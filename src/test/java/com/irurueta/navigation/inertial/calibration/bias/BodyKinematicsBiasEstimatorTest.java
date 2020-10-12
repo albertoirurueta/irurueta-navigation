@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.irurueta.navigation.inertial.calibration;
+package com.irurueta.navigation.inertial.calibration.bias;
 
 import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.WrongSizeException;
@@ -30,6 +30,10 @@ import com.irurueta.navigation.geodesic.Constants;
 import com.irurueta.navigation.inertial.BodyKinematics;
 import com.irurueta.navigation.inertial.ECEFPosition;
 import com.irurueta.navigation.inertial.NEDPosition;
+import com.irurueta.navigation.inertial.calibration.AccelerationTriad;
+import com.irurueta.navigation.inertial.calibration.AngularSpeedTriad;
+import com.irurueta.navigation.inertial.calibration.BodyKinematicsGenerator;
+import com.irurueta.navigation.inertial.calibration.IMUErrors;
 import com.irurueta.navigation.inertial.estimators.ECEFKinematicsEstimator;
 import com.irurueta.statistics.UniformRandomizer;
 import com.irurueta.units.*;
@@ -38,8 +42,9 @@ import org.junit.Test;
 import java.util.Random;
 
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
+public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstimatorListener {
 
     private static final double MICRO_G_TO_METERS_PER_SECOND_SQUARED = 9.80665E-6;
     private static final double DEG_TO_RAD = 0.01745329252;
@@ -54,8 +59,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
     private static final double MIN_HEIGHT = -50.0;
     private static final double MAX_HEIGHT = 50.0;
 
-    private static final int MIN_TOTAL_SAMPLES = 100;
-    private static final int MAX_TOTAL_SAMPLES = 500;
+    private static final int N_SAMPLES = 100000;
 
     private static final double MIN_TIME_INTERVAL = 0.01;
     private static final double MAX_TIME_INTERVAL = 0.04;
@@ -73,7 +77,6 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
     private int mStart = 0;
     private int mBodyKinematicsAdded = 0;
-    private int mFinish = 0;
     private int mReset = 0;
 
     @Test
@@ -89,7 +92,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 AngularSpeedUnit.RADIANS_PER_SECOND);
         final BodyKinematics kinematics1 = new BodyKinematics();
         final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+        final Time time1 = new Time(BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
                 TimeUnit.SECOND);
         final Time time2 = new Time(0.0, TimeUnit.SECOND);
         final NEDFrame nedFrame1 = new NEDFrame();
@@ -112,18 +115,17 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
         final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
                 .estimateKinematicsAndReturnNew(
-                        IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, ecefC, ecefC,
+                        BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, ecefC, ecefC,
                         0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
                         ecefPosition1);
 
 
         // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator();
+        BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator();
 
         // check default values
-        assertEquals(estimator.getTotalSamples(), IMUBiasEstimator.DEFAULT_TOTAL_SAMPLES);
         assertEquals(estimator.getTimeInterval(),
-                IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, 0.0);
+                BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, 0.0);
         assertEquals(estimator.getTimeIntervalAsTime(), time1);
         estimator.getTimeIntervalAsTime(time2);
         assertEquals(time1, time2);
@@ -172,6 +174,22 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
         estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AccelerationTriad aTriad1 = estimator.getBiasF();
+        assertEquals(aTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aTriad2 = new AccelerationTriad();
+        estimator.getBiasF(aTriad2);
+        assertEquals(aTriad1, aTriad2);
+        final AngularSpeedTriad wTriad1 = estimator.getBiasAngularRate();
+        assertEquals(wTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wTriad2 = new AngularSpeedTriad();
+        estimator.getBiasAngularRate(wTriad2);
+        assertEquals(wTriad1, wTriad2);
         assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
         estimator.getBiasesAsBodyKinematics(kinematics2);
         assertEquals(kinematics1, kinematics2);
@@ -193,6 +211,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad aStdTriad1 = estimator.getStandardDeviationF();
+        assertEquals(aStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aStdTriad2 = new AccelerationTriad();
+        estimator.getStandardDeviationF(aStdTriad2);
+        assertEquals(aStdTriad1, aStdTriad2);
         assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
                 0.0);
         assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
@@ -217,6 +243,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AngularSpeedTriad wStdTriad1 = estimator.getStandardDeviationAngularRate();
+        assertEquals(wStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wStdTriad2 = new AngularSpeedTriad();
+        estimator.getStandardDeviationAngularRate(wStdTriad2);
+        assertEquals(wStdTriad1, wStdTriad2);
         assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
         assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
                 angularSpeed1);
@@ -249,7 +283,6 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(m1, m2);
         assertEquals(estimator.getNumberOfProcessedSamples(), 0);
         assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
         assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
         estimator.getExpectedKinematics(kinematics2);
         assertEquals(expectedKinematics, kinematics2);
@@ -269,7 +302,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 AngularSpeedUnit.RADIANS_PER_SECOND);
         final BodyKinematics kinematics1 = new BodyKinematics();
         final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+        final Time time1 = new Time(BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
                 TimeUnit.SECOND);
         final Time time2 = new Time(0.0, TimeUnit.SECOND);
         final NEDFrame nedFrame1 = new NEDFrame();
@@ -304,18 +337,17 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
         final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
                 .estimateKinematicsAndReturnNew(
-                        IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, ecefC, ecefC,
+                        BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, ecefC, ecefC,
                         0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
                         ecefPosition1);
 
 
         // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(nedC);
+        BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator(nedC);
 
         // check default values
-        assertEquals(estimator.getTotalSamples(), IMUBiasEstimator.DEFAULT_TOTAL_SAMPLES);
         assertEquals(estimator.getTimeInterval(),
-                IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, 0.0);
+                BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, 0.0);
         assertEquals(estimator.getTimeIntervalAsTime(), time1);
         estimator.getTimeIntervalAsTime(time2);
         assertEquals(time1, time2);
@@ -364,6 +396,22 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
         estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AccelerationTriad aTriad1 = estimator.getBiasF();
+        assertEquals(aTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aTriad2 = new AccelerationTriad();
+        estimator.getBiasF(aTriad2);
+        assertEquals(aTriad1, aTriad2);
+        final AngularSpeedTriad wTriad1 = estimator.getBiasAngularRate();
+        assertEquals(wTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wTriad2 = new AngularSpeedTriad();
+        estimator.getBiasAngularRate(wTriad2);
+        assertEquals(wTriad1, wTriad2);
         assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
         estimator.getBiasesAsBodyKinematics(kinematics2);
         assertEquals(kinematics1, kinematics2);
@@ -385,6 +433,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad aStdTriad1 = estimator.getStandardDeviationF();
+        assertEquals(aStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aStdTriad2 = new AccelerationTriad();
+        estimator.getStandardDeviationF(aStdTriad2);
+        assertEquals(aStdTriad1, aStdTriad2);
         assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
                 0.0);
         assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
@@ -409,6 +465,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AngularSpeedTriad wStdTriad1 = estimator.getStandardDeviationAngularRate();
+        assertEquals(wStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wStdTriad2 = new AngularSpeedTriad();
+        estimator.getStandardDeviationAngularRate(wStdTriad2);
+        assertEquals(wStdTriad1, wStdTriad2);
         assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
         assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
                 angularSpeed1);
@@ -441,7 +505,6 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(m1, m2);
         assertEquals(estimator.getNumberOfProcessedSamples(), 0);
         assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
         assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
         estimator.getExpectedKinematics(kinematics2);
         assertEquals(expectedKinematics, kinematics2);
@@ -449,7 +512,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         // Force InvalidSourceAndDestinationFrameTypeException
         estimator = null;
         try {
-            estimator = new IMUBiasEstimator(new CoordinateTransformation(
+            estimator = new BodyKinematicsBiasEstimator(new CoordinateTransformation(
                     FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
         } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
@@ -466,7 +529,6 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
 
-
         final Acceleration acceleration1 = new Acceleration(0.0,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
         final Acceleration acceleration2 = new Acceleration(0.0,
@@ -477,7 +539,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 AngularSpeedUnit.RADIANS_PER_SECOND);
         final BodyKinematics kinematics1 = new BodyKinematics();
         final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+        final Time time1 = new Time(BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
                 TimeUnit.SECOND);
         final Time time2 = new Time(0.0, TimeUnit.SECOND);
         final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height);
@@ -500,18 +562,18 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
         final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
                 .estimateKinematicsAndReturnNew(
-                        IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, ecefC, ecefC,
+                        BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, ecefC, ecefC,
                         0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
                         ecefPosition1);
 
 
         // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(latitude, longitude, height);
+        BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator(
+                latitude, longitude, height);
 
         // check default values
-        assertEquals(estimator.getTotalSamples(), IMUBiasEstimator.DEFAULT_TOTAL_SAMPLES);
         assertEquals(estimator.getTimeInterval(),
-                IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, 0.0);
+                BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, 0.0);
         assertEquals(estimator.getTimeIntervalAsTime(), time1);
         estimator.getTimeIntervalAsTime(time2);
         assertEquals(time1, time2);
@@ -560,6 +622,22 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
         estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AccelerationTriad aTriad1 = estimator.getBiasF();
+        assertEquals(aTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aTriad2 = new AccelerationTriad();
+        estimator.getBiasF(aTriad2);
+        assertEquals(aTriad1, aTriad2);
+        final AngularSpeedTriad wTriad1 = estimator.getBiasAngularRate();
+        assertEquals(wTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wTriad2 = new AngularSpeedTriad();
+        estimator.getBiasAngularRate(wTriad2);
+        assertEquals(wTriad1, wTriad2);
         assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
         estimator.getBiasesAsBodyKinematics(kinematics2);
         assertEquals(kinematics1, kinematics2);
@@ -581,6 +659,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad aStdTriad1 = estimator.getStandardDeviationF();
+        assertEquals(aStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aStdTriad2 = new AccelerationTriad();
+        estimator.getStandardDeviationF(aStdTriad2);
+        assertEquals(aStdTriad1, aStdTriad2);
         assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
                 0.0);
         assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
@@ -605,6 +691,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AngularSpeedTriad wStdTriad1 = estimator.getStandardDeviationAngularRate();
+        assertEquals(wStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wStdTriad2 = new AngularSpeedTriad();
+        estimator.getStandardDeviationAngularRate(wStdTriad2);
+        assertEquals(wStdTriad1, wStdTriad2);
         assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
         assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
                 angularSpeed1);
@@ -637,7 +731,6 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(m1, m2);
         assertEquals(estimator.getNumberOfProcessedSamples(), 0);
         assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
         assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
         estimator.getExpectedKinematics(kinematics2);
         assertEquals(expectedKinematics, kinematics2);
@@ -663,7 +756,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 AngularSpeedUnit.RADIANS_PER_SECOND);
         final BodyKinematics kinematics1 = new BodyKinematics();
         final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+        final Time time1 = new Time(BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
                 TimeUnit.SECOND);
         final Time time2 = new Time(0.0, TimeUnit.SECOND);
         final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height);
@@ -686,18 +779,18 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
         final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
                 .estimateKinematicsAndReturnNew(
-                        IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, ecefC, ecefC,
+                        BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, ecefC, ecefC,
                         0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
                         ecefPosition1);
 
 
         // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(latitude, longitude, height);
+        BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator(
+                latitude, longitude, height);
 
         // check default values
-        assertEquals(estimator.getTotalSamples(), IMUBiasEstimator.DEFAULT_TOTAL_SAMPLES);
         assertEquals(estimator.getTimeInterval(),
-                IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, 0.0);
+                BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, 0.0);
         assertEquals(estimator.getTimeIntervalAsTime(), time1);
         estimator.getTimeIntervalAsTime(time2);
         assertEquals(time1, time2);
@@ -746,6 +839,22 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
         estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AccelerationTriad aTriad1 = estimator.getBiasF();
+        assertEquals(aTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aTriad2 = new AccelerationTriad();
+        estimator.getBiasF(aTriad2);
+        assertEquals(aTriad1, aTriad2);
+        final AngularSpeedTriad wTriad1 = estimator.getBiasAngularRate();
+        assertEquals(wTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wTriad2 = new AngularSpeedTriad();
+        estimator.getBiasAngularRate(wTriad2);
+        assertEquals(wTriad1, wTriad2);
         assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
         estimator.getBiasesAsBodyKinematics(kinematics2);
         assertEquals(kinematics1, kinematics2);
@@ -767,6 +876,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad aStdTriad1 = estimator.getStandardDeviationF();
+        assertEquals(aStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aStdTriad2 = new AccelerationTriad();
+        estimator.getStandardDeviationF(aStdTriad2);
+        assertEquals(aStdTriad1, aStdTriad2);
         assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
                 0.0);
         assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
@@ -791,6 +908,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AngularSpeedTriad wStdTriad1 = estimator.getStandardDeviationAngularRate();
+        assertEquals(wStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wStdTriad2 = new AngularSpeedTriad();
+        estimator.getStandardDeviationAngularRate(wStdTriad2);
+        assertEquals(wStdTriad1, wStdTriad2);
         assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
         assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
                 angularSpeed1);
@@ -823,7 +948,6 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(m1, m2);
         assertEquals(estimator.getNumberOfProcessedSamples(), 0);
         assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
         assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
         estimator.getExpectedKinematics(kinematics2);
         assertEquals(expectedKinematics, kinematics2);
@@ -850,7 +974,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 AngularSpeedUnit.RADIANS_PER_SECOND);
         final BodyKinematics kinematics1 = new BodyKinematics();
         final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+        final Time time1 = new Time(BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
                 TimeUnit.SECOND);
         final Time time2 = new Time(0.0, TimeUnit.SECOND);
         final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height);
@@ -873,18 +997,18 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
         final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
                 .estimateKinematicsAndReturnNew(
-                        IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, ecefC, ecefC,
+                        BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, ecefC, ecefC,
                         0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
                         ecefPosition1);
 
 
         // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(latitude, longitude, height);
+        BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator(
+                latitude, longitude, height);
 
         // check default values
-        assertEquals(estimator.getTotalSamples(), IMUBiasEstimator.DEFAULT_TOTAL_SAMPLES);
         assertEquals(estimator.getTimeInterval(),
-                IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, 0.0);
+                BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, 0.0);
         assertEquals(estimator.getTimeIntervalAsTime(), time1);
         estimator.getTimeIntervalAsTime(time2);
         assertEquals(time1, time2);
@@ -933,6 +1057,22 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
         estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AccelerationTriad aTriad1 = estimator.getBiasF();
+        assertEquals(aTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aTriad2 = new AccelerationTriad();
+        estimator.getBiasF(aTriad2);
+        assertEquals(aTriad1, aTriad2);
+        final AngularSpeedTriad wTriad1 = estimator.getBiasAngularRate();
+        assertEquals(wTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wTriad2 = new AngularSpeedTriad();
+        estimator.getBiasAngularRate(wTriad2);
+        assertEquals(wTriad1, wTriad2);
         assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
         estimator.getBiasesAsBodyKinematics(kinematics2);
         assertEquals(kinematics1, kinematics2);
@@ -954,6 +1094,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad aStdTriad1 = estimator.getStandardDeviationF();
+        assertEquals(aStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aStdTriad2 = new AccelerationTriad();
+        estimator.getStandardDeviationF(aStdTriad2);
+        assertEquals(aStdTriad1, aStdTriad2);
         assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
                 0.0);
         assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
@@ -978,6 +1126,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AngularSpeedTriad wStdTriad1 = estimator.getStandardDeviationAngularRate();
+        assertEquals(wStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wStdTriad2 = new AngularSpeedTriad();
+        estimator.getStandardDeviationAngularRate(wStdTriad2);
+        assertEquals(wStdTriad1, wStdTriad2);
         assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
         assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
                 angularSpeed1);
@@ -1010,7 +1166,6 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(m1, m2);
         assertEquals(estimator.getNumberOfProcessedSamples(), 0);
         assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
         assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
         estimator.getExpectedKinematics(kinematics2);
         assertEquals(expectedKinematics, kinematics2);
@@ -1044,7 +1199,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 AngularSpeedUnit.RADIANS_PER_SECOND);
         final BodyKinematics kinematics1 = new BodyKinematics();
         final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+        final Time time1 = new Time(BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
                 TimeUnit.SECOND);
         final Time time2 = new Time(0.0, TimeUnit.SECOND);
         final CoordinateTransformation nedC = new CoordinateTransformation(
@@ -1068,18 +1223,17 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
         final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
                 .estimateKinematicsAndReturnNew(
-                        IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, ecefC, ecefC,
+                        BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, ecefC, ecefC,
                         0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
                         ecefPosition1);
 
 
         // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(nedPosition1, nedC);
+        BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator(nedPosition1, nedC);
 
         // check default values
-        assertEquals(estimator.getTotalSamples(), IMUBiasEstimator.DEFAULT_TOTAL_SAMPLES);
         assertEquals(estimator.getTimeInterval(),
-                IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, 0.0);
+                BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, 0.0);
         assertEquals(estimator.getTimeIntervalAsTime(), time1);
         estimator.getTimeIntervalAsTime(time2);
         assertEquals(time1, time2);
@@ -1128,6 +1282,22 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
         estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AccelerationTriad aTriad1 = estimator.getBiasF();
+        assertEquals(aTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aTriad2 = new AccelerationTriad();
+        estimator.getBiasF(aTriad2);
+        assertEquals(aTriad1, aTriad2);
+        final AngularSpeedTriad wTriad1 = estimator.getBiasAngularRate();
+        assertEquals(wTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wTriad2 = new AngularSpeedTriad();
+        estimator.getBiasAngularRate(wTriad2);
+        assertEquals(wTriad1, wTriad2);
         assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
         estimator.getBiasesAsBodyKinematics(kinematics2);
         assertEquals(kinematics1, kinematics2);
@@ -1149,6 +1319,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad aStdTriad1 = estimator.getStandardDeviationF();
+        assertEquals(aStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aStdTriad2 = new AccelerationTriad();
+        estimator.getStandardDeviationF(aStdTriad2);
+        assertEquals(aStdTriad1, aStdTriad2);
         assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
                 0.0);
         assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
@@ -1173,6 +1351,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AngularSpeedTriad wStdTriad1 = estimator.getStandardDeviationAngularRate();
+        assertEquals(wStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wStdTriad2 = new AngularSpeedTriad();
+        estimator.getStandardDeviationAngularRate(wStdTriad2);
+        assertEquals(wStdTriad1, wStdTriad2);
         assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
         assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
                 angularSpeed1);
@@ -1205,7 +1391,6 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(m1, m2);
         assertEquals(estimator.getNumberOfProcessedSamples(), 0);
         assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
         assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
         estimator.getExpectedKinematics(kinematics2);
         assertEquals(expectedKinematics, kinematics2);
@@ -1213,7 +1398,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         // Force InvalidSourceAndDestinationFrameTypeException
         estimator = null;
         try {
-            estimator = new IMUBiasEstimator(nedPosition1, new CoordinateTransformation(
+            estimator = new BodyKinematicsBiasEstimator(nedPosition1, new CoordinateTransformation(
                     FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
         } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
@@ -1251,7 +1436,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                     AngularSpeedUnit.RADIANS_PER_SECOND);
             final BodyKinematics kinematics1 = new BodyKinematics();
             final BodyKinematics kinematics2 = new BodyKinematics();
-            final Time time1 = new Time(IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+            final Time time1 = new Time(BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
                     TimeUnit.SECOND);
             final Time time2 = new Time(0.0, TimeUnit.SECOND);
             final CoordinateTransformation nedC = new CoordinateTransformation(
@@ -1275,18 +1460,18 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
             final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
                     .estimateKinematicsAndReturnNew(
-                            IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, ecefC, ecefC,
+                            BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, ecefC, ecefC,
                             0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
                             ecefPosition1);
 
 
             // test constructor
-            IMUBiasEstimator estimator = new IMUBiasEstimator(ecefPosition1, nedC);
+            BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator(
+                    ecefPosition1, nedC);
 
             // check default values
-            assertEquals(estimator.getTotalSamples(), IMUBiasEstimator.DEFAULT_TOTAL_SAMPLES);
             assertEquals(estimator.getTimeInterval(),
-                    IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, 0.0);
+                    BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, 0.0);
             assertEquals(estimator.getTimeIntervalAsTime(), time1);
             estimator.getTimeIntervalAsTime(time2);
             assertEquals(time1, time2);
@@ -1343,11 +1528,22 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
             estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
             assertEquals(angularSpeed1, angularSpeed2);
-            assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-            assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                    angularSpeed1);
-            estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-            assertEquals(angularSpeed1, angularSpeed2);
+            final AccelerationTriad aTriad1 = estimator.getBiasF();
+            assertEquals(aTriad1.getValueX(), 0.0, 0.0);
+            assertEquals(aTriad1.getValueY(), 0.0, 0.0);
+            assertEquals(aTriad1.getValueZ(), 0.0, 0.0);
+            assertEquals(aTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+            final AccelerationTriad aTriad2 = new AccelerationTriad();
+            estimator.getBiasF(aTriad2);
+            assertEquals(aTriad1, aTriad2);
+            final AngularSpeedTriad wTriad1 = estimator.getBiasAngularRate();
+            assertEquals(wTriad1.getValueX(), 0.0, 0.0);
+            assertEquals(wTriad1.getValueY(), 0.0, 0.0);
+            assertEquals(wTriad1.getValueZ(), 0.0, 0.0);
+            assertEquals(wTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+            final AngularSpeedTriad wTriad2 = new AngularSpeedTriad();
+            estimator.getBiasAngularRate(wTriad2);
+            assertEquals(wTriad1, wTriad2);
             assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
             estimator.getBiasesAsBodyKinematics(kinematics2);
             assertEquals(kinematics1, kinematics2);
@@ -1369,6 +1565,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
             estimator.getStandardDeviationFzAsAcceleration(acceleration2);
             assertEquals(acceleration1, acceleration2);
+            final AccelerationTriad aStdTriad1 = estimator.getStandardDeviationF();
+            assertEquals(aStdTriad1.getValueX(), 0.0, 0.0);
+            assertEquals(aStdTriad1.getValueY(), 0.0, 0.0);
+            assertEquals(aStdTriad1.getValueZ(), 0.0, 0.0);
+            assertEquals(aStdTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+            final AccelerationTriad aStdTriad2 = new AccelerationTriad();
+            estimator.getStandardDeviationF(aStdTriad2);
+            assertEquals(aStdTriad1, aStdTriad2);
             assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
                     0.0);
             assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
@@ -1392,6 +1596,19 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                     angularSpeed1);
             estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+            assertEquals(angularSpeed1, angularSpeed2);
+            final AngularSpeedTriad wStdTriad1 = estimator.getStandardDeviationAngularRate();
+            assertEquals(wStdTriad1.getValueX(), 0.0, 0.0);
+            assertEquals(wStdTriad1.getValueY(), 0.0, 0.0);
+            assertEquals(wStdTriad1.getValueZ(), 0.0, 0.0);
+            assertEquals(wStdTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+            final AngularSpeedTriad wStdTriad2 = new AngularSpeedTriad();
+            estimator.getStandardDeviationAngularRate(wStdTriad2);
+            assertEquals(wStdTriad1, wStdTriad2);
+            assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+            assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                    angularSpeed1);
+            estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
             assertEquals(angularSpeed1, angularSpeed2);
             assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
             estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -1420,7 +1637,6 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertEquals(m1, m2);
             assertEquals(estimator.getNumberOfProcessedSamples(), 0);
             assertFalse(estimator.isRunning());
-            assertFalse(estimator.isFinished());
             assertTrue(estimator.getExpectedKinematics().equals(expectedKinematics,
                     ABSOLUTE_ERROR));
             estimator.getExpectedKinematics(kinematics2);
@@ -1429,7 +1645,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             // Force InvalidSourceAndDestinationFrameTypeException
             estimator = null;
             try {
-                estimator = new IMUBiasEstimator(ecefPosition1,
+                estimator = new BodyKinematicsBiasEstimator(ecefPosition1,
                         new CoordinateTransformation(
                                 FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME,
                                 FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME));
@@ -1457,7 +1673,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 AngularSpeedUnit.RADIANS_PER_SECOND);
         final BodyKinematics kinematics1 = new BodyKinematics();
         final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+        final Time time1 = new Time(BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
                 TimeUnit.SECOND);
         final Time time2 = new Time(0.0, TimeUnit.SECOND);
         final NEDFrame nedFrame1 = new NEDFrame();
@@ -1480,18 +1696,17 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
         final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
                 .estimateKinematicsAndReturnNew(
-                        IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, ecefC, ecefC,
+                        BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, ecefC, ecefC,
                         0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
                         ecefPosition1);
 
 
         // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(this);
+        BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator(this);
 
         // check default values
-        assertEquals(estimator.getTotalSamples(), IMUBiasEstimator.DEFAULT_TOTAL_SAMPLES);
         assertEquals(estimator.getTimeInterval(),
-                IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, 0.0);
+                BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, 0.0);
         assertEquals(estimator.getTimeIntervalAsTime(), time1);
         estimator.getTimeIntervalAsTime(time2);
         assertEquals(time1, time2);
@@ -1540,6 +1755,22 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
         estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AccelerationTriad aTriad1 = estimator.getBiasF();
+        assertEquals(aTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aTriad2 = new AccelerationTriad();
+        estimator.getBiasF(aTriad2);
+        assertEquals(aTriad1, aTriad2);
+        final AngularSpeedTriad wTriad1 = estimator.getBiasAngularRate();
+        assertEquals(wTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wTriad2 = new AngularSpeedTriad();
+        estimator.getBiasAngularRate(wTriad2);
+        assertEquals(wTriad1, wTriad2);
         assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
         estimator.getBiasesAsBodyKinematics(kinematics2);
         assertEquals(kinematics1, kinematics2);
@@ -1561,6 +1792,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad aStdTriad1 = estimator.getStandardDeviationF();
+        assertEquals(aStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aStdTriad2 = new AccelerationTriad();
+        estimator.getStandardDeviationF(aStdTriad2);
+        assertEquals(aStdTriad1, aStdTriad2);
         assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
                 0.0);
         assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
@@ -1585,6 +1824,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AngularSpeedTriad wStdTriad1 = estimator.getStandardDeviationAngularRate();
+        assertEquals(wStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wStdTriad2 = new AngularSpeedTriad();
+        estimator.getStandardDeviationAngularRate(wStdTriad2);
+        assertEquals(wStdTriad1, wStdTriad2);
         assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
         assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
                 angularSpeed1);
@@ -1617,7 +1864,6 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(m1, m2);
         assertEquals(estimator.getNumberOfProcessedSamples(), 0);
         assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
         assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
         estimator.getExpectedKinematics(kinematics2);
         assertEquals(expectedKinematics, kinematics2);
@@ -1637,7 +1883,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 AngularSpeedUnit.RADIANS_PER_SECOND);
         final BodyKinematics kinematics1 = new BodyKinematics();
         final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+        final Time time1 = new Time(BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
                 TimeUnit.SECOND);
         final Time time2 = new Time(0.0, TimeUnit.SECOND);
         final NEDFrame nedFrame1 = new NEDFrame();
@@ -1672,18 +1918,18 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
         final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
                 .estimateKinematicsAndReturnNew(
-                        IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, ecefC, ecefC,
+                        BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, ecefC, ecefC,
                         0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
                         ecefPosition1);
 
 
         // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(nedC, this);
+        BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator(
+                nedC, this);
 
         // check default values
-        assertEquals(estimator.getTotalSamples(), IMUBiasEstimator.DEFAULT_TOTAL_SAMPLES);
         assertEquals(estimator.getTimeInterval(),
-                IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, 0.0);
+                BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, 0.0);
         assertEquals(estimator.getTimeIntervalAsTime(), time1);
         estimator.getTimeIntervalAsTime(time2);
         assertEquals(time1, time2);
@@ -1732,6 +1978,22 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
         estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AccelerationTriad aTriad1 = estimator.getBiasF();
+        assertEquals(aTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aTriad2 = new AccelerationTriad();
+        estimator.getBiasF(aTriad2);
+        assertEquals(aTriad1, aTriad2);
+        final AngularSpeedTriad wTriad1 = estimator.getBiasAngularRate();
+        assertEquals(wTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wTriad2 = new AngularSpeedTriad();
+        estimator.getBiasAngularRate(wTriad2);
+        assertEquals(wTriad1, wTriad2);
         assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
         estimator.getBiasesAsBodyKinematics(kinematics2);
         assertEquals(kinematics1, kinematics2);
@@ -1753,6 +2015,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad aStdTriad1 = estimator.getStandardDeviationF();
+        assertEquals(aStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aStdTriad2 = new AccelerationTriad();
+        estimator.getStandardDeviationF(aStdTriad2);
+        assertEquals(aStdTriad1, aStdTriad2);
         assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
                 0.0);
         assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
@@ -1777,6 +2047,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AngularSpeedTriad wStdTriad1 = estimator.getStandardDeviationAngularRate();
+        assertEquals(wStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wStdTriad2 = new AngularSpeedTriad();
+        estimator.getStandardDeviationAngularRate(wStdTriad2);
+        assertEquals(wStdTriad1, wStdTriad2);
         assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
         assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
                 angularSpeed1);
@@ -1809,7 +2087,6 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(m1, m2);
         assertEquals(estimator.getNumberOfProcessedSamples(), 0);
         assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
         assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
         estimator.getExpectedKinematics(kinematics2);
         assertEquals(expectedKinematics, kinematics2);
@@ -1817,9 +2094,9 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         // Force InvalidSourceAndDestinationFrameTypeException
         estimator = null;
         try {
-            estimator = new IMUBiasEstimator(new CoordinateTransformation(
-                    FrameType.LOCAL_NAVIGATION_FRAME,
-                    FrameType.LOCAL_NAVIGATION_FRAME), this);
+            estimator = new BodyKinematicsBiasEstimator(new CoordinateTransformation(
+                    FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME),
+                    this);
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
         } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
         }
@@ -1835,7 +2112,6 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
 
-
         final Acceleration acceleration1 = new Acceleration(0.0,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
         final Acceleration acceleration2 = new Acceleration(0.0,
@@ -1846,7 +2122,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 AngularSpeedUnit.RADIANS_PER_SECOND);
         final BodyKinematics kinematics1 = new BodyKinematics();
         final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+        final Time time1 = new Time(BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
                 TimeUnit.SECOND);
         final Time time2 = new Time(0.0, TimeUnit.SECOND);
         final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height);
@@ -1869,19 +2145,18 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
         final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
                 .estimateKinematicsAndReturnNew(
-                        IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, ecefC, ecefC,
+                        BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, ecefC, ecefC,
                         0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
                         ecefPosition1);
 
 
         // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(
+        BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator(
                 latitude, longitude, height, this);
 
         // check default values
-        assertEquals(estimator.getTotalSamples(), IMUBiasEstimator.DEFAULT_TOTAL_SAMPLES);
         assertEquals(estimator.getTimeInterval(),
-                IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, 0.0);
+                BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, 0.0);
         assertEquals(estimator.getTimeIntervalAsTime(), time1);
         estimator.getTimeIntervalAsTime(time2);
         assertEquals(time1, time2);
@@ -1930,6 +2205,22 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
         estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AccelerationTriad aTriad1 = estimator.getBiasF();
+        assertEquals(aTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aTriad2 = new AccelerationTriad();
+        estimator.getBiasF(aTriad2);
+        assertEquals(aTriad1, aTriad2);
+        final AngularSpeedTriad wTriad1 = estimator.getBiasAngularRate();
+        assertEquals(wTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wTriad2 = new AngularSpeedTriad();
+        estimator.getBiasAngularRate(wTriad2);
+        assertEquals(wTriad1, wTriad2);
         assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
         estimator.getBiasesAsBodyKinematics(kinematics2);
         assertEquals(kinematics1, kinematics2);
@@ -1951,6 +2242,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad aStdTriad1 = estimator.getStandardDeviationF();
+        assertEquals(aStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aStdTriad2 = new AccelerationTriad();
+        estimator.getStandardDeviationF(aStdTriad2);
+        assertEquals(aStdTriad1, aStdTriad2);
         assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
                 0.0);
         assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
@@ -1975,6 +2274,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AngularSpeedTriad wStdTriad1 = estimator.getStandardDeviationAngularRate();
+        assertEquals(wStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wStdTriad2 = new AngularSpeedTriad();
+        estimator.getStandardDeviationAngularRate(wStdTriad2);
+        assertEquals(wStdTriad1, wStdTriad2);
         assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
         assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
                 angularSpeed1);
@@ -2007,7 +2314,6 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(m1, m2);
         assertEquals(estimator.getNumberOfProcessedSamples(), 0);
         assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
         assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
         estimator.getExpectedKinematics(kinematics2);
         assertEquals(expectedKinematics, kinematics2);
@@ -2033,7 +2339,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 AngularSpeedUnit.RADIANS_PER_SECOND);
         final BodyKinematics kinematics1 = new BodyKinematics();
         final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+        final Time time1 = new Time(BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
                 TimeUnit.SECOND);
         final Time time2 = new Time(0.0, TimeUnit.SECOND);
         final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height);
@@ -2056,19 +2362,18 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
         final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
                 .estimateKinematicsAndReturnNew(
-                        IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, ecefC, ecefC,
+                        BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, ecefC, ecefC,
                         0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
                         ecefPosition1);
 
 
         // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(latitude, longitude, height,
-                this);
+        BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator(
+                latitude, longitude, height, this);
 
         // check default values
-        assertEquals(estimator.getTotalSamples(), IMUBiasEstimator.DEFAULT_TOTAL_SAMPLES);
         assertEquals(estimator.getTimeInterval(),
-                IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, 0.0);
+                BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, 0.0);
         assertEquals(estimator.getTimeIntervalAsTime(), time1);
         estimator.getTimeIntervalAsTime(time2);
         assertEquals(time1, time2);
@@ -2117,6 +2422,22 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
         estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AccelerationTriad aTriad1 = estimator.getBiasF();
+        assertEquals(aTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aTriad2 = new AccelerationTriad();
+        estimator.getBiasF(aTriad2);
+        assertEquals(aTriad1, aTriad2);
+        final AngularSpeedTriad wTriad1 = estimator.getBiasAngularRate();
+        assertEquals(wTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wTriad2 = new AngularSpeedTriad();
+        estimator.getBiasAngularRate(wTriad2);
+        assertEquals(wTriad1, wTriad2);
         assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
         estimator.getBiasesAsBodyKinematics(kinematics2);
         assertEquals(kinematics1, kinematics2);
@@ -2138,6 +2459,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad aStdTriad1 = estimator.getStandardDeviationF();
+        assertEquals(aStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aStdTriad2 = new AccelerationTriad();
+        estimator.getStandardDeviationF(aStdTriad2);
+        assertEquals(aStdTriad1, aStdTriad2);
         assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
                 0.0);
         assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
@@ -2162,6 +2491,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AngularSpeedTriad wStdTriad1 = estimator.getStandardDeviationAngularRate();
+        assertEquals(wStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wStdTriad2 = new AngularSpeedTriad();
+        estimator.getStandardDeviationAngularRate(wStdTriad2);
+        assertEquals(wStdTriad1, wStdTriad2);
         assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
         assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
                 angularSpeed1);
@@ -2194,7 +2531,6 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(m1, m2);
         assertEquals(estimator.getNumberOfProcessedSamples(), 0);
         assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
         assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
         estimator.getExpectedKinematics(kinematics2);
         assertEquals(expectedKinematics, kinematics2);
@@ -2221,7 +2557,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 AngularSpeedUnit.RADIANS_PER_SECOND);
         final BodyKinematics kinematics1 = new BodyKinematics();
         final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+        final Time time1 = new Time(BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
                 TimeUnit.SECOND);
         final Time time2 = new Time(0.0, TimeUnit.SECOND);
         final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height);
@@ -2244,19 +2580,18 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
         final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
                 .estimateKinematicsAndReturnNew(
-                        IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, ecefC, ecefC,
+                        BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, ecefC, ecefC,
                         0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
                         ecefPosition1);
 
 
         // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(latitude, longitude, height,
-                this);
+        BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator(
+                latitude, longitude, height, this);
 
         // check default values
-        assertEquals(estimator.getTotalSamples(), IMUBiasEstimator.DEFAULT_TOTAL_SAMPLES);
         assertEquals(estimator.getTimeInterval(),
-                IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, 0.0);
+                BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, 0.0);
         assertEquals(estimator.getTimeIntervalAsTime(), time1);
         estimator.getTimeIntervalAsTime(time2);
         assertEquals(time1, time2);
@@ -2305,6 +2640,22 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
         estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AccelerationTriad aTriad1 = estimator.getBiasF();
+        assertEquals(aTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aTriad2 = new AccelerationTriad();
+        estimator.getBiasF(aTriad2);
+        assertEquals(aTriad1, aTriad2);
+        final AngularSpeedTriad wTriad1 = estimator.getBiasAngularRate();
+        assertEquals(wTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wTriad2 = new AngularSpeedTriad();
+        estimator.getBiasAngularRate(wTriad2);
+        assertEquals(wTriad1, wTriad2);
         assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
         estimator.getBiasesAsBodyKinematics(kinematics2);
         assertEquals(kinematics1, kinematics2);
@@ -2326,6 +2677,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad aStdTriad1 = estimator.getStandardDeviationF();
+        assertEquals(aStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aStdTriad2 = new AccelerationTriad();
+        estimator.getStandardDeviationF(aStdTriad2);
+        assertEquals(aStdTriad1, aStdTriad2);
         assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
                 0.0);
         assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
@@ -2350,6 +2709,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AngularSpeedTriad wStdTriad1 = estimator.getStandardDeviationAngularRate();
+        assertEquals(wStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wStdTriad2 = new AngularSpeedTriad();
+        estimator.getStandardDeviationAngularRate(wStdTriad2);
+        assertEquals(wStdTriad1, wStdTriad2);
         assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
         assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
                 angularSpeed1);
@@ -2382,7 +2749,6 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(m1, m2);
         assertEquals(estimator.getNumberOfProcessedSamples(), 0);
         assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
         assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
         estimator.getExpectedKinematics(kinematics2);
         assertEquals(expectedKinematics, kinematics2);
@@ -2416,7 +2782,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 AngularSpeedUnit.RADIANS_PER_SECOND);
         final BodyKinematics kinematics1 = new BodyKinematics();
         final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+        final Time time1 = new Time(BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
                 TimeUnit.SECOND);
         final Time time2 = new Time(0.0, TimeUnit.SECOND);
         final CoordinateTransformation nedC = new CoordinateTransformation(
@@ -2440,19 +2806,18 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
         final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
                 .estimateKinematicsAndReturnNew(
-                        IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, ecefC, ecefC,
+                        BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, ecefC, ecefC,
                         0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
                         ecefPosition1);
 
 
         // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(nedPosition1, nedC,
-                this);
+        BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator(
+                nedPosition1, nedC, this);
 
         // check default values
-        assertEquals(estimator.getTotalSamples(), IMUBiasEstimator.DEFAULT_TOTAL_SAMPLES);
         assertEquals(estimator.getTimeInterval(),
-                IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, 0.0);
+                BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, 0.0);
         assertEquals(estimator.getTimeIntervalAsTime(), time1);
         estimator.getTimeIntervalAsTime(time2);
         assertEquals(time1, time2);
@@ -2501,11 +2866,22 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
         estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
+        final AccelerationTriad aTriad1 = estimator.getBiasF();
+        assertEquals(aTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aTriad2 = new AccelerationTriad();
+        estimator.getBiasF(aTriad2);
+        assertEquals(aTriad1, aTriad2);
+        final AngularSpeedTriad wTriad1 = estimator.getBiasAngularRate();
+        assertEquals(wTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wTriad2 = new AngularSpeedTriad();
+        estimator.getBiasAngularRate(wTriad2);
+        assertEquals(wTriad1, wTriad2);
         assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
         estimator.getBiasesAsBodyKinematics(kinematics2);
         assertEquals(kinematics1, kinematics2);
@@ -2527,6 +2903,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad aStdTriad1 = estimator.getStandardDeviationF();
+        assertEquals(aStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aStdTriad2 = new AccelerationTriad();
+        estimator.getStandardDeviationF(aStdTriad2);
+        assertEquals(aStdTriad1, aStdTriad2);
         assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
                 0.0);
         assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
@@ -2550,6 +2934,19 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        final AngularSpeedTriad wStdTriad1 = estimator.getStandardDeviationAngularRate();
+        assertEquals(wStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wStdTriad2 = new AngularSpeedTriad();
+        estimator.getStandardDeviationAngularRate(wStdTriad2);
+        assertEquals(wStdTriad1, wStdTriad2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -2578,7 +2975,6 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(m1, m2);
         assertEquals(estimator.getNumberOfProcessedSamples(), 0);
         assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
         assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
         estimator.getExpectedKinematics(kinematics2);
         assertEquals(expectedKinematics, kinematics2);
@@ -2586,7 +2982,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         // Force InvalidSourceAndDestinationFrameTypeException
         estimator = null;
         try {
-            estimator = new IMUBiasEstimator(nedPosition1,
+            estimator = new BodyKinematicsBiasEstimator(nedPosition1,
                     new CoordinateTransformation(
                             FrameType.LOCAL_NAVIGATION_FRAME,
                             FrameType.LOCAL_NAVIGATION_FRAME), this);
@@ -2626,7 +3022,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                     AngularSpeedUnit.RADIANS_PER_SECOND);
             final BodyKinematics kinematics1 = new BodyKinematics();
             final BodyKinematics kinematics2 = new BodyKinematics();
-            final Time time1 = new Time(IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+            final Time time1 = new Time(BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
                     TimeUnit.SECOND);
             final Time time2 = new Time(0.0, TimeUnit.SECOND);
             final CoordinateTransformation nedC = new CoordinateTransformation(
@@ -2650,19 +3046,18 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
             final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
                     .estimateKinematicsAndReturnNew(
-                            IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, ecefC, ecefC,
+                            BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, ecefC, ecefC,
                             0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
                             ecefPosition1);
 
 
             // test constructor
-            IMUBiasEstimator estimator = new IMUBiasEstimator(ecefPosition1, nedC,
-                    this);
+            BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator(
+                    ecefPosition1, nedC, this);
 
             // check default values
-            assertEquals(estimator.getTotalSamples(), IMUBiasEstimator.DEFAULT_TOTAL_SAMPLES);
             assertEquals(estimator.getTimeInterval(),
-                    IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, 0.0);
+                    BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, 0.0);
             assertEquals(estimator.getTimeIntervalAsTime(), time1);
             estimator.getTimeIntervalAsTime(time2);
             assertEquals(time1, time2);
@@ -2672,8 +3067,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertTrue(estimator.getEcefPosition().equals(ecefPosition1,
                     ABSOLUTE_ERROR));
             estimator.getEcefPosition(ecefPosition2);
-            assertTrue(ecefPosition1.equals(ecefPosition2,
-                    ABSOLUTE_ERROR));
+            assertTrue(ecefPosition1.equals(ecefPosition2, ABSOLUTE_ERROR));
             if (!estimator.getEcefFrame().equals(ecefFrame1, ABSOLUTE_ERROR)) {
                 continue;
             }
@@ -2720,11 +3114,22 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
             estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
             assertEquals(angularSpeed1, angularSpeed2);
-            assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-            assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                    angularSpeed1);
-            estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-            assertEquals(angularSpeed1, angularSpeed2);
+            final AccelerationTriad aTriad1 = estimator.getBiasF();
+            assertEquals(aTriad1.getValueX(), 0.0, 0.0);
+            assertEquals(aTriad1.getValueY(), 0.0, 0.0);
+            assertEquals(aTriad1.getValueZ(), 0.0, 0.0);
+            assertEquals(aTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+            final AccelerationTriad aTriad2 = new AccelerationTriad();
+            estimator.getBiasF(aTriad2);
+            assertEquals(aTriad1, aTriad2);
+            final AngularSpeedTriad wTriad1 = estimator.getBiasAngularRate();
+            assertEquals(wTriad1.getValueX(), 0.0, 0.0);
+            assertEquals(wTriad1.getValueY(), 0.0, 0.0);
+            assertEquals(wTriad1.getValueZ(), 0.0, 0.0);
+            assertEquals(wTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+            final AngularSpeedTriad wTriad2 = new AngularSpeedTriad();
+            estimator.getBiasAngularRate(wTriad2);
+            assertEquals(wTriad1, wTriad2);
             assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
             estimator.getBiasesAsBodyKinematics(kinematics2);
             assertEquals(kinematics1, kinematics2);
@@ -2746,6 +3151,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
             estimator.getStandardDeviationFzAsAcceleration(acceleration2);
             assertEquals(acceleration1, acceleration2);
+            final AccelerationTriad aStdTriad1 = estimator.getStandardDeviationF();
+            assertEquals(aStdTriad1.getValueX(), 0.0, 0.0);
+            assertEquals(aStdTriad1.getValueY(), 0.0, 0.0);
+            assertEquals(aStdTriad1.getValueZ(), 0.0, 0.0);
+            assertEquals(aStdTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+            final AccelerationTriad aStdTriad2 = new AccelerationTriad();
+            estimator.getStandardDeviationF(aStdTriad2);
+            assertEquals(aStdTriad1, aStdTriad2);
             assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
                     0.0);
             assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
@@ -2769,6 +3182,19 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                     angularSpeed1);
             estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+            assertEquals(angularSpeed1, angularSpeed2);
+            final AngularSpeedTriad wStdTriad1 = estimator.getStandardDeviationAngularRate();
+            assertEquals(wStdTriad1.getValueX(), 0.0, 0.0);
+            assertEquals(wStdTriad1.getValueY(), 0.0, 0.0);
+            assertEquals(wStdTriad1.getValueZ(), 0.0, 0.0);
+            assertEquals(wStdTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+            final AngularSpeedTriad wStdTriad2 = new AngularSpeedTriad();
+            estimator.getStandardDeviationAngularRate(wStdTriad2);
+            assertEquals(wStdTriad1, wStdTriad2);
+            assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+            assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                    angularSpeed1);
+            estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
             assertEquals(angularSpeed1, angularSpeed2);
             assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
             estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -2797,7 +3223,6 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertEquals(m1, m2);
             assertEquals(estimator.getNumberOfProcessedSamples(), 0);
             assertFalse(estimator.isRunning());
-            assertFalse(estimator.isFinished());
             assertTrue(estimator.getExpectedKinematics().equals(expectedKinematics,
                     ABSOLUTE_ERROR));
             estimator.getExpectedKinematics(kinematics2);
@@ -2806,10 +3231,10 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             // Force InvalidSourceAndDestinationFrameTypeException
             estimator = null;
             try {
-                estimator = new IMUBiasEstimator(ecefPosition1,
+                estimator = new BodyKinematicsBiasEstimator(ecefPosition1,
                         new CoordinateTransformation(
                                 FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME,
-                                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME), this);
+                                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME));
                 fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
             } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
             }
@@ -2818,12 +3243,15 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             numValid++;
             break;
         }
-
         assertTrue(numValid > 0);
     }
 
     @Test
     public void testConstructor15() throws WrongSizeException {
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double timeInterval = randomizer.nextDouble(
+                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
 
         final Acceleration acceleration1 = new Acceleration(0.0,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
@@ -2835,8 +3263,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 AngularSpeedUnit.RADIANS_PER_SECOND);
         final BodyKinematics kinematics1 = new BodyKinematics();
         final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
-                TimeUnit.SECOND);
+        final Time time1 = new Time(timeInterval, TimeUnit.SECOND);
         final Time time2 = new Time(0.0, TimeUnit.SECOND);
         final NEDFrame nedFrame1 = new NEDFrame();
         final NEDFrame nedFrame2 = new NEDFrame();
@@ -2856,24 +3283,20 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
         final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final int totalSamples = randomizer.nextInt(
-                MIN_TOTAL_SAMPLES, MAX_TOTAL_SAMPLES);
-
         final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
                 .estimateKinematicsAndReturnNew(
-                        IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, ecefC, ecefC,
+                        timeInterval, ecefC, ecefC,
                         0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
                         ecefPosition1);
 
 
         // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(totalSamples);
+        BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator(
+                timeInterval);
 
         // check default values
-        assertEquals(estimator.getTotalSamples(), totalSamples);
         assertEquals(estimator.getTimeInterval(),
-                IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, 0.0);
+                timeInterval, 0.0);
         assertEquals(estimator.getTimeIntervalAsTime(), time1);
         estimator.getTimeIntervalAsTime(time2);
         assertEquals(time1, time2);
@@ -2922,6 +3345,22 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
         estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AccelerationTriad aTriad1 = estimator.getBiasF();
+        assertEquals(aTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aTriad2 = new AccelerationTriad();
+        estimator.getBiasF(aTriad2);
+        assertEquals(aTriad1, aTriad2);
+        final AngularSpeedTriad wTriad1 = estimator.getBiasAngularRate();
+        assertEquals(wTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wTriad2 = new AngularSpeedTriad();
+        estimator.getBiasAngularRate(wTriad2);
+        assertEquals(wTriad1, wTriad2);
         assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
         estimator.getBiasesAsBodyKinematics(kinematics2);
         assertEquals(kinematics1, kinematics2);
@@ -2943,6 +3382,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad aStdTriad1 = estimator.getStandardDeviationF();
+        assertEquals(aStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aStdTriad2 = new AccelerationTriad();
+        estimator.getStandardDeviationF(aStdTriad2);
+        assertEquals(aStdTriad1, aStdTriad2);
         assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
                 0.0);
         assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
@@ -2967,6 +3414,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AngularSpeedTriad wStdTriad1 = estimator.getStandardDeviationAngularRate();
+        assertEquals(wStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wStdTriad2 = new AngularSpeedTriad();
+        estimator.getStandardDeviationAngularRate(wStdTriad2);
+        assertEquals(wStdTriad1, wStdTriad2);
         assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
         assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
                 angularSpeed1);
@@ -2999,7 +3454,6 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(m1, m2);
         assertEquals(estimator.getNumberOfProcessedSamples(), 0);
         assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
         assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
         estimator.getExpectedKinematics(kinematics2);
         assertEquals(expectedKinematics, kinematics2);
@@ -3007,7 +3461,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         // Force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new IMUBiasEstimator(0);
+            estimator = new BodyKinematicsBiasEstimator(-1.0);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -3017,6 +3471,10 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
     @Test
     public void testConstructor16() throws WrongSizeException,
             InvalidSourceAndDestinationFrameTypeException {
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double timeInterval = randomizer.nextDouble(
+                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
 
         final Acceleration acceleration1 = new Acceleration(0.0,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
@@ -3028,8 +3486,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 AngularSpeedUnit.RADIANS_PER_SECOND);
         final BodyKinematics kinematics1 = new BodyKinematics();
         final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
-                TimeUnit.SECOND);
+        final Time time1 = new Time(timeInterval, TimeUnit.SECOND);
         final Time time2 = new Time(0.0, TimeUnit.SECOND);
         final NEDFrame nedFrame1 = new NEDFrame();
         final NEDFrame nedFrame2 = new NEDFrame();
@@ -3049,7 +3506,6 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
         final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double roll = Math.toRadians(randomizer.nextDouble(
                 MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
         final double pitch = Math.toRadians(randomizer.nextDouble(
@@ -3061,23 +3517,20 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         NEDtoECEFFrameConverter.convertNEDtoECEF(nedFrame1, ecefFrame1);
         ecefFrame1.getCoordinateTransformation(ecefC);
 
-        final int totalSamples = randomizer.nextInt(
-                MIN_TOTAL_SAMPLES, MAX_TOTAL_SAMPLES);
-
         final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
                 .estimateKinematicsAndReturnNew(
-                        IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, ecefC, ecefC,
+                        timeInterval, ecefC, ecefC,
                         0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
                         ecefPosition1);
 
 
         // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(nedC, totalSamples);
+        BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator(
+                nedC, timeInterval);
 
         // check default values
-        assertEquals(estimator.getTotalSamples(), totalSamples);
         assertEquals(estimator.getTimeInterval(),
-                IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, 0.0);
+                timeInterval, 0.0);
         assertEquals(estimator.getTimeIntervalAsTime(), time1);
         estimator.getTimeIntervalAsTime(time2);
         assertEquals(time1, time2);
@@ -3126,11 +3579,22 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
         estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
+        final AccelerationTriad aTriad1 = estimator.getBiasF();
+        assertEquals(aTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aTriad2 = new AccelerationTriad();
+        estimator.getBiasF(aTriad2);
+        assertEquals(aTriad1, aTriad2);
+        final AngularSpeedTriad wTriad1 = estimator.getBiasAngularRate();
+        assertEquals(wTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wTriad2 = new AngularSpeedTriad();
+        estimator.getBiasAngularRate(wTriad2);
+        assertEquals(wTriad1, wTriad2);
         assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
         estimator.getBiasesAsBodyKinematics(kinematics2);
         assertEquals(kinematics1, kinematics2);
@@ -3152,6 +3616,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad aStdTriad1 = estimator.getStandardDeviationF();
+        assertEquals(aStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aStdTriad2 = new AccelerationTriad();
+        estimator.getStandardDeviationF(aStdTriad2);
+        assertEquals(aStdTriad1, aStdTriad2);
         assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
                 0.0);
         assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
@@ -3175,6 +3647,19 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        final AngularSpeedTriad wStdTriad1 = estimator.getStandardDeviationAngularRate();
+        assertEquals(wStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wStdTriad2 = new AngularSpeedTriad();
+        estimator.getStandardDeviationAngularRate(wStdTriad2);
+        assertEquals(wStdTriad1, wStdTriad2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -3203,7 +3688,6 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(m1, m2);
         assertEquals(estimator.getNumberOfProcessedSamples(), 0);
         assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
         assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
         estimator.getExpectedKinematics(kinematics2);
         assertEquals(expectedKinematics, kinematics2);
@@ -3211,16 +3695,16 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         // Force InvalidSourceAndDestinationFrameTypeException
         estimator = null;
         try {
-            estimator = new IMUBiasEstimator(new CoordinateTransformation(
+            estimator = new BodyKinematicsBiasEstimator(new CoordinateTransformation(
                     FrameType.LOCAL_NAVIGATION_FRAME,
-                    FrameType.LOCAL_NAVIGATION_FRAME), totalSamples);
+                    FrameType.LOCAL_NAVIGATION_FRAME), timeInterval);
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
         } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
         }
 
         // Force IllegalArgumentException
         try {
-            estimator = new IMUBiasEstimator(nedC, 0);
+            estimator = new BodyKinematicsBiasEstimator(nedC, -1.0);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -3229,7 +3713,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
     @Test
     public void testConstructor17() throws WrongSizeException {
+
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double timeInterval = randomizer.nextDouble(
+                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
+
         final double latitude = Math.toRadians(randomizer.nextDouble(
                 MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
         final double longitude = Math.toRadians(randomizer.nextDouble(
@@ -3247,8 +3735,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 AngularSpeedUnit.RADIANS_PER_SECOND);
         final BodyKinematics kinematics1 = new BodyKinematics();
         final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
-                TimeUnit.SECOND);
+        final Time time1 = new Time(timeInterval, TimeUnit.SECOND);
         final Time time2 = new Time(0.0, TimeUnit.SECOND);
         final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height);
         final NEDFrame nedFrame2 = new NEDFrame();
@@ -3268,24 +3755,20 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
         final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
 
-        final int totalSamples = randomizer.nextInt(
-                MIN_TOTAL_SAMPLES, MAX_TOTAL_SAMPLES);
-
         final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
                 .estimateKinematicsAndReturnNew(
-                        IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, ecefC, ecefC,
+                        timeInterval, ecefC, ecefC,
                         0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
                         ecefPosition1);
 
 
         // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(
-                latitude, longitude, height, totalSamples);
+        BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator(
+                latitude, longitude, height, timeInterval);
 
         // check default values
-        assertEquals(estimator.getTotalSamples(), totalSamples);
         assertEquals(estimator.getTimeInterval(),
-                IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, 0.0);
+                timeInterval, 0.0);
         assertEquals(estimator.getTimeIntervalAsTime(), time1);
         estimator.getTimeIntervalAsTime(time2);
         assertEquals(time1, time2);
@@ -3334,6 +3817,22 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
         estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AccelerationTriad aTriad1 = estimator.getBiasF();
+        assertEquals(aTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aTriad2 = new AccelerationTriad();
+        estimator.getBiasF(aTriad2);
+        assertEquals(aTriad1, aTriad2);
+        final AngularSpeedTriad wTriad1 = estimator.getBiasAngularRate();
+        assertEquals(wTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wTriad2 = new AngularSpeedTriad();
+        estimator.getBiasAngularRate(wTriad2);
+        assertEquals(wTriad1, wTriad2);
         assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
         estimator.getBiasesAsBodyKinematics(kinematics2);
         assertEquals(kinematics1, kinematics2);
@@ -3355,6 +3854,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad aStdTriad1 = estimator.getStandardDeviationF();
+        assertEquals(aStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aStdTriad2 = new AccelerationTriad();
+        estimator.getStandardDeviationF(aStdTriad2);
+        assertEquals(aStdTriad1, aStdTriad2);
         assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
                 0.0);
         assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
@@ -3379,6 +3886,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AngularSpeedTriad wStdTriad1 = estimator.getStandardDeviationAngularRate();
+        assertEquals(wStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wStdTriad2 = new AngularSpeedTriad();
+        estimator.getStandardDeviationAngularRate(wStdTriad2);
+        assertEquals(wStdTriad1, wStdTriad2);
         assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
         assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
                 angularSpeed1);
@@ -3411,7 +3926,6 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(m1, m2);
         assertEquals(estimator.getNumberOfProcessedSamples(), 0);
         assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
         assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
         estimator.getExpectedKinematics(kinematics2);
         assertEquals(expectedKinematics, kinematics2);
@@ -3419,8 +3933,9 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         // Force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new IMUBiasEstimator(latitude, longitude, height,
-                    0);
+            estimator = new BodyKinematicsBiasEstimator(
+                    latitude, longitude, height,
+                    -1.0);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -3429,7 +3944,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
     @Test
     public void testConstructor18() throws WrongSizeException {
+
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double timeInterval = randomizer.nextDouble(
+                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
+
         final Angle latitude = new Angle(randomizer.nextDouble(
                 MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs), AngleUnit.DEGREES);
         final Angle longitude = new Angle(randomizer.nextDouble(
@@ -3447,8 +3966,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 AngularSpeedUnit.RADIANS_PER_SECOND);
         final BodyKinematics kinematics1 = new BodyKinematics();
         final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
-                TimeUnit.SECOND);
+        final Time time1 = new Time(timeInterval, TimeUnit.SECOND);
         final Time time2 = new Time(0.0, TimeUnit.SECOND);
         final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height);
         final NEDFrame nedFrame2 = new NEDFrame();
@@ -3468,24 +3986,20 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
         final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
 
-        final int totalSamples = randomizer.nextInt(
-                MIN_TOTAL_SAMPLES, MAX_TOTAL_SAMPLES);
-
         final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
                 .estimateKinematicsAndReturnNew(
-                        IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, ecefC, ecefC,
+                        timeInterval, ecefC, ecefC,
                         0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
                         ecefPosition1);
 
 
         // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(latitude, longitude, height,
-                totalSamples);
+        BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator(
+                latitude, longitude, height, timeInterval);
 
         // check default values
-        assertEquals(estimator.getTotalSamples(), totalSamples);
         assertEquals(estimator.getTimeInterval(),
-                IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, 0.0);
+                timeInterval, 0.0);
         assertEquals(estimator.getTimeIntervalAsTime(), time1);
         estimator.getTimeIntervalAsTime(time2);
         assertEquals(time1, time2);
@@ -3534,6 +4048,22 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
         estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AccelerationTriad aTriad1 = estimator.getBiasF();
+        assertEquals(aTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aTriad2 = new AccelerationTriad();
+        estimator.getBiasF(aTriad2);
+        assertEquals(aTriad1, aTriad2);
+        final AngularSpeedTriad wTriad1 = estimator.getBiasAngularRate();
+        assertEquals(wTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wTriad2 = new AngularSpeedTriad();
+        estimator.getBiasAngularRate(wTriad2);
+        assertEquals(wTriad1, wTriad2);
         assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
         estimator.getBiasesAsBodyKinematics(kinematics2);
         assertEquals(kinematics1, kinematics2);
@@ -3555,6 +4085,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad aStdTriad1 = estimator.getStandardDeviationF();
+        assertEquals(aStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aStdTriad2 = new AccelerationTriad();
+        estimator.getStandardDeviationF(aStdTriad2);
+        assertEquals(aStdTriad1, aStdTriad2);
         assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
                 0.0);
         assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
@@ -3579,6 +4117,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AngularSpeedTriad wStdTriad1 = estimator.getStandardDeviationAngularRate();
+        assertEquals(wStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wStdTriad2 = new AngularSpeedTriad();
+        estimator.getStandardDeviationAngularRate(wStdTriad2);
+        assertEquals(wStdTriad1, wStdTriad2);
         assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
         assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
                 angularSpeed1);
@@ -3611,7 +4157,6 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(m1, m2);
         assertEquals(estimator.getNumberOfProcessedSamples(), 0);
         assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
         assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
         estimator.getExpectedKinematics(kinematics2);
         assertEquals(expectedKinematics, kinematics2);
@@ -3619,8 +4164,9 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         // Force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new IMUBiasEstimator(latitude, longitude, height,
-                    0);
+            estimator = new BodyKinematicsBiasEstimator(
+                    latitude, longitude, height,
+                    -1.0);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -3629,7 +4175,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
     @Test
     public void testConstructor19() throws WrongSizeException {
+
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double timeInterval = randomizer.nextDouble(
+                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
+
         final Angle latitude = new Angle(randomizer.nextDouble(
                 MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs), AngleUnit.DEGREES);
         final Angle longitude = new Angle(randomizer.nextDouble(
@@ -3648,8 +4198,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 AngularSpeedUnit.RADIANS_PER_SECOND);
         final BodyKinematics kinematics1 = new BodyKinematics();
         final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
-                TimeUnit.SECOND);
+        final Time time1 = new Time(timeInterval, TimeUnit.SECOND);
         final Time time2 = new Time(0.0, TimeUnit.SECOND);
         final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height);
         final NEDFrame nedFrame2 = new NEDFrame();
@@ -3669,24 +4218,20 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
         final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
 
-        final int totalSamples = randomizer.nextInt(
-                MIN_TOTAL_SAMPLES, MAX_TOTAL_SAMPLES);
-
         final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
                 .estimateKinematicsAndReturnNew(
-                        IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, ecefC, ecefC,
+                        timeInterval, ecefC, ecefC,
                         0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
                         ecefPosition1);
 
 
         // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(latitude, longitude, height,
-                totalSamples);
+        BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator(
+                latitude, longitude, height, timeInterval);
 
         // check default values
-        assertEquals(estimator.getTotalSamples(), totalSamples);
         assertEquals(estimator.getTimeInterval(),
-                IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, 0.0);
+                timeInterval, 0.0);
         assertEquals(estimator.getTimeIntervalAsTime(), time1);
         estimator.getTimeIntervalAsTime(time2);
         assertEquals(time1, time2);
@@ -3735,6 +4280,22 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
         estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AccelerationTriad aTriad1 = estimator.getBiasF();
+        assertEquals(aTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aTriad2 = new AccelerationTriad();
+        estimator.getBiasF(aTriad2);
+        assertEquals(aTriad1, aTriad2);
+        final AngularSpeedTriad wTriad1 = estimator.getBiasAngularRate();
+        assertEquals(wTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wTriad2 = new AngularSpeedTriad();
+        estimator.getBiasAngularRate(wTriad2);
+        assertEquals(wTriad1, wTriad2);
         assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
         estimator.getBiasesAsBodyKinematics(kinematics2);
         assertEquals(kinematics1, kinematics2);
@@ -3756,6 +4317,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad aStdTriad1 = estimator.getStandardDeviationF();
+        assertEquals(aStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aStdTriad2 = new AccelerationTriad();
+        estimator.getStandardDeviationF(aStdTriad2);
+        assertEquals(aStdTriad1, aStdTriad2);
         assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
                 0.0);
         assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
@@ -3780,6 +4349,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AngularSpeedTriad wStdTriad1 = estimator.getStandardDeviationAngularRate();
+        assertEquals(wStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wStdTriad2 = new AngularSpeedTriad();
+        estimator.getStandardDeviationAngularRate(wStdTriad2);
+        assertEquals(wStdTriad1, wStdTriad2);
         assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
         assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
                 angularSpeed1);
@@ -3812,7 +4389,6 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(m1, m2);
         assertEquals(estimator.getNumberOfProcessedSamples(), 0);
         assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
         assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
         estimator.getExpectedKinematics(kinematics2);
         assertEquals(expectedKinematics, kinematics2);
@@ -3820,8 +4396,9 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         // Force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new IMUBiasEstimator(latitude, longitude, height,
-                    0);
+            estimator = new BodyKinematicsBiasEstimator(
+                    latitude, longitude, height,
+                    -1.0);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -3832,6 +4409,9 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
     public void testConstructor20() throws WrongSizeException,
             InvalidSourceAndDestinationFrameTypeException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double timeInterval = randomizer.nextDouble(
+                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
+
         final double latitude = Math.toRadians(randomizer.nextDouble(
                 MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
         final double longitude = Math.toRadians(randomizer.nextDouble(
@@ -3856,8 +4436,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 AngularSpeedUnit.RADIANS_PER_SECOND);
         final BodyKinematics kinematics1 = new BodyKinematics();
         final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
-                TimeUnit.SECOND);
+        final Time time1 = new Time(timeInterval, TimeUnit.SECOND);
         final Time time2 = new Time(0.0, TimeUnit.SECOND);
         final CoordinateTransformation nedC = new CoordinateTransformation(
                 roll, pitch, yaw, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
@@ -3878,24 +4457,20 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
         final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
 
-        final int totalSamples = randomizer.nextInt(
-                MIN_TOTAL_SAMPLES, MAX_TOTAL_SAMPLES);
-
         final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
                 .estimateKinematicsAndReturnNew(
-                        IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, ecefC, ecefC,
+                        timeInterval, ecefC, ecefC,
                         0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
                         ecefPosition1);
 
 
         // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(nedPosition1, nedC,
-                totalSamples);
+        BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator(
+                nedPosition1, nedC, timeInterval);
 
         // check default values
-        assertEquals(estimator.getTotalSamples(), totalSamples);
         assertEquals(estimator.getTimeInterval(),
-                IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, 0.0);
+                timeInterval, 0.0);
         assertEquals(estimator.getTimeIntervalAsTime(), time1);
         estimator.getTimeIntervalAsTime(time2);
         assertEquals(time1, time2);
@@ -3944,11 +4519,22 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
         estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
+        final AccelerationTriad aTriad1 = estimator.getBiasF();
+        assertEquals(aTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aTriad2 = new AccelerationTriad();
+        estimator.getBiasF(aTriad2);
+        assertEquals(aTriad1, aTriad2);
+        final AngularSpeedTriad wTriad1 = estimator.getBiasAngularRate();
+        assertEquals(wTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wTriad2 = new AngularSpeedTriad();
+        estimator.getBiasAngularRate(wTriad2);
+        assertEquals(wTriad1, wTriad2);
         assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
         estimator.getBiasesAsBodyKinematics(kinematics2);
         assertEquals(kinematics1, kinematics2);
@@ -3970,6 +4556,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad aStdTriad1 = estimator.getStandardDeviationF();
+        assertEquals(aStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aStdTriad2 = new AccelerationTriad();
+        estimator.getStandardDeviationF(aStdTriad2);
+        assertEquals(aStdTriad1, aStdTriad2);
         assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
                 0.0);
         assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
@@ -3993,6 +4587,19 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        final AngularSpeedTriad wStdTriad1 = estimator.getStandardDeviationAngularRate();
+        assertEquals(wStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wStdTriad2 = new AngularSpeedTriad();
+        estimator.getStandardDeviationAngularRate(wStdTriad2);
+        assertEquals(wStdTriad1, wStdTriad2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -4021,7 +4628,6 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(m1, m2);
         assertEquals(estimator.getNumberOfProcessedSamples(), 0);
         assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
         assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
         estimator.getExpectedKinematics(kinematics2);
         assertEquals(expectedKinematics, kinematics2);
@@ -4029,15 +4635,18 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         // Force InvalidSourceAndDestinationFrameTypeException
         estimator = null;
         try {
-            estimator = new IMUBiasEstimator(nedPosition1, new CoordinateTransformation(
-                    FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME));
+            estimator = new BodyKinematicsBiasEstimator(nedPosition1,
+                    new CoordinateTransformation(
+                            FrameType.LOCAL_NAVIGATION_FRAME,
+                            FrameType.LOCAL_NAVIGATION_FRAME), timeInterval);
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
         } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
         }
 
         // Force IllegalArgumentException
         try {
-            estimator = new IMUBiasEstimator(nedPosition1, nedC, 0);
+            estimator = new BodyKinematicsBiasEstimator(nedPosition1,
+                    nedC, -1.0);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -4050,6 +4659,9 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            final double timeInterval = randomizer.nextDouble(
+                    MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
+
             final double latitude = Math.toRadians(randomizer.nextDouble(
                     MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
             final double longitude = Math.toRadians(randomizer.nextDouble(
@@ -4074,8 +4686,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                     AngularSpeedUnit.RADIANS_PER_SECOND);
             final BodyKinematics kinematics1 = new BodyKinematics();
             final BodyKinematics kinematics2 = new BodyKinematics();
-            final Time time1 = new Time(IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
-                    TimeUnit.SECOND);
+            final Time time1 = new Time(timeInterval, TimeUnit.SECOND);
             final Time time2 = new Time(0.0, TimeUnit.SECOND);
             final CoordinateTransformation nedC = new CoordinateTransformation(
                     roll, pitch, yaw, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
@@ -4096,24 +4707,19 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
             final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
 
-            final int totalSamples = randomizer.nextInt(
-                    MIN_TOTAL_SAMPLES, MAX_TOTAL_SAMPLES);
-
             final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
                     .estimateKinematicsAndReturnNew(
-                            IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, ecefC, ecefC,
+                            timeInterval, ecefC, ecefC,
                             0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
                             ecefPosition1);
 
 
             // test constructor
-            IMUBiasEstimator estimator = new IMUBiasEstimator(ecefPosition1, nedC,
-                    totalSamples);
+            BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator(
+                    ecefPosition1, nedC, timeInterval);
 
             // check default values
-            assertEquals(estimator.getTotalSamples(), totalSamples);
-            assertEquals(estimator.getTimeInterval(),
-                    IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, 0.0);
+            assertEquals(estimator.getTimeInterval(), timeInterval, 0.0);
             assertEquals(estimator.getTimeIntervalAsTime(), time1);
             estimator.getTimeIntervalAsTime(time2);
             assertEquals(time1, time2);
@@ -4123,19 +4729,18 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertTrue(estimator.getEcefPosition().equals(ecefPosition1,
                     ABSOLUTE_ERROR));
             estimator.getEcefPosition(ecefPosition2);
-            assertTrue(ecefPosition1.equals(ecefPosition2,
-                    ABSOLUTE_ERROR));
+            assertTrue(ecefPosition1.equals(ecefPosition2, ABSOLUTE_ERROR));
             if (!estimator.getEcefFrame().equals(ecefFrame1, ABSOLUTE_ERROR)) {
                 continue;
             }
-            assertTrue(estimator.getEcefFrame().equals(ecefFrame1,
-                    ABSOLUTE_ERROR));
+            assertTrue(estimator.getEcefFrame().equals(ecefFrame1, ABSOLUTE_ERROR));
             estimator.getEcefFrame(ecefFrame2);
             assertTrue(ecefFrame2.equals(ecefFrame1, ABSOLUTE_ERROR));
             assertTrue(estimator.getNedFrame().equals(nedFrame1, ABSOLUTE_ERROR));
             estimator.getNedFrame(nedFrame2);
             assertTrue(nedFrame1.equals(nedFrame2, ABSOLUTE_ERROR));
-            assertTrue(estimator.getNedPosition().equals(nedPosition1, ABSOLUTE_ERROR));
+            assertTrue(estimator.getNedPosition().equals(nedPosition1,
+                    ABSOLUTE_ERROR));
             estimator.getNedPosition(nedPosition2);
             assertTrue(nedPosition1.equals(nedPosition2, ABSOLUTE_ERROR));
             assertTrue(estimator.getEcefC().equals(ecefC, ABSOLUTE_ERROR));
@@ -4171,11 +4776,22 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
             estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
             assertEquals(angularSpeed1, angularSpeed2);
-            assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-            assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                    angularSpeed1);
-            estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-            assertEquals(angularSpeed1, angularSpeed2);
+            final AccelerationTriad aTriad1 = estimator.getBiasF();
+            assertEquals(aTriad1.getValueX(), 0.0, 0.0);
+            assertEquals(aTriad1.getValueY(), 0.0, 0.0);
+            assertEquals(aTriad1.getValueZ(), 0.0, 0.0);
+            assertEquals(aTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+            final AccelerationTriad aTriad2 = new AccelerationTriad();
+            estimator.getBiasF(aTriad2);
+            assertEquals(aTriad1, aTriad2);
+            final AngularSpeedTriad wTriad1 = estimator.getBiasAngularRate();
+            assertEquals(wTriad1.getValueX(), 0.0, 0.0);
+            assertEquals(wTriad1.getValueY(), 0.0, 0.0);
+            assertEquals(wTriad1.getValueZ(), 0.0, 0.0);
+            assertEquals(wTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+            final AngularSpeedTriad wTriad2 = new AngularSpeedTriad();
+            estimator.getBiasAngularRate(wTriad2);
+            assertEquals(wTriad1, wTriad2);
             assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
             estimator.getBiasesAsBodyKinematics(kinematics2);
             assertEquals(kinematics1, kinematics2);
@@ -4197,6 +4813,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
             estimator.getStandardDeviationFzAsAcceleration(acceleration2);
             assertEquals(acceleration1, acceleration2);
+            final AccelerationTriad aStdTriad1 = estimator.getStandardDeviationF();
+            assertEquals(aStdTriad1.getValueX(), 0.0, 0.0);
+            assertEquals(aStdTriad1.getValueY(), 0.0, 0.0);
+            assertEquals(aStdTriad1.getValueZ(), 0.0, 0.0);
+            assertEquals(aStdTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+            final AccelerationTriad aStdTriad2 = new AccelerationTriad();
+            estimator.getStandardDeviationF(aStdTriad2);
+            assertEquals(aStdTriad1, aStdTriad2);
             assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
                     0.0);
             assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
@@ -4220,6 +4844,19 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                     angularSpeed1);
             estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+            assertEquals(angularSpeed1, angularSpeed2);
+            final AngularSpeedTriad wStdTriad1 = estimator.getStandardDeviationAngularRate();
+            assertEquals(wStdTriad1.getValueX(), 0.0, 0.0);
+            assertEquals(wStdTriad1.getValueY(), 0.0, 0.0);
+            assertEquals(wStdTriad1.getValueZ(), 0.0, 0.0);
+            assertEquals(wStdTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+            final AngularSpeedTriad wStdTriad2 = new AngularSpeedTriad();
+            estimator.getStandardDeviationAngularRate(wStdTriad2);
+            assertEquals(wStdTriad1, wStdTriad2);
+            assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+            assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                    angularSpeed1);
+            estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
             assertEquals(angularSpeed1, angularSpeed2);
             assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
             estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -4248,7 +4885,6 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertEquals(m1, m2);
             assertEquals(estimator.getNumberOfProcessedSamples(), 0);
             assertFalse(estimator.isRunning());
-            assertFalse(estimator.isFinished());
             assertTrue(estimator.getExpectedKinematics().equals(expectedKinematics,
                     ABSOLUTE_ERROR));
             estimator.getExpectedKinematics(kinematics2);
@@ -4257,17 +4893,19 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             // Force InvalidSourceAndDestinationFrameTypeException
             estimator = null;
             try {
-                estimator = new IMUBiasEstimator(ecefPosition1,
+                estimator = new BodyKinematicsBiasEstimator(ecefPosition1,
                         new CoordinateTransformation(
                                 FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME,
-                                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME));
+                                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME),
+                        timeInterval);
                 fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
             } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
             }
 
             // Force IllegalArgumentException
             try {
-                estimator = new IMUBiasEstimator(ecefPosition1, nedC, 0);
+                estimator = new BodyKinematicsBiasEstimator(ecefPosition1, nedC,
+                        -1.0);
                 fail("IllegalArgumentException expected but not thrown");
             } catch (final IllegalArgumentException ignore) {
             }
@@ -4282,6 +4920,10 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
     @Test
     public void testConstructor22() throws WrongSizeException {
 
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double timeInterval = randomizer.nextDouble(
+                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
+
         final Acceleration acceleration1 = new Acceleration(0.0,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
         final Acceleration acceleration2 = new Acceleration(0.0,
@@ -4292,8 +4934,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 AngularSpeedUnit.RADIANS_PER_SECOND);
         final BodyKinematics kinematics1 = new BodyKinematics();
         final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
-                TimeUnit.SECOND);
+        final Time time1 = new Time(timeInterval, TimeUnit.SECOND);
         final Time time2 = new Time(0.0, TimeUnit.SECOND);
         final NEDFrame nedFrame1 = new NEDFrame();
         final NEDFrame nedFrame2 = new NEDFrame();
@@ -4313,24 +4954,20 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
         final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final int totalSamples = randomizer.nextInt(
-                MIN_TOTAL_SAMPLES, MAX_TOTAL_SAMPLES);
-
         final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
                 .estimateKinematicsAndReturnNew(
-                        IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, ecefC, ecefC,
+                        timeInterval, ecefC, ecefC,
                         0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
                         ecefPosition1);
 
 
         // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(totalSamples, this);
+        BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator(
+                timeInterval, this);
 
         // check default values
-        assertEquals(estimator.getTotalSamples(), totalSamples);
         assertEquals(estimator.getTimeInterval(),
-                IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, 0.0);
+                timeInterval, 0.0);
         assertEquals(estimator.getTimeIntervalAsTime(), time1);
         estimator.getTimeIntervalAsTime(time2);
         assertEquals(time1, time2);
@@ -4379,6 +5016,22 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
         estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AccelerationTriad aTriad1 = estimator.getBiasF();
+        assertEquals(aTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aTriad2 = new AccelerationTriad();
+        estimator.getBiasF(aTriad2);
+        assertEquals(aTriad1, aTriad2);
+        final AngularSpeedTriad wTriad1 = estimator.getBiasAngularRate();
+        assertEquals(wTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wTriad2 = new AngularSpeedTriad();
+        estimator.getBiasAngularRate(wTriad2);
+        assertEquals(wTriad1, wTriad2);
         assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
         estimator.getBiasesAsBodyKinematics(kinematics2);
         assertEquals(kinematics1, kinematics2);
@@ -4400,6 +5053,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad aStdTriad1 = estimator.getStandardDeviationF();
+        assertEquals(aStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aStdTriad2 = new AccelerationTriad();
+        estimator.getStandardDeviationF(aStdTriad2);
+        assertEquals(aStdTriad1, aStdTriad2);
         assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
                 0.0);
         assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
@@ -4424,6 +5085,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AngularSpeedTriad wStdTriad1 = estimator.getStandardDeviationAngularRate();
+        assertEquals(wStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wStdTriad2 = new AngularSpeedTriad();
+        estimator.getStandardDeviationAngularRate(wStdTriad2);
+        assertEquals(wStdTriad1, wStdTriad2);
         assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
         assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
                 angularSpeed1);
@@ -4456,7 +5125,6 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(m1, m2);
         assertEquals(estimator.getNumberOfProcessedSamples(), 0);
         assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
         assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
         estimator.getExpectedKinematics(kinematics2);
         assertEquals(expectedKinematics, kinematics2);
@@ -4464,7 +5132,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         // Force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new IMUBiasEstimator(0, this);
+            estimator = new BodyKinematicsBiasEstimator(-1.0);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -4474,6 +5142,10 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
     @Test
     public void testConstructor23() throws WrongSizeException,
             InvalidSourceAndDestinationFrameTypeException {
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double timeInterval = randomizer.nextDouble(
+                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
 
         final Acceleration acceleration1 = new Acceleration(0.0,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
@@ -4485,8 +5157,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 AngularSpeedUnit.RADIANS_PER_SECOND);
         final BodyKinematics kinematics1 = new BodyKinematics();
         final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
-                TimeUnit.SECOND);
+        final Time time1 = new Time(timeInterval, TimeUnit.SECOND);
         final Time time2 = new Time(0.0, TimeUnit.SECOND);
         final NEDFrame nedFrame1 = new NEDFrame();
         final NEDFrame nedFrame2 = new NEDFrame();
@@ -4506,7 +5177,6 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
         final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double roll = Math.toRadians(randomizer.nextDouble(
                 MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
         final double pitch = Math.toRadians(randomizer.nextDouble(
@@ -4518,24 +5188,20 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         NEDtoECEFFrameConverter.convertNEDtoECEF(nedFrame1, ecefFrame1);
         ecefFrame1.getCoordinateTransformation(ecefC);
 
-        final int totalSamples = randomizer.nextInt(
-                MIN_TOTAL_SAMPLES, MAX_TOTAL_SAMPLES);
-
         final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
                 .estimateKinematicsAndReturnNew(
-                        IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, ecefC, ecefC,
+                        timeInterval, ecefC, ecefC,
                         0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
                         ecefPosition1);
 
 
         // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(nedC, totalSamples,
-                this);
+        BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator(
+                nedC, timeInterval, this);
 
         // check default values
-        assertEquals(estimator.getTotalSamples(), totalSamples);
         assertEquals(estimator.getTimeInterval(),
-                IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, 0.0);
+                timeInterval, 0.0);
         assertEquals(estimator.getTimeIntervalAsTime(), time1);
         estimator.getTimeIntervalAsTime(time2);
         assertEquals(time1, time2);
@@ -4584,6 +5250,22 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
         estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AccelerationTriad aTriad1 = estimator.getBiasF();
+        assertEquals(aTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aTriad2 = new AccelerationTriad();
+        estimator.getBiasF(aTriad2);
+        assertEquals(aTriad1, aTriad2);
+        final AngularSpeedTriad wTriad1 = estimator.getBiasAngularRate();
+        assertEquals(wTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wTriad2 = new AngularSpeedTriad();
+        estimator.getBiasAngularRate(wTriad2);
+        assertEquals(wTriad1, wTriad2);
         assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
         estimator.getBiasesAsBodyKinematics(kinematics2);
         assertEquals(kinematics1, kinematics2);
@@ -4605,6 +5287,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad aStdTriad1 = estimator.getStandardDeviationF();
+        assertEquals(aStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aStdTriad2 = new AccelerationTriad();
+        estimator.getStandardDeviationF(aStdTriad2);
+        assertEquals(aStdTriad1, aStdTriad2);
         assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
                 0.0);
         assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
@@ -4629,6 +5319,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AngularSpeedTriad wStdTriad1 = estimator.getStandardDeviationAngularRate();
+        assertEquals(wStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wStdTriad2 = new AngularSpeedTriad();
+        estimator.getStandardDeviationAngularRate(wStdTriad2);
+        assertEquals(wStdTriad1, wStdTriad2);
         assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
         assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
                 angularSpeed1);
@@ -4661,7 +5359,6 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(m1, m2);
         assertEquals(estimator.getNumberOfProcessedSamples(), 0);
         assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
         assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
         estimator.getExpectedKinematics(kinematics2);
         assertEquals(expectedKinematics, kinematics2);
@@ -4669,16 +5366,16 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         // Force InvalidSourceAndDestinationFrameTypeException
         estimator = null;
         try {
-            estimator = new IMUBiasEstimator(new CoordinateTransformation(
+            estimator = new BodyKinematicsBiasEstimator(new CoordinateTransformation(
                     FrameType.LOCAL_NAVIGATION_FRAME,
-                    FrameType.LOCAL_NAVIGATION_FRAME), this);
+                    FrameType.LOCAL_NAVIGATION_FRAME), timeInterval);
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
         } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
         }
 
         // Force IllegalArgumentException
         try {
-            estimator = new IMUBiasEstimator(nedC, 0, this);
+            estimator = new BodyKinematicsBiasEstimator(nedC, -1.0);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -4688,13 +5385,15 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
     @Test
     public void testConstructor24() throws WrongSizeException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double timeInterval = randomizer.nextDouble(
+                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
+
         final double latitude = Math.toRadians(randomizer.nextDouble(
                 MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
         final double longitude = Math.toRadians(randomizer.nextDouble(
                 MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
 
-
         final Acceleration acceleration1 = new Acceleration(0.0,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
         final Acceleration acceleration2 = new Acceleration(0.0,
@@ -4705,8 +5404,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 AngularSpeedUnit.RADIANS_PER_SECOND);
         final BodyKinematics kinematics1 = new BodyKinematics();
         final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
-                TimeUnit.SECOND);
+        final Time time1 = new Time(timeInterval, TimeUnit.SECOND);
         final Time time2 = new Time(0.0, TimeUnit.SECOND);
         final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height);
         final NEDFrame nedFrame2 = new NEDFrame();
@@ -4726,24 +5424,20 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
         final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
 
-        final int totalSamples = randomizer.nextInt(
-                MIN_TOTAL_SAMPLES, MAX_TOTAL_SAMPLES);
-
         final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
                 .estimateKinematicsAndReturnNew(
-                        IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, ecefC, ecefC,
+                        timeInterval, ecefC, ecefC,
                         0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
                         ecefPosition1);
 
 
         // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(
-                latitude, longitude, height, totalSamples, this);
+        BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator(
+                latitude, longitude, height, timeInterval, this);
 
         // check default values
-        assertEquals(estimator.getTotalSamples(), totalSamples);
         assertEquals(estimator.getTimeInterval(),
-                IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, 0.0);
+                timeInterval, 0.0);
         assertEquals(estimator.getTimeIntervalAsTime(), time1);
         estimator.getTimeIntervalAsTime(time2);
         assertEquals(time1, time2);
@@ -4792,6 +5486,22 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
         estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AccelerationTriad aTriad1 = estimator.getBiasF();
+        assertEquals(aTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aTriad2 = new AccelerationTriad();
+        estimator.getBiasF(aTriad2);
+        assertEquals(aTriad1, aTriad2);
+        final AngularSpeedTriad wTriad1 = estimator.getBiasAngularRate();
+        assertEquals(wTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wTriad2 = new AngularSpeedTriad();
+        estimator.getBiasAngularRate(wTriad2);
+        assertEquals(wTriad1, wTriad2);
         assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
         estimator.getBiasesAsBodyKinematics(kinematics2);
         assertEquals(kinematics1, kinematics2);
@@ -4813,6 +5523,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad aStdTriad1 = estimator.getStandardDeviationF();
+        assertEquals(aStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aStdTriad2 = new AccelerationTriad();
+        estimator.getStandardDeviationF(aStdTriad2);
+        assertEquals(aStdTriad1, aStdTriad2);
         assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
                 0.0);
         assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
@@ -4837,6 +5555,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AngularSpeedTriad wStdTriad1 = estimator.getStandardDeviationAngularRate();
+        assertEquals(wStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wStdTriad2 = new AngularSpeedTriad();
+        estimator.getStandardDeviationAngularRate(wStdTriad2);
+        assertEquals(wStdTriad1, wStdTriad2);
         assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
         assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
                 angularSpeed1);
@@ -4869,32 +5595,23 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(m1, m2);
         assertEquals(estimator.getNumberOfProcessedSamples(), 0);
         assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
         assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
         estimator.getExpectedKinematics(kinematics2);
         assertEquals(expectedKinematics, kinematics2);
-
-        // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = new IMUBiasEstimator(latitude, longitude, height,
-                    0, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
     }
 
     @Test
     public void testConstructor25() throws WrongSizeException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double timeInterval = randomizer.nextDouble(
+                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
+
         final Angle latitude = new Angle(randomizer.nextDouble(
                 MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs), AngleUnit.DEGREES);
         final Angle longitude = new Angle(randomizer.nextDouble(
                 MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES), AngleUnit.DEGREES);
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
 
-
         final Acceleration acceleration1 = new Acceleration(0.0,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
         final Acceleration acceleration2 = new Acceleration(0.0,
@@ -4905,8 +5622,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 AngularSpeedUnit.RADIANS_PER_SECOND);
         final BodyKinematics kinematics1 = new BodyKinematics();
         final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
-                TimeUnit.SECOND);
+        final Time time1 = new Time(timeInterval, TimeUnit.SECOND);
         final Time time2 = new Time(0.0, TimeUnit.SECOND);
         final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height);
         final NEDFrame nedFrame2 = new NEDFrame();
@@ -4926,24 +5642,20 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
         final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
 
-        final int totalSamples = randomizer.nextInt(
-                MIN_TOTAL_SAMPLES, MAX_TOTAL_SAMPLES);
-
         final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
                 .estimateKinematicsAndReturnNew(
-                        IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, ecefC, ecefC,
+                        timeInterval, ecefC, ecefC,
                         0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
                         ecefPosition1);
 
 
         // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(latitude, longitude, height,
-                totalSamples, this);
+        BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator(
+                latitude, longitude, height, timeInterval, this);
 
         // check default values
-        assertEquals(estimator.getTotalSamples(), totalSamples);
         assertEquals(estimator.getTimeInterval(),
-                IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, 0.0);
+                timeInterval, 0.0);
         assertEquals(estimator.getTimeIntervalAsTime(), time1);
         estimator.getTimeIntervalAsTime(time2);
         assertEquals(time1, time2);
@@ -4992,6 +5704,22 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
         estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AccelerationTriad aTriad1 = estimator.getBiasF();
+        assertEquals(aTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aTriad2 = new AccelerationTriad();
+        estimator.getBiasF(aTriad2);
+        assertEquals(aTriad1, aTriad2);
+        final AngularSpeedTriad wTriad1 = estimator.getBiasAngularRate();
+        assertEquals(wTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wTriad2 = new AngularSpeedTriad();
+        estimator.getBiasAngularRate(wTriad2);
+        assertEquals(wTriad1, wTriad2);
         assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
         estimator.getBiasesAsBodyKinematics(kinematics2);
         assertEquals(kinematics1, kinematics2);
@@ -5013,6 +5741,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad aStdTriad1 = estimator.getStandardDeviationF();
+        assertEquals(aStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aStdTriad2 = new AccelerationTriad();
+        estimator.getStandardDeviationF(aStdTriad2);
+        assertEquals(aStdTriad1, aStdTriad2);
         assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
                 0.0);
         assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
@@ -5037,6 +5773,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AngularSpeedTriad wStdTriad1 = estimator.getStandardDeviationAngularRate();
+        assertEquals(wStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wStdTriad2 = new AngularSpeedTriad();
+        estimator.getStandardDeviationAngularRate(wStdTriad2);
+        assertEquals(wStdTriad1, wStdTriad2);
         assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
         assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
                 angularSpeed1);
@@ -5069,7 +5813,6 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(m1, m2);
         assertEquals(estimator.getNumberOfProcessedSamples(), 0);
         assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
         assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
         estimator.getExpectedKinematics(kinematics2);
         assertEquals(expectedKinematics, kinematics2);
@@ -5077,8 +5820,9 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         // Force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new IMUBiasEstimator(latitude, longitude, height,
-                    0, this);
+            estimator = new BodyKinematicsBiasEstimator(
+                    latitude, longitude, height,
+                    -1.0, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -5088,6 +5832,9 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
     @Test
     public void testConstructor26() throws WrongSizeException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double timeInterval = randomizer.nextDouble(
+                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
+
         final Angle latitude = new Angle(randomizer.nextDouble(
                 MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs), AngleUnit.DEGREES);
         final Angle longitude = new Angle(randomizer.nextDouble(
@@ -5106,8 +5853,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 AngularSpeedUnit.RADIANS_PER_SECOND);
         final BodyKinematics kinematics1 = new BodyKinematics();
         final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
-                TimeUnit.SECOND);
+        final Time time1 = new Time(timeInterval, TimeUnit.SECOND);
         final Time time2 = new Time(0.0, TimeUnit.SECOND);
         final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height);
         final NEDFrame nedFrame2 = new NEDFrame();
@@ -5127,24 +5873,20 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
         final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
 
-        final int totalSamples = randomizer.nextInt(
-                MIN_TOTAL_SAMPLES, MAX_TOTAL_SAMPLES);
-
         final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
                 .estimateKinematicsAndReturnNew(
-                        IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, ecefC, ecefC,
+                        timeInterval, ecefC, ecefC,
                         0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
                         ecefPosition1);
 
 
         // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(latitude, longitude, height,
-                totalSamples, this);
+        BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator(
+                latitude, longitude, height, timeInterval, this);
 
         // check default values
-        assertEquals(estimator.getTotalSamples(), totalSamples);
         assertEquals(estimator.getTimeInterval(),
-                IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, 0.0);
+                timeInterval, 0.0);
         assertEquals(estimator.getTimeIntervalAsTime(), time1);
         estimator.getTimeIntervalAsTime(time2);
         assertEquals(time1, time2);
@@ -5193,6 +5935,22 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
         estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AccelerationTriad aTriad1 = estimator.getBiasF();
+        assertEquals(aTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aTriad2 = new AccelerationTriad();
+        estimator.getBiasF(aTriad2);
+        assertEquals(aTriad1, aTriad2);
+        final AngularSpeedTriad wTriad1 = estimator.getBiasAngularRate();
+        assertEquals(wTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wTriad2 = new AngularSpeedTriad();
+        estimator.getBiasAngularRate(wTriad2);
+        assertEquals(wTriad1, wTriad2);
         assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
         estimator.getBiasesAsBodyKinematics(kinematics2);
         assertEquals(kinematics1, kinematics2);
@@ -5214,6 +5972,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad aStdTriad1 = estimator.getStandardDeviationF();
+        assertEquals(aStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aStdTriad2 = new AccelerationTriad();
+        estimator.getStandardDeviationF(aStdTriad2);
+        assertEquals(aStdTriad1, aStdTriad2);
         assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
                 0.0);
         assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
@@ -5238,6 +6004,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AngularSpeedTriad wStdTriad1 = estimator.getStandardDeviationAngularRate();
+        assertEquals(wStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wStdTriad2 = new AngularSpeedTriad();
+        estimator.getStandardDeviationAngularRate(wStdTriad2);
+        assertEquals(wStdTriad1, wStdTriad2);
         assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
         assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
                 angularSpeed1);
@@ -5270,7 +6044,6 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(m1, m2);
         assertEquals(estimator.getNumberOfProcessedSamples(), 0);
         assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
         assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
         estimator.getExpectedKinematics(kinematics2);
         assertEquals(expectedKinematics, kinematics2);
@@ -5278,8 +6051,9 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         // Force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new IMUBiasEstimator(latitude, longitude, height,
-                    0, this);
+            estimator = new BodyKinematicsBiasEstimator(
+                    latitude, longitude, height,
+                    -1.0, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -5290,6 +6064,9 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
     public void testConstructor27() throws WrongSizeException,
             InvalidSourceAndDestinationFrameTypeException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double timeInterval = randomizer.nextDouble(
+                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
+
         final double latitude = Math.toRadians(randomizer.nextDouble(
                 MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
         final double longitude = Math.toRadians(randomizer.nextDouble(
@@ -5314,8 +6091,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 AngularSpeedUnit.RADIANS_PER_SECOND);
         final BodyKinematics kinematics1 = new BodyKinematics();
         final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
-                TimeUnit.SECOND);
+        final Time time1 = new Time(timeInterval, TimeUnit.SECOND);
         final Time time2 = new Time(0.0, TimeUnit.SECOND);
         final CoordinateTransformation nedC = new CoordinateTransformation(
                 roll, pitch, yaw, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
@@ -5336,24 +6112,19 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
         final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
 
-        final int totalSamples = randomizer.nextInt(
-                MIN_TOTAL_SAMPLES, MAX_TOTAL_SAMPLES);
-
         final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
                 .estimateKinematicsAndReturnNew(
-                        IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, ecefC, ecefC,
+                        timeInterval, ecefC, ecefC,
                         0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
                         ecefPosition1);
 
 
         // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(nedPosition1, nedC,
-                totalSamples, this);
+        BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator(
+                nedPosition1, nedC, timeInterval, this);
 
         // check default values
-        assertEquals(estimator.getTotalSamples(), totalSamples);
-        assertEquals(estimator.getTimeInterval(),
-                IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, 0.0);
+        assertEquals(estimator.getTimeInterval(), timeInterval, 0.0);
         assertEquals(estimator.getTimeIntervalAsTime(), time1);
         estimator.getTimeIntervalAsTime(time2);
         assertEquals(time1, time2);
@@ -5402,6 +6173,22 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
         estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AccelerationTriad aTriad1 = estimator.getBiasF();
+        assertEquals(aTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aTriad2 = new AccelerationTriad();
+        estimator.getBiasF(aTriad2);
+        assertEquals(aTriad1, aTriad2);
+        final AngularSpeedTriad wTriad1 = estimator.getBiasAngularRate();
+        assertEquals(wTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wTriad2 = new AngularSpeedTriad();
+        estimator.getBiasAngularRate(wTriad2);
+        assertEquals(wTriad1, wTriad2);
         assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
         estimator.getBiasesAsBodyKinematics(kinematics2);
         assertEquals(kinematics1, kinematics2);
@@ -5423,6 +6210,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad aStdTriad1 = estimator.getStandardDeviationF();
+        assertEquals(aStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aStdTriad2 = new AccelerationTriad();
+        estimator.getStandardDeviationF(aStdTriad2);
+        assertEquals(aStdTriad1, aStdTriad2);
         assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
                 0.0);
         assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
@@ -5447,6 +6242,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AngularSpeedTriad wStdTriad1 = estimator.getStandardDeviationAngularRate();
+        assertEquals(wStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wStdTriad2 = new AngularSpeedTriad();
+        estimator.getStandardDeviationAngularRate(wStdTriad2);
+        assertEquals(wStdTriad1, wStdTriad2);
         assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
         assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
                 angularSpeed1);
@@ -5479,7 +6282,6 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(m1, m2);
         assertEquals(estimator.getNumberOfProcessedSamples(), 0);
         assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
         assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
         estimator.getExpectedKinematics(kinematics2);
         assertEquals(expectedKinematics, kinematics2);
@@ -5487,18 +6289,19 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         // Force InvalidSourceAndDestinationFrameTypeException
         estimator = null;
         try {
-            estimator = new IMUBiasEstimator(nedPosition1,
+            estimator = new BodyKinematicsBiasEstimator(nedPosition1,
                     new CoordinateTransformation(
                             FrameType.LOCAL_NAVIGATION_FRAME,
-                            FrameType.LOCAL_NAVIGATION_FRAME), this);
+                            FrameType.LOCAL_NAVIGATION_FRAME),
+                    timeInterval, this);
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
         } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
         }
 
         // Force IllegalArgumentException
         try {
-            estimator = new IMUBiasEstimator(ecefPosition1, nedC,
-                    0, this);
+            estimator = new BodyKinematicsBiasEstimator(nedPosition1, nedC,
+                    -1.0, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -5511,6 +6314,9 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            final double timeInterval = randomizer.nextDouble(
+                    MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
+
             final double latitude = Math.toRadians(randomizer.nextDouble(
                     MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
             final double longitude = Math.toRadians(randomizer.nextDouble(
@@ -5535,8 +6341,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                     AngularSpeedUnit.RADIANS_PER_SECOND);
             final BodyKinematics kinematics1 = new BodyKinematics();
             final BodyKinematics kinematics2 = new BodyKinematics();
-            final Time time1 = new Time(IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
-                    TimeUnit.SECOND);
+            final Time time1 = new Time(timeInterval, TimeUnit.SECOND);
             final Time time2 = new Time(0.0, TimeUnit.SECOND);
             final CoordinateTransformation nedC = new CoordinateTransformation(
                     roll, pitch, yaw, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
@@ -5557,24 +6362,20 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
             final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
 
-            final int totalSamples = randomizer.nextInt(
-                    MIN_TOTAL_SAMPLES, MAX_TOTAL_SAMPLES);
-
             final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
                     .estimateKinematicsAndReturnNew(
-                            IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, ecefC, ecefC,
+                            timeInterval, ecefC, ecefC,
                             0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
                             ecefPosition1);
 
 
             // test constructor
-            IMUBiasEstimator estimator = new IMUBiasEstimator(ecefPosition1, nedC,
-                    totalSamples, this);
+            BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator(
+                    ecefPosition1, nedC, timeInterval, this);
 
             // check default values
-            assertEquals(estimator.getTotalSamples(), totalSamples);
             assertEquals(estimator.getTimeInterval(),
-                    IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, 0.0);
+                    timeInterval, 0.0);
             assertEquals(estimator.getTimeIntervalAsTime(), time1);
             estimator.getTimeIntervalAsTime(time2);
             assertEquals(time1, time2);
@@ -5584,8 +6385,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertTrue(estimator.getEcefPosition().equals(ecefPosition1,
                     ABSOLUTE_ERROR));
             estimator.getEcefPosition(ecefPosition2);
-            assertTrue(ecefPosition1.equals(ecefPosition2,
-                    ABSOLUTE_ERROR));
+            assertTrue(ecefPosition1.equals(ecefPosition2, ABSOLUTE_ERROR));
             if (!estimator.getEcefFrame().equals(ecefFrame1, ABSOLUTE_ERROR)) {
                 continue;
             }
@@ -5595,7 +6395,8 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertTrue(estimator.getNedFrame().equals(nedFrame1, ABSOLUTE_ERROR));
             estimator.getNedFrame(nedFrame2);
             assertTrue(nedFrame1.equals(nedFrame2, ABSOLUTE_ERROR));
-            assertTrue(estimator.getNedPosition().equals(nedPosition1, ABSOLUTE_ERROR));
+            assertTrue(estimator.getNedPosition().equals(nedPosition1,
+                    ABSOLUTE_ERROR));
             estimator.getNedPosition(nedPosition2);
             assertTrue(nedPosition1.equals(nedPosition2, ABSOLUTE_ERROR));
             assertTrue(estimator.getEcefC().equals(ecefC, ABSOLUTE_ERROR));
@@ -5631,11 +6432,22 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
             estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
             assertEquals(angularSpeed1, angularSpeed2);
-            assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-            assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                    angularSpeed1);
-            estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-            assertEquals(angularSpeed1, angularSpeed2);
+            final AccelerationTriad aTriad1 = estimator.getBiasF();
+            assertEquals(aTriad1.getValueX(), 0.0, 0.0);
+            assertEquals(aTriad1.getValueY(), 0.0, 0.0);
+            assertEquals(aTriad1.getValueZ(), 0.0, 0.0);
+            assertEquals(aTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+            final AccelerationTriad aTriad2 = new AccelerationTriad();
+            estimator.getBiasF(aTriad2);
+            assertEquals(aTriad1, aTriad2);
+            final AngularSpeedTriad wTriad1 = estimator.getBiasAngularRate();
+            assertEquals(wTriad1.getValueX(), 0.0, 0.0);
+            assertEquals(wTriad1.getValueY(), 0.0, 0.0);
+            assertEquals(wTriad1.getValueZ(), 0.0, 0.0);
+            assertEquals(wTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+            final AngularSpeedTriad wTriad2 = new AngularSpeedTriad();
+            estimator.getBiasAngularRate(wTriad2);
+            assertEquals(wTriad1, wTriad2);
             assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
             estimator.getBiasesAsBodyKinematics(kinematics2);
             assertEquals(kinematics1, kinematics2);
@@ -5657,6 +6469,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
             estimator.getStandardDeviationFzAsAcceleration(acceleration2);
             assertEquals(acceleration1, acceleration2);
+            final AccelerationTriad aStdTriad1 = estimator.getStandardDeviationF();
+            assertEquals(aStdTriad1.getValueX(), 0.0, 0.0);
+            assertEquals(aStdTriad1.getValueY(), 0.0, 0.0);
+            assertEquals(aStdTriad1.getValueZ(), 0.0, 0.0);
+            assertEquals(aStdTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+            final AccelerationTriad aStdTriad2 = new AccelerationTriad();
+            estimator.getStandardDeviationF(aStdTriad2);
+            assertEquals(aStdTriad1, aStdTriad2);
             assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
                     0.0);
             assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
@@ -5680,6 +6500,19 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                     angularSpeed1);
             estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+            assertEquals(angularSpeed1, angularSpeed2);
+            final AngularSpeedTriad wStdTriad1 = estimator.getStandardDeviationAngularRate();
+            assertEquals(wStdTriad1.getValueX(), 0.0, 0.0);
+            assertEquals(wStdTriad1.getValueY(), 0.0, 0.0);
+            assertEquals(wStdTriad1.getValueZ(), 0.0, 0.0);
+            assertEquals(wStdTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+            final AngularSpeedTriad wStdTriad2 = new AngularSpeedTriad();
+            estimator.getStandardDeviationAngularRate(wStdTriad2);
+            assertEquals(wStdTriad1, wStdTriad2);
+            assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+            assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                    angularSpeed1);
+            estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
             assertEquals(angularSpeed1, angularSpeed2);
             assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
             estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -5708,7 +6541,6 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertEquals(m1, m2);
             assertEquals(estimator.getNumberOfProcessedSamples(), 0);
             assertFalse(estimator.isRunning());
-            assertFalse(estimator.isFinished());
             assertTrue(estimator.getExpectedKinematics().equals(expectedKinematics,
                     ABSOLUTE_ERROR));
             estimator.getExpectedKinematics(kinematics2);
@@ -5717,18 +6549,17 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             // Force InvalidSourceAndDestinationFrameTypeException
             estimator = null;
             try {
-                estimator = new IMUBiasEstimator(ecefPosition1,
+                estimator = new BodyKinematicsBiasEstimator(ecefPosition1,
                         new CoordinateTransformation(
                                 FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME,
-                                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME), this);
+                                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME),
+                        timeInterval, this);
                 fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
             } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
             }
-
-            // Force IllegalArgumentException
             try {
-                estimator = new IMUBiasEstimator(ecefPosition1, nedC,
-                        0, this);
+                estimator = new BodyKinematicsBiasEstimator(ecefPosition1, nedC,
+                        -1.0, this);
                 fail("IllegalArgumentException expected but not thrown");
             } catch (final IllegalArgumentException ignore) {
             }
@@ -5737,7 +6568,6 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             numValid++;
             break;
         }
-
         assertTrue(numValid > 0);
     }
 
@@ -5745,8 +6575,8 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
     public void testConstructor29() throws WrongSizeException {
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double timeInterval = randomizer.nextDouble(
-                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
+        final Time timeInterval = new Time(randomizer.nextDouble(
+                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
 
         final Acceleration acceleration1 = new Acceleration(0.0,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
@@ -5758,7 +6588,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 AngularSpeedUnit.RADIANS_PER_SECOND);
         final BodyKinematics kinematics1 = new BodyKinematics();
         final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(timeInterval, TimeUnit.SECOND);
+        final Time time1 = new Time(timeInterval.getValue(), TimeUnit.SECOND);
         final Time time2 = new Time(0.0, TimeUnit.SECOND);
         final NEDFrame nedFrame1 = new NEDFrame();
         final NEDFrame nedFrame2 = new NEDFrame();
@@ -5786,12 +6616,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
 
         // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(timeInterval);
+        BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator(
+                timeInterval);
 
         // check default values
-        assertEquals(estimator.getTotalSamples(), IMUBiasEstimator.DEFAULT_TOTAL_SAMPLES);
         assertEquals(estimator.getTimeInterval(),
-                timeInterval, 0.0);
+                timeInterval.getValue().doubleValue(), 0.0);
         assertEquals(estimator.getTimeIntervalAsTime(), time1);
         estimator.getTimeIntervalAsTime(time2);
         assertEquals(time1, time2);
@@ -5840,6 +6670,22 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
         estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AccelerationTriad aTriad1 = estimator.getBiasF();
+        assertEquals(aTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aTriad2 = new AccelerationTriad();
+        estimator.getBiasF(aTriad2);
+        assertEquals(aTriad1, aTriad2);
+        final AngularSpeedTriad wTriad1 = estimator.getBiasAngularRate();
+        assertEquals(wTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wTriad2 = new AngularSpeedTriad();
+        estimator.getBiasAngularRate(wTriad2);
+        assertEquals(wTriad1, wTriad2);
         assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
         estimator.getBiasesAsBodyKinematics(kinematics2);
         assertEquals(kinematics1, kinematics2);
@@ -5861,6 +6707,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad aStdTriad1 = estimator.getStandardDeviationF();
+        assertEquals(aStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aStdTriad2 = new AccelerationTriad();
+        estimator.getStandardDeviationF(aStdTriad2);
+        assertEquals(aStdTriad1, aStdTriad2);
         assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
                 0.0);
         assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
@@ -5885,6 +6739,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AngularSpeedTriad wStdTriad1 = estimator.getStandardDeviationAngularRate();
+        assertEquals(wStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wStdTriad2 = new AngularSpeedTriad();
+        estimator.getStandardDeviationAngularRate(wStdTriad2);
+        assertEquals(wStdTriad1, wStdTriad2);
         assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
         assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
                 angularSpeed1);
@@ -5917,7 +6779,6 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(m1, m2);
         assertEquals(estimator.getNumberOfProcessedSamples(), 0);
         assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
         assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
         estimator.getExpectedKinematics(kinematics2);
         assertEquals(expectedKinematics, kinematics2);
@@ -5925,7 +6786,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         // Force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new IMUBiasEstimator(-1.0);
+            estimator = new BodyKinematicsBiasEstimator(-1.0);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -5937,8 +6798,8 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             InvalidSourceAndDestinationFrameTypeException {
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double timeInterval = randomizer.nextDouble(
-                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
+        final Time timeInterval = new Time(randomizer.nextDouble(
+                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
 
         final Acceleration acceleration1 = new Acceleration(0.0,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
@@ -5950,8 +6811,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 AngularSpeedUnit.RADIANS_PER_SECOND);
         final BodyKinematics kinematics1 = new BodyKinematics();
         final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(timeInterval,
-                TimeUnit.SECOND);
+        final Time time1 = new Time(timeInterval.getValue(), TimeUnit.SECOND);
         final Time time2 = new Time(0.0, TimeUnit.SECOND);
         final NEDFrame nedFrame1 = new NEDFrame();
         final NEDFrame nedFrame2 = new NEDFrame();
@@ -5990,12 +6850,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
 
         // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(nedC, timeInterval);
+        BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator(
+                nedC, timeInterval);
 
         // check default values
-        assertEquals(estimator.getTotalSamples(), IMUBiasEstimator.DEFAULT_TOTAL_SAMPLES);
         assertEquals(estimator.getTimeInterval(),
-                timeInterval, 0.0);
+                timeInterval.getValue().doubleValue(), 0.0);
         assertEquals(estimator.getTimeIntervalAsTime(), time1);
         estimator.getTimeIntervalAsTime(time2);
         assertEquals(time1, time2);
@@ -6044,6 +6904,22 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
         estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AccelerationTriad aTriad1 = estimator.getBiasF();
+        assertEquals(aTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aTriad2 = new AccelerationTriad();
+        estimator.getBiasF(aTriad2);
+        assertEquals(aTriad1, aTriad2);
+        final AngularSpeedTriad wTriad1 = estimator.getBiasAngularRate();
+        assertEquals(wTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wTriad2 = new AngularSpeedTriad();
+        estimator.getBiasAngularRate(wTriad2);
+        assertEquals(wTriad1, wTriad2);
         assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
         estimator.getBiasesAsBodyKinematics(kinematics2);
         assertEquals(kinematics1, kinematics2);
@@ -6065,6 +6941,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad aStdTriad1 = estimator.getStandardDeviationF();
+        assertEquals(aStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aStdTriad2 = new AccelerationTriad();
+        estimator.getStandardDeviationF(aStdTriad2);
+        assertEquals(aStdTriad1, aStdTriad2);
         assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
                 0.0);
         assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
@@ -6089,6 +6973,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AngularSpeedTriad wStdTriad1 = estimator.getStandardDeviationAngularRate();
+        assertEquals(wStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wStdTriad2 = new AngularSpeedTriad();
+        estimator.getStandardDeviationAngularRate(wStdTriad2);
+        assertEquals(wStdTriad1, wStdTriad2);
         assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
         assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
                 angularSpeed1);
@@ -6121,7 +7013,6 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(m1, m2);
         assertEquals(estimator.getNumberOfProcessedSamples(), 0);
         assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
         assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
         estimator.getExpectedKinematics(kinematics2);
         assertEquals(expectedKinematics, kinematics2);
@@ -6129,7 +7020,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         // Force InvalidSourceAndDestinationFrameTypeException
         estimator = null;
         try {
-            estimator = new IMUBiasEstimator(new CoordinateTransformation(
+            estimator = new BodyKinematicsBiasEstimator(new CoordinateTransformation(
                     FrameType.LOCAL_NAVIGATION_FRAME,
                     FrameType.LOCAL_NAVIGATION_FRAME), timeInterval);
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
@@ -6138,7 +7029,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
         // Force IllegalArgumentException
         try {
-            estimator = new IMUBiasEstimator(nedC, -1.0);
+            estimator = new BodyKinematicsBiasEstimator(nedC, -1.0);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -6147,9 +7038,10 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
     @Test
     public void testConstructor31() throws WrongSizeException {
+
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double timeInterval = randomizer.nextDouble(
-                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
+        final Time timeInterval = new Time(randomizer.nextDouble(
+                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
 
         final double latitude = Math.toRadians(randomizer.nextDouble(
                 MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
@@ -6168,7 +7060,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 AngularSpeedUnit.RADIANS_PER_SECOND);
         final BodyKinematics kinematics1 = new BodyKinematics();
         final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(timeInterval, TimeUnit.SECOND);
+        final Time time1 = new Time(timeInterval.getValue(), TimeUnit.SECOND);
         final Time time2 = new Time(0.0, TimeUnit.SECOND);
         final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height);
         final NEDFrame nedFrame2 = new NEDFrame();
@@ -6196,13 +7088,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
 
         // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(latitude, longitude, height,
-                timeInterval);
+        BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator(
+                latitude, longitude, height, timeInterval);
 
         // check default values
-        assertEquals(estimator.getTotalSamples(), IMUBiasEstimator.DEFAULT_TOTAL_SAMPLES);
         assertEquals(estimator.getTimeInterval(),
-                timeInterval, 0.0);
+                timeInterval.getValue().doubleValue(), 0.0);
         assertEquals(estimator.getTimeIntervalAsTime(), time1);
         estimator.getTimeIntervalAsTime(time2);
         assertEquals(time1, time2);
@@ -6251,6 +7142,22 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
         estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AccelerationTriad aTriad1 = estimator.getBiasF();
+        assertEquals(aTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aTriad2 = new AccelerationTriad();
+        estimator.getBiasF(aTriad2);
+        assertEquals(aTriad1, aTriad2);
+        final AngularSpeedTriad wTriad1 = estimator.getBiasAngularRate();
+        assertEquals(wTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wTriad2 = new AngularSpeedTriad();
+        estimator.getBiasAngularRate(wTriad2);
+        assertEquals(wTriad1, wTriad2);
         assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
         estimator.getBiasesAsBodyKinematics(kinematics2);
         assertEquals(kinematics1, kinematics2);
@@ -6272,6 +7179,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad aStdTriad1 = estimator.getStandardDeviationF();
+        assertEquals(aStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aStdTriad2 = new AccelerationTriad();
+        estimator.getStandardDeviationF(aStdTriad2);
+        assertEquals(aStdTriad1, aStdTriad2);
         assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
                 0.0);
         assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
@@ -6296,6 +7211,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AngularSpeedTriad wStdTriad1 = estimator.getStandardDeviationAngularRate();
+        assertEquals(wStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wStdTriad2 = new AngularSpeedTriad();
+        estimator.getStandardDeviationAngularRate(wStdTriad2);
+        assertEquals(wStdTriad1, wStdTriad2);
         assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
         assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
                 angularSpeed1);
@@ -6328,7 +7251,6 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(m1, m2);
         assertEquals(estimator.getNumberOfProcessedSamples(), 0);
         assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
         assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
         estimator.getExpectedKinematics(kinematics2);
         assertEquals(expectedKinematics, kinematics2);
@@ -6336,7 +7258,8 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         // Force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new IMUBiasEstimator(latitude, longitude, height,
+            estimator = new BodyKinematicsBiasEstimator(
+                    latitude, longitude, height,
                     -1.0);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -6346,9 +7269,10 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
     @Test
     public void testConstructor32() throws WrongSizeException {
+
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double timeInterval = randomizer.nextDouble(
-                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
+        final Time timeInterval = new Time(randomizer.nextDouble(
+                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
 
         final Angle latitude = new Angle(randomizer.nextDouble(
                 MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs), AngleUnit.DEGREES);
@@ -6367,7 +7291,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 AngularSpeedUnit.RADIANS_PER_SECOND);
         final BodyKinematics kinematics1 = new BodyKinematics();
         final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(timeInterval, TimeUnit.SECOND);
+        final Time time1 = new Time(timeInterval.getValue(), TimeUnit.SECOND);
         final Time time2 = new Time(0.0, TimeUnit.SECOND);
         final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height);
         final NEDFrame nedFrame2 = new NEDFrame();
@@ -6395,12 +7319,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
 
         // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(latitude, longitude, height,
-                timeInterval);
+        BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator(
+                latitude, longitude, height, timeInterval);
 
         // check default values
-        assertEquals(estimator.getTotalSamples(), IMUBiasEstimator.DEFAULT_TOTAL_SAMPLES);
-        assertEquals(estimator.getTimeInterval(), timeInterval, 0.0);
+        assertEquals(estimator.getTimeInterval(),
+                timeInterval.getValue().doubleValue(), 0.0);
         assertEquals(estimator.getTimeIntervalAsTime(), time1);
         estimator.getTimeIntervalAsTime(time2);
         assertEquals(time1, time2);
@@ -6449,6 +7373,22 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
         estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AccelerationTriad aTriad1 = estimator.getBiasF();
+        assertEquals(aTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aTriad2 = new AccelerationTriad();
+        estimator.getBiasF(aTriad2);
+        assertEquals(aTriad1, aTriad2);
+        final AngularSpeedTriad wTriad1 = estimator.getBiasAngularRate();
+        assertEquals(wTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wTriad2 = new AngularSpeedTriad();
+        estimator.getBiasAngularRate(wTriad2);
+        assertEquals(wTriad1, wTriad2);
         assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
         estimator.getBiasesAsBodyKinematics(kinematics2);
         assertEquals(kinematics1, kinematics2);
@@ -6470,6 +7410,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad aStdTriad1 = estimator.getStandardDeviationF();
+        assertEquals(aStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aStdTriad2 = new AccelerationTriad();
+        estimator.getStandardDeviationF(aStdTriad2);
+        assertEquals(aStdTriad1, aStdTriad2);
         assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
                 0.0);
         assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
@@ -6494,6 +7442,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AngularSpeedTriad wStdTriad1 = estimator.getStandardDeviationAngularRate();
+        assertEquals(wStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wStdTriad2 = new AngularSpeedTriad();
+        estimator.getStandardDeviationAngularRate(wStdTriad2);
+        assertEquals(wStdTriad1, wStdTriad2);
         assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
         assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
                 angularSpeed1);
@@ -6526,7 +7482,6 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(m1, m2);
         assertEquals(estimator.getNumberOfProcessedSamples(), 0);
         assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
         assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
         estimator.getExpectedKinematics(kinematics2);
         assertEquals(expectedKinematics, kinematics2);
@@ -6534,7 +7489,8 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         // Force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new IMUBiasEstimator(latitude, longitude, height,
+            estimator = new BodyKinematicsBiasEstimator(
+                    latitude, longitude, height,
                     -1.0);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -6544,207 +7500,10 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
     @Test
     public void testConstructor33() throws WrongSizeException {
+
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double timeInterval = randomizer.nextDouble(
-                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
-
-        final Angle latitude = new Angle(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs), AngleUnit.DEGREES);
-        final Angle longitude = new Angle(randomizer.nextDouble(
-                MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES), AngleUnit.DEGREES);
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-
-
-        final Acceleration acceleration1 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final AngularSpeed angularSpeed1 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final AngularSpeed angularSpeed2 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final BodyKinematics kinematics1 = new BodyKinematics();
-        final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(timeInterval, TimeUnit.SECOND);
-        final Time time2 = new Time(0.0, TimeUnit.SECOND);
-        final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height);
-        final NEDFrame nedFrame2 = new NEDFrame();
-        final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
-                .convertNEDtoECEFAndReturnNew(nedFrame1);
-        final ECEFFrame ecefFrame2 = new ECEFFrame();
-        final NEDPosition nedPosition1 = nedFrame1.getPosition();
-        final NEDPosition nedPosition2 = new NEDPosition();
-        final ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
-        final ECEFPosition ecefPosition2 = new ECEFPosition();
-        final CoordinateTransformation ecefC = ecefFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation nedC = nedFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-        final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
-        final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
-
-        final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
-                .estimateKinematicsAndReturnNew(
-                        timeInterval, ecefC, ecefC,
-                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                        ecefPosition1);
-
-
-        // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(latitude, longitude, height,
-                timeInterval);
-
-        // check default values
-        assertEquals(estimator.getTotalSamples(), IMUBiasEstimator.DEFAULT_TOTAL_SAMPLES);
-        assertEquals(estimator.getTimeInterval(), timeInterval, 0.0);
-        assertEquals(estimator.getTimeIntervalAsTime(), time1);
-        estimator.getTimeIntervalAsTime(time2);
-        assertEquals(time1, time2);
-        assertEquals(estimator.getEcefPosition(), ecefPosition1);
-        estimator.getEcefPosition(ecefPosition2);
-        assertEquals(ecefPosition1, ecefPosition2);
-        assertEquals(estimator.getEcefFrame(), ecefFrame1);
-        estimator.getEcefFrame(ecefFrame2);
-        assertEquals(ecefFrame2, ecefFrame1);
-        assertTrue(estimator.getNedFrame().equals(nedFrame1, ABSOLUTE_ERROR));
-        estimator.getNedFrame(nedFrame2);
-        assertTrue(nedFrame1.equals(nedFrame2, ABSOLUTE_ERROR));
-        assertTrue(estimator.getNedPosition().equals(nedPosition1, ABSOLUTE_ERROR));
-        estimator.getNedPosition(nedPosition2);
-        assertTrue(nedPosition1.equals(nedPosition2, ABSOLUTE_ERROR));
-        assertEquals(estimator.getEcefC(), ecefC);
-        estimator.getEcefC(c);
-        assertEquals(ecefC, c);
-        assertTrue(estimator.getNedC().equals(nedC, ABSOLUTE_ERROR));
-        estimator.getNedC(c);
-        assertTrue(nedC.equals(c, ABSOLUTE_ERROR));
-        assertNull(estimator.getListener());
-        assertNull(estimator.getLastBodyKinematics());
-        assertFalse(estimator.getLastBodyKinematics(null));
-        assertEquals(estimator.getBiasFx(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFxAsAcceleration(), acceleration1);
-        estimator.getBiasFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFy(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFyAsAcceleration(), acceleration1);
-        estimator.getBiasFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFz(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFzAsAcceleration(), acceleration1);
-        estimator.getBiasFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateXAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateYAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
-        estimator.getBiasesAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getVarianceFx(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFy(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFz(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFx(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFxAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFy(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFyAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
-                0.0);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
-                acceleration1);
-        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationAngularRateX(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateY(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateYAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateZ(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
-        estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerBias(), m1);
-        estimator.getAccelerometerBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getGyroBias(), m1);
-        estimator.getGyroBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getNumberOfProcessedSamples(), 0);
-        assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
-        assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
-        estimator.getExpectedKinematics(kinematics2);
-        assertEquals(expectedKinematics, kinematics2);
-
-        // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = new IMUBiasEstimator(latitude, longitude, height,
-                    -1.0);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
-    }
-
-    @Test
-    public void testConstructor34() throws WrongSizeException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double timeInterval = randomizer.nextDouble(
-                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
+        final Time timeInterval = new Time(randomizer.nextDouble(
+                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
 
         final Angle latitude = new Angle(randomizer.nextDouble(
                 MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs), AngleUnit.DEGREES);
@@ -6764,7 +7523,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 AngularSpeedUnit.RADIANS_PER_SECOND);
         final BodyKinematics kinematics1 = new BodyKinematics();
         final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(timeInterval, TimeUnit.SECOND);
+        final Time time1 = new Time(timeInterval.getValue(), TimeUnit.SECOND);
         final Time time2 = new Time(0.0, TimeUnit.SECOND);
         final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height);
         final NEDFrame nedFrame2 = new NEDFrame();
@@ -6792,13 +7551,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
 
         // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(latitude, longitude, height,
-                timeInterval);
+        BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator(
+                latitude, longitude, height, timeInterval);
 
         // check default values
-        assertEquals(estimator.getTotalSamples(), IMUBiasEstimator.DEFAULT_TOTAL_SAMPLES);
         assertEquals(estimator.getTimeInterval(),
-                timeInterval, 0.0);
+                timeInterval.getValue().doubleValue(), 0.0);
         assertEquals(estimator.getTimeIntervalAsTime(), time1);
         estimator.getTimeIntervalAsTime(time2);
         assertEquals(time1, time2);
@@ -6847,6 +7605,22 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
         estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AccelerationTriad aTriad1 = estimator.getBiasF();
+        assertEquals(aTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aTriad2 = new AccelerationTriad();
+        estimator.getBiasF(aTriad2);
+        assertEquals(aTriad1, aTriad2);
+        final AngularSpeedTriad wTriad1 = estimator.getBiasAngularRate();
+        assertEquals(wTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wTriad2 = new AngularSpeedTriad();
+        estimator.getBiasAngularRate(wTriad2);
+        assertEquals(wTriad1, wTriad2);
         assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
         estimator.getBiasesAsBodyKinematics(kinematics2);
         assertEquals(kinematics1, kinematics2);
@@ -6868,6 +7642,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad aStdTriad1 = estimator.getStandardDeviationF();
+        assertEquals(aStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aStdTriad2 = new AccelerationTriad();
+        estimator.getStandardDeviationF(aStdTriad2);
+        assertEquals(aStdTriad1, aStdTriad2);
         assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
                 0.0);
         assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
@@ -6892,6 +7674,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AngularSpeedTriad wStdTriad1 = estimator.getStandardDeviationAngularRate();
+        assertEquals(wStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wStdTriad2 = new AngularSpeedTriad();
+        estimator.getStandardDeviationAngularRate(wStdTriad2);
+        assertEquals(wStdTriad1, wStdTriad2);
         assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
         assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
                 angularSpeed1);
@@ -6924,7 +7714,6 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(m1, m2);
         assertEquals(estimator.getNumberOfProcessedSamples(), 0);
         assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
         assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
         estimator.getExpectedKinematics(kinematics2);
         assertEquals(expectedKinematics, kinematics2);
@@ -6932,7 +7721,8 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         // Force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new IMUBiasEstimator(latitude, longitude, height,
+            estimator = new BodyKinematicsBiasEstimator(
+                    latitude, longitude, height,
                     -1.0);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -6941,11 +7731,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
     }
 
     @Test
-    public void testConstructor35() throws WrongSizeException,
+    public void testConstructor34() throws WrongSizeException,
             InvalidSourceAndDestinationFrameTypeException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double timeInterval = randomizer.nextDouble(
-                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
+        final Time timeInterval = new Time(randomizer.nextDouble(
+                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
 
         final double latitude = Math.toRadians(randomizer.nextDouble(
                 MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
@@ -6971,7 +7761,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 AngularSpeedUnit.RADIANS_PER_SECOND);
         final BodyKinematics kinematics1 = new BodyKinematics();
         final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(timeInterval, TimeUnit.SECOND);
+        final Time time1 = new Time(timeInterval.getValue(), TimeUnit.SECOND);
         final Time time2 = new Time(0.0, TimeUnit.SECOND);
         final CoordinateTransformation nedC = new CoordinateTransformation(
                 roll, pitch, yaw, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
@@ -7000,13 +7790,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
 
         // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(nedPosition1, nedC,
-                timeInterval);
+        BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator(
+                nedPosition1, nedC, timeInterval);
 
         // check default values
-        assertEquals(estimator.getTotalSamples(), IMUBiasEstimator.DEFAULT_TOTAL_SAMPLES);
         assertEquals(estimator.getTimeInterval(),
-                timeInterval, 0.0);
+                timeInterval.getValue().doubleValue(), 0.0);
         assertEquals(estimator.getTimeIntervalAsTime(), time1);
         estimator.getTimeIntervalAsTime(time2);
         assertEquals(time1, time2);
@@ -7055,6 +7844,22 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
         estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AccelerationTriad aTriad1 = estimator.getBiasF();
+        assertEquals(aTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aTriad2 = new AccelerationTriad();
+        estimator.getBiasF(aTriad2);
+        assertEquals(aTriad1, aTriad2);
+        final AngularSpeedTriad wTriad1 = estimator.getBiasAngularRate();
+        assertEquals(wTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wTriad2 = new AngularSpeedTriad();
+        estimator.getBiasAngularRate(wTriad2);
+        assertEquals(wTriad1, wTriad2);
         assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
         estimator.getBiasesAsBodyKinematics(kinematics2);
         assertEquals(kinematics1, kinematics2);
@@ -7076,6 +7881,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad aStdTriad1 = estimator.getStandardDeviationF();
+        assertEquals(aStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aStdTriad2 = new AccelerationTriad();
+        estimator.getStandardDeviationF(aStdTriad2);
+        assertEquals(aStdTriad1, aStdTriad2);
         assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
                 0.0);
         assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
@@ -7100,6 +7913,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AngularSpeedTriad wStdTriad1 = estimator.getStandardDeviationAngularRate();
+        assertEquals(wStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wStdTriad2 = new AngularSpeedTriad();
+        estimator.getStandardDeviationAngularRate(wStdTriad2);
+        assertEquals(wStdTriad1, wStdTriad2);
         assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
         assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
                 angularSpeed1);
@@ -7132,7 +7953,6 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(m1, m2);
         assertEquals(estimator.getNumberOfProcessedSamples(), 0);
         assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
         assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
         estimator.getExpectedKinematics(kinematics2);
         assertEquals(expectedKinematics, kinematics2);
@@ -7140,7 +7960,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         // Force InvalidSourceAndDestinationFrameTypeException
         estimator = null;
         try {
-            estimator = new IMUBiasEstimator(nedPosition1,
+            estimator = new BodyKinematicsBiasEstimator(nedPosition1,
                     new CoordinateTransformation(
                             FrameType.LOCAL_NAVIGATION_FRAME,
                             FrameType.LOCAL_NAVIGATION_FRAME), timeInterval);
@@ -7150,7 +7970,8 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
         // Force IllegalArgumentException
         try {
-            estimator = new IMUBiasEstimator(nedPosition1, nedC, -1.0);
+            estimator = new BodyKinematicsBiasEstimator(nedPosition1,
+                    nedC, -1.0);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -7158,13 +7979,13 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
     }
 
     @Test
-    public void testConstructor36() throws WrongSizeException,
+    public void testConstructor35() throws WrongSizeException,
             InvalidSourceAndDestinationFrameTypeException {
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double timeInterval = randomizer.nextDouble(
-                    MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
+            final Time timeInterval = new Time(randomizer.nextDouble(
+                    MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
 
             final double latitude = Math.toRadians(randomizer.nextDouble(
                     MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
@@ -7190,7 +8011,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                     AngularSpeedUnit.RADIANS_PER_SECOND);
             final BodyKinematics kinematics1 = new BodyKinematics();
             final BodyKinematics kinematics2 = new BodyKinematics();
-            final Time time1 = new Time(timeInterval, TimeUnit.SECOND);
+            final Time time1 = new Time(timeInterval.getValue(), TimeUnit.SECOND);
             final Time time2 = new Time(0.0, TimeUnit.SECOND);
             final CoordinateTransformation nedC = new CoordinateTransformation(
                     roll, pitch, yaw, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
@@ -7219,12 +8040,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
 
             // test constructor
-            IMUBiasEstimator estimator = new IMUBiasEstimator(ecefPosition1, nedC,
-                    timeInterval);
+            BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator(
+                    ecefPosition1, nedC, timeInterval);
 
             // check default values
-            assertEquals(estimator.getTotalSamples(), IMUBiasEstimator.DEFAULT_TOTAL_SAMPLES);
-            assertEquals(estimator.getTimeInterval(), timeInterval, 0.0);
+            assertEquals(estimator.getTimeInterval(),
+                    timeInterval.getValue().doubleValue(), 0.0);
             assertEquals(estimator.getTimeIntervalAsTime(), time1);
             estimator.getTimeIntervalAsTime(time2);
             assertEquals(time1, time2);
@@ -7234,8 +8055,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertTrue(estimator.getEcefPosition().equals(ecefPosition1,
                     ABSOLUTE_ERROR));
             estimator.getEcefPosition(ecefPosition2);
-            assertTrue(ecefPosition1.equals(ecefPosition2,
-                    ABSOLUTE_ERROR));
+            assertTrue(ecefPosition1.equals(ecefPosition2, ABSOLUTE_ERROR));
             if (!estimator.getEcefFrame().equals(ecefFrame1, ABSOLUTE_ERROR)) {
                 continue;
             }
@@ -7245,7 +8065,8 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertTrue(estimator.getNedFrame().equals(nedFrame1, ABSOLUTE_ERROR));
             estimator.getNedFrame(nedFrame2);
             assertTrue(nedFrame1.equals(nedFrame2, ABSOLUTE_ERROR));
-            assertTrue(estimator.getNedPosition().equals(nedPosition1, ABSOLUTE_ERROR));
+            assertTrue(estimator.getNedPosition().equals(nedPosition1,
+                    ABSOLUTE_ERROR));
             estimator.getNedPosition(nedPosition2);
             assertTrue(nedPosition1.equals(nedPosition2, ABSOLUTE_ERROR));
             assertTrue(estimator.getEcefC().equals(ecefC, ABSOLUTE_ERROR));
@@ -7281,6 +8102,22 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
             estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
             assertEquals(angularSpeed1, angularSpeed2);
+            final AccelerationTriad aTriad1 = estimator.getBiasF();
+            assertEquals(aTriad1.getValueX(), 0.0, 0.0);
+            assertEquals(aTriad1.getValueY(), 0.0, 0.0);
+            assertEquals(aTriad1.getValueZ(), 0.0, 0.0);
+            assertEquals(aTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+            final AccelerationTriad aTriad2 = new AccelerationTriad();
+            estimator.getBiasF(aTriad2);
+            assertEquals(aTriad1, aTriad2);
+            final AngularSpeedTriad wTriad1 = estimator.getBiasAngularRate();
+            assertEquals(wTriad1.getValueX(), 0.0, 0.0);
+            assertEquals(wTriad1.getValueY(), 0.0, 0.0);
+            assertEquals(wTriad1.getValueZ(), 0.0, 0.0);
+            assertEquals(wTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+            final AngularSpeedTriad wTriad2 = new AngularSpeedTriad();
+            estimator.getBiasAngularRate(wTriad2);
+            assertEquals(wTriad1, wTriad2);
             assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
             estimator.getBiasesAsBodyKinematics(kinematics2);
             assertEquals(kinematics1, kinematics2);
@@ -7302,6 +8139,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
             estimator.getStandardDeviationFzAsAcceleration(acceleration2);
             assertEquals(acceleration1, acceleration2);
+            final AccelerationTriad aStdTriad1 = estimator.getStandardDeviationF();
+            assertEquals(aStdTriad1.getValueX(), 0.0, 0.0);
+            assertEquals(aStdTriad1.getValueY(), 0.0, 0.0);
+            assertEquals(aStdTriad1.getValueZ(), 0.0, 0.0);
+            assertEquals(aStdTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+            final AccelerationTriad aStdTriad2 = new AccelerationTriad();
+            estimator.getStandardDeviationF(aStdTriad2);
+            assertEquals(aStdTriad1, aStdTriad2);
             assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
                     0.0);
             assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
@@ -7326,6 +8171,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                     angularSpeed1);
             estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
             assertEquals(angularSpeed1, angularSpeed2);
+            final AngularSpeedTriad wStdTriad1 = estimator.getStandardDeviationAngularRate();
+            assertEquals(wStdTriad1.getValueX(), 0.0, 0.0);
+            assertEquals(wStdTriad1.getValueY(), 0.0, 0.0);
+            assertEquals(wStdTriad1.getValueZ(), 0.0, 0.0);
+            assertEquals(wStdTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+            final AngularSpeedTriad wStdTriad2 = new AngularSpeedTriad();
+            estimator.getStandardDeviationAngularRate(wStdTriad2);
+            assertEquals(wStdTriad1, wStdTriad2);
             assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
             assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
                     angularSpeed1);
@@ -7358,7 +8211,6 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertEquals(m1, m2);
             assertEquals(estimator.getNumberOfProcessedSamples(), 0);
             assertFalse(estimator.isRunning());
-            assertFalse(estimator.isFinished());
             assertTrue(estimator.getExpectedKinematics().equals(expectedKinematics,
                     ABSOLUTE_ERROR));
             estimator.getExpectedKinematics(kinematics2);
@@ -7367,17 +8219,18 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             // Force InvalidSourceAndDestinationFrameTypeException
             estimator = null;
             try {
-                estimator = new IMUBiasEstimator(ecefPosition1,
+                estimator = new BodyKinematicsBiasEstimator(ecefPosition1,
                         new CoordinateTransformation(
                                 FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME,
-                                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME), timeInterval);
+                                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME),
+                        timeInterval);
                 fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
             } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
             }
 
             // Force IllegalArgumentException
             try {
-                estimator = new IMUBiasEstimator(ecefPosition1, nedC,
+                estimator = new BodyKinematicsBiasEstimator(ecefPosition1, nedC,
                         -1.0);
                 fail("IllegalArgumentException expected but not thrown");
             } catch (final IllegalArgumentException ignore) {
@@ -7387,15 +8240,15 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             numValid++;
             break;
         }
-
         assertTrue(numValid > 0);
     }
 
     @Test
-    public void testConstructor37() throws WrongSizeException {
+    public void testConstructor36() throws WrongSizeException {
+
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double timeInterval = randomizer.nextDouble(
-                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
+        final Time timeInterval = new Time(randomizer.nextDouble(
+                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
 
         final Acceleration acceleration1 = new Acceleration(0.0,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
@@ -7407,7 +8260,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 AngularSpeedUnit.RADIANS_PER_SECOND);
         final BodyKinematics kinematics1 = new BodyKinematics();
         final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(timeInterval, TimeUnit.SECOND);
+        final Time time1 = new Time(timeInterval.getValue(), TimeUnit.SECOND);
         final Time time2 = new Time(0.0, TimeUnit.SECOND);
         final NEDFrame nedFrame1 = new NEDFrame();
         final NEDFrame nedFrame2 = new NEDFrame();
@@ -7435,11 +8288,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
 
         // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(timeInterval, this);
+        BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator(
+                timeInterval, this);
 
         // check default values
-        assertEquals(estimator.getTotalSamples(), IMUBiasEstimator.DEFAULT_TOTAL_SAMPLES);
-        assertEquals(estimator.getTimeInterval(), timeInterval, 0.0);
+        assertEquals(estimator.getTimeInterval(),
+                timeInterval.getValue().doubleValue(), 0.0);
         assertEquals(estimator.getTimeIntervalAsTime(), time1);
         estimator.getTimeIntervalAsTime(time2);
         assertEquals(time1, time2);
@@ -7488,6 +8342,22 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
         estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AccelerationTriad aTriad1 = estimator.getBiasF();
+        assertEquals(aTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aTriad2 = new AccelerationTriad();
+        estimator.getBiasF(aTriad2);
+        assertEquals(aTriad1, aTriad2);
+        final AngularSpeedTriad wTriad1 = estimator.getBiasAngularRate();
+        assertEquals(wTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wTriad2 = new AngularSpeedTriad();
+        estimator.getBiasAngularRate(wTriad2);
+        assertEquals(wTriad1, wTriad2);
         assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
         estimator.getBiasesAsBodyKinematics(kinematics2);
         assertEquals(kinematics1, kinematics2);
@@ -7509,6 +8379,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad aStdTriad1 = estimator.getStandardDeviationF();
+        assertEquals(aStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aStdTriad2 = new AccelerationTriad();
+        estimator.getStandardDeviationF(aStdTriad2);
+        assertEquals(aStdTriad1, aStdTriad2);
         assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
                 0.0);
         assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
@@ -7533,6 +8411,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AngularSpeedTriad wStdTriad1 = estimator.getStandardDeviationAngularRate();
+        assertEquals(wStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wStdTriad2 = new AngularSpeedTriad();
+        estimator.getStandardDeviationAngularRate(wStdTriad2);
+        assertEquals(wStdTriad1, wStdTriad2);
         assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
         assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
                 angularSpeed1);
@@ -7565,7 +8451,6 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(m1, m2);
         assertEquals(estimator.getNumberOfProcessedSamples(), 0);
         assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
         assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
         estimator.getExpectedKinematics(kinematics2);
         assertEquals(expectedKinematics, kinematics2);
@@ -7573,7 +8458,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         // Force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new IMUBiasEstimator(-1.0, this);
+            estimator = new BodyKinematicsBiasEstimator(-1.0);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -7581,11 +8466,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
     }
 
     @Test
-    public void testConstructor38() throws WrongSizeException,
+    public void testConstructor37() throws WrongSizeException,
             InvalidSourceAndDestinationFrameTypeException {
+
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double timeInterval = randomizer.nextDouble(
-                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
+        final Time timeInterval = new Time(randomizer.nextDouble(
+                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
 
         final Acceleration acceleration1 = new Acceleration(0.0,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
@@ -7597,7 +8483,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 AngularSpeedUnit.RADIANS_PER_SECOND);
         final BodyKinematics kinematics1 = new BodyKinematics();
         final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(timeInterval, TimeUnit.SECOND);
+        final Time time1 = new Time(timeInterval.getValue(), TimeUnit.SECOND);
         final Time time2 = new Time(0.0, TimeUnit.SECOND);
         final NEDFrame nedFrame1 = new NEDFrame();
         final NEDFrame nedFrame2 = new NEDFrame();
@@ -7636,12 +8522,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
 
         // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(nedC, timeInterval,
-                this);
+        BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator(
+                nedC, timeInterval, this);
 
         // check default values
-        assertEquals(estimator.getTotalSamples(), IMUBiasEstimator.DEFAULT_TOTAL_SAMPLES);
-        assertEquals(estimator.getTimeInterval(), timeInterval, 0.0);
+        assertEquals(estimator.getTimeInterval(),
+                timeInterval.getValue().doubleValue(), 0.0);
         assertEquals(estimator.getTimeIntervalAsTime(), time1);
         estimator.getTimeIntervalAsTime(time2);
         assertEquals(time1, time2);
@@ -7690,6 +8576,22 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
         estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AccelerationTriad aTriad1 = estimator.getBiasF();
+        assertEquals(aTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aTriad2 = new AccelerationTriad();
+        estimator.getBiasF(aTriad2);
+        assertEquals(aTriad1, aTriad2);
+        final AngularSpeedTriad wTriad1 = estimator.getBiasAngularRate();
+        assertEquals(wTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wTriad2 = new AngularSpeedTriad();
+        estimator.getBiasAngularRate(wTriad2);
+        assertEquals(wTriad1, wTriad2);
         assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
         estimator.getBiasesAsBodyKinematics(kinematics2);
         assertEquals(kinematics1, kinematics2);
@@ -7711,6 +8613,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad aStdTriad1 = estimator.getStandardDeviationF();
+        assertEquals(aStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aStdTriad2 = new AccelerationTriad();
+        estimator.getStandardDeviationF(aStdTriad2);
+        assertEquals(aStdTriad1, aStdTriad2);
         assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
                 0.0);
         assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
@@ -7735,6 +8645,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AngularSpeedTriad wStdTriad1 = estimator.getStandardDeviationAngularRate();
+        assertEquals(wStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wStdTriad2 = new AngularSpeedTriad();
+        estimator.getStandardDeviationAngularRate(wStdTriad2);
+        assertEquals(wStdTriad1, wStdTriad2);
         assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
         assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
                 angularSpeed1);
@@ -7767,7 +8685,6 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(m1, m2);
         assertEquals(estimator.getNumberOfProcessedSamples(), 0);
         assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
         assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
         estimator.getExpectedKinematics(kinematics2);
         assertEquals(expectedKinematics, kinematics2);
@@ -7775,16 +8692,16 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         // Force InvalidSourceAndDestinationFrameTypeException
         estimator = null;
         try {
-            estimator = new IMUBiasEstimator(new CoordinateTransformation(
+            estimator = new BodyKinematicsBiasEstimator(new CoordinateTransformation(
                     FrameType.LOCAL_NAVIGATION_FRAME,
-                    FrameType.LOCAL_NAVIGATION_FRAME), timeInterval, this);
+                    FrameType.LOCAL_NAVIGATION_FRAME), timeInterval);
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
         } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
         }
 
         // Force IllegalArgumentException
         try {
-            estimator = new IMUBiasEstimator(nedC, -1.0, this);
+            estimator = new BodyKinematicsBiasEstimator(nedC, -1.0);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -7792,17 +8709,16 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
     }
 
     @Test
-    public void testConstructor39() throws WrongSizeException {
+    public void testConstructor38() throws WrongSizeException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double timeInterval = randomizer.nextDouble(
-                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
+        final Time timeInterval = new Time(randomizer.nextDouble(
+                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
 
         final double latitude = Math.toRadians(randomizer.nextDouble(
                 MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
         final double longitude = Math.toRadians(randomizer.nextDouble(
                 MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-
 
         final Acceleration acceleration1 = new Acceleration(0.0,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
@@ -7814,7 +8730,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 AngularSpeedUnit.RADIANS_PER_SECOND);
         final BodyKinematics kinematics1 = new BodyKinematics();
         final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(timeInterval, TimeUnit.SECOND);
+        final Time time1 = new Time(timeInterval.getValue(), TimeUnit.SECOND);
         final Time time2 = new Time(0.0, TimeUnit.SECOND);
         final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height);
         final NEDFrame nedFrame2 = new NEDFrame();
@@ -7842,12 +8758,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
 
         // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(
+        BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator(
                 latitude, longitude, height, timeInterval, this);
 
         // check default values
-        assertEquals(estimator.getTotalSamples(), IMUBiasEstimator.DEFAULT_TOTAL_SAMPLES);
-        assertEquals(estimator.getTimeInterval(), timeInterval, 0.0);
+        assertEquals(estimator.getTimeInterval(),
+                timeInterval.getValue().doubleValue(), 0.0);
         assertEquals(estimator.getTimeIntervalAsTime(), time1);
         estimator.getTimeIntervalAsTime(time2);
         assertEquals(time1, time2);
@@ -7896,6 +8812,22 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
         estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AccelerationTriad aTriad1 = estimator.getBiasF();
+        assertEquals(aTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aTriad2 = new AccelerationTriad();
+        estimator.getBiasF(aTriad2);
+        assertEquals(aTriad1, aTriad2);
+        final AngularSpeedTriad wTriad1 = estimator.getBiasAngularRate();
+        assertEquals(wTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wTriad2 = new AngularSpeedTriad();
+        estimator.getBiasAngularRate(wTriad2);
+        assertEquals(wTriad1, wTriad2);
         assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
         estimator.getBiasesAsBodyKinematics(kinematics2);
         assertEquals(kinematics1, kinematics2);
@@ -7917,6 +8849,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad aStdTriad1 = estimator.getStandardDeviationF();
+        assertEquals(aStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aStdTriad2 = new AccelerationTriad();
+        estimator.getStandardDeviationF(aStdTriad2);
+        assertEquals(aStdTriad1, aStdTriad2);
         assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
                 0.0);
         assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
@@ -7941,6 +8881,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        final AngularSpeedTriad wStdTriad1 = estimator.getStandardDeviationAngularRate();
+        assertEquals(wStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wStdTriad2 = new AngularSpeedTriad();
+        estimator.getStandardDeviationAngularRate(wStdTriad2);
+        assertEquals(wStdTriad1, wStdTriad2);
         assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
         assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
                 angularSpeed1);
@@ -7973,7 +8921,224 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(m1, m2);
         assertEquals(estimator.getNumberOfProcessedSamples(), 0);
         assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
+        assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
+        estimator.getExpectedKinematics(kinematics2);
+        assertEquals(expectedKinematics, kinematics2);
+    }
+
+    @Test
+    public void testConstructor39() throws WrongSizeException {
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final Time timeInterval = new Time(randomizer.nextDouble(
+                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
+
+        final Angle latitude = new Angle(randomizer.nextDouble(
+                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs), AngleUnit.DEGREES);
+        final Angle longitude = new Angle(randomizer.nextDouble(
+                MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES), AngleUnit.DEGREES);
+        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+
+        final Acceleration acceleration1 = new Acceleration(0.0,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration acceleration2 = new Acceleration(0.0,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AngularSpeed angularSpeed1 = new AngularSpeed(0.0,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed angularSpeed2 = new AngularSpeed(0.0,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+        final BodyKinematics kinematics1 = new BodyKinematics();
+        final BodyKinematics kinematics2 = new BodyKinematics();
+        final Time time1 = new Time(timeInterval.getValue(), TimeUnit.SECOND);
+        final Time time2 = new Time(0.0, TimeUnit.SECOND);
+        final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height);
+        final NEDFrame nedFrame2 = new NEDFrame();
+        final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
+                .convertNEDtoECEFAndReturnNew(nedFrame1);
+        final ECEFFrame ecefFrame2 = new ECEFFrame();
+        final NEDPosition nedPosition1 = nedFrame1.getPosition();
+        final NEDPosition nedPosition2 = new NEDPosition();
+        final ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
+        final ECEFPosition ecefPosition2 = new ECEFPosition();
+        final CoordinateTransformation ecefC = ecefFrame1
+                .getCoordinateTransformation();
+        final CoordinateTransformation nedC = nedFrame1
+                .getCoordinateTransformation();
+        final CoordinateTransformation c = new CoordinateTransformation(
+                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
+        final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
+        final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
+
+        final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
+                .estimateKinematicsAndReturnNew(
+                        timeInterval, ecefC, ecefC,
+                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                        ecefPosition1);
+
+
+        // test constructor
+        BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator(
+                latitude, longitude, height, timeInterval, this);
+
+        // check default values
+        assertEquals(estimator.getTimeInterval(),
+                timeInterval.getValue().doubleValue(), 0.0);
+        assertEquals(estimator.getTimeIntervalAsTime(), time1);
+        estimator.getTimeIntervalAsTime(time2);
+        assertEquals(time1, time2);
+        assertEquals(estimator.getEcefPosition(), ecefPosition1);
+        estimator.getEcefPosition(ecefPosition2);
+        assertEquals(ecefPosition1, ecefPosition2);
+        assertEquals(estimator.getEcefFrame(), ecefFrame1);
+        estimator.getEcefFrame(ecefFrame2);
+        assertEquals(ecefFrame2, ecefFrame1);
+        assertTrue(estimator.getNedFrame().equals(nedFrame1, ABSOLUTE_ERROR));
+        estimator.getNedFrame(nedFrame2);
+        assertTrue(nedFrame1.equals(nedFrame2, ABSOLUTE_ERROR));
+        assertTrue(estimator.getNedPosition().equals(nedPosition1, ABSOLUTE_ERROR));
+        estimator.getNedPosition(nedPosition2);
+        assertTrue(nedPosition1.equals(nedPosition2, ABSOLUTE_ERROR));
+        assertEquals(estimator.getEcefC(), ecefC);
+        estimator.getEcefC(c);
+        assertEquals(ecefC, c);
+        assertTrue(estimator.getNedC().equals(nedC, ABSOLUTE_ERROR));
+        estimator.getNedC(c);
+        assertTrue(nedC.equals(c, ABSOLUTE_ERROR));
+        assertSame(estimator.getListener(), this);
+        assertNull(estimator.getLastBodyKinematics());
+        assertFalse(estimator.getLastBodyKinematics(null));
+        assertEquals(estimator.getBiasFx(), 0.0, 0.0);
+        assertEquals(estimator.getBiasFxAsAcceleration(), acceleration1);
+        estimator.getBiasFxAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getBiasFy(), 0.0, 0.0);
+        assertEquals(estimator.getBiasFyAsAcceleration(), acceleration1);
+        estimator.getBiasFyAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getBiasFz(), 0.0, 0.0);
+        assertEquals(estimator.getBiasFzAsAcceleration(), acceleration1);
+        estimator.getBiasFzAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getBiasAngularRateX(), 0.0, 0.0);
+        assertEquals(estimator.getBiasAngularRateXAsAngularSpeed(), angularSpeed1);
+        estimator.getBiasAngularRateXAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getBiasAngularRateY(), 0.0, 0.0);
+        assertEquals(estimator.getBiasAngularRateYAsAngularSpeed(), angularSpeed1);
+        estimator.getBiasAngularRateYAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getBiasAngularRateZ(), 0.0, 0.0);
+        assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
+        estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        final AccelerationTriad aTriad1 = estimator.getBiasF();
+        assertEquals(aTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aTriad2 = new AccelerationTriad();
+        estimator.getBiasF(aTriad2);
+        assertEquals(aTriad1, aTriad2);
+        final AngularSpeedTriad wTriad1 = estimator.getBiasAngularRate();
+        assertEquals(wTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wTriad2 = new AngularSpeedTriad();
+        estimator.getBiasAngularRate(wTriad2);
+        assertEquals(wTriad1, wTriad2);
+        assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
+        estimator.getBiasesAsBodyKinematics(kinematics2);
+        assertEquals(kinematics1, kinematics2);
+        assertEquals(estimator.getVarianceFx(), 0.0, 0.0);
+        assertEquals(estimator.getVarianceFy(), 0.0, 0.0);
+        assertEquals(estimator.getVarianceFz(), 0.0, 0.0);
+        assertEquals(estimator.getVarianceAngularRateX(), 0.0, 0.0);
+        assertEquals(estimator.getVarianceAngularRateY(), 0.0, 0.0);
+        assertEquals(estimator.getVarianceAngularRateZ(), 0.0, 0.0);
+        assertEquals(estimator.getStandardDeviationFx(), 0.0, 0.0);
+        assertEquals(estimator.getStandardDeviationFxAsAcceleration(), acceleration1);
+        estimator.getStandardDeviationFxAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getStandardDeviationFy(), 0.0, 0.0);
+        assertEquals(estimator.getStandardDeviationFyAsAcceleration(), acceleration1);
+        estimator.getStandardDeviationFyAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
+        assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
+        estimator.getStandardDeviationFzAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad aStdTriad1 = estimator.getStandardDeviationF();
+        assertEquals(aStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aStdTriad2 = new AccelerationTriad();
+        estimator.getStandardDeviationF(aStdTriad2);
+        assertEquals(aStdTriad1, aStdTriad2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getStandardDeviationAngularRateX(),
+                0.0, 0.0);
+        assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getStandardDeviationAngularRateXAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getStandardDeviationAngularRateY(),
+                0.0, 0.0);
+        assertEquals(estimator.getStandardDeviationAngularRateYAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getStandardDeviationAngularRateYAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getStandardDeviationAngularRateZ(),
+                0.0, 0.0);
+        assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        final AngularSpeedTriad wStdTriad1 = estimator.getStandardDeviationAngularRate();
+        assertEquals(wStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wStdTriad2 = new AngularSpeedTriad();
+        estimator.getStandardDeviationAngularRate(wStdTriad2);
+        assertEquals(wStdTriad1, wStdTriad2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
+        estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
+        assertEquals(kinematics1, kinematics2);
+        assertEquals(estimator.getPSDFx(), 0.0, 0.0);
+        assertEquals(estimator.getPSDFy(), 0.0, 0.0);
+        assertEquals(estimator.getPSDFz(), 0.0, 0.0);
+        assertEquals(estimator.getPSDAngularRateX(), 0.0, 0.0);
+        assertEquals(estimator.getPSDAngularRateY(), 0.0, 0.0);
+        assertEquals(estimator.getPSDAngularRateZ(), 0.0, 0.0);
+        assertEquals(estimator.getRootPSDFx(), 0.0, 0.0);
+        assertEquals(estimator.getRootPSDFy(), 0.0, 0.0);
+        assertEquals(estimator.getRootPSDFz(), 0.0, 0.0);
+        assertEquals(estimator.getRootPSDAngularRateX(), 0.0, 0.0);
+        assertEquals(estimator.getRootPSDAngularRateY(), 0.0, 0.0);
+        assertEquals(estimator.getRootPSDAngularRateZ(), 0.0, 0.0);
+        assertEquals(estimator.getAccelerometerNoisePSD(), 0.0, 0.0);
+        assertEquals(estimator.getAccelerometerNoiseRootPSD(), 0.0, 0.0);
+        assertEquals(estimator.getGyroNoisePSD(), 0.0, 0.0);
+        assertEquals(estimator.getGyroNoiseRootPSD(), 0.0, 0.0);
+        assertEquals(estimator.getAccelerometerBias(), m1);
+        estimator.getAccelerometerBias(m2);
+        assertEquals(m1, m2);
+        assertEquals(estimator.getGyroBias(), m1);
+        estimator.getGyroBias(m2);
+        assertEquals(m1, m2);
+        assertEquals(estimator.getNumberOfProcessedSamples(), 0);
+        assertFalse(estimator.isRunning());
         assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
         estimator.getExpectedKinematics(kinematics2);
         assertEquals(expectedKinematics, kinematics2);
@@ -7981,7 +9146,8 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         // Force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new IMUBiasEstimator(latitude, longitude, height,
+            estimator = new BodyKinematicsBiasEstimator(
+                    latitude, longitude, height,
                     -1.0, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -7992,206 +9158,8 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
     @Test
     public void testConstructor40() throws WrongSizeException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double timeInterval = randomizer.nextDouble(
-                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
-
-        final Angle latitude = new Angle(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs), AngleUnit.DEGREES);
-        final Angle longitude = new Angle(randomizer.nextDouble(
-                MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES), AngleUnit.DEGREES);
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-
-
-        final Acceleration acceleration1 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final AngularSpeed angularSpeed1 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final AngularSpeed angularSpeed2 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final BodyKinematics kinematics1 = new BodyKinematics();
-        final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(timeInterval, TimeUnit.SECOND);
-        final Time time2 = new Time(0.0, TimeUnit.SECOND);
-        final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height);
-        final NEDFrame nedFrame2 = new NEDFrame();
-        final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
-                .convertNEDtoECEFAndReturnNew(nedFrame1);
-        final ECEFFrame ecefFrame2 = new ECEFFrame();
-        final NEDPosition nedPosition1 = nedFrame1.getPosition();
-        final NEDPosition nedPosition2 = new NEDPosition();
-        final ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
-        final ECEFPosition ecefPosition2 = new ECEFPosition();
-        final CoordinateTransformation ecefC = ecefFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation nedC = nedFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-        final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
-        final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
-
-        final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
-                .estimateKinematicsAndReturnNew(
-                        timeInterval, ecefC, ecefC,
-                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                        ecefPosition1);
-
-
-        // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(latitude, longitude, height,
-                timeInterval, this);
-
-        // check default values
-        assertEquals(estimator.getTotalSamples(), IMUBiasEstimator.DEFAULT_TOTAL_SAMPLES);
-        assertEquals(estimator.getTimeInterval(), timeInterval, 0.0);
-        assertEquals(estimator.getTimeIntervalAsTime(), time1);
-        estimator.getTimeIntervalAsTime(time2);
-        assertEquals(time1, time2);
-        assertEquals(estimator.getEcefPosition(), ecefPosition1);
-        estimator.getEcefPosition(ecefPosition2);
-        assertEquals(ecefPosition1, ecefPosition2);
-        assertEquals(estimator.getEcefFrame(), ecefFrame1);
-        estimator.getEcefFrame(ecefFrame2);
-        assertEquals(ecefFrame2, ecefFrame1);
-        assertTrue(estimator.getNedFrame().equals(nedFrame1, ABSOLUTE_ERROR));
-        estimator.getNedFrame(nedFrame2);
-        assertTrue(nedFrame1.equals(nedFrame2, ABSOLUTE_ERROR));
-        assertTrue(estimator.getNedPosition().equals(nedPosition1, ABSOLUTE_ERROR));
-        estimator.getNedPosition(nedPosition2);
-        assertTrue(nedPosition1.equals(nedPosition2, ABSOLUTE_ERROR));
-        assertEquals(estimator.getEcefC(), ecefC);
-        estimator.getEcefC(c);
-        assertEquals(ecefC, c);
-        assertTrue(estimator.getNedC().equals(nedC, ABSOLUTE_ERROR));
-        estimator.getNedC(c);
-        assertTrue(nedC.equals(c, ABSOLUTE_ERROR));
-        assertSame(estimator.getListener(), this);
-        assertNull(estimator.getLastBodyKinematics());
-        assertFalse(estimator.getLastBodyKinematics(null));
-        assertEquals(estimator.getBiasFx(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFxAsAcceleration(), acceleration1);
-        estimator.getBiasFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFy(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFyAsAcceleration(), acceleration1);
-        estimator.getBiasFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFz(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFzAsAcceleration(), acceleration1);
-        estimator.getBiasFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateXAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateYAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
-        estimator.getBiasesAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getVarianceFx(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFy(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFz(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFx(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFxAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFy(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFyAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
-                0.0);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
-                acceleration1);
-        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationAngularRateX(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateY(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateYAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateZ(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
-        estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerBias(), m1);
-        estimator.getAccelerometerBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getGyroBias(), m1);
-        estimator.getGyroBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getNumberOfProcessedSamples(), 0);
-        assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
-        assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
-        estimator.getExpectedKinematics(kinematics2);
-        assertEquals(expectedKinematics, kinematics2);
-
-        // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = new IMUBiasEstimator(latitude, longitude, height,
-                    -1.0, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
-    }
-
-    @Test
-    public void testConstructor41() throws WrongSizeException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double timeInterval = randomizer.nextDouble(
-                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
+        final Time timeInterval = new Time(randomizer.nextDouble(
+                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
 
         final Angle latitude = new Angle(randomizer.nextDouble(
                 MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs), AngleUnit.DEGREES);
@@ -8211,7 +9179,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 AngularSpeedUnit.RADIANS_PER_SECOND);
         final BodyKinematics kinematics1 = new BodyKinematics();
         final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(timeInterval, TimeUnit.SECOND);
+        final Time time1 = new Time(timeInterval.getValue(), TimeUnit.SECOND);
         final Time time2 = new Time(0.0, TimeUnit.SECOND);
         final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height);
         final NEDFrame nedFrame2 = new NEDFrame();
@@ -8239,13 +9207,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
 
         // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(latitude, longitude, height,
-                timeInterval, this);
+        BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator(
+                latitude, longitude, height, timeInterval, this);
 
         // check default values
-        assertEquals(estimator.getTotalSamples(), IMUBiasEstimator.DEFAULT_TOTAL_SAMPLES);
         assertEquals(estimator.getTimeInterval(),
-                timeInterval, 0.0);
+                timeInterval.getValue().doubleValue(), 0.0);
         assertEquals(estimator.getTimeIntervalAsTime(), time1);
         estimator.getTimeIntervalAsTime(time2);
         assertEquals(time1, time2);
@@ -8294,11 +9261,22 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
         estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
+        final AccelerationTriad aTriad1 = estimator.getBiasF();
+        assertEquals(aTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aTriad2 = new AccelerationTriad();
+        estimator.getBiasF(aTriad2);
+        assertEquals(aTriad1, aTriad2);
+        final AngularSpeedTriad wTriad1 = estimator.getBiasAngularRate();
+        assertEquals(wTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wTriad2 = new AngularSpeedTriad();
+        estimator.getBiasAngularRate(wTriad2);
+        assertEquals(wTriad1, wTriad2);
         assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
         estimator.getBiasesAsBodyKinematics(kinematics2);
         assertEquals(kinematics1, kinematics2);
@@ -8320,6 +9298,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad aStdTriad1 = estimator.getStandardDeviationF();
+        assertEquals(aStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aStdTriad2 = new AccelerationTriad();
+        estimator.getStandardDeviationF(aStdTriad2);
+        assertEquals(aStdTriad1, aStdTriad2);
         assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
                 0.0);
         assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
@@ -8343,6 +9329,19 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        final AngularSpeedTriad wStdTriad1 = estimator.getStandardDeviationAngularRate();
+        assertEquals(wStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wStdTriad2 = new AngularSpeedTriad();
+        estimator.getStandardDeviationAngularRate(wStdTriad2);
+        assertEquals(wStdTriad1, wStdTriad2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -8371,7 +9370,6 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(m1, m2);
         assertEquals(estimator.getNumberOfProcessedSamples(), 0);
         assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
         assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
         estimator.getExpectedKinematics(kinematics2);
         assertEquals(expectedKinematics, kinematics2);
@@ -8379,7 +9377,257 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         // Force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new IMUBiasEstimator(latitude, longitude, height,
+            estimator = new BodyKinematicsBiasEstimator(
+                    latitude, longitude, height,
+                    -1.0, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(estimator);
+    }
+
+    @Test
+    public void testConstructor41() throws WrongSizeException,
+            InvalidSourceAndDestinationFrameTypeException {
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final Time timeInterval = new Time(randomizer.nextDouble(
+                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
+
+        final double latitude = Math.toRadians(randomizer.nextDouble(
+                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+        final double longitude = Math.toRadians(randomizer.nextDouble(
+                MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
+        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+
+        final double roll = Math.toRadians(randomizer.nextDouble(
+                MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double pitch = Math.toRadians(randomizer.nextDouble(
+                MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double yaw = Math.toRadians(randomizer.nextDouble(
+                MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+
+
+        final Acceleration acceleration1 = new Acceleration(0.0,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration acceleration2 = new Acceleration(0.0,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AngularSpeed angularSpeed1 = new AngularSpeed(0.0,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed angularSpeed2 = new AngularSpeed(0.0,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+        final BodyKinematics kinematics1 = new BodyKinematics();
+        final BodyKinematics kinematics2 = new BodyKinematics();
+        final Time time1 = new Time(timeInterval.getValue(), TimeUnit.SECOND);
+        final Time time2 = new Time(0.0, TimeUnit.SECOND);
+        final CoordinateTransformation nedC = new CoordinateTransformation(
+                roll, pitch, yaw, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
+        final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height,
+                0.0, 0.0, 0.0, nedC);
+        final NEDFrame nedFrame2 = new NEDFrame();
+        final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
+                .convertNEDtoECEFAndReturnNew(nedFrame1);
+        final ECEFFrame ecefFrame2 = new ECEFFrame();
+        final NEDPosition nedPosition1 = nedFrame1.getPosition();
+        final NEDPosition nedPosition2 = new NEDPosition();
+        final ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
+        final ECEFPosition ecefPosition2 = new ECEFPosition();
+        final CoordinateTransformation ecefC = ecefFrame1
+                .getCoordinateTransformation();
+        final CoordinateTransformation c = new CoordinateTransformation(
+                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
+        final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
+        final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
+
+        final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
+                .estimateKinematicsAndReturnNew(
+                        timeInterval, ecefC, ecefC,
+                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                        ecefPosition1);
+
+
+        // test constructor
+        BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator(
+                nedPosition1, nedC, timeInterval, this);
+
+        // check default values
+        assertEquals(estimator.getTimeInterval(),
+                timeInterval.getValue().doubleValue(), 0.0);
+        assertEquals(estimator.getTimeIntervalAsTime(), time1);
+        estimator.getTimeIntervalAsTime(time2);
+        assertEquals(time1, time2);
+        assertEquals(estimator.getEcefPosition(), ecefPosition1);
+        estimator.getEcefPosition(ecefPosition2);
+        assertEquals(ecefPosition1, ecefPosition2);
+        assertEquals(estimator.getEcefFrame(), ecefFrame1);
+        estimator.getEcefFrame(ecefFrame2);
+        assertEquals(ecefFrame2, ecefFrame1);
+        assertTrue(estimator.getNedFrame().equals(nedFrame1, ABSOLUTE_ERROR));
+        estimator.getNedFrame(nedFrame2);
+        assertTrue(nedFrame1.equals(nedFrame2, ABSOLUTE_ERROR));
+        assertTrue(estimator.getNedPosition().equals(nedPosition1, ABSOLUTE_ERROR));
+        estimator.getNedPosition(nedPosition2);
+        assertTrue(nedPosition1.equals(nedPosition2, ABSOLUTE_ERROR));
+        assertEquals(estimator.getEcefC(), ecefC);
+        estimator.getEcefC(c);
+        assertEquals(ecefC, c);
+        assertTrue(estimator.getNedC().equals(nedC, ABSOLUTE_ERROR));
+        estimator.getNedC(c);
+        assertTrue(nedC.equals(c, ABSOLUTE_ERROR));
+        assertSame(estimator.getListener(), this);
+        assertNull(estimator.getLastBodyKinematics());
+        assertFalse(estimator.getLastBodyKinematics(null));
+        assertEquals(estimator.getBiasFx(), 0.0, 0.0);
+        assertEquals(estimator.getBiasFxAsAcceleration(), acceleration1);
+        estimator.getBiasFxAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getBiasFy(), 0.0, 0.0);
+        assertEquals(estimator.getBiasFyAsAcceleration(), acceleration1);
+        estimator.getBiasFyAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getBiasFz(), 0.0, 0.0);
+        assertEquals(estimator.getBiasFzAsAcceleration(), acceleration1);
+        estimator.getBiasFzAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getBiasAngularRateX(), 0.0, 0.0);
+        assertEquals(estimator.getBiasAngularRateXAsAngularSpeed(), angularSpeed1);
+        estimator.getBiasAngularRateXAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getBiasAngularRateY(), 0.0, 0.0);
+        assertEquals(estimator.getBiasAngularRateYAsAngularSpeed(), angularSpeed1);
+        estimator.getBiasAngularRateYAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getBiasAngularRateZ(), 0.0, 0.0);
+        assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
+        estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        final AccelerationTriad aTriad1 = estimator.getBiasF();
+        assertEquals(aTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aTriad2 = new AccelerationTriad();
+        estimator.getBiasF(aTriad2);
+        assertEquals(aTriad1, aTriad2);
+        final AngularSpeedTriad wTriad1 = estimator.getBiasAngularRate();
+        assertEquals(wTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wTriad2 = new AngularSpeedTriad();
+        estimator.getBiasAngularRate(wTriad2);
+        assertEquals(wTriad1, wTriad2);
+        assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
+        estimator.getBiasesAsBodyKinematics(kinematics2);
+        assertEquals(kinematics1, kinematics2);
+        assertEquals(estimator.getVarianceFx(), 0.0, 0.0);
+        assertEquals(estimator.getVarianceFy(), 0.0, 0.0);
+        assertEquals(estimator.getVarianceFz(), 0.0, 0.0);
+        assertEquals(estimator.getVarianceAngularRateX(), 0.0, 0.0);
+        assertEquals(estimator.getVarianceAngularRateY(), 0.0, 0.0);
+        assertEquals(estimator.getVarianceAngularRateZ(), 0.0, 0.0);
+        assertEquals(estimator.getStandardDeviationFx(), 0.0, 0.0);
+        assertEquals(estimator.getStandardDeviationFxAsAcceleration(), acceleration1);
+        estimator.getStandardDeviationFxAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getStandardDeviationFy(), 0.0, 0.0);
+        assertEquals(estimator.getStandardDeviationFyAsAcceleration(), acceleration1);
+        estimator.getStandardDeviationFyAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
+        assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
+        estimator.getStandardDeviationFzAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad aStdTriad1 = estimator.getStandardDeviationF();
+        assertEquals(aStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(aStdTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad aStdTriad2 = new AccelerationTriad();
+        estimator.getStandardDeviationF(aStdTriad2);
+        assertEquals(aStdTriad1, aStdTriad2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getStandardDeviationAngularRateX(),
+                0.0, 0.0);
+        assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getStandardDeviationAngularRateXAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getStandardDeviationAngularRateY(),
+                0.0, 0.0);
+        assertEquals(estimator.getStandardDeviationAngularRateYAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getStandardDeviationAngularRateYAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getStandardDeviationAngularRateZ(),
+                0.0, 0.0);
+        assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        final AngularSpeedTriad wStdTriad1 = estimator.getStandardDeviationAngularRate();
+        assertEquals(wStdTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(wStdTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad wStdTriad2 = new AngularSpeedTriad();
+        estimator.getStandardDeviationAngularRate(wStdTriad2);
+        assertEquals(wStdTriad1, wStdTriad2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
+        estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
+        assertEquals(kinematics1, kinematics2);
+        assertEquals(estimator.getPSDFx(), 0.0, 0.0);
+        assertEquals(estimator.getPSDFy(), 0.0, 0.0);
+        assertEquals(estimator.getPSDFz(), 0.0, 0.0);
+        assertEquals(estimator.getPSDAngularRateX(), 0.0, 0.0);
+        assertEquals(estimator.getPSDAngularRateY(), 0.0, 0.0);
+        assertEquals(estimator.getPSDAngularRateZ(), 0.0, 0.0);
+        assertEquals(estimator.getRootPSDFx(), 0.0, 0.0);
+        assertEquals(estimator.getRootPSDFy(), 0.0, 0.0);
+        assertEquals(estimator.getRootPSDFz(), 0.0, 0.0);
+        assertEquals(estimator.getRootPSDAngularRateX(), 0.0, 0.0);
+        assertEquals(estimator.getRootPSDAngularRateY(), 0.0, 0.0);
+        assertEquals(estimator.getRootPSDAngularRateZ(), 0.0, 0.0);
+        assertEquals(estimator.getAccelerometerNoisePSD(), 0.0, 0.0);
+        assertEquals(estimator.getAccelerometerNoiseRootPSD(), 0.0, 0.0);
+        assertEquals(estimator.getGyroNoisePSD(), 0.0, 0.0);
+        assertEquals(estimator.getGyroNoiseRootPSD(), 0.0, 0.0);
+        assertEquals(estimator.getAccelerometerBias(), m1);
+        estimator.getAccelerometerBias(m2);
+        assertEquals(m1, m2);
+        assertEquals(estimator.getGyroBias(), m1);
+        estimator.getGyroBias(m2);
+        assertEquals(m1, m2);
+        assertEquals(estimator.getNumberOfProcessedSamples(), 0);
+        assertFalse(estimator.isRunning());
+        assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
+        estimator.getExpectedKinematics(kinematics2);
+        assertEquals(expectedKinematics, kinematics2);
+
+        // Force InvalidSourceAndDestinationFrameTypeException
+        estimator = null;
+        try {
+            estimator = new BodyKinematicsBiasEstimator(nedPosition1,
+                    new CoordinateTransformation(
+                            FrameType.LOCAL_NAVIGATION_FRAME,
+                            FrameType.LOCAL_NAVIGATION_FRAME),
+                    timeInterval, this);
+            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
+        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
+        }
+
+        // Force IllegalArgumentException
+        try {
+            estimator = new BodyKinematicsBiasEstimator(nedPosition1, nedC,
                     -1.0, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -8390,228 +9638,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
     @Test
     public void testConstructor42() throws WrongSizeException,
             InvalidSourceAndDestinationFrameTypeException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double timeInterval = randomizer.nextDouble(
-                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
-
-        final double latitude = Math.toRadians(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
-        final double longitude = Math.toRadians(randomizer.nextDouble(
-                MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-
-        final double roll = Math.toRadians(randomizer.nextDouble(
-                MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(randomizer.nextDouble(
-                MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(randomizer.nextDouble(
-                MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-
-
-        final Acceleration acceleration1 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final AngularSpeed angularSpeed1 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final AngularSpeed angularSpeed2 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final BodyKinematics kinematics1 = new BodyKinematics();
-        final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(timeInterval, TimeUnit.SECOND);
-        final Time time2 = new Time(0.0, TimeUnit.SECOND);
-        final CoordinateTransformation nedC = new CoordinateTransformation(
-                roll, pitch, yaw, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-        final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height,
-                0.0, 0.0, 0.0, nedC);
-        final NEDFrame nedFrame2 = new NEDFrame();
-        final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
-                .convertNEDtoECEFAndReturnNew(nedFrame1);
-        final ECEFFrame ecefFrame2 = new ECEFFrame();
-        final NEDPosition nedPosition1 = nedFrame1.getPosition();
-        final NEDPosition nedPosition2 = new NEDPosition();
-        final ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
-        final ECEFPosition ecefPosition2 = new ECEFPosition();
-        final CoordinateTransformation ecefC = ecefFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-        final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
-        final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
-
-        final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
-                .estimateKinematicsAndReturnNew(
-                        timeInterval, ecefC, ecefC,
-                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                        ecefPosition1);
-
-
-        // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(nedPosition1, nedC,
-                timeInterval, this);
-
-        // check default values
-        assertEquals(estimator.getTotalSamples(), IMUBiasEstimator.DEFAULT_TOTAL_SAMPLES);
-        assertEquals(estimator.getTimeInterval(), timeInterval, 0.0);
-        assertEquals(estimator.getTimeIntervalAsTime(), time1);
-        estimator.getTimeIntervalAsTime(time2);
-        assertEquals(time1, time2);
-        assertEquals(estimator.getEcefPosition(), ecefPosition1);
-        estimator.getEcefPosition(ecefPosition2);
-        assertEquals(ecefPosition1, ecefPosition2);
-        assertEquals(estimator.getEcefFrame(), ecefFrame1);
-        estimator.getEcefFrame(ecefFrame2);
-        assertEquals(ecefFrame2, ecefFrame1);
-        assertTrue(estimator.getNedFrame().equals(nedFrame1, ABSOLUTE_ERROR));
-        estimator.getNedFrame(nedFrame2);
-        assertTrue(nedFrame1.equals(nedFrame2, ABSOLUTE_ERROR));
-        assertTrue(estimator.getNedPosition().equals(nedPosition1, ABSOLUTE_ERROR));
-        estimator.getNedPosition(nedPosition2);
-        assertTrue(nedPosition1.equals(nedPosition2, ABSOLUTE_ERROR));
-        assertEquals(estimator.getEcefC(), ecefC);
-        estimator.getEcefC(c);
-        assertEquals(ecefC, c);
-        assertTrue(estimator.getNedC().equals(nedC, ABSOLUTE_ERROR));
-        estimator.getNedC(c);
-        assertTrue(nedC.equals(c, ABSOLUTE_ERROR));
-        assertSame(estimator.getListener(), this);
-        assertNull(estimator.getLastBodyKinematics());
-        assertFalse(estimator.getLastBodyKinematics(null));
-        assertEquals(estimator.getBiasFx(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFxAsAcceleration(), acceleration1);
-        estimator.getBiasFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFy(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFyAsAcceleration(), acceleration1);
-        estimator.getBiasFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFz(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFzAsAcceleration(), acceleration1);
-        estimator.getBiasFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateXAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateYAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
-        estimator.getBiasesAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getVarianceFx(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFy(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFz(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFx(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFxAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFy(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFyAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
-                0.0);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
-                acceleration1);
-        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationAngularRateX(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateY(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateYAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateZ(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
-        estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerBias(), m1);
-        estimator.getAccelerometerBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getGyroBias(), m1);
-        estimator.getGyroBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getNumberOfProcessedSamples(), 0);
-        assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
-        assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
-        estimator.getExpectedKinematics(kinematics2);
-        assertEquals(expectedKinematics, kinematics2);
-
-        // Force InvalidSourceAndDestinationFrameTypeException
-        estimator = null;
-        try {
-            estimator = new IMUBiasEstimator(nedPosition1,
-                    new CoordinateTransformation(
-                            FrameType.LOCAL_NAVIGATION_FRAME,
-                            FrameType.LOCAL_NAVIGATION_FRAME), this);
-            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
-        }
-
-        // Force IllegalArgumentException
-        try {
-            estimator = new IMUBiasEstimator(nedPosition1, nedC, -1.0,
-                    this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
-    }
-
-    @Test
-    public void testConstructor43() throws WrongSizeException,
-            InvalidSourceAndDestinationFrameTypeException {
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double timeInterval = randomizer.nextDouble(
-                    MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
+            final Time timeInterval = new Time(randomizer.nextDouble(
+                    MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
 
             final double latitude = Math.toRadians(randomizer.nextDouble(
                     MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
@@ -8637,7 +9668,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                     AngularSpeedUnit.RADIANS_PER_SECOND);
             final BodyKinematics kinematics1 = new BodyKinematics();
             final BodyKinematics kinematics2 = new BodyKinematics();
-            final Time time1 = new Time(timeInterval, TimeUnit.SECOND);
+            final Time time1 = new Time(timeInterval.getValue(), TimeUnit.SECOND);
             final Time time2 = new Time(0.0, TimeUnit.SECOND);
             final CoordinateTransformation nedC = new CoordinateTransformation(
                     roll, pitch, yaw, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
@@ -8666,12 +9697,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
 
             // test constructor
-            IMUBiasEstimator estimator = new IMUBiasEstimator(ecefPosition1, nedC,
-                    timeInterval, this);
+            BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator(
+                    ecefPosition1, nedC, timeInterval, this);
 
             // check default values
-            assertEquals(estimator.getTotalSamples(), IMUBiasEstimator.DEFAULT_TOTAL_SAMPLES);
-            assertEquals(estimator.getTimeInterval(), timeInterval, 0.0);
+            assertEquals(estimator.getTimeInterval(),
+                    timeInterval.getValue().doubleValue(), 0.0);
             assertEquals(estimator.getTimeIntervalAsTime(), time1);
             estimator.getTimeIntervalAsTime(time2);
             assertEquals(time1, time2);
@@ -8681,8 +9712,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertTrue(estimator.getEcefPosition().equals(ecefPosition1,
                     ABSOLUTE_ERROR));
             estimator.getEcefPosition(ecefPosition2);
-            assertTrue(ecefPosition1.equals(ecefPosition2,
-                    ABSOLUTE_ERROR));
+            assertTrue(ecefPosition1.equals(ecefPosition2, ABSOLUTE_ERROR));
             if (!estimator.getEcefFrame().equals(ecefFrame1, ABSOLUTE_ERROR)) {
                 continue;
             }
@@ -8692,7 +9722,8 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertTrue(estimator.getNedFrame().equals(nedFrame1, ABSOLUTE_ERROR));
             estimator.getNedFrame(nedFrame2);
             assertTrue(nedFrame1.equals(nedFrame2, ABSOLUTE_ERROR));
-            assertTrue(estimator.getNedPosition().equals(nedPosition1, ABSOLUTE_ERROR));
+            assertTrue(estimator.getNedPosition().equals(nedPosition1,
+                    ABSOLUTE_ERROR));
             estimator.getNedPosition(nedPosition2);
             assertTrue(nedPosition1.equals(nedPosition2, ABSOLUTE_ERROR));
             assertTrue(estimator.getEcefC().equals(ecefC, ABSOLUTE_ERROR));
@@ -8728,6 +9759,22 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
             estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
             assertEquals(angularSpeed1, angularSpeed2);
+            final AccelerationTriad aTriad1 = estimator.getBiasF();
+            assertEquals(aTriad1.getValueX(), 0.0, 0.0);
+            assertEquals(aTriad1.getValueY(), 0.0, 0.0);
+            assertEquals(aTriad1.getValueZ(), 0.0, 0.0);
+            assertEquals(aTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+            final AccelerationTriad aTriad2 = new AccelerationTriad();
+            estimator.getBiasF(aTriad2);
+            assertEquals(aTriad1, aTriad2);
+            final AngularSpeedTriad wTriad1 = estimator.getBiasAngularRate();
+            assertEquals(wTriad1.getValueX(), 0.0, 0.0);
+            assertEquals(wTriad1.getValueY(), 0.0, 0.0);
+            assertEquals(wTriad1.getValueZ(), 0.0, 0.0);
+            assertEquals(wTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+            final AngularSpeedTriad wTriad2 = new AngularSpeedTriad();
+            estimator.getBiasAngularRate(wTriad2);
+            assertEquals(wTriad1, wTriad2);
             assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
             estimator.getBiasesAsBodyKinematics(kinematics2);
             assertEquals(kinematics1, kinematics2);
@@ -8749,6 +9796,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
             estimator.getStandardDeviationFzAsAcceleration(acceleration2);
             assertEquals(acceleration1, acceleration2);
+            final AccelerationTriad aStdTriad1 = estimator.getStandardDeviationF();
+            assertEquals(aStdTriad1.getValueX(), 0.0, 0.0);
+            assertEquals(aStdTriad1.getValueY(), 0.0, 0.0);
+            assertEquals(aStdTriad1.getValueZ(), 0.0, 0.0);
+            assertEquals(aStdTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+            final AccelerationTriad aStdTriad2 = new AccelerationTriad();
+            estimator.getStandardDeviationF(aStdTriad2);
+            assertEquals(aStdTriad1, aStdTriad2);
             assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
                     0.0);
             assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
@@ -8773,6 +9828,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                     angularSpeed1);
             estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
             assertEquals(angularSpeed1, angularSpeed2);
+            final AngularSpeedTriad wStdTriad1 = estimator.getStandardDeviationAngularRate();
+            assertEquals(wStdTriad1.getValueX(), 0.0, 0.0);
+            assertEquals(wStdTriad1.getValueY(), 0.0, 0.0);
+            assertEquals(wStdTriad1.getValueZ(), 0.0, 0.0);
+            assertEquals(wStdTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+            final AngularSpeedTriad wStdTriad2 = new AngularSpeedTriad();
+            estimator.getStandardDeviationAngularRate(wStdTriad2);
+            assertEquals(wStdTriad1, wStdTriad2);
             assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
             assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
                     angularSpeed1);
@@ -8805,7 +9868,6 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertEquals(m1, m2);
             assertEquals(estimator.getNumberOfProcessedSamples(), 0);
             assertFalse(estimator.isRunning());
-            assertFalse(estimator.isFinished());
             assertTrue(estimator.getExpectedKinematics().equals(expectedKinematics,
                     ABSOLUTE_ERROR));
             estimator.getExpectedKinematics(kinematics2);
@@ -8814,7 +9876,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             // Force InvalidSourceAndDestinationFrameTypeException
             estimator = null;
             try {
-                estimator = new IMUBiasEstimator(ecefPosition1,
+                estimator = new BodyKinematicsBiasEstimator(ecefPosition1,
                         new CoordinateTransformation(
                                 FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME,
                                 FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME),
@@ -8823,7 +9885,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
             }
             try {
-                estimator = new IMUBiasEstimator(ecefPosition1, nedC,
+                estimator = new BodyKinematicsBiasEstimator(ecefPosition1, nedC,
                         -1.0, this);
                 fail("IllegalArgumentException expected but not thrown");
             } catch (final IllegalArgumentException ignore) {
@@ -8833,9027 +9895,18 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             numValid++;
             break;
         }
-
         assertTrue(numValid > 0);
-    }
-
-    @Test
-    public void testConstructor44() throws WrongSizeException {
-
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double timeInterval = randomizer.nextDouble(
-                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
-
-        final Acceleration acceleration1 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final AngularSpeed angularSpeed1 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final AngularSpeed angularSpeed2 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final BodyKinematics kinematics1 = new BodyKinematics();
-        final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(timeInterval, TimeUnit.SECOND);
-        final Time time2 = new Time(0.0, TimeUnit.SECOND);
-        final NEDFrame nedFrame1 = new NEDFrame();
-        final NEDFrame nedFrame2 = new NEDFrame();
-        final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
-                .convertNEDtoECEFAndReturnNew(nedFrame1);
-        final ECEFFrame ecefFrame2 = new ECEFFrame();
-        final NEDPosition nedPosition1 = nedFrame1.getPosition();
-        final NEDPosition nedPosition2 = new NEDPosition();
-        final ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
-        final ECEFPosition ecefPosition2 = new ECEFPosition();
-        final CoordinateTransformation ecefC = ecefFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation nedC = nedFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-        final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
-        final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
-
-        final int totalSamples = randomizer.nextInt(
-                MIN_TOTAL_SAMPLES, MAX_TOTAL_SAMPLES);
-
-        final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
-                .estimateKinematicsAndReturnNew(
-                        timeInterval, ecefC, ecefC,
-                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                        ecefPosition1);
-
-
-        // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(totalSamples, timeInterval);
-
-        // check default values
-        assertEquals(estimator.getTotalSamples(), totalSamples);
-        assertEquals(estimator.getTimeInterval(), timeInterval, 0.0);
-        assertEquals(estimator.getTimeIntervalAsTime(), time1);
-        estimator.getTimeIntervalAsTime(time2);
-        assertEquals(time1, time2);
-        assertEquals(estimator.getEcefPosition(), ecefPosition1);
-        estimator.getEcefPosition(ecefPosition2);
-        assertEquals(ecefPosition1, ecefPosition2);
-        assertEquals(estimator.getEcefFrame(), ecefFrame1);
-        estimator.getEcefFrame(ecefFrame2);
-        assertEquals(ecefFrame2, ecefFrame1);
-        assertEquals(estimator.getNedFrame(), nedFrame1);
-        estimator.getNedFrame(nedFrame2);
-        assertEquals(nedFrame1, nedFrame2);
-        assertEquals(estimator.getNedPosition(), nedPosition1);
-        estimator.getNedPosition(nedPosition2);
-        assertEquals(nedPosition1, nedPosition2);
-        assertEquals(estimator.getEcefC(), ecefC);
-        estimator.getEcefC(c);
-        assertEquals(ecefC, c);
-        assertEquals(estimator.getNedC(), nedC);
-        estimator.getNedC(c);
-        assertEquals(nedC, c);
-        assertNull(estimator.getListener());
-        assertNull(estimator.getLastBodyKinematics());
-        assertFalse(estimator.getLastBodyKinematics(null));
-        assertEquals(estimator.getBiasFx(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFxAsAcceleration(), acceleration1);
-        estimator.getBiasFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFy(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFyAsAcceleration(), acceleration1);
-        estimator.getBiasFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFz(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFzAsAcceleration(), acceleration1);
-        estimator.getBiasFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateXAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateYAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
-        estimator.getBiasesAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getVarianceFx(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFy(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFz(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFx(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFxAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFy(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFyAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
-                0.0);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
-                acceleration1);
-        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationAngularRateX(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateY(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateYAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateZ(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
-        estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerBias(), m1);
-        estimator.getAccelerometerBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getGyroBias(), m1);
-        estimator.getGyroBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getNumberOfProcessedSamples(), 0);
-        assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
-        assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
-        estimator.getExpectedKinematics(kinematics2);
-        assertEquals(expectedKinematics, kinematics2);
-
-        // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = new IMUBiasEstimator(0, timeInterval);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new IMUBiasEstimator(totalSamples, -1.0);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
-    }
-
-    @Test
-    public void testConstructor45() throws WrongSizeException,
-            InvalidSourceAndDestinationFrameTypeException {
-
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double timeInterval = randomizer.nextDouble(
-                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
-
-        final Acceleration acceleration1 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final AngularSpeed angularSpeed1 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final AngularSpeed angularSpeed2 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final BodyKinematics kinematics1 = new BodyKinematics();
-        final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(timeInterval, TimeUnit.SECOND);
-        final Time time2 = new Time(0.0, TimeUnit.SECOND);
-        final NEDFrame nedFrame1 = new NEDFrame();
-        final NEDFrame nedFrame2 = new NEDFrame();
-        final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
-                .convertNEDtoECEFAndReturnNew(nedFrame1);
-        final ECEFFrame ecefFrame2 = new ECEFFrame();
-        final NEDPosition nedPosition1 = nedFrame1.getPosition();
-        final NEDPosition nedPosition2 = new NEDPosition();
-        final ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
-        final ECEFPosition ecefPosition2 = new ECEFPosition();
-        final CoordinateTransformation ecefC = ecefFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation nedC = nedFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-        final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
-        final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
-
-        final double roll = Math.toRadians(randomizer.nextDouble(
-                MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(randomizer.nextDouble(
-                MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(randomizer.nextDouble(
-                MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        nedC.setEulerAngles(roll, pitch, yaw);
-        nedFrame1.setCoordinateTransformation(nedC);
-        NEDtoECEFFrameConverter.convertNEDtoECEF(nedFrame1, ecefFrame1);
-        ecefFrame1.getCoordinateTransformation(ecefC);
-
-        final int totalSamples = randomizer.nextInt(
-                MIN_TOTAL_SAMPLES, MAX_TOTAL_SAMPLES);
-
-        final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
-                .estimateKinematicsAndReturnNew(
-                        timeInterval, ecefC, ecefC,
-                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                        ecefPosition1);
-
-
-        // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(nedC, totalSamples,
-                timeInterval);
-
-        // check default values
-        assertEquals(estimator.getTotalSamples(), totalSamples);
-        assertEquals(estimator.getTimeInterval(), timeInterval, 0.0);
-        assertEquals(estimator.getTimeIntervalAsTime(), time1);
-        estimator.getTimeIntervalAsTime(time2);
-        assertEquals(time1, time2);
-        assertEquals(estimator.getEcefPosition(), ecefPosition1);
-        estimator.getEcefPosition(ecefPosition2);
-        assertEquals(ecefPosition1, ecefPosition2);
-        assertEquals(estimator.getEcefFrame(), ecefFrame1);
-        estimator.getEcefFrame(ecefFrame2);
-        assertEquals(ecefFrame2, ecefFrame1);
-        assertEquals(estimator.getNedFrame(), nedFrame1);
-        estimator.getNedFrame(nedFrame2);
-        assertEquals(nedFrame1, nedFrame2);
-        assertEquals(estimator.getNedPosition(), nedPosition1);
-        estimator.getNedPosition(nedPosition2);
-        assertEquals(nedPosition1, nedPosition2);
-        assertEquals(estimator.getEcefC(), ecefC);
-        estimator.getEcefC(c);
-        assertEquals(ecefC, c);
-        assertEquals(estimator.getNedC(), nedC);
-        estimator.getNedC(c);
-        assertEquals(nedC, c);
-        assertNull(estimator.getListener());
-        assertNull(estimator.getLastBodyKinematics());
-        assertFalse(estimator.getLastBodyKinematics(null));
-        assertEquals(estimator.getBiasFx(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFxAsAcceleration(), acceleration1);
-        estimator.getBiasFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFy(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFyAsAcceleration(), acceleration1);
-        estimator.getBiasFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFz(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFzAsAcceleration(), acceleration1);
-        estimator.getBiasFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateXAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateYAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
-        estimator.getBiasesAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getVarianceFx(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFy(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFz(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFx(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFxAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFy(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFyAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
-                0.0);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
-                acceleration1);
-        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationAngularRateX(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateY(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateYAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateZ(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
-        estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerBias(), m1);
-        estimator.getAccelerometerBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getGyroBias(), m1);
-        estimator.getGyroBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getNumberOfProcessedSamples(), 0);
-        assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
-        assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
-        estimator.getExpectedKinematics(kinematics2);
-        assertEquals(expectedKinematics, kinematics2);
-
-        // Force InvalidSourceAndDestinationFrameTypeException
-        estimator = null;
-        try {
-            estimator = new IMUBiasEstimator(new CoordinateTransformation(
-                    FrameType.LOCAL_NAVIGATION_FRAME,
-                    FrameType.LOCAL_NAVIGATION_FRAME), totalSamples, timeInterval);
-            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
-        }
-
-        // Force IllegalArgumentException
-        try {
-            estimator = new IMUBiasEstimator(nedC, 0, timeInterval);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new IMUBiasEstimator(nedC, totalSamples, -1.0);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
-    }
-
-    @Test
-    public void testConstructor46() throws WrongSizeException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double timeInterval = randomizer.nextDouble(
-                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
-
-        final double latitude = Math.toRadians(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
-        final double longitude = Math.toRadians(randomizer.nextDouble(
-                MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-
-
-        final Acceleration acceleration1 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final AngularSpeed angularSpeed1 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final AngularSpeed angularSpeed2 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final BodyKinematics kinematics1 = new BodyKinematics();
-        final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(timeInterval, TimeUnit.SECOND);
-        final Time time2 = new Time(0.0, TimeUnit.SECOND);
-        final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height);
-        final NEDFrame nedFrame2 = new NEDFrame();
-        final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
-                .convertNEDtoECEFAndReturnNew(nedFrame1);
-        final ECEFFrame ecefFrame2 = new ECEFFrame();
-        final NEDPosition nedPosition1 = nedFrame1.getPosition();
-        final NEDPosition nedPosition2 = new NEDPosition();
-        final ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
-        final ECEFPosition ecefPosition2 = new ECEFPosition();
-        final CoordinateTransformation ecefC = ecefFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation nedC = nedFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-        final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
-        final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
-
-        final int totalSamples = randomizer.nextInt(
-                MIN_TOTAL_SAMPLES, MAX_TOTAL_SAMPLES);
-
-        final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
-                .estimateKinematicsAndReturnNew(
-                        timeInterval, ecefC, ecefC,
-                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                        ecefPosition1);
-
-
-        // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(
-                latitude, longitude, height, totalSamples, timeInterval);
-
-        // check default values
-        assertEquals(estimator.getTotalSamples(), totalSamples);
-        assertEquals(estimator.getTimeInterval(), timeInterval, 0.0);
-        assertEquals(estimator.getTimeIntervalAsTime(), time1);
-        estimator.getTimeIntervalAsTime(time2);
-        assertEquals(time1, time2);
-        assertEquals(estimator.getEcefPosition(), ecefPosition1);
-        estimator.getEcefPosition(ecefPosition2);
-        assertEquals(ecefPosition1, ecefPosition2);
-        assertEquals(estimator.getEcefFrame(), ecefFrame1);
-        estimator.getEcefFrame(ecefFrame2);
-        assertEquals(ecefFrame2, ecefFrame1);
-        assertTrue(estimator.getNedFrame().equals(nedFrame1, ABSOLUTE_ERROR));
-        estimator.getNedFrame(nedFrame2);
-        assertTrue(nedFrame1.equals(nedFrame2, ABSOLUTE_ERROR));
-        assertTrue(estimator.getNedPosition().equals(nedPosition1, ABSOLUTE_ERROR));
-        estimator.getNedPosition(nedPosition2);
-        assertTrue(nedPosition1.equals(nedPosition2, ABSOLUTE_ERROR));
-        assertEquals(estimator.getEcefC(), ecefC);
-        estimator.getEcefC(c);
-        assertEquals(ecefC, c);
-        assertTrue(estimator.getNedC().equals(nedC, ABSOLUTE_ERROR));
-        estimator.getNedC(c);
-        assertTrue(nedC.equals(c, ABSOLUTE_ERROR));
-        assertNull(estimator.getListener());
-        assertNull(estimator.getLastBodyKinematics());
-        assertFalse(estimator.getLastBodyKinematics(null));
-        assertEquals(estimator.getBiasFx(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFxAsAcceleration(), acceleration1);
-        estimator.getBiasFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFy(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFyAsAcceleration(), acceleration1);
-        estimator.getBiasFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFz(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFzAsAcceleration(), acceleration1);
-        estimator.getBiasFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateXAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateYAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
-        estimator.getBiasesAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getVarianceFx(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFy(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFz(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFx(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFxAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFy(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFyAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
-                0.0);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
-                acceleration1);
-        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationAngularRateX(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateY(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateYAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateZ(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
-        estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerBias(), m1);
-        estimator.getAccelerometerBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getGyroBias(), m1);
-        estimator.getGyroBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getNumberOfProcessedSamples(), 0);
-        assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
-        assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
-        estimator.getExpectedKinematics(kinematics2);
-        assertEquals(expectedKinematics, kinematics2);
-
-        // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = new IMUBiasEstimator(latitude, longitude, height,
-                    0, timeInterval);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new IMUBiasEstimator(latitude, longitude, height,
-                    totalSamples, -1.0);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
-    }
-
-    @Test
-    public void testConstructor47() throws WrongSizeException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double timeInterval = randomizer.nextDouble(
-                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
-
-        final Angle latitude = new Angle(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs), AngleUnit.DEGREES);
-        final Angle longitude = new Angle(randomizer.nextDouble(
-                MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES), AngleUnit.DEGREES);
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-
-
-        final Acceleration acceleration1 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final AngularSpeed angularSpeed1 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final AngularSpeed angularSpeed2 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final BodyKinematics kinematics1 = new BodyKinematics();
-        final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(timeInterval, TimeUnit.SECOND);
-        final Time time2 = new Time(0.0, TimeUnit.SECOND);
-        final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height);
-        final NEDFrame nedFrame2 = new NEDFrame();
-        final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
-                .convertNEDtoECEFAndReturnNew(nedFrame1);
-        final ECEFFrame ecefFrame2 = new ECEFFrame();
-        final NEDPosition nedPosition1 = nedFrame1.getPosition();
-        final NEDPosition nedPosition2 = new NEDPosition();
-        final ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
-        final ECEFPosition ecefPosition2 = new ECEFPosition();
-        final CoordinateTransformation ecefC = ecefFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation nedC = nedFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-        final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
-        final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
-
-        final int totalSamples = randomizer.nextInt(
-                MIN_TOTAL_SAMPLES, MAX_TOTAL_SAMPLES);
-
-        final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
-                .estimateKinematicsAndReturnNew(
-                        timeInterval, ecefC, ecefC,
-                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                        ecefPosition1);
-
-
-        // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(latitude, longitude, height,
-                totalSamples, timeInterval);
-
-        // check default values
-        assertEquals(estimator.getTotalSamples(), totalSamples);
-        assertEquals(estimator.getTimeInterval(), timeInterval, 0.0);
-        assertEquals(estimator.getTimeIntervalAsTime(), time1);
-        estimator.getTimeIntervalAsTime(time2);
-        assertEquals(time1, time2);
-        assertEquals(estimator.getEcefPosition(), ecefPosition1);
-        estimator.getEcefPosition(ecefPosition2);
-        assertEquals(ecefPosition1, ecefPosition2);
-        assertEquals(estimator.getEcefFrame(), ecefFrame1);
-        estimator.getEcefFrame(ecefFrame2);
-        assertEquals(ecefFrame2, ecefFrame1);
-        assertTrue(estimator.getNedFrame().equals(nedFrame1, ABSOLUTE_ERROR));
-        estimator.getNedFrame(nedFrame2);
-        assertTrue(nedFrame1.equals(nedFrame2, ABSOLUTE_ERROR));
-        assertTrue(estimator.getNedPosition().equals(nedPosition1, ABSOLUTE_ERROR));
-        estimator.getNedPosition(nedPosition2);
-        assertTrue(nedPosition1.equals(nedPosition2, ABSOLUTE_ERROR));
-        assertEquals(estimator.getEcefC(), ecefC);
-        estimator.getEcefC(c);
-        assertEquals(ecefC, c);
-        assertTrue(estimator.getNedC().equals(nedC, ABSOLUTE_ERROR));
-        estimator.getNedC(c);
-        assertTrue(nedC.equals(c, ABSOLUTE_ERROR));
-        assertNull(estimator.getListener());
-        assertNull(estimator.getLastBodyKinematics());
-        assertFalse(estimator.getLastBodyKinematics(null));
-        assertEquals(estimator.getBiasFx(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFxAsAcceleration(), acceleration1);
-        estimator.getBiasFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFy(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFyAsAcceleration(), acceleration1);
-        estimator.getBiasFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFz(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFzAsAcceleration(), acceleration1);
-        estimator.getBiasFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateXAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateYAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
-        estimator.getBiasesAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getVarianceFx(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFy(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFz(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFx(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFxAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFy(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFyAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
-                0.0);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
-                acceleration1);
-        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationAngularRateX(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateY(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateYAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateZ(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
-        estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerBias(), m1);
-        estimator.getAccelerometerBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getGyroBias(), m1);
-        estimator.getGyroBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getNumberOfProcessedSamples(), 0);
-        assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
-        assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
-        estimator.getExpectedKinematics(kinematics2);
-        assertEquals(expectedKinematics, kinematics2);
-
-        // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = new IMUBiasEstimator(latitude, longitude, height,
-                    0, timeInterval);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new IMUBiasEstimator(latitude, longitude, height,
-                    totalSamples, -1.0);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
-    }
-
-    @Test
-    public void testConstructor48() throws WrongSizeException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double timeInterval = randomizer.nextDouble(
-                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
-
-        final Angle latitude = new Angle(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs), AngleUnit.DEGREES);
-        final Angle longitude = new Angle(randomizer.nextDouble(
-                MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES), AngleUnit.DEGREES);
-        final Distance height = new Distance(
-                randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT), DistanceUnit.METER);
-
-
-        final Acceleration acceleration1 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final AngularSpeed angularSpeed1 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final AngularSpeed angularSpeed2 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final BodyKinematics kinematics1 = new BodyKinematics();
-        final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(timeInterval, TimeUnit.SECOND);
-        final Time time2 = new Time(0.0, TimeUnit.SECOND);
-        final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height);
-        final NEDFrame nedFrame2 = new NEDFrame();
-        final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
-                .convertNEDtoECEFAndReturnNew(nedFrame1);
-        final ECEFFrame ecefFrame2 = new ECEFFrame();
-        final NEDPosition nedPosition1 = nedFrame1.getPosition();
-        final NEDPosition nedPosition2 = new NEDPosition();
-        final ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
-        final ECEFPosition ecefPosition2 = new ECEFPosition();
-        final CoordinateTransformation ecefC = ecefFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation nedC = nedFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-        final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
-        final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
-
-        final int totalSamples = randomizer.nextInt(
-                MIN_TOTAL_SAMPLES, MAX_TOTAL_SAMPLES);
-
-        final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
-                .estimateKinematicsAndReturnNew(
-                        timeInterval, ecefC, ecefC,
-                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                        ecefPosition1);
-
-
-        // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(latitude, longitude, height,
-                totalSamples, timeInterval);
-
-        // check default values
-        assertEquals(estimator.getTotalSamples(), totalSamples);
-        assertEquals(estimator.getTimeInterval(),
-                timeInterval, 0.0);
-        assertEquals(estimator.getTimeIntervalAsTime(), time1);
-        estimator.getTimeIntervalAsTime(time2);
-        assertEquals(time1, time2);
-        assertEquals(estimator.getEcefPosition(), ecefPosition1);
-        estimator.getEcefPosition(ecefPosition2);
-        assertEquals(ecefPosition1, ecefPosition2);
-        assertEquals(estimator.getEcefFrame(), ecefFrame1);
-        estimator.getEcefFrame(ecefFrame2);
-        assertEquals(ecefFrame2, ecefFrame1);
-        assertTrue(estimator.getNedFrame().equals(nedFrame1, ABSOLUTE_ERROR));
-        estimator.getNedFrame(nedFrame2);
-        assertTrue(nedFrame1.equals(nedFrame2, ABSOLUTE_ERROR));
-        assertTrue(estimator.getNedPosition().equals(nedPosition1, ABSOLUTE_ERROR));
-        estimator.getNedPosition(nedPosition2);
-        assertTrue(nedPosition1.equals(nedPosition2, ABSOLUTE_ERROR));
-        assertEquals(estimator.getEcefC(), ecefC);
-        estimator.getEcefC(c);
-        assertEquals(ecefC, c);
-        assertTrue(estimator.getNedC().equals(nedC, ABSOLUTE_ERROR));
-        estimator.getNedC(c);
-        assertTrue(nedC.equals(c, ABSOLUTE_ERROR));
-        assertNull(estimator.getListener());
-        assertNull(estimator.getLastBodyKinematics());
-        assertFalse(estimator.getLastBodyKinematics(null));
-        assertEquals(estimator.getBiasFx(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFxAsAcceleration(), acceleration1);
-        estimator.getBiasFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFy(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFyAsAcceleration(), acceleration1);
-        estimator.getBiasFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFz(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFzAsAcceleration(), acceleration1);
-        estimator.getBiasFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateXAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateYAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
-        estimator.getBiasesAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getVarianceFx(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFy(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFz(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFx(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFxAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFy(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFyAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
-                0.0);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
-                acceleration1);
-        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationAngularRateX(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateY(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateYAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateZ(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
-        estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerBias(), m1);
-        estimator.getAccelerometerBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getGyroBias(), m1);
-        estimator.getGyroBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getNumberOfProcessedSamples(), 0);
-        assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
-        assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
-        estimator.getExpectedKinematics(kinematics2);
-        assertEquals(expectedKinematics, kinematics2);
-
-        // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = new IMUBiasEstimator(latitude, longitude, height,
-                    0, timeInterval);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new IMUBiasEstimator(latitude, longitude, height,
-                    totalSamples, -1.0);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
-    }
-
-    @Test
-    public void testConstructor49() throws WrongSizeException,
-            InvalidSourceAndDestinationFrameTypeException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double timeInterval = randomizer.nextDouble(
-                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
-
-        final double latitude = Math.toRadians(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
-        final double longitude = Math.toRadians(randomizer.nextDouble(
-                MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-
-        final double roll = Math.toRadians(randomizer.nextDouble(
-                MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(randomizer.nextDouble(
-                MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(randomizer.nextDouble(
-                MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-
-
-        final Acceleration acceleration1 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final AngularSpeed angularSpeed1 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final AngularSpeed angularSpeed2 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final BodyKinematics kinematics1 = new BodyKinematics();
-        final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(timeInterval, TimeUnit.SECOND);
-        final Time time2 = new Time(0.0, TimeUnit.SECOND);
-        final CoordinateTransformation nedC = new CoordinateTransformation(
-                roll, pitch, yaw, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-        final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height,
-                0.0, 0.0, 0.0, nedC);
-        final NEDFrame nedFrame2 = new NEDFrame();
-        final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
-                .convertNEDtoECEFAndReturnNew(nedFrame1);
-        final ECEFFrame ecefFrame2 = new ECEFFrame();
-        final NEDPosition nedPosition1 = nedFrame1.getPosition();
-        final NEDPosition nedPosition2 = new NEDPosition();
-        final ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
-        final ECEFPosition ecefPosition2 = new ECEFPosition();
-        final CoordinateTransformation ecefC = ecefFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-        final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
-        final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
-
-        final int totalSamples = randomizer.nextInt(
-                MIN_TOTAL_SAMPLES, MAX_TOTAL_SAMPLES);
-
-        final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
-                .estimateKinematicsAndReturnNew(
-                        timeInterval, ecefC, ecefC,
-                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                        ecefPosition1);
-
-
-        // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(nedPosition1, nedC,
-                totalSamples, timeInterval);
-
-        // check default values
-        assertEquals(estimator.getTotalSamples(), totalSamples);
-        assertEquals(estimator.getTimeInterval(), timeInterval, 0.0);
-        assertEquals(estimator.getTimeIntervalAsTime(), time1);
-        estimator.getTimeIntervalAsTime(time2);
-        assertEquals(time1, time2);
-        assertEquals(estimator.getEcefPosition(), ecefPosition1);
-        estimator.getEcefPosition(ecefPosition2);
-        assertEquals(ecefPosition1, ecefPosition2);
-        assertEquals(estimator.getEcefFrame(), ecefFrame1);
-        estimator.getEcefFrame(ecefFrame2);
-        assertEquals(ecefFrame2, ecefFrame1);
-        assertTrue(estimator.getNedFrame().equals(nedFrame1, ABSOLUTE_ERROR));
-        estimator.getNedFrame(nedFrame2);
-        assertTrue(nedFrame1.equals(nedFrame2, ABSOLUTE_ERROR));
-        assertTrue(estimator.getNedPosition().equals(nedPosition1, ABSOLUTE_ERROR));
-        estimator.getNedPosition(nedPosition2);
-        assertTrue(nedPosition1.equals(nedPosition2, ABSOLUTE_ERROR));
-        assertEquals(estimator.getEcefC(), ecefC);
-        estimator.getEcefC(c);
-        assertEquals(ecefC, c);
-        assertTrue(estimator.getNedC().equals(nedC, ABSOLUTE_ERROR));
-        estimator.getNedC(c);
-        assertTrue(nedC.equals(c, ABSOLUTE_ERROR));
-        assertNull(estimator.getListener());
-        assertNull(estimator.getLastBodyKinematics());
-        assertFalse(estimator.getLastBodyKinematics(null));
-        assertEquals(estimator.getBiasFx(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFxAsAcceleration(), acceleration1);
-        estimator.getBiasFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFy(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFyAsAcceleration(), acceleration1);
-        estimator.getBiasFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFz(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFzAsAcceleration(), acceleration1);
-        estimator.getBiasFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateXAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateYAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
-        estimator.getBiasesAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getVarianceFx(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFy(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFz(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFx(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFxAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFy(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFyAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
-                0.0);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
-                acceleration1);
-        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationAngularRateX(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateY(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateYAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateZ(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
-        estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerBias(), m1);
-        estimator.getAccelerometerBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getGyroBias(), m1);
-        estimator.getGyroBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getNumberOfProcessedSamples(), 0);
-        assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
-        assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
-        estimator.getExpectedKinematics(kinematics2);
-        assertEquals(expectedKinematics, kinematics2);
-
-        // Force InvalidSourceAndDestinationFrameTypeException
-        estimator = null;
-        try {
-            estimator = new IMUBiasEstimator(nedPosition1,
-                    new CoordinateTransformation(
-                            FrameType.LOCAL_NAVIGATION_FRAME,
-                            FrameType.LOCAL_NAVIGATION_FRAME),
-                    totalSamples, timeInterval);
-            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
-        }
-
-        // Force IllegalArgumentException
-        try {
-            estimator = new IMUBiasEstimator(nedPosition1, nedC,
-                    0, timeInterval);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new IMUBiasEstimator(nedPosition1, nedC, totalSamples,
-                    -1.0);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
-    }
-
-    @Test
-    public void testConstructor50() throws WrongSizeException,
-            InvalidSourceAndDestinationFrameTypeException {
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double timeInterval = randomizer.nextDouble(
-                    MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
-
-            final double latitude = Math.toRadians(randomizer.nextDouble(
-                    MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
-            final double longitude = Math.toRadians(randomizer.nextDouble(
-                    MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
-            final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-
-            final double roll = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double pitch = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-
-
-            final Acceleration acceleration1 = new Acceleration(0.0,
-                    AccelerationUnit.METERS_PER_SQUARED_SECOND);
-            final Acceleration acceleration2 = new Acceleration(0.0,
-                    AccelerationUnit.METERS_PER_SQUARED_SECOND);
-            final AngularSpeed angularSpeed1 = new AngularSpeed(0.0,
-                    AngularSpeedUnit.RADIANS_PER_SECOND);
-            final AngularSpeed angularSpeed2 = new AngularSpeed(0.0,
-                    AngularSpeedUnit.RADIANS_PER_SECOND);
-            final BodyKinematics kinematics1 = new BodyKinematics();
-            final BodyKinematics kinematics2 = new BodyKinematics();
-            final Time time1 = new Time(timeInterval, TimeUnit.SECOND);
-            final Time time2 = new Time(0.0, TimeUnit.SECOND);
-            final CoordinateTransformation nedC = new CoordinateTransformation(
-                    roll, pitch, yaw, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-            final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height,
-                    0.0, 0.0, 0.0, nedC);
-            final NEDFrame nedFrame2 = new NEDFrame();
-            final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
-                    .convertNEDtoECEFAndReturnNew(nedFrame1);
-            final ECEFFrame ecefFrame2 = new ECEFFrame();
-            final NEDPosition nedPosition1 = nedFrame1.getPosition();
-            final NEDPosition nedPosition2 = new NEDPosition();
-            final ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
-            final ECEFPosition ecefPosition2 = new ECEFPosition();
-            final CoordinateTransformation ecefC = ecefFrame1
-                    .getCoordinateTransformation();
-            final CoordinateTransformation c = new CoordinateTransformation(
-                    FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-            final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
-            final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
-
-            final int totalSamples = randomizer.nextInt(
-                    MIN_TOTAL_SAMPLES, MAX_TOTAL_SAMPLES);
-
-            final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
-                    .estimateKinematicsAndReturnNew(
-                            timeInterval, ecefC, ecefC,
-                            0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                            ecefPosition1);
-
-
-            // test constructor
-            IMUBiasEstimator estimator = new IMUBiasEstimator(ecefPosition1, nedC,
-                    totalSamples, timeInterval);
-
-            // check default values
-            assertEquals(estimator.getTotalSamples(), totalSamples);
-            assertEquals(estimator.getTimeInterval(), timeInterval, 0.0);
-            assertEquals(estimator.getTimeIntervalAsTime(), time1);
-            estimator.getTimeIntervalAsTime(time2);
-            assertEquals(time1, time2);
-            if (!estimator.getEcefPosition().equals(ecefPosition1, ABSOLUTE_ERROR)) {
-                continue;
-            }
-            assertTrue(estimator.getEcefPosition().equals(ecefPosition1,
-                    ABSOLUTE_ERROR));
-            estimator.getEcefPosition(ecefPosition2);
-            assertTrue(ecefPosition1.equals(ecefPosition2,
-                    ABSOLUTE_ERROR));
-            if (!estimator.getEcefFrame().equals(ecefFrame1, ABSOLUTE_ERROR)) {
-                continue;
-            }
-            assertTrue(estimator.getEcefFrame().equals(ecefFrame1,
-                    ABSOLUTE_ERROR));
-            estimator.getEcefFrame(ecefFrame2);
-            assertTrue(ecefFrame2.equals(ecefFrame1, ABSOLUTE_ERROR));
-            assertTrue(estimator.getNedFrame().equals(nedFrame1, ABSOLUTE_ERROR));
-            estimator.getNedFrame(nedFrame2);
-            assertTrue(nedFrame1.equals(nedFrame2, ABSOLUTE_ERROR));
-            assertTrue(estimator.getNedPosition().equals(nedPosition1, ABSOLUTE_ERROR));
-            estimator.getNedPosition(nedPosition2);
-            assertTrue(nedPosition1.equals(nedPosition2, ABSOLUTE_ERROR));
-            assertTrue(estimator.getEcefC().equals(ecefC, ABSOLUTE_ERROR));
-            estimator.getEcefC(c);
-            assertTrue(ecefC.equals(c, ABSOLUTE_ERROR));
-            assertTrue(estimator.getNedC().equals(nedC, ABSOLUTE_ERROR));
-            estimator.getNedC(c);
-            assertTrue(nedC.equals(c, ABSOLUTE_ERROR));
-            assertNull(estimator.getListener());
-            assertNull(estimator.getLastBodyKinematics());
-            assertFalse(estimator.getLastBodyKinematics(null));
-            assertEquals(estimator.getBiasFx(), 0.0, 0.0);
-            assertEquals(estimator.getBiasFxAsAcceleration(), acceleration1);
-            estimator.getBiasFxAsAcceleration(acceleration2);
-            assertEquals(acceleration1, acceleration2);
-            assertEquals(estimator.getBiasFy(), 0.0, 0.0);
-            assertEquals(estimator.getBiasFyAsAcceleration(), acceleration1);
-            estimator.getBiasFyAsAcceleration(acceleration2);
-            assertEquals(acceleration1, acceleration2);
-            assertEquals(estimator.getBiasFz(), 0.0, 0.0);
-            assertEquals(estimator.getBiasFzAsAcceleration(), acceleration1);
-            estimator.getBiasFzAsAcceleration(acceleration2);
-            assertEquals(acceleration1, acceleration2);
-            assertEquals(estimator.getBiasAngularRateX(), 0.0, 0.0);
-            assertEquals(estimator.getBiasAngularRateXAsAngularSpeed(), angularSpeed1);
-            estimator.getBiasAngularRateXAsAngularSpeed(angularSpeed2);
-            assertEquals(angularSpeed1, angularSpeed2);
-            assertEquals(estimator.getBiasAngularRateY(), 0.0, 0.0);
-            assertEquals(estimator.getBiasAngularRateYAsAngularSpeed(), angularSpeed1);
-            estimator.getBiasAngularRateYAsAngularSpeed(angularSpeed2);
-            assertEquals(angularSpeed1, angularSpeed2);
-            assertEquals(estimator.getBiasAngularRateZ(), 0.0, 0.0);
-            assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
-            estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
-            assertEquals(angularSpeed1, angularSpeed2);
-            assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-            assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                    angularSpeed1);
-            estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-            assertEquals(angularSpeed1, angularSpeed2);
-            assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
-            estimator.getBiasesAsBodyKinematics(kinematics2);
-            assertEquals(kinematics1, kinematics2);
-            assertEquals(estimator.getVarianceFx(), 0.0, 0.0);
-            assertEquals(estimator.getVarianceFy(), 0.0, 0.0);
-            assertEquals(estimator.getVarianceFz(), 0.0, 0.0);
-            assertEquals(estimator.getVarianceAngularRateX(), 0.0, 0.0);
-            assertEquals(estimator.getVarianceAngularRateY(), 0.0, 0.0);
-            assertEquals(estimator.getVarianceAngularRateZ(), 0.0, 0.0);
-            assertEquals(estimator.getStandardDeviationFx(), 0.0, 0.0);
-            assertEquals(estimator.getStandardDeviationFxAsAcceleration(), acceleration1);
-            estimator.getStandardDeviationFxAsAcceleration(acceleration2);
-            assertEquals(acceleration1, acceleration2);
-            assertEquals(estimator.getStandardDeviationFy(), 0.0, 0.0);
-            assertEquals(estimator.getStandardDeviationFyAsAcceleration(), acceleration1);
-            estimator.getStandardDeviationFyAsAcceleration(acceleration2);
-            assertEquals(acceleration1, acceleration2);
-            assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
-            assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
-            estimator.getStandardDeviationFzAsAcceleration(acceleration2);
-            assertEquals(acceleration1, acceleration2);
-            assertEquals(estimator.getStandardDeviationAngularRateX(),
-                    0.0, 0.0);
-            assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
-                    angularSpeed1);
-            estimator.getStandardDeviationAngularRateXAsAngularSpeed(angularSpeed2);
-            assertEquals(angularSpeed1, angularSpeed2);
-            assertEquals(estimator.getStandardDeviationAngularRateY(),
-                    0.0, 0.0);
-            assertEquals(estimator.getStandardDeviationAngularRateYAsAngularSpeed(),
-                    angularSpeed1);
-            estimator.getStandardDeviationAngularRateYAsAngularSpeed(angularSpeed2);
-            assertEquals(angularSpeed1, angularSpeed2);
-            assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
-                    0.0);
-            assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
-                    acceleration1);
-            estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
-            assertEquals(acceleration1, acceleration2);
-            assertEquals(estimator.getStandardDeviationAngularRateZ(),
-                    0.0, 0.0);
-            assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
-                    angularSpeed1);
-            estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
-            assertEquals(angularSpeed1, angularSpeed2);
-            assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
-            estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
-            assertEquals(kinematics1, kinematics2);
-            assertEquals(estimator.getPSDFx(), 0.0, 0.0);
-            assertEquals(estimator.getPSDFy(), 0.0, 0.0);
-            assertEquals(estimator.getPSDFz(), 0.0, 0.0);
-            assertEquals(estimator.getPSDAngularRateX(), 0.0, 0.0);
-            assertEquals(estimator.getPSDAngularRateY(), 0.0, 0.0);
-            assertEquals(estimator.getPSDAngularRateZ(), 0.0, 0.0);
-            assertEquals(estimator.getRootPSDFx(), 0.0, 0.0);
-            assertEquals(estimator.getRootPSDFy(), 0.0, 0.0);
-            assertEquals(estimator.getRootPSDFz(), 0.0, 0.0);
-            assertEquals(estimator.getRootPSDAngularRateX(), 0.0, 0.0);
-            assertEquals(estimator.getRootPSDAngularRateY(), 0.0, 0.0);
-            assertEquals(estimator.getRootPSDAngularRateZ(), 0.0, 0.0);
-            assertEquals(estimator.getAccelerometerNoisePSD(), 0.0, 0.0);
-            assertEquals(estimator.getAccelerometerNoiseRootPSD(), 0.0, 0.0);
-            assertEquals(estimator.getGyroNoisePSD(), 0.0, 0.0);
-            assertEquals(estimator.getGyroNoiseRootPSD(), 0.0, 0.0);
-            assertEquals(estimator.getAccelerometerBias(), m1);
-            estimator.getAccelerometerBias(m2);
-            assertEquals(m1, m2);
-            assertEquals(estimator.getGyroBias(), m1);
-            estimator.getGyroBias(m2);
-            assertEquals(m1, m2);
-            assertEquals(estimator.getNumberOfProcessedSamples(), 0);
-            assertFalse(estimator.isRunning());
-            assertFalse(estimator.isFinished());
-            assertTrue(estimator.getExpectedKinematics().equals(expectedKinematics,
-                    ABSOLUTE_ERROR));
-            estimator.getExpectedKinematics(kinematics2);
-            assertTrue(expectedKinematics.equals(kinematics2, ABSOLUTE_ERROR));
-
-            // Force InvalidSourceAndDestinationFrameTypeException
-            estimator = null;
-            try {
-                estimator = new IMUBiasEstimator(ecefPosition1,
-                        new CoordinateTransformation(
-                                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME,
-                                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME),
-                        totalSamples, timeInterval);
-                fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-            } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
-            }
-
-            // Force IllegalArgumentException
-            try {
-                estimator = new IMUBiasEstimator(ecefPosition1, nedC, 0,
-                        timeInterval);
-                fail("IllegalArgumentException expected but not thrown");
-            } catch (final IllegalArgumentException ignore) {
-            }
-            try {
-                estimator = new IMUBiasEstimator(ecefPosition1, nedC, totalSamples,
-                        -1.0);
-                fail("IllegalArgumentException expected but not thrown");
-            } catch (final IllegalArgumentException ignore) {
-            }
-            assertNull(estimator);
-
-            numValid++;
-            break;
-        }
-        assertTrue(numValid > 0);
-    }
-
-    @Test
-    public void testConstructor51() throws WrongSizeException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double timeInterval = randomizer.nextDouble(
-                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
-
-        final Acceleration acceleration1 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final AngularSpeed angularSpeed1 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final AngularSpeed angularSpeed2 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final BodyKinematics kinematics1 = new BodyKinematics();
-        final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(timeInterval, TimeUnit.SECOND);
-        final Time time2 = new Time(0.0, TimeUnit.SECOND);
-        final NEDFrame nedFrame1 = new NEDFrame();
-        final NEDFrame nedFrame2 = new NEDFrame();
-        final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
-                .convertNEDtoECEFAndReturnNew(nedFrame1);
-        final ECEFFrame ecefFrame2 = new ECEFFrame();
-        final NEDPosition nedPosition1 = nedFrame1.getPosition();
-        final NEDPosition nedPosition2 = new NEDPosition();
-        final ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
-        final ECEFPosition ecefPosition2 = new ECEFPosition();
-        final CoordinateTransformation ecefC = ecefFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation nedC = nedFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-        final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
-        final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
-
-        final int totalSamples = randomizer.nextInt(
-                MIN_TOTAL_SAMPLES, MAX_TOTAL_SAMPLES);
-
-        final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
-                .estimateKinematicsAndReturnNew(
-                        timeInterval, ecefC, ecefC,
-                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                        ecefPosition1);
-
-
-        // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(totalSamples,
-                timeInterval, this);
-
-        // check default values
-        assertEquals(estimator.getTotalSamples(), totalSamples);
-        assertEquals(estimator.getTimeInterval(),
-                timeInterval, 0.0);
-        assertEquals(estimator.getTimeIntervalAsTime(), time1);
-        estimator.getTimeIntervalAsTime(time2);
-        assertEquals(time1, time2);
-        assertEquals(estimator.getEcefPosition(), ecefPosition1);
-        estimator.getEcefPosition(ecefPosition2);
-        assertEquals(ecefPosition1, ecefPosition2);
-        assertEquals(estimator.getEcefFrame(), ecefFrame1);
-        estimator.getEcefFrame(ecefFrame2);
-        assertEquals(ecefFrame2, ecefFrame1);
-        assertEquals(estimator.getNedFrame(), nedFrame1);
-        estimator.getNedFrame(nedFrame2);
-        assertEquals(nedFrame1, nedFrame2);
-        assertEquals(estimator.getNedPosition(), nedPosition1);
-        estimator.getNedPosition(nedPosition2);
-        assertEquals(nedPosition1, nedPosition2);
-        assertEquals(estimator.getEcefC(), ecefC);
-        estimator.getEcefC(c);
-        assertEquals(ecefC, c);
-        assertEquals(estimator.getNedC(), nedC);
-        estimator.getNedC(c);
-        assertEquals(nedC, c);
-        assertSame(estimator.getListener(), this);
-        assertNull(estimator.getLastBodyKinematics());
-        assertFalse(estimator.getLastBodyKinematics(null));
-        assertEquals(estimator.getBiasFx(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFxAsAcceleration(), acceleration1);
-        estimator.getBiasFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFy(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFyAsAcceleration(), acceleration1);
-        estimator.getBiasFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFz(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFzAsAcceleration(), acceleration1);
-        estimator.getBiasFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateXAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateYAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
-        estimator.getBiasesAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getVarianceFx(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFy(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFz(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFx(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFxAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFy(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFyAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
-                0.0);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
-                acceleration1);
-        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationAngularRateX(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateY(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateYAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateZ(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
-        estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerBias(), m1);
-        estimator.getAccelerometerBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getGyroBias(), m1);
-        estimator.getGyroBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getNumberOfProcessedSamples(), 0);
-        assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
-        assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
-        estimator.getExpectedKinematics(kinematics2);
-        assertEquals(expectedKinematics, kinematics2);
-
-        // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = new IMUBiasEstimator(0,
-                    timeInterval, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new IMUBiasEstimator(totalSamples,
-                    -1.0, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
-    }
-
-    @Test
-    public void testConstructor52() throws WrongSizeException,
-            InvalidSourceAndDestinationFrameTypeException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double timeInterval = randomizer.nextDouble(
-                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
-
-        final Acceleration acceleration1 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final AngularSpeed angularSpeed1 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final AngularSpeed angularSpeed2 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final BodyKinematics kinematics1 = new BodyKinematics();
-        final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(timeInterval, TimeUnit.SECOND);
-        final Time time2 = new Time(0.0, TimeUnit.SECOND);
-        final NEDFrame nedFrame1 = new NEDFrame();
-        final NEDFrame nedFrame2 = new NEDFrame();
-        final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
-                .convertNEDtoECEFAndReturnNew(nedFrame1);
-        final ECEFFrame ecefFrame2 = new ECEFFrame();
-        final NEDPosition nedPosition1 = nedFrame1.getPosition();
-        final NEDPosition nedPosition2 = new NEDPosition();
-        final ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
-        final ECEFPosition ecefPosition2 = new ECEFPosition();
-        final CoordinateTransformation ecefC = ecefFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation nedC = nedFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-        final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
-        final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
-
-        final double roll = Math.toRadians(randomizer.nextDouble(
-                MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(randomizer.nextDouble(
-                MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(randomizer.nextDouble(
-                MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        nedC.setEulerAngles(roll, pitch, yaw);
-        nedFrame1.setCoordinateTransformation(nedC);
-        NEDtoECEFFrameConverter.convertNEDtoECEF(nedFrame1, ecefFrame1);
-        ecefFrame1.getCoordinateTransformation(ecefC);
-
-        final int totalSamples = randomizer.nextInt(
-                MIN_TOTAL_SAMPLES, MAX_TOTAL_SAMPLES);
-
-        final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
-                .estimateKinematicsAndReturnNew(
-                        timeInterval, ecefC, ecefC,
-                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                        ecefPosition1);
-
-
-        // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(nedC, totalSamples,
-                timeInterval, this);
-
-        // check default values
-        assertEquals(estimator.getTotalSamples(), totalSamples);
-        assertEquals(estimator.getTimeInterval(),
-                timeInterval, 0.0);
-        assertEquals(estimator.getTimeIntervalAsTime(), time1);
-        estimator.getTimeIntervalAsTime(time2);
-        assertEquals(time1, time2);
-        assertEquals(estimator.getEcefPosition(), ecefPosition1);
-        estimator.getEcefPosition(ecefPosition2);
-        assertEquals(ecefPosition1, ecefPosition2);
-        assertEquals(estimator.getEcefFrame(), ecefFrame1);
-        estimator.getEcefFrame(ecefFrame2);
-        assertEquals(ecefFrame2, ecefFrame1);
-        assertEquals(estimator.getNedFrame(), nedFrame1);
-        estimator.getNedFrame(nedFrame2);
-        assertEquals(nedFrame1, nedFrame2);
-        assertEquals(estimator.getNedPosition(), nedPosition1);
-        estimator.getNedPosition(nedPosition2);
-        assertEquals(nedPosition1, nedPosition2);
-        assertEquals(estimator.getEcefC(), ecefC);
-        estimator.getEcefC(c);
-        assertEquals(ecefC, c);
-        assertEquals(estimator.getNedC(), nedC);
-        estimator.getNedC(c);
-        assertEquals(nedC, c);
-        assertSame(estimator.getListener(), this);
-        assertNull(estimator.getLastBodyKinematics());
-        assertFalse(estimator.getLastBodyKinematics(null));
-        assertEquals(estimator.getBiasFx(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFxAsAcceleration(), acceleration1);
-        estimator.getBiasFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFy(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFyAsAcceleration(), acceleration1);
-        estimator.getBiasFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFz(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFzAsAcceleration(), acceleration1);
-        estimator.getBiasFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateXAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateYAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
-        estimator.getBiasesAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getVarianceFx(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFy(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFz(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFx(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFxAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFy(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFyAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
-                0.0);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
-                acceleration1);
-        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationAngularRateX(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateY(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateYAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateZ(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
-        estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerBias(), m1);
-        estimator.getAccelerometerBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getGyroBias(), m1);
-        estimator.getGyroBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getNumberOfProcessedSamples(), 0);
-        assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
-        assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
-        estimator.getExpectedKinematics(kinematics2);
-        assertEquals(expectedKinematics, kinematics2);
-
-        // Force InvalidSourceAndDestinationFrameTypeException
-        estimator = null;
-        try {
-            estimator = new IMUBiasEstimator(new CoordinateTransformation(
-                    FrameType.LOCAL_NAVIGATION_FRAME,
-                    FrameType.LOCAL_NAVIGATION_FRAME), totalSamples, timeInterval,
-                    this);
-            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
-        }
-
-        // Force IllegalArgumentException
-        try {
-            estimator = new IMUBiasEstimator(nedC, 0, timeInterval,
-                    this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new IMUBiasEstimator(nedC, totalSamples, -1.0,
-                    this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
-    }
-
-    @Test
-    public void testConstructor53() throws WrongSizeException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double timeInterval = randomizer.nextDouble(
-                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
-
-        final double latitude = Math.toRadians(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
-        final double longitude = Math.toRadians(randomizer.nextDouble(
-                MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-
-
-        final Acceleration acceleration1 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final AngularSpeed angularSpeed1 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final AngularSpeed angularSpeed2 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final BodyKinematics kinematics1 = new BodyKinematics();
-        final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(timeInterval, TimeUnit.SECOND);
-        final Time time2 = new Time(0.0, TimeUnit.SECOND);
-        final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height);
-        final NEDFrame nedFrame2 = new NEDFrame();
-        final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
-                .convertNEDtoECEFAndReturnNew(nedFrame1);
-        final ECEFFrame ecefFrame2 = new ECEFFrame();
-        final NEDPosition nedPosition1 = nedFrame1.getPosition();
-        final NEDPosition nedPosition2 = new NEDPosition();
-        final ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
-        final ECEFPosition ecefPosition2 = new ECEFPosition();
-        final CoordinateTransformation ecefC = ecefFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation nedC = nedFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-        final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
-        final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
-
-        final int totalSamples = randomizer.nextInt(
-                MIN_TOTAL_SAMPLES, MAX_TOTAL_SAMPLES);
-
-        final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
-                .estimateKinematicsAndReturnNew(
-                        timeInterval, ecefC, ecefC,
-                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                        ecefPosition1);
-
-
-        // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(
-                latitude, longitude, height, totalSamples, timeInterval,
-                this);
-
-        // check default values
-        assertEquals(estimator.getTotalSamples(), totalSamples);
-        assertEquals(estimator.getTimeInterval(), timeInterval, 0.0);
-        assertEquals(estimator.getTimeIntervalAsTime(), time1);
-        estimator.getTimeIntervalAsTime(time2);
-        assertEquals(time1, time2);
-        assertEquals(estimator.getEcefPosition(), ecefPosition1);
-        estimator.getEcefPosition(ecefPosition2);
-        assertEquals(ecefPosition1, ecefPosition2);
-        assertEquals(estimator.getEcefFrame(), ecefFrame1);
-        estimator.getEcefFrame(ecefFrame2);
-        assertEquals(ecefFrame2, ecefFrame1);
-        assertTrue(estimator.getNedFrame().equals(nedFrame1, ABSOLUTE_ERROR));
-        estimator.getNedFrame(nedFrame2);
-        assertTrue(nedFrame1.equals(nedFrame2, ABSOLUTE_ERROR));
-        assertTrue(estimator.getNedPosition().equals(nedPosition1, ABSOLUTE_ERROR));
-        estimator.getNedPosition(nedPosition2);
-        assertTrue(nedPosition1.equals(nedPosition2, ABSOLUTE_ERROR));
-        assertEquals(estimator.getEcefC(), ecefC);
-        estimator.getEcefC(c);
-        assertEquals(ecefC, c);
-        assertTrue(estimator.getNedC().equals(nedC, ABSOLUTE_ERROR));
-        estimator.getNedC(c);
-        assertTrue(nedC.equals(c, ABSOLUTE_ERROR));
-        assertSame(estimator.getListener(), this);
-        assertNull(estimator.getLastBodyKinematics());
-        assertFalse(estimator.getLastBodyKinematics(null));
-        assertEquals(estimator.getBiasFx(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFxAsAcceleration(), acceleration1);
-        estimator.getBiasFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFy(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFyAsAcceleration(), acceleration1);
-        estimator.getBiasFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFz(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFzAsAcceleration(), acceleration1);
-        estimator.getBiasFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateXAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateYAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
-        estimator.getBiasesAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getVarianceFx(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFy(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFz(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFx(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFxAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFy(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFyAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
-                0.0);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
-                acceleration1);
-        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationAngularRateX(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateY(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateYAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateZ(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
-        estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerBias(), m1);
-        estimator.getAccelerometerBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getGyroBias(), m1);
-        estimator.getGyroBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getNumberOfProcessedSamples(), 0);
-        assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
-        assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
-        estimator.getExpectedKinematics(kinematics2);
-        assertEquals(expectedKinematics, kinematics2);
-
-        // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = new IMUBiasEstimator(latitude, longitude, height,
-                    0, timeInterval, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new IMUBiasEstimator(latitude, longitude, height,
-                    totalSamples, -1.0, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
-    }
-
-    @Test
-    public void testConstructor54() throws WrongSizeException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double timeInterval = randomizer.nextDouble(
-                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
-
-        final Angle latitude = new Angle(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs), AngleUnit.DEGREES);
-        final Angle longitude = new Angle(randomizer.nextDouble(
-                MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES), AngleUnit.DEGREES);
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-
-
-        final Acceleration acceleration1 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final AngularSpeed angularSpeed1 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final AngularSpeed angularSpeed2 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final BodyKinematics kinematics1 = new BodyKinematics();
-        final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(timeInterval, TimeUnit.SECOND);
-        final Time time2 = new Time(0.0, TimeUnit.SECOND);
-        final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height);
-        final NEDFrame nedFrame2 = new NEDFrame();
-        final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
-                .convertNEDtoECEFAndReturnNew(nedFrame1);
-        final ECEFFrame ecefFrame2 = new ECEFFrame();
-        final NEDPosition nedPosition1 = nedFrame1.getPosition();
-        final NEDPosition nedPosition2 = new NEDPosition();
-        final ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
-        final ECEFPosition ecefPosition2 = new ECEFPosition();
-        final CoordinateTransformation ecefC = ecefFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation nedC = nedFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-        final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
-        final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
-
-        final int totalSamples = randomizer.nextInt(
-                MIN_TOTAL_SAMPLES, MAX_TOTAL_SAMPLES);
-
-        final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
-                .estimateKinematicsAndReturnNew(
-                        timeInterval, ecefC, ecefC,
-                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                        ecefPosition1);
-
-
-        // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(latitude, longitude, height,
-                totalSamples, timeInterval, this);
-
-        // check default values
-        assertEquals(estimator.getTotalSamples(), totalSamples);
-        assertEquals(estimator.getTimeInterval(), timeInterval, 0.0);
-        assertEquals(estimator.getTimeIntervalAsTime(), time1);
-        estimator.getTimeIntervalAsTime(time2);
-        assertEquals(time1, time2);
-        assertEquals(estimator.getEcefPosition(), ecefPosition1);
-        estimator.getEcefPosition(ecefPosition2);
-        assertEquals(ecefPosition1, ecefPosition2);
-        assertEquals(estimator.getEcefFrame(), ecefFrame1);
-        estimator.getEcefFrame(ecefFrame2);
-        assertEquals(ecefFrame2, ecefFrame1);
-        assertTrue(estimator.getNedFrame().equals(nedFrame1, ABSOLUTE_ERROR));
-        estimator.getNedFrame(nedFrame2);
-        assertTrue(nedFrame1.equals(nedFrame2, ABSOLUTE_ERROR));
-        assertTrue(estimator.getNedPosition().equals(nedPosition1, ABSOLUTE_ERROR));
-        estimator.getNedPosition(nedPosition2);
-        assertTrue(nedPosition1.equals(nedPosition2, ABSOLUTE_ERROR));
-        assertEquals(estimator.getEcefC(), ecefC);
-        estimator.getEcefC(c);
-        assertEquals(ecefC, c);
-        assertTrue(estimator.getNedC().equals(nedC, ABSOLUTE_ERROR));
-        estimator.getNedC(c);
-        assertTrue(nedC.equals(c, ABSOLUTE_ERROR));
-        assertSame(estimator.getListener(), this);
-        assertNull(estimator.getLastBodyKinematics());
-        assertFalse(estimator.getLastBodyKinematics(null));
-        assertEquals(estimator.getBiasFx(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFxAsAcceleration(), acceleration1);
-        estimator.getBiasFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFy(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFyAsAcceleration(), acceleration1);
-        estimator.getBiasFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFz(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFzAsAcceleration(), acceleration1);
-        estimator.getBiasFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateXAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateYAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
-        estimator.getBiasesAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getVarianceFx(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFy(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFz(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFx(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFxAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFy(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFyAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
-                0.0);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
-                acceleration1);
-        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationAngularRateX(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateY(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateYAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateZ(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
-        estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerBias(), m1);
-        estimator.getAccelerometerBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getGyroBias(), m1);
-        estimator.getGyroBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getNumberOfProcessedSamples(), 0);
-        assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
-        assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
-        estimator.getExpectedKinematics(kinematics2);
-        assertEquals(expectedKinematics, kinematics2);
-
-        // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = new IMUBiasEstimator(latitude, longitude, height,
-                    0, timeInterval, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new IMUBiasEstimator(latitude, longitude, height,
-                    totalSamples, -1.0, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
-    }
-
-    @Test
-    public void testConstructor55() throws WrongSizeException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double timeInterval = randomizer.nextDouble(
-                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
-
-        final Angle latitude = new Angle(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs), AngleUnit.DEGREES);
-        final Angle longitude = new Angle(randomizer.nextDouble(
-                MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES), AngleUnit.DEGREES);
-        final Distance height = new Distance(
-                randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT), DistanceUnit.METER);
-
-
-        final Acceleration acceleration1 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final AngularSpeed angularSpeed1 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final AngularSpeed angularSpeed2 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final BodyKinematics kinematics1 = new BodyKinematics();
-        final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(timeInterval, TimeUnit.SECOND);
-        final Time time2 = new Time(0.0, TimeUnit.SECOND);
-        final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height);
-        final NEDFrame nedFrame2 = new NEDFrame();
-        final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
-                .convertNEDtoECEFAndReturnNew(nedFrame1);
-        final ECEFFrame ecefFrame2 = new ECEFFrame();
-        final NEDPosition nedPosition1 = nedFrame1.getPosition();
-        final NEDPosition nedPosition2 = new NEDPosition();
-        final ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
-        final ECEFPosition ecefPosition2 = new ECEFPosition();
-        final CoordinateTransformation ecefC = ecefFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation nedC = nedFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-        final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
-        final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
-
-        final int totalSamples = randomizer.nextInt(
-                MIN_TOTAL_SAMPLES, MAX_TOTAL_SAMPLES);
-
-        final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
-                .estimateKinematicsAndReturnNew(
-                        timeInterval, ecefC, ecefC,
-                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                        ecefPosition1);
-
-
-        // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(latitude, longitude, height,
-                totalSamples, timeInterval, this);
-
-        // check default values
-        assertEquals(estimator.getTotalSamples(), totalSamples);
-        assertEquals(estimator.getTimeInterval(), timeInterval, 0.0);
-        assertEquals(estimator.getTimeIntervalAsTime(), time1);
-        estimator.getTimeIntervalAsTime(time2);
-        assertEquals(time1, time2);
-        assertEquals(estimator.getEcefPosition(), ecefPosition1);
-        estimator.getEcefPosition(ecefPosition2);
-        assertEquals(ecefPosition1, ecefPosition2);
-        assertEquals(estimator.getEcefFrame(), ecefFrame1);
-        estimator.getEcefFrame(ecefFrame2);
-        assertEquals(ecefFrame2, ecefFrame1);
-        assertTrue(estimator.getNedFrame().equals(nedFrame1, ABSOLUTE_ERROR));
-        estimator.getNedFrame(nedFrame2);
-        assertTrue(nedFrame1.equals(nedFrame2, ABSOLUTE_ERROR));
-        assertTrue(estimator.getNedPosition().equals(nedPosition1, ABSOLUTE_ERROR));
-        estimator.getNedPosition(nedPosition2);
-        assertTrue(nedPosition1.equals(nedPosition2, ABSOLUTE_ERROR));
-        assertEquals(estimator.getEcefC(), ecefC);
-        estimator.getEcefC(c);
-        assertEquals(ecefC, c);
-        assertTrue(estimator.getNedC().equals(nedC, ABSOLUTE_ERROR));
-        estimator.getNedC(c);
-        assertTrue(nedC.equals(c, ABSOLUTE_ERROR));
-        assertSame(estimator.getListener(), this);
-        assertNull(estimator.getLastBodyKinematics());
-        assertFalse(estimator.getLastBodyKinematics(null));
-        assertEquals(estimator.getBiasFx(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFxAsAcceleration(), acceleration1);
-        estimator.getBiasFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFy(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFyAsAcceleration(), acceleration1);
-        estimator.getBiasFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFz(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFzAsAcceleration(), acceleration1);
-        estimator.getBiasFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateXAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateYAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
-        estimator.getBiasesAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getVarianceFx(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFy(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFz(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFx(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFxAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFy(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFyAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
-                0.0);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
-                acceleration1);
-        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationAngularRateX(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateY(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateYAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateZ(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
-        estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerBias(), m1);
-        estimator.getAccelerometerBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getGyroBias(), m1);
-        estimator.getGyroBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getNumberOfProcessedSamples(), 0);
-        assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
-        assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
-        estimator.getExpectedKinematics(kinematics2);
-        assertEquals(expectedKinematics, kinematics2);
-
-        // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = new IMUBiasEstimator(latitude, longitude, height,
-                    0, timeInterval, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new IMUBiasEstimator(latitude, longitude, height,
-                    totalSamples, -1.0, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
-    }
-
-    @Test
-    public void testConstructor56() throws WrongSizeException,
-            InvalidSourceAndDestinationFrameTypeException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double timeInterval = randomizer.nextDouble(
-                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
-
-        final double latitude = Math.toRadians(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
-        final double longitude = Math.toRadians(randomizer.nextDouble(
-                MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-
-        final double roll = Math.toRadians(randomizer.nextDouble(
-                MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(randomizer.nextDouble(
-                MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(randomizer.nextDouble(
-                MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-
-
-        final Acceleration acceleration1 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final AngularSpeed angularSpeed1 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final AngularSpeed angularSpeed2 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final BodyKinematics kinematics1 = new BodyKinematics();
-        final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(timeInterval, TimeUnit.SECOND);
-        final Time time2 = new Time(0.0, TimeUnit.SECOND);
-        final CoordinateTransformation nedC = new CoordinateTransformation(
-                roll, pitch, yaw, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-        final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height,
-                0.0, 0.0, 0.0, nedC);
-        final NEDFrame nedFrame2 = new NEDFrame();
-        final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
-                .convertNEDtoECEFAndReturnNew(nedFrame1);
-        final ECEFFrame ecefFrame2 = new ECEFFrame();
-        final NEDPosition nedPosition1 = nedFrame1.getPosition();
-        final NEDPosition nedPosition2 = new NEDPosition();
-        final ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
-        final ECEFPosition ecefPosition2 = new ECEFPosition();
-        final CoordinateTransformation ecefC = ecefFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-        final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
-        final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
-
-        final int totalSamples = randomizer.nextInt(
-                MIN_TOTAL_SAMPLES, MAX_TOTAL_SAMPLES);
-
-        final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
-                .estimateKinematicsAndReturnNew(
-                        timeInterval, ecefC, ecefC,
-                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                        ecefPosition1);
-
-
-        // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(nedPosition1, nedC,
-                totalSamples, timeInterval, this);
-
-        // check default values
-        assertEquals(estimator.getTotalSamples(), totalSamples);
-        assertEquals(estimator.getTimeInterval(), timeInterval, 0.0);
-        assertEquals(estimator.getTimeIntervalAsTime(), time1);
-        estimator.getTimeIntervalAsTime(time2);
-        assertEquals(time1, time2);
-        assertEquals(estimator.getEcefPosition(), ecefPosition1);
-        estimator.getEcefPosition(ecefPosition2);
-        assertEquals(ecefPosition1, ecefPosition2);
-        assertEquals(estimator.getEcefFrame(), ecefFrame1);
-        estimator.getEcefFrame(ecefFrame2);
-        assertEquals(ecefFrame2, ecefFrame1);
-        assertTrue(estimator.getNedFrame().equals(nedFrame1, ABSOLUTE_ERROR));
-        estimator.getNedFrame(nedFrame2);
-        assertTrue(nedFrame1.equals(nedFrame2, ABSOLUTE_ERROR));
-        assertTrue(estimator.getNedPosition().equals(nedPosition1, ABSOLUTE_ERROR));
-        estimator.getNedPosition(nedPosition2);
-        assertTrue(nedPosition1.equals(nedPosition2, ABSOLUTE_ERROR));
-        assertEquals(estimator.getEcefC(), ecefC);
-        estimator.getEcefC(c);
-        assertEquals(ecefC, c);
-        assertTrue(estimator.getNedC().equals(nedC, ABSOLUTE_ERROR));
-        estimator.getNedC(c);
-        assertTrue(nedC.equals(c, ABSOLUTE_ERROR));
-        assertSame(estimator.getListener(), this);
-        assertNull(estimator.getLastBodyKinematics());
-        assertFalse(estimator.getLastBodyKinematics(null));
-        assertEquals(estimator.getBiasFx(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFxAsAcceleration(), acceleration1);
-        estimator.getBiasFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFy(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFyAsAcceleration(), acceleration1);
-        estimator.getBiasFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFz(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFzAsAcceleration(), acceleration1);
-        estimator.getBiasFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateXAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateYAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
-        estimator.getBiasesAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getVarianceFx(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFy(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFz(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFx(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFxAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFy(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFyAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
-                0.0);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
-                acceleration1);
-        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationAngularRateX(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateY(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateYAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateZ(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
-        estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerBias(), m1);
-        estimator.getAccelerometerBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getGyroBias(), m1);
-        estimator.getGyroBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getNumberOfProcessedSamples(), 0);
-        assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
-        assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
-        estimator.getExpectedKinematics(kinematics2);
-        assertEquals(expectedKinematics, kinematics2);
-
-        // Force InvalidSourceAndDestinationFrameTypeException
-        estimator = null;
-        try {
-            estimator = new IMUBiasEstimator(nedPosition1,
-                    new CoordinateTransformation(
-                            FrameType.LOCAL_NAVIGATION_FRAME,
-                            FrameType.LOCAL_NAVIGATION_FRAME),
-                    totalSamples, timeInterval, this);
-            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
-        }
-
-        // Force IllegalArgumentException
-        try {
-            estimator = new IMUBiasEstimator(nedPosition1, nedC,
-                    0, timeInterval, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new IMUBiasEstimator(nedPosition1, nedC,
-                    totalSamples, -1.0, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
-    }
-
-    @Test
-    public void testConstructor57() throws WrongSizeException,
-            InvalidSourceAndDestinationFrameTypeException {
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double timeInterval = randomizer.nextDouble(
-                    MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
-
-            final double latitude = Math.toRadians(randomizer.nextDouble(
-                    MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
-            final double longitude = Math.toRadians(randomizer.nextDouble(
-                    MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
-            final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-
-            final double roll = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double pitch = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-
-
-            final Acceleration acceleration1 = new Acceleration(0.0,
-                    AccelerationUnit.METERS_PER_SQUARED_SECOND);
-            final Acceleration acceleration2 = new Acceleration(0.0,
-                    AccelerationUnit.METERS_PER_SQUARED_SECOND);
-            final AngularSpeed angularSpeed1 = new AngularSpeed(0.0,
-                    AngularSpeedUnit.RADIANS_PER_SECOND);
-            final AngularSpeed angularSpeed2 = new AngularSpeed(0.0,
-                    AngularSpeedUnit.RADIANS_PER_SECOND);
-            final BodyKinematics kinematics1 = new BodyKinematics();
-            final BodyKinematics kinematics2 = new BodyKinematics();
-            final Time time1 = new Time(timeInterval, TimeUnit.SECOND);
-            final Time time2 = new Time(0.0, TimeUnit.SECOND);
-            final CoordinateTransformation nedC = new CoordinateTransformation(
-                    roll, pitch, yaw, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-            final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height,
-                    0.0, 0.0, 0.0, nedC);
-            final NEDFrame nedFrame2 = new NEDFrame();
-            final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
-                    .convertNEDtoECEFAndReturnNew(nedFrame1);
-            final ECEFFrame ecefFrame2 = new ECEFFrame();
-            final NEDPosition nedPosition1 = nedFrame1.getPosition();
-            final NEDPosition nedPosition2 = new NEDPosition();
-            final ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
-            final ECEFPosition ecefPosition2 = new ECEFPosition();
-            final CoordinateTransformation ecefC = ecefFrame1
-                    .getCoordinateTransformation();
-            final CoordinateTransformation c = new CoordinateTransformation(
-                    FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-            final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
-            final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
-
-            final int totalSamples = randomizer.nextInt(
-                    MIN_TOTAL_SAMPLES, MAX_TOTAL_SAMPLES);
-
-            final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
-                    .estimateKinematicsAndReturnNew(
-                            timeInterval, ecefC, ecefC,
-                            0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                            ecefPosition1);
-
-
-            // test constructor
-            IMUBiasEstimator estimator = new IMUBiasEstimator(ecefPosition1, nedC,
-                    totalSamples, timeInterval, this);
-
-            // check default values
-            assertEquals(estimator.getTotalSamples(), totalSamples);
-            assertEquals(estimator.getTimeInterval(), timeInterval, 0.0);
-            assertEquals(estimator.getTimeIntervalAsTime(), time1);
-            estimator.getTimeIntervalAsTime(time2);
-            assertEquals(time1, time2);
-            if (!estimator.getEcefPosition().equals(ecefPosition1, ABSOLUTE_ERROR)) {
-                continue;
-            }
-            assertTrue(estimator.getEcefPosition().equals(ecefPosition1,
-                    ABSOLUTE_ERROR));
-            estimator.getEcefPosition(ecefPosition2);
-            assertTrue(ecefPosition1.equals(ecefPosition2,
-                    ABSOLUTE_ERROR));
-            if (!estimator.getEcefFrame().equals(ecefFrame1, ABSOLUTE_ERROR)) {
-                continue;
-            }
-            assertTrue(estimator.getEcefFrame().equals(ecefFrame1, ABSOLUTE_ERROR));
-            estimator.getEcefFrame(ecefFrame2);
-            assertTrue(ecefFrame2.equals(ecefFrame1, ABSOLUTE_ERROR));
-            assertTrue(estimator.getNedFrame().equals(nedFrame1, ABSOLUTE_ERROR));
-            estimator.getNedFrame(nedFrame2);
-            assertTrue(nedFrame1.equals(nedFrame2, ABSOLUTE_ERROR));
-            assertTrue(estimator.getNedPosition().equals(nedPosition1, ABSOLUTE_ERROR));
-            estimator.getNedPosition(nedPosition2);
-            assertTrue(nedPosition1.equals(nedPosition2, ABSOLUTE_ERROR));
-            assertTrue(estimator.getEcefC().equals(ecefC, ABSOLUTE_ERROR));
-            estimator.getEcefC(c);
-            assertTrue(ecefC.equals(c, ABSOLUTE_ERROR));
-            assertTrue(estimator.getNedC().equals(nedC, ABSOLUTE_ERROR));
-            estimator.getNedC(c);
-            assertTrue(nedC.equals(c, ABSOLUTE_ERROR));
-            assertSame(estimator.getListener(), this);
-            assertNull(estimator.getLastBodyKinematics());
-            assertFalse(estimator.getLastBodyKinematics(null));
-            assertEquals(estimator.getBiasFx(), 0.0, 0.0);
-            assertEquals(estimator.getBiasFxAsAcceleration(), acceleration1);
-            estimator.getBiasFxAsAcceleration(acceleration2);
-            assertEquals(acceleration1, acceleration2);
-            assertEquals(estimator.getBiasFy(), 0.0, 0.0);
-            assertEquals(estimator.getBiasFyAsAcceleration(), acceleration1);
-            estimator.getBiasFyAsAcceleration(acceleration2);
-            assertEquals(acceleration1, acceleration2);
-            assertEquals(estimator.getBiasFz(), 0.0, 0.0);
-            assertEquals(estimator.getBiasFzAsAcceleration(), acceleration1);
-            estimator.getBiasFzAsAcceleration(acceleration2);
-            assertEquals(acceleration1, acceleration2);
-            assertEquals(estimator.getBiasAngularRateX(), 0.0, 0.0);
-            assertEquals(estimator.getBiasAngularRateXAsAngularSpeed(), angularSpeed1);
-            estimator.getBiasAngularRateXAsAngularSpeed(angularSpeed2);
-            assertEquals(angularSpeed1, angularSpeed2);
-            assertEquals(estimator.getBiasAngularRateY(), 0.0, 0.0);
-            assertEquals(estimator.getBiasAngularRateYAsAngularSpeed(), angularSpeed1);
-            estimator.getBiasAngularRateYAsAngularSpeed(angularSpeed2);
-            assertEquals(angularSpeed1, angularSpeed2);
-            assertEquals(estimator.getBiasAngularRateZ(), 0.0, 0.0);
-            assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
-            estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
-            assertEquals(angularSpeed1, angularSpeed2);
-            assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
-            estimator.getBiasesAsBodyKinematics(kinematics2);
-            assertEquals(kinematics1, kinematics2);
-            assertEquals(estimator.getVarianceFx(), 0.0, 0.0);
-            assertEquals(estimator.getVarianceFy(), 0.0, 0.0);
-            assertEquals(estimator.getVarianceFz(), 0.0, 0.0);
-            assertEquals(estimator.getVarianceAngularRateX(), 0.0, 0.0);
-            assertEquals(estimator.getVarianceAngularRateY(), 0.0, 0.0);
-            assertEquals(estimator.getVarianceAngularRateZ(), 0.0, 0.0);
-            assertEquals(estimator.getStandardDeviationFx(), 0.0, 0.0);
-            assertEquals(estimator.getStandardDeviationFxAsAcceleration(), acceleration1);
-            estimator.getStandardDeviationFxAsAcceleration(acceleration2);
-            assertEquals(acceleration1, acceleration2);
-            assertEquals(estimator.getStandardDeviationFy(), 0.0, 0.0);
-            assertEquals(estimator.getStandardDeviationFyAsAcceleration(), acceleration1);
-            estimator.getStandardDeviationFyAsAcceleration(acceleration2);
-            assertEquals(acceleration1, acceleration2);
-            assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
-            assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
-            estimator.getStandardDeviationFzAsAcceleration(acceleration2);
-            assertEquals(acceleration1, acceleration2);
-            assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
-                    0.0);
-            assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
-                    acceleration1);
-            estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
-            assertEquals(acceleration1, acceleration2);
-            assertEquals(estimator.getStandardDeviationAngularRateX(),
-                    0.0, 0.0);
-            assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
-                    angularSpeed1);
-            estimator.getStandardDeviationAngularRateXAsAngularSpeed(angularSpeed2);
-            assertEquals(angularSpeed1, angularSpeed2);
-            assertEquals(estimator.getStandardDeviationAngularRateY(),
-                    0.0, 0.0);
-            assertEquals(estimator.getStandardDeviationAngularRateYAsAngularSpeed(),
-                    angularSpeed1);
-            estimator.getStandardDeviationAngularRateYAsAngularSpeed(angularSpeed2);
-            assertEquals(angularSpeed1, angularSpeed2);
-            assertEquals(estimator.getStandardDeviationAngularRateZ(),
-                    0.0, 0.0);
-            assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
-                    angularSpeed1);
-            estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
-            assertEquals(angularSpeed1, angularSpeed2);
-            assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-            assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                    angularSpeed1);
-            estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-            assertEquals(angularSpeed1, angularSpeed2);
-            assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
-            estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
-            assertEquals(kinematics1, kinematics2);
-            assertEquals(estimator.getPSDFx(), 0.0, 0.0);
-            assertEquals(estimator.getPSDFy(), 0.0, 0.0);
-            assertEquals(estimator.getPSDFz(), 0.0, 0.0);
-            assertEquals(estimator.getPSDAngularRateX(), 0.0, 0.0);
-            assertEquals(estimator.getPSDAngularRateY(), 0.0, 0.0);
-            assertEquals(estimator.getPSDAngularRateZ(), 0.0, 0.0);
-            assertEquals(estimator.getRootPSDFx(), 0.0, 0.0);
-            assertEquals(estimator.getRootPSDFy(), 0.0, 0.0);
-            assertEquals(estimator.getRootPSDFz(), 0.0, 0.0);
-            assertEquals(estimator.getRootPSDAngularRateX(), 0.0, 0.0);
-            assertEquals(estimator.getRootPSDAngularRateY(), 0.0, 0.0);
-            assertEquals(estimator.getRootPSDAngularRateZ(), 0.0, 0.0);
-            assertEquals(estimator.getAccelerometerNoisePSD(), 0.0, 0.0);
-            assertEquals(estimator.getAccelerometerNoiseRootPSD(), 0.0, 0.0);
-            assertEquals(estimator.getGyroNoisePSD(), 0.0, 0.0);
-            assertEquals(estimator.getGyroNoiseRootPSD(), 0.0, 0.0);
-            assertEquals(estimator.getAccelerometerBias(), m1);
-            estimator.getAccelerometerBias(m2);
-            assertEquals(m1, m2);
-            assertEquals(estimator.getGyroBias(), m1);
-            estimator.getGyroBias(m2);
-            assertEquals(m1, m2);
-            assertEquals(estimator.getNumberOfProcessedSamples(), 0);
-            assertFalse(estimator.isRunning());
-            assertFalse(estimator.isFinished());
-            assertTrue(estimator.getExpectedKinematics().equals(expectedKinematics,
-                    ABSOLUTE_ERROR));
-            estimator.getExpectedKinematics(kinematics2);
-            assertTrue(expectedKinematics.equals(kinematics2, ABSOLUTE_ERROR));
-
-            // Force InvalidSourceAndDestinationFrameTypeException
-            estimator = null;
-            try {
-                estimator = new IMUBiasEstimator(ecefPosition1,
-                        new CoordinateTransformation(
-                                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME,
-                                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME),
-                        totalSamples, timeInterval, this);
-                fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-            } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
-            }
-
-            // Force IllegalArgumentException
-            try {
-                estimator = new IMUBiasEstimator(ecefPosition1, nedC,
-                        0, timeInterval, this);
-                fail("IllegalArgumentException expected but not thrown");
-            } catch (final IllegalArgumentException ignore) {
-            }
-            try {
-                estimator = new IMUBiasEstimator(ecefPosition1, nedC,
-                        totalSamples, -1.0, this);
-                fail("IllegalArgumentException expected but not thrown");
-            } catch (final IllegalArgumentException ignore) {
-            }
-            assertNull(estimator);
-
-            numValid++;
-            break;
-        }
-
-        assertTrue(numValid > 0);
-    }
-
-    @Test
-    public void testConstructor58() throws WrongSizeException {
-
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final Time timeInterval = new Time(randomizer.nextDouble(
-                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
-
-        final Acceleration acceleration1 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final AngularSpeed angularSpeed1 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final AngularSpeed angularSpeed2 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final BodyKinematics kinematics1 = new BodyKinematics();
-        final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(timeInterval.getValue(), timeInterval.getUnit());
-        final Time time2 = new Time(0.0, TimeUnit.SECOND);
-        final NEDFrame nedFrame1 = new NEDFrame();
-        final NEDFrame nedFrame2 = new NEDFrame();
-        final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
-                .convertNEDtoECEFAndReturnNew(nedFrame1);
-        final ECEFFrame ecefFrame2 = new ECEFFrame();
-        final NEDPosition nedPosition1 = nedFrame1.getPosition();
-        final NEDPosition nedPosition2 = new NEDPosition();
-        final ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
-        final ECEFPosition ecefPosition2 = new ECEFPosition();
-        final CoordinateTransformation ecefC = ecefFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation nedC = nedFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-        final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
-        final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
-
-        final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
-                .estimateKinematicsAndReturnNew(
-                        timeInterval, ecefC, ecefC,
-                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                        ecefPosition1);
-
-
-        // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(timeInterval);
-
-        // check default values
-        assertEquals(estimator.getTotalSamples(), IMUBiasEstimator.DEFAULT_TOTAL_SAMPLES);
-        assertEquals(estimator.getTimeInterval(),
-                timeInterval.getValue().doubleValue(), 0.0);
-        assertEquals(estimator.getTimeIntervalAsTime(), time1);
-        estimator.getTimeIntervalAsTime(time2);
-        assertEquals(time1, time2);
-        assertEquals(estimator.getEcefPosition(), ecefPosition1);
-        estimator.getEcefPosition(ecefPosition2);
-        assertEquals(ecefPosition1, ecefPosition2);
-        assertEquals(estimator.getEcefFrame(), ecefFrame1);
-        estimator.getEcefFrame(ecefFrame2);
-        assertEquals(ecefFrame2, ecefFrame1);
-        assertEquals(estimator.getNedFrame(), nedFrame1);
-        estimator.getNedFrame(nedFrame2);
-        assertEquals(nedFrame1, nedFrame2);
-        assertEquals(estimator.getNedPosition(), nedPosition1);
-        estimator.getNedPosition(nedPosition2);
-        assertEquals(nedPosition1, nedPosition2);
-        assertEquals(estimator.getEcefC(), ecefC);
-        estimator.getEcefC(c);
-        assertEquals(ecefC, c);
-        assertEquals(estimator.getNedC(), nedC);
-        estimator.getNedC(c);
-        assertEquals(nedC, c);
-        assertNull(estimator.getListener());
-        assertNull(estimator.getLastBodyKinematics());
-        assertFalse(estimator.getLastBodyKinematics(null));
-        assertEquals(estimator.getBiasFx(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFxAsAcceleration(), acceleration1);
-        estimator.getBiasFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFy(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFyAsAcceleration(), acceleration1);
-        estimator.getBiasFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFz(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFzAsAcceleration(), acceleration1);
-        estimator.getBiasFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateXAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateYAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
-        estimator.getBiasesAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getVarianceFx(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFy(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFz(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFx(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFxAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFy(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFyAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
-                0.0);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
-                acceleration1);
-        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationAngularRateX(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateY(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateYAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateZ(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
-        estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerBias(), m1);
-        estimator.getAccelerometerBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getGyroBias(), m1);
-        estimator.getGyroBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getNumberOfProcessedSamples(), 0);
-        assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
-        assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
-        estimator.getExpectedKinematics(kinematics2);
-        assertEquals(expectedKinematics, kinematics2);
-
-        // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = new IMUBiasEstimator(
-                    new Time(-1.0, TimeUnit.SECOND));
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
-    }
-
-    @Test
-    public void testConstructor59() throws WrongSizeException,
-            InvalidSourceAndDestinationFrameTypeException {
-
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final Time timeInterval = new Time(randomizer.nextDouble(
-                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
-
-        final Acceleration acceleration1 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final AngularSpeed angularSpeed1 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final AngularSpeed angularSpeed2 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final BodyKinematics kinematics1 = new BodyKinematics();
-        final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(timeInterval.getValue(),
-                TimeUnit.SECOND);
-        final Time time2 = new Time(0.0, TimeUnit.SECOND);
-        final NEDFrame nedFrame1 = new NEDFrame();
-        final NEDFrame nedFrame2 = new NEDFrame();
-        final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
-                .convertNEDtoECEFAndReturnNew(nedFrame1);
-        final ECEFFrame ecefFrame2 = new ECEFFrame();
-        final NEDPosition nedPosition1 = nedFrame1.getPosition();
-        final NEDPosition nedPosition2 = new NEDPosition();
-        final ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
-        final ECEFPosition ecefPosition2 = new ECEFPosition();
-        final CoordinateTransformation ecefC = ecefFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation nedC = nedFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-        final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
-        final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
-
-        final double roll = Math.toRadians(randomizer.nextDouble(
-                MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(randomizer.nextDouble(
-                MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(randomizer.nextDouble(
-                MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        nedC.setEulerAngles(roll, pitch, yaw);
-        nedFrame1.setCoordinateTransformation(nedC);
-        NEDtoECEFFrameConverter.convertNEDtoECEF(nedFrame1, ecefFrame1);
-        ecefFrame1.getCoordinateTransformation(ecefC);
-
-        final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
-                .estimateKinematicsAndReturnNew(
-                        timeInterval, ecefC, ecefC,
-                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                        ecefPosition1);
-
-
-        // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(nedC, timeInterval);
-
-        // check default values
-        assertEquals(estimator.getTotalSamples(), IMUBiasEstimator.DEFAULT_TOTAL_SAMPLES);
-        assertEquals(estimator.getTimeInterval(),
-                timeInterval.getValue().doubleValue(), 0.0);
-        assertEquals(estimator.getTimeIntervalAsTime(), time1);
-        estimator.getTimeIntervalAsTime(time2);
-        assertEquals(time1, time2);
-        assertEquals(estimator.getEcefPosition(), ecefPosition1);
-        estimator.getEcefPosition(ecefPosition2);
-        assertEquals(ecefPosition1, ecefPosition2);
-        assertEquals(estimator.getEcefFrame(), ecefFrame1);
-        estimator.getEcefFrame(ecefFrame2);
-        assertEquals(ecefFrame2, ecefFrame1);
-        assertEquals(estimator.getNedFrame(), nedFrame1);
-        estimator.getNedFrame(nedFrame2);
-        assertEquals(nedFrame1, nedFrame2);
-        assertEquals(estimator.getNedPosition(), nedPosition1);
-        estimator.getNedPosition(nedPosition2);
-        assertEquals(nedPosition1, nedPosition2);
-        assertEquals(estimator.getEcefC(), ecefC);
-        estimator.getEcefC(c);
-        assertEquals(ecefC, c);
-        assertEquals(estimator.getNedC(), nedC);
-        estimator.getNedC(c);
-        assertEquals(nedC, c);
-        assertNull(estimator.getListener());
-        assertNull(estimator.getLastBodyKinematics());
-        assertFalse(estimator.getLastBodyKinematics(null));
-        assertEquals(estimator.getBiasFx(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFxAsAcceleration(), acceleration1);
-        estimator.getBiasFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFy(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFyAsAcceleration(), acceleration1);
-        estimator.getBiasFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFz(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFzAsAcceleration(), acceleration1);
-        estimator.getBiasFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateXAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateYAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
-        estimator.getBiasesAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getVarianceFx(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFy(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFz(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFx(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFxAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFy(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFyAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
-                0.0);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
-                acceleration1);
-        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationAngularRateX(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateY(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateYAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateZ(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
-        estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerBias(), m1);
-        estimator.getAccelerometerBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getGyroBias(), m1);
-        estimator.getGyroBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getNumberOfProcessedSamples(), 0);
-        assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
-        assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
-        estimator.getExpectedKinematics(kinematics2);
-        assertEquals(expectedKinematics, kinematics2);
-
-        // Force InvalidSourceAndDestinationFrameTypeException
-        estimator = null;
-        try {
-            estimator = new IMUBiasEstimator(new CoordinateTransformation(
-                    FrameType.LOCAL_NAVIGATION_FRAME,
-                    FrameType.LOCAL_NAVIGATION_FRAME), timeInterval);
-            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
-        }
-
-        // Force IllegalArgumentException
-        try {
-            estimator = new IMUBiasEstimator(nedC,
-                    new Time(-1.0, TimeUnit.SECOND));
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
-    }
-
-    @Test
-    public void testConstructor60() throws WrongSizeException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final Time timeInterval = new Time(randomizer.nextDouble(
-                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
-
-        final double latitude = Math.toRadians(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
-        final double longitude = Math.toRadians(randomizer.nextDouble(
-                MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-
-
-        final Acceleration acceleration1 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final AngularSpeed angularSpeed1 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final AngularSpeed angularSpeed2 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final BodyKinematics kinematics1 = new BodyKinematics();
-        final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(timeInterval.getValue(), TimeUnit.SECOND);
-        final Time time2 = new Time(0.0, TimeUnit.SECOND);
-        final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height);
-        final NEDFrame nedFrame2 = new NEDFrame();
-        final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
-                .convertNEDtoECEFAndReturnNew(nedFrame1);
-        final ECEFFrame ecefFrame2 = new ECEFFrame();
-        final NEDPosition nedPosition1 = nedFrame1.getPosition();
-        final NEDPosition nedPosition2 = new NEDPosition();
-        final ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
-        final ECEFPosition ecefPosition2 = new ECEFPosition();
-        final CoordinateTransformation ecefC = ecefFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation nedC = nedFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-        final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
-        final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
-
-        final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
-                .estimateKinematicsAndReturnNew(
-                        timeInterval, ecefC, ecefC,
-                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                        ecefPosition1);
-
-
-        // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(latitude, longitude, height,
-                timeInterval);
-
-        // check default values
-        assertEquals(estimator.getTotalSamples(), IMUBiasEstimator.DEFAULT_TOTAL_SAMPLES);
-        assertEquals(estimator.getTimeInterval(),
-                timeInterval.getValue().doubleValue(), 0.0);
-        assertEquals(estimator.getTimeIntervalAsTime(), time1);
-        estimator.getTimeIntervalAsTime(time2);
-        assertEquals(time1, time2);
-        assertEquals(estimator.getEcefPosition(), ecefPosition1);
-        estimator.getEcefPosition(ecefPosition2);
-        assertEquals(ecefPosition1, ecefPosition2);
-        assertEquals(estimator.getEcefFrame(), ecefFrame1);
-        estimator.getEcefFrame(ecefFrame2);
-        assertEquals(ecefFrame2, ecefFrame1);
-        assertTrue(estimator.getNedFrame().equals(nedFrame1, ABSOLUTE_ERROR));
-        estimator.getNedFrame(nedFrame2);
-        assertTrue(nedFrame1.equals(nedFrame2, ABSOLUTE_ERROR));
-        assertTrue(estimator.getNedPosition().equals(nedPosition1, ABSOLUTE_ERROR));
-        estimator.getNedPosition(nedPosition2);
-        assertTrue(nedPosition1.equals(nedPosition2, ABSOLUTE_ERROR));
-        assertEquals(estimator.getEcefC(), ecefC);
-        estimator.getEcefC(c);
-        assertEquals(ecefC, c);
-        assertTrue(estimator.getNedC().equals(nedC, ABSOLUTE_ERROR));
-        estimator.getNedC(c);
-        assertTrue(nedC.equals(c, ABSOLUTE_ERROR));
-        assertNull(estimator.getListener());
-        assertNull(estimator.getLastBodyKinematics());
-        assertFalse(estimator.getLastBodyKinematics(null));
-        assertEquals(estimator.getBiasFx(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFxAsAcceleration(), acceleration1);
-        estimator.getBiasFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFy(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFyAsAcceleration(), acceleration1);
-        estimator.getBiasFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFz(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFzAsAcceleration(), acceleration1);
-        estimator.getBiasFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateXAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateYAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
-        estimator.getBiasesAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getVarianceFx(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFy(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFz(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFx(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFxAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFy(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFyAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
-                0.0);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
-                acceleration1);
-        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationAngularRateX(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateY(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateYAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateZ(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
-        estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerBias(), m1);
-        estimator.getAccelerometerBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getGyroBias(), m1);
-        estimator.getGyroBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getNumberOfProcessedSamples(), 0);
-        assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
-        assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
-        estimator.getExpectedKinematics(kinematics2);
-        assertEquals(expectedKinematics, kinematics2);
-
-        // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = new IMUBiasEstimator(latitude, longitude, height,
-                    new Time(-1.0, TimeUnit.SECOND));
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
-    }
-
-    @Test
-    public void testConstructor61() throws WrongSizeException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final Time timeInterval = new Time(randomizer.nextDouble(
-                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
-
-        final Angle latitude = new Angle(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs), AngleUnit.DEGREES);
-        final Angle longitude = new Angle(randomizer.nextDouble(
-                MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES), AngleUnit.DEGREES);
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-
-
-        final Acceleration acceleration1 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final AngularSpeed angularSpeed1 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final AngularSpeed angularSpeed2 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final BodyKinematics kinematics1 = new BodyKinematics();
-        final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(timeInterval.getValue(), TimeUnit.SECOND);
-        final Time time2 = new Time(0.0, TimeUnit.SECOND);
-        final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height);
-        final NEDFrame nedFrame2 = new NEDFrame();
-        final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
-                .convertNEDtoECEFAndReturnNew(nedFrame1);
-        final ECEFFrame ecefFrame2 = new ECEFFrame();
-        final NEDPosition nedPosition1 = nedFrame1.getPosition();
-        final NEDPosition nedPosition2 = new NEDPosition();
-        final ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
-        final ECEFPosition ecefPosition2 = new ECEFPosition();
-        final CoordinateTransformation ecefC = ecefFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation nedC = nedFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-        final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
-        final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
-
-        final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
-                .estimateKinematicsAndReturnNew(
-                        timeInterval, ecefC, ecefC,
-                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                        ecefPosition1);
-
-
-        // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(latitude, longitude, height,
-                timeInterval);
-
-        // check default values
-        assertEquals(estimator.getTotalSamples(), IMUBiasEstimator.DEFAULT_TOTAL_SAMPLES);
-        assertEquals(estimator.getTimeInterval(),
-                timeInterval.getValue().doubleValue(), 0.0);
-        assertEquals(estimator.getTimeIntervalAsTime(), time1);
-        estimator.getTimeIntervalAsTime(time2);
-        assertEquals(time1, time2);
-        assertEquals(estimator.getEcefPosition(), ecefPosition1);
-        estimator.getEcefPosition(ecefPosition2);
-        assertEquals(ecefPosition1, ecefPosition2);
-        assertEquals(estimator.getEcefFrame(), ecefFrame1);
-        estimator.getEcefFrame(ecefFrame2);
-        assertEquals(ecefFrame2, ecefFrame1);
-        assertTrue(estimator.getNedFrame().equals(nedFrame1, ABSOLUTE_ERROR));
-        estimator.getNedFrame(nedFrame2);
-        assertTrue(nedFrame1.equals(nedFrame2, ABSOLUTE_ERROR));
-        assertTrue(estimator.getNedPosition().equals(nedPosition1, ABSOLUTE_ERROR));
-        estimator.getNedPosition(nedPosition2);
-        assertTrue(nedPosition1.equals(nedPosition2, ABSOLUTE_ERROR));
-        assertEquals(estimator.getEcefC(), ecefC);
-        estimator.getEcefC(c);
-        assertEquals(ecefC, c);
-        assertTrue(estimator.getNedC().equals(nedC, ABSOLUTE_ERROR));
-        estimator.getNedC(c);
-        assertTrue(nedC.equals(c, ABSOLUTE_ERROR));
-        assertNull(estimator.getListener());
-        assertNull(estimator.getLastBodyKinematics());
-        assertFalse(estimator.getLastBodyKinematics(null));
-        assertEquals(estimator.getBiasFx(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFxAsAcceleration(), acceleration1);
-        estimator.getBiasFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFy(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFyAsAcceleration(), acceleration1);
-        estimator.getBiasFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFz(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFzAsAcceleration(), acceleration1);
-        estimator.getBiasFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateXAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateYAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
-        estimator.getBiasesAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getVarianceFx(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFy(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFz(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFx(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFxAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFy(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFyAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
-                0.0);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
-                acceleration1);
-        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationAngularRateX(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateY(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateYAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateZ(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
-        estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerBias(), m1);
-        estimator.getAccelerometerBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getGyroBias(), m1);
-        estimator.getGyroBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getNumberOfProcessedSamples(), 0);
-        assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
-        assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
-        estimator.getExpectedKinematics(kinematics2);
-        assertEquals(expectedKinematics, kinematics2);
-
-        // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = new IMUBiasEstimator(latitude, longitude, height,
-                    new Time(-1.0, TimeUnit.SECOND));
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
-    }
-
-    @Test
-    public void testConstructor62() throws WrongSizeException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final Time timeInterval = new Time(randomizer.nextDouble(
-                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
-
-        final Angle latitude = new Angle(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs), AngleUnit.DEGREES);
-        final Angle longitude = new Angle(randomizer.nextDouble(
-                MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES), AngleUnit.DEGREES);
-        final Distance height = new Distance(
-                randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT), DistanceUnit.METER);
-
-
-        final Acceleration acceleration1 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final AngularSpeed angularSpeed1 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final AngularSpeed angularSpeed2 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final BodyKinematics kinematics1 = new BodyKinematics();
-        final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(timeInterval.getValue(), TimeUnit.SECOND);
-        final Time time2 = new Time(0.0, TimeUnit.SECOND);
-        final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height);
-        final NEDFrame nedFrame2 = new NEDFrame();
-        final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
-                .convertNEDtoECEFAndReturnNew(nedFrame1);
-        final ECEFFrame ecefFrame2 = new ECEFFrame();
-        final NEDPosition nedPosition1 = nedFrame1.getPosition();
-        final NEDPosition nedPosition2 = new NEDPosition();
-        final ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
-        final ECEFPosition ecefPosition2 = new ECEFPosition();
-        final CoordinateTransformation ecefC = ecefFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation nedC = nedFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-        final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
-        final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
-
-        final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
-                .estimateKinematicsAndReturnNew(
-                        timeInterval, ecefC, ecefC,
-                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                        ecefPosition1);
-
-
-        // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(latitude, longitude, height,
-                timeInterval);
-
-        // check default values
-        assertEquals(estimator.getTotalSamples(), IMUBiasEstimator.DEFAULT_TOTAL_SAMPLES);
-        assertEquals(estimator.getTimeInterval(),
-                timeInterval.getValue().doubleValue(), 0.0);
-        assertEquals(estimator.getTimeIntervalAsTime(), time1);
-        estimator.getTimeIntervalAsTime(time2);
-        assertEquals(time1, time2);
-        assertEquals(estimator.getEcefPosition(), ecefPosition1);
-        estimator.getEcefPosition(ecefPosition2);
-        assertEquals(ecefPosition1, ecefPosition2);
-        assertEquals(estimator.getEcefFrame(), ecefFrame1);
-        estimator.getEcefFrame(ecefFrame2);
-        assertEquals(ecefFrame2, ecefFrame1);
-        assertTrue(estimator.getNedFrame().equals(nedFrame1, ABSOLUTE_ERROR));
-        estimator.getNedFrame(nedFrame2);
-        assertTrue(nedFrame1.equals(nedFrame2, ABSOLUTE_ERROR));
-        assertTrue(estimator.getNedPosition().equals(nedPosition1, ABSOLUTE_ERROR));
-        estimator.getNedPosition(nedPosition2);
-        assertTrue(nedPosition1.equals(nedPosition2, ABSOLUTE_ERROR));
-        assertEquals(estimator.getEcefC(), ecefC);
-        estimator.getEcefC(c);
-        assertEquals(ecefC, c);
-        assertTrue(estimator.getNedC().equals(nedC, ABSOLUTE_ERROR));
-        estimator.getNedC(c);
-        assertTrue(nedC.equals(c, ABSOLUTE_ERROR));
-        assertNull(estimator.getListener());
-        assertNull(estimator.getLastBodyKinematics());
-        assertFalse(estimator.getLastBodyKinematics(null));
-        assertEquals(estimator.getBiasFx(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFxAsAcceleration(), acceleration1);
-        estimator.getBiasFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFy(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFyAsAcceleration(), acceleration1);
-        estimator.getBiasFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFz(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFzAsAcceleration(), acceleration1);
-        estimator.getBiasFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateXAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateYAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
-        estimator.getBiasesAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getVarianceFx(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFy(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFz(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFx(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFxAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFy(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFyAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
-                0.0);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
-                acceleration1);
-        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationAngularRateX(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateY(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateYAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateZ(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
-        estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerBias(), m1);
-        estimator.getAccelerometerBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getGyroBias(), m1);
-        estimator.getGyroBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getNumberOfProcessedSamples(), 0);
-        assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
-        assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
-        estimator.getExpectedKinematics(kinematics2);
-        assertEquals(expectedKinematics, kinematics2);
-
-        // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = new IMUBiasEstimator(latitude, longitude, height,
-                    new Time(-1.0, TimeUnit.SECOND));
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
-    }
-
-    @Test
-    public void testConstructor63() throws WrongSizeException,
-            InvalidSourceAndDestinationFrameTypeException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final Time timeInterval = new Time(randomizer.nextDouble(
-                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
-
-        final double latitude = Math.toRadians(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
-        final double longitude = Math.toRadians(randomizer.nextDouble(
-                MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-
-        final double roll = Math.toRadians(randomizer.nextDouble(
-                MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(randomizer.nextDouble(
-                MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(randomizer.nextDouble(
-                MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-
-
-        final Acceleration acceleration1 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final AngularSpeed angularSpeed1 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final AngularSpeed angularSpeed2 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final BodyKinematics kinematics1 = new BodyKinematics();
-        final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(timeInterval.getValue(), TimeUnit.SECOND);
-        final Time time2 = new Time(0.0, TimeUnit.SECOND);
-        final CoordinateTransformation nedC = new CoordinateTransformation(
-                roll, pitch, yaw, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-        final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height,
-                0.0, 0.0, 0.0, nedC);
-        final NEDFrame nedFrame2 = new NEDFrame();
-        final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
-                .convertNEDtoECEFAndReturnNew(nedFrame1);
-        final ECEFFrame ecefFrame2 = new ECEFFrame();
-        final NEDPosition nedPosition1 = nedFrame1.getPosition();
-        final NEDPosition nedPosition2 = new NEDPosition();
-        final ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
-        final ECEFPosition ecefPosition2 = new ECEFPosition();
-        final CoordinateTransformation ecefC = ecefFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-        final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
-        final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
-
-        final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
-                .estimateKinematicsAndReturnNew(
-                        timeInterval, ecefC, ecefC,
-                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                        ecefPosition1);
-
-
-        // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(nedPosition1, nedC,
-                timeInterval);
-
-        // check default values
-        assertEquals(estimator.getTotalSamples(), IMUBiasEstimator.DEFAULT_TOTAL_SAMPLES);
-        assertEquals(estimator.getTimeInterval(),
-                timeInterval.getValue().doubleValue(), 0.0);
-        assertEquals(estimator.getTimeIntervalAsTime(), time1);
-        estimator.getTimeIntervalAsTime(time2);
-        assertEquals(time1, time2);
-        assertEquals(estimator.getEcefPosition(), ecefPosition1);
-        estimator.getEcefPosition(ecefPosition2);
-        assertEquals(ecefPosition1, ecefPosition2);
-        assertEquals(estimator.getEcefFrame(), ecefFrame1);
-        estimator.getEcefFrame(ecefFrame2);
-        assertEquals(ecefFrame2, ecefFrame1);
-        assertTrue(estimator.getNedFrame().equals(nedFrame1, ABSOLUTE_ERROR));
-        estimator.getNedFrame(nedFrame2);
-        assertTrue(nedFrame1.equals(nedFrame2, ABSOLUTE_ERROR));
-        assertTrue(estimator.getNedPosition().equals(nedPosition1, ABSOLUTE_ERROR));
-        estimator.getNedPosition(nedPosition2);
-        assertTrue(nedPosition1.equals(nedPosition2, ABSOLUTE_ERROR));
-        assertEquals(estimator.getEcefC(), ecefC);
-        estimator.getEcefC(c);
-        assertEquals(ecefC, c);
-        assertTrue(estimator.getNedC().equals(nedC, ABSOLUTE_ERROR));
-        estimator.getNedC(c);
-        assertTrue(nedC.equals(c, ABSOLUTE_ERROR));
-        assertNull(estimator.getListener());
-        assertNull(estimator.getLastBodyKinematics());
-        assertFalse(estimator.getLastBodyKinematics(null));
-        assertEquals(estimator.getBiasFx(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFxAsAcceleration(), acceleration1);
-        estimator.getBiasFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFy(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFyAsAcceleration(), acceleration1);
-        estimator.getBiasFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFz(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFzAsAcceleration(), acceleration1);
-        estimator.getBiasFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateXAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateYAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
-        estimator.getBiasesAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getVarianceFx(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFy(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFz(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFx(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFxAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFy(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFyAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
-                0.0);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
-                acceleration1);
-        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationAngularRateX(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateY(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateYAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateZ(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
-        estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerBias(), m1);
-        estimator.getAccelerometerBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getGyroBias(), m1);
-        estimator.getGyroBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getNumberOfProcessedSamples(), 0);
-        assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
-        assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
-        estimator.getExpectedKinematics(kinematics2);
-        assertEquals(expectedKinematics, kinematics2);
-
-        // Force InvalidSourceAndDestinationFrameTypeException
-        estimator = null;
-        try {
-            estimator = new IMUBiasEstimator(nedPosition1,
-                    new CoordinateTransformation(
-                            FrameType.LOCAL_NAVIGATION_FRAME,
-                            FrameType.LOCAL_NAVIGATION_FRAME), timeInterval);
-            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
-        }
-
-        // Force IllegalArgumentException
-        try {
-            estimator = new IMUBiasEstimator(nedPosition1, nedC,
-                    new Time(-1.0, TimeUnit.SECOND));
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
-    }
-
-    @Test
-    public void testConstructor64() throws WrongSizeException,
-            InvalidSourceAndDestinationFrameTypeException {
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final Time timeInterval = new Time(randomizer.nextDouble(
-                    MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
-
-            final double latitude = Math.toRadians(randomizer.nextDouble(
-                    MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
-            final double longitude = Math.toRadians(randomizer.nextDouble(
-                    MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
-            final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-
-            final double roll = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double pitch = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-
-
-            final Acceleration acceleration1 = new Acceleration(0.0,
-                    AccelerationUnit.METERS_PER_SQUARED_SECOND);
-            final Acceleration acceleration2 = new Acceleration(0.0,
-                    AccelerationUnit.METERS_PER_SQUARED_SECOND);
-            final AngularSpeed angularSpeed1 = new AngularSpeed(0.0,
-                    AngularSpeedUnit.RADIANS_PER_SECOND);
-            final AngularSpeed angularSpeed2 = new AngularSpeed(0.0,
-                    AngularSpeedUnit.RADIANS_PER_SECOND);
-            final BodyKinematics kinematics1 = new BodyKinematics();
-            final BodyKinematics kinematics2 = new BodyKinematics();
-            final Time time1 = new Time(timeInterval.getValue(), TimeUnit.SECOND);
-            final Time time2 = new Time(0.0, TimeUnit.SECOND);
-            final CoordinateTransformation nedC = new CoordinateTransformation(
-                    roll, pitch, yaw, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-            final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height,
-                    0.0, 0.0, 0.0, nedC);
-            final NEDFrame nedFrame2 = new NEDFrame();
-            final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
-                    .convertNEDtoECEFAndReturnNew(nedFrame1);
-            final ECEFFrame ecefFrame2 = new ECEFFrame();
-            final NEDPosition nedPosition1 = nedFrame1.getPosition();
-            final NEDPosition nedPosition2 = new NEDPosition();
-            final ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
-            final ECEFPosition ecefPosition2 = new ECEFPosition();
-            final CoordinateTransformation ecefC = ecefFrame1
-                    .getCoordinateTransformation();
-            final CoordinateTransformation c = new CoordinateTransformation(
-                    FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-            final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
-            final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
-
-            final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
-                    .estimateKinematicsAndReturnNew(
-                            timeInterval, ecefC, ecefC,
-                            0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                            ecefPosition1);
-
-
-            // test constructor
-            IMUBiasEstimator estimator = new IMUBiasEstimator(ecefPosition1, nedC,
-                    timeInterval);
-
-            // check default values
-            assertEquals(estimator.getTotalSamples(), IMUBiasEstimator.DEFAULT_TOTAL_SAMPLES);
-            assertEquals(estimator.getTimeInterval(),
-                    timeInterval.getValue().doubleValue(), 0.0);
-            assertEquals(estimator.getTimeIntervalAsTime(), time1);
-            estimator.getTimeIntervalAsTime(time2);
-            assertEquals(time1, time2);
-            if (!estimator.getEcefPosition().equals(ecefPosition1, ABSOLUTE_ERROR)) {
-                continue;
-            }
-            assertTrue(estimator.getEcefPosition().equals(ecefPosition1,
-                    ABSOLUTE_ERROR));
-            estimator.getEcefPosition(ecefPosition2);
-            assertTrue(ecefPosition1.equals(ecefPosition2,
-                    ABSOLUTE_ERROR));
-            if (!estimator.getEcefFrame().equals(ecefFrame1, ABSOLUTE_ERROR)) {
-                continue;
-            }
-            assertTrue(estimator.getEcefFrame().equals(ecefFrame1, ABSOLUTE_ERROR));
-            estimator.getEcefFrame(ecefFrame2);
-            assertTrue(ecefFrame2.equals(ecefFrame1, ABSOLUTE_ERROR));
-            assertTrue(estimator.getNedFrame().equals(nedFrame1, ABSOLUTE_ERROR));
-            estimator.getNedFrame(nedFrame2);
-            assertTrue(nedFrame1.equals(nedFrame2, ABSOLUTE_ERROR));
-            assertTrue(estimator.getNedPosition().equals(nedPosition1, ABSOLUTE_ERROR));
-            estimator.getNedPosition(nedPosition2);
-            assertTrue(nedPosition1.equals(nedPosition2, ABSOLUTE_ERROR));
-            assertTrue(estimator.getEcefC().equals(ecefC, ABSOLUTE_ERROR));
-            estimator.getEcefC(c);
-            assertTrue(ecefC.equals(c, ABSOLUTE_ERROR));
-            assertTrue(estimator.getNedC().equals(nedC, ABSOLUTE_ERROR));
-            estimator.getNedC(c);
-            assertTrue(nedC.equals(c, ABSOLUTE_ERROR));
-            assertNull(estimator.getListener());
-            assertNull(estimator.getLastBodyKinematics());
-            assertFalse(estimator.getLastBodyKinematics(null));
-            assertEquals(estimator.getBiasFx(), 0.0, 0.0);
-            assertEquals(estimator.getBiasFxAsAcceleration(), acceleration1);
-            estimator.getBiasFxAsAcceleration(acceleration2);
-            assertEquals(acceleration1, acceleration2);
-            assertEquals(estimator.getBiasFy(), 0.0, 0.0);
-            assertEquals(estimator.getBiasFyAsAcceleration(), acceleration1);
-            estimator.getBiasFyAsAcceleration(acceleration2);
-            assertEquals(acceleration1, acceleration2);
-            assertEquals(estimator.getBiasFz(), 0.0, 0.0);
-            assertEquals(estimator.getBiasFzAsAcceleration(), acceleration1);
-            estimator.getBiasFzAsAcceleration(acceleration2);
-            assertEquals(acceleration1, acceleration2);
-            assertEquals(estimator.getBiasAngularRateX(), 0.0, 0.0);
-            assertEquals(estimator.getBiasAngularRateXAsAngularSpeed(), angularSpeed1);
-            estimator.getBiasAngularRateXAsAngularSpeed(angularSpeed2);
-            assertEquals(angularSpeed1, angularSpeed2);
-            assertEquals(estimator.getBiasAngularRateY(), 0.0, 0.0);
-            assertEquals(estimator.getBiasAngularRateYAsAngularSpeed(), angularSpeed1);
-            estimator.getBiasAngularRateYAsAngularSpeed(angularSpeed2);
-            assertEquals(angularSpeed1, angularSpeed2);
-            assertEquals(estimator.getBiasAngularRateZ(), 0.0, 0.0);
-            assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
-            estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
-            assertEquals(angularSpeed1, angularSpeed2);
-            assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
-            estimator.getBiasesAsBodyKinematics(kinematics2);
-            assertEquals(kinematics1, kinematics2);
-            assertEquals(estimator.getVarianceFx(), 0.0, 0.0);
-            assertEquals(estimator.getVarianceFy(), 0.0, 0.0);
-            assertEquals(estimator.getVarianceFz(), 0.0, 0.0);
-            assertEquals(estimator.getVarianceAngularRateX(), 0.0, 0.0);
-            assertEquals(estimator.getVarianceAngularRateY(), 0.0, 0.0);
-            assertEquals(estimator.getVarianceAngularRateZ(), 0.0, 0.0);
-            assertEquals(estimator.getStandardDeviationFx(), 0.0, 0.0);
-            assertEquals(estimator.getStandardDeviationFxAsAcceleration(), acceleration1);
-            estimator.getStandardDeviationFxAsAcceleration(acceleration2);
-            assertEquals(acceleration1, acceleration2);
-            assertEquals(estimator.getStandardDeviationFy(), 0.0, 0.0);
-            assertEquals(estimator.getStandardDeviationFyAsAcceleration(), acceleration1);
-            estimator.getStandardDeviationFyAsAcceleration(acceleration2);
-            assertEquals(acceleration1, acceleration2);
-            assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
-            assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
-            estimator.getStandardDeviationFzAsAcceleration(acceleration2);
-            assertEquals(acceleration1, acceleration2);
-            assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
-                    0.0);
-            assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
-                    acceleration1);
-            estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
-            assertEquals(acceleration1, acceleration2);
-            assertEquals(estimator.getStandardDeviationAngularRateX(),
-                    0.0, 0.0);
-            assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
-                    angularSpeed1);
-            estimator.getStandardDeviationAngularRateXAsAngularSpeed(angularSpeed2);
-            assertEquals(angularSpeed1, angularSpeed2);
-            assertEquals(estimator.getStandardDeviationAngularRateY(),
-                    0.0, 0.0);
-            assertEquals(estimator.getStandardDeviationAngularRateYAsAngularSpeed(),
-                    angularSpeed1);
-            estimator.getStandardDeviationAngularRateYAsAngularSpeed(angularSpeed2);
-            assertEquals(angularSpeed1, angularSpeed2);
-            assertEquals(estimator.getStandardDeviationAngularRateZ(),
-                    0.0, 0.0);
-            assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
-                    angularSpeed1);
-            estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
-            assertEquals(angularSpeed1, angularSpeed2);
-            assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-            assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                    angularSpeed1);
-            estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-            assertEquals(angularSpeed1, angularSpeed2);
-            assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
-            estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
-            assertEquals(kinematics1, kinematics2);
-            assertEquals(estimator.getPSDFx(), 0.0, 0.0);
-            assertEquals(estimator.getPSDFy(), 0.0, 0.0);
-            assertEquals(estimator.getPSDFz(), 0.0, 0.0);
-            assertEquals(estimator.getPSDAngularRateX(), 0.0, 0.0);
-            assertEquals(estimator.getPSDAngularRateY(), 0.0, 0.0);
-            assertEquals(estimator.getPSDAngularRateZ(), 0.0, 0.0);
-            assertEquals(estimator.getRootPSDFx(), 0.0, 0.0);
-            assertEquals(estimator.getRootPSDFy(), 0.0, 0.0);
-            assertEquals(estimator.getRootPSDFz(), 0.0, 0.0);
-            assertEquals(estimator.getRootPSDAngularRateX(), 0.0, 0.0);
-            assertEquals(estimator.getRootPSDAngularRateY(), 0.0, 0.0);
-            assertEquals(estimator.getRootPSDAngularRateZ(), 0.0, 0.0);
-            assertEquals(estimator.getAccelerometerNoisePSD(), 0.0, 0.0);
-            assertEquals(estimator.getAccelerometerNoiseRootPSD(), 0.0, 0.0);
-            assertEquals(estimator.getGyroNoisePSD(), 0.0, 0.0);
-            assertEquals(estimator.getGyroNoiseRootPSD(), 0.0, 0.0);
-            assertEquals(estimator.getAccelerometerBias(), m1);
-            estimator.getAccelerometerBias(m2);
-            assertEquals(m1, m2);
-            assertEquals(estimator.getGyroBias(), m1);
-            estimator.getGyroBias(m2);
-            assertEquals(m1, m2);
-            assertEquals(estimator.getNumberOfProcessedSamples(), 0);
-            assertFalse(estimator.isRunning());
-            assertFalse(estimator.isFinished());
-            assertTrue(estimator.getExpectedKinematics().equals(expectedKinematics,
-                    ABSOLUTE_ERROR));
-            estimator.getExpectedKinematics(kinematics2);
-            assertTrue(expectedKinematics.equals(kinematics2, ABSOLUTE_ERROR));
-
-            // Force InvalidSourceAndDestinationFrameTypeException
-            estimator = null;
-            try {
-                estimator = new IMUBiasEstimator(ecefPosition1,
-                        new CoordinateTransformation(
-                                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME,
-                                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME),
-                        timeInterval);
-                fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-            } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
-            }
-
-            // Force IllegalArgumentException
-            try {
-                estimator = new IMUBiasEstimator(ecefPosition1, nedC,
-                        new Time(-1.0, TimeUnit.SECOND));
-                fail("IllegalArgumentException expected but not thrown");
-            } catch (final IllegalArgumentException ignore) {
-            }
-            assertNull(estimator);
-
-            numValid++;
-            break;
-        }
-
-        assertTrue(numValid > 0);
-    }
-
-    @Test
-    public void testConstructor65() throws WrongSizeException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final Time timeInterval = new Time(randomizer.nextDouble(
-                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
-
-        final Acceleration acceleration1 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final AngularSpeed angularSpeed1 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final AngularSpeed angularSpeed2 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final BodyKinematics kinematics1 = new BodyKinematics();
-        final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(timeInterval.getValue(), TimeUnit.SECOND);
-        final Time time2 = new Time(0.0, TimeUnit.SECOND);
-        final NEDFrame nedFrame1 = new NEDFrame();
-        final NEDFrame nedFrame2 = new NEDFrame();
-        final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
-                .convertNEDtoECEFAndReturnNew(nedFrame1);
-        final ECEFFrame ecefFrame2 = new ECEFFrame();
-        final NEDPosition nedPosition1 = nedFrame1.getPosition();
-        final NEDPosition nedPosition2 = new NEDPosition();
-        final ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
-        final ECEFPosition ecefPosition2 = new ECEFPosition();
-        final CoordinateTransformation ecefC = ecefFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation nedC = nedFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-        final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
-        final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
-
-        final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
-                .estimateKinematicsAndReturnNew(
-                        timeInterval, ecefC, ecefC,
-                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                        ecefPosition1);
-
-
-        // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(timeInterval, this);
-
-        // check default values
-        assertEquals(estimator.getTotalSamples(), IMUBiasEstimator.DEFAULT_TOTAL_SAMPLES);
-        assertEquals(estimator.getTimeInterval(),
-                timeInterval.getValue().doubleValue(), 0.0);
-        assertEquals(estimator.getTimeIntervalAsTime(), time1);
-        estimator.getTimeIntervalAsTime(time2);
-        assertEquals(time1, time2);
-        assertEquals(estimator.getEcefPosition(), ecefPosition1);
-        estimator.getEcefPosition(ecefPosition2);
-        assertEquals(ecefPosition1, ecefPosition2);
-        assertEquals(estimator.getEcefFrame(), ecefFrame1);
-        estimator.getEcefFrame(ecefFrame2);
-        assertEquals(ecefFrame2, ecefFrame1);
-        assertEquals(estimator.getNedFrame(), nedFrame1);
-        estimator.getNedFrame(nedFrame2);
-        assertEquals(nedFrame1, nedFrame2);
-        assertEquals(estimator.getNedPosition(), nedPosition1);
-        estimator.getNedPosition(nedPosition2);
-        assertEquals(nedPosition1, nedPosition2);
-        assertEquals(estimator.getEcefC(), ecefC);
-        estimator.getEcefC(c);
-        assertEquals(ecefC, c);
-        assertEquals(estimator.getNedC(), nedC);
-        estimator.getNedC(c);
-        assertEquals(nedC, c);
-        assertSame(estimator.getListener(), this);
-        assertNull(estimator.getLastBodyKinematics());
-        assertFalse(estimator.getLastBodyKinematics(null));
-        assertEquals(estimator.getBiasFx(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFxAsAcceleration(), acceleration1);
-        estimator.getBiasFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFy(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFyAsAcceleration(), acceleration1);
-        estimator.getBiasFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFz(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFzAsAcceleration(), acceleration1);
-        estimator.getBiasFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateXAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateYAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
-        estimator.getBiasesAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getVarianceFx(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFy(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFz(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFx(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFxAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFy(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFyAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
-                0.0);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
-                acceleration1);
-        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationAngularRateX(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateY(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateYAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateZ(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
-        estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerBias(), m1);
-        estimator.getAccelerometerBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getGyroBias(), m1);
-        estimator.getGyroBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getNumberOfProcessedSamples(), 0);
-        assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
-        assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
-        estimator.getExpectedKinematics(kinematics2);
-        assertEquals(expectedKinematics, kinematics2);
-
-        // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = new IMUBiasEstimator(
-                    new Time(-1.0, TimeUnit.SECOND), this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
-    }
-
-    @Test
-    public void testConstructor66() throws WrongSizeException,
-            InvalidSourceAndDestinationFrameTypeException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final Time timeInterval = new Time(randomizer.nextDouble(
-                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
-
-        final Acceleration acceleration1 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final AngularSpeed angularSpeed1 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final AngularSpeed angularSpeed2 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final BodyKinematics kinematics1 = new BodyKinematics();
-        final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(timeInterval.getValue(), TimeUnit.SECOND);
-        final Time time2 = new Time(0.0, TimeUnit.SECOND);
-        final NEDFrame nedFrame1 = new NEDFrame();
-        final NEDFrame nedFrame2 = new NEDFrame();
-        final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
-                .convertNEDtoECEFAndReturnNew(nedFrame1);
-        final ECEFFrame ecefFrame2 = new ECEFFrame();
-        final NEDPosition nedPosition1 = nedFrame1.getPosition();
-        final NEDPosition nedPosition2 = new NEDPosition();
-        final ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
-        final ECEFPosition ecefPosition2 = new ECEFPosition();
-        final CoordinateTransformation ecefC = ecefFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation nedC = nedFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-        final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
-        final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
-
-        final double roll = Math.toRadians(randomizer.nextDouble(
-                MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(randomizer.nextDouble(
-                MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(randomizer.nextDouble(
-                MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        nedC.setEulerAngles(roll, pitch, yaw);
-        nedFrame1.setCoordinateTransformation(nedC);
-        NEDtoECEFFrameConverter.convertNEDtoECEF(nedFrame1, ecefFrame1);
-        ecefFrame1.getCoordinateTransformation(ecefC);
-
-        final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
-                .estimateKinematicsAndReturnNew(
-                        timeInterval, ecefC, ecefC,
-                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                        ecefPosition1);
-
-
-        // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(nedC, timeInterval,
-                this);
-
-        // check default values
-        assertEquals(estimator.getTotalSamples(), IMUBiasEstimator.DEFAULT_TOTAL_SAMPLES);
-        assertEquals(estimator.getTimeInterval(),
-                timeInterval.getValue().doubleValue(), 0.0);
-        assertEquals(estimator.getTimeIntervalAsTime(), time1);
-        estimator.getTimeIntervalAsTime(time2);
-        assertEquals(time1, time2);
-        assertEquals(estimator.getEcefPosition(), ecefPosition1);
-        estimator.getEcefPosition(ecefPosition2);
-        assertEquals(ecefPosition1, ecefPosition2);
-        assertEquals(estimator.getEcefFrame(), ecefFrame1);
-        estimator.getEcefFrame(ecefFrame2);
-        assertEquals(ecefFrame2, ecefFrame1);
-        assertEquals(estimator.getNedFrame(), nedFrame1);
-        estimator.getNedFrame(nedFrame2);
-        assertEquals(nedFrame1, nedFrame2);
-        assertEquals(estimator.getNedPosition(), nedPosition1);
-        estimator.getNedPosition(nedPosition2);
-        assertEquals(nedPosition1, nedPosition2);
-        assertEquals(estimator.getEcefC(), ecefC);
-        estimator.getEcefC(c);
-        assertEquals(ecefC, c);
-        assertEquals(estimator.getNedC(), nedC);
-        estimator.getNedC(c);
-        assertEquals(nedC, c);
-        assertSame(estimator.getListener(), this);
-        assertNull(estimator.getLastBodyKinematics());
-        assertFalse(estimator.getLastBodyKinematics(null));
-        assertEquals(estimator.getBiasFx(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFxAsAcceleration(), acceleration1);
-        estimator.getBiasFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFy(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFyAsAcceleration(), acceleration1);
-        estimator.getBiasFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFz(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFzAsAcceleration(), acceleration1);
-        estimator.getBiasFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateXAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateYAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
-        estimator.getBiasesAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getVarianceFx(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFy(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFz(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFx(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFxAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFy(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFyAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
-                0.0);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
-                acceleration1);
-        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationAngularRateX(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateY(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateYAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateZ(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
-        estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerBias(), m1);
-        estimator.getAccelerometerBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getGyroBias(), m1);
-        estimator.getGyroBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getNumberOfProcessedSamples(), 0);
-        assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
-        assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
-        estimator.getExpectedKinematics(kinematics2);
-        assertEquals(expectedKinematics, kinematics2);
-
-        // Force InvalidSourceAndDestinationFrameTypeException
-        estimator = null;
-        try {
-            estimator = new IMUBiasEstimator(new CoordinateTransformation(
-                    FrameType.LOCAL_NAVIGATION_FRAME,
-                    FrameType.LOCAL_NAVIGATION_FRAME), timeInterval, this);
-            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
-        }
-
-        // Force IllegalArgumentException
-        try {
-            estimator = new IMUBiasEstimator(nedC, -1.0, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
-    }
-
-    @Test
-    public void testConstructor67() throws WrongSizeException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final Time timeInterval = new Time(randomizer.nextDouble(
-                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
-
-        final double latitude = Math.toRadians(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
-        final double longitude = Math.toRadians(randomizer.nextDouble(
-                MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-
-
-        final Acceleration acceleration1 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final AngularSpeed angularSpeed1 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final AngularSpeed angularSpeed2 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final BodyKinematics kinematics1 = new BodyKinematics();
-        final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(timeInterval.getValue(), TimeUnit.SECOND);
-        final Time time2 = new Time(0.0, TimeUnit.SECOND);
-        final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height);
-        final NEDFrame nedFrame2 = new NEDFrame();
-        final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
-                .convertNEDtoECEFAndReturnNew(nedFrame1);
-        final ECEFFrame ecefFrame2 = new ECEFFrame();
-        final NEDPosition nedPosition1 = nedFrame1.getPosition();
-        final NEDPosition nedPosition2 = new NEDPosition();
-        final ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
-        final ECEFPosition ecefPosition2 = new ECEFPosition();
-        final CoordinateTransformation ecefC = ecefFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation nedC = nedFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-        final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
-        final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
-
-        final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
-                .estimateKinematicsAndReturnNew(
-                        timeInterval, ecefC, ecefC,
-                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                        ecefPosition1);
-
-
-        // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(
-                latitude, longitude, height, timeInterval, this);
-
-        // check default values
-        assertEquals(estimator.getTotalSamples(), IMUBiasEstimator.DEFAULT_TOTAL_SAMPLES);
-        assertEquals(estimator.getTimeInterval(),
-                timeInterval.getValue().doubleValue(), 0.0);
-        assertEquals(estimator.getTimeIntervalAsTime(), time1);
-        estimator.getTimeIntervalAsTime(time2);
-        assertEquals(time1, time2);
-        assertEquals(estimator.getEcefPosition(), ecefPosition1);
-        estimator.getEcefPosition(ecefPosition2);
-        assertEquals(ecefPosition1, ecefPosition2);
-        assertEquals(estimator.getEcefFrame(), ecefFrame1);
-        estimator.getEcefFrame(ecefFrame2);
-        assertEquals(ecefFrame2, ecefFrame1);
-        assertTrue(estimator.getNedFrame().equals(nedFrame1, ABSOLUTE_ERROR));
-        estimator.getNedFrame(nedFrame2);
-        assertTrue(nedFrame1.equals(nedFrame2, ABSOLUTE_ERROR));
-        assertTrue(estimator.getNedPosition().equals(nedPosition1, ABSOLUTE_ERROR));
-        estimator.getNedPosition(nedPosition2);
-        assertTrue(nedPosition1.equals(nedPosition2, ABSOLUTE_ERROR));
-        assertEquals(estimator.getEcefC(), ecefC);
-        estimator.getEcefC(c);
-        assertEquals(ecefC, c);
-        assertTrue(estimator.getNedC().equals(nedC, ABSOLUTE_ERROR));
-        estimator.getNedC(c);
-        assertTrue(nedC.equals(c, ABSOLUTE_ERROR));
-        assertSame(estimator.getListener(), this);
-        assertNull(estimator.getLastBodyKinematics());
-        assertFalse(estimator.getLastBodyKinematics(null));
-        assertEquals(estimator.getBiasFx(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFxAsAcceleration(), acceleration1);
-        estimator.getBiasFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFy(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFyAsAcceleration(), acceleration1);
-        estimator.getBiasFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFz(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFzAsAcceleration(), acceleration1);
-        estimator.getBiasFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateXAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateYAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
-        estimator.getBiasesAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getVarianceFx(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFy(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFz(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFx(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFxAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFy(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFyAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
-                0.0);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
-                acceleration1);
-        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationAngularRateX(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateY(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateYAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateZ(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
-        estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerBias(), m1);
-        estimator.getAccelerometerBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getGyroBias(), m1);
-        estimator.getGyroBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getNumberOfProcessedSamples(), 0);
-        assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
-        assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
-        estimator.getExpectedKinematics(kinematics2);
-        assertEquals(expectedKinematics, kinematics2);
-
-        // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = new IMUBiasEstimator(latitude, longitude, height,
-                    new Time(-1.0, TimeUnit.SECOND), this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
-    }
-
-    @Test
-    public void testConstructor68() throws WrongSizeException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final Time timeInterval = new Time(randomizer.nextDouble(
-                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
-
-        final Angle latitude = new Angle(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs), AngleUnit.DEGREES);
-        final Angle longitude = new Angle(randomizer.nextDouble(
-                MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES), AngleUnit.DEGREES);
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-
-
-        final Acceleration acceleration1 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final AngularSpeed angularSpeed1 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final AngularSpeed angularSpeed2 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final BodyKinematics kinematics1 = new BodyKinematics();
-        final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(timeInterval.getValue(), TimeUnit.SECOND);
-        final Time time2 = new Time(0.0, TimeUnit.SECOND);
-        final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height);
-        final NEDFrame nedFrame2 = new NEDFrame();
-        final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
-                .convertNEDtoECEFAndReturnNew(nedFrame1);
-        final ECEFFrame ecefFrame2 = new ECEFFrame();
-        final NEDPosition nedPosition1 = nedFrame1.getPosition();
-        final NEDPosition nedPosition2 = new NEDPosition();
-        final ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
-        final ECEFPosition ecefPosition2 = new ECEFPosition();
-        final CoordinateTransformation ecefC = ecefFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation nedC = nedFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-        final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
-        final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
-
-        final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
-                .estimateKinematicsAndReturnNew(
-                        timeInterval, ecefC, ecefC,
-                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                        ecefPosition1);
-
-
-        // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(latitude, longitude, height,
-                timeInterval, this);
-
-        // check default values
-        assertEquals(estimator.getTotalSamples(), IMUBiasEstimator.DEFAULT_TOTAL_SAMPLES);
-        assertEquals(estimator.getTimeInterval(),
-                timeInterval.getValue().doubleValue(), 0.0);
-        assertEquals(estimator.getTimeIntervalAsTime(), time1);
-        estimator.getTimeIntervalAsTime(time2);
-        assertEquals(time1, time2);
-        assertEquals(estimator.getEcefPosition(), ecefPosition1);
-        estimator.getEcefPosition(ecefPosition2);
-        assertEquals(ecefPosition1, ecefPosition2);
-        assertEquals(estimator.getEcefFrame(), ecefFrame1);
-        estimator.getEcefFrame(ecefFrame2);
-        assertEquals(ecefFrame2, ecefFrame1);
-        assertTrue(estimator.getNedFrame().equals(nedFrame1, ABSOLUTE_ERROR));
-        estimator.getNedFrame(nedFrame2);
-        assertTrue(nedFrame1.equals(nedFrame2, ABSOLUTE_ERROR));
-        assertTrue(estimator.getNedPosition().equals(nedPosition1, ABSOLUTE_ERROR));
-        estimator.getNedPosition(nedPosition2);
-        assertTrue(nedPosition1.equals(nedPosition2, ABSOLUTE_ERROR));
-        assertEquals(estimator.getEcefC(), ecefC);
-        estimator.getEcefC(c);
-        assertEquals(ecefC, c);
-        assertTrue(estimator.getNedC().equals(nedC, ABSOLUTE_ERROR));
-        estimator.getNedC(c);
-        assertTrue(nedC.equals(c, ABSOLUTE_ERROR));
-        assertSame(estimator.getListener(), this);
-        assertNull(estimator.getLastBodyKinematics());
-        assertFalse(estimator.getLastBodyKinematics(null));
-        assertEquals(estimator.getBiasFx(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFxAsAcceleration(), acceleration1);
-        estimator.getBiasFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFy(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFyAsAcceleration(), acceleration1);
-        estimator.getBiasFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFz(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFzAsAcceleration(), acceleration1);
-        estimator.getBiasFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateXAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateYAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
-        estimator.getBiasesAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getVarianceFx(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFy(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFz(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFx(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFxAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFy(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFyAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
-                0.0);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
-                acceleration1);
-        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationAngularRateX(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateY(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateYAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateZ(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
-        estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerBias(), m1);
-        estimator.getAccelerometerBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getGyroBias(), m1);
-        estimator.getGyroBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getNumberOfProcessedSamples(), 0);
-        assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
-        assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
-        estimator.getExpectedKinematics(kinematics2);
-        assertEquals(expectedKinematics, kinematics2);
-
-        // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = new IMUBiasEstimator(latitude, longitude, height,
-                    new Time(-1.0, TimeUnit.SECOND), this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
-    }
-
-    @Test
-    public void testConstructor69() throws WrongSizeException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final Time timeInterval = new Time(randomizer.nextDouble(
-                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
-
-        final Angle latitude = new Angle(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs), AngleUnit.DEGREES);
-        final Angle longitude = new Angle(randomizer.nextDouble(
-                MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES), AngleUnit.DEGREES);
-        final Distance height = new Distance(
-                randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT), DistanceUnit.METER);
-
-
-        final Acceleration acceleration1 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final AngularSpeed angularSpeed1 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final AngularSpeed angularSpeed2 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final BodyKinematics kinematics1 = new BodyKinematics();
-        final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(timeInterval.getValue(), TimeUnit.SECOND);
-        final Time time2 = new Time(0.0, TimeUnit.SECOND);
-        final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height);
-        final NEDFrame nedFrame2 = new NEDFrame();
-        final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
-                .convertNEDtoECEFAndReturnNew(nedFrame1);
-        final ECEFFrame ecefFrame2 = new ECEFFrame();
-        final NEDPosition nedPosition1 = nedFrame1.getPosition();
-        final NEDPosition nedPosition2 = new NEDPosition();
-        final ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
-        final ECEFPosition ecefPosition2 = new ECEFPosition();
-        final CoordinateTransformation ecefC = ecefFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation nedC = nedFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-        final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
-        final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
-
-        final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
-                .estimateKinematicsAndReturnNew(
-                        timeInterval, ecefC, ecefC,
-                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                        ecefPosition1);
-
-
-        // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(latitude, longitude, height,
-                timeInterval, this);
-
-        // check default values
-        assertEquals(estimator.getTotalSamples(), IMUBiasEstimator.DEFAULT_TOTAL_SAMPLES);
-        assertEquals(estimator.getTimeInterval(),
-                timeInterval.getValue().doubleValue(), 0.0);
-        assertEquals(estimator.getTimeIntervalAsTime(), time1);
-        estimator.getTimeIntervalAsTime(time2);
-        assertEquals(time1, time2);
-        assertEquals(estimator.getEcefPosition(), ecefPosition1);
-        estimator.getEcefPosition(ecefPosition2);
-        assertEquals(ecefPosition1, ecefPosition2);
-        assertEquals(estimator.getEcefFrame(), ecefFrame1);
-        estimator.getEcefFrame(ecefFrame2);
-        assertEquals(ecefFrame2, ecefFrame1);
-        assertTrue(estimator.getNedFrame().equals(nedFrame1, ABSOLUTE_ERROR));
-        estimator.getNedFrame(nedFrame2);
-        assertTrue(nedFrame1.equals(nedFrame2, ABSOLUTE_ERROR));
-        assertTrue(estimator.getNedPosition().equals(nedPosition1, ABSOLUTE_ERROR));
-        estimator.getNedPosition(nedPosition2);
-        assertTrue(nedPosition1.equals(nedPosition2, ABSOLUTE_ERROR));
-        assertEquals(estimator.getEcefC(), ecefC);
-        estimator.getEcefC(c);
-        assertEquals(ecefC, c);
-        assertTrue(estimator.getNedC().equals(nedC, ABSOLUTE_ERROR));
-        estimator.getNedC(c);
-        assertTrue(nedC.equals(c, ABSOLUTE_ERROR));
-        assertSame(estimator.getListener(), this);
-        assertNull(estimator.getLastBodyKinematics());
-        assertFalse(estimator.getLastBodyKinematics(null));
-        assertEquals(estimator.getBiasFx(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFxAsAcceleration(), acceleration1);
-        estimator.getBiasFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFy(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFyAsAcceleration(), acceleration1);
-        estimator.getBiasFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFz(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFzAsAcceleration(), acceleration1);
-        estimator.getBiasFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateXAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateYAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
-        estimator.getBiasesAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getVarianceFx(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFy(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFz(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFx(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFxAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFy(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFyAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
-                0.0);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
-                acceleration1);
-        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationAngularRateX(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateY(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateYAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateZ(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
-        estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerBias(), m1);
-        estimator.getAccelerometerBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getGyroBias(), m1);
-        estimator.getGyroBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getNumberOfProcessedSamples(), 0);
-        assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
-        assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
-        estimator.getExpectedKinematics(kinematics2);
-        assertEquals(expectedKinematics, kinematics2);
-
-        // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = new IMUBiasEstimator(latitude, longitude, height,
-                    -1.0, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
-    }
-
-    @Test
-    public void testConstructor70() throws WrongSizeException,
-            InvalidSourceAndDestinationFrameTypeException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final Time timeInterval = new Time(randomizer.nextDouble(
-                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
-
-        final double latitude = Math.toRadians(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
-        final double longitude = Math.toRadians(randomizer.nextDouble(
-                MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-
-        final double roll = Math.toRadians(randomizer.nextDouble(
-                MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(randomizer.nextDouble(
-                MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(randomizer.nextDouble(
-                MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-
-
-        final Acceleration acceleration1 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final AngularSpeed angularSpeed1 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final AngularSpeed angularSpeed2 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final BodyKinematics kinematics1 = new BodyKinematics();
-        final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(timeInterval.getValue(), TimeUnit.SECOND);
-        final Time time2 = new Time(0.0, TimeUnit.SECOND);
-        final CoordinateTransformation nedC = new CoordinateTransformation(
-                roll, pitch, yaw, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-        final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height,
-                0.0, 0.0, 0.0, nedC);
-        final NEDFrame nedFrame2 = new NEDFrame();
-        final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
-                .convertNEDtoECEFAndReturnNew(nedFrame1);
-        final ECEFFrame ecefFrame2 = new ECEFFrame();
-        final NEDPosition nedPosition1 = nedFrame1.getPosition();
-        final NEDPosition nedPosition2 = new NEDPosition();
-        final ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
-        final ECEFPosition ecefPosition2 = new ECEFPosition();
-        final CoordinateTransformation ecefC = ecefFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-        final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
-        final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
-
-        final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
-                .estimateKinematicsAndReturnNew(
-                        timeInterval, ecefC, ecefC,
-                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                        ecefPosition1);
-
-
-        // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(nedPosition1, nedC,
-                timeInterval, this);
-
-        // check default values
-        assertEquals(estimator.getTotalSamples(), IMUBiasEstimator.DEFAULT_TOTAL_SAMPLES);
-        assertEquals(estimator.getTimeInterval(),
-                timeInterval.getValue().doubleValue(), 0.0);
-        assertEquals(estimator.getTimeIntervalAsTime(), time1);
-        estimator.getTimeIntervalAsTime(time2);
-        assertEquals(time1, time2);
-        assertEquals(estimator.getEcefPosition(), ecefPosition1);
-        estimator.getEcefPosition(ecefPosition2);
-        assertEquals(ecefPosition1, ecefPosition2);
-        assertEquals(estimator.getEcefFrame(), ecefFrame1);
-        estimator.getEcefFrame(ecefFrame2);
-        assertEquals(ecefFrame2, ecefFrame1);
-        assertTrue(estimator.getNedFrame().equals(nedFrame1, ABSOLUTE_ERROR));
-        estimator.getNedFrame(nedFrame2);
-        assertTrue(nedFrame1.equals(nedFrame2, ABSOLUTE_ERROR));
-        assertTrue(estimator.getNedPosition().equals(nedPosition1, ABSOLUTE_ERROR));
-        estimator.getNedPosition(nedPosition2);
-        assertTrue(nedPosition1.equals(nedPosition2, ABSOLUTE_ERROR));
-        assertEquals(estimator.getEcefC(), ecefC);
-        estimator.getEcefC(c);
-        assertEquals(ecefC, c);
-        assertTrue(estimator.getNedC().equals(nedC, ABSOLUTE_ERROR));
-        estimator.getNedC(c);
-        assertTrue(nedC.equals(c, ABSOLUTE_ERROR));
-        assertSame(estimator.getListener(), this);
-        assertNull(estimator.getLastBodyKinematics());
-        assertFalse(estimator.getLastBodyKinematics(null));
-        assertEquals(estimator.getBiasFx(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFxAsAcceleration(), acceleration1);
-        estimator.getBiasFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFy(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFyAsAcceleration(), acceleration1);
-        estimator.getBiasFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFz(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFzAsAcceleration(), acceleration1);
-        estimator.getBiasFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateXAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateYAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
-        estimator.getBiasesAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getVarianceFx(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFy(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFz(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFx(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFxAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFy(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFyAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
-                0.0);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
-                acceleration1);
-        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationAngularRateX(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateY(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateYAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateZ(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
-        estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerBias(), m1);
-        estimator.getAccelerometerBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getGyroBias(), m1);
-        estimator.getGyroBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getNumberOfProcessedSamples(), 0);
-        assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
-        assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
-        estimator.getExpectedKinematics(kinematics2);
-        assertEquals(expectedKinematics, kinematics2);
-
-        // Force InvalidSourceAndDestinationFrameTypeException
-        estimator = null;
-        try {
-            estimator = new IMUBiasEstimator(nedPosition1,
-                    new CoordinateTransformation(
-                            FrameType.LOCAL_NAVIGATION_FRAME,
-                            FrameType.LOCAL_NAVIGATION_FRAME), this);
-            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
-        }
-
-        // Force IllegalArgumentException
-        try {
-            estimator = new IMUBiasEstimator(nedPosition1, nedC, -1.0,
-                    this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
-    }
-
-    @Test
-    public void testConstructor71() throws WrongSizeException,
-            InvalidSourceAndDestinationFrameTypeException {
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final Time timeInterval = new Time(randomizer.nextDouble(
-                    MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
-
-            final double latitude = Math.toRadians(randomizer.nextDouble(
-                    MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
-            final double longitude = Math.toRadians(randomizer.nextDouble(
-                    MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
-            final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-
-            final double roll = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double pitch = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-
-
-            final Acceleration acceleration1 = new Acceleration(0.0,
-                    AccelerationUnit.METERS_PER_SQUARED_SECOND);
-            final Acceleration acceleration2 = new Acceleration(0.0,
-                    AccelerationUnit.METERS_PER_SQUARED_SECOND);
-            final AngularSpeed angularSpeed1 = new AngularSpeed(0.0,
-                    AngularSpeedUnit.RADIANS_PER_SECOND);
-            final AngularSpeed angularSpeed2 = new AngularSpeed(0.0,
-                    AngularSpeedUnit.RADIANS_PER_SECOND);
-            final BodyKinematics kinematics1 = new BodyKinematics();
-            final BodyKinematics kinematics2 = new BodyKinematics();
-            final Time time1 = new Time(timeInterval.getValue(), TimeUnit.SECOND);
-            final Time time2 = new Time(0.0, TimeUnit.SECOND);
-            final CoordinateTransformation nedC = new CoordinateTransformation(
-                    roll, pitch, yaw, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-            final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height,
-                    0.0, 0.0, 0.0, nedC);
-            final NEDFrame nedFrame2 = new NEDFrame();
-            final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
-                    .convertNEDtoECEFAndReturnNew(nedFrame1);
-            final ECEFFrame ecefFrame2 = new ECEFFrame();
-            final NEDPosition nedPosition1 = nedFrame1.getPosition();
-            final NEDPosition nedPosition2 = new NEDPosition();
-            final ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
-            final ECEFPosition ecefPosition2 = new ECEFPosition();
-            final CoordinateTransformation ecefC = ecefFrame1
-                    .getCoordinateTransformation();
-            final CoordinateTransformation c = new CoordinateTransformation(
-                    FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-            final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
-            final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
-
-            final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
-                    .estimateKinematicsAndReturnNew(
-                            timeInterval, ecefC, ecefC,
-                            0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                            ecefPosition1);
-
-
-            // test constructor
-            IMUBiasEstimator estimator = new IMUBiasEstimator(ecefPosition1, nedC,
-                    timeInterval, this);
-
-            // check default values
-            assertEquals(estimator.getTotalSamples(), IMUBiasEstimator.DEFAULT_TOTAL_SAMPLES);
-            assertEquals(estimator.getTimeInterval(),
-                    timeInterval.getValue().doubleValue(), 0.0);
-            assertEquals(estimator.getTimeIntervalAsTime(), time1);
-            estimator.getTimeIntervalAsTime(time2);
-            assertEquals(time1, time2);
-            if (!estimator.getEcefPosition().equals(ecefPosition1, ABSOLUTE_ERROR)) {
-                continue;
-            }
-            assertTrue(estimator.getEcefPosition().equals(ecefPosition1,
-                    ABSOLUTE_ERROR));
-            estimator.getEcefPosition(ecefPosition2);
-            assertTrue(ecefPosition1.equals(ecefPosition2,
-                    ABSOLUTE_ERROR));
-            if (!estimator.getEcefFrame().equals(ecefFrame1, ABSOLUTE_ERROR)) {
-                continue;
-            }
-            assertTrue(estimator.getEcefFrame().equals(ecefFrame1, ABSOLUTE_ERROR));
-            estimator.getEcefFrame(ecefFrame2);
-            assertTrue(ecefFrame2.equals(ecefFrame1, ABSOLUTE_ERROR));
-            assertTrue(estimator.getNedFrame().equals(nedFrame1, ABSOLUTE_ERROR));
-            estimator.getNedFrame(nedFrame2);
-            assertTrue(nedFrame1.equals(nedFrame2, ABSOLUTE_ERROR));
-            assertTrue(estimator.getNedPosition().equals(nedPosition1, ABSOLUTE_ERROR));
-            estimator.getNedPosition(nedPosition2);
-            assertTrue(nedPosition1.equals(nedPosition2, ABSOLUTE_ERROR));
-            assertTrue(estimator.getEcefC().equals(ecefC, ABSOLUTE_ERROR));
-            estimator.getEcefC(c);
-            assertTrue(ecefC.equals(c, ABSOLUTE_ERROR));
-            assertTrue(estimator.getNedC().equals(nedC, ABSOLUTE_ERROR));
-            estimator.getNedC(c);
-            assertTrue(nedC.equals(c, ABSOLUTE_ERROR));
-            assertSame(estimator.getListener(), this);
-            assertNull(estimator.getLastBodyKinematics());
-            assertFalse(estimator.getLastBodyKinematics(null));
-            assertEquals(estimator.getBiasFx(), 0.0, 0.0);
-            assertEquals(estimator.getBiasFxAsAcceleration(), acceleration1);
-            estimator.getBiasFxAsAcceleration(acceleration2);
-            assertEquals(acceleration1, acceleration2);
-            assertEquals(estimator.getBiasFy(), 0.0, 0.0);
-            assertEquals(estimator.getBiasFyAsAcceleration(), acceleration1);
-            estimator.getBiasFyAsAcceleration(acceleration2);
-            assertEquals(acceleration1, acceleration2);
-            assertEquals(estimator.getBiasFz(), 0.0, 0.0);
-            assertEquals(estimator.getBiasFzAsAcceleration(), acceleration1);
-            estimator.getBiasFzAsAcceleration(acceleration2);
-            assertEquals(acceleration1, acceleration2);
-            assertEquals(estimator.getBiasAngularRateX(), 0.0, 0.0);
-            assertEquals(estimator.getBiasAngularRateXAsAngularSpeed(), angularSpeed1);
-            estimator.getBiasAngularRateXAsAngularSpeed(angularSpeed2);
-            assertEquals(angularSpeed1, angularSpeed2);
-            assertEquals(estimator.getBiasAngularRateY(), 0.0, 0.0);
-            assertEquals(estimator.getBiasAngularRateYAsAngularSpeed(), angularSpeed1);
-            estimator.getBiasAngularRateYAsAngularSpeed(angularSpeed2);
-            assertEquals(angularSpeed1, angularSpeed2);
-            assertEquals(estimator.getBiasAngularRateZ(), 0.0, 0.0);
-            assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
-            estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
-            assertEquals(angularSpeed1, angularSpeed2);
-            assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
-            estimator.getBiasesAsBodyKinematics(kinematics2);
-            assertEquals(kinematics1, kinematics2);
-            assertEquals(estimator.getVarianceFx(), 0.0, 0.0);
-            assertEquals(estimator.getVarianceFy(), 0.0, 0.0);
-            assertEquals(estimator.getVarianceFz(), 0.0, 0.0);
-            assertEquals(estimator.getVarianceAngularRateX(), 0.0, 0.0);
-            assertEquals(estimator.getVarianceAngularRateY(), 0.0, 0.0);
-            assertEquals(estimator.getVarianceAngularRateZ(), 0.0, 0.0);
-            assertEquals(estimator.getStandardDeviationFx(), 0.0, 0.0);
-            assertEquals(estimator.getStandardDeviationFxAsAcceleration(), acceleration1);
-            estimator.getStandardDeviationFxAsAcceleration(acceleration2);
-            assertEquals(acceleration1, acceleration2);
-            assertEquals(estimator.getStandardDeviationFy(), 0.0, 0.0);
-            assertEquals(estimator.getStandardDeviationFyAsAcceleration(), acceleration1);
-            estimator.getStandardDeviationFyAsAcceleration(acceleration2);
-            assertEquals(acceleration1, acceleration2);
-            assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
-            assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
-            estimator.getStandardDeviationFzAsAcceleration(acceleration2);
-            assertEquals(acceleration1, acceleration2);
-            assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
-                    0.0);
-            assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
-                    acceleration1);
-            estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
-            assertEquals(acceleration1, acceleration2);
-            assertEquals(estimator.getStandardDeviationAngularRateX(),
-                    0.0, 0.0);
-            assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
-                    angularSpeed1);
-            estimator.getStandardDeviationAngularRateXAsAngularSpeed(angularSpeed2);
-            assertEquals(angularSpeed1, angularSpeed2);
-            assertEquals(estimator.getStandardDeviationAngularRateY(),
-                    0.0, 0.0);
-            assertEquals(estimator.getStandardDeviationAngularRateYAsAngularSpeed(),
-                    angularSpeed1);
-            estimator.getStandardDeviationAngularRateYAsAngularSpeed(angularSpeed2);
-            assertEquals(angularSpeed1, angularSpeed2);
-            assertEquals(estimator.getStandardDeviationAngularRateZ(),
-                    0.0, 0.0);
-            assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
-                    angularSpeed1);
-            estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
-            assertEquals(angularSpeed1, angularSpeed2);
-            assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-            assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                    angularSpeed1);
-            estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-            assertEquals(angularSpeed1, angularSpeed2);
-            assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
-            estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
-            assertEquals(kinematics1, kinematics2);
-            assertEquals(estimator.getPSDFx(), 0.0, 0.0);
-            assertEquals(estimator.getPSDFy(), 0.0, 0.0);
-            assertEquals(estimator.getPSDFz(), 0.0, 0.0);
-            assertEquals(estimator.getPSDAngularRateX(), 0.0, 0.0);
-            assertEquals(estimator.getPSDAngularRateY(), 0.0, 0.0);
-            assertEquals(estimator.getPSDAngularRateZ(), 0.0, 0.0);
-            assertEquals(estimator.getRootPSDFx(), 0.0, 0.0);
-            assertEquals(estimator.getRootPSDFy(), 0.0, 0.0);
-            assertEquals(estimator.getRootPSDFz(), 0.0, 0.0);
-            assertEquals(estimator.getRootPSDAngularRateX(), 0.0, 0.0);
-            assertEquals(estimator.getRootPSDAngularRateY(), 0.0, 0.0);
-            assertEquals(estimator.getRootPSDAngularRateZ(), 0.0, 0.0);
-            assertEquals(estimator.getAccelerometerNoisePSD(), 0.0, 0.0);
-            assertEquals(estimator.getAccelerometerNoiseRootPSD(), 0.0, 0.0);
-            assertEquals(estimator.getGyroNoisePSD(), 0.0, 0.0);
-            assertEquals(estimator.getGyroNoiseRootPSD(), 0.0, 0.0);
-            assertEquals(estimator.getAccelerometerBias(), m1);
-            estimator.getAccelerometerBias(m2);
-            assertEquals(m1, m2);
-            assertEquals(estimator.getGyroBias(), m1);
-            estimator.getGyroBias(m2);
-            assertEquals(m1, m2);
-            assertEquals(estimator.getNumberOfProcessedSamples(), 0);
-            assertFalse(estimator.isRunning());
-            assertFalse(estimator.isFinished());
-            assertTrue(estimator.getExpectedKinematics().equals(expectedKinematics,
-                    ABSOLUTE_ERROR));
-            estimator.getExpectedKinematics(kinematics2);
-            assertTrue(expectedKinematics.equals(kinematics2, ABSOLUTE_ERROR));
-
-            // Force InvalidSourceAndDestinationFrameTypeException
-            estimator = null;
-            try {
-                estimator = new IMUBiasEstimator(ecefPosition1,
-                        new CoordinateTransformation(
-                                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME,
-                                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME),
-                        timeInterval, this);
-                fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-            } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
-            }
-            try {
-                estimator = new IMUBiasEstimator(ecefPosition1, nedC,
-                        new Time(-1.0, TimeUnit.SECOND), this);
-                fail("IllegalArgumentException expected but not thrown");
-            } catch (final IllegalArgumentException ignore) {
-            }
-            assertNull(estimator);
-
-            numValid++;
-            break;
-        }
-
-        assertTrue(numValid > 0);
-    }
-
-    @Test
-    public void testConstructor72() throws WrongSizeException {
-
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final Time timeInterval = new Time(randomizer.nextDouble(
-                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
-
-        final Acceleration acceleration1 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final AngularSpeed angularSpeed1 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final AngularSpeed angularSpeed2 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final BodyKinematics kinematics1 = new BodyKinematics();
-        final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(timeInterval.getValue(), TimeUnit.SECOND);
-        final Time time2 = new Time(0.0, TimeUnit.SECOND);
-        final NEDFrame nedFrame1 = new NEDFrame();
-        final NEDFrame nedFrame2 = new NEDFrame();
-        final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
-                .convertNEDtoECEFAndReturnNew(nedFrame1);
-        final ECEFFrame ecefFrame2 = new ECEFFrame();
-        final NEDPosition nedPosition1 = nedFrame1.getPosition();
-        final NEDPosition nedPosition2 = new NEDPosition();
-        final ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
-        final ECEFPosition ecefPosition2 = new ECEFPosition();
-        final CoordinateTransformation ecefC = ecefFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation nedC = nedFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-        final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
-        final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
-
-        final int totalSamples = randomizer.nextInt(
-                MIN_TOTAL_SAMPLES, MAX_TOTAL_SAMPLES);
-
-        final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
-                .estimateKinematicsAndReturnNew(
-                        timeInterval, ecefC, ecefC,
-                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                        ecefPosition1);
-
-
-        // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(totalSamples, timeInterval);
-
-        // check default values
-        assertEquals(estimator.getTotalSamples(), totalSamples);
-        assertEquals(estimator.getTimeInterval(),
-                timeInterval.getValue().doubleValue(), 0.0);
-        assertEquals(estimator.getTimeIntervalAsTime(), time1);
-        estimator.getTimeIntervalAsTime(time2);
-        assertEquals(time1, time2);
-        assertEquals(estimator.getEcefPosition(), ecefPosition1);
-        estimator.getEcefPosition(ecefPosition2);
-        assertEquals(ecefPosition1, ecefPosition2);
-        assertEquals(estimator.getEcefFrame(), ecefFrame1);
-        estimator.getEcefFrame(ecefFrame2);
-        assertEquals(ecefFrame2, ecefFrame1);
-        assertEquals(estimator.getNedFrame(), nedFrame1);
-        estimator.getNedFrame(nedFrame2);
-        assertEquals(nedFrame1, nedFrame2);
-        assertEquals(estimator.getNedPosition(), nedPosition1);
-        estimator.getNedPosition(nedPosition2);
-        assertEquals(nedPosition1, nedPosition2);
-        assertEquals(estimator.getEcefC(), ecefC);
-        estimator.getEcefC(c);
-        assertEquals(ecefC, c);
-        assertEquals(estimator.getNedC(), nedC);
-        estimator.getNedC(c);
-        assertEquals(nedC, c);
-        assertNull(estimator.getListener());
-        assertNull(estimator.getLastBodyKinematics());
-        assertFalse(estimator.getLastBodyKinematics(null));
-        assertEquals(estimator.getBiasFx(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFxAsAcceleration(), acceleration1);
-        estimator.getBiasFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFy(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFyAsAcceleration(), acceleration1);
-        estimator.getBiasFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFz(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFzAsAcceleration(), acceleration1);
-        estimator.getBiasFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateXAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateYAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
-        estimator.getBiasesAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getVarianceFx(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFy(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFz(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFx(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFxAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFy(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFyAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationAngularRateX(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateY(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateYAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateZ(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
-                0.0);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
-                acceleration1);
-        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
-        estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerBias(), m1);
-        estimator.getAccelerometerBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getGyroBias(), m1);
-        estimator.getGyroBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getNumberOfProcessedSamples(), 0);
-        assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
-        assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
-        estimator.getExpectedKinematics(kinematics2);
-        assertEquals(expectedKinematics, kinematics2);
-
-        // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = new IMUBiasEstimator(0, timeInterval);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new IMUBiasEstimator(totalSamples,
-                    new Time(-1.0, TimeUnit.SECOND));
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
-    }
-
-    @Test
-    public void testConstructor73() throws WrongSizeException,
-            InvalidSourceAndDestinationFrameTypeException {
-
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final Time timeInterval = new Time(randomizer.nextDouble(
-                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
-
-        final Acceleration acceleration1 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final AngularSpeed angularSpeed1 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final AngularSpeed angularSpeed2 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final BodyKinematics kinematics1 = new BodyKinematics();
-        final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(timeInterval.getValue(), TimeUnit.SECOND);
-        final Time time2 = new Time(0.0, TimeUnit.SECOND);
-        final NEDFrame nedFrame1 = new NEDFrame();
-        final NEDFrame nedFrame2 = new NEDFrame();
-        final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
-                .convertNEDtoECEFAndReturnNew(nedFrame1);
-        final ECEFFrame ecefFrame2 = new ECEFFrame();
-        final NEDPosition nedPosition1 = nedFrame1.getPosition();
-        final NEDPosition nedPosition2 = new NEDPosition();
-        final ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
-        final ECEFPosition ecefPosition2 = new ECEFPosition();
-        final CoordinateTransformation ecefC = ecefFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation nedC = nedFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-        final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
-        final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
-
-        final double roll = Math.toRadians(randomizer.nextDouble(
-                MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(randomizer.nextDouble(
-                MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(randomizer.nextDouble(
-                MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        nedC.setEulerAngles(roll, pitch, yaw);
-        nedFrame1.setCoordinateTransformation(nedC);
-        NEDtoECEFFrameConverter.convertNEDtoECEF(nedFrame1, ecefFrame1);
-        ecefFrame1.getCoordinateTransformation(ecefC);
-
-        final int totalSamples = randomizer.nextInt(
-                MIN_TOTAL_SAMPLES, MAX_TOTAL_SAMPLES);
-
-        final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
-                .estimateKinematicsAndReturnNew(
-                        timeInterval, ecefC, ecefC,
-                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                        ecefPosition1);
-
-
-        // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(nedC, totalSamples,
-                timeInterval);
-
-        // check default values
-        assertEquals(estimator.getTotalSamples(), totalSamples);
-        assertEquals(estimator.getTimeInterval(),
-                timeInterval.getValue().doubleValue(), 0.0);
-        assertEquals(estimator.getTimeIntervalAsTime(), time1);
-        estimator.getTimeIntervalAsTime(time2);
-        assertEquals(time1, time2);
-        assertEquals(estimator.getEcefPosition(), ecefPosition1);
-        estimator.getEcefPosition(ecefPosition2);
-        assertEquals(ecefPosition1, ecefPosition2);
-        assertEquals(estimator.getEcefFrame(), ecefFrame1);
-        estimator.getEcefFrame(ecefFrame2);
-        assertEquals(ecefFrame2, ecefFrame1);
-        assertEquals(estimator.getNedFrame(), nedFrame1);
-        estimator.getNedFrame(nedFrame2);
-        assertEquals(nedFrame1, nedFrame2);
-        assertEquals(estimator.getNedPosition(), nedPosition1);
-        estimator.getNedPosition(nedPosition2);
-        assertEquals(nedPosition1, nedPosition2);
-        assertEquals(estimator.getEcefC(), ecefC);
-        estimator.getEcefC(c);
-        assertEquals(ecefC, c);
-        assertEquals(estimator.getNedC(), nedC);
-        estimator.getNedC(c);
-        assertEquals(nedC, c);
-        assertNull(estimator.getListener());
-        assertNull(estimator.getLastBodyKinematics());
-        assertFalse(estimator.getLastBodyKinematics(null));
-        assertEquals(estimator.getBiasFx(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFxAsAcceleration(), acceleration1);
-        estimator.getBiasFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFy(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFyAsAcceleration(), acceleration1);
-        estimator.getBiasFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFz(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFzAsAcceleration(), acceleration1);
-        estimator.getBiasFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateXAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateYAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
-        estimator.getBiasesAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getVarianceFx(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFy(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFz(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFx(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFxAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFy(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFyAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
-                0.0);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
-                acceleration1);
-        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationAngularRateX(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateY(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateYAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateZ(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
-        estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerBias(), m1);
-        estimator.getAccelerometerBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getGyroBias(), m1);
-        estimator.getGyroBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getNumberOfProcessedSamples(), 0);
-        assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
-        assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
-        estimator.getExpectedKinematics(kinematics2);
-        assertEquals(expectedKinematics, kinematics2);
-
-        // Force InvalidSourceAndDestinationFrameTypeException
-        estimator = null;
-        try {
-            estimator = new IMUBiasEstimator(new CoordinateTransformation(
-                    FrameType.LOCAL_NAVIGATION_FRAME,
-                    FrameType.LOCAL_NAVIGATION_FRAME), totalSamples, timeInterval);
-            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
-        }
-
-        // Force IllegalArgumentException
-        try {
-            estimator = new IMUBiasEstimator(nedC, 0, timeInterval);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new IMUBiasEstimator(nedC, totalSamples,
-                    new Time(-1.0, TimeUnit.SECOND));
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
-    }
-
-    @Test
-    public void testConstructor74() throws WrongSizeException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final Time timeInterval = new Time(randomizer.nextDouble(
-                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
-
-        final double latitude = Math.toRadians(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
-        final double longitude = Math.toRadians(randomizer.nextDouble(
-                MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-
-
-        final Acceleration acceleration1 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final AngularSpeed angularSpeed1 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final AngularSpeed angularSpeed2 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final BodyKinematics kinematics1 = new BodyKinematics();
-        final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(timeInterval.getValue(), TimeUnit.SECOND);
-        final Time time2 = new Time(0.0, TimeUnit.SECOND);
-        final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height);
-        final NEDFrame nedFrame2 = new NEDFrame();
-        final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
-                .convertNEDtoECEFAndReturnNew(nedFrame1);
-        final ECEFFrame ecefFrame2 = new ECEFFrame();
-        final NEDPosition nedPosition1 = nedFrame1.getPosition();
-        final NEDPosition nedPosition2 = new NEDPosition();
-        final ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
-        final ECEFPosition ecefPosition2 = new ECEFPosition();
-        final CoordinateTransformation ecefC = ecefFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation nedC = nedFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-        final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
-        final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
-
-        final int totalSamples = randomizer.nextInt(
-                MIN_TOTAL_SAMPLES, MAX_TOTAL_SAMPLES);
-
-        final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
-                .estimateKinematicsAndReturnNew(
-                        timeInterval, ecefC, ecefC,
-                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                        ecefPosition1);
-
-
-        // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(
-                latitude, longitude, height, totalSamples, timeInterval);
-
-        // check default values
-        assertEquals(estimator.getTotalSamples(), totalSamples);
-        assertEquals(estimator.getTimeInterval(),
-                timeInterval.getValue().doubleValue(), 0.0);
-        assertEquals(estimator.getTimeIntervalAsTime(), time1);
-        estimator.getTimeIntervalAsTime(time2);
-        assertEquals(time1, time2);
-        assertEquals(estimator.getEcefPosition(), ecefPosition1);
-        estimator.getEcefPosition(ecefPosition2);
-        assertEquals(ecefPosition1, ecefPosition2);
-        assertEquals(estimator.getEcefFrame(), ecefFrame1);
-        estimator.getEcefFrame(ecefFrame2);
-        assertEquals(ecefFrame2, ecefFrame1);
-        assertTrue(estimator.getNedFrame().equals(nedFrame1, ABSOLUTE_ERROR));
-        estimator.getNedFrame(nedFrame2);
-        assertTrue(nedFrame1.equals(nedFrame2, ABSOLUTE_ERROR));
-        assertTrue(estimator.getNedPosition().equals(nedPosition1, ABSOLUTE_ERROR));
-        estimator.getNedPosition(nedPosition2);
-        assertTrue(nedPosition1.equals(nedPosition2, ABSOLUTE_ERROR));
-        assertEquals(estimator.getEcefC(), ecefC);
-        estimator.getEcefC(c);
-        assertEquals(ecefC, c);
-        assertTrue(estimator.getNedC().equals(nedC, ABSOLUTE_ERROR));
-        estimator.getNedC(c);
-        assertTrue(nedC.equals(c, ABSOLUTE_ERROR));
-        assertNull(estimator.getListener());
-        assertNull(estimator.getLastBodyKinematics());
-        assertFalse(estimator.getLastBodyKinematics(null));
-        assertEquals(estimator.getBiasFx(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFxAsAcceleration(), acceleration1);
-        estimator.getBiasFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFy(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFyAsAcceleration(), acceleration1);
-        estimator.getBiasFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFz(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFzAsAcceleration(), acceleration1);
-        estimator.getBiasFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateXAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateYAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
-        estimator.getBiasesAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getVarianceFx(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFy(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFz(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFx(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFxAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFy(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFyAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
-                0.0);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
-                acceleration1);
-        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationAngularRateX(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateY(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateYAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateZ(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
-        estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerBias(), m1);
-        estimator.getAccelerometerBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getGyroBias(), m1);
-        estimator.getGyroBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getNumberOfProcessedSamples(), 0);
-        assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
-        assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
-        estimator.getExpectedKinematics(kinematics2);
-        assertEquals(expectedKinematics, kinematics2);
-
-        // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = new IMUBiasEstimator(latitude, longitude, height,
-                    0, timeInterval);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new IMUBiasEstimator(latitude, longitude, height,
-                    totalSamples, new Time(-1.0, TimeUnit.SECOND));
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
-    }
-
-    @Test
-    public void testConstructor75() throws WrongSizeException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final Time timeInterval = new Time(randomizer.nextDouble(
-                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
-
-        final Angle latitude = new Angle(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs), AngleUnit.DEGREES);
-        final Angle longitude = new Angle(randomizer.nextDouble(
-                MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES), AngleUnit.DEGREES);
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-
-
-        final Acceleration acceleration1 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final AngularSpeed angularSpeed1 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final AngularSpeed angularSpeed2 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final BodyKinematics kinematics1 = new BodyKinematics();
-        final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(timeInterval.getValue(), TimeUnit.SECOND);
-        final Time time2 = new Time(0.0, TimeUnit.SECOND);
-        final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height);
-        final NEDFrame nedFrame2 = new NEDFrame();
-        final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
-                .convertNEDtoECEFAndReturnNew(nedFrame1);
-        final ECEFFrame ecefFrame2 = new ECEFFrame();
-        final NEDPosition nedPosition1 = nedFrame1.getPosition();
-        final NEDPosition nedPosition2 = new NEDPosition();
-        final ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
-        final ECEFPosition ecefPosition2 = new ECEFPosition();
-        final CoordinateTransformation ecefC = ecefFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation nedC = nedFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-        final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
-        final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
-
-        final int totalSamples = randomizer.nextInt(
-                MIN_TOTAL_SAMPLES, MAX_TOTAL_SAMPLES);
-
-        final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
-                .estimateKinematicsAndReturnNew(
-                        timeInterval, ecefC, ecefC,
-                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                        ecefPosition1);
-
-
-        // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(latitude, longitude, height,
-                totalSamples, timeInterval);
-
-        // check default values
-        assertEquals(estimator.getTotalSamples(), totalSamples);
-        assertEquals(estimator.getTimeInterval(),
-                timeInterval.getValue().doubleValue(), 0.0);
-        assertEquals(estimator.getTimeIntervalAsTime(), time1);
-        estimator.getTimeIntervalAsTime(time2);
-        assertEquals(time1, time2);
-        assertEquals(estimator.getEcefPosition(), ecefPosition1);
-        estimator.getEcefPosition(ecefPosition2);
-        assertEquals(ecefPosition1, ecefPosition2);
-        assertEquals(estimator.getEcefFrame(), ecefFrame1);
-        estimator.getEcefFrame(ecefFrame2);
-        assertEquals(ecefFrame2, ecefFrame1);
-        assertTrue(estimator.getNedFrame().equals(nedFrame1, ABSOLUTE_ERROR));
-        estimator.getNedFrame(nedFrame2);
-        assertTrue(nedFrame1.equals(nedFrame2, ABSOLUTE_ERROR));
-        assertTrue(estimator.getNedPosition().equals(nedPosition1, ABSOLUTE_ERROR));
-        estimator.getNedPosition(nedPosition2);
-        assertTrue(nedPosition1.equals(nedPosition2, ABSOLUTE_ERROR));
-        assertEquals(estimator.getEcefC(), ecefC);
-        estimator.getEcefC(c);
-        assertEquals(ecefC, c);
-        assertTrue(estimator.getNedC().equals(nedC, ABSOLUTE_ERROR));
-        estimator.getNedC(c);
-        assertTrue(nedC.equals(c, ABSOLUTE_ERROR));
-        assertNull(estimator.getListener());
-        assertNull(estimator.getLastBodyKinematics());
-        assertFalse(estimator.getLastBodyKinematics(null));
-        assertEquals(estimator.getBiasFx(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFxAsAcceleration(), acceleration1);
-        estimator.getBiasFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFy(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFyAsAcceleration(), acceleration1);
-        estimator.getBiasFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFz(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFzAsAcceleration(), acceleration1);
-        estimator.getBiasFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateXAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateYAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
-        estimator.getBiasesAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getVarianceFx(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFy(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFz(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFx(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFxAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFy(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFyAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
-                0.0);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
-                acceleration1);
-        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationAngularRateX(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateY(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateYAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateZ(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
-        estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerBias(), m1);
-        estimator.getAccelerometerBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getGyroBias(), m1);
-        estimator.getGyroBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getNumberOfProcessedSamples(), 0);
-        assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
-        assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
-        estimator.getExpectedKinematics(kinematics2);
-        assertEquals(expectedKinematics, kinematics2);
-
-        // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = new IMUBiasEstimator(latitude, longitude, height,
-                    0, timeInterval);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new IMUBiasEstimator(latitude, longitude, height,
-                    totalSamples, new Time(-1.0, TimeUnit.SECOND));
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
-    }
-
-    @Test
-    public void testConstructor76() throws WrongSizeException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final Time timeInterval = new Time(randomizer.nextDouble(
-                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
-
-        final Angle latitude = new Angle(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs), AngleUnit.DEGREES);
-        final Angle longitude = new Angle(randomizer.nextDouble(
-                MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES), AngleUnit.DEGREES);
-        final Distance height = new Distance(
-                randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT), DistanceUnit.METER);
-
-
-        final Acceleration acceleration1 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final AngularSpeed angularSpeed1 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final AngularSpeed angularSpeed2 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final BodyKinematics kinematics1 = new BodyKinematics();
-        final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(timeInterval.getValue(), TimeUnit.SECOND);
-        final Time time2 = new Time(0.0, TimeUnit.SECOND);
-        final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height);
-        final NEDFrame nedFrame2 = new NEDFrame();
-        final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
-                .convertNEDtoECEFAndReturnNew(nedFrame1);
-        final ECEFFrame ecefFrame2 = new ECEFFrame();
-        final NEDPosition nedPosition1 = nedFrame1.getPosition();
-        final NEDPosition nedPosition2 = new NEDPosition();
-        final ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
-        final ECEFPosition ecefPosition2 = new ECEFPosition();
-        final CoordinateTransformation ecefC = ecefFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation nedC = nedFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-        final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
-        final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
-
-        final int totalSamples = randomizer.nextInt(
-                MIN_TOTAL_SAMPLES, MAX_TOTAL_SAMPLES);
-
-        final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
-                .estimateKinematicsAndReturnNew(
-                        timeInterval, ecefC, ecefC,
-                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                        ecefPosition1);
-
-
-        // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(latitude, longitude, height,
-                totalSamples, timeInterval);
-
-        // check default values
-        assertEquals(estimator.getTotalSamples(), totalSamples);
-        assertEquals(estimator.getTimeInterval(),
-                timeInterval.getValue().doubleValue(), 0.0);
-        assertEquals(estimator.getTimeIntervalAsTime(), time1);
-        estimator.getTimeIntervalAsTime(time2);
-        assertEquals(time1, time2);
-        assertEquals(estimator.getEcefPosition(), ecefPosition1);
-        estimator.getEcefPosition(ecefPosition2);
-        assertEquals(ecefPosition1, ecefPosition2);
-        assertEquals(estimator.getEcefFrame(), ecefFrame1);
-        estimator.getEcefFrame(ecefFrame2);
-        assertEquals(ecefFrame2, ecefFrame1);
-        assertTrue(estimator.getNedFrame().equals(nedFrame1, ABSOLUTE_ERROR));
-        estimator.getNedFrame(nedFrame2);
-        assertTrue(nedFrame1.equals(nedFrame2, ABSOLUTE_ERROR));
-        assertTrue(estimator.getNedPosition().equals(nedPosition1, ABSOLUTE_ERROR));
-        estimator.getNedPosition(nedPosition2);
-        assertTrue(nedPosition1.equals(nedPosition2, ABSOLUTE_ERROR));
-        assertEquals(estimator.getEcefC(), ecefC);
-        estimator.getEcefC(c);
-        assertEquals(ecefC, c);
-        assertTrue(estimator.getNedC().equals(nedC, ABSOLUTE_ERROR));
-        estimator.getNedC(c);
-        assertTrue(nedC.equals(c, ABSOLUTE_ERROR));
-        assertNull(estimator.getListener());
-        assertNull(estimator.getLastBodyKinematics());
-        assertFalse(estimator.getLastBodyKinematics(null));
-        assertEquals(estimator.getBiasFx(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFxAsAcceleration(), acceleration1);
-        estimator.getBiasFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFy(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFyAsAcceleration(), acceleration1);
-        estimator.getBiasFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFz(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFzAsAcceleration(), acceleration1);
-        estimator.getBiasFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateXAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateYAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
-        estimator.getBiasesAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getVarianceFx(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFy(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFz(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFx(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFxAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFy(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFyAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
-                0.0);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
-                acceleration1);
-        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationAngularRateX(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateY(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateYAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateZ(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
-        estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerBias(), m1);
-        estimator.getAccelerometerBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getGyroBias(), m1);
-        estimator.getGyroBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getNumberOfProcessedSamples(), 0);
-        assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
-        assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
-        estimator.getExpectedKinematics(kinematics2);
-        assertEquals(expectedKinematics, kinematics2);
-
-        // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = new IMUBiasEstimator(latitude, longitude, height,
-                    0, timeInterval);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new IMUBiasEstimator(latitude, longitude, height,
-                    totalSamples, new Time(-1.0, TimeUnit.SECOND));
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
-    }
-
-    @Test
-    public void testConstructor77() throws WrongSizeException,
-            InvalidSourceAndDestinationFrameTypeException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final Time timeInterval = new Time(randomizer.nextDouble(
-                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
-
-        final double latitude = Math.toRadians(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
-        final double longitude = Math.toRadians(randomizer.nextDouble(
-                MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-
-        final double roll = Math.toRadians(randomizer.nextDouble(
-                MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(randomizer.nextDouble(
-                MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(randomizer.nextDouble(
-                MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-
-
-        final Acceleration acceleration1 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final AngularSpeed angularSpeed1 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final AngularSpeed angularSpeed2 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final BodyKinematics kinematics1 = new BodyKinematics();
-        final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(timeInterval.getValue(), TimeUnit.SECOND);
-        final Time time2 = new Time(0.0, TimeUnit.SECOND);
-        final CoordinateTransformation nedC = new CoordinateTransformation(
-                roll, pitch, yaw, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-        final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height,
-                0.0, 0.0, 0.0, nedC);
-        final NEDFrame nedFrame2 = new NEDFrame();
-        final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
-                .convertNEDtoECEFAndReturnNew(nedFrame1);
-        final ECEFFrame ecefFrame2 = new ECEFFrame();
-        final NEDPosition nedPosition1 = nedFrame1.getPosition();
-        final NEDPosition nedPosition2 = new NEDPosition();
-        final ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
-        final ECEFPosition ecefPosition2 = new ECEFPosition();
-        final CoordinateTransformation ecefC = ecefFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-        final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
-        final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
-
-        final int totalSamples = randomizer.nextInt(
-                MIN_TOTAL_SAMPLES, MAX_TOTAL_SAMPLES);
-
-        final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
-                .estimateKinematicsAndReturnNew(
-                        timeInterval, ecefC, ecefC,
-                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                        ecefPosition1);
-
-
-        // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(nedPosition1, nedC,
-                totalSamples, timeInterval);
-
-        // check default values
-        assertEquals(estimator.getTotalSamples(), totalSamples);
-        assertEquals(estimator.getTimeInterval(),
-                timeInterval.getValue().doubleValue(), 0.0);
-        assertEquals(estimator.getTimeIntervalAsTime(), time1);
-        estimator.getTimeIntervalAsTime(time2);
-        assertEquals(time1, time2);
-        assertEquals(estimator.getEcefPosition(), ecefPosition1);
-        estimator.getEcefPosition(ecefPosition2);
-        assertEquals(ecefPosition1, ecefPosition2);
-        assertEquals(estimator.getEcefFrame(), ecefFrame1);
-        estimator.getEcefFrame(ecefFrame2);
-        assertEquals(ecefFrame2, ecefFrame1);
-        assertTrue(estimator.getNedFrame().equals(nedFrame1, ABSOLUTE_ERROR));
-        estimator.getNedFrame(nedFrame2);
-        assertTrue(nedFrame1.equals(nedFrame2, ABSOLUTE_ERROR));
-        assertTrue(estimator.getNedPosition().equals(nedPosition1, ABSOLUTE_ERROR));
-        estimator.getNedPosition(nedPosition2);
-        assertTrue(nedPosition1.equals(nedPosition2, ABSOLUTE_ERROR));
-        assertEquals(estimator.getEcefC(), ecefC);
-        estimator.getEcefC(c);
-        assertEquals(ecefC, c);
-        assertTrue(estimator.getNedC().equals(nedC, ABSOLUTE_ERROR));
-        estimator.getNedC(c);
-        assertTrue(nedC.equals(c, ABSOLUTE_ERROR));
-        assertNull(estimator.getListener());
-        assertNull(estimator.getLastBodyKinematics());
-        assertFalse(estimator.getLastBodyKinematics(null));
-        assertEquals(estimator.getBiasFx(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFxAsAcceleration(), acceleration1);
-        estimator.getBiasFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFy(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFyAsAcceleration(), acceleration1);
-        estimator.getBiasFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFz(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFzAsAcceleration(), acceleration1);
-        estimator.getBiasFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateXAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateYAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
-        estimator.getBiasesAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getVarianceFx(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFy(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFz(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFx(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFxAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFy(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFyAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
-                0.0);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
-                acceleration1);
-        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationAngularRateX(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateY(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateYAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateZ(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
-        estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerBias(), m1);
-        estimator.getAccelerometerBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getGyroBias(), m1);
-        estimator.getGyroBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getNumberOfProcessedSamples(), 0);
-        assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
-        assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
-        estimator.getExpectedKinematics(kinematics2);
-        assertEquals(expectedKinematics, kinematics2);
-
-        // Force InvalidSourceAndDestinationFrameTypeException
-        estimator = null;
-        try {
-            estimator = new IMUBiasEstimator(nedPosition1,
-                    new CoordinateTransformation(
-                            FrameType.LOCAL_NAVIGATION_FRAME,
-                            FrameType.LOCAL_NAVIGATION_FRAME),
-                    totalSamples, timeInterval);
-            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
-        }
-
-        // Force IllegalArgumentException
-        try {
-            estimator = new IMUBiasEstimator(nedPosition1, nedC,
-                    0, timeInterval);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new IMUBiasEstimator(nedPosition1, nedC, totalSamples,
-                    new Time(-1.0, TimeUnit.SECOND));
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
-    }
-
-    @Test
-    public void testConstructor78() throws WrongSizeException,
-            InvalidSourceAndDestinationFrameTypeException {
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final Time timeInterval = new Time(randomizer.nextDouble(
-                    MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
-
-            final double latitude = Math.toRadians(randomizer.nextDouble(
-                    MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
-            final double longitude = Math.toRadians(randomizer.nextDouble(
-                    MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
-            final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-
-            final double roll = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double pitch = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-
-
-            final Acceleration acceleration1 = new Acceleration(0.0,
-                    AccelerationUnit.METERS_PER_SQUARED_SECOND);
-            final Acceleration acceleration2 = new Acceleration(0.0,
-                    AccelerationUnit.METERS_PER_SQUARED_SECOND);
-            final AngularSpeed angularSpeed1 = new AngularSpeed(0.0,
-                    AngularSpeedUnit.RADIANS_PER_SECOND);
-            final AngularSpeed angularSpeed2 = new AngularSpeed(0.0,
-                    AngularSpeedUnit.RADIANS_PER_SECOND);
-            final BodyKinematics kinematics1 = new BodyKinematics();
-            final BodyKinematics kinematics2 = new BodyKinematics();
-            final Time time1 = new Time(timeInterval.getValue(), TimeUnit.SECOND);
-            final Time time2 = new Time(0.0, TimeUnit.SECOND);
-            final CoordinateTransformation nedC = new CoordinateTransformation(
-                    roll, pitch, yaw, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-            final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height,
-                    0.0, 0.0, 0.0, nedC);
-            final NEDFrame nedFrame2 = new NEDFrame();
-            final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
-                    .convertNEDtoECEFAndReturnNew(nedFrame1);
-            final ECEFFrame ecefFrame2 = new ECEFFrame();
-            final NEDPosition nedPosition1 = nedFrame1.getPosition();
-            final NEDPosition nedPosition2 = new NEDPosition();
-            final ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
-            final ECEFPosition ecefPosition2 = new ECEFPosition();
-            final CoordinateTransformation ecefC = ecefFrame1
-                    .getCoordinateTransformation();
-            final CoordinateTransformation c = new CoordinateTransformation(
-                    FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-            final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
-            final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
-
-            final int totalSamples = randomizer.nextInt(
-                    MIN_TOTAL_SAMPLES, MAX_TOTAL_SAMPLES);
-
-            final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
-                    .estimateKinematicsAndReturnNew(
-                            timeInterval, ecefC, ecefC,
-                            0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                            ecefPosition1);
-
-
-            // test constructor
-            IMUBiasEstimator estimator = new IMUBiasEstimator(ecefPosition1, nedC,
-                    totalSamples, timeInterval);
-
-            // check default values
-            assertEquals(estimator.getTotalSamples(), totalSamples);
-            assertEquals(estimator.getTimeInterval(),
-                    timeInterval.getValue().doubleValue(), 0.0);
-            assertEquals(estimator.getTimeIntervalAsTime(), time1);
-            estimator.getTimeIntervalAsTime(time2);
-            assertEquals(time1, time2);
-            if (!estimator.getEcefPosition().equals(ecefPosition1, ABSOLUTE_ERROR)) {
-                continue;
-            }
-            assertTrue(estimator.getEcefPosition().equals(ecefPosition1,
-                    ABSOLUTE_ERROR));
-            estimator.getEcefPosition(ecefPosition2);
-            assertTrue(ecefPosition1.equals(ecefPosition2,
-                    ABSOLUTE_ERROR));
-            if (!estimator.getEcefFrame().equals(ecefFrame1, ABSOLUTE_ERROR)) {
-                continue;
-            }
-            assertTrue(estimator.getEcefFrame().equals(ecefFrame1,
-                    ABSOLUTE_ERROR));
-            estimator.getEcefFrame(ecefFrame2);
-            assertTrue(ecefFrame2.equals(ecefFrame1, ABSOLUTE_ERROR));
-            assertTrue(estimator.getNedFrame().equals(nedFrame1, ABSOLUTE_ERROR));
-            estimator.getNedFrame(nedFrame2);
-            assertTrue(nedFrame1.equals(nedFrame2, ABSOLUTE_ERROR));
-            assertTrue(estimator.getNedPosition().equals(nedPosition1, ABSOLUTE_ERROR));
-            estimator.getNedPosition(nedPosition2);
-            assertTrue(nedPosition1.equals(nedPosition2, ABSOLUTE_ERROR));
-            assertTrue(estimator.getEcefC().equals(ecefC, ABSOLUTE_ERROR));
-            estimator.getEcefC(c);
-            assertTrue(ecefC.equals(c, ABSOLUTE_ERROR));
-            assertTrue(estimator.getNedC().equals(nedC, ABSOLUTE_ERROR));
-            estimator.getNedC(c);
-            assertTrue(nedC.equals(c, ABSOLUTE_ERROR));
-            assertNull(estimator.getListener());
-            assertNull(estimator.getLastBodyKinematics());
-            assertFalse(estimator.getLastBodyKinematics(null));
-            assertEquals(estimator.getBiasFx(), 0.0, 0.0);
-            assertEquals(estimator.getBiasFxAsAcceleration(), acceleration1);
-            estimator.getBiasFxAsAcceleration(acceleration2);
-            assertEquals(acceleration1, acceleration2);
-            assertEquals(estimator.getBiasFy(), 0.0, 0.0);
-            assertEquals(estimator.getBiasFyAsAcceleration(), acceleration1);
-            estimator.getBiasFyAsAcceleration(acceleration2);
-            assertEquals(acceleration1, acceleration2);
-            assertEquals(estimator.getBiasFz(), 0.0, 0.0);
-            assertEquals(estimator.getBiasFzAsAcceleration(), acceleration1);
-            estimator.getBiasFzAsAcceleration(acceleration2);
-            assertEquals(acceleration1, acceleration2);
-            assertEquals(estimator.getBiasAngularRateX(), 0.0, 0.0);
-            assertEquals(estimator.getBiasAngularRateXAsAngularSpeed(), angularSpeed1);
-            estimator.getBiasAngularRateXAsAngularSpeed(angularSpeed2);
-            assertEquals(angularSpeed1, angularSpeed2);
-            assertEquals(estimator.getBiasAngularRateY(), 0.0, 0.0);
-            assertEquals(estimator.getBiasAngularRateYAsAngularSpeed(), angularSpeed1);
-            estimator.getBiasAngularRateYAsAngularSpeed(angularSpeed2);
-            assertEquals(angularSpeed1, angularSpeed2);
-            assertEquals(estimator.getBiasAngularRateZ(), 0.0, 0.0);
-            assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
-            estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
-            assertEquals(angularSpeed1, angularSpeed2);
-            assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
-            estimator.getBiasesAsBodyKinematics(kinematics2);
-            assertEquals(kinematics1, kinematics2);
-            assertEquals(estimator.getVarianceFx(), 0.0, 0.0);
-            assertEquals(estimator.getVarianceFy(), 0.0, 0.0);
-            assertEquals(estimator.getVarianceFz(), 0.0, 0.0);
-            assertEquals(estimator.getVarianceAngularRateX(), 0.0, 0.0);
-            assertEquals(estimator.getVarianceAngularRateY(), 0.0, 0.0);
-            assertEquals(estimator.getVarianceAngularRateZ(), 0.0, 0.0);
-            assertEquals(estimator.getStandardDeviationFx(), 0.0, 0.0);
-            assertEquals(estimator.getStandardDeviationFxAsAcceleration(), acceleration1);
-            estimator.getStandardDeviationFxAsAcceleration(acceleration2);
-            assertEquals(acceleration1, acceleration2);
-            assertEquals(estimator.getStandardDeviationFy(), 0.0, 0.0);
-            assertEquals(estimator.getStandardDeviationFyAsAcceleration(), acceleration1);
-            estimator.getStandardDeviationFyAsAcceleration(acceleration2);
-            assertEquals(acceleration1, acceleration2);
-            assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
-            assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
-            estimator.getStandardDeviationFzAsAcceleration(acceleration2);
-            assertEquals(acceleration1, acceleration2);
-            assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
-                    0.0);
-            assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
-                    acceleration1);
-            estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
-            assertEquals(acceleration1, acceleration2);
-            assertEquals(estimator.getStandardDeviationAngularRateX(),
-                    0.0, 0.0);
-            assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
-                    angularSpeed1);
-            estimator.getStandardDeviationAngularRateXAsAngularSpeed(angularSpeed2);
-            assertEquals(angularSpeed1, angularSpeed2);
-            assertEquals(estimator.getStandardDeviationAngularRateY(),
-                    0.0, 0.0);
-            assertEquals(estimator.getStandardDeviationAngularRateYAsAngularSpeed(),
-                    angularSpeed1);
-            estimator.getStandardDeviationAngularRateYAsAngularSpeed(angularSpeed2);
-            assertEquals(angularSpeed1, angularSpeed2);
-            assertEquals(estimator.getStandardDeviationAngularRateZ(),
-                    0.0, 0.0);
-            assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
-                    angularSpeed1);
-            estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
-            assertEquals(angularSpeed1, angularSpeed2);
-            assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-            assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                    angularSpeed1);
-            estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-            assertEquals(angularSpeed1, angularSpeed2);
-            assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
-            estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
-            assertEquals(kinematics1, kinematics2);
-            assertEquals(estimator.getPSDFx(), 0.0, 0.0);
-            assertEquals(estimator.getPSDFy(), 0.0, 0.0);
-            assertEquals(estimator.getPSDFz(), 0.0, 0.0);
-            assertEquals(estimator.getPSDAngularRateX(), 0.0, 0.0);
-            assertEquals(estimator.getPSDAngularRateY(), 0.0, 0.0);
-            assertEquals(estimator.getPSDAngularRateZ(), 0.0, 0.0);
-            assertEquals(estimator.getRootPSDFx(), 0.0, 0.0);
-            assertEquals(estimator.getRootPSDFy(), 0.0, 0.0);
-            assertEquals(estimator.getRootPSDFz(), 0.0, 0.0);
-            assertEquals(estimator.getRootPSDAngularRateX(), 0.0, 0.0);
-            assertEquals(estimator.getRootPSDAngularRateY(), 0.0, 0.0);
-            assertEquals(estimator.getRootPSDAngularRateZ(), 0.0, 0.0);
-            assertEquals(estimator.getAccelerometerNoisePSD(), 0.0, 0.0);
-            assertEquals(estimator.getAccelerometerNoiseRootPSD(), 0.0, 0.0);
-            assertEquals(estimator.getGyroNoisePSD(), 0.0, 0.0);
-            assertEquals(estimator.getGyroNoiseRootPSD(), 0.0, 0.0);
-            assertEquals(estimator.getAccelerometerBias(), m1);
-            estimator.getAccelerometerBias(m2);
-            assertEquals(m1, m2);
-            assertEquals(estimator.getGyroBias(), m1);
-            estimator.getGyroBias(m2);
-            assertEquals(m1, m2);
-            assertEquals(estimator.getNumberOfProcessedSamples(), 0);
-            assertFalse(estimator.isRunning());
-            assertFalse(estimator.isFinished());
-            assertTrue(estimator.getExpectedKinematics().equals(expectedKinematics,
-                    ABSOLUTE_ERROR));
-            estimator.getExpectedKinematics(kinematics2);
-            assertTrue(expectedKinematics.equals(kinematics2, ABSOLUTE_ERROR));
-
-            // Force InvalidSourceAndDestinationFrameTypeException
-            estimator = null;
-            try {
-                estimator = new IMUBiasEstimator(ecefPosition1,
-                        new CoordinateTransformation(
-                                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME,
-                                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME),
-                        totalSamples, timeInterval);
-                fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-            } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
-            }
-
-            // Force IllegalArgumentException
-            try {
-                estimator = new IMUBiasEstimator(ecefPosition1, nedC, 0,
-                        timeInterval);
-                fail("IllegalArgumentException expected but not thrown");
-            } catch (final IllegalArgumentException ignore) {
-            }
-            try {
-                estimator = new IMUBiasEstimator(ecefPosition1, nedC, totalSamples,
-                        new Time(-1.0, TimeUnit.SECOND));
-                fail("IllegalArgumentException expected but not thrown");
-            } catch (final IllegalArgumentException ignore) {
-            }
-            assertNull(estimator);
-
-            numValid++;
-            break;
-        }
-        assertTrue(numValid > 0);
-    }
-
-    @Test
-    public void testConstructor79() throws WrongSizeException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final Time timeInterval = new Time(randomizer.nextDouble(
-                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
-
-        final Acceleration acceleration1 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final AngularSpeed angularSpeed1 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final AngularSpeed angularSpeed2 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final BodyKinematics kinematics1 = new BodyKinematics();
-        final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(timeInterval.getValue(), TimeUnit.SECOND);
-        final Time time2 = new Time(0.0, TimeUnit.SECOND);
-        final NEDFrame nedFrame1 = new NEDFrame();
-        final NEDFrame nedFrame2 = new NEDFrame();
-        final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
-                .convertNEDtoECEFAndReturnNew(nedFrame1);
-        final ECEFFrame ecefFrame2 = new ECEFFrame();
-        final NEDPosition nedPosition1 = nedFrame1.getPosition();
-        final NEDPosition nedPosition2 = new NEDPosition();
-        final ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
-        final ECEFPosition ecefPosition2 = new ECEFPosition();
-        final CoordinateTransformation ecefC = ecefFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation nedC = nedFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-        final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
-        final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
-
-        final int totalSamples = randomizer.nextInt(
-                MIN_TOTAL_SAMPLES, MAX_TOTAL_SAMPLES);
-
-        final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
-                .estimateKinematicsAndReturnNew(
-                        timeInterval, ecefC, ecefC,
-                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                        ecefPosition1);
-
-
-        // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(totalSamples,
-                timeInterval, this);
-
-        // check default values
-        assertEquals(estimator.getTotalSamples(), totalSamples);
-        assertEquals(estimator.getTimeInterval(),
-                timeInterval.getValue().doubleValue(), 0.0);
-        assertEquals(estimator.getTimeIntervalAsTime(), time1);
-        estimator.getTimeIntervalAsTime(time2);
-        assertEquals(time1, time2);
-        assertEquals(estimator.getEcefPosition(), ecefPosition1);
-        estimator.getEcefPosition(ecefPosition2);
-        assertEquals(ecefPosition1, ecefPosition2);
-        assertEquals(estimator.getEcefFrame(), ecefFrame1);
-        estimator.getEcefFrame(ecefFrame2);
-        assertEquals(ecefFrame2, ecefFrame1);
-        assertEquals(estimator.getNedFrame(), nedFrame1);
-        estimator.getNedFrame(nedFrame2);
-        assertEquals(nedFrame1, nedFrame2);
-        assertEquals(estimator.getNedPosition(), nedPosition1);
-        estimator.getNedPosition(nedPosition2);
-        assertEquals(nedPosition1, nedPosition2);
-        assertEquals(estimator.getEcefC(), ecefC);
-        estimator.getEcefC(c);
-        assertEquals(ecefC, c);
-        assertEquals(estimator.getNedC(), nedC);
-        estimator.getNedC(c);
-        assertEquals(nedC, c);
-        assertSame(estimator.getListener(), this);
-        assertNull(estimator.getLastBodyKinematics());
-        assertFalse(estimator.getLastBodyKinematics(null));
-        assertEquals(estimator.getBiasFx(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFxAsAcceleration(), acceleration1);
-        estimator.getBiasFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFy(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFyAsAcceleration(), acceleration1);
-        estimator.getBiasFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFz(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFzAsAcceleration(), acceleration1);
-        estimator.getBiasFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateXAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateYAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
-        estimator.getBiasesAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getVarianceFx(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFy(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFz(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFx(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFxAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFy(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFyAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
-                0.0);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
-                acceleration1);
-        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationAngularRateX(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateY(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateYAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateZ(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
-        estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerBias(), m1);
-        estimator.getAccelerometerBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getGyroBias(), m1);
-        estimator.getGyroBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getNumberOfProcessedSamples(), 0);
-        assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
-        assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
-        estimator.getExpectedKinematics(kinematics2);
-        assertEquals(expectedKinematics, kinematics2);
-
-        // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = new IMUBiasEstimator(0,
-                    timeInterval, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new IMUBiasEstimator(totalSamples,
-                    new Time(-1.0, TimeUnit.SECOND), this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
-    }
-
-    @Test
-    public void testConstructor80() throws WrongSizeException,
-            InvalidSourceAndDestinationFrameTypeException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final Time timeInterval = new Time(randomizer.nextDouble(
-                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
-
-        final Acceleration acceleration1 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final AngularSpeed angularSpeed1 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final AngularSpeed angularSpeed2 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final BodyKinematics kinematics1 = new BodyKinematics();
-        final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(timeInterval.getValue(), TimeUnit.SECOND);
-        final Time time2 = new Time(0.0, TimeUnit.SECOND);
-        final NEDFrame nedFrame1 = new NEDFrame();
-        final NEDFrame nedFrame2 = new NEDFrame();
-        final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
-                .convertNEDtoECEFAndReturnNew(nedFrame1);
-        final ECEFFrame ecefFrame2 = new ECEFFrame();
-        final NEDPosition nedPosition1 = nedFrame1.getPosition();
-        final NEDPosition nedPosition2 = new NEDPosition();
-        final ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
-        final ECEFPosition ecefPosition2 = new ECEFPosition();
-        final CoordinateTransformation ecefC = ecefFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation nedC = nedFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-        final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
-        final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
-
-        final double roll = Math.toRadians(randomizer.nextDouble(
-                MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(randomizer.nextDouble(
-                MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(randomizer.nextDouble(
-                MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        nedC.setEulerAngles(roll, pitch, yaw);
-        nedFrame1.setCoordinateTransformation(nedC);
-        NEDtoECEFFrameConverter.convertNEDtoECEF(nedFrame1, ecefFrame1);
-        ecefFrame1.getCoordinateTransformation(ecefC);
-
-        final int totalSamples = randomizer.nextInt(
-                MIN_TOTAL_SAMPLES, MAX_TOTAL_SAMPLES);
-
-        final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
-                .estimateKinematicsAndReturnNew(
-                        timeInterval, ecefC, ecefC,
-                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                        ecefPosition1);
-
-
-        // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(nedC, totalSamples,
-                timeInterval, this);
-
-        // check default values
-        assertEquals(estimator.getTotalSamples(), totalSamples);
-        assertEquals(estimator.getTimeInterval(),
-                timeInterval.getValue().doubleValue(), 0.0);
-        assertEquals(estimator.getTimeIntervalAsTime(), time1);
-        estimator.getTimeIntervalAsTime(time2);
-        assertEquals(time1, time2);
-        assertEquals(estimator.getEcefPosition(), ecefPosition1);
-        estimator.getEcefPosition(ecefPosition2);
-        assertEquals(ecefPosition1, ecefPosition2);
-        assertEquals(estimator.getEcefFrame(), ecefFrame1);
-        estimator.getEcefFrame(ecefFrame2);
-        assertEquals(ecefFrame2, ecefFrame1);
-        assertEquals(estimator.getNedFrame(), nedFrame1);
-        estimator.getNedFrame(nedFrame2);
-        assertEquals(nedFrame1, nedFrame2);
-        assertEquals(estimator.getNedPosition(), nedPosition1);
-        estimator.getNedPosition(nedPosition2);
-        assertEquals(nedPosition1, nedPosition2);
-        assertEquals(estimator.getEcefC(), ecefC);
-        estimator.getEcefC(c);
-        assertEquals(ecefC, c);
-        assertEquals(estimator.getNedC(), nedC);
-        estimator.getNedC(c);
-        assertEquals(nedC, c);
-        assertSame(estimator.getListener(), this);
-        assertNull(estimator.getLastBodyKinematics());
-        assertFalse(estimator.getLastBodyKinematics(null));
-        assertEquals(estimator.getBiasFx(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFxAsAcceleration(), acceleration1);
-        estimator.getBiasFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFy(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFyAsAcceleration(), acceleration1);
-        estimator.getBiasFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFz(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFzAsAcceleration(), acceleration1);
-        estimator.getBiasFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateXAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateYAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
-        estimator.getBiasesAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getVarianceFx(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFy(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFz(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFx(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFxAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFy(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFyAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
-                0.0);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
-                acceleration1);
-        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationAngularRateX(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateY(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateYAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateZ(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
-        estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerBias(), m1);
-        estimator.getAccelerometerBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getGyroBias(), m1);
-        estimator.getGyroBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getNumberOfProcessedSamples(), 0);
-        assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
-        assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
-        estimator.getExpectedKinematics(kinematics2);
-        assertEquals(expectedKinematics, kinematics2);
-
-        // Force InvalidSourceAndDestinationFrameTypeException
-        estimator = null;
-        try {
-            estimator = new IMUBiasEstimator(new CoordinateTransformation(
-                    FrameType.LOCAL_NAVIGATION_FRAME,
-                    FrameType.LOCAL_NAVIGATION_FRAME), totalSamples, timeInterval,
-                    this);
-            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
-        }
-
-        // Force IllegalArgumentException
-        try {
-            estimator = new IMUBiasEstimator(nedC, 0, timeInterval,
-                    this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new IMUBiasEstimator(nedC, totalSamples, -1.0,
-                    this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
-    }
-
-    @Test
-    public void testConstructor81() throws WrongSizeException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final Time timeInterval = new Time(randomizer.nextDouble(
-                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
-
-        final double latitude = Math.toRadians(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
-        final double longitude = Math.toRadians(randomizer.nextDouble(
-                MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-
-
-        final Acceleration acceleration1 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final AngularSpeed angularSpeed1 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final AngularSpeed angularSpeed2 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final BodyKinematics kinematics1 = new BodyKinematics();
-        final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(timeInterval.getValue(), TimeUnit.SECOND);
-        final Time time2 = new Time(0.0, TimeUnit.SECOND);
-        final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height);
-        final NEDFrame nedFrame2 = new NEDFrame();
-        final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
-                .convertNEDtoECEFAndReturnNew(nedFrame1);
-        final ECEFFrame ecefFrame2 = new ECEFFrame();
-        final NEDPosition nedPosition1 = nedFrame1.getPosition();
-        final NEDPosition nedPosition2 = new NEDPosition();
-        final ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
-        final ECEFPosition ecefPosition2 = new ECEFPosition();
-        final CoordinateTransformation ecefC = ecefFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation nedC = nedFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-        final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
-        final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
-
-        final int totalSamples = randomizer.nextInt(
-                MIN_TOTAL_SAMPLES, MAX_TOTAL_SAMPLES);
-
-        final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
-                .estimateKinematicsAndReturnNew(
-                        timeInterval, ecefC, ecefC,
-                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                        ecefPosition1);
-
-
-        // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(
-                latitude, longitude, height, totalSamples, timeInterval,
-                this);
-
-        // check default values
-        assertEquals(estimator.getTotalSamples(), totalSamples);
-        assertEquals(estimator.getTimeInterval(),
-                timeInterval.getValue().doubleValue(), 0.0);
-        assertEquals(estimator.getTimeIntervalAsTime(), time1);
-        estimator.getTimeIntervalAsTime(time2);
-        assertEquals(time1, time2);
-        assertEquals(estimator.getEcefPosition(), ecefPosition1);
-        estimator.getEcefPosition(ecefPosition2);
-        assertEquals(ecefPosition1, ecefPosition2);
-        assertEquals(estimator.getEcefFrame(), ecefFrame1);
-        estimator.getEcefFrame(ecefFrame2);
-        assertEquals(ecefFrame2, ecefFrame1);
-        assertTrue(estimator.getNedFrame().equals(nedFrame1, ABSOLUTE_ERROR));
-        estimator.getNedFrame(nedFrame2);
-        assertTrue(nedFrame1.equals(nedFrame2, ABSOLUTE_ERROR));
-        assertTrue(estimator.getNedPosition().equals(nedPosition1, ABSOLUTE_ERROR));
-        estimator.getNedPosition(nedPosition2);
-        assertTrue(nedPosition1.equals(nedPosition2, ABSOLUTE_ERROR));
-        assertEquals(estimator.getEcefC(), ecefC);
-        estimator.getEcefC(c);
-        assertEquals(ecefC, c);
-        assertTrue(estimator.getNedC().equals(nedC, ABSOLUTE_ERROR));
-        estimator.getNedC(c);
-        assertTrue(nedC.equals(c, ABSOLUTE_ERROR));
-        assertSame(estimator.getListener(), this);
-        assertNull(estimator.getLastBodyKinematics());
-        assertFalse(estimator.getLastBodyKinematics(null));
-        assertEquals(estimator.getBiasFx(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFxAsAcceleration(), acceleration1);
-        estimator.getBiasFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFy(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFyAsAcceleration(), acceleration1);
-        estimator.getBiasFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFz(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFzAsAcceleration(), acceleration1);
-        estimator.getBiasFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateXAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateYAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
-        estimator.getBiasesAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getVarianceFx(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFy(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFz(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFx(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFxAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFy(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFyAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
-                0.0);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
-                acceleration1);
-        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationAngularRateX(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateY(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateYAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateZ(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
-        estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerBias(), m1);
-        estimator.getAccelerometerBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getGyroBias(), m1);
-        estimator.getGyroBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getNumberOfProcessedSamples(), 0);
-        assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
-        assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
-        estimator.getExpectedKinematics(kinematics2);
-        assertEquals(expectedKinematics, kinematics2);
-
-        // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = new IMUBiasEstimator(latitude, longitude, height,
-                    0, timeInterval, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new IMUBiasEstimator(latitude, longitude, height,
-                    totalSamples, new Time(-1.0, TimeUnit.SECOND),
-                    this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
-    }
-
-    @Test
-    public void testConstructor82() throws WrongSizeException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final Time timeInterval = new Time(randomizer.nextDouble(
-                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
-
-        final Angle latitude = new Angle(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs), AngleUnit.DEGREES);
-        final Angle longitude = new Angle(randomizer.nextDouble(
-                MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES), AngleUnit.DEGREES);
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-
-
-        final Acceleration acceleration1 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final AngularSpeed angularSpeed1 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final AngularSpeed angularSpeed2 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final BodyKinematics kinematics1 = new BodyKinematics();
-        final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(timeInterval.getValue(), TimeUnit.SECOND);
-        final Time time2 = new Time(0.0, TimeUnit.SECOND);
-        final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height);
-        final NEDFrame nedFrame2 = new NEDFrame();
-        final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
-                .convertNEDtoECEFAndReturnNew(nedFrame1);
-        final ECEFFrame ecefFrame2 = new ECEFFrame();
-        final NEDPosition nedPosition1 = nedFrame1.getPosition();
-        final NEDPosition nedPosition2 = new NEDPosition();
-        final ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
-        final ECEFPosition ecefPosition2 = new ECEFPosition();
-        final CoordinateTransformation ecefC = ecefFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation nedC = nedFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-        final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
-        final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
-
-        final int totalSamples = randomizer.nextInt(
-                MIN_TOTAL_SAMPLES, MAX_TOTAL_SAMPLES);
-
-        final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
-                .estimateKinematicsAndReturnNew(
-                        timeInterval, ecefC, ecefC,
-                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                        ecefPosition1);
-
-
-        // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(latitude, longitude, height,
-                totalSamples, timeInterval, this);
-
-        // check default values
-        assertEquals(estimator.getTotalSamples(), totalSamples);
-        assertEquals(estimator.getTimeInterval(),
-                timeInterval.getValue().doubleValue(), 0.0);
-        assertEquals(estimator.getTimeIntervalAsTime(), time1);
-        estimator.getTimeIntervalAsTime(time2);
-        assertEquals(time1, time2);
-        assertEquals(estimator.getEcefPosition(), ecefPosition1);
-        estimator.getEcefPosition(ecefPosition2);
-        assertEquals(ecefPosition1, ecefPosition2);
-        assertEquals(estimator.getEcefFrame(), ecefFrame1);
-        estimator.getEcefFrame(ecefFrame2);
-        assertEquals(ecefFrame2, ecefFrame1);
-        assertTrue(estimator.getNedFrame().equals(nedFrame1, ABSOLUTE_ERROR));
-        estimator.getNedFrame(nedFrame2);
-        assertTrue(nedFrame1.equals(nedFrame2, ABSOLUTE_ERROR));
-        assertTrue(estimator.getNedPosition().equals(nedPosition1, ABSOLUTE_ERROR));
-        estimator.getNedPosition(nedPosition2);
-        assertTrue(nedPosition1.equals(nedPosition2, ABSOLUTE_ERROR));
-        assertEquals(estimator.getEcefC(), ecefC);
-        estimator.getEcefC(c);
-        assertEquals(ecefC, c);
-        assertTrue(estimator.getNedC().equals(nedC, ABSOLUTE_ERROR));
-        estimator.getNedC(c);
-        assertTrue(nedC.equals(c, ABSOLUTE_ERROR));
-        assertSame(estimator.getListener(), this);
-        assertNull(estimator.getLastBodyKinematics());
-        assertFalse(estimator.getLastBodyKinematics(null));
-        assertEquals(estimator.getBiasFx(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFxAsAcceleration(), acceleration1);
-        estimator.getBiasFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFy(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFyAsAcceleration(), acceleration1);
-        estimator.getBiasFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFz(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFzAsAcceleration(), acceleration1);
-        estimator.getBiasFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateXAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateYAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
-        estimator.getBiasesAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getVarianceFx(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFy(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFz(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFx(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFxAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFy(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFyAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
-                0.0);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
-                acceleration1);
-        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationAngularRateX(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateY(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateYAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateZ(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
-        estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerBias(), m1);
-        estimator.getAccelerometerBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getGyroBias(), m1);
-        estimator.getGyroBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getNumberOfProcessedSamples(), 0);
-        assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
-        assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
-        estimator.getExpectedKinematics(kinematics2);
-        assertEquals(expectedKinematics, kinematics2);
-
-        // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = new IMUBiasEstimator(latitude, longitude, height,
-                    0, timeInterval, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new IMUBiasEstimator(latitude, longitude, height,
-                    totalSamples, -1.0, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
-    }
-
-    @Test
-    public void testConstructor83() throws WrongSizeException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final Time timeInterval = new Time(randomizer.nextDouble(
-                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
-
-        final Angle latitude = new Angle(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs), AngleUnit.DEGREES);
-        final Angle longitude = new Angle(randomizer.nextDouble(
-                MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES), AngleUnit.DEGREES);
-        final Distance height = new Distance(
-                randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT), DistanceUnit.METER);
-
-
-        final Acceleration acceleration1 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final AngularSpeed angularSpeed1 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final AngularSpeed angularSpeed2 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final BodyKinematics kinematics1 = new BodyKinematics();
-        final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(timeInterval.getValue(), TimeUnit.SECOND);
-        final Time time2 = new Time(0.0, TimeUnit.SECOND);
-        final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height);
-        final NEDFrame nedFrame2 = new NEDFrame();
-        final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
-                .convertNEDtoECEFAndReturnNew(nedFrame1);
-        final ECEFFrame ecefFrame2 = new ECEFFrame();
-        final NEDPosition nedPosition1 = nedFrame1.getPosition();
-        final NEDPosition nedPosition2 = new NEDPosition();
-        final ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
-        final ECEFPosition ecefPosition2 = new ECEFPosition();
-        final CoordinateTransformation ecefC = ecefFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation nedC = nedFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-        final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
-        final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
-
-        final int totalSamples = randomizer.nextInt(
-                MIN_TOTAL_SAMPLES, MAX_TOTAL_SAMPLES);
-
-        final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
-                .estimateKinematicsAndReturnNew(
-                        timeInterval, ecefC, ecefC,
-                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                        ecefPosition1);
-
-
-        // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(latitude, longitude, height,
-                totalSamples, timeInterval, this);
-
-        // check default values
-        assertEquals(estimator.getTotalSamples(), totalSamples);
-        assertEquals(estimator.getTimeInterval(),
-                timeInterval.getValue().doubleValue(), 0.0);
-        assertEquals(estimator.getTimeIntervalAsTime(), time1);
-        estimator.getTimeIntervalAsTime(time2);
-        assertEquals(time1, time2);
-        assertEquals(estimator.getEcefPosition(), ecefPosition1);
-        estimator.getEcefPosition(ecefPosition2);
-        assertEquals(ecefPosition1, ecefPosition2);
-        assertEquals(estimator.getEcefFrame(), ecefFrame1);
-        estimator.getEcefFrame(ecefFrame2);
-        assertEquals(ecefFrame2, ecefFrame1);
-        assertTrue(estimator.getNedFrame().equals(nedFrame1, ABSOLUTE_ERROR));
-        estimator.getNedFrame(nedFrame2);
-        assertTrue(nedFrame1.equals(nedFrame2, ABSOLUTE_ERROR));
-        assertTrue(estimator.getNedPosition().equals(nedPosition1, ABSOLUTE_ERROR));
-        estimator.getNedPosition(nedPosition2);
-        assertTrue(nedPosition1.equals(nedPosition2, ABSOLUTE_ERROR));
-        assertEquals(estimator.getEcefC(), ecefC);
-        estimator.getEcefC(c);
-        assertEquals(ecefC, c);
-        assertTrue(estimator.getNedC().equals(nedC, ABSOLUTE_ERROR));
-        estimator.getNedC(c);
-        assertTrue(nedC.equals(c, ABSOLUTE_ERROR));
-        assertSame(estimator.getListener(), this);
-        assertNull(estimator.getLastBodyKinematics());
-        assertFalse(estimator.getLastBodyKinematics(null));
-        assertEquals(estimator.getBiasFx(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFxAsAcceleration(), acceleration1);
-        estimator.getBiasFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFy(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFyAsAcceleration(), acceleration1);
-        estimator.getBiasFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFz(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFzAsAcceleration(), acceleration1);
-        estimator.getBiasFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateXAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateYAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
-        estimator.getBiasesAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getVarianceFx(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFy(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFz(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFx(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFxAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFy(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFyAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
-                0.0);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
-                acceleration1);
-        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationAngularRateX(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateY(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateYAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateZ(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
-        estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerBias(), m1);
-        estimator.getAccelerometerBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getGyroBias(), m1);
-        estimator.getGyroBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getNumberOfProcessedSamples(), 0);
-        assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
-        assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
-        estimator.getExpectedKinematics(kinematics2);
-        assertEquals(expectedKinematics, kinematics2);
-
-        // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = new IMUBiasEstimator(latitude, longitude, height,
-                    0, timeInterval, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new IMUBiasEstimator(latitude, longitude, height,
-                    totalSamples, new Time(-1.0, TimeUnit.SECOND),
-                    this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
-    }
-
-    @Test
-    public void testConstructor84() throws WrongSizeException,
-            InvalidSourceAndDestinationFrameTypeException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final Time timeInterval = new Time(randomizer.nextDouble(
-                MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
-
-        final double latitude = Math.toRadians(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
-        final double longitude = Math.toRadians(randomizer.nextDouble(
-                MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-
-        final double roll = Math.toRadians(randomizer.nextDouble(
-                MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(randomizer.nextDouble(
-                MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(randomizer.nextDouble(
-                MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-
-
-        final Acceleration acceleration1 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final AngularSpeed angularSpeed1 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final AngularSpeed angularSpeed2 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        final BodyKinematics kinematics1 = new BodyKinematics();
-        final BodyKinematics kinematics2 = new BodyKinematics();
-        final Time time1 = new Time(timeInterval.getValue(), TimeUnit.SECOND);
-        final Time time2 = new Time(0.0, TimeUnit.SECOND);
-        final CoordinateTransformation nedC = new CoordinateTransformation(
-                roll, pitch, yaw, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-        final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height,
-                0.0, 0.0, 0.0, nedC);
-        final NEDFrame nedFrame2 = new NEDFrame();
-        final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
-                .convertNEDtoECEFAndReturnNew(nedFrame1);
-        final ECEFFrame ecefFrame2 = new ECEFFrame();
-        final NEDPosition nedPosition1 = nedFrame1.getPosition();
-        final NEDPosition nedPosition2 = new NEDPosition();
-        final ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
-        final ECEFPosition ecefPosition2 = new ECEFPosition();
-        final CoordinateTransformation ecefC = ecefFrame1
-                .getCoordinateTransformation();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-        final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
-        final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
-
-        final int totalSamples = randomizer.nextInt(
-                MIN_TOTAL_SAMPLES, MAX_TOTAL_SAMPLES);
-
-        final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
-                .estimateKinematicsAndReturnNew(
-                        timeInterval, ecefC, ecefC,
-                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                        ecefPosition1);
-
-
-        // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(nedPosition1, nedC,
-                totalSamples, timeInterval, this);
-
-        // check default values
-        assertEquals(estimator.getTotalSamples(), totalSamples);
-        assertEquals(estimator.getTimeInterval(),
-                timeInterval.getValue().doubleValue(), 0.0);
-        assertEquals(estimator.getTimeIntervalAsTime(), time1);
-        estimator.getTimeIntervalAsTime(time2);
-        assertEquals(time1, time2);
-        assertEquals(estimator.getEcefPosition(), ecefPosition1);
-        estimator.getEcefPosition(ecefPosition2);
-        assertEquals(ecefPosition1, ecefPosition2);
-        assertEquals(estimator.getEcefFrame(), ecefFrame1);
-        estimator.getEcefFrame(ecefFrame2);
-        assertEquals(ecefFrame2, ecefFrame1);
-        assertTrue(estimator.getNedFrame().equals(nedFrame1, ABSOLUTE_ERROR));
-        estimator.getNedFrame(nedFrame2);
-        assertTrue(nedFrame1.equals(nedFrame2, ABSOLUTE_ERROR));
-        assertTrue(estimator.getNedPosition().equals(nedPosition1, ABSOLUTE_ERROR));
-        estimator.getNedPosition(nedPosition2);
-        assertTrue(nedPosition1.equals(nedPosition2, ABSOLUTE_ERROR));
-        assertEquals(estimator.getEcefC(), ecefC);
-        estimator.getEcefC(c);
-        assertEquals(ecefC, c);
-        assertTrue(estimator.getNedC().equals(nedC, ABSOLUTE_ERROR));
-        estimator.getNedC(c);
-        assertTrue(nedC.equals(c, ABSOLUTE_ERROR));
-        assertSame(estimator.getListener(), this);
-        assertNull(estimator.getLastBodyKinematics());
-        assertFalse(estimator.getLastBodyKinematics(null));
-        assertEquals(estimator.getBiasFx(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFxAsAcceleration(), acceleration1);
-        estimator.getBiasFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFy(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFyAsAcceleration(), acceleration1);
-        estimator.getBiasFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasFz(), 0.0, 0.0);
-        assertEquals(estimator.getBiasFzAsAcceleration(), acceleration1);
-        estimator.getBiasFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getBiasAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateXAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateYAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
-        estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
-        estimator.getBiasesAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getVarianceFx(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFy(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceFz(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getVarianceAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFx(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFxAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFxAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFy(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFyAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFyAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
-        estimator.getStandardDeviationFzAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
-                0.0);
-        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
-                acceleration1);
-        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        assertEquals(estimator.getStandardDeviationAngularRateX(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateXAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateY(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateYAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateYAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationAngularRateZ(),
-                0.0, 0.0);
-        assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                angularSpeed1);
-        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-        assertEquals(angularSpeed1, angularSpeed2);
-        assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
-        estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-        assertEquals(estimator.getPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFx(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFy(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDFz(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateX(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateY(), 0.0, 0.0);
-        assertEquals(estimator.getRootPSDAngularRateZ(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoisePSD(), 0.0, 0.0);
-        assertEquals(estimator.getGyroNoiseRootPSD(), 0.0, 0.0);
-        assertEquals(estimator.getAccelerometerBias(), m1);
-        estimator.getAccelerometerBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getGyroBias(), m1);
-        estimator.getGyroBias(m2);
-        assertEquals(m1, m2);
-        assertEquals(estimator.getNumberOfProcessedSamples(), 0);
-        assertFalse(estimator.isRunning());
-        assertFalse(estimator.isFinished());
-        assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
-        estimator.getExpectedKinematics(kinematics2);
-        assertEquals(expectedKinematics, kinematics2);
-
-        // Force InvalidSourceAndDestinationFrameTypeException
-        estimator = null;
-        try {
-            estimator = new IMUBiasEstimator(nedPosition1,
-                    new CoordinateTransformation(
-                            FrameType.LOCAL_NAVIGATION_FRAME,
-                            FrameType.LOCAL_NAVIGATION_FRAME),
-                    totalSamples, timeInterval, this);
-            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
-        }
-
-        // Force IllegalArgumentException
-        try {
-            estimator = new IMUBiasEstimator(nedPosition1, nedC,
-                    0, timeInterval, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new IMUBiasEstimator(nedPosition1, nedC,
-                    totalSamples, new Time(-1.0, TimeUnit.SECOND),
-                    this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
-    }
-
-    @Test
-    public void testConstructor85() throws WrongSizeException,
-            InvalidSourceAndDestinationFrameTypeException {
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final Time timeInterval = new Time(randomizer.nextDouble(
-                    MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
-
-            final double latitude = Math.toRadians(randomizer.nextDouble(
-                    MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
-            final double longitude = Math.toRadians(randomizer.nextDouble(
-                    MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
-            final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-
-            final double roll = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double pitch = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-
-
-            final Acceleration acceleration1 = new Acceleration(0.0,
-                    AccelerationUnit.METERS_PER_SQUARED_SECOND);
-            final Acceleration acceleration2 = new Acceleration(0.0,
-                    AccelerationUnit.METERS_PER_SQUARED_SECOND);
-            final AngularSpeed angularSpeed1 = new AngularSpeed(0.0,
-                    AngularSpeedUnit.RADIANS_PER_SECOND);
-            final AngularSpeed angularSpeed2 = new AngularSpeed(0.0,
-                    AngularSpeedUnit.RADIANS_PER_SECOND);
-            final BodyKinematics kinematics1 = new BodyKinematics();
-            final BodyKinematics kinematics2 = new BodyKinematics();
-            final Time time1 = new Time(timeInterval.getValue(), TimeUnit.SECOND);
-            final Time time2 = new Time(0.0, TimeUnit.SECOND);
-            final CoordinateTransformation nedC = new CoordinateTransformation(
-                    roll, pitch, yaw, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-            final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height,
-                    0.0, 0.0, 0.0, nedC);
-            final NEDFrame nedFrame2 = new NEDFrame();
-            final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
-                    .convertNEDtoECEFAndReturnNew(nedFrame1);
-            final ECEFFrame ecefFrame2 = new ECEFFrame();
-            final NEDPosition nedPosition1 = nedFrame1.getPosition();
-            final NEDPosition nedPosition2 = new NEDPosition();
-            final ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
-            final ECEFPosition ecefPosition2 = new ECEFPosition();
-            final CoordinateTransformation ecefC = ecefFrame1
-                    .getCoordinateTransformation();
-            final CoordinateTransformation c = new CoordinateTransformation(
-                    FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-            final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
-            final Matrix m2 = new Matrix(BodyKinematics.COMPONENTS, 1);
-
-            final int totalSamples = randomizer.nextInt(
-                    MIN_TOTAL_SAMPLES, MAX_TOTAL_SAMPLES);
-
-            final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
-                    .estimateKinematicsAndReturnNew(
-                            timeInterval, ecefC, ecefC,
-                            0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                            ecefPosition1);
-
-
-            // test constructor
-            IMUBiasEstimator estimator = new IMUBiasEstimator(ecefPosition1, nedC,
-                    totalSamples, timeInterval, this);
-
-            // check default values
-            assertEquals(estimator.getTotalSamples(), totalSamples);
-            assertEquals(estimator.getTimeInterval(),
-                    timeInterval.getValue().doubleValue(), 0.0);
-            assertEquals(estimator.getTimeIntervalAsTime(), time1);
-            estimator.getTimeIntervalAsTime(time2);
-            assertEquals(time1, time2);
-            if (!estimator.getEcefPosition().equals(ecefPosition1, ABSOLUTE_ERROR)) {
-                continue;
-            }
-            assertTrue(estimator.getEcefPosition().equals(ecefPosition1,
-                    ABSOLUTE_ERROR));
-            estimator.getEcefPosition(ecefPosition2);
-            assertTrue(ecefPosition1.equals(ecefPosition2,
-                    ABSOLUTE_ERROR));
-            if (!estimator.getEcefFrame().equals(ecefFrame1, ABSOLUTE_ERROR)) {
-                continue;
-            }
-            assertTrue(estimator.getEcefFrame().equals(ecefFrame1, ABSOLUTE_ERROR));
-            estimator.getEcefFrame(ecefFrame2);
-            assertTrue(ecefFrame2.equals(ecefFrame1, ABSOLUTE_ERROR));
-            assertTrue(estimator.getNedFrame().equals(nedFrame1, ABSOLUTE_ERROR));
-            estimator.getNedFrame(nedFrame2);
-            assertTrue(nedFrame1.equals(nedFrame2, ABSOLUTE_ERROR));
-            assertTrue(estimator.getNedPosition().equals(nedPosition1, ABSOLUTE_ERROR));
-            estimator.getNedPosition(nedPosition2);
-            assertTrue(nedPosition1.equals(nedPosition2, ABSOLUTE_ERROR));
-            assertTrue(estimator.getEcefC().equals(ecefC, ABSOLUTE_ERROR));
-            estimator.getEcefC(c);
-            assertTrue(ecefC.equals(c, ABSOLUTE_ERROR));
-            assertTrue(estimator.getNedC().equals(nedC, ABSOLUTE_ERROR));
-            estimator.getNedC(c);
-            assertTrue(nedC.equals(c, ABSOLUTE_ERROR));
-            assertSame(estimator.getListener(), this);
-            assertNull(estimator.getLastBodyKinematics());
-            assertFalse(estimator.getLastBodyKinematics(null));
-            assertEquals(estimator.getBiasFx(), 0.0, 0.0);
-            assertEquals(estimator.getBiasFxAsAcceleration(), acceleration1);
-            estimator.getBiasFxAsAcceleration(acceleration2);
-            assertEquals(acceleration1, acceleration2);
-            assertEquals(estimator.getBiasFy(), 0.0, 0.0);
-            assertEquals(estimator.getBiasFyAsAcceleration(), acceleration1);
-            estimator.getBiasFyAsAcceleration(acceleration2);
-            assertEquals(acceleration1, acceleration2);
-            assertEquals(estimator.getBiasFz(), 0.0, 0.0);
-            assertEquals(estimator.getBiasFzAsAcceleration(), acceleration1);
-            estimator.getBiasFzAsAcceleration(acceleration2);
-            assertEquals(acceleration1, acceleration2);
-            assertEquals(estimator.getBiasAngularRateX(), 0.0, 0.0);
-            assertEquals(estimator.getBiasAngularRateXAsAngularSpeed(), angularSpeed1);
-            estimator.getBiasAngularRateXAsAngularSpeed(angularSpeed2);
-            assertEquals(angularSpeed1, angularSpeed2);
-            assertEquals(estimator.getBiasAngularRateY(), 0.0, 0.0);
-            assertEquals(estimator.getBiasAngularRateYAsAngularSpeed(), angularSpeed1);
-            estimator.getBiasAngularRateYAsAngularSpeed(angularSpeed2);
-            assertEquals(angularSpeed1, angularSpeed2);
-            assertEquals(estimator.getBiasAngularRateZ(), 0.0, 0.0);
-            assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
-            estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
-            assertEquals(angularSpeed1, angularSpeed2);
-            assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
-            estimator.getBiasesAsBodyKinematics(kinematics2);
-            assertEquals(kinematics1, kinematics2);
-            assertEquals(estimator.getVarianceFx(), 0.0, 0.0);
-            assertEquals(estimator.getVarianceFy(), 0.0, 0.0);
-            assertEquals(estimator.getVarianceFz(), 0.0, 0.0);
-            assertEquals(estimator.getVarianceAngularRateX(), 0.0, 0.0);
-            assertEquals(estimator.getVarianceAngularRateY(), 0.0, 0.0);
-            assertEquals(estimator.getVarianceAngularRateZ(), 0.0, 0.0);
-            assertEquals(estimator.getStandardDeviationFx(), 0.0, 0.0);
-            assertEquals(estimator.getStandardDeviationFxAsAcceleration(), acceleration1);
-            estimator.getStandardDeviationFxAsAcceleration(acceleration2);
-            assertEquals(acceleration1, acceleration2);
-            assertEquals(estimator.getStandardDeviationFy(), 0.0, 0.0);
-            assertEquals(estimator.getStandardDeviationFyAsAcceleration(), acceleration1);
-            estimator.getStandardDeviationFyAsAcceleration(acceleration2);
-            assertEquals(acceleration1, acceleration2);
-            assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
-            assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
-            estimator.getStandardDeviationFzAsAcceleration(acceleration2);
-            assertEquals(acceleration1, acceleration2);
-            assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
-                    0.0);
-            assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
-                    acceleration1);
-            estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
-            assertEquals(acceleration1, acceleration2);
-            assertEquals(estimator.getStandardDeviationAngularRateX(),
-                    0.0, 0.0);
-            assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
-                    angularSpeed1);
-            estimator.getStandardDeviationAngularRateXAsAngularSpeed(angularSpeed2);
-            assertEquals(angularSpeed1, angularSpeed2);
-            assertEquals(estimator.getStandardDeviationAngularRateY(),
-                    0.0, 0.0);
-            assertEquals(estimator.getStandardDeviationAngularRateYAsAngularSpeed(),
-                    angularSpeed1);
-            estimator.getStandardDeviationAngularRateYAsAngularSpeed(angularSpeed2);
-            assertEquals(angularSpeed1, angularSpeed2);
-            assertEquals(estimator.getStandardDeviationAngularRateZ(),
-                    0.0, 0.0);
-            assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
-                    angularSpeed1);
-            estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
-            assertEquals(angularSpeed1, angularSpeed2);
-            assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
-            assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
-                    angularSpeed1);
-            estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
-            assertEquals(angularSpeed1, angularSpeed2);
-            assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
-            estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
-            assertEquals(kinematics1, kinematics2);
-            assertEquals(estimator.getPSDFx(), 0.0, 0.0);
-            assertEquals(estimator.getPSDFy(), 0.0, 0.0);
-            assertEquals(estimator.getPSDFz(), 0.0, 0.0);
-            assertEquals(estimator.getPSDAngularRateX(), 0.0, 0.0);
-            assertEquals(estimator.getPSDAngularRateY(), 0.0, 0.0);
-            assertEquals(estimator.getPSDAngularRateZ(), 0.0, 0.0);
-            assertEquals(estimator.getRootPSDFx(), 0.0, 0.0);
-            assertEquals(estimator.getRootPSDFy(), 0.0, 0.0);
-            assertEquals(estimator.getRootPSDFz(), 0.0, 0.0);
-            assertEquals(estimator.getRootPSDAngularRateX(), 0.0, 0.0);
-            assertEquals(estimator.getRootPSDAngularRateY(), 0.0, 0.0);
-            assertEquals(estimator.getRootPSDAngularRateZ(), 0.0, 0.0);
-            assertEquals(estimator.getAccelerometerNoisePSD(), 0.0, 0.0);
-            assertEquals(estimator.getAccelerometerNoiseRootPSD(), 0.0, 0.0);
-            assertEquals(estimator.getGyroNoisePSD(), 0.0, 0.0);
-            assertEquals(estimator.getGyroNoiseRootPSD(), 0.0, 0.0);
-            assertEquals(estimator.getAccelerometerBias(), m1);
-            estimator.getAccelerometerBias(m2);
-            assertEquals(m1, m2);
-            assertEquals(estimator.getGyroBias(), m1);
-            estimator.getGyroBias(m2);
-            assertEquals(m1, m2);
-            assertEquals(estimator.getNumberOfProcessedSamples(), 0);
-            assertFalse(estimator.isRunning());
-            assertFalse(estimator.isFinished());
-            assertTrue(estimator.getExpectedKinematics().equals(expectedKinematics,
-                    ABSOLUTE_ERROR));
-            estimator.getExpectedKinematics(kinematics2);
-            assertTrue(expectedKinematics.equals(kinematics2, ABSOLUTE_ERROR));
-
-            // Force InvalidSourceAndDestinationFrameTypeException
-            estimator = null;
-            try {
-                estimator = new IMUBiasEstimator(ecefPosition1,
-                        new CoordinateTransformation(
-                                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME,
-                                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME),
-                        totalSamples, timeInterval, this);
-                fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-            } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
-            }
-
-            // Force IllegalArgumentException
-            try {
-                estimator = new IMUBiasEstimator(ecefPosition1, nedC,
-                        0, timeInterval, this);
-                fail("IllegalArgumentException expected but not thrown");
-            } catch (final IllegalArgumentException ignore) {
-            }
-            try {
-                estimator = new IMUBiasEstimator(ecefPosition1, nedC,
-                        totalSamples, new Time(-1.0, TimeUnit.SECOND),
-                        this);
-                fail("IllegalArgumentException expected but not thrown");
-            } catch (final IllegalArgumentException ignore) {
-            }
-            assertNull(estimator);
-
-            numValid++;
-            break;
-        }
-
-        assertTrue(numValid > 0);
-    }
-
-    @Test
-    public void testGetSetTotalSamples() throws LockedException {
-        final IMUBiasEstimator estimator = new IMUBiasEstimator();
-
-        // check default value
-        assertEquals(estimator.getTotalSamples(),
-                IMUBiasEstimator.DEFAULT_TOTAL_SAMPLES);
-
-        // set new value
-        estimator.setTotalSamples(1);
-
-        // check
-        assertEquals(estimator.getTotalSamples(), 1);
-
-        // Force IllegalArgumentException
-        try {
-            estimator.setTotalSamples(0);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
     }
 
     @Test
     public void testGetSetTimeInterval() throws LockedException {
-        final IMUBiasEstimator estimator = new IMUBiasEstimator();
+        final BodyKinematicsBiasEstimator estimator =
+                new BodyKinematicsBiasEstimator();
 
         // check default value
         assertEquals(estimator.getTimeInterval(),
-                IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, 0.0);
+                BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                0.0);
 
         // set new value
         estimator.setTimeInterval(1.0);
@@ -17877,13 +9930,15 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
     @Test
     public void testGetTimeIntervalAsTime() throws LockedException {
-        final IMUBiasEstimator estimator = new IMUBiasEstimator();
+        final BodyKinematicsBiasEstimator estimator =
+                new BodyKinematicsBiasEstimator();
 
         // check default value
         final Time time1 = estimator.getTimeIntervalAsTime();
 
         assertEquals(time1.getValue().doubleValue(),
-                IMUBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS, 0.0);
+                BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                0.0);
         assertEquals(time1.getUnit(), TimeUnit.SECOND);
 
         // set new value
@@ -17900,7 +9955,8 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
     @Test
     public void testGetSetEcefPosition() throws LockedException {
-        final IMUBiasEstimator estimator = new IMUBiasEstimator();
+        final BodyKinematicsBiasEstimator estimator =
+                new BodyKinematicsBiasEstimator();
 
         // check default value
         final ECEFPosition ecefPosition1 =
@@ -17932,7 +9988,8 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
     @Test
     public void testSetEcefPosition1() throws LockedException {
-        final IMUBiasEstimator estimator = new IMUBiasEstimator();
+        final BodyKinematicsBiasEstimator estimator =
+                new BodyKinematicsBiasEstimator();
 
         // check default value
         final ECEFPosition ecefPosition1 =
@@ -17967,7 +10024,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
     @Test
     public void testSetEcefPosition2() throws LockedException {
-        final IMUBiasEstimator estimator = new IMUBiasEstimator();
+        final BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator();
 
         // check default value
         final ECEFPosition ecefPosition1 =
@@ -18002,7 +10059,8 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
     @Test
     public void testSetEcefPosition3() throws LockedException {
-        final IMUBiasEstimator estimator = new IMUBiasEstimator();
+        final BodyKinematicsBiasEstimator estimator =
+                new BodyKinematicsBiasEstimator();
 
         // check default value
         final ECEFPosition ecefPosition1 =
@@ -18039,7 +10097,8 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
     @Test
     public void testGetEcefFrame() {
-        final IMUBiasEstimator estimator = new IMUBiasEstimator();
+        final BodyKinematicsBiasEstimator estimator =
+                new BodyKinematicsBiasEstimator();
 
         // check default value
         final NEDFrame nedFrame1 = new NEDFrame();
@@ -18054,7 +10113,8 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
     @Test
     public void testGetNedFrame() {
-        final IMUBiasEstimator estimator = new IMUBiasEstimator();
+        final BodyKinematicsBiasEstimator estimator =
+                new BodyKinematicsBiasEstimator();
 
         // check default value
         final NEDFrame nedFrame1 = new NEDFrame();
@@ -18067,7 +10127,8 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
     @Test
     public void testGetSetNedPosition() throws LockedException {
-        final IMUBiasEstimator estimator = new IMUBiasEstimator();
+        final BodyKinematicsBiasEstimator estimator =
+                new BodyKinematicsBiasEstimator();
 
         // check default value
         final NEDPosition nedPosition1 = estimator.getNedPosition();
@@ -18105,7 +10166,8 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
     @Test
     public void testSetNedPosition1() throws LockedException {
-        final IMUBiasEstimator estimator = new IMUBiasEstimator();
+        final BodyKinematicsBiasEstimator estimator =
+                new BodyKinematicsBiasEstimator();
 
         // check default value
         assertTrue(estimator.getNedPosition().equals(new NEDPosition(),
@@ -18141,7 +10203,8 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
     @Test
     public void testSetNedPosition2() throws LockedException {
-        final IMUBiasEstimator estimator = new IMUBiasEstimator();
+        final BodyKinematicsBiasEstimator estimator =
+                new BodyKinematicsBiasEstimator();
 
         // check default value
         assertTrue(estimator.getNedPosition().equals(new NEDPosition(),
@@ -18181,7 +10244,8 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
     @Test
     public void testSetNedPosition3() throws LockedException {
-        final IMUBiasEstimator estimator = new IMUBiasEstimator();
+        final BodyKinematicsBiasEstimator estimator =
+                new BodyKinematicsBiasEstimator();
 
         // check default value
         assertTrue(estimator.getNedPosition().equals(new NEDPosition(),
@@ -18220,7 +10284,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
     @Test
     public void testGetSetEcefC() throws InvalidSourceAndDestinationFrameTypeException, LockedException {
-        final IMUBiasEstimator estimator = new IMUBiasEstimator();
+        final BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator();
 
         // check default value
         final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
@@ -18261,7 +10325,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
     @Test
     public void testGetSetNedC() throws InvalidSourceAndDestinationFrameTypeException,
             LockedException {
-        final IMUBiasEstimator estimator = new IMUBiasEstimator();
+        final BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator();
 
         // check default value
         assertTrue(estimator.getNedC().equals(
@@ -18308,7 +10372,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
     @Test
     public void testSetNedPositionAndNedOrientation1()
             throws InvalidSourceAndDestinationFrameTypeException, LockedException {
-        final IMUBiasEstimator estimator = new IMUBiasEstimator();
+        final BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator();
 
         // check default values
         assertTrue(estimator.getNedPosition().equals(new NEDPosition(),
@@ -18364,7 +10428,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
     @Test
     public void testSetNedPositionAndNedOrientation2()
             throws InvalidSourceAndDestinationFrameTypeException, LockedException {
-        final IMUBiasEstimator estimator = new IMUBiasEstimator();
+        final BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator();
 
         // check default values
         assertTrue(estimator.getNedPosition().equals(new NEDPosition(),
@@ -18421,7 +10485,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
     @Test
     public void testSetNedPositionAndNedOrientation3()
             throws InvalidSourceAndDestinationFrameTypeException, LockedException {
-        final IMUBiasEstimator estimator = new IMUBiasEstimator();
+        final BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator();
 
         // check default values
         assertTrue(estimator.getNedPosition().equals(new NEDPosition(),
@@ -18483,7 +10547,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
     @Test
     public void testSetNedPositionAndNedOrientation4()
             throws InvalidSourceAndDestinationFrameTypeException, LockedException {
-        final IMUBiasEstimator estimator = new IMUBiasEstimator();
+        final BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator();
 
         // check default values
         assertTrue(estimator.getNedPosition().equals(new NEDPosition(),
@@ -18546,7 +10610,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
     @Test
     public void testSetEcefPositionAndEcefOrientation1()
             throws InvalidSourceAndDestinationFrameTypeException, LockedException {
-        final IMUBiasEstimator estimator = new IMUBiasEstimator();
+        final BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator();
 
         // check default values
         final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
@@ -18622,7 +10686,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
     @Test
     public void testSetEcefPositionAndEcefOrientation2()
             throws InvalidSourceAndDestinationFrameTypeException, LockedException {
-        final IMUBiasEstimator estimator = new IMUBiasEstimator();
+        final BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator();
 
         // check default values
         final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
@@ -18701,7 +10765,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
     @Test
     public void testSetEcefPositionAndEcefOrientation3()
             throws InvalidSourceAndDestinationFrameTypeException, LockedException {
-        final IMUBiasEstimator estimator = new IMUBiasEstimator();
+        final BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator();
 
         // check default values
         final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
@@ -18780,7 +10844,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
     @Test
     public void testSetEcefPositionAndEcefOrientation4()
             throws InvalidSourceAndDestinationFrameTypeException, LockedException {
-        final IMUBiasEstimator estimator = new IMUBiasEstimator();
+        final BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator();
 
         // check default values
         final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter
@@ -18859,7 +10923,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
     @Test
     public void testSetNedPositionAndEcefOrientation1() throws InvalidSourceAndDestinationFrameTypeException, LockedException {
-        final IMUBiasEstimator estimator = new IMUBiasEstimator();
+        final BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator();
 
         // check default values
         final NEDFrame nedFrame1 = new NEDFrame();
@@ -18932,7 +10996,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
     @Test
     public void testSetNedPositionAndEcefOrientation2()
             throws InvalidSourceAndDestinationFrameTypeException, LockedException {
-        final IMUBiasEstimator estimator = new IMUBiasEstimator();
+        final BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator();
 
         // check default values
         final NEDFrame nedFrame1 = new NEDFrame();
@@ -19006,7 +11070,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
     @Test
     public void testSetNedPositionAndEcefOrientation3()
             throws InvalidSourceAndDestinationFrameTypeException, LockedException {
-        final IMUBiasEstimator estimator = new IMUBiasEstimator();
+        final BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator();
 
         // check default values
         final NEDFrame nedFrame1 = new NEDFrame();
@@ -19085,7 +11149,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
     @Test
     public void testSetNedPositionAndEcefOrientation4()
             throws InvalidSourceAndDestinationFrameTypeException, LockedException {
-        final IMUBiasEstimator estimator = new IMUBiasEstimator();
+        final BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator();
 
         // check default values
         final NEDFrame nedFrame1 = new NEDFrame();
@@ -19164,7 +11228,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
     @Test
     public void testSetEcefPositionAndNedOrientation1()
             throws InvalidSourceAndDestinationFrameTypeException, LockedException {
-        final IMUBiasEstimator estimator = new IMUBiasEstimator();
+        final BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator();
 
         // check default values
         final NEDFrame nedFrame1 = new NEDFrame();
@@ -19251,7 +11315,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             throws InvalidSourceAndDestinationFrameTypeException, LockedException {
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
-            final IMUBiasEstimator estimator = new IMUBiasEstimator();
+            final BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator();
 
             // check default values
             final NEDFrame nedFrame1 = new NEDFrame();
@@ -19348,7 +11412,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
     @Test
     public void testSetEcefPositionAndNedOrientation3()
             throws InvalidSourceAndDestinationFrameTypeException, LockedException {
-        final IMUBiasEstimator estimator = new IMUBiasEstimator();
+        final BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator();
 
         // check default values
         final NEDFrame nedFrame1 = new NEDFrame();
@@ -19437,7 +11501,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
     @Test
     public void testSetEcefPositionAndNedOrientation4()
             throws InvalidSourceAndDestinationFrameTypeException, LockedException {
-        final IMUBiasEstimator estimator = new IMUBiasEstimator();
+        final BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator();
 
         // check default values
         final NEDFrame nedFrame1 = new NEDFrame();
@@ -19515,7 +11579,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
     @Test
     public void testGetSetListener() throws LockedException {
-        final IMUBiasEstimator estimator = new IMUBiasEstimator();
+        final BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator();
 
         // check default value
         assertNull(estimator.getListener());
@@ -19529,7 +11593,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
     @Test
     public void testGetAccelerometerBias() throws WrongSizeException {
-        final IMUBiasEstimator estimator = new IMUBiasEstimator();
+        final BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator();
 
         final Matrix accelerometerBias1 = new Matrix(3, 1);
         final Matrix accelerometerBias2 = estimator.getAccelerometerBias();
@@ -19554,7 +11618,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
     @Test
     public void testGetGyroBias() throws WrongSizeException {
-        final IMUBiasEstimator estimator = new IMUBiasEstimator();
+        final BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator();
 
         final Matrix gyroBias1 = new Matrix(3, 1);
         final Matrix gyroBias2 = estimator.getGyroBias();
@@ -19620,7 +11684,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 .getCoordinateTransformation();
         final ECEFPosition ecefPosition = ecefFrame.getECEFPosition();
 
-        final IMUBiasEstimator estimator = new IMUBiasEstimator(nedPosition, nedC,
+        final BodyKinematicsBiasEstimator estimator = new BodyKinematicsBiasEstimator(nedPosition, nedC,
                 this);
 
         // Expected true kinematics for a static body at provided location and
@@ -19633,17 +11697,14 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         reset();
         assertEquals(mStart, 0);
         assertEquals(mBodyKinematicsAdded, 0);
-        assertEquals(mFinish, 0);
         assertEquals(mReset, 0);
-        assertFalse(estimator.isFinished());
         assertEquals(estimator.getNumberOfProcessedSamples(), 0);
         assertNull(estimator.getLastBodyKinematics());
         assertFalse(estimator.isRunning());
 
         final BodyKinematics kinematics = new BodyKinematics();
-        final int totalSamples = estimator.getTotalSamples();
-        BodyKinematics lastKinematics = new BodyKinematics();
-        for (int i = 0; i < totalSamples; i++) {
+        final BodyKinematics lastKinematics = new BodyKinematics();
+        for (int i = 0; i < N_SAMPLES; i++) {
             if (estimator.getLastBodyKinematics(lastKinematics)) {
                 assertEquals(estimator.getLastBodyKinematics(), lastKinematics);
                 assertEquals(lastKinematics, kinematics);
@@ -19652,7 +11713,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             BodyKinematicsGenerator.generate(timeInterval, trueKinematics,
                     errors, random, kinematics);
 
-            assertTrue(estimator.addBodyKinematics(kinematics));
+            estimator.addBodyKinematics(kinematics);
 
             assertTrue(estimator.getLastBodyKinematics(lastKinematics));
             assertEquals(lastKinematics, kinematics);
@@ -19660,12 +11721,10 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertFalse(estimator.isRunning());
         }
 
-        assertEquals(estimator.getNumberOfProcessedSamples(), totalSamples);
-        assertTrue(estimator.isFinished());
+        assertEquals(estimator.getNumberOfProcessedSamples(), N_SAMPLES);
         assertFalse(estimator.isRunning());
         assertEquals(mStart, 1);
-        assertEquals(mBodyKinematicsAdded, totalSamples);
-        assertEquals(mFinish, 1);
+        assertEquals(mBodyKinematicsAdded, N_SAMPLES);
         assertEquals(mReset, 0);
 
         final double biasFx = estimator.getBiasFx();
@@ -19746,6 +11805,24 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
         assertEquals(biasAngularRateZ1, biasAngularRateZ2);
         assertEquals(biasAngularRateZ1, biasAngularRateZ3);
+
+        final AccelerationTriad biasF1 = estimator.getBiasF();
+        assertEquals(biasF1.getValueX(), biasFx, 0.0);
+        assertEquals(biasF1.getValueY(), biasFy, 0.0);
+        assertEquals(biasF1.getValueZ(), biasFz, 0.0);
+        assertEquals(biasF1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad biasF2 = new AccelerationTriad();
+        estimator.getBiasF(biasF2);
+        assertEquals(biasF1, biasF2);
+
+        final AngularSpeedTriad biasAngularRate1 = estimator.getBiasAngularRate();
+        assertEquals(biasAngularRate1.getValueX(), biasAngularRateX, 0.0);
+        assertEquals(biasAngularRate1.getValueY(), biasAngularRateY, 0.0);
+        assertEquals(biasAngularRate1.getValueZ(), biasAngularRateZ, 0.0);
+        assertEquals(biasAngularRate1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasAngularRate2 = new AngularSpeedTriad();
+        estimator.getBiasAngularRate(biasAngularRate2);
+        assertEquals(biasAngularRate1, biasAngularRate2);
 
         final BodyKinematics biasKinematics1 = estimator.getBiasesAsBodyKinematics();
         final BodyKinematics biasKinematics2 = new BodyKinematics();
@@ -19828,6 +11905,15 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(standardDeviationFz1, standardDeviationFz2);
         assertEquals(standardDeviationFz1, standardDeviationFz3);
 
+        final AccelerationTriad standardDeviationF1 = estimator.getStandardDeviationF();
+        assertEquals(standardDeviationF1.getValueX(), standardDeviationFx, 0.0);
+        assertEquals(standardDeviationF1.getValueY(), standardDeviationFy, 0.0);
+        assertEquals(standardDeviationF1.getValueZ(), standardDeviationFz, 0.0);
+        assertEquals(standardDeviationF1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad standardDeviationF2 = new AccelerationTriad();
+        estimator.getStandardDeviationF(standardDeviationF2);
+        assertEquals(standardDeviationF1, standardDeviationF2);
+
         final Acceleration avgF1 = estimator
                 .getAverageAccelerometerStandardDeviationAsAcceleration();
         final Acceleration avgF2 = new Acceleration(0.0,
@@ -19873,6 +11959,15 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
         assertEquals(standardDeviationAngularRateZ1, standardDeviationAngularRateZ2);
         assertEquals(standardDeviationAngularRateZ1, standardDeviationAngularRateZ3);
+
+        final AngularSpeedTriad standardDeviationAngularRate1 = estimator.getStandardDeviationAngularRate();
+        assertEquals(standardDeviationAngularRate1.getValueX(), standardDeviationAngularRateX, 0.0);
+        assertEquals(standardDeviationAngularRate1.getValueY(), standardDeviationAngularRateY, 0.0);
+        assertEquals(standardDeviationAngularRate1.getValueZ(), standardDeviationAngularRateZ, 0.0);
+        assertEquals(standardDeviationAngularRate1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad standardDeviationAngularRate2 = new AngularSpeedTriad();
+        estimator.getStandardDeviationAngularRate(standardDeviationAngularRate2);
+        assertEquals(standardDeviationAngularRate1, standardDeviationAngularRate2);
 
         final AngularSpeed avgAngularRate1 = estimator
                 .getAverageGyroscopeStandardDeviationAsAngularSpeed();
@@ -19985,9 +12080,8 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(gyroBias1, gyroBias2);
         assertEquals(gyroBias1, gyroBias3);
 
-        assertEquals(estimator.getNumberOfProcessedSamples(), totalSamples);
+        assertEquals(estimator.getNumberOfProcessedSamples(), N_SAMPLES);
         assertFalse(estimator.isRunning());
-        assertTrue(estimator.isFinished());
 
         final BodyKinematics expectedKinematics1 = estimator.getExpectedKinematics();
         final BodyKinematics expectedKinematics2 = new BodyKinematics();
@@ -19999,22 +12093,22 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         // reset
         estimator.reset();
 
-        assertFalse(estimator.isFinished());
         assertEquals(estimator.getNumberOfProcessedSamples(), 0);
         assertNull(estimator.getLastBodyKinematics());
         assertFalse(estimator.getLastBodyKinematics(null));
         assertFalse(estimator.isRunning());
         assertEquals(mReset, 1);
     }
-
+    
     @Override
-    public void onStart(IMUBiasEstimator estimator) {
+    public void onStart(final BodyKinematicsBiasEstimator estimator) {
         checkLocked(estimator);
         mStart++;
     }
 
     @Override
-    public void onBodyKinematicsAdded(IMUBiasEstimator estimator) {
+    public void onBodyKinematicsAdded(
+            final BodyKinematicsBiasEstimator estimator) {
         if (mBodyKinematicsAdded == 0) {
             checkLocked(estimator);
         }
@@ -20022,14 +12116,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
     }
 
     @Override
-    public void onFinish(IMUBiasEstimator estimator) {
-        assertFalse(estimator.isRunning());
-        assertTrue(estimator.isFinished());
-        mFinish++;
-    }
-
-    @Override
-    public void onReset(IMUBiasEstimator estimator) {
+    public void onReset(final BodyKinematicsBiasEstimator estimator) {
         checkLocked(estimator);
         mReset++;
     }
@@ -20037,11 +12124,10 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
     private void reset() {
         mStart = 0;
         mBodyKinematicsAdded = 0;
-        mFinish = 0;
         mReset = 0;
     }
 
-    private void checkLocked(final IMUBiasEstimator estimator) {
+    private void checkLocked(final BodyKinematicsBiasEstimator estimator) {
         final ECEFPosition ecefPosition = new ECEFPosition();
         final Distance distance = new Distance(0.0, DistanceUnit.METER);
         final Point3D point = Point3D.create();
@@ -20049,11 +12135,6 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         final Angle angle = new Angle(0.0, AngleUnit.RADIANS);
 
         assertTrue(estimator.isRunning());
-        try {
-            estimator.setTotalSamples(0);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
         try {
             estimator.setTimeInterval(0.0);
             fail("LockedException expected but not thrown");

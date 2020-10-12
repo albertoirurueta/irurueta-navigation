@@ -16,7 +16,7 @@
 package com.irurueta.navigation.inertial.calibration.noise;
 
 import com.irurueta.navigation.inertial.calibration.AngularSpeedTriad;
-import com.irurueta.navigation.inertial.calibration.IMUTimeIntervalEstimator;
+import com.irurueta.navigation.inertial.calibration.TimeIntervalEstimator;
 import com.irurueta.units.AngularSpeed;
 import com.irurueta.units.AngularSpeedUnit;
 
@@ -28,7 +28,7 @@ import com.irurueta.units.AngularSpeedUnit;
  * To compute PSD's, this estimator assumes that gyroscope samples are
  * obtained at a constant provided rate equal to {@link #getTimeInterval()} seconds.
  * If not available, gyroscope sampling rate average can be estimated using
- * {@link IMUTimeIntervalEstimator}.
+ * {@link TimeIntervalEstimator}.
  * This estimator does NOT require the knowledge of current location and body
  * orientation.
  * Because body location and orientation is not known, estimated average values

@@ -16,5 +16,8 @@
 
 /**
  * Contains classes related to noise level estimation.
+ * Noise level estimation can be used by a static interval detector
+ * to determine periods of time when body where IMU is attached is static
+ * and when it is moving.
  */
 package com.irurueta.navigation.inertial.calibration.noise;

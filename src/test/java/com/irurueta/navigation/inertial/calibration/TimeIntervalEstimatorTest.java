@@ -25,7 +25,7 @@ import java.util.Random;
 
 import static org.junit.Assert.*;
 
-public class IMUTimeIntervalEstimatorTest implements IMUTimeIntervalEstimatorListener {
+public class TimeIntervalEstimatorTest implements TimeIntervalEstimatorListener {
 
     private static final double TIME_INTERVAL_SECONDS = 0.02;
     private static final double TIME_INTERVAL_STD = 1e-3;
@@ -42,11 +42,11 @@ public class IMUTimeIntervalEstimatorTest implements IMUTimeIntervalEstimatorLis
     @Test
     public void testConstructor() {
         // test empty constructor
-        IMUTimeIntervalEstimator estimator = new IMUTimeIntervalEstimator();
+        TimeIntervalEstimator estimator = new TimeIntervalEstimator();
 
         // check default values
         assertEquals(estimator.getTotalSamples(),
-                IMUTimeIntervalEstimator.DEFAULT_TOTAL_SAMPLES);
+                TimeIntervalEstimator.DEFAULT_TOTAL_SAMPLES);
         assertNull(estimator.getListener());
         assertNull(estimator.getLastTimestamp());
         assertNull(estimator.getLastTimestampAsTime());
@@ -59,11 +59,11 @@ public class IMUTimeIntervalEstimatorTest implements IMUTimeIntervalEstimatorLis
 
 
         // test constructor with listener
-        estimator = new IMUTimeIntervalEstimator(this);
+        estimator = new TimeIntervalEstimator(this);
 
         // check default values
         assertEquals(estimator.getTotalSamples(),
-                IMUTimeIntervalEstimator.DEFAULT_TOTAL_SAMPLES);
+                TimeIntervalEstimator.DEFAULT_TOTAL_SAMPLES);
         assertSame(estimator.getListener(), this);
         assertNull(estimator.getLastTimestamp());
         assertNull(estimator.getLastTimestampAsTime());
@@ -76,7 +76,7 @@ public class IMUTimeIntervalEstimatorTest implements IMUTimeIntervalEstimatorLis
 
 
         // test constructor with total samples
-        estimator = new IMUTimeIntervalEstimator(1);
+        estimator = new TimeIntervalEstimator(1);
 
         // check default values
         assertEquals(estimator.getTotalSamples(), 1);
@@ -93,7 +93,7 @@ public class IMUTimeIntervalEstimatorTest implements IMUTimeIntervalEstimatorLis
         // Force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new IMUTimeIntervalEstimator(0);
+            estimator = new TimeIntervalEstimator(0);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -101,7 +101,7 @@ public class IMUTimeIntervalEstimatorTest implements IMUTimeIntervalEstimatorLis
 
 
         // test constructor with total samples and listener
-        estimator = new IMUTimeIntervalEstimator(1, this);
+        estimator = new TimeIntervalEstimator(1, this);
 
         // check default values
         assertEquals(estimator.getTotalSamples(), 1);
@@ -118,7 +118,7 @@ public class IMUTimeIntervalEstimatorTest implements IMUTimeIntervalEstimatorLis
         // Force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new IMUTimeIntervalEstimator(0, this);
+            estimator = new TimeIntervalEstimator(0, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -127,11 +127,11 @@ public class IMUTimeIntervalEstimatorTest implements IMUTimeIntervalEstimatorLis
 
     @Test
     public void testGetSetTotalSamples() throws LockedException {
-        final IMUTimeIntervalEstimator estimator = new IMUTimeIntervalEstimator();
+        final TimeIntervalEstimator estimator = new TimeIntervalEstimator();
 
         // check default value
         assertEquals(estimator.getTotalSamples(),
-                IMUTimeIntervalEstimator.DEFAULT_TOTAL_SAMPLES);
+                TimeIntervalEstimator.DEFAULT_TOTAL_SAMPLES);
 
         // set new value
         estimator.setTotalSamples(1);
@@ -149,7 +149,7 @@ public class IMUTimeIntervalEstimatorTest implements IMUTimeIntervalEstimatorLis
 
     @Test
     public void testGetSetListener() throws LockedException {
-        final IMUTimeIntervalEstimator estimator = new IMUTimeIntervalEstimator();
+        final TimeIntervalEstimator estimator = new TimeIntervalEstimator();
 
         // check default value
         assertNull(estimator.getListener());
@@ -163,8 +163,8 @@ public class IMUTimeIntervalEstimatorTest implements IMUTimeIntervalEstimatorLis
 
     @Test
     public void testAddTimestampAndReset1() throws LockedException {
-        final IMUTimeIntervalEstimator estimator =
-                new IMUTimeIntervalEstimator(this);
+        final TimeIntervalEstimator estimator =
+                new TimeIntervalEstimator(this);
 
         reset();
         assertEquals(mStart, 0);
@@ -262,8 +262,8 @@ public class IMUTimeIntervalEstimatorTest implements IMUTimeIntervalEstimatorLis
 
     @Test
     public void testAddTimestampAndReset2() throws LockedException {
-        final IMUTimeIntervalEstimator estimator =
-                new IMUTimeIntervalEstimator(this);
+        final TimeIntervalEstimator estimator =
+                new TimeIntervalEstimator(this);
 
         reset();
         assertEquals(mStart, 0);
@@ -360,26 +360,26 @@ public class IMUTimeIntervalEstimatorTest implements IMUTimeIntervalEstimatorLis
     }
 
     @Override
-    public void onStart(IMUTimeIntervalEstimator estimator) {
+    public void onStart(TimeIntervalEstimator estimator) {
         checkLocked(estimator);
         mStart++;
     }
 
     @Override
-    public void onTimestampAdded(IMUTimeIntervalEstimator estimator) {
+    public void onTimestampAdded(TimeIntervalEstimator estimator) {
         checkLocked(estimator);
         mTimestampAdded++;
     }
 
     @Override
-    public void onFinish(IMUTimeIntervalEstimator estimator) {
+    public void onFinish(TimeIntervalEstimator estimator) {
         assertFalse(estimator.isRunning());
         assertTrue(estimator.isFinished());
         mFinish++;
     }
 
     @Override
-    public void onReset(IMUTimeIntervalEstimator estimator) {
+    public void onReset(TimeIntervalEstimator estimator) {
         checkLocked(estimator);
         mReset++;
     }
@@ -391,7 +391,7 @@ public class IMUTimeIntervalEstimatorTest implements IMUTimeIntervalEstimatorLis
         mReset = 0;
     }
 
-    private void checkLocked(final IMUTimeIntervalEstimator estimator) {
+    private void checkLocked(final TimeIntervalEstimator estimator) {
         assertTrue(estimator.isRunning());
         try {
             estimator.setTotalSamples(1);

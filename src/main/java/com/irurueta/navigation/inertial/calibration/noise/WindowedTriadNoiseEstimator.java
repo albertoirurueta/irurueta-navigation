@@ -16,7 +16,7 @@
 package com.irurueta.navigation.inertial.calibration.noise;
 
 import com.irurueta.navigation.LockedException;
-import com.irurueta.navigation.inertial.calibration.IMUTimeIntervalEstimator;
+import com.irurueta.navigation.inertial.calibration.TimeIntervalEstimator;
 import com.irurueta.navigation.inertial.calibration.Triad;
 import com.irurueta.units.Measurement;
 import com.irurueta.units.Time;
@@ -33,7 +33,7 @@ import java.util.LinkedList;
  * To compute PSD's, this estimator assumes that measurement samples are obtained
  * at a constant provided rate equal to {@link #getTimeInterval()} seconds.
  * If not available, accelerometer sampling rate average can be estimated using
- * {@link IMUTimeIntervalEstimator}.
+ * {@link TimeIntervalEstimator}.
  * This estimator does NOT require the knowledge of current location and body
  * orientation.
  * Because body location and orientation is not known, estimated average values

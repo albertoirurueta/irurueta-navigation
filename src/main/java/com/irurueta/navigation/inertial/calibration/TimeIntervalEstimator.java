@@ -24,7 +24,7 @@ import com.irurueta.units.TimeUnit;
 /**
  * Estimates average time interval between processed samples.
  */
-public class IMUTimeIntervalEstimator {
+public class TimeIntervalEstimator {
 
     /**
      * Default total samples to be processed.
@@ -39,7 +39,7 @@ public class IMUTimeIntervalEstimator {
     /**
      * Listener to handle events raised by this estimator.
      */
-    private IMUTimeIntervalEstimatorListener mListener;
+    private TimeIntervalEstimatorListener mListener;
 
     /**
      * Last provided timestamp expressed in seconds (s).
@@ -76,7 +76,7 @@ public class IMUTimeIntervalEstimator {
     /**
      * Constructor.
      */
-    public IMUTimeIntervalEstimator() {
+    public TimeIntervalEstimator() {
     }
 
     /**
@@ -84,7 +84,7 @@ public class IMUTimeIntervalEstimator {
      *
      * @param listener listener to handle events raised by this estimator.
      */
-    public IMUTimeIntervalEstimator(final IMUTimeIntervalEstimatorListener listener) {
+    public TimeIntervalEstimator(final TimeIntervalEstimatorListener listener) {
         mListener = listener;
     }
 
@@ -94,7 +94,7 @@ public class IMUTimeIntervalEstimator {
      * @param totalSamples total samples to be processed to finish estimation.
      * @throws IllegalArgumentException if provided total samples is zero or negative.
      */
-    public IMUTimeIntervalEstimator(final int totalSamples) {
+    public TimeIntervalEstimator(final int totalSamples) {
         if (totalSamples <= 0) {
             throw new IllegalArgumentException();
         }
@@ -109,8 +109,8 @@ public class IMUTimeIntervalEstimator {
      * @param listener     listener to handle events raised by this estimator.
      * @throws IllegalArgumentException if provided total samples is zero or negative.
      */
-    public IMUTimeIntervalEstimator(final int totalSamples,
-                                    final IMUTimeIntervalEstimatorListener listener) {
+    public TimeIntervalEstimator(final int totalSamples,
+                                 final TimeIntervalEstimatorListener listener) {
         this(totalSamples);
         mListener = listener;
     }
@@ -147,7 +147,7 @@ public class IMUTimeIntervalEstimator {
      *
      * @return listener to handle events raised by this estimator.
      */
-    public IMUTimeIntervalEstimatorListener getListener() {
+    public TimeIntervalEstimatorListener getListener() {
         return mListener;
     }
 
@@ -157,7 +157,7 @@ public class IMUTimeIntervalEstimator {
      * @param listener listener to handle events raised by this estimator.
      * @throws LockedException if this estimator is running.
      */
-    public void setListener(final IMUTimeIntervalEstimatorListener listener)
+    public void setListener(final TimeIntervalEstimatorListener listener)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();

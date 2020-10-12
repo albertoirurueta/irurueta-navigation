@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.irurueta.navigation.inertial.calibration;
+package com.irurueta.navigation.inertial.calibration.bias;
 
 import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.WrongSizeException;
@@ -28,6 +28,8 @@ import com.irurueta.navigation.frames.converters.NEDtoECEFFrameConverter;
 import com.irurueta.navigation.inertial.BodyKinematics;
 import com.irurueta.navigation.inertial.ECEFPosition;
 import com.irurueta.navigation.inertial.NEDPosition;
+import com.irurueta.navigation.inertial.calibration.AccelerationTriad;
+import com.irurueta.navigation.inertial.calibration.AngularSpeedTriad;
 import com.irurueta.navigation.inertial.estimators.ECEFKinematicsEstimator;
 import com.irurueta.units.Acceleration;
 import com.irurueta.units.AccelerationUnit;
@@ -40,38 +42,58 @@ import com.irurueta.units.TimeConverter;
 import com.irurueta.units.TimeUnit;
 
 /**
- * This class estimates IMU accelerometer and gyroscope biases and noise PSD's by
- * averaging all provided samples when body position and orientation is known.
- * <p>
- * This estimator must be used when the body where the IMU is attached remains static
- * on the same position with zero velocity while capturing data.
- * <p>
- * To compute PSD's, this estimator assumes that IMU samples are obtained at a constant
- * provided rate equal to {@link #getTimeInterval()} seconds.
- * If not available, IMU sampling rate average can be estimated using
- * {@link IMUTimeIntervalEstimator}.
- * <p>
+ * Approximately estimates accelerometer and gyroscope biases and noise PSD's
+ * by averaging all provided samples when body position and orientation is known
+ * while assuming that any cross coupling errors can be neglected.
+ *
+ * This estimator must be used when the body where the accelerometer and gyroscope
+ * is attached remains static on the same position with zero velocity and no rotation
+ * speed while capturing data.
+ *
+ * To compute PSD's this estimator assumes that accelerometer samples are obtained
+ * at a constant provided rate equal to {@link #getTimeInterval()} seconds.
+ * If not available, accelerometer and gyroscope sampling rate average can be
+ * estimated using {@link com.irurueta.navigation.inertial.calibration.TimeIntervalEstimator}.
+ *
  * Notice that in order to compute accelerometer and gyroscope biases, body position
  * and orientation must be known to account for gravity and Earth rotation effects.
- * If only noise PSD's levels are required  can be used
- * instead, if body position and orientation is not available.
+ *
+ * Even though this estimator obtains approximate bias values, the obtained
+ * result can be used to initialize some non-linear calibrators to obtain
+ * more accurate results. Such calibrators are:
+ * - {@link com.irurueta.navigation.inertial.calibration.accelerometer.KnownFrameAccelerometerNonLinearLeastSquaresCalibrator}
+ * - {@link com.irurueta.navigation.inertial.calibration.accelerometer.KnownGravityNormAccelerometerCalibrator}
+ * - {@link com.irurueta.navigation.inertial.calibration.accelerometer.KnownPositionAccelerometerCalibrator}
+ * - {@link com.irurueta.navigation.inertial.calibration.accelerometer.RobustKnownFrameAccelerometerCalibrator} and
+ * any of its subclasses.
+ * - {@link com.irurueta.navigation.inertial.calibration.accelerometer.RobustKnownGravityNormAccelerometerCalibrator}
+ * and any of its subclasses.
+ * - {@link com.irurueta.navigation.inertial.calibration.accelerometer.RobustKnownPositionAccelerometerCalibrator} and
+ * any of its subclasses.
+ * - {@link com.irurueta.navigation.inertial.calibration.gyroscope.KnownBiasAndFrameGyroscopeLinearLeastSquaresCalibrator}
+ * - {@link com.irurueta.navigation.inertial.calibration.gyroscope.KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator}
+ * - {@link com.irurueta.navigation.inertial.calibration.gyroscope.KnownBiasEasyGyroscopeCalibrator}
+ * - {@link com.irurueta.navigation.inertial.calibration.gyroscope.KnownBiasTurntableGyroscopeCalibrator}
+ * - {@link com.irurueta.navigation.inertial.calibration.gyroscope.RobustKnownBiasAndFrameGyroscopeCalibrator} and any
+ * of its subclasses.
+ * - {@link com.irurueta.navigation.inertial.calibration.gyroscope.RobustKnownBiasEasyGyroscopeCalibrator} and any of
+ * its subclasses.
+ * - {@link com.irurueta.navigation.inertial.calibration.gyroscope.RobustKnownBiasTurntableGyroscopeCalibrator} and any
+ * of its subclasses.
+ *
+ * Even though this estimator can compute noise PSD's, if only noise PSD's levels
+ * are required, estimators in {@link com.irurueta.navigation.inertial.calibration.noise} package should
+ * be used instead.
+ *
+ * This estimator does NOT compute average bias values over a period of time, it only
+ * computes accumulated averages.
  */
-public class IMUBiasEstimator {
+public class BodyKinematicsBiasEstimator {
 
     /**
-     * Default total samples to be processed.
-     */
-    public static final int DEFAULT_TOTAL_SAMPLES = 100000;
-
-    /**
-     * Default time interval between body kinematics samples expressed in seconds (s).
+     * Default time interval between accelerometer samples expressed in seconds (s).
      */
     public static final double DEFAULT_TIME_INTERVAL_SECONDS = 0.02;
-
-    /**
-     * Total samples to be processed to finish estimation.
-     */
-    private int mTotalSamples = DEFAULT_TOTAL_SAMPLES;
 
     /**
      * Time interval expressed in seconds (s) between body kinematics samples.
@@ -86,12 +108,12 @@ public class IMUBiasEstimator {
      * pith = 0, yaw = 0), which for Android devices it means that the device is flat
      * on a horizontal surface with the screen facing down.
      */
-    private ECEFFrame mFrame;
+    private final ECEFFrame mFrame;
 
     /**
      * Listener to handle events raised by this estimator.
      */
-    private IMUBiasEstimatorListener mListener;
+    private BodyKinematicsBiasEstimatorListener mListener;
 
     /**
      * Last provided body kinematics values.
@@ -176,7 +198,7 @@ public class IMUBiasEstimator {
     private int mNumberOfProcessedSamples;
 
     /**
-     * Number of processed timestamp samples plus one.
+     * Number of processed body kinematics samples plus one.
      */
     private int mNumberOfProcessedSamplesPlusOne = 1;
 
@@ -201,7 +223,7 @@ public class IMUBiasEstimator {
      * (roll = 0, pith = 0, yaw = 0), which for Android devices it means that the
      * device is flat on a horizontal surface with the screen facing down.
      */
-    public IMUBiasEstimator() {
+    public BodyKinematicsBiasEstimator() {
         mFrame = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(new NEDFrame());
         rebuildExpectedKinematics();
     }
@@ -219,7 +241,7 @@ public class IMUBiasEstimator {
      *                                                       from body to local
      *                                                       navigation coordinates.
      */
-    public IMUBiasEstimator(final CoordinateTransformation nedC)
+    public BodyKinematicsBiasEstimator(final CoordinateTransformation nedC)
             throws InvalidSourceAndDestinationFrameTypeException {
         mFrame = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(
                 new NEDFrame(nedC));
@@ -237,7 +259,7 @@ public class IMUBiasEstimator {
      * @param longitude longitude expressed in radians (rad).
      * @param height    height expressed in meters (m).
      */
-    public IMUBiasEstimator(
+    public BodyKinematicsBiasEstimator(
             final double latitude, final double longitude, final double height) {
         mFrame = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(
                 new NEDFrame(latitude, longitude, height));
@@ -255,7 +277,7 @@ public class IMUBiasEstimator {
      * @param longitude longitude.
      * @param height    height expressed in meters (m).
      */
-    public IMUBiasEstimator(
+    public BodyKinematicsBiasEstimator(
             final Angle latitude, final Angle longitude, final double height) {
         mFrame = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(
                 new NEDFrame(latitude, longitude, height));
@@ -273,7 +295,7 @@ public class IMUBiasEstimator {
      * @param longitude longitude.
      * @param height    height.
      */
-    public IMUBiasEstimator(
+    public BodyKinematicsBiasEstimator(
             final Angle latitude, final Angle longitude, final Distance height) {
         mFrame = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(
                 new NEDFrame(latitude, longitude, height));
@@ -292,7 +314,7 @@ public class IMUBiasEstimator {
      *                                                       from body to local
      *                                                       navigation coordinates.
      */
-    public IMUBiasEstimator(
+    public BodyKinematicsBiasEstimator(
             final NEDPosition position, final CoordinateTransformation nedC)
             throws InvalidSourceAndDestinationFrameTypeException {
         mFrame = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(
@@ -312,7 +334,7 @@ public class IMUBiasEstimator {
      *                                                       from body to local
      *                                                       navigation coordinates.
      */
-    public IMUBiasEstimator(
+    public BodyKinematicsBiasEstimator(
             final ECEFPosition position, final CoordinateTransformation nedC)
             throws InvalidSourceAndDestinationFrameTypeException {
         mFrame = new ECEFFrame(position);
@@ -332,7 +354,7 @@ public class IMUBiasEstimator {
      *
      * @param listener listener to handle events raised by this estimator.
      */
-    public IMUBiasEstimator(final IMUBiasEstimatorListener listener) {
+    public BodyKinematicsBiasEstimator(final BodyKinematicsBiasEstimatorListener listener) {
         this();
         mListener = listener;
     }
@@ -351,9 +373,9 @@ public class IMUBiasEstimator {
      *                                                       from body to local
      *                                                       navigation coordinates.
      */
-    public IMUBiasEstimator(
+    public BodyKinematicsBiasEstimator(
             final CoordinateTransformation nedC,
-            final IMUBiasEstimatorListener listener)
+            final BodyKinematicsBiasEstimatorListener listener)
             throws InvalidSourceAndDestinationFrameTypeException {
         this(nedC);
         mListener = listener;
@@ -371,9 +393,9 @@ public class IMUBiasEstimator {
      * @param height    height expressed in meters (m).
      * @param listener  listener to handle events raised by this estimator.
      */
-    public IMUBiasEstimator(
+    public BodyKinematicsBiasEstimator(
             final double latitude, final double longitude, final double height,
-            final IMUBiasEstimatorListener listener) {
+            final BodyKinematicsBiasEstimatorListener listener) {
         this(latitude, longitude, height);
         mListener = listener;
     }
@@ -390,9 +412,9 @@ public class IMUBiasEstimator {
      * @param height    height expressed in meters (m).
      * @param listener  listener to handle events raised by this estimator.
      */
-    public IMUBiasEstimator(
+    public BodyKinematicsBiasEstimator(
             final Angle latitude, final Angle longitude, final double height,
-            final IMUBiasEstimatorListener listener) {
+            final BodyKinematicsBiasEstimatorListener listener) {
         this(latitude, longitude, height);
         mListener = listener;
     }
@@ -409,9 +431,9 @@ public class IMUBiasEstimator {
      * @param height    height.
      * @param listener  listener to handle events raised by this estimator.
      */
-    public IMUBiasEstimator(
+    public BodyKinematicsBiasEstimator(
             final Angle latitude, final Angle longitude, final Distance height,
-            final IMUBiasEstimatorListener listener) {
+            final BodyKinematicsBiasEstimatorListener listener) {
         this(latitude, longitude, height);
         mListener = listener;
     }
@@ -429,9 +451,9 @@ public class IMUBiasEstimator {
      *                                                       from body to local
      *                                                       navigation coordinates.
      */
-    public IMUBiasEstimator(
+    public BodyKinematicsBiasEstimator(
             final NEDPosition position, final CoordinateTransformation nedC,
-            final IMUBiasEstimatorListener listener)
+            final BodyKinematicsBiasEstimatorListener listener)
             throws InvalidSourceAndDestinationFrameTypeException {
         this(position, nedC);
         mListener = listener;
@@ -450,328 +472,11 @@ public class IMUBiasEstimator {
      *                                                       from body to local
      *                                                       navigation coordinates.
      */
-    public IMUBiasEstimator(
+    public BodyKinematicsBiasEstimator(
             final ECEFPosition position, final CoordinateTransformation nedC,
-            final IMUBiasEstimatorListener listener)
+            final BodyKinematicsBiasEstimatorListener listener)
             throws InvalidSourceAndDestinationFrameTypeException {
         this(position, nedC);
-        mListener = listener;
-    }
-
-    /**
-     * Constructor.
-     * It is assumed that body is located at zero NED coordinates (latitude = 0,
-     * longitude = 0 and height = 0) and with zero Euler angles representing rotation
-     * (roll = 0, pith = 0, yaw = 0), which for Android devices it means that the
-     * device is flat on a horizontal surface with the screen facing down.
-     *
-     * @param totalSamples total samples to be processed to finish estimation.
-     * @throws IllegalArgumentException if provided total samples is zero or negative.
-     */
-    public IMUBiasEstimator(final int totalSamples) {
-        this();
-
-        if (totalSamples <= 0) {
-            throw new IllegalArgumentException();
-        }
-
-        mTotalSamples = totalSamples;
-    }
-
-    /**
-     * Constructor.
-     * It is assumed that body is located at zero NED coordinates (latitude = 0,
-     * longitude = 0, and height = 0) with provided orientation.
-     *
-     * @param nedC         coordinate transformation from body to local navigation
-     *                     (NED) coordinates. This contains orientation respect the
-     *                     horizon at current body location.
-     * @param totalSamples total samples to be processed to finish estimation.
-     * @throws InvalidSourceAndDestinationFrameTypeException if provided coordinate
-     *                                                       transformation is not
-     *                                                       from body to local
-     *                                                       navigation coordinates.
-     * @throws IllegalArgumentException                      if provided total samples
-     *                                                       is zero or negative.
-     */
-    public IMUBiasEstimator(
-            final CoordinateTransformation nedC, final int totalSamples)
-            throws InvalidSourceAndDestinationFrameTypeException {
-        this(totalSamples);
-        mFrame = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(
-                new NEDFrame(nedC));
-        rebuildExpectedKinematics();
-    }
-
-    /**
-     * Constructor.
-     * It is assumed that body has zero Euler angles representing rotation (roll = 0,
-     * pitch = 0, yaw = 0) respect the horizon at provided body location.
-     * For Android devices this means that the device is flat on a horizontal surface
-     * with the screen facing down.
-     *
-     * @param latitude     latitude expressed in radians (rad).
-     * @param longitude    longitude expressed in radians (rad).
-     * @param height       height expressed in meters (m).
-     * @param totalSamples total samples to be processed to finish estimation.
-     * @throws IllegalArgumentException if provided total samples is zero or negative.
-     */
-    public IMUBiasEstimator(
-            final double latitude, final double longitude, final double height,
-            final int totalSamples) {
-        this(totalSamples);
-        mFrame = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(
-                new NEDFrame(latitude, longitude, height));
-        rebuildExpectedKinematics();
-    }
-
-    /**
-     * Constructor.
-     * It is assumed that body has zero Euler angles representing rotation (roll = 0,
-     * pitch = 0, yaw = 0) respect the horizon at provided body location.
-     * For Android devices this means that the device is flat on a horizontal surface
-     * with the screen facing down.
-     *
-     * @param latitude     latitude.
-     * @param longitude    longitude.
-     * @param height       height expressed in meters (m).
-     * @param totalSamples total samples to be processed to finish estimation.
-     * @throws IllegalArgumentException if provided total samples is zero or negative.
-     */
-    public IMUBiasEstimator(
-            final Angle latitude, final Angle longitude, final double height,
-            final int totalSamples) {
-        this(totalSamples);
-        mFrame = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(
-                new NEDFrame(latitude, longitude, height));
-        rebuildExpectedKinematics();
-    }
-
-    /**
-     * Constructor.
-     * It is assumed that body has zero Euler angles representing rotation (roll = 0,
-     * pitch = 0, yaw = 0) respect the horizon at provided body location.
-     * For Android devices this means that the device is flat on a horizontal surface
-     * with the screen facing down.
-     *
-     * @param latitude     latitude.
-     * @param longitude    longitude.
-     * @param height       height.
-     * @param totalSamples total samples to be processed to finish estimation.
-     * @throws IllegalArgumentException if provided total samples is zero or negative.
-     */
-    public IMUBiasEstimator(
-            final Angle latitude, final Angle longitude, final Distance height,
-            final int totalSamples) {
-        this(totalSamples);
-        mFrame = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(
-                new NEDFrame(latitude, longitude, height));
-        rebuildExpectedKinematics();
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param position     body position expressed in NED coordinates.
-     * @param nedC         coordinate transformation from body to local navigation
-     *                     (NED) coordinates. This contains orientation respect the
-     *                     horizon at current body location.
-     * @param totalSamples total samples to be processed to finish estimation.
-     * @throws InvalidSourceAndDestinationFrameTypeException if provided coordinate
-     *                                                       transformation is not
-     *                                                       from body to local
-     *                                                       navigation coordinates.
-     * @throws IllegalArgumentException                      if provided total samples
-     *                                                       is zero or negative.
-     */
-    public IMUBiasEstimator(
-            final NEDPosition position, final CoordinateTransformation nedC,
-            final int totalSamples)
-            throws InvalidSourceAndDestinationFrameTypeException {
-        this(totalSamples);
-        mFrame = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(
-                new NEDFrame(position, nedC));
-        rebuildExpectedKinematics();
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param position     body position expressed in ECEF coordinates.
-     * @param nedC         coordinate transformation from body to local navigation
-     *                     (NED) coordinates. This contains orientation respect the
-     *                     horizon at current body location.
-     * @param totalSamples total samples to be processed to finish estimation.
-     * @throws InvalidSourceAndDestinationFrameTypeException if provided coordinate
-     *                                                       transformation is not
-     *                                                       from body to local
-     *                                                       navigation coordinates.
-     * @throws IllegalArgumentException                      if provided total samples
-     *                                                       is zero or negative.
-     */
-    public IMUBiasEstimator(
-            final ECEFPosition position, final CoordinateTransformation nedC,
-            final int totalSamples)
-            throws InvalidSourceAndDestinationFrameTypeException {
-        this(position, nedC);
-
-        if (totalSamples <= 0) {
-            throw new IllegalArgumentException();
-        }
-
-        mTotalSamples = totalSamples;
-    }
-
-    /**
-     * Constructor.
-     * It is assumed that body is located at zero NED coordinates (latitude = 0,
-     * longitude = 0 and height = 0) and with zero Euler angles representing rotation
-     * (roll = 0, pith = 0, yaw = 0), which for Android devices it means that the
-     * device is flat on a horizontal surface with the screen facing down.
-     *
-     * @param totalSamples total samples to be processed to finish estimation.
-     * @param listener     listener to handle events raised by this estimator.
-     * @throws IllegalArgumentException if provided total samples is zero or negative.
-     */
-    public IMUBiasEstimator(
-            final int totalSamples, final IMUBiasEstimatorListener listener) {
-        this(totalSamples);
-        mListener = listener;
-    }
-
-    /**
-     * Constructor.
-     * It is assumed that body is located at zero NED coordinates (latitude = 0,
-     * longitude = 0, and height = 0) with provided orientation.
-     *
-     * @param nedC         coordinate transformation from body to local navigation
-     *                     (NED) coordinates. This contains orientation respect the
-     *                     horizon at current body location.
-     * @param totalSamples total samples to be processed to finish estimation.
-     * @param listener     listener to handle events raised by this estimator.
-     * @throws InvalidSourceAndDestinationFrameTypeException if provided coordinate
-     *                                                       transformation is not
-     *                                                       from body to local
-     *                                                       navigation coordinates.
-     * @throws IllegalArgumentException                      if provided total samples
-     *                                                       is zero or negative.
-     */
-    public IMUBiasEstimator(
-            final CoordinateTransformation nedC, final int totalSamples,
-            final IMUBiasEstimatorListener listener)
-            throws InvalidSourceAndDestinationFrameTypeException {
-        this(nedC, totalSamples);
-        mListener = listener;
-    }
-
-    /**
-     * Constructor.
-     * It is assumed that body has zero Euler angles representing rotation (roll = 0,
-     * pitch = 0, yaw = 0) respect the horizon at provided body location.
-     * For Android devices this means that the device is flat on a horizontal surface
-     * with the screen facing down.
-     *
-     * @param latitude     latitude expressed in radians (rad).
-     * @param longitude    longitude expressed in radians (rad).
-     * @param height       height expressed in meters (m).
-     * @param totalSamples total samples to be processed to finish estimation.
-     * @param listener     listener to handle events raised by this estimator.
-     * @throws IllegalArgumentException if provided total samples is zero or negative.
-     */
-    public IMUBiasEstimator(
-            final double latitude, final double longitude, final double height,
-            final int totalSamples, final IMUBiasEstimatorListener listener) {
-        this(latitude, longitude, height, totalSamples);
-        mListener = listener;
-    }
-
-    /**
-     * Constructor.
-     * It is assumed that body has zero Euler angles representing rotation (roll = 0,
-     * pitch = 0, yaw = 0) respect the horizon at provided body location.
-     * For Android devices this means that the device is flat on a horizontal surface
-     * with the screen facing down.
-     *
-     * @param latitude     latitude.
-     * @param longitude    longitude.
-     * @param height       height expressed in meters (m).
-     * @param totalSamples total samples to be processed to finish estimation.
-     * @param listener     listener to handle events raised by this estimator.
-     * @throws IllegalArgumentException if provided total samples is zero or negative.
-     */
-    public IMUBiasEstimator(
-            final Angle latitude, final Angle longitude, final double height,
-            final int totalSamples, final IMUBiasEstimatorListener listener) {
-        this(latitude, longitude, height, totalSamples);
-        mListener = listener;
-    }
-
-    /**
-     * Constructor.
-     * It is assumed that body has zero Euler angles representing rotation (roll = 0,
-     * pitch = 0, yaw = 0) respect the horizon at provided body location.
-     * For Android devices this means that the device is flat on a horizontal surface
-     * with the screen facing down.
-     *
-     * @param latitude     latitude.
-     * @param longitude    longitude.
-     * @param height       height.
-     * @param totalSamples total samples to be processed to finish estimation.
-     * @param listener     listener to handle events raised by this estimator.
-     * @throws IllegalArgumentException if provided total samples is zero or negative.
-     */
-    public IMUBiasEstimator(
-            final Angle latitude, final Angle longitude, final Distance height,
-            final int totalSamples, final IMUBiasEstimatorListener listener) {
-        this(latitude, longitude, height, totalSamples);
-        mListener = listener;
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param position     body position expressed in NED coordinates.
-     * @param nedC         coordinate transformation from body to local navigation
-     *                     (NED) coordinates. This contains orientation respect the
-     *                     horizon at current body location.
-     * @param totalSamples total samples to be processed to finish estimation.
-     * @param listener     listener to handle events raised by this estimator.
-     * @throws InvalidSourceAndDestinationFrameTypeException if provided coordinate
-     *                                                       transformation is not
-     *                                                       from body to local
-     *                                                       navigation coordinates.
-     * @throws IllegalArgumentException                      if provided total samples
-     *                                                       is zero or negative.
-     */
-    public IMUBiasEstimator(
-            final NEDPosition position, final CoordinateTransformation nedC,
-            final int totalSamples, final IMUBiasEstimatorListener listener)
-            throws InvalidSourceAndDestinationFrameTypeException {
-        this(position, nedC, totalSamples);
-        mListener = listener;
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param position     body position expressed in ECEF coordinates.
-     * @param nedC         coordinate transformation from body to local navigation
-     *                     (NED) coordinates. This contains orientation respect the
-     *                     horizon at current body location.
-     * @param totalSamples total samples to be processed to finish estimation.
-     * @param listener     listener to handle events raised by this estimator.
-     * @throws InvalidSourceAndDestinationFrameTypeException if provided coordinate
-     *                                                       transformation is not
-     *                                                       from body to local
-     *                                                       navigation coordinates.
-     * @throws IllegalArgumentException                      if provided total samples
-     *                                                       is zero or negative.
-     */
-    public IMUBiasEstimator(
-            final ECEFPosition position, final CoordinateTransformation nedC,
-            final int totalSamples, final IMUBiasEstimatorListener listener)
-            throws InvalidSourceAndDestinationFrameTypeException {
-        this(position, nedC, totalSamples);
         mListener = listener;
     }
 
@@ -787,7 +492,7 @@ public class IMUBiasEstimator {
      *                     expressed in seconds (s).
      * @throws IllegalArgumentException if provided time interval is negative.
      */
-    public IMUBiasEstimator(final double timeInterval) {
+    public BodyKinematicsBiasEstimator(final double timeInterval) {
         this();
         try {
             setTimeInterval(timeInterval);
@@ -814,7 +519,7 @@ public class IMUBiasEstimator {
      * @throws IllegalArgumentException                      if provided time interval
      *                                                       is negative.
      */
-    public IMUBiasEstimator(
+    public BodyKinematicsBiasEstimator(
             final CoordinateTransformation nedC, final double timeInterval)
             throws InvalidSourceAndDestinationFrameTypeException {
         this(nedC);
@@ -840,7 +545,7 @@ public class IMUBiasEstimator {
      *                     expressed in seconds (s).
      * @throws IllegalArgumentException if provided time interval is negative.
      */
-    public IMUBiasEstimator(final double latitude, final double longitude,
+    public BodyKinematicsBiasEstimator(final double latitude, final double longitude,
                             final double height, final double timeInterval) {
         this(latitude, longitude, height);
         try {
@@ -865,7 +570,7 @@ public class IMUBiasEstimator {
      *                     expressed in seconds (s).
      * @throws IllegalArgumentException if provided time interval is negative.
      */
-    public IMUBiasEstimator(final Angle latitude, final Angle longitude,
+    public BodyKinematicsBiasEstimator(final Angle latitude, final Angle longitude,
                             final double height, final double timeInterval) {
         this(latitude, longitude, height);
         try {
@@ -890,7 +595,7 @@ public class IMUBiasEstimator {
      *                     expressed in seconds (s).
      * @throws IllegalArgumentException if provided time interval is negative.
      */
-    public IMUBiasEstimator(final Angle latitude, final Angle longitude,
+    public BodyKinematicsBiasEstimator(final Angle latitude, final Angle longitude,
                             final Distance height, final double timeInterval) {
         this(latitude, longitude, height);
         try {
@@ -917,7 +622,7 @@ public class IMUBiasEstimator {
      * @throws IllegalArgumentException                      if provided time interval
      *                                                       is negative.
      */
-    public IMUBiasEstimator(
+    public BodyKinematicsBiasEstimator(
             final NEDPosition position, final CoordinateTransformation nedC,
             final double timeInterval)
             throws InvalidSourceAndDestinationFrameTypeException {
@@ -946,7 +651,7 @@ public class IMUBiasEstimator {
      * @throws IllegalArgumentException                      if provided time interval
      *                                                       is negative.
      */
-    public IMUBiasEstimator(
+    public BodyKinematicsBiasEstimator(
             final ECEFPosition position, final CoordinateTransformation nedC,
             final double timeInterval)
             throws InvalidSourceAndDestinationFrameTypeException {
@@ -971,8 +676,8 @@ public class IMUBiasEstimator {
      * @param listener     listener to handle events raised by this estimator.
      * @throws IllegalArgumentException if provided time interval is negative.
      */
-    public IMUBiasEstimator(final double timeInterval,
-                            final IMUBiasEstimatorListener listener) {
+    public BodyKinematicsBiasEstimator(final double timeInterval,
+                            final BodyKinematicsBiasEstimatorListener listener) {
         this(timeInterval);
         mListener = listener;
     }
@@ -996,9 +701,9 @@ public class IMUBiasEstimator {
      * @throws IllegalArgumentException                      if provided time interval
      *                                                       is negative.
      */
-    public IMUBiasEstimator(
+    public BodyKinematicsBiasEstimator(
             final CoordinateTransformation nedC, final double timeInterval,
-            final IMUBiasEstimatorListener listener)
+            final BodyKinematicsBiasEstimatorListener listener)
             throws InvalidSourceAndDestinationFrameTypeException {
         this(nedC, timeInterval);
         mListener = listener;
@@ -1020,9 +725,9 @@ public class IMUBiasEstimator {
      * @param listener     listener to handle events raised by this estimator.
      * @throws IllegalArgumentException if provided time interval is negative.
      */
-    public IMUBiasEstimator(
+    public BodyKinematicsBiasEstimator(
             final double latitude, final double longitude, final double height,
-            final double timeInterval, final IMUBiasEstimatorListener listener) {
+            final double timeInterval, final BodyKinematicsBiasEstimatorListener listener) {
         this(latitude, longitude, height, timeInterval);
         mListener = listener;
     }
@@ -1043,9 +748,9 @@ public class IMUBiasEstimator {
      * @param listener     listener to handle events raised by this estimator.
      * @throws IllegalArgumentException if provided time interval is negative.
      */
-    public IMUBiasEstimator(
+    public BodyKinematicsBiasEstimator(
             final Angle latitude, final Angle longitude, final double height,
-            final double timeInterval, final IMUBiasEstimatorListener listener) {
+            final double timeInterval, final BodyKinematicsBiasEstimatorListener listener) {
         this(latitude, longitude, height, timeInterval);
         mListener = listener;
     }
@@ -1066,9 +771,9 @@ public class IMUBiasEstimator {
      * @param listener     listener to handle events raised by this estimator.
      * @throws IllegalArgumentException if provided time interval is negative.
      */
-    public IMUBiasEstimator(
+    public BodyKinematicsBiasEstimator(
             final Angle latitude, final Angle longitude, final Distance height,
-            final double timeInterval, final IMUBiasEstimatorListener listener) {
+            final double timeInterval, final BodyKinematicsBiasEstimatorListener listener) {
         this(latitude, longitude, height, timeInterval);
         mListener = listener;
     }
@@ -1091,9 +796,9 @@ public class IMUBiasEstimator {
      * @throws IllegalArgumentException                      if provided time interval
      *                                                       is negative.
      */
-    public IMUBiasEstimator(
+    public BodyKinematicsBiasEstimator(
             final NEDPosition position, final CoordinateTransformation nedC,
-            final double timeInterval, final IMUBiasEstimatorListener listener)
+            final double timeInterval, final BodyKinematicsBiasEstimatorListener listener)
             throws InvalidSourceAndDestinationFrameTypeException {
         this(position, nedC, timeInterval);
         mListener = listener;
@@ -1117,404 +822,11 @@ public class IMUBiasEstimator {
      * @throws IllegalArgumentException                      if provided time interval
      *                                                       is negative.
      */
-    public IMUBiasEstimator(
+    public BodyKinematicsBiasEstimator(
             final ECEFPosition position, final CoordinateTransformation nedC,
-            final double timeInterval, final IMUBiasEstimatorListener listener)
+            final double timeInterval, final BodyKinematicsBiasEstimatorListener listener)
             throws InvalidSourceAndDestinationFrameTypeException {
         this(position, nedC, timeInterval);
-        mListener = listener;
-    }
-
-    /**
-     * Constructor.
-     * It is assumed that body is located at zero NED coordinates (latitude = 0,
-     * longitude = 0 and height = 0) and with zero Euler angles representing rotation
-     * (roll = 0, pith = 0, yaw = 0), which for Android devices it means that the
-     * device is flat on a horizontal surface with the screen facing down.
-     *
-     * @param totalSamples total samples to be processed to finish estimation.
-     * @param timeInterval time interval between body kinematics
-     *                     (IMU acceleration + gyroscope) samples
-     *                     expressed in seconds (s).
-     * @throws IllegalArgumentException if provided total samples is zero or negative, or
-     *                                  if provided time interval is negative.
-     */
-    public IMUBiasEstimator(final int totalSamples, final double timeInterval) {
-        this(totalSamples);
-        try {
-            setTimeInterval(timeInterval);
-        } catch (final LockedException ignore) {
-            // never happens
-        }
-    }
-
-    /**
-     * Constructor.
-     * It is assumed that body is located at zero NED coordinates (latitude = 0,
-     * longitude = 0, and height = 0) with provided orientation.
-     *
-     * @param nedC         coordinate transformation from body to local navigation
-     *                     (NED) coordinates. This contains orientation respect the
-     *                     horizon at current body location.
-     * @param totalSamples total samples to be processed to finish estimation.
-     * @param timeInterval time interval between body kinematics
-     *                     (IMU acceleration + gyroscope) samples
-     *                     expressed in seconds (s).
-     * @throws InvalidSourceAndDestinationFrameTypeException if provided coordinate
-     *                                                       transformation is not
-     *                                                       from body to local
-     *                                                       navigation coordinates.
-     * @throws IllegalArgumentException                      if provided total samples
-     *                                                       is zero or negative, or
-     *                                                       if provided time interval
-     *                                                       is negative.
-     */
-    public IMUBiasEstimator(
-            final CoordinateTransformation nedC, final int totalSamples,
-            final double timeInterval)
-            throws InvalidSourceAndDestinationFrameTypeException {
-        this(nedC, totalSamples);
-        try {
-            setTimeInterval(timeInterval);
-        } catch (final LockedException ignore) {
-            // never happens
-        }
-    }
-
-    /**
-     * Constructor.
-     * It is assumed that body has zero Euler angles representing rotation (roll = 0,
-     * pitch = 0, yaw = 0) respect the horizon at provided body location.
-     * For Android devices this means that the device is flat on a horizontal surface
-     * with the screen facing down.
-     *
-     * @param latitude     latitude expressed in radians (rad).
-     * @param longitude    longitude expressed in radians (rad).
-     * @param height       height expressed in meters (m).
-     * @param totalSamples total samples to be processed to finish estimation.
-     * @param timeInterval time interval between body kinematics
-     *                     (IMU acceleration + gyroscope) samples
-     *                     expressed in seconds (s).
-     * @throws IllegalArgumentException if provided total samples is zero or negative, or
-     *                                  if provided time interval is negative.
-     */
-    public IMUBiasEstimator(
-            final double latitude, final double longitude, final double height,
-            final int totalSamples, final double timeInterval) {
-        this(latitude, longitude, height, totalSamples);
-        try {
-            setTimeInterval(timeInterval);
-        } catch (final LockedException ignore) {
-            // never happens
-        }
-    }
-
-    /**
-     * Constructor.
-     * It is assumed that body has zero Euler angles representing rotation (roll = 0,
-     * pitch = 0, yaw = 0) respect the horizon at provided body location.
-     * For Android devices this means that the device is flat on a horizontal surface
-     * with the screen facing down.
-     *
-     * @param latitude     latitude.
-     * @param longitude    longitude.
-     * @param height       height expressed in meters (m).
-     * @param totalSamples total samples to be processed to finish estimation.
-     * @param timeInterval time interval between body kinematics
-     *                     (IMU acceleration + gyroscope) samples
-     *                     expressed in seconds (s).
-     * @throws IllegalArgumentException if provided total samples is zero or negative, or
-     *                                  if provided time interval is negative.
-     */
-    public IMUBiasEstimator(
-            final Angle latitude, final Angle longitude, final double height,
-            final int totalSamples, final double timeInterval) {
-        this(latitude, longitude, height, totalSamples);
-        try {
-            setTimeInterval(timeInterval);
-        } catch (final LockedException ignore) {
-            // never happens
-        }
-    }
-
-    /**
-     * Constructor.
-     * It is assumed that body has zero Euler angles representing rotation (roll = 0,
-     * pitch = 0, yaw = 0) respect the horizon at provided body location.
-     * For Android devices this means that the device is flat on a horizontal surface
-     * with the screen facing down.
-     *
-     * @param latitude     latitude.
-     * @param longitude    longitude.
-     * @param height       height.
-     * @param totalSamples total samples to be processed to finish estimation.
-     * @param timeInterval time interval between body kinematics
-     *                     (IMU acceleration + gyroscope) samples
-     *                     expressed in seconds (s).
-     * @throws IllegalArgumentException if provided total samples is zero or negative, or
-     *                                  if provided time interval is negative.
-     */
-    public IMUBiasEstimator(
-            final Angle latitude, final Angle longitude, final Distance height,
-            final int totalSamples, final double timeInterval) {
-        this(latitude, longitude, height, totalSamples);
-        try {
-            setTimeInterval(timeInterval);
-        } catch (final LockedException ignore) {
-            // never happens
-        }
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param position     body position expressed in NED coordinates.
-     * @param nedC         coordinate transformation from body to local navigation
-     *                     (NED) coordinates. This contains orientation respect the
-     *                     horizon at current body location.
-     * @param totalSamples total samples to be processed to finish estimation.
-     * @param timeInterval time interval between body kinematics
-     *                     (IMU acceleration + gyroscope) samples
-     *                     expressed in seconds (s).
-     * @throws InvalidSourceAndDestinationFrameTypeException if provided coordinate
-     *                                                       transformation is not
-     *                                                       from body to local
-     *                                                       navigation coordinates.
-     * @throws IllegalArgumentException                      if provided total samples
-     *                                                       is zero or negative, or
-     *                                                       if provided time interval
-     *                                                       is negative.
-     */
-    public IMUBiasEstimator(
-            final NEDPosition position, final CoordinateTransformation nedC,
-            final int totalSamples, final double timeInterval)
-            throws InvalidSourceAndDestinationFrameTypeException {
-        this(position, nedC, totalSamples);
-        try {
-            setTimeInterval(timeInterval);
-        } catch (final LockedException ignore) {
-            // never happens
-        }
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param position     body position expressed in ECEF coordinates.
-     * @param nedC         coordinate transformation from body to local navigation
-     *                     (NED) coordinates. This contains orientation respect the
-     *                     horizon at current body location.
-     * @param totalSamples total samples to be processed to finish estimation.
-     * @param timeInterval time interval between body kinematics
-     *                     (IMU acceleration + gyroscope) samples
-     *                     expressed in seconds (s).
-     * @throws InvalidSourceAndDestinationFrameTypeException if provided coordinate
-     *                                                       transformation is not
-     *                                                       from body to local
-     *                                                       navigation coordinates.
-     * @throws IllegalArgumentException                      if provided total samples
-     *                                                       is zero or negative, or
-     *                                                       if provided time interval
-     *                                                       is negative.
-     */
-    public IMUBiasEstimator(
-            final ECEFPosition position, final CoordinateTransformation nedC,
-            final int totalSamples, final double timeInterval)
-            throws InvalidSourceAndDestinationFrameTypeException {
-        this(position, nedC, totalSamples);
-        try {
-            setTimeInterval(timeInterval);
-        } catch (final LockedException ignore) {
-            // never happens
-        }
-    }
-
-    /**
-     * Constructor.
-     * It is assumed that body is located at zero NED coordinates (latitude = 0,
-     * longitude = 0 and height = 0) and with zero Euler angles representing rotation
-     * (roll = 0, pith = 0, yaw = 0), which for Android devices it means that the
-     * device is flat on a horizontal surface with the screen facing down.
-     *
-     * @param totalSamples total samples to be processed to finish estimation.
-     * @param timeInterval time interval between body kinematics
-     *                     (IMU acceleration + gyroscope) samples
-     *                     expressed in seconds (s).
-     * @param listener     listener to handle events raised by this estimator.
-     * @throws IllegalArgumentException if provided total samples is zero or negative,
-     *                                  or if provided time interval is negative.
-     */
-    public IMUBiasEstimator(final int totalSamples, final double timeInterval,
-                            final IMUBiasEstimatorListener listener) {
-        this(totalSamples, timeInterval);
-        mListener = listener;
-    }
-
-    /**
-     * Constructor.
-     * It is assumed that body is located at zero NED coordinates (latitude = 0,
-     * longitude = 0, and height = 0) with provided orientation.
-     *
-     * @param nedC         coordinate transformation from body to local navigation
-     *                     (NED) coordinates. This contains orientation respect the
-     *                     horizon at current body location.
-     * @param totalSamples total samples to be processed to finish estimation.
-     * @param timeInterval time interval between body kinematics
-     *                     (IMU acceleration + gyroscope) samples
-     *                     expressed in seconds (s).
-     * @param listener     listener to handle events raised by this estimator.
-     * @throws InvalidSourceAndDestinationFrameTypeException if provided coordinate
-     *                                                       transformation is not
-     *                                                       from body to local
-     *                                                       navigation coordinates.
-     * @throws IllegalArgumentException                      if provided total samples
-     *                                                       is zero or negative,
-     *                                                       or if provided time
-     *                                                       interval is negative.
-     */
-    public IMUBiasEstimator(
-            final CoordinateTransformation nedC, final int totalSamples,
-            final double timeInterval, final IMUBiasEstimatorListener listener)
-            throws InvalidSourceAndDestinationFrameTypeException {
-        this(nedC, totalSamples, timeInterval);
-        mListener = listener;
-    }
-
-    /**
-     * Constructor.
-     * It is assumed that body has zero Euler angles representing rotation (roll = 0,
-     * pitch = 0, yaw = 0) respect the horizon at provided body location.
-     * For Android devices this means that the device is flat on a horizontal surface
-     * with the screen facing down.
-     *
-     * @param latitude     latitude expressed in radians (rad).
-     * @param longitude    longitude expressed in radians (rad).
-     * @param height       height expressed in meters (m).
-     * @param totalSamples total samples to be processed to finish estimation.
-     * @param timeInterval time interval between body kinematics
-     *                     (IMU acceleration + gyroscope) samples
-     *                     expressed in seconds (s).
-     * @param listener     listener to handle events raised by this estimator.
-     * @throws IllegalArgumentException if provided total samples is zero or negative,
-     *                                  or if provided time interval is negative.
-     */
-    public IMUBiasEstimator(
-            final double latitude, final double longitude, final double height,
-            final int totalSamples, final double timeInterval,
-            final IMUBiasEstimatorListener listener) {
-        this(latitude, longitude, height, totalSamples, timeInterval);
-        mListener = listener;
-    }
-
-    /**
-     * Constructor.
-     * It is assumed that body has zero Euler angles representing rotation (roll = 0,
-     * pitch = 0, yaw = 0) respect the horizon at provided body location.
-     * For Android devices this means that the device is flat on a horizontal surface
-     * with the screen facing down.
-     *
-     * @param latitude     latitude.
-     * @param longitude    longitude.
-     * @param height       height expressed in meters (m).
-     * @param totalSamples total samples to be processed to finish estimation.
-     * @param timeInterval time interval between body kinematics
-     *                     (IMU acceleration + gyroscope) samples
-     *                     expressed in seconds (s).
-     * @param listener     listener to handle events raised by this estimator.
-     * @throws IllegalArgumentException if provided total samples is zero or negative,
-     *                                  or if provided time interval is negative.
-     */
-    public IMUBiasEstimator(
-            final Angle latitude, final Angle longitude, final double height,
-            final int totalSamples, final double timeInterval,
-            final IMUBiasEstimatorListener listener) {
-        this(latitude, longitude, height, totalSamples, timeInterval);
-        mListener = listener;
-    }
-
-    /**
-     * Constructor.
-     * It is assumed that body has zero Euler angles representing rotation (roll = 0,
-     * pitch = 0, yaw = 0) respect the horizon at provided body location.
-     * For Android devices this means that the device is flat on a horizontal surface
-     * with the screen facing down.
-     *
-     * @param latitude     latitude.
-     * @param longitude    longitude.
-     * @param height       height.
-     * @param totalSamples total samples to be processed to finish estimation.
-     * @param timeInterval time interval between body kinematics
-     *                     (IMU acceleration + gyroscope) samples
-     *                     expressed in seconds (s).
-     * @param listener     listener to handle events raised by this estimator.
-     * @throws IllegalArgumentException if provided total samples is zero or negative,
-     *                                  or if provided time interval is negative.
-     */
-    public IMUBiasEstimator(
-            final Angle latitude, final Angle longitude, final Distance height,
-            final int totalSamples, final double timeInterval,
-            final IMUBiasEstimatorListener listener) {
-        this(latitude, longitude, height, totalSamples, timeInterval);
-        mListener = listener;
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param position     body position expressed in NED coordinates.
-     * @param nedC         coordinate transformation from body to local navigation
-     *                     (NED) coordinates. This contains orientation respect the
-     *                     horizon at current body location.
-     * @param totalSamples total samples to be processed to finish estimation.
-     * @param timeInterval time interval between body kinematics
-     *                     (IMU acceleration + gyroscope) samples
-     *                     expressed in seconds (s).
-     * @param listener     listener to handle events raised by this estimator.
-     * @throws InvalidSourceAndDestinationFrameTypeException if provided coordinate
-     *                                                       transformation is not
-     *                                                       from body to local
-     *                                                       navigation coordinates.
-     * @throws IllegalArgumentException                      if provided total samples
-     *                                                       is zero or negative,
-     *                                                       or if provided time
-     *                                                       interval is negative.
-     */
-    public IMUBiasEstimator(
-            final NEDPosition position, final CoordinateTransformation nedC,
-            final int totalSamples, final double timeInterval,
-            final IMUBiasEstimatorListener listener)
-            throws InvalidSourceAndDestinationFrameTypeException {
-        this(position, nedC, totalSamples, timeInterval);
-        mListener = listener;
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param position     body position expressed in ECEF coordinates.
-     * @param nedC         coordinate transformation from body to local navigation
-     *                     (NED) coordinates. This contains orientation respect the
-     *                     horizon at current body location.
-     * @param totalSamples total samples to be processed to finish estimation.
-     * @param timeInterval time interval between body kinematics
-     *                     (IMU acceleration + gyroscope) samples
-     *                     expressed in seconds (s).
-     * @param listener     listener to handle events raised by this estimator.
-     * @throws InvalidSourceAndDestinationFrameTypeException if provided coordinate
-     *                                                       transformation is not
-     *                                                       from body to local
-     *                                                       navigation coordinates.
-     * @throws IllegalArgumentException                      if provided total samples
-     *                                                       is zero or negative,
-     *                                                       or if provided time
-     *                                                       interval is negative.
-     */
-    public IMUBiasEstimator(
-            final ECEFPosition position, final CoordinateTransformation nedC,
-            final int totalSamples, final double timeInterval,
-            final IMUBiasEstimatorListener listener)
-            throws InvalidSourceAndDestinationFrameTypeException {
-        this(position, nedC, totalSamples, timeInterval);
         mListener = listener;
     }
 
@@ -1529,7 +841,7 @@ public class IMUBiasEstimator {
      *                     (IMU acceleration + gyroscope) samples.
      * @throws IllegalArgumentException if provided time interval is negative.
      */
-    public IMUBiasEstimator(final Time timeInterval) {
+    public BodyKinematicsBiasEstimator(final Time timeInterval) {
         this(convertTime(timeInterval));
     }
 
@@ -1550,7 +862,7 @@ public class IMUBiasEstimator {
      * @throws IllegalArgumentException                      if provided time interval
      *                                                       is negative.
      */
-    public IMUBiasEstimator(
+    public BodyKinematicsBiasEstimator(
             final CoordinateTransformation nedC, final Time timeInterval)
             throws InvalidSourceAndDestinationFrameTypeException {
         this(nedC, convertTime(timeInterval));
@@ -1570,7 +882,7 @@ public class IMUBiasEstimator {
      *                     (IMU acceleration + gyroscope) samples.
      * @throws IllegalArgumentException if provided time interval is negative.
      */
-    public IMUBiasEstimator(final double latitude, final double longitude,
+    public BodyKinematicsBiasEstimator(final double latitude, final double longitude,
                             final double height, final Time timeInterval) {
         this(latitude, longitude, height, convertTime(timeInterval));
     }
@@ -1589,7 +901,7 @@ public class IMUBiasEstimator {
      *                     (IMU acceleration + gyroscope) samples.
      * @throws IllegalArgumentException if provided time interval is negative.
      */
-    public IMUBiasEstimator(final Angle latitude, final Angle longitude,
+    public BodyKinematicsBiasEstimator(final Angle latitude, final Angle longitude,
                             final double height, final Time timeInterval) {
         this(latitude, longitude, height, convertTime(timeInterval));
     }
@@ -1608,7 +920,7 @@ public class IMUBiasEstimator {
      *                     (IMU acceleration + gyroscope) samples.
      * @throws IllegalArgumentException if provided time interval is negative.
      */
-    public IMUBiasEstimator(final Angle latitude, final Angle longitude,
+    public BodyKinematicsBiasEstimator(final Angle latitude, final Angle longitude,
                             final Distance height, final Time timeInterval) {
         this(latitude, longitude, height, convertTime(timeInterval));
     }
@@ -1629,7 +941,7 @@ public class IMUBiasEstimator {
      * @throws IllegalArgumentException                      if provided time interval
      *                                                       is negative.
      */
-    public IMUBiasEstimator(
+    public BodyKinematicsBiasEstimator(
             final NEDPosition position, final CoordinateTransformation nedC,
             final Time timeInterval)
             throws InvalidSourceAndDestinationFrameTypeException {
@@ -1652,7 +964,7 @@ public class IMUBiasEstimator {
      * @throws IllegalArgumentException                      if provided time interval
      *                                                       is negative.
      */
-    public IMUBiasEstimator(
+    public BodyKinematicsBiasEstimator(
             final ECEFPosition position, final CoordinateTransformation nedC,
             final Time timeInterval)
             throws InvalidSourceAndDestinationFrameTypeException {
@@ -1671,8 +983,8 @@ public class IMUBiasEstimator {
      * @param listener     listener to handle events raised by this estimator.
      * @throws IllegalArgumentException if provided time interval is negative.
      */
-    public IMUBiasEstimator(final Time timeInterval,
-                            final IMUBiasEstimatorListener listener) {
+    public BodyKinematicsBiasEstimator(final Time timeInterval,
+                            final BodyKinematicsBiasEstimatorListener listener) {
         this(convertTime(timeInterval), listener);
     }
 
@@ -1694,9 +1006,9 @@ public class IMUBiasEstimator {
      * @throws IllegalArgumentException                      if provided time interval
      *                                                       is negative.
      */
-    public IMUBiasEstimator(
+    public BodyKinematicsBiasEstimator(
             final CoordinateTransformation nedC, final Time timeInterval,
-            final IMUBiasEstimatorListener listener)
+            final BodyKinematicsBiasEstimatorListener listener)
             throws InvalidSourceAndDestinationFrameTypeException {
         this(nedC, convertTime(timeInterval), listener);
     }
@@ -1716,9 +1028,9 @@ public class IMUBiasEstimator {
      * @param listener     listener to handle events raised by this estimator.
      * @throws IllegalArgumentException if provided time interval is negative.
      */
-    public IMUBiasEstimator(
+    public BodyKinematicsBiasEstimator(
             final double latitude, final double longitude, final double height,
-            final Time timeInterval, final IMUBiasEstimatorListener listener) {
+            final Time timeInterval, final BodyKinematicsBiasEstimatorListener listener) {
         this(latitude, longitude, height, convertTime(timeInterval), listener);
     }
 
@@ -1737,9 +1049,9 @@ public class IMUBiasEstimator {
      * @param listener     listener to handle events raised by this estimator.
      * @throws IllegalArgumentException if provided time interval is negative.
      */
-    public IMUBiasEstimator(
+    public BodyKinematicsBiasEstimator(
             final Angle latitude, final Angle longitude, final double height,
-            final Time timeInterval, final IMUBiasEstimatorListener listener) {
+            final Time timeInterval, final BodyKinematicsBiasEstimatorListener listener) {
         this(latitude, longitude, height, convertTime(timeInterval), listener);
     }
 
@@ -1758,9 +1070,9 @@ public class IMUBiasEstimator {
      * @param listener     listener to handle events raised by this estimator.
      * @throws IllegalArgumentException if provided time interval is negative.
      */
-    public IMUBiasEstimator(
+    public BodyKinematicsBiasEstimator(
             final Angle latitude, final Angle longitude, final Distance height,
-            final Time timeInterval, final IMUBiasEstimatorListener listener) {
+            final Time timeInterval, final BodyKinematicsBiasEstimatorListener listener) {
         this(latitude, longitude, height, convertTime(timeInterval), listener);
     }
 
@@ -1781,9 +1093,9 @@ public class IMUBiasEstimator {
      * @throws IllegalArgumentException                      if provided time interval
      *                                                       is negative.
      */
-    public IMUBiasEstimator(
+    public BodyKinematicsBiasEstimator(
             final NEDPosition position, final CoordinateTransformation nedC,
-            final Time timeInterval, final IMUBiasEstimatorListener listener)
+            final Time timeInterval, final BodyKinematicsBiasEstimatorListener listener)
             throws InvalidSourceAndDestinationFrameTypeException {
         this(position, nedC, convertTime(timeInterval), listener);
     }
@@ -1805,378 +1117,11 @@ public class IMUBiasEstimator {
      * @throws IllegalArgumentException                      if provided time interval
      *                                                       is negative.
      */
-    public IMUBiasEstimator(
+    public BodyKinematicsBiasEstimator(
             final ECEFPosition position, final CoordinateTransformation nedC,
-            final Time timeInterval, final IMUBiasEstimatorListener listener)
+            final Time timeInterval, final BodyKinematicsBiasEstimatorListener listener)
             throws InvalidSourceAndDestinationFrameTypeException {
         this(position, nedC, convertTime(timeInterval), listener);
-    }
-
-    /**
-     * Constructor.
-     * It is assumed that body is located at zero NED coordinates (latitude = 0,
-     * longitude = 0 and height = 0) and with zero Euler angles representing rotation
-     * (roll = 0, pith = 0, yaw = 0), which for Android devices it means that the
-     * device is flat on a horizontal surface with the screen facing down.
-     *
-     * @param totalSamples total samples to be processed to finish estimation.
-     * @param timeInterval time interval between body kinematics
-     *                     (IMU acceleration + gyroscope) samples.
-     * @throws IllegalArgumentException if provided total samples is zero or negative,
-     *                                  or if provided time interval is negative.
-     */
-    public IMUBiasEstimator(final int totalSamples, final Time timeInterval) {
-        this(totalSamples, convertTime(timeInterval));
-    }
-
-    /**
-     * Constructor.
-     * It is assumed that body is located at zero NED coordinates (latitude = 0,
-     * longitude = 0, and height = 0) with provided orientation.
-     *
-     * @param nedC         coordinate transformation from body to local navigation
-     *                     (NED) coordinates. This contains orientation respect the
-     *                     horizon at current body location.
-     * @param totalSamples total samples to be processed to finish estimation.
-     * @param timeInterval time interval between body kinematics
-     *                     (IMU acceleration + gyroscope) samples.
-     * @throws InvalidSourceAndDestinationFrameTypeException if provided coordinate
-     *                                                       transformation is not
-     *                                                       from body to local
-     *                                                       navigation coordinates.
-     * @throws IllegalArgumentException                      if provided total samples
-     *                                                       is zero or negative, or
-     *                                                       if provided time interval
-     *                                                       is negative.
-     */
-    public IMUBiasEstimator(
-            final CoordinateTransformation nedC, final int totalSamples,
-            final Time timeInterval)
-            throws InvalidSourceAndDestinationFrameTypeException {
-        this(nedC, totalSamples, convertTime(timeInterval));
-    }
-
-    /**
-     * Constructor.
-     * It is assumed that body has zero Euler angles representing rotation (roll = 0,
-     * pitch = 0, yaw = 0) respect the horizon at provided body location.
-     * For Android devices this means that the device is flat on a horizontal surface
-     * with the screen facing down.
-     *
-     * @param latitude     latitude expressed in radians (rad).
-     * @param longitude    longitude expressed in radians (rad).
-     * @param height       height expressed in meters (m).
-     * @param totalSamples total samples to be processed to finish estimation.
-     * @param timeInterval time interval between body kinematics
-     *                     (IMU acceleration + gyroscope) samples.
-     * @throws IllegalArgumentException if provided total samples is zero or negative, or
-     *                                  if provided time interval is negative.
-     */
-    public IMUBiasEstimator(
-            final double latitude, final double longitude, final double height,
-            final int totalSamples, final Time timeInterval) {
-        this(latitude, longitude, height, totalSamples, convertTime(timeInterval));
-    }
-
-    /**
-     * Constructor.
-     * It is assumed that body has zero Euler angles representing rotation (roll = 0,
-     * pitch = 0, yaw = 0) respect the horizon at provided body location.
-     * For Android devices this means that the device is flat on a horizontal surface
-     * with the screen facing down.
-     *
-     * @param latitude     latitude.
-     * @param longitude    longitude.
-     * @param height       height expressed in meters (m).
-     * @param totalSamples total samples to be processed to finish estimation.
-     * @param timeInterval time interval between body kinematics
-     *                     (IMU acceleration + gyroscope) samples.
-     * @throws IllegalArgumentException if provided total samples is zero or negative, or
-     *                                  if provided time interval is negative.
-     */
-    public IMUBiasEstimator(
-            final Angle latitude, final Angle longitude, final double height,
-            final int totalSamples, final Time timeInterval) {
-        this(latitude, longitude, height, totalSamples, convertTime(timeInterval));
-    }
-
-    /**
-     * Constructor.
-     * It is assumed that body has zero Euler angles representing rotation (roll = 0,
-     * pitch = 0, yaw = 0) respect the horizon at provided body location.
-     * For Android devices this means that the device is flat on a horizontal surface
-     * with the screen facing down.
-     *
-     * @param latitude     latitude.
-     * @param longitude    longitude.
-     * @param height       height.
-     * @param totalSamples total samples to be processed to finish estimation.
-     * @param timeInterval time interval between body kinematics
-     *                     (IMU acceleration + gyroscope) samples.
-     * @throws IllegalArgumentException if provided total samples is zero or negative,
-     *                                  or if provided time interval is negative.
-     */
-    public IMUBiasEstimator(
-            final Angle latitude, final Angle longitude, final Distance height,
-            final int totalSamples, final Time timeInterval) {
-        this(latitude, longitude, height, totalSamples, convertTime(timeInterval));
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param position     body position expressed in NED coordinates.
-     * @param nedC         coordinate transformation from body to local navigation
-     *                     (NED) coordinates. This contains orientation respect the
-     *                     horizon at current body location.
-     * @param totalSamples total samples to be processed to finish estimation.
-     * @param timeInterval time interval between body kinematics
-     *                     (IMU acceleration + gyroscope) samples.
-     * @throws InvalidSourceAndDestinationFrameTypeException if provided coordinate
-     *                                                       transformation is not
-     *                                                       from body to local
-     *                                                       navigation coordinates.
-     * @throws IllegalArgumentException                      if provided total samples
-     *                                                       is zero or negative, or
-     *                                                       if provided time interval
-     *                                                       is negative.
-     */
-    public IMUBiasEstimator(
-            final NEDPosition position, final CoordinateTransformation nedC,
-            final int totalSamples, final Time timeInterval)
-            throws InvalidSourceAndDestinationFrameTypeException {
-        this(position, nedC, totalSamples, convertTime(timeInterval));
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param position     body position expressed in ECEF coordinates.
-     * @param nedC         coordinate transformation from body to local navigation
-     *                     (NED) coordinates. This contains orientation respect the
-     *                     horizon at current body location.
-     * @param totalSamples total samples to be processed to finish estimation.
-     * @param timeInterval time interval between body kinematics
-     *                     (IMU acceleration + gyroscope) samples.
-     * @throws InvalidSourceAndDestinationFrameTypeException if provided coordinate
-     *                                                       transformation is not
-     *                                                       from body to local
-     *                                                       navigation coordinates.
-     * @throws IllegalArgumentException                      if provided total samples
-     *                                                       is zero or negative, or
-     *                                                       if provided time interval
-     *                                                       is negative.
-     */
-    public IMUBiasEstimator(
-            final ECEFPosition position, final CoordinateTransformation nedC,
-            final int totalSamples, final Time timeInterval)
-            throws InvalidSourceAndDestinationFrameTypeException {
-        this(position, nedC, totalSamples, convertTime(timeInterval));
-    }
-
-    /**
-     * Constructor.
-     * It is assumed that body is located at zero NED coordinates (latitude = 0,
-     * longitude = 0 and height = 0) and with zero Euler angles representing rotation
-     * (roll = 0, pith = 0, yaw = 0), which for Android devices it means that the
-     * device is flat on a horizontal surface with the screen facing down.
-     *
-     * @param totalSamples total samples to be processed to finish estimation.
-     * @param timeInterval time interval between body kinematics
-     *                     (IMU acceleration + gyroscope) samples.
-     * @param listener     listener to handle events raised by this estimator.
-     * @throws IllegalArgumentException if provided total samples is zero or negative,
-     *                                  or if provided time interval is negative.
-     */
-    public IMUBiasEstimator(final int totalSamples, final Time timeInterval,
-                            final IMUBiasEstimatorListener listener) {
-        this(totalSamples, convertTime(timeInterval), listener);
-    }
-
-    /**
-     * Constructor.
-     * It is assumed that body is located at zero NED coordinates (latitude = 0,
-     * longitude = 0, and height = 0) with provided orientation.
-     *
-     * @param nedC         coordinate transformation from body to local navigation
-     *                     (NED) coordinates. This contains orientation respect the
-     *                     horizon at current body location.
-     * @param totalSamples total samples to be processed to finish estimation.
-     * @param timeInterval time interval between body kinematics
-     *                     (IMU acceleration + gyroscope) samples.
-     * @param listener     listener to handle events raised by this estimator.
-     * @throws InvalidSourceAndDestinationFrameTypeException if provided coordinate
-     *                                                       transformation is not
-     *                                                       from body to local
-     *                                                       navigation coordinates.
-     * @throws IllegalArgumentException                      if provided total samples
-     *                                                       is zero or negative,
-     *                                                       or if provided time
-     *                                                       interval is negative.
-     */
-    public IMUBiasEstimator(
-            final CoordinateTransformation nedC, final int totalSamples,
-            final Time timeInterval, final IMUBiasEstimatorListener listener)
-            throws InvalidSourceAndDestinationFrameTypeException {
-        this(nedC, totalSamples, convertTime(timeInterval), listener);
-    }
-
-    /**
-     * Constructor.
-     * It is assumed that body has zero Euler angles representing rotation (roll = 0,
-     * pitch = 0, yaw = 0) respect the horizon at provided body location.
-     * For Android devices this means that the device is flat on a horizontal surface
-     * with the screen facing down.
-     *
-     * @param latitude     latitude expressed in radians (rad).
-     * @param longitude    longitude expressed in radians (rad).
-     * @param height       height expressed in meters (m).
-     * @param totalSamples total samples to be processed to finish estimation.
-     * @param timeInterval time interval between body kinematics
-     *                     (IMU acceleration + gyroscope) samples.
-     * @param listener     listener to handle events raised by this estimator.
-     * @throws IllegalArgumentException if provided total samples is zero or negative,
-     *                                  or if provided time interval is negative.
-     */
-    public IMUBiasEstimator(
-            final double latitude, final double longitude, final double height,
-            final int totalSamples, final Time timeInterval,
-            final IMUBiasEstimatorListener listener) {
-        this(latitude, longitude, height, totalSamples, convertTime(timeInterval),
-                listener);
-    }
-
-    /**
-     * Constructor.
-     * It is assumed that body has zero Euler angles representing rotation (roll = 0,
-     * pitch = 0, yaw = 0) respect the horizon at provided body location.
-     * For Android devices this means that the device is flat on a horizontal surface
-     * with the screen facing down.
-     *
-     * @param latitude     latitude.
-     * @param longitude    longitude.
-     * @param height       height expressed in meters (m).
-     * @param totalSamples total samples to be processed to finish estimation.
-     * @param timeInterval time interval between body kinematics
-     *                     (IMU acceleration + gyroscope) samples.
-     * @param listener     listener to handle events raised by this estimator.
-     * @throws IllegalArgumentException if provided total samples is zero or negative,
-     *                                  or if provided time interval is negative.
-     */
-    public IMUBiasEstimator(
-            final Angle latitude, final Angle longitude, final double height,
-            final int totalSamples, final Time timeInterval,
-            final IMUBiasEstimatorListener listener) {
-        this(latitude, longitude, height, totalSamples, convertTime(timeInterval),
-                listener);
-    }
-
-    /**
-     * Constructor.
-     * It is assumed that body has zero Euler angles representing rotation (roll = 0,
-     * pitch = 0, yaw = 0) respect the horizon at provided body location.
-     * For Android devices this means that the device is flat on a horizontal surface
-     * with the screen facing down.
-     *
-     * @param latitude     latitude.
-     * @param longitude    longitude.
-     * @param height       height.
-     * @param totalSamples total samples to be processed to finish estimation.
-     * @param timeInterval time interval between body kinematics
-     *                     (IMU acceleration + gyroscope) samples.
-     * @param listener     listener to handle events raised by this estimator.
-     * @throws IllegalArgumentException if provided total samples is zero or negative,
-     *                                  or if provided time interval is negative.
-     */
-    public IMUBiasEstimator(
-            final Angle latitude, final Angle longitude, final Distance height,
-            final int totalSamples, final Time timeInterval,
-            final IMUBiasEstimatorListener listener) {
-        this(latitude, longitude, height, totalSamples, convertTime(timeInterval),
-                listener);
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param position     body position expressed in NED coordinates.
-     * @param nedC         coordinate transformation from body to local navigation
-     *                     (NED) coordinates. This contains orientation respect the
-     *                     horizon at current body location.
-     * @param totalSamples total samples to be processed to finish estimation.
-     * @param timeInterval time interval between body kinematics
-     *                     (IMU acceleration + gyroscope) samples.
-     * @param listener     listener to handle events raised by this estimator.
-     * @throws InvalidSourceAndDestinationFrameTypeException if provided coordinate
-     *                                                       transformation is not
-     *                                                       from body to local
-     *                                                       navigation coordinates.
-     * @throws IllegalArgumentException                      if provided total samples
-     *                                                       is zero or negative,
-     *                                                       or if provided time
-     *                                                       interval is negative.
-     */
-    public IMUBiasEstimator(
-            final NEDPosition position, final CoordinateTransformation nedC,
-            final int totalSamples, final Time timeInterval,
-            final IMUBiasEstimatorListener listener)
-            throws InvalidSourceAndDestinationFrameTypeException {
-        this(position, nedC, totalSamples, convertTime(timeInterval), listener);
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param position     body position expressed in ECEF coordinates.
-     * @param nedC         coordinate transformation from body to local navigation
-     *                     (NED) coordinates. This contains orientation respect the
-     *                     horizon at current body location.
-     * @param totalSamples total samples to be processed to finish estimation.
-     * @param timeInterval time interval between body kinematics
-     *                     (IMU acceleration + gyroscope) samples.
-     * @param listener     listener to handle events raised by this estimator.
-     * @throws InvalidSourceAndDestinationFrameTypeException if provided coordinate
-     *                                                       transformation is not
-     *                                                       from body to local
-     *                                                       navigation coordinates.
-     * @throws IllegalArgumentException                      if provided total samples
-     *                                                       is zero or negative,
-     *                                                       or if provided time
-     *                                                       interval is negative.
-     */
-    public IMUBiasEstimator(
-            final ECEFPosition position, final CoordinateTransformation nedC,
-            final int totalSamples, final Time timeInterval,
-            final IMUBiasEstimatorListener listener)
-            throws InvalidSourceAndDestinationFrameTypeException {
-        this(position, nedC, totalSamples, convertTime(timeInterval), listener);
-    }
-
-    /**
-     * Gets total samples to be processed to finish estimation.
-     *
-     * @return total samples to be processed to finish estimation.
-     */
-    public int getTotalSamples() {
-        return mTotalSamples;
-    }
-
-    /**
-     * Sets total samples to be processed to finish estimation.
-     *
-     * @param totalSamples total samples to be processed to finish estimation.
-     * @throws LockedException if estimator is currently running.
-     */
-    public void setTotalSamples(final int totalSamples) throws LockedException {
-        if (mRunning) {
-            throw new LockedException();
-        }
-
-        if (totalSamples <= 0) {
-            throw new IllegalArgumentException();
-        }
-
-        mTotalSamples = totalSamples;
     }
 
     /**
@@ -3088,7 +2033,7 @@ public class IMUBiasEstimator {
      *
      * @return listener to handle events raised by this estimator.
      */
-    public IMUBiasEstimatorListener getListener() {
+    public BodyKinematicsBiasEstimatorListener getListener() {
         return mListener;
     }
 
@@ -3098,7 +2043,7 @@ public class IMUBiasEstimator {
      * @param listener listener to handle events raised by this estimator.
      * @throws LockedException if this estimator is running.
      */
-    public void setListener(final IMUBiasEstimatorListener listener)
+    public void setListener(final BodyKinematicsBiasEstimatorListener listener)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -3316,6 +2261,49 @@ public class IMUBiasEstimator {
     }
 
     /**
+     * Gets estimated bias of accelerometer sensed specific force.
+     *
+     * @return estimated bias of accelerometer sensed specific force.
+     */
+    public AccelerationTriad getBiasF() {
+        return new AccelerationTriad(AccelerationUnit.METERS_PER_SQUARED_SECOND,
+                mBiasFx, mBiasFy, mBiasFz);
+    }
+
+    /**
+     * Gets estimated bias of accelerometer sensed specific force.
+     *
+     * @param result instance where bias of sensed specific force will
+     *               be stored.
+     */
+    public void getBiasF(final AccelerationTriad result) {
+        result.setValueCoordinatesAndUnit(mBiasFx, mBiasFy, mBiasFz,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+    }
+
+    /**
+     * Gets estimated bias of gyroscope sensed angular rate.
+     *
+     * @return estimated bias of gyroscope sensed angular rate.
+     */
+    public AngularSpeedTriad getBiasAngularRate() {
+        return new AngularSpeedTriad(AngularSpeedUnit.RADIANS_PER_SECOND,
+                mBiasAngularRateX, mBiasAngularRateY, mBiasAngularRateZ);
+    }
+
+    /**
+     * Gets estimated bias of gyroscope sensed angular rate.
+     *
+     * @param result instance where bias of gyroscope sensed angular
+     *               rate will be stored.
+     */
+    public void getBiasAngularRate(final AngularSpeedTriad result) {
+        result.setValueCoordinatesAndUnit(
+                mBiasAngularRateX, mBiasAngularRateY, mBiasAngularRateZ,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+    }
+
+    /**
      * Gets body kinematics containing estimated bias values for accelerometer
      * and gyroscope.
      *
@@ -3504,6 +2492,32 @@ public class IMUBiasEstimator {
     }
 
     /**
+     * Gets estimated standard deviation of accelerometer sensed
+     * specific force.
+     *
+     * @return estimated standard deviation of accelerometer
+     */
+    public AccelerationTriad getStandardDeviationF() {
+        return new AccelerationTriad(AccelerationUnit.METERS_PER_SQUARED_SECOND,
+                getStandardDeviationFx(),
+                getStandardDeviationFy(),
+                getStandardDeviationFz());
+    }
+
+    /**
+     * Gets estimated standard deviation of accelerometer sensed
+     * specific force.
+     *
+     * @param result instance where estimated standard deviation of
+     *               accelerometer will be stored.
+     */
+    public void getStandardDeviationF(final AccelerationTriad result) {
+        result.setValueCoordinatesAndUnit(
+                getStandardDeviationFx(), getStandardDeviationFy(), getStandardDeviationFz(),
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+    }
+
+    /**
      * Gets average of estimated standard deviation of accelerometer sensed specific
      * force for all coordinates expressed in meters per squared second (m/s^2).
      *
@@ -3637,6 +2651,31 @@ public class IMUBiasEstimator {
             final AngularSpeed result) {
         result.setValue(getStandardDeviationAngularRateZ());
         result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);
+    }
+
+    /**
+     * Gets estimated standard deviation of sensed angular rate.
+     *
+     * @return estimated standard deviation of sensed angular rate.
+     */
+    public AngularSpeedTriad getStandardDeviationAngularRate() {
+        return new AngularSpeedTriad(AngularSpeedUnit.RADIANS_PER_SECOND,
+                getStandardDeviationAngularRateX(),
+                getStandardDeviationAngularRateY(),
+                getStandardDeviationAngularRateZ());
+    }
+
+    /**
+     * Gets estimated standard deviation of sensed angular rate.
+     *
+     * @param result instance where estimated standard deviation of
+     *               sensed angular rate.
+     */
+    public void getStandardDeviationAngularRate(final AngularSpeedTriad result) {
+        result.setValueCoordinatesAndUnit(getStandardDeviationAngularRateX(),
+                getStandardDeviationAngularRateY(),
+                getStandardDeviationAngularRateZ(),
+                AngularSpeedUnit.RADIANS_PER_SECOND);
     }
 
     /**
@@ -3956,15 +2995,6 @@ public class IMUBiasEstimator {
     }
 
     /**
-     * Indicates whether estimator has finished the estimation.
-     *
-     * @return true if estimator has finished, false otherwise.
-     */
-    public boolean isFinished() {
-        return mNumberOfProcessedSamples == mTotalSamples;
-    }
-
-    /**
      * Gets theoretically expected body kinematics for provided body position and
      * orientation, and provided time interval, assuming that body remains at the
      * same position (zero velocity).
@@ -3993,22 +3023,15 @@ public class IMUBiasEstimator {
     /**
      * Adds a sample of body kinematics (accelerometer + gyroscope readings) obtained
      * from an IMU.
-     * If estimator is already finished, provided sample will be ignored.
      *
      * @param kinematics kinematics instance to be added and processed.
-     * @return true if provided kinematics instance has been processed, false if it has
-     * been ignored.
      * @throws LockedException if estimator is currently running.
      */
-    public boolean addBodyKinematics(final BodyKinematics kinematics)
+    public void addBodyKinematics(final BodyKinematics kinematics)
             throws LockedException {
 
         if (mRunning) {
             throw new LockedException();
-        }
-
-        if (isFinished()) {
-            return true;
         }
 
         mRunning = true;
@@ -4039,24 +3062,17 @@ public class IMUBiasEstimator {
         final double diffAngularRateZ = angularRateZ - expectedAngularRateZ;
 
         // compute biases
-        mBiasFx = mBiasFx * (double) mNumberOfProcessedSamples
-                / (double) mNumberOfProcessedSamplesPlusOne
-                + diffFx / (double) mNumberOfProcessedSamplesPlusOne;
-        mBiasFy = mBiasFy * (double) mNumberOfProcessedSamples
-                / (double) mNumberOfProcessedSamplesPlusOne
-                + diffFy / (double) mNumberOfProcessedSamplesPlusOne;
-        mBiasFz = mBiasFz * (double) mNumberOfProcessedSamples
-                / (double) mNumberOfProcessedSamplesPlusOne
-                + diffFz / (double) mNumberOfProcessedSamplesPlusOne;
+        final double tmp = (double) mNumberOfProcessedSamples
+                / (double) mNumberOfProcessedSamplesPlusOne;
+        mBiasFx = mBiasFx * tmp + diffFx / (double) mNumberOfProcessedSamplesPlusOne;
+        mBiasFy = mBiasFy * tmp + diffFy / (double) mNumberOfProcessedSamplesPlusOne;
+        mBiasFz = mBiasFz * tmp + diffFz / (double) mNumberOfProcessedSamplesPlusOne;
 
-        mBiasAngularRateX = mBiasAngularRateX * (double) mNumberOfProcessedSamples
-                / (double) mNumberOfProcessedSamplesPlusOne
+        mBiasAngularRateX = mBiasAngularRateX * tmp
                 + diffAngularRateX / (double) mNumberOfProcessedSamplesPlusOne;
-        mBiasAngularRateY = mBiasAngularRateY * (double) mNumberOfProcessedSamples
-                / (double) mNumberOfProcessedSamplesPlusOne
+        mBiasAngularRateY = mBiasAngularRateY * tmp
                 + diffAngularRateY / (double) mNumberOfProcessedSamplesPlusOne;
-        mBiasAngularRateZ = mBiasAngularRateZ * (double) mNumberOfProcessedSamples
-                / (double) mNumberOfProcessedSamplesPlusOne
+        mBiasAngularRateZ = mBiasAngularRateZ * tmp
                 + diffAngularRateZ / (double) mNumberOfProcessedSamplesPlusOne;
 
         // compute variances
@@ -4077,27 +3093,18 @@ public class IMUBiasEstimator {
         final double diffBiasAngularRateZ2 =
                 diffBiasAngularRateZ * diffBiasAngularRateZ;
 
-        mVarianceFx = mVarianceFx * (double) mNumberOfProcessedSamples
-                / (double) mNumberOfProcessedSamplesPlusOne
+        mVarianceFx = mVarianceFx * tmp
                 + diffBiasFx2 / (double) mNumberOfProcessedSamplesPlusOne;
-        mVarianceFy = mVarianceFy * (double) mNumberOfProcessedSamples
-                / (double) mNumberOfProcessedSamplesPlusOne
+        mVarianceFy = mVarianceFy * tmp
                 + diffBiasFy2 / (double) mNumberOfProcessedSamplesPlusOne;
-        mVarianceFz = mVarianceFz * (double) mNumberOfProcessedSamples
-                / (double) mNumberOfProcessedSamplesPlusOne
+        mVarianceFz = mVarianceFz * tmp
                 + diffBiasFz2 / (double) mNumberOfProcessedSamplesPlusOne;
 
-        mVarianceAngularRateX = mVarianceAngularRateX
-                * (double) mNumberOfProcessedSamples
-                / (double) mNumberOfProcessedSamplesPlusOne
+        mVarianceAngularRateX = mVarianceAngularRateX * tmp
                 + diffBiasAngularRateX2 / (double) mNumberOfProcessedSamplesPlusOne;
-        mVarianceAngularRateY = mVarianceAngularRateY
-                * (double) mNumberOfProcessedSamples
-                / (double) mNumberOfProcessedSamplesPlusOne
+        mVarianceAngularRateY = mVarianceAngularRateY * tmp
                 + diffBiasAngularRateY2 / (double) mNumberOfProcessedSamplesPlusOne;
-        mVarianceAngularRateZ = mVarianceAngularRateZ
-                * (double) mNumberOfProcessedSamples
-                / (double) mNumberOfProcessedSamplesPlusOne
+        mVarianceAngularRateZ = mVarianceAngularRateZ * tmp
                 + diffBiasAngularRateZ2 / (double) mNumberOfProcessedSamplesPlusOne;
 
         mLastBodyKinematics = kinematics;
@@ -4110,12 +3117,6 @@ public class IMUBiasEstimator {
         }
 
         mRunning = false;
-
-        if (isFinished() && mListener != null) {
-            mListener.onFinish(this);
-        }
-
-        return true;
     }
 
     /**

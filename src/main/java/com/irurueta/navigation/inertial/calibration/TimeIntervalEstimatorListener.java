@@ -16,36 +16,35 @@
 package com.irurueta.navigation.inertial.calibration;
 
 /**
- * Listener for IMUBiasAndNoiseEstimatorListener to handle generated events.
+ * Listener for IMUTimeIntervalEstimator to handle generated events.
  */
-public interface IMUBiasEstimatorListener {
+public interface TimeIntervalEstimatorListener {
 
     /**
      * Called when estimation starts.
      *
      * @param estimator estimator that raised the event.
      */
-    void onStart(final IMUBiasEstimator estimator);
+    void onStart(final TimeIntervalEstimator estimator);
 
     /**
-     * Called when a body kinematics sample is added containing new IMU
-     * (accelerometer + gyroscope) measures.
+     * Called when a timestamp is added.
      *
      * @param estimator estimator that raised the event.
      */
-    void onBodyKinematicsAdded(final IMUBiasEstimator estimator);
+    void onTimestampAdded(final TimeIntervalEstimator estimator);
 
     /**
      * Called when estimation finishes after processing all required samples.
      *
      * @param estimator estimator that raised the event.
      */
-    void onFinish(final IMUBiasEstimator estimator);
+    void onFinish(final TimeIntervalEstimator estimator);
 
     /**
      * Called when estimation is reset.
      *
      * @param estimator estimator that raised the event.
      */
-    void onReset(final IMUBiasEstimator estimator);
+    void onReset(final TimeIntervalEstimator estimator);
 }

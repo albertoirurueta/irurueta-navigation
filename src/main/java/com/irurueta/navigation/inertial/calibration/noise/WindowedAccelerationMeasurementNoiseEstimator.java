@@ -15,7 +15,7 @@
  */
 package com.irurueta.navigation.inertial.calibration.noise;
 
-import com.irurueta.navigation.inertial.calibration.IMUTimeIntervalEstimator;
+import com.irurueta.navigation.inertial.calibration.TimeIntervalEstimator;
 import com.irurueta.units.Acceleration;
 import com.irurueta.units.AccelerationConverter;
 import com.irurueta.units.AccelerationUnit;
@@ -28,7 +28,7 @@ import com.irurueta.units.AccelerationUnit;
  * To compute PSD's, this estimator assumes that accelerometer samples are
  * obtained at a constant provided rate equal to {@link #getTimeInterval()} seconds.
  * If not available, accelerometer sampling rate average can be estimated using
- * {@link IMUTimeIntervalEstimator}.
+ * {@link TimeIntervalEstimator}.
  * This estimator does NOT require the knowledge of current location and body
  * orientation.
  * This implementation of noise estimator will use the following units:

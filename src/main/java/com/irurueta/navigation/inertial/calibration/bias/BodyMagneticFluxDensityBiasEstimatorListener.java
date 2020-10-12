@@ -13,38 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.irurueta.navigation.inertial.calibration;
+package com.irurueta.navigation.inertial.calibration.bias;
 
 /**
- * Listener for IMUTimeIntervalEstimator to handle generated events.
+ * Listener to {@link BodyMagneticFluxDensityBiasEstimator} to handle generated
+ * events.
  */
-public interface IMUTimeIntervalEstimatorListener {
+public interface BodyMagneticFluxDensityBiasEstimatorListener {
 
     /**
      * Called when estimation starts.
      *
      * @param estimator estimator that raised the event.
      */
-    void onStart(final IMUTimeIntervalEstimator estimator);
+    void onStart(final BodyMagneticFluxDensityBiasEstimator estimator);
 
     /**
-     * Called when a timestamp is added.
+     * Called when a body magnetic flux density is added containing new
+     * magnetometer measures.
      *
      * @param estimator estimator that raised the event.
      */
-    void onTimestampAdded(final IMUTimeIntervalEstimator estimator);
-
-    /**
-     * Called when estimation finishes after processing all required samples.
-     *
-     * @param estimator estimator that raised the event.
-     */
-    void onFinish(final IMUTimeIntervalEstimator estimator);
+    void onBodyMagneticFluxDensityAdded(
+            final BodyMagneticFluxDensityBiasEstimator estimator);
 
     /**
      * Called when estimation is reset.
      *
      * @param estimator estimator that raised the event.
      */
-    void onReset(final IMUTimeIntervalEstimator estimator);
+    void onReset(final BodyMagneticFluxDensityBiasEstimator estimator);
 }
