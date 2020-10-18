@@ -20,8 +20,3 @@ A GNSS/INS navigation library
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=albertoirurueta_irurueta-navigation&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=albertoirurueta_irurueta-navigation)
 
 [Maven Site Report](http://albertoirurueta.github.io/irurueta-navigation)
-
-Donations are welcome :)
-Contribute to the maintenance of this project by clicking on the following link:
-
-[![paypal](https://www.paypalobjects.com/webstatic/en_US/i/buttons/PP_logo_h_100x26.png)](https://paypal.me/albertoirurueta)

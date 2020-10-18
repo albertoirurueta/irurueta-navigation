@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.irurueta.navigation.inertial.calibration;
+package com.irurueta.navigation.inertial.calibration.gyroscope;
 
 import com.irurueta.algebra.AlgebraException;
 import com.irurueta.algebra.Matrix;

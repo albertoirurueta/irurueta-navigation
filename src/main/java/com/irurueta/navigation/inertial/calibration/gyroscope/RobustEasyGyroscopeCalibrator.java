@@ -25,7 +25,6 @@ import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
 import com.irurueta.navigation.inertial.BodyKinematics;
 import com.irurueta.navigation.inertial.calibration.AccelerationFixer;
-import com.irurueta.navigation.inertial.calibration.AngularRateFixer;
 import com.irurueta.navigation.inertial.calibration.BodyKinematicsSequence;
 import com.irurueta.navigation.inertial.calibration.CalibrationException;
 import com.irurueta.navigation.inertial.calibration.StandardDeviationTimedBodyKinematics;
