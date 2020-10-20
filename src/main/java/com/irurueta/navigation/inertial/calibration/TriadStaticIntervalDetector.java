@@ -1,35 +1,53 @@
+/*
+ * Copyright (C) 2020 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.irurueta.navigation.inertial.calibration;
 
 import com.irurueta.navigation.LockedException;
-import com.irurueta.navigation.inertial.calibration.noise.AccumulatedAccelerationTriadNoiseEstimator;
-import com.irurueta.navigation.inertial.calibration.noise.WindowedAccelerationTriadNoiseEstimator;
+import com.irurueta.navigation.inertial.calibration.noise.AccumulatedTriadNoiseEstimator;
 import com.irurueta.navigation.inertial.calibration.noise.WindowedTriadNoiseEstimator;
-import com.irurueta.units.Acceleration;
-import com.irurueta.units.AccelerationConverter;
-import com.irurueta.units.AccelerationUnit;
+import com.irurueta.units.Measurement;
 
 /**
- * This detector is in charge of determining when a static period of
- * IMU measurements starts and finishes.
- * Statis periods, are periods of time where the device is considered
- * to remain static (no movement applied to it).
+ * Abstract base class for detectors in charge of determining when a static period of
+ * measurements starts and finishes.
+ * Static periods are periods of time where the device is considered to
+ * remain static (no movement applied to it).
+ *
+ * @param <U> type of unit.
+ * @param <M> a type of measurement.
+ * @param <T> a triad type.
+ * @param <D> a detector type.
+ * @param <L> a listener type.
  */
-public class StaticIntervalDetector {
+public abstract class TriadStaticIntervalDetector<U extends Enum<?>, M extends Measurement<U>,
+        T extends Triad<U, M>, D extends TriadStaticIntervalDetector<U, M, T, D, L>,
+        L extends TriadStaticIntervalDetectorListener<U, M, T, D>> {
 
     /**
      * Number of samples to keep within the window by default.
-     * For an accelerometer generating 100 samples/second, this is equivalent to
-     * 1 second.
-     * For an accelerometer generating 50 samples/second, this is equivalent to
-     * 2 seconds.
+     * For a sensor generating 100 samples/second, this is equivalent to 1 second.
+     * For a sensor generating 50 samples/second, this is equivalent to 2 seconds.
      */
     public static final int DEFAULT_WINDOW_SIZE = WindowedTriadNoiseEstimator.DEFAULT_WINDOW_SIZE;
 
     /**
-     * Number of samples to process during the initial static period to determine the accelerometer
-     * noise level.
-     * For an accelerometer generating 100 samples/secon, this is equivalent to 50 seconds.
-     * For an accelerometer generating 50 samples/second, this is equivalent to 100 seconds.
+     * Number of samples to process during the initial static period to determine the sensor
+     * (accelerometer, gyroscope or magnetometer) noise level.
+     * For a sensor generating 100 samples/second, this is equivalent to 50 seconds.
+     * For a sensor generating 50 samples/second, this is equivalent to 100 seconds.
      */
     public static final int DEFAULT_INITIAL_STATIC_SAMPLES = 5000;
 
@@ -54,9 +72,10 @@ public class StaticIntervalDetector {
     /**
      * Default overall absolute threshold to determine whether there has been excessive motion
      * during the whole initialization phase.
-     * This threshold is expressed in meters per squared second (m/s^2), and by default it is
-     * set to the maximum allowed value, thus effectively disabling this error condition check
-     * during initialization.
+     * This threshold is expressed in meters per squared second (m/s^2) for acceleration, radians
+     * per second (rad/s) for angular speed or Teslas (T) for magnetic flux density, and by
+     * default it is set to the maximum allowed value, thus effectively disabling this error
+     * condition check during initialization.
      */
     public static final double DEFAULT_BASE_NOISE_LEVEL_ABSOLUTE_THRESHOLD = Double.MAX_VALUE;
 
@@ -69,7 +88,7 @@ public class StaticIntervalDetector {
     private int mWindowSize = DEFAULT_WINDOW_SIZE;
 
     /**
-     * Number of samples to be processed initially while keeping the accelerometer static in order
+     * Number of samples to be processed initially while keeping the sensor static in order
      * to find the base noise level when device is static.
      */
     private int mInitialStaticSamples = DEFAULT_INITIAL_STATIC_SAMPLES;
@@ -92,14 +111,15 @@ public class StaticIntervalDetector {
      * during the whole initialization phase.
      * Failure will be detected if estimated base noise level exceeds this threshold when
      * initialization completes.
-     * This threshold is expressed in meters per squared second (m/s^2).
+     * This threshold is expressed in meters per squared second (m/s^2) for acceleration,
+     * radians per second (rad/s) for angular speed or Teslas (T) for magnetic flux density.
      */
     private double mBaseNoiseLevelAbsoluteThreshold = DEFAULT_BASE_NOISE_LEVEL_ABSOLUTE_THRESHOLD;
 
     /**
      * Listener to handle events generated by this detector.
      */
-    private StaticIntervalDetectorListener mListener;
+    private L mListener;
 
     /**
      * Current status of this detector.
@@ -107,14 +127,16 @@ public class StaticIntervalDetector {
     private Status mStatus = Status.IDLE;
 
     /**
-     * Accelerometer base noise level that has been detected during initialization expressed in
-     * meters per squared second (m/s^2).
+     * Measurement base noise level that has been detected during initialization expressed in
+     * meters per squared second (m/s^2) for acceleration, radians per second (rad/s) for
+     * angular speed or Teslas (T) for magnetic flux density.
      */
     private double mBaseNoiseLevel;
 
     /**
      * Threshold to determine static/dynamic period changes expressed in meters per squared
-     * second (m/s^2).
+     * second (m/s^2) for acceleration, radians per second (rad/s) for angular speed or
+     * Teslas (T) for magnetic flux density.
      */
     private double mThreshold;
 
@@ -129,53 +151,70 @@ public class StaticIntervalDetector {
     private int mProcessedSamples;
 
     /**
-     * Gets average x-coordinate of specific force during last static period
-     * expressed in meters per squared second (m/s^2).
+     * Gets average x-coordinate of measurement during last static period
+     * expressed in meters per squared second (m/s^2) for acceleration,
+     * radians per second (rad/s) for angular speed or Teslas (T) for
+     * magnetic flux density.
      * This value is updated when switching from a static period to a dynamic
      * one or after completing initialization.
      */
-    private double mAvgSpecificForceX;
+    private double mAvgX;
 
     /**
-     * Gets average y-coordinate of specific force during last static period
-     * expressed in meters per squared second (m/s^2).
+     * Gets average y-coordinate of measurement during last static period
+     * expressed in meters per squared second (m/s^2) for acceleration,
+     * radians per second (rad/s) for angular speed or Teslas (T) for
+     * magnetic flux density.
      * This value is updated when switching from a static period to a dynamic
      * one or after completing initialization.
      */
-    private double mAvgSpecificForceY;
+    private double mAvgY;
 
     /**
      * Gets average z-coordinate of specific force during last static period
-     * expressed in meters per squared second (m/s^2).
+     * expressed in meters per squared second (m/s^2) for acceleration,
+     * radians per second (rad/s) for angular speed or Teslas (T) for
+     * magnetic flux density.
      * This value is updated when switching from a static period to a dynamic
      * one or after completing initialization.
      */
-    private double mAvgSpecificForceZ;
+    private double mAvgZ;
 
     /**
-     * Estimator to find instantaneous accelerometer noise level averaged for a certain window of samples.
+     * Estimator to find instantaneous measurement noise level averaged for a certain window of samples.
      */
-    private final WindowedAccelerationTriadNoiseEstimator mWindowedNoiseEstimator
-            = new WindowedAccelerationTriadNoiseEstimator();
+    private final WindowedTriadNoiseEstimator<U, M, T, ?, ?> mWindowedNoiseEstimator;
 
     /**
      * Estimator to find accumulated accelerometer noise level.
      */
-    private final AccumulatedAccelerationTriadNoiseEstimator mAccumulatedNoiseEstimator =
-            new AccumulatedAccelerationTriadNoiseEstimator();
+    private final AccumulatedTriadNoiseEstimator<U, M, T, ?, ?> mAccumulatedNoiseEstimator;
 
     /**
      * Constructor.
+     *
+     * @param windowedNoiseEstimator    windowed noise estimator to estimate noise within a window of measures.
+     * @param accumulatedNoiseEstimator accumulated noise estimator to estimate accumulated noise and average.
      */
-    public StaticIntervalDetector() {
+    protected TriadStaticIntervalDetector(
+            final WindowedTriadNoiseEstimator<U, M, T, ?, ?> windowedNoiseEstimator,
+            final AccumulatedTriadNoiseEstimator<U, M, T, ?, ?> accumulatedNoiseEstimator) {
+        mWindowedNoiseEstimator = windowedNoiseEstimator;
+        mAccumulatedNoiseEstimator = accumulatedNoiseEstimator;
     }
 
     /**
      * Constructor.
      *
-     * @param listener listener to handle events generated by this detector.
+     * @param windowedNoiseEstimator    windowed noise estimator to estimate noise within a window of measures.
+     * @param accumulatedNoiseEstimator accumulated noise estimator to estimate accumulated noise and average.
+     * @param listener                  listener to handle events generated by this detector.
      */
-    public StaticIntervalDetector(final StaticIntervalDetectorListener listener) {
+    protected TriadStaticIntervalDetector(
+            final WindowedTriadNoiseEstimator<U, M, T, ?, ?> windowedNoiseEstimator,
+            final AccumulatedTriadNoiseEstimator<U, M, T, ?, ?> accumulatedNoiseEstimator,
+            final L listener) {
+        this(windowedNoiseEstimator, accumulatedNoiseEstimator);
         mListener = listener;
     }
 
@@ -208,7 +247,7 @@ public class StaticIntervalDetector {
     }
 
     /**
-     * Gets number of samples to be processed initially while keeping the accelerometer static in order
+     * Gets number of samples to be processed initially while keeping the sensor static in order
      * to find the base noise level when device is static.
      *
      * @return number of samples to be processed initially.
@@ -218,7 +257,7 @@ public class StaticIntervalDetector {
     }
 
     /**
-     * Sets number of samples to be processed initially while keeping the accelerometer static in order
+     * Sets number of samples to be processed initially while keeping the sensor static in order
      * to find the base noise level when device is static.
      *
      * @param initialStaticSamples number of samples to be processed initially.
@@ -311,7 +350,9 @@ public class StaticIntervalDetector {
      * excessive motion during the whole initialization phase.
      * Failure will be detected if estimated base noise level exceeds this
      * threshold when initialization completes.
-     * This threshold is expressed in meters per squared second (m/s^2).
+     * This threshold is expressed in meters per squared second (m/s^2) for
+     * acceleration, radians per second (rad/s) for angular speed or Teslas
+     * (T) for magnetic flux density.
      *
      * @return overall absolute threshold to determine whether there has
      * been excessive motion.
@@ -325,7 +366,9 @@ public class StaticIntervalDetector {
      * excessive motion during the whole initialization phase.
      * Failure will be detected if estimated base noise level exceeds this
      * threshold when initialization completes.
-     * This threshold is expressed in meters per squared second (m/s^2).
+     * This threshold is expressed in meters per squared second (m/s^2) for
+     * acceleration, radians per second (rad/s) for angular speed or Teslas
+     * (T) for magnetic flux density.
      *
      * @param baseNoiseLevelAbsoluteThreshold overall absolute threshold to
      *                                        determine whether there has been
@@ -354,9 +397,8 @@ public class StaticIntervalDetector {
      * @return overall absolute threshold to determine whether there has been
      * excessive motion.
      */
-    public Acceleration getBaseNoiseLevelAbsoluteThresholdAsAcceleration() {
-        return new Acceleration(mBaseNoiseLevelAbsoluteThreshold,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+    public M getBaseNoiseLevelAbsoluteThresholdAsMeasurement() {
+        return createMeasurement(mBaseNoiseLevelAbsoluteThreshold, getDefaultUnit());
     }
 
     /**
@@ -367,10 +409,9 @@ public class StaticIntervalDetector {
      *
      * @param result instance where result will be stored.
      */
-    public void getBaseNoiseLevelAbsoluteThresholdAsAcceleration(
-            final Acceleration result) {
+    public void getBaseNoiseLevelAbsoluteThresholdAsMeasurement(final M result) {
         result.setValue(mBaseNoiseLevelAbsoluteThreshold);
-        result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        result.setUnit(getDefaultUnit());
     }
 
     /**
@@ -386,14 +427,13 @@ public class StaticIntervalDetector {
      * @throws IllegalArgumentException if provided value is zero or negative.
      */
     public void setBaseNoiseLevelAbsoluteThreshold(
-            final Acceleration baseNoiseLevelAbsoluteThreshold)
-            throws LockedException {
+            final M baseNoiseLevelAbsoluteThreshold) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
 
-        setBaseNoiseLevelAbsoluteThreshold(convertAcceleration(
-                baseNoiseLevelAbsoluteThreshold));
+        setBaseNoiseLevelAbsoluteThreshold(
+                convertMeasurement(baseNoiseLevelAbsoluteThreshold));
     }
 
     /**
@@ -401,7 +441,7 @@ public class StaticIntervalDetector {
      *
      * @return listener to handle events.
      */
-    public StaticIntervalDetectorListener getListener() {
+    public L getListener() {
         return mListener;
     }
 
@@ -411,8 +451,7 @@ public class StaticIntervalDetector {
      * @param listener listener to handle events.
      * @throws LockedException if detector is busy.
      */
-    public void setListener(final StaticIntervalDetectorListener listener)
-            throws LockedException {
+    public void setListener(final L listener) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -430,8 +469,10 @@ public class StaticIntervalDetector {
     }
 
     /**
-     * Gets accelerometer base noise level that has been detected during
-     * initialization expressed in meters per squared second (m/s^2).
+     * Gets measurement base noise level that has been detected during
+     * initialization expressed in meters per squared second (m/s^2) for
+     * acceleration, radians per second (rad/s) for angular speed or
+     * Teslas (T) for magnetic flux density.
      *
      * @return accelerometer base noise level.
      */
@@ -440,30 +481,30 @@ public class StaticIntervalDetector {
     }
 
     /**
-     * Gets accelerometer base noise level that has been detected during
+     * Gets measurement base noise level that has been detected during
      * initialization.
      *
-     * @return accelerometer base noise level.
+     * @return measurement base noise level.
      */
-    public Acceleration getBaseNoiseLevelAsAcceleration() {
-        return new Acceleration(mBaseNoiseLevel,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+    public M getBaseNoiseLevelAsMeasurement() {
+        return createMeasurement(mBaseNoiseLevel, getDefaultUnit());
     }
 
     /**
-     * Gets accelerometer base noise level that has been detected during
+     * Gets measurement base noise level that has been detected during
      * initialization.
      *
      * @param result instance where result will be stored.
      */
-    public void getBaseNoiseLevelAsAcceleration(final Acceleration result) {
+    public void getBaseNoiseLevelAsMeasurement(final M result) {
         result.setValue(mBaseNoiseLevel);
-        result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        result.setUnit(getDefaultUnit());
     }
 
     /**
      * Gets threshold to determine static/dynamic period changes expressed in
-     * meters per squared second (m/s^2).
+     * meters per squared second (m/s^2) for acceleration, radians per second
+     * (rad/s) for angular speed or Teslas (T) for magnetic flux density.
      *
      * @return threshold to determine static/dynamic period changes.
      */
@@ -476,9 +517,8 @@ public class StaticIntervalDetector {
      *
      * @return threshold to determine static/dynamic period changes.
      */
-    public Acceleration getThresholdAsAcceleration() {
-        return new Acceleration(mThreshold,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+    public M getThresholdAsMeasurement() {
+        return createMeasurement(mThreshold, getDefaultUnit());
     }
 
     /**
@@ -486,9 +526,9 @@ public class StaticIntervalDetector {
      *
      * @param result instance where result will be stored.
      */
-    public void getThresholdAsAcceleration(final Acceleration result) {
+    public void getThresholdAsMeasurement(final M result) {
         result.setValue(mThreshold);
-        result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        result.setUnit(getDefaultUnit());
     }
 
     /**
@@ -510,183 +550,188 @@ public class StaticIntervalDetector {
     }
 
     /**
-     * Gets average x-coordinate of specific force during last static period
-     * expressed in meters per squared second (m/s^2).
+     * Gets average x-coordinate of measurement during last static period
+     * expressed in meters per squared second (m/s^2) for acceleration,
+     * radians per second (rad/s) for angular speed or Teslas (T) for
+     * magnetic flux density.
      * This value is updated when switching from a static period to a dynamic
      * one or after completing initialization.
      *
-     * @return average x-coordinate of specific force during last static period.
+     * @return average x-coordinate of measurement during last static period.
      */
-    public double getAvgSpecificForceX() {
-        return mAvgSpecificForceX;
+    public double getAvgX() {
+        return mAvgX;
     }
 
     /**
-     * Gets average x-coordinate of specific force during last static period.
+     * Gets average x-coordinate of measurement during last static period.
      * This value is updated when switching from a static period to a dynamic
      * one or after completing initialization.
      *
-     * @return average x-coordinate of specific force during last static period.
+     * @return average x-coordinate of measurement during last static period.
      */
-    public Acceleration getAvgSpecificForceXAsAcceleration() {
-        return new Acceleration(mAvgSpecificForceX,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+    public M getAvgXAsMeasurement() {
+        return createMeasurement(mAvgX, getDefaultUnit());
     }
 
     /**
-     * Gets average x-coordinate of specific force during last static period.
+     * Gets average x-coordinate of measurement during last static period.
      * This value is updated when switching from a static period to a dynamic
      * one or after completing initialization.
      *
      * @param result instance where result will be stored.
      */
-    public void getAvgSpecificForceXAsAcceleration(final Acceleration result) {
-        result.setValue(mAvgSpecificForceX);
-        result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);
+    public void getAvgXAsMeasurement(final M result) {
+        result.setValue(mAvgX);
+        result.setUnit(getDefaultUnit());
     }
 
     /**
-     * Gets average y-coordinate of specific force during last static period
-     * expressed in meters per squared second (m/s^2).
+     * Gets average y-coordinate of measurement during last static period
+     * expressed in meters per squared second (m/s^2) for acceleration,
+     * radians per second (rad/s) for angular speed or Teslas (T) for
+     * magnetic flux density.
      * This value is updated when switching from a static period to a dynamic
      * one or after completing initialization.
      *
-     * @return average y-coordinate of specific force during last static period.
+     * @return average y-coordinate of measurement during last static period.
      */
-    public double getAvgSpecificForceY() {
-        return mAvgSpecificForceY;
+    public double getAvgY() {
+        return mAvgY;
     }
 
     /**
-     * Gets average y-coordinate of specific force during last static period.
+     * Gets average y-coordinate of measurement during last static period.
      * This value is updated when switching from a static period to a dynamic
      * one or after completing initialization.
      *
-     * @return average y-coordinate of specific force during last static period.
+     * @return average y-coordinate of measurement during last static period.
      */
-    public Acceleration getAvgSpecificForceYAsAcceleration() {
-        return new Acceleration(mAvgSpecificForceY,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+    public M getAvgYAsMeasurement() {
+        return createMeasurement(mAvgY, getDefaultUnit());
     }
 
     /**
-     * Gets average y-coordinate of specific force during last static period.
+     * Gets average y-coordinate of measurement during last static period.
      * This value is updated when switching from a static period to a dynamic
      * one or after completing initialization.
      *
      * @param result instance where result will be stored.
      */
-    public void getAvgSpecificForceYAsAcceleration(final Acceleration result) {
-        result.setValue(mAvgSpecificForceY);
-        result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);
+    public void getAvgYAsMeasurement(final M result) {
+        result.setValue(mAvgY);
+        result.setUnit(getDefaultUnit());
     }
 
     /**
      * Gets average z-coordinate of specific force during last static period
-     * expressed in meters per squared second (m/s^2).
+     * expressed in meters per squared second (m/s^2) for acceleration,
+     * radians per second (rad/s) for angular speed or Teslas (T) for
+     * magnetic flux density.
      * This value is updated when switching from a static period to a dynamic
      * one or after completing initialization.
      *
-     * @return average z-coordinate of specific force during last static period.
+     * @return average y-coordinate of measurement during last static period.
      */
-    public double getAvgSpecificForceZ() {
-        return mAvgSpecificForceZ;
+    public double getAvgZ() {
+        return mAvgZ;
     }
 
     /**
-     * Gets average z-coordinate of specific force during last static period.
+     * Gets average z-coordinate of measurement during last static period.
      * This value is updated when switching from a static period to a dynamic
      * one or after completing initialization.
      *
-     * @return average z-coordinate of specific force during last static period.
+     * @return average z-coordinate of measurement during last static period.
      */
-    public Acceleration getAvgSpecificForceZAsAcceleration() {
-        return new Acceleration(mAvgSpecificForceZ,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+    public M getAvgZAsMeasurement() {
+        return createMeasurement(mAvgZ, getDefaultUnit());
     }
 
     /**
-     * Gets average z-coordinate of specific force during last static period.
-     * This value is updated when switching from a static period to a dynamic
-     * one or after completing initialization.
-     *
-     * @param result instance where result will be stored.
-     */
-    public void getAvgSpecificForceZAsAcceleration(final Acceleration result) {
-        result.setValue(mAvgSpecificForceZ);
-        result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);
-    }
-
-    /**
-     * Gets average specific force during last static period.
-     * This value is updated when switching from a static period to a dynamic
-     * one or after completing initialization.
-     *
-     * @return average specific force during last static period.
-     */
-    public AccelerationTriad getAvgSpecificForce() {
-        return new AccelerationTriad(AccelerationUnit.METERS_PER_SQUARED_SECOND,
-                mAvgSpecificForceX, mAvgSpecificForceY, mAvgSpecificForceZ);
-    }
-
-    /**
-     * Gets average specific force during last static period.
+     * Gets average z-coordinate of measurement during last static period.
      * This value is updated when switching from a static period to a dynamic
      * one or after completing initialization.
      *
      * @param result instance where result will be stored.
      */
-    public void getAvgSpecificForce(final AccelerationTriad result) {
-        result.setValueCoordinatesAndUnit(
-                mAvgSpecificForceX, mAvgSpecificForceY, mAvgSpecificForceZ,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+    public void getAvgZAsMeasurement(final M result) {
+        result.setValue(mAvgZ);
+        result.setUnit(getDefaultUnit());
     }
 
     /**
-     * Processes a new acceleration triad sample.
+     * Gets average measurement triad during last static period.
+     * This value is updated when switching from a static period to a dynamic
+     * one or after completing initialization.
      *
-     * @param triad a new acceleration triad to be processed.
+     * @return average measurement triad during last static period.
+     */
+    public T getAvgTriad() {
+        return createTriad(mAvgX, mAvgY, mAvgZ, getDefaultUnit());
+    }
+
+    /**
+     * Gets average measurement triad during last static period.
+     * This value is updated when switching from a static period to a dynamic
+     * one or after completing initialization.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getAvgTriad(final T result) {
+        result.setValueCoordinatesAndUnit(mAvgX, mAvgY, mAvgZ,
+                getDefaultUnit());
+    }
+
+    /**
+     * Processes a new measurement triad sample.
+     *
+     * @param triad a new measurement triad to be processed.
      * @return true if provided triad has been processed, false if provided triad has been skipped because detector
      * previously failed. If detector previously failed, it will need to be reset before processing additional
      * samples.
      * @throws LockedException if detector is busy processing a previous sample.
      */
-    public boolean processAccelerationTriad(final AccelerationTriad triad) throws LockedException {
-        return processAccelerationTriad(
-                convertAcceleration(triad.getValueX(), triad.getUnit()),
-                convertAcceleration(triad.getValueY(), triad.getUnit()),
-                convertAcceleration(triad.getValueZ(), triad.getUnit()));
+    public boolean process(final T triad) throws LockedException {
+        return process(convertMeasurement(triad.getValueX(), triad.getUnit()),
+                convertMeasurement(triad.getValueY(), triad.getUnit()),
+                convertMeasurement(triad.getValueZ(), triad.getUnit()));
     }
 
     /**
-     * Processes a new acceleration triad sample.
+     * Processes a new measurement triad sample.
      *
-     * @param fx x-coordinate of sensed accelerometer specific force.
-     * @param fy y-coordinate of sensed accelerometer specific force.
-     * @param fz z-coordinate of sensed accelerometer specific force.
+     * @param valueX x-coordinate of sensed measurement.
+     * @param valueY y-coordinate of sensed measurement.
+     * @param valueZ z-coordinate of sensed measurement.
      * @return true if provided triad has been processed, false if provided triad has been skipped because detector
      * previously failed. If detector previously failed, it will need to be reset before processing additional
      * samples.
      * @throws LockedException if detector is busy processing a previous sample.
      */
-    public boolean processAccelerationTriad(
-            final Acceleration fx, final Acceleration fy, final Acceleration fz) throws LockedException {
-        return processAccelerationTriad(convertAcceleration(fx), convertAcceleration(fy), convertAcceleration(fz));
-    }
-
-    /**
-     * Processed a new acceleration triad sample.
-     *
-     * @param fx x-coordinate of sensed accelerometer specific force expressed in meters per squared second (m/s^2).
-     * @param fy y-coordinate of sensed accelerometer specific force expressed in meters per squared second (m/s^2).
-     * @param fz z-coordinate of sensed accelerometer specific force expressed in meters per squared second (m/s^2).
-     * @return true if provided triad has been processed, false if provided triad has been skipped because detector
-     * previously failed. If detector previously failed, it will need to be reset before processing additional
-     * samples.
-     * @throws LockedException if detector is busy processing a previous sample.
-     */
-    public boolean processAccelerationTriad(final double fx, final double fy, final double fz)
+    public boolean process(final M valueX, final M valueY, final M valueZ)
             throws LockedException {
+        return process(convertMeasurement(valueX),
+                convertMeasurement(valueY),
+                convertMeasurement(valueZ));
+    }
+
+    /**
+     * Processes a new measurement triad sample.
+     * Provided measurement coordinates are expressed in meters per squared second (m/s^2) for acceleration,
+     * radians per second (rad/s) for angular speed or Teslas (T) for magnetic flux density.
+     *
+     * @param valueX x-coordinate of sensed measurement.
+     * @param valueY y-coordinate of sensed measurement.
+     * @param valueZ z-coordinate of sensed measurement.
+     * @return true if provided triad has been processed, false if provided triad has been skipped because detector
+     * previously failed. If detector previously failed, it will need to be reset before processing additional
+     * samples.
+     * @throws LockedException if detector is busy processing a previous sample.
+     */
+    public boolean process(final double valueX,
+                           final double valueY,
+                           final double valueZ) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -702,14 +747,15 @@ public class StaticIntervalDetector {
             mStatus = Status.INITIALIZING;
 
             if (mListener != null) {
-                mListener.onInitializationStarted(this);
+                //noinspection unchecked
+                mListener.onInitializationStarted((D) this);
             }
         }
 
         mProcessedSamples++;
 
         final boolean windowedProcessed = mWindowedNoiseEstimator
-                .addTriadAndProcess(fx, fy, fz);
+                .addTriadAndProcess(valueX, valueY, valueZ);
 
         final double windowedStdNorm = mWindowedNoiseEstimator
                 .getStandardDeviationNorm();
@@ -719,7 +765,7 @@ public class StaticIntervalDetector {
         if (mStatus == Status.INITIALIZING) {
             // process sample during initialization
             final boolean accumulatedProcessed = mAccumulatedNoiseEstimator
-                    .addTriad(fx, fy, fz);
+                    .addTriad(valueX, valueY, valueZ);
             final double accumulatedStdNorm = mAccumulatedNoiseEstimator
                     .getStandardDeviationNorm();
 
@@ -731,7 +777,8 @@ public class StaticIntervalDetector {
 
                         // notify error
                         if (mListener != null) {
-                            mListener.onError(this, accumulatedStdNorm,
+                            //noinspection unchecked
+                            mListener.onError((D) this, accumulatedStdNorm,
                                     windowedStdNorm,
                                     ErrorReason.SUDDEN_EXCESSIVE_MOVEMENT_DETECTED);
                         }
@@ -744,11 +791,11 @@ public class StaticIntervalDetector {
                 mBaseNoiseLevel = accumulatedStdNorm;
                 mThreshold = mBaseNoiseLevel * mThresholdFactor;
 
-                // keep average specific force in case we want to obtain
+                // keep average measurement triad in case we want to obtain
                 // its value since initial period must be static
-                mAvgSpecificForceX = mAccumulatedNoiseEstimator.getAvgX();
-                mAvgSpecificForceY = mAccumulatedNoiseEstimator.getAvgY();
-                mAvgSpecificForceZ = mAccumulatedNoiseEstimator.getAvgZ();
+                mAvgX = mAccumulatedNoiseEstimator.getAvgX();
+                mAvgY = mAccumulatedNoiseEstimator.getAvgY();
+                mAvgZ = mAccumulatedNoiseEstimator.getAvgZ();
 
                 // reset accumulated estimator so that we can estimate
                 // average specific force in static periods
@@ -760,7 +807,8 @@ public class StaticIntervalDetector {
 
                     // notify error
                     if (mListener != null) {
-                        mListener.onError(this, accumulatedStdNorm,
+                        //noinspection unchecked
+                        mListener.onError((D) this, accumulatedStdNorm,
                                 windowedStdNorm,
                                 ErrorReason.OVERALL_EXCESSIVE_MOVEMENT_DETECTED);
                     }
@@ -770,8 +818,9 @@ public class StaticIntervalDetector {
                     mStatus = Status.INITIALIZATION_COMPLETED;
 
                     if (mListener != null) {
+                        //noinspection unchecked
                         mListener.onInitializationCompleted(
-                                this, mBaseNoiseLevel);
+                                (D) this, mBaseNoiseLevel);
                     }
                 }
 
@@ -786,8 +835,8 @@ public class StaticIntervalDetector {
             if (previousStatus == Status.STATIC_INTERVAL ||
                     previousStatus == Status.INITIALIZATION_COMPLETED) {
                 // while we are in static interval (or initial static period), keep
-                // adding samples to estimate accumulated average specific force
-                mAccumulatedNoiseEstimator.addTriad(fx, fy, fz);
+                // adding samples to estimate accumulated average measurement triad
+                mAccumulatedNoiseEstimator.addTriad(valueX, valueY, valueZ);
             }
 
             if (windowedStdNorm < mThreshold) {
@@ -801,23 +850,23 @@ public class StaticIntervalDetector {
                 switch (mStatus) {
                     case STATIC_INTERVAL:
                         if (mListener != null) {
-                            mListener.onStaticIntervalDetected(this);
+                            //noinspection unchecked
+                            mListener.onStaticIntervalDetected((D) this);
                         }
                         break;
                     case DYNAMIC_INTERVAL:
                         // when switching from static to dynamic interval,
-                        // pick accumulated average specific force
-                        mAvgSpecificForceX = mAccumulatedNoiseEstimator.getAvgX();
-                        mAvgSpecificForceY = mAccumulatedNoiseEstimator.getAvgY();
-                        mAvgSpecificForceZ = mAccumulatedNoiseEstimator.getAvgZ();
+                        // pick accumulated average measurement triad
+                        mAvgX = mAccumulatedNoiseEstimator.getAvgX();
+                        mAvgY = mAccumulatedNoiseEstimator.getAvgY();
+                        mAvgZ = mAccumulatedNoiseEstimator.getAvgZ();
 
                         // reset accumulated estimator when switching to dynamic period
                         mAccumulatedNoiseEstimator.reset();
 
                         if (mListener != null) {
-                            mListener.onDynamicIntervalDetected(this,
-                                    mAvgSpecificForceX, mAvgSpecificForceY,
-                                    mAvgSpecificForceZ);
+                            //noinspection unchecked
+                            mListener.onDynamicIntervalDetected((D) this, mAvgX, mAvgY, mAvgZ);
                         }
                         break;
                 }
@@ -849,32 +898,64 @@ public class StaticIntervalDetector {
         mAccumulatedNoiseEstimator.reset();
 
         if (mListener != null) {
-            mListener.onReset(this);
+            //noinspection unchecked
+            mListener.onReset((D) this);
         }
 
         mRunning = false;
     }
 
     /**
-     * Converts provided acceleration instance to meters per squared second (m/s^2).
+     * Converts provided measurement instance to its default unit, which is
+     * meters per squared second (m/s^2) for acceleration, radians per second (rad/s) for
+     * angular speed or Teslas (T) for magnetic flux density.
      *
-     * @param value value to be converted.
+     * @param measurement measurement to be converted.
      * @return converted value.
      */
-    private static double convertAcceleration(final Acceleration value) {
-        return convertAcceleration(value.getValue().doubleValue(), value.getUnit());
+    protected double convertMeasurement(M measurement) {
+        return convertMeasurement(measurement.getValue().doubleValue(),
+                measurement.getUnit());
     }
 
     /**
-     * Converts provided value from provided unit to meters per squared second (m/s^2).
+     * Converts provided measurement value expressed in provided unit to the
+     * default measurement value, which is meters per squared second (m/s^2) for acceleration,
+     * radians per second (rad/s) for angular speed or Teslas (t) for magnetic flux density.
      *
      * @param value value to be converted.
      * @param unit  unit of value to be converted.
      * @return converted value.
      */
-    private static double convertAcceleration(final double value, final AccelerationUnit unit) {
-        return AccelerationConverter.convert(value, unit, AccelerationUnit.METERS_PER_SQUARED_SECOND);
-    }
+    protected abstract double convertMeasurement(final double value, final U unit);
+
+    /**
+     * Creates a measurement instance using provided value and unit.
+     *
+     * @param value value of measurement.
+     * @param unit  unit of value.
+     * @return created measurement
+     */
+    protected abstract M createMeasurement(final double value, final U unit);
+
+    /**
+     * Gets default unit for measurements this implementation works with.
+     *
+     * @return default measurement unit.
+     */
+    protected abstract U getDefaultUnit();
+
+    /**
+     * Creates a triad.
+     *
+     * @param valueX x-coordinate value.
+     * @param valueY y-coordinate value.
+     * @param valueZ z-coordinate value.
+     * @param unit   unit of values.
+     * @return created triad.
+     */
+    protected abstract T createTriad(
+            final double valueX, final double valueY, final double valueZ, final U unit);
 
     /**
      * Possible detector status values.
@@ -920,7 +1001,14 @@ public class StaticIntervalDetector {
      * Reason why this detector has failed during initialization.
      */
     public enum ErrorReason {
+        /**
+         * If a sudden movement is detected during initialization.
+         */
         SUDDEN_EXCESSIVE_MOVEMENT_DETECTED,
+
+        /**
+         * If overall noise level is excessive during initialization.
+         */
         OVERALL_EXCESSIVE_MOVEMENT_DETECTED
     }
 }

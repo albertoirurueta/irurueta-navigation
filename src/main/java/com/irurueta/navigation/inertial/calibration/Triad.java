@@ -25,6 +25,7 @@ import java.util.Objects;
 /**
  * Contains a triad of measurement data.
  *
+ * @param <U> type of unit.
  * @param <T> a type of measurement.
  */
 public abstract class Triad<U extends Enum<?>, T extends Measurement<U>>

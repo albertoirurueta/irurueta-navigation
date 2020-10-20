@@ -14,15 +14,16 @@ import com.irurueta.navigation.inertial.BodyKinematics;
 import com.irurueta.navigation.inertial.NEDPosition;
 import com.irurueta.navigation.inertial.estimators.ECEFKinematicsEstimator;
 import com.irurueta.statistics.UniformRandomizer;
-import com.irurueta.units.Acceleration;
-import com.irurueta.units.AccelerationUnit;
+import com.irurueta.units.AngularSpeed;
+import com.irurueta.units.AngularSpeedUnit;
 import org.junit.Test;
 
 import java.util.Random;
 
 import static org.junit.Assert.*;
 
-public class StaticIntervalDetectorTest implements StaticIntervalDetectorListener {
+public class AngularSpeedTriadStaticIntervalDetectorTest implements
+        AngularSpeedTriadStaticIntervalDetectorListener {
 
     private static final double TIME_INTERVAL_SECONDS = 0.02;
 
@@ -44,8 +45,6 @@ public class StaticIntervalDetectorTest implements StaticIntervalDetectorListene
     private static final double MIN_DELTA_ANGLE_DEGREES = -2.0;
     private static final double MAX_DELTA_ANGLE_DEGREES = 2.0;
 
-    private static final double ABSOLUTE_ERROR = 1e-1;
-
     private int mInitializationStarted;
 
     private int mInitializationCompleted;
@@ -62,92 +61,92 @@ public class StaticIntervalDetectorTest implements StaticIntervalDetectorListene
 
     private double mErrorInstantaneousNoiseLevel;
 
-    private StaticIntervalDetector.ErrorReason mErrorReason;
+    private AccelerationTriadStaticIntervalDetector.ErrorReason mErrorReason;
 
     @Test
     public void testConstructor1() {
-        final StaticIntervalDetector detector = new StaticIntervalDetector();
+        final AngularSpeedTriadStaticIntervalDetector detector = new AngularSpeedTriadStaticIntervalDetector();
 
         assertEquals(detector.getWindowSize(),
-                StaticIntervalDetector.DEFAULT_WINDOW_SIZE);
+                AngularSpeedTriadStaticIntervalDetector.DEFAULT_WINDOW_SIZE);
         assertEquals(detector.getInitialStaticSamples(),
-                StaticIntervalDetector.DEFAULT_INITIAL_STATIC_SAMPLES);
+                AngularSpeedTriadStaticIntervalDetector.DEFAULT_INITIAL_STATIC_SAMPLES);
         assertEquals(detector.getThresholdFactor(),
-                StaticIntervalDetector.DEFAULT_THRESHOLD_FACTOR, 0.0);
+                AngularSpeedTriadStaticIntervalDetector.DEFAULT_THRESHOLD_FACTOR, 0.0);
         assertEquals(detector.getInstantaneousNoiseLevelFactor(),
-                StaticIntervalDetector.DEFAULT_INSTANTANEOUS_NOISE_LEVEL_FACTOR,
+                AngularSpeedTriadStaticIntervalDetector.DEFAULT_INSTANTANEOUS_NOISE_LEVEL_FACTOR,
                 0.0);
         assertEquals(detector.getBaseNoiseLevelAbsoluteThreshold(),
-                StaticIntervalDetector.DEFAULT_BASE_NOISE_LEVEL_ABSOLUTE_THRESHOLD,
+                AngularSpeedTriadStaticIntervalDetector.DEFAULT_BASE_NOISE_LEVEL_ABSOLUTE_THRESHOLD,
                 0.0);
         assertNull(detector.getListener());
-        assertEquals(detector.getStatus(), StaticIntervalDetector.Status.IDLE);
+        assertEquals(detector.getStatus(), AngularSpeedTriadStaticIntervalDetector.Status.IDLE);
         assertEquals(detector.getBaseNoiseLevel(), 0.0, 0.0);
-        final Acceleration a1 = detector.getBaseNoiseLevelAsAcceleration();
-        assertEquals(a1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(a1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration a2 = new Acceleration(
-                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        detector.getBaseNoiseLevelAsAcceleration(a2);
-        assertEquals(a1, a2);
+        final AngularSpeed w1 = detector.getBaseNoiseLevelAsMeasurement();
+        assertEquals(w1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(w1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed w2 = new AngularSpeed(
+                1.0, AngularSpeedUnit.RADIANS_PER_SECOND);
+        detector.getBaseNoiseLevelAsMeasurement(w2);
+        assertEquals(w1, w2);
         assertEquals(detector.getThreshold(), 0.0, 0.0);
-        final Acceleration a3 = detector.getThresholdAsAcceleration();
-        assertEquals(a3.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(a3.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration a4 = new Acceleration(
-                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        detector.getThresholdAsAcceleration(a4);
-        assertEquals(a3, a4);
+        final AngularSpeed w3 = detector.getThresholdAsMeasurement();
+        assertEquals(w3.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(w3.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed w4 = new AngularSpeed(
+                1.0, AngularSpeedUnit.RADIANS_PER_SECOND);
+        detector.getThresholdAsMeasurement(w4);
+        assertEquals(w3, w4);
         assertFalse(detector.isRunning());
         assertEquals(detector.getProcessedSamples(), 0);
     }
 
     @Test
     public void testConstructor2() {
-        final StaticIntervalDetector detector = new StaticIntervalDetector(
+        final AngularSpeedTriadStaticIntervalDetector detector = new AngularSpeedTriadStaticIntervalDetector(
                 this);
 
         assertEquals(detector.getWindowSize(),
-                StaticIntervalDetector.DEFAULT_WINDOW_SIZE);
+                AngularSpeedTriadStaticIntervalDetector.DEFAULT_WINDOW_SIZE);
         assertEquals(detector.getInitialStaticSamples(),
-                StaticIntervalDetector.DEFAULT_INITIAL_STATIC_SAMPLES);
+                AngularSpeedTriadStaticIntervalDetector.DEFAULT_INITIAL_STATIC_SAMPLES);
         assertEquals(detector.getThresholdFactor(),
-                StaticIntervalDetector.DEFAULT_THRESHOLD_FACTOR, 0.0);
+                AngularSpeedTriadStaticIntervalDetector.DEFAULT_THRESHOLD_FACTOR, 0.0);
         assertEquals(detector.getInstantaneousNoiseLevelFactor(),
-                StaticIntervalDetector.DEFAULT_INSTANTANEOUS_NOISE_LEVEL_FACTOR,
+                AngularSpeedTriadStaticIntervalDetector.DEFAULT_INSTANTANEOUS_NOISE_LEVEL_FACTOR,
                 0.0);
         assertEquals(detector.getBaseNoiseLevelAbsoluteThreshold(),
-                StaticIntervalDetector.DEFAULT_BASE_NOISE_LEVEL_ABSOLUTE_THRESHOLD,
+                AngularSpeedTriadStaticIntervalDetector.DEFAULT_BASE_NOISE_LEVEL_ABSOLUTE_THRESHOLD,
                 0.0);
         assertSame(detector.getListener(), this);
-        assertEquals(detector.getStatus(), StaticIntervalDetector.Status.IDLE);
+        assertEquals(detector.getStatus(), AngularSpeedTriadStaticIntervalDetector.Status.IDLE);
         assertEquals(detector.getBaseNoiseLevel(), 0.0, 0.0);
-        final Acceleration a1 = detector.getBaseNoiseLevelAsAcceleration();
-        assertEquals(a1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(a1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration a2 = new Acceleration(
-                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        detector.getBaseNoiseLevelAsAcceleration(a2);
-        assertEquals(a1, a2);
+        final AngularSpeed w1 = detector.getBaseNoiseLevelAsMeasurement();
+        assertEquals(w1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(w1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed w2 = new AngularSpeed(
+                1.0, AngularSpeedUnit.RADIANS_PER_SECOND);
+        detector.getBaseNoiseLevelAsMeasurement(w2);
+        assertEquals(w1, w2);
         assertEquals(detector.getThreshold(), 0.0, 0.0);
-        final Acceleration a3 = detector.getThresholdAsAcceleration();
-        assertEquals(a3.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(a3.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration a4 = new Acceleration(
-                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        detector.getThresholdAsAcceleration(a4);
-        assertEquals(a3, a4);
+        final AngularSpeed w3 = detector.getThresholdAsMeasurement();
+        assertEquals(w3.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(w3.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed w4 = new AngularSpeed(
+                1.0, AngularSpeedUnit.RADIANS_PER_SECOND);
+        detector.getThresholdAsMeasurement(w4);
+        assertEquals(w3, w4);
         assertFalse(detector.isRunning());
         assertEquals(detector.getProcessedSamples(), 0);
     }
 
     @Test
     public void testGetSetWindowSize() throws LockedException {
-        final StaticIntervalDetector detector = new StaticIntervalDetector();
+        final AngularSpeedTriadStaticIntervalDetector detector = new AngularSpeedTriadStaticIntervalDetector();
 
         // check default value
         assertEquals(detector.getWindowSize(),
-                StaticIntervalDetector.DEFAULT_WINDOW_SIZE);
+                AngularSpeedTriadStaticIntervalDetector.DEFAULT_WINDOW_SIZE);
 
         // set new value
         detector.setWindowSize(2);
@@ -165,11 +164,11 @@ public class StaticIntervalDetectorTest implements StaticIntervalDetectorListene
 
     @Test
     public void testGetSetInitialStaticSamples() throws LockedException {
-        final StaticIntervalDetector detector = new StaticIntervalDetector();
+        final AngularSpeedTriadStaticIntervalDetector detector = new AngularSpeedTriadStaticIntervalDetector();
 
         // check default value
         assertEquals(detector.getInitialStaticSamples(),
-                StaticIntervalDetector.DEFAULT_INITIAL_STATIC_SAMPLES);
+                AngularSpeedTriadStaticIntervalDetector.DEFAULT_INITIAL_STATIC_SAMPLES);
 
         // set new value
         detector.setInitialStaticSamples(2);
@@ -187,11 +186,11 @@ public class StaticIntervalDetectorTest implements StaticIntervalDetectorListene
 
     @Test
     public void testGetSetThresholdFactor() throws LockedException {
-        final StaticIntervalDetector detector = new StaticIntervalDetector();
+        final AngularSpeedTriadStaticIntervalDetector detector = new AngularSpeedTriadStaticIntervalDetector();
 
         // check default value
         assertEquals(detector.getThresholdFactor(),
-                StaticIntervalDetector.DEFAULT_THRESHOLD_FACTOR, 0.0);
+                AngularSpeedTriadStaticIntervalDetector.DEFAULT_THRESHOLD_FACTOR, 0.0);
 
         // set new value
         detector.setThresholdFactor(1.0);
@@ -209,11 +208,11 @@ public class StaticIntervalDetectorTest implements StaticIntervalDetectorListene
 
     @Test
     public void testGetSetInstantaneousNoiseLevelFactor() throws LockedException {
-        final StaticIntervalDetector detector = new StaticIntervalDetector();
+        final AngularSpeedTriadStaticIntervalDetector detector = new AngularSpeedTriadStaticIntervalDetector();
 
         // check default value
         assertEquals(detector.getInstantaneousNoiseLevelFactor(),
-                StaticIntervalDetector.DEFAULT_INSTANTANEOUS_NOISE_LEVEL_FACTOR,
+                AngularSpeedTriadStaticIntervalDetector.DEFAULT_INSTANTANEOUS_NOISE_LEVEL_FACTOR,
                 0.0);
 
         // set new value
@@ -234,11 +233,11 @@ public class StaticIntervalDetectorTest implements StaticIntervalDetectorListene
     @Test
     public void testGetSetBaseNoiseLevelAbsoluteThreshold()
             throws LockedException {
-        final StaticIntervalDetector detector = new StaticIntervalDetector();
+        final AngularSpeedTriadStaticIntervalDetector detector = new AngularSpeedTriadStaticIntervalDetector();
 
         // check default value
         assertEquals(detector.getBaseNoiseLevelAbsoluteThreshold(),
-                StaticIntervalDetector.DEFAULT_BASE_NOISE_LEVEL_ABSOLUTE_THRESHOLD,
+                AngularSpeedTriadStaticIntervalDetector.DEFAULT_BASE_NOISE_LEVEL_ABSOLUTE_THRESHOLD,
                 0.0);
 
         // set new value
@@ -257,39 +256,39 @@ public class StaticIntervalDetectorTest implements StaticIntervalDetectorListene
     }
 
     @Test
-    public void testGetSetBaseNoiseLevelAbsoluteThresholdAsAcceleration()
+    public void testGetSetBaseNoiseLevelAbsoluteThresholdAsMeasurement()
             throws LockedException {
 
-        final StaticIntervalDetector detector = new StaticIntervalDetector();
+        final AngularSpeedTriadStaticIntervalDetector detector = new AngularSpeedTriadStaticIntervalDetector();
 
         // check default value
         assertEquals(detector.getBaseNoiseLevelAbsoluteThreshold(),
-                StaticIntervalDetector.DEFAULT_BASE_NOISE_LEVEL_ABSOLUTE_THRESHOLD,
+                AngularSpeedTriadStaticIntervalDetector.DEFAULT_BASE_NOISE_LEVEL_ABSOLUTE_THRESHOLD,
                 0.0);
 
-        final Acceleration a1 = detector.getBaseNoiseLevelAbsoluteThresholdAsAcceleration();
-        assertEquals(a1.getValue().doubleValue(),
-                StaticIntervalDetector.DEFAULT_BASE_NOISE_LEVEL_ABSOLUTE_THRESHOLD,
+        final AngularSpeed w1 = detector.getBaseNoiseLevelAbsoluteThresholdAsMeasurement();
+        assertEquals(w1.getValue().doubleValue(),
+                AngularSpeedTriadStaticIntervalDetector.DEFAULT_BASE_NOISE_LEVEL_ABSOLUTE_THRESHOLD,
                 0.0);
-        assertEquals(a1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        assertEquals(w1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
 
         // set new value
-        final Acceleration a2 = new Acceleration(1.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        detector.setBaseNoiseLevelAbsoluteThreshold(a2);
+        final AngularSpeed w2 = new AngularSpeed(1.0,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+        detector.setBaseNoiseLevelAbsoluteThreshold(w2);
 
         // check
-        final Acceleration a3 = detector.getBaseNoiseLevelAbsoluteThresholdAsAcceleration();
-        final Acceleration a4 = new Acceleration(
-                0.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        detector.getBaseNoiseLevelAbsoluteThresholdAsAcceleration(a4);
-        assertEquals(a2, a3);
-        assertEquals(a2, a4);
+        final AngularSpeed w3 = detector.getBaseNoiseLevelAbsoluteThresholdAsMeasurement();
+        final AngularSpeed w4 = new AngularSpeed(
+                0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
+        detector.getBaseNoiseLevelAbsoluteThresholdAsMeasurement(w4);
+        assertEquals(w2, w3);
+        assertEquals(w2, w4);
     }
 
     @Test
     public void testGetSetListener() throws LockedException {
-        final StaticIntervalDetector detector = new StaticIntervalDetector();
+        final AngularSpeedTriadStaticIntervalDetector detector = new AngularSpeedTriadStaticIntervalDetector();
 
         // check default value
         assertNull(detector.getListener());
@@ -302,9 +301,9 @@ public class StaticIntervalDetectorTest implements StaticIntervalDetectorListene
     }
 
     @Test
-    public void testProcessAccelerationTriadWithSuccessfulInitializationStaticAndDynamicPeriodAndReset1()
-            throws WrongSizeException,
-            InvalidSourceAndDestinationFrameTypeException, LockedException {
+    public void testProcessWithSuccessfulInitializationStaticAndDynamicPeriodAndReset1()
+            throws WrongSizeException, InvalidSourceAndDestinationFrameTypeException,
+            LockedException {
         final Matrix ba = generateBa();
         final Matrix bg = generateBg();
         final Matrix ma = generateMaGeneral();
@@ -354,61 +353,59 @@ public class StaticIntervalDetectorTest implements StaticIntervalDetectorListene
         assertEquals(mDynamicIntervalDetected, 0);
         assertEquals(mReset, 0);
 
-        final StaticIntervalDetector detector =
-                new StaticIntervalDetector(this);
+        final AngularSpeedTriadStaticIntervalDetector detector =
+                new AngularSpeedTriadStaticIntervalDetector(this);
 
-        assertEquals(detector.getStatus(), StaticIntervalDetector.Status.IDLE);
+        assertEquals(detector.getStatus(), AngularSpeedTriadStaticIntervalDetector.Status.IDLE);
         assertEquals(detector.getBaseNoiseLevel(), 0.0, 0.0);
-        Acceleration a1 = detector.getBaseNoiseLevelAsAcceleration();
-        assertEquals(a1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(a1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration a2 = new Acceleration(
-                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        detector.getBaseNoiseLevelAsAcceleration(a2);
-        assertEquals(a1, a2);
+        AngularSpeed w1 = detector.getBaseNoiseLevelAsMeasurement();
+        assertEquals(w1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(w1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed w2 = new AngularSpeed(
+                1.0, AngularSpeedUnit.RADIANS_PER_SECOND);
+        detector.getBaseNoiseLevelAsMeasurement(w2);
+        assertEquals(w1, w2);
         assertEquals(detector.getThreshold(), 0.0, 0.0);
-        a1 = detector.getThresholdAsAcceleration();
-        assertEquals(a1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(a1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        detector.getThresholdAsAcceleration(a2);
-        assertEquals(a1, a2);
+        w1 = detector.getThresholdAsMeasurement();
+        assertEquals(w1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(w1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        detector.getThresholdAsMeasurement(w2);
+        assertEquals(w1, w2);
         assertEquals(detector.getProcessedSamples(), 0);
 
         final int initialStaticSamples = detector.getInitialStaticSamples();
 
         // generate enough measurements to complete initialization while keeping
-        // accelerometer static
+        // gyroscope static
         final BodyKinematics measuredKinematics = new BodyKinematics();
-        final AccelerationTriad triad = new AccelerationTriad();
+        final AngularSpeedTriad triad = new AngularSpeedTriad();
         for (int i = 0; i < initialStaticSamples; i++) {
             BodyKinematicsGenerator.generate(TIME_INTERVAL_SECONDS,
                     trueKinematics, errors, random, measuredKinematics);
-            measuredKinematics.getSpecificForceTriad(triad);
+            measuredKinematics.getAngularRateTriad(triad);
 
-            assertTrue(detector.processAccelerationTriad(triad));
+            assertTrue(detector.process(triad));
         }
 
         assertEquals(mInitializationStarted, 1);
         assertEquals(mInitializationCompleted, 1);
         assertEquals(detector.getStatus(),
-                StaticIntervalDetector.Status.INITIALIZATION_COMPLETED);
+                AngularSpeedTriadStaticIntervalDetector.Status.INITIALIZATION_COMPLETED);
         assertTrue(detector.getBaseNoiseLevel() > 0.0);
-        a1 = detector.getBaseNoiseLevelAsAcceleration();
-        assertEquals(a1.getValue().doubleValue(), detector.getBaseNoiseLevel(),
+        w1 = detector.getBaseNoiseLevelAsMeasurement();
+        assertEquals(w1.getValue().doubleValue(), detector.getBaseNoiseLevel(),
                 0.0);
-        assertEquals(a1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        detector.getBaseNoiseLevelAsAcceleration(a2);
-        assertEquals(a1, a2);
+        assertEquals(w1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        detector.getBaseNoiseLevelAsMeasurement(w2);
+        assertEquals(w1, w2);
         assertTrue(detector.getThreshold() > 0.0);
         assertEquals(detector.getThreshold(),
                 detector.getBaseNoiseLevel() * detector.getThresholdFactor(),
                 0.0);
-        a1 = detector.getThresholdAsAcceleration();
-        assertEquals(a1.getValue().doubleValue(), detector.getThreshold(),
-                0.0);
-        assertEquals(a1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        detector.getThresholdAsAcceleration(a2);
-        assertEquals(a1, a2);
+        w1 = detector.getThresholdAsMeasurement();
+        assertEquals(w1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        detector.getThresholdAsMeasurement(w2);
+        assertEquals(w1, w2);
         assertEquals(detector.getProcessedSamples(), initialStaticSamples);
 
         // keep adding static samples for twice the window size
@@ -416,19 +413,16 @@ public class StaticIntervalDetectorTest implements StaticIntervalDetectorListene
         for (int i = 0; i < periodLength; i++) {
             BodyKinematicsGenerator.generate(TIME_INTERVAL_SECONDS,
                     trueKinematics, errors, random, measuredKinematics);
-            measuredKinematics.getSpecificForceTriad(triad);
+            measuredKinematics.getAngularRateTriad(triad);
 
-            assertTrue(detector.processAccelerationTriad(triad));
+            assertTrue(detector.process(triad));
         }
 
         assertEquals(mStaticIntervalDetected, 1);
         assertEquals(detector.getStatus(),
-                StaticIntervalDetector.Status.STATIC_INTERVAL);
+                AngularSpeedTriadStaticIntervalDetector.Status.STATIC_INTERVAL);
         assertEquals(detector.getProcessedSamples(),
                 initialStaticSamples + periodLength);
-
-        final AccelerationTriad lastStaticTriad =
-                trueKinematics.getSpecificForceTriad();
 
         // add dynamic samples for twice the window size
         final double deltaX = randomizer.nextDouble(
@@ -492,9 +486,9 @@ public class StaticIntervalDetectorTest implements StaticIntervalDetectorListene
             // add error to true kinematics
             BodyKinematicsGenerator.generate(TIME_INTERVAL_SECONDS,
                     trueKinematics, errors, random, measuredKinematics);
-            measuredKinematics.getSpecificForceTriad(triad);
+            measuredKinematics.getAngularRateTriad(triad);
 
-            assertTrue(detector.processAccelerationTriad(triad));
+            assertTrue(detector.process(triad));
 
             oldNedFrame.copyFrom(newNedFrame);
             oldEcefFrame.copyFrom(newEcefFrame);
@@ -509,45 +503,24 @@ public class StaticIntervalDetectorTest implements StaticIntervalDetectorListene
         assertEquals(mStaticIntervalDetected, 1);
         assertEquals(mDynamicIntervalDetected, 1);
         assertEquals(detector.getStatus(),
-                StaticIntervalDetector.Status.DYNAMIC_INTERVAL);
+                AngularSpeedTriadStaticIntervalDetector.Status.DYNAMIC_INTERVAL);
         assertEquals(detector.getProcessedSamples(),
                 initialStaticSamples + 2 * periodLength);
-
-        // check that when switching to dynamic period, estimated average
-        // specific force from last static period is approximately equal to the
-        // true value
-        assertEquals(lastStaticTriad.getUnit(),
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        assertEquals(lastStaticTriad.getValueX(),
-                detector.getAvgSpecificForceX(), ABSOLUTE_ERROR);
-        assertEquals(lastStaticTriad.getValueY(),
-                detector.getAvgSpecificForceY(), ABSOLUTE_ERROR);
-        assertEquals(lastStaticTriad.getValueZ(),
-                detector.getAvgSpecificForceZ(), ABSOLUTE_ERROR);
-        assertTrue(lastStaticTriad.getMeasurementX().equals(
-                detector.getAvgSpecificForceXAsAcceleration(), ABSOLUTE_ERROR));
-        assertTrue(lastStaticTriad.getMeasurementY().equals(
-                detector.getAvgSpecificForceYAsAcceleration(), ABSOLUTE_ERROR));
-        assertTrue(lastStaticTriad.getMeasurementZ().equals(
-                detector.getAvgSpecificForceZAsAcceleration(), ABSOLUTE_ERROR));
-        assertTrue(lastStaticTriad.equals(detector.getAvgSpecificForce(),
-                ABSOLUTE_ERROR));
-
 
         // keep adding static samples for twice the window size to last
         // true kinematics
         for (int i = 0; i < periodLength; i++) {
             BodyKinematicsGenerator.generate(TIME_INTERVAL_SECONDS,
                     trueKinematics, errors, random, measuredKinematics);
-            measuredKinematics.getSpecificForceTriad(triad);
+            measuredKinematics.getAngularRateTriad(triad);
 
-            assertTrue(detector.processAccelerationTriad(triad));
+            assertTrue(detector.process(triad));
         }
 
         assertEquals(mStaticIntervalDetected, 2);
         assertEquals(mDynamicIntervalDetected, 1);
         assertEquals(detector.getStatus(),
-                StaticIntervalDetector.Status.STATIC_INTERVAL);
+                AngularSpeedTriadStaticIntervalDetector.Status.STATIC_INTERVAL);
         assertEquals(detector.getProcessedSamples(),
                 initialStaticSamples + 3 * periodLength);
 
@@ -555,26 +528,26 @@ public class StaticIntervalDetectorTest implements StaticIntervalDetectorListene
         detector.reset();
 
         assertEquals(mReset, 1);
-        assertEquals(detector.getStatus(), StaticIntervalDetector.Status.IDLE);
+        assertEquals(detector.getStatus(), AngularSpeedTriadStaticIntervalDetector.Status.IDLE);
         assertEquals(detector.getBaseNoiseLevel(), 0.0, 0.0);
-        a1 = detector.getBaseNoiseLevelAsAcceleration();
-        assertEquals(a1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(a1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        detector.getBaseNoiseLevelAsAcceleration(a2);
-        assertEquals(a1, a2);
+        w1 = detector.getBaseNoiseLevelAsMeasurement();
+        assertEquals(w1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(w1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        detector.getBaseNoiseLevelAsMeasurement(w2);
+        assertEquals(w1, w2);
         assertEquals(detector.getThreshold(), 0.0, 0.0);
-        a1 = detector.getThresholdAsAcceleration();
-        assertEquals(a1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(a1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        detector.getThresholdAsAcceleration(a2);
-        assertEquals(a1, a2);
+        w1 = detector.getThresholdAsMeasurement();
+        assertEquals(w1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(w1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        detector.getThresholdAsMeasurement(w2);
+        assertEquals(w1, w2);
         assertEquals(detector.getProcessedSamples(), 0);
     }
 
     @Test
-    public void testProcessAccelerationTriadWithSuccessfulInitializationStaticAndDynamicPeriodAndReset2()
-            throws WrongSizeException,
-            InvalidSourceAndDestinationFrameTypeException, LockedException {
+    public void testProcessWithSuccessfulInitializationStaticAndDynamicPeriodAndReset2()
+            throws WrongSizeException, InvalidSourceAndDestinationFrameTypeException,
+            LockedException {
         final Matrix ba = generateBa();
         final Matrix bg = generateBg();
         final Matrix ma = generateMaGeneral();
@@ -624,71 +597,69 @@ public class StaticIntervalDetectorTest implements StaticIntervalDetectorListene
         assertEquals(mDynamicIntervalDetected, 0);
         assertEquals(mReset, 0);
 
-        final StaticIntervalDetector detector =
-                new StaticIntervalDetector(this);
+        final AngularSpeedTriadStaticIntervalDetector detector =
+                new AngularSpeedTriadStaticIntervalDetector(this);
 
-        assertEquals(detector.getStatus(), StaticIntervalDetector.Status.IDLE);
+        assertEquals(detector.getStatus(), AngularSpeedTriadStaticIntervalDetector.Status.IDLE);
         assertEquals(detector.getBaseNoiseLevel(), 0.0, 0.0);
-        Acceleration a1 = detector.getBaseNoiseLevelAsAcceleration();
-        assertEquals(a1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(a1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration a2 = new Acceleration(
-                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        detector.getBaseNoiseLevelAsAcceleration(a2);
-        assertEquals(a1, a2);
+        AngularSpeed w1 = detector.getBaseNoiseLevelAsMeasurement();
+        assertEquals(w1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(w1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed w2 = new AngularSpeed(
+                1.0, AngularSpeedUnit.RADIANS_PER_SECOND);
+        detector.getBaseNoiseLevelAsMeasurement(w2);
+        assertEquals(w1, w2);
         assertEquals(detector.getThreshold(), 0.0, 0.0);
-        a1 = detector.getThresholdAsAcceleration();
-        assertEquals(a1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(a1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        detector.getThresholdAsAcceleration(a2);
-        assertEquals(a1, a2);
+        w1 = detector.getThresholdAsMeasurement();
+        assertEquals(w1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(w1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        detector.getThresholdAsMeasurement(w2);
+        assertEquals(w1, w2);
         assertEquals(detector.getProcessedSamples(), 0);
 
         final int initialStaticSamples = detector.getInitialStaticSamples();
 
         // generate enough measurements to complete initialization while keeping
-        // accelerometer static
+        // gyroscope static
         final BodyKinematics measuredKinematics = new BodyKinematics();
-        final AccelerationTriad triad = new AccelerationTriad();
-        final Acceleration aX = new Acceleration(
-                0.0, AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration aY = new Acceleration(
-                0.0, AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration aZ = new Acceleration(
-                0.0, AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AngularSpeedTriad triad = new AngularSpeedTriad();
+        final AngularSpeed wX = new AngularSpeed(
+                0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed wY = new AngularSpeed(
+                0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed wZ = new AngularSpeed(
+                0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
 
         for (int i = 0; i < initialStaticSamples; i++) {
             BodyKinematicsGenerator.generate(TIME_INTERVAL_SECONDS,
                     trueKinematics, errors, random, measuredKinematics);
-            measuredKinematics.getSpecificForceTriad(triad);
-            triad.getMeasurementX(aX);
-            triad.getMeasurementY(aY);
-            triad.getMeasurementZ(aZ);
+            measuredKinematics.getAngularRateTriad(triad);
+            triad.getMeasurementX(wX);
+            triad.getMeasurementY(wY);
+            triad.getMeasurementZ(wZ);
 
-            assertTrue(detector.processAccelerationTriad(aX, aY, aZ));
+            assertTrue(detector.process(wX, wY, wZ));
         }
 
         assertEquals(mInitializationStarted, 1);
         assertEquals(mInitializationCompleted, 1);
         assertEquals(detector.getStatus(),
-                StaticIntervalDetector.Status.INITIALIZATION_COMPLETED);
+                AngularSpeedTriadStaticIntervalDetector.Status.INITIALIZATION_COMPLETED);
         assertTrue(detector.getBaseNoiseLevel() > 0.0);
-        a1 = detector.getBaseNoiseLevelAsAcceleration();
-        assertEquals(a1.getValue().doubleValue(), detector.getBaseNoiseLevel(),
+        w1 = detector.getBaseNoiseLevelAsMeasurement();
+        assertEquals(w1.getValue().doubleValue(), detector.getBaseNoiseLevel(),
                 0.0);
-        assertEquals(a1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        detector.getBaseNoiseLevelAsAcceleration(a2);
-        assertEquals(a1, a2);
+        assertEquals(w1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        detector.getBaseNoiseLevelAsMeasurement(w2);
+        assertEquals(w1, w2);
         assertTrue(detector.getThreshold() > 0.0);
         assertEquals(detector.getThreshold(),
                 detector.getBaseNoiseLevel() * detector.getThresholdFactor(),
                 0.0);
-        a1 = detector.getThresholdAsAcceleration();
-        assertEquals(a1.getValue().doubleValue(), detector.getThreshold(),
-                0.0);
-        assertEquals(a1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        detector.getThresholdAsAcceleration(a2);
-        assertEquals(a1, a2);
+        w1 = detector.getThresholdAsMeasurement();
+        assertEquals(w1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        detector.getThresholdAsMeasurement(w2);
+        assertEquals(w1, w2);
         assertEquals(detector.getProcessedSamples(), initialStaticSamples);
 
         // keep adding static samples for twice the window size
@@ -696,22 +667,19 @@ public class StaticIntervalDetectorTest implements StaticIntervalDetectorListene
         for (int i = 0; i < periodLength; i++) {
             BodyKinematicsGenerator.generate(TIME_INTERVAL_SECONDS,
                     trueKinematics, errors, random, measuredKinematics);
-            measuredKinematics.getSpecificForceTriad(triad);
-            triad.getMeasurementX(aX);
-            triad.getMeasurementY(aY);
-            triad.getMeasurementZ(aZ);
+            measuredKinematics.getAngularRateTriad(triad);
+            triad.getMeasurementX(wX);
+            triad.getMeasurementY(wY);
+            triad.getMeasurementZ(wZ);
 
-            assertTrue(detector.processAccelerationTriad(aX, aY, aZ));
+            assertTrue(detector.process(wX, wY, wZ));
         }
 
         assertEquals(mStaticIntervalDetected, 1);
         assertEquals(detector.getStatus(),
-                StaticIntervalDetector.Status.STATIC_INTERVAL);
+                AngularSpeedTriadStaticIntervalDetector.Status.STATIC_INTERVAL);
         assertEquals(detector.getProcessedSamples(),
                 initialStaticSamples + periodLength);
-
-        final AccelerationTriad lastStaticTriad =
-                trueKinematics.getSpecificForceTriad();
 
         // add dynamic samples for twice the window size
         final double deltaX = randomizer.nextDouble(
@@ -775,12 +743,12 @@ public class StaticIntervalDetectorTest implements StaticIntervalDetectorListene
             // add error to true kinematics
             BodyKinematicsGenerator.generate(TIME_INTERVAL_SECONDS,
                     trueKinematics, errors, random, measuredKinematics);
-            measuredKinematics.getSpecificForceTriad(triad);
-            triad.getMeasurementX(aX);
-            triad.getMeasurementY(aY);
-            triad.getMeasurementZ(aZ);
+            measuredKinematics.getAngularRateTriad(triad);
+            triad.getMeasurementX(wX);
+            triad.getMeasurementY(wY);
+            triad.getMeasurementZ(wZ);
 
-            assertTrue(detector.processAccelerationTriad(aX, aY, aZ));
+            assertTrue(detector.process(wX, wY, wZ));
 
             oldNedFrame.copyFrom(newNedFrame);
             oldEcefFrame.copyFrom(newEcefFrame);
@@ -795,48 +763,27 @@ public class StaticIntervalDetectorTest implements StaticIntervalDetectorListene
         assertEquals(mStaticIntervalDetected, 1);
         assertEquals(mDynamicIntervalDetected, 1);
         assertEquals(detector.getStatus(),
-                StaticIntervalDetector.Status.DYNAMIC_INTERVAL);
+                AngularSpeedTriadStaticIntervalDetector.Status.DYNAMIC_INTERVAL);
         assertEquals(detector.getProcessedSamples(),
                 initialStaticSamples + 2 * periodLength);
-
-        // check that when switching to dynamic period, estimated average
-        // specific force from last static period is approximately equal to the
-        // true value
-        assertEquals(lastStaticTriad.getUnit(),
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        assertEquals(lastStaticTriad.getValueX(),
-                detector.getAvgSpecificForceX(), ABSOLUTE_ERROR);
-        assertEquals(lastStaticTriad.getValueY(),
-                detector.getAvgSpecificForceY(), ABSOLUTE_ERROR);
-        assertEquals(lastStaticTriad.getValueZ(),
-                detector.getAvgSpecificForceZ(), ABSOLUTE_ERROR);
-        assertTrue(lastStaticTriad.getMeasurementX().equals(
-                detector.getAvgSpecificForceXAsAcceleration(), ABSOLUTE_ERROR));
-        assertTrue(lastStaticTriad.getMeasurementY().equals(
-                detector.getAvgSpecificForceYAsAcceleration(), ABSOLUTE_ERROR));
-        assertTrue(lastStaticTriad.getMeasurementZ().equals(
-                detector.getAvgSpecificForceZAsAcceleration(), ABSOLUTE_ERROR));
-        assertTrue(lastStaticTriad.equals(detector.getAvgSpecificForce(),
-                ABSOLUTE_ERROR));
-
 
         // keep adding static samples for twice the window size to last
         // true kinematics
         for (int i = 0; i < periodLength; i++) {
             BodyKinematicsGenerator.generate(TIME_INTERVAL_SECONDS,
                     trueKinematics, errors, random, measuredKinematics);
-            measuredKinematics.getSpecificForceTriad(triad);
-            triad.getMeasurementX(aX);
-            triad.getMeasurementY(aY);
-            triad.getMeasurementZ(aZ);
+            measuredKinematics.getAngularRateTriad(triad);
+            triad.getMeasurementX(wX);
+            triad.getMeasurementY(wY);
+            triad.getMeasurementZ(wZ);
 
-            assertTrue(detector.processAccelerationTriad(aX, aY, aZ));
+            assertTrue(detector.process(wX, wY, wZ));
         }
 
         assertEquals(mStaticIntervalDetected, 2);
         assertEquals(mDynamicIntervalDetected, 1);
         assertEquals(detector.getStatus(),
-                StaticIntervalDetector.Status.STATIC_INTERVAL);
+                AngularSpeedTriadStaticIntervalDetector.Status.STATIC_INTERVAL);
         assertEquals(detector.getProcessedSamples(),
                 initialStaticSamples + 3 * periodLength);
 
@@ -844,26 +791,26 @@ public class StaticIntervalDetectorTest implements StaticIntervalDetectorListene
         detector.reset();
 
         assertEquals(mReset, 1);
-        assertEquals(detector.getStatus(), StaticIntervalDetector.Status.IDLE);
+        assertEquals(detector.getStatus(), AngularSpeedTriadStaticIntervalDetector.Status.IDLE);
         assertEquals(detector.getBaseNoiseLevel(), 0.0, 0.0);
-        a1 = detector.getBaseNoiseLevelAsAcceleration();
-        assertEquals(a1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(a1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        detector.getBaseNoiseLevelAsAcceleration(a2);
-        assertEquals(a1, a2);
+        w1 = detector.getBaseNoiseLevelAsMeasurement();
+        assertEquals(w1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(w1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        detector.getBaseNoiseLevelAsMeasurement(w2);
+        assertEquals(w1, w2);
         assertEquals(detector.getThreshold(), 0.0, 0.0);
-        a1 = detector.getThresholdAsAcceleration();
-        assertEquals(a1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(a1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        detector.getThresholdAsAcceleration(a2);
-        assertEquals(a1, a2);
+        w1 = detector.getThresholdAsMeasurement();
+        assertEquals(w1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(w1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        detector.getThresholdAsMeasurement(w2);
+        assertEquals(w1, w2);
         assertEquals(detector.getProcessedSamples(), 0);
     }
 
     @Test
-    public void testProcessAccelerationTriadWithSuccessfulInitializationStaticAndDynamicPeriodAndReset3()
-            throws WrongSizeException,
-            InvalidSourceAndDestinationFrameTypeException, LockedException {
+    public void testProcessWithSuccessfulInitializationStaticAndDynamicPeriodAndReset3()
+            throws WrongSizeException, InvalidSourceAndDestinationFrameTypeException,
+            LockedException {
         final Matrix ba = generateBa();
         final Matrix bg = generateBg();
         final Matrix ma = generateMaGeneral();
@@ -913,62 +860,60 @@ public class StaticIntervalDetectorTest implements StaticIntervalDetectorListene
         assertEquals(mDynamicIntervalDetected, 0);
         assertEquals(mReset, 0);
 
-        final StaticIntervalDetector detector =
-                new StaticIntervalDetector(this);
+        final AngularSpeedTriadStaticIntervalDetector detector =
+                new AngularSpeedTriadStaticIntervalDetector(this);
 
-        assertEquals(detector.getStatus(), StaticIntervalDetector.Status.IDLE);
+        assertEquals(detector.getStatus(), AngularSpeedTriadStaticIntervalDetector.Status.IDLE);
         assertEquals(detector.getBaseNoiseLevel(), 0.0, 0.0);
-        Acceleration a1 = detector.getBaseNoiseLevelAsAcceleration();
-        assertEquals(a1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(a1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration a2 = new Acceleration(
-                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        detector.getBaseNoiseLevelAsAcceleration(a2);
-        assertEquals(a1, a2);
+        AngularSpeed w1 = detector.getBaseNoiseLevelAsMeasurement();
+        assertEquals(w1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(w1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed w2 = new AngularSpeed(
+                1.0, AngularSpeedUnit.RADIANS_PER_SECOND);
+        detector.getBaseNoiseLevelAsMeasurement(w2);
+        assertEquals(w1, w2);
         assertEquals(detector.getThreshold(), 0.0, 0.0);
-        a1 = detector.getThresholdAsAcceleration();
-        assertEquals(a1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(a1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        detector.getThresholdAsAcceleration(a2);
-        assertEquals(a1, a2);
+        w1 = detector.getThresholdAsMeasurement();
+        assertEquals(w1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(w1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        detector.getThresholdAsMeasurement(w2);
+        assertEquals(w1, w2);
         assertEquals(detector.getProcessedSamples(), 0);
 
         final int initialStaticSamples = detector.getInitialStaticSamples();
 
         // generate enough measurements to complete initialization while keeping
-        // accelerometer static
+        // gyroscope static
         final BodyKinematics measuredKinematics = new BodyKinematics();
-        final AccelerationTriad triad = new AccelerationTriad();
+        final AngularSpeedTriad triad = new AngularSpeedTriad();
         for (int i = 0; i < initialStaticSamples; i++) {
             BodyKinematicsGenerator.generate(TIME_INTERVAL_SECONDS,
                     trueKinematics, errors, random, measuredKinematics);
-            measuredKinematics.getSpecificForceTriad(triad);
+            measuredKinematics.getAngularRateTriad(triad);
 
-            assertTrue(detector.processAccelerationTriad(
+            assertTrue(detector.process(
                     triad.getValueX(), triad.getValueY(), triad.getValueZ()));
         }
 
         assertEquals(mInitializationStarted, 1);
         assertEquals(mInitializationCompleted, 1);
         assertEquals(detector.getStatus(),
-                StaticIntervalDetector.Status.INITIALIZATION_COMPLETED);
+                AngularSpeedTriadStaticIntervalDetector.Status.INITIALIZATION_COMPLETED);
         assertTrue(detector.getBaseNoiseLevel() > 0.0);
-        a1 = detector.getBaseNoiseLevelAsAcceleration();
-        assertEquals(a1.getValue().doubleValue(), detector.getBaseNoiseLevel(),
+        w1 = detector.getBaseNoiseLevelAsMeasurement();
+        assertEquals(w1.getValue().doubleValue(), detector.getBaseNoiseLevel(),
                 0.0);
-        assertEquals(a1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        detector.getBaseNoiseLevelAsAcceleration(a2);
-        assertEquals(a1, a2);
+        assertEquals(w1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        detector.getBaseNoiseLevelAsMeasurement(w2);
+        assertEquals(w1, w2);
         assertTrue(detector.getThreshold() > 0.0);
         assertEquals(detector.getThreshold(),
                 detector.getBaseNoiseLevel() * detector.getThresholdFactor(),
                 0.0);
-        a1 = detector.getThresholdAsAcceleration();
-        assertEquals(a1.getValue().doubleValue(), detector.getThreshold(),
-                0.0);
-        assertEquals(a1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        detector.getThresholdAsAcceleration(a2);
-        assertEquals(a1, a2);
+        w1 = detector.getThresholdAsMeasurement();
+        assertEquals(w1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        detector.getThresholdAsMeasurement(w2);
+        assertEquals(w1, w2);
         assertEquals(detector.getProcessedSamples(), initialStaticSamples);
 
         // keep adding static samples for twice the window size
@@ -976,20 +921,17 @@ public class StaticIntervalDetectorTest implements StaticIntervalDetectorListene
         for (int i = 0; i < periodLength; i++) {
             BodyKinematicsGenerator.generate(TIME_INTERVAL_SECONDS,
                     trueKinematics, errors, random, measuredKinematics);
-            measuredKinematics.getSpecificForceTriad(triad);
+            measuredKinematics.getAngularRateTriad(triad);
 
-            assertTrue(detector.processAccelerationTriad(
+            assertTrue(detector.process(
                     triad.getValueX(), triad.getValueY(), triad.getValueZ()));
         }
 
         assertEquals(mStaticIntervalDetected, 1);
         assertEquals(detector.getStatus(),
-                StaticIntervalDetector.Status.STATIC_INTERVAL);
+                AngularSpeedTriadStaticIntervalDetector.Status.STATIC_INTERVAL);
         assertEquals(detector.getProcessedSamples(),
                 initialStaticSamples + periodLength);
-
-        final AccelerationTriad lastStaticTriad =
-                trueKinematics.getSpecificForceTriad();
 
         // add dynamic samples for twice the window size
         final double deltaX = randomizer.nextDouble(
@@ -1053,9 +995,9 @@ public class StaticIntervalDetectorTest implements StaticIntervalDetectorListene
             // add error to true kinematics
             BodyKinematicsGenerator.generate(TIME_INTERVAL_SECONDS,
                     trueKinematics, errors, random, measuredKinematics);
-            measuredKinematics.getSpecificForceTriad(triad);
+            measuredKinematics.getAngularRateTriad(triad);
 
-            assertTrue(detector.processAccelerationTriad(
+            assertTrue(detector.process(
                     triad.getValueX(), triad.getValueY(), triad.getValueZ()));
 
             oldNedFrame.copyFrom(newNedFrame);
@@ -1071,46 +1013,25 @@ public class StaticIntervalDetectorTest implements StaticIntervalDetectorListene
         assertEquals(mStaticIntervalDetected, 1);
         assertEquals(mDynamicIntervalDetected, 1);
         assertEquals(detector.getStatus(),
-                StaticIntervalDetector.Status.DYNAMIC_INTERVAL);
+                AngularSpeedTriadStaticIntervalDetector.Status.DYNAMIC_INTERVAL);
         assertEquals(detector.getProcessedSamples(),
                 initialStaticSamples + 2 * periodLength);
-
-        // check that when switching to dynamic period, estimated average
-        // specific force from last static period is approximately equal to the
-        // true value
-        assertEquals(lastStaticTriad.getUnit(),
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        assertEquals(lastStaticTriad.getValueX(),
-                detector.getAvgSpecificForceX(), ABSOLUTE_ERROR);
-        assertEquals(lastStaticTriad.getValueY(),
-                detector.getAvgSpecificForceY(), ABSOLUTE_ERROR);
-        assertEquals(lastStaticTriad.getValueZ(),
-                detector.getAvgSpecificForceZ(), ABSOLUTE_ERROR);
-        assertTrue(lastStaticTriad.getMeasurementX().equals(
-                detector.getAvgSpecificForceXAsAcceleration(), ABSOLUTE_ERROR));
-        assertTrue(lastStaticTriad.getMeasurementY().equals(
-                detector.getAvgSpecificForceYAsAcceleration(), ABSOLUTE_ERROR));
-        assertTrue(lastStaticTriad.getMeasurementZ().equals(
-                detector.getAvgSpecificForceZAsAcceleration(), ABSOLUTE_ERROR));
-        assertTrue(lastStaticTriad.equals(detector.getAvgSpecificForce(),
-                ABSOLUTE_ERROR));
-
 
         // keep adding static samples for twice the window size to last
         // true kinematics
         for (int i = 0; i < periodLength; i++) {
             BodyKinematicsGenerator.generate(TIME_INTERVAL_SECONDS,
                     trueKinematics, errors, random, measuredKinematics);
-            measuredKinematics.getSpecificForceTriad(triad);
+            measuredKinematics.getAngularRateTriad(triad);
 
-            assertTrue(detector.processAccelerationTriad(
+            assertTrue(detector.process(
                     triad.getValueX(), triad.getValueY(), triad.getValueZ()));
         }
 
         assertEquals(mStaticIntervalDetected, 2);
         assertEquals(mDynamicIntervalDetected, 1);
         assertEquals(detector.getStatus(),
-                StaticIntervalDetector.Status.STATIC_INTERVAL);
+                AngularSpeedTriadStaticIntervalDetector.Status.STATIC_INTERVAL);
         assertEquals(detector.getProcessedSamples(),
                 initialStaticSamples + 3 * periodLength);
 
@@ -1118,24 +1039,24 @@ public class StaticIntervalDetectorTest implements StaticIntervalDetectorListene
         detector.reset();
 
         assertEquals(mReset, 1);
-        assertEquals(detector.getStatus(), StaticIntervalDetector.Status.IDLE);
+        assertEquals(detector.getStatus(), AngularSpeedTriadStaticIntervalDetector.Status.IDLE);
         assertEquals(detector.getBaseNoiseLevel(), 0.0, 0.0);
-        a1 = detector.getBaseNoiseLevelAsAcceleration();
-        assertEquals(a1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(a1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        detector.getBaseNoiseLevelAsAcceleration(a2);
-        assertEquals(a1, a2);
+        w1 = detector.getBaseNoiseLevelAsMeasurement();
+        assertEquals(w1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(w1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        detector.getBaseNoiseLevelAsMeasurement(w2);
+        assertEquals(w1, w2);
         assertEquals(detector.getThreshold(), 0.0, 0.0);
-        a1 = detector.getThresholdAsAcceleration();
-        assertEquals(a1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(a1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        detector.getThresholdAsAcceleration(a2);
-        assertEquals(a1, a2);
+        w1 = detector.getThresholdAsMeasurement();
+        assertEquals(w1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(w1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        detector.getThresholdAsMeasurement(w2);
+        assertEquals(w1, w2);
         assertEquals(detector.getProcessedSamples(), 0);
     }
 
     @Test
-    public void testProcessAccelerationTriadWithExcessiveOverallNoiseDuringInitialization()
+    public void testProcessWithExcessiveOverallNoiseDuringInitialization()
             throws WrongSizeException, InvalidSourceAndDestinationFrameTypeException, LockedException {
         final Matrix ba = generateBa();
         final Matrix bg = generateBg();
@@ -1186,24 +1107,24 @@ public class StaticIntervalDetectorTest implements StaticIntervalDetectorListene
         assertEquals(mDynamicIntervalDetected, 0);
         assertEquals(mReset, 0);
 
-        final StaticIntervalDetector detector =
-                new StaticIntervalDetector(this);
+        final AngularSpeedTriadStaticIntervalDetector detector =
+                new AngularSpeedTriadStaticIntervalDetector(this);
         detector.setBaseNoiseLevelAbsoluteThreshold(Double.MIN_VALUE);
 
-        assertEquals(detector.getStatus(), StaticIntervalDetector.Status.IDLE);
+        assertEquals(detector.getStatus(), AngularSpeedTriadStaticIntervalDetector.Status.IDLE);
 
         final int initialStaticSamples = detector.getInitialStaticSamples();
 
         // generate enough measurements to complete initialization while keeping
-        // accelerometer static
+        // gyroscope static
         final BodyKinematics measuredKinematics = new BodyKinematics();
-        final AccelerationTriad triad = new AccelerationTriad();
+        final AngularSpeedTriad triad = new AngularSpeedTriad();
         for (int i = 0; i < initialStaticSamples; i++) {
             BodyKinematicsGenerator.generate(TIME_INTERVAL_SECONDS,
                     trueKinematics, errors, random, measuredKinematics);
-            measuredKinematics.getSpecificForceTriad(triad);
+            measuredKinematics.getAngularRateTriad(triad);
 
-            assertTrue(detector.processAccelerationTriad(triad));
+            assertTrue(detector.process(triad));
 
             if (mError != 0) {
                 break;
@@ -1212,24 +1133,23 @@ public class StaticIntervalDetectorTest implements StaticIntervalDetectorListene
 
         assertEquals(mInitializationStarted, 1);
         assertEquals(mError, 1);
-        assertEquals(detector.getStatus(), StaticIntervalDetector.Status.FAILED);
+        assertEquals(detector.getStatus(), AngularSpeedTriadStaticIntervalDetector.Status.FAILED);
         assertTrue(mErrorAccumulatedNoiseLevel > 0.0);
         assertTrue(mErrorInstantaneousNoiseLevel > 0.0);
         assertEquals(mErrorReason,
-                StaticIntervalDetector.ErrorReason.OVERALL_EXCESSIVE_MOVEMENT_DETECTED);
+                AngularSpeedTriadStaticIntervalDetector.ErrorReason.OVERALL_EXCESSIVE_MOVEMENT_DETECTED);
 
         // attempting to process another triad after failure, is ignored
-        assertFalse(detector.processAccelerationTriad(triad));
+        assertFalse(detector.process(triad));
 
         // if we reset detector, we can process new samples
         detector.reset();
 
-        assertTrue(detector.processAccelerationTriad(triad));
+        assertTrue(detector.process(triad));
     }
 
     @Test
-    public void testProcessAccelerationTriadWithSuddenMotionDuringInitialization()
-            throws WrongSizeException,
+    public void testProcessWithSuddenMotionDuringInitialization() throws WrongSizeException,
             InvalidSourceAndDestinationFrameTypeException, LockedException {
         final Matrix ba = generateBa();
         final Matrix bg = generateBg();
@@ -1280,10 +1200,10 @@ public class StaticIntervalDetectorTest implements StaticIntervalDetectorListene
         assertEquals(mDynamicIntervalDetected, 0);
         assertEquals(mReset, 0);
 
-        final StaticIntervalDetector detector =
-                new StaticIntervalDetector(this);
+        final AngularSpeedTriadStaticIntervalDetector detector =
+                new AngularSpeedTriadStaticIntervalDetector(this);
 
-        assertEquals(detector.getStatus(), StaticIntervalDetector.Status.IDLE);
+        assertEquals(detector.getStatus(), AngularSpeedTriadStaticIntervalDetector.Status.IDLE);
 
         final int initialStaticSamples = detector.getInitialStaticSamples();
         int periodLength = 2 * detector.getWindowSize();
@@ -1291,20 +1211,20 @@ public class StaticIntervalDetectorTest implements StaticIntervalDetectorListene
         assertTrue(initialStaticSamples > 2 * periodLength);
         int halfInitialStaticSamples = initialStaticSamples / 2;
 
-        // add some sample while keeping accelerometer body static
+        // add some sample while keeping gyroscope body static
         final BodyKinematics measuredKinematics = new BodyKinematics();
-        final AccelerationTriad triad = new AccelerationTriad();
+        final AngularSpeedTriad triad = new AngularSpeedTriad();
         for (int i = 0; i < halfInitialStaticSamples; i++) {
             BodyKinematicsGenerator.generate(TIME_INTERVAL_SECONDS,
                     trueKinematics, errors, random, measuredKinematics);
-            measuredKinematics.getSpecificForceTriad(triad);
+            measuredKinematics.getAngularRateTriad(triad);
 
-            assertTrue(detector.processAccelerationTriad(triad));
+            assertTrue(detector.process(triad));
         }
 
         assertEquals(mInitializationStarted, 1);
         assertEquals(detector.getStatus(),
-                StaticIntervalDetector.Status.INITIALIZING);
+                AngularSpeedTriadStaticIntervalDetector.Status.INITIALIZING);
 
         // then add samples with motion
         final double deltaX = randomizer.nextDouble(
@@ -1368,9 +1288,9 @@ public class StaticIntervalDetectorTest implements StaticIntervalDetectorListene
             // add error to true kinematics
             BodyKinematicsGenerator.generate(TIME_INTERVAL_SECONDS,
                     trueKinematics, errors, random, measuredKinematics);
-            measuredKinematics.getSpecificForceTriad(triad);
+            measuredKinematics.getAngularRateTriad(triad);
 
-            assertTrue(detector.processAccelerationTriad(triad));
+            assertTrue(detector.process(triad));
 
             oldNedFrame.copyFrom(newNedFrame);
             oldEcefFrame.copyFrom(newEcefFrame);
@@ -1388,43 +1308,43 @@ public class StaticIntervalDetectorTest implements StaticIntervalDetectorListene
 
         assertEquals(mInitializationStarted, 1);
         assertEquals(mError, 1);
-        assertEquals(detector.getStatus(), StaticIntervalDetector.Status.FAILED);
+        assertEquals(detector.getStatus(), AngularSpeedTriadStaticIntervalDetector.Status.FAILED);
         assertTrue(mErrorAccumulatedNoiseLevel > 0.0);
         assertTrue(mErrorInstantaneousNoiseLevel > 0.0);
         assertEquals(mErrorReason,
-                StaticIntervalDetector.ErrorReason.SUDDEN_EXCESSIVE_MOVEMENT_DETECTED);
+                AngularSpeedTriadStaticIntervalDetector.ErrorReason.SUDDEN_EXCESSIVE_MOVEMENT_DETECTED);
 
         // attempting to process another triad after failure, is ignored
-        assertFalse(detector.processAccelerationTriad(triad));
+        assertFalse(detector.process(triad));
 
         // if we reset detector, we can process new samples
         detector.reset();
 
-        assertTrue(detector.processAccelerationTriad(triad));
+        assertTrue(detector.process(triad));
     }
 
     @Override
-    public void onInitializationStarted(final StaticIntervalDetector detected) {
+    public void onInitializationStarted(final AngularSpeedTriadStaticIntervalDetector detector) {
         mInitializationStarted++;
-        checkLocked(detected);
-        assertEquals(detected.getStatus(),
-                StaticIntervalDetector.Status.INITIALIZING);
+        checkLocked(detector);
+        assertEquals(detector.getStatus(),
+                AngularSpeedTriadStaticIntervalDetector.Status.INITIALIZING);
     }
 
     @Override
-    public void onInitializationCompleted(final StaticIntervalDetector detected,
+    public void onInitializationCompleted(final AngularSpeedTriadStaticIntervalDetector detector,
                                           final double baseNoiseLevel) {
         mInitializationCompleted++;
-        checkLocked(detected);
-        assertEquals(detected.getStatus(),
-                StaticIntervalDetector.Status.INITIALIZATION_COMPLETED);
+        checkLocked(detector);
+        assertEquals(detector.getStatus(),
+                AngularSpeedTriadStaticIntervalDetector.Status.INITIALIZATION_COMPLETED);
     }
 
     @Override
-    public void onError(final StaticIntervalDetector detector,
+    public void onError(final AngularSpeedTriadStaticIntervalDetector detector,
                         final double accumulatedNoiseLevel,
                         final double instantaneousNoiseLevel,
-                        final StaticIntervalDetector.ErrorReason reason) {
+                        final TriadStaticIntervalDetector.ErrorReason reason) {
         mError++;
         mErrorAccumulatedNoiseLevel = accumulatedNoiseLevel;
         mErrorInstantaneousNoiseLevel = instantaneousNoiseLevel;
@@ -1433,63 +1353,61 @@ public class StaticIntervalDetectorTest implements StaticIntervalDetectorListene
     }
 
     @Override
-    public void onStaticIntervalDetected(final StaticIntervalDetector detector) {
+    public void onStaticIntervalDetected(final AngularSpeedTriadStaticIntervalDetector detector) {
         mStaticIntervalDetected++;
         checkLocked(detector);
         assertEquals(detector.getStatus(),
-                StaticIntervalDetector.Status.STATIC_INTERVAL);
+                AngularSpeedTriadStaticIntervalDetector.Status.STATIC_INTERVAL);
     }
 
     @Override
-    public void onDynamicIntervalDetected(final StaticIntervalDetector detector,
-                                          final double avgSpecificForceX,
-                                          final double avgSpecificForceY,
-                                          final double avgSpecificForceZ) {
+    public void onDynamicIntervalDetected(final AngularSpeedTriadStaticIntervalDetector detector,
+                                          final double avgX, final double avgY, final double avgZ) {
         mDynamicIntervalDetected++;
         checkLocked(detector);
         assertEquals(detector.getStatus(),
-                StaticIntervalDetector.Status.DYNAMIC_INTERVAL);
-        assertEquals(avgSpecificForceX, detector.getAvgSpecificForceX(), 0.0);
-        assertEquals(avgSpecificForceY, detector.getAvgSpecificForceY(), 0.0);
-        assertEquals(avgSpecificForceZ, detector.getAvgSpecificForceZ(), 0.0);
+                AngularSpeedTriadStaticIntervalDetector.Status.DYNAMIC_INTERVAL);
+        assertEquals(avgX, detector.getAvgX(), 0.0);
+        assertEquals(avgY, detector.getAvgY(), 0.0);
+        assertEquals(avgZ, detector.getAvgZ(), 0.0);
 
-        final Acceleration ax1 = detector.getAvgSpecificForceXAsAcceleration();
-        assertEquals(ax1.getValue().doubleValue(), avgSpecificForceX, 0.0);
-        assertEquals(ax1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration ax2 = new Acceleration(
-                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        detector.getAvgSpecificForceXAsAcceleration(ax2);
-        assertEquals(ax1, ax2);
+        final AngularSpeed wx1 = detector.getAvgXAsMeasurement();
+        assertEquals(wx1.getValue().doubleValue(), avgX, 0.0);
+        assertEquals(wx1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed wx2 = new AngularSpeed(
+                1.0, AngularSpeedUnit.RADIANS_PER_SECOND);
+        detector.getAvgXAsMeasurement(wx2);
+        assertEquals(wx1, wx2);
 
-        final Acceleration ay1 = detector.getAvgSpecificForceYAsAcceleration();
-        assertEquals(ay1.getValue().doubleValue(), avgSpecificForceY, 0.0);
-        assertEquals(ay1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration ay2 = new Acceleration(
-                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        detector.getAvgSpecificForceYAsAcceleration(ay2);
-        assertEquals(ay1, ay2);
+        final AngularSpeed wy1 = detector.getAvgYAsMeasurement();
+        assertEquals(wy1.getValue().doubleValue(), avgY, 0.0);
+        assertEquals(wy1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed wy2 = new AngularSpeed(
+                1.0, AngularSpeedUnit.RADIANS_PER_SECOND);
+        detector.getAvgYAsMeasurement(wy2);
+        assertEquals(wy1, wy2);
 
-        final Acceleration az1 = detector.getAvgSpecificForceZAsAcceleration();
-        assertEquals(az1.getValue().doubleValue(), avgSpecificForceZ, 0.0);
-        assertEquals(az1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration az2 = new Acceleration(
-                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        detector.getAvgSpecificForceZAsAcceleration(az2);
-        assertEquals(az1, az2);
+        final AngularSpeed wz1 = detector.getAvgZAsMeasurement();
+        assertEquals(wz1.getValue().doubleValue(), avgZ, 0.0);
+        assertEquals(wz1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed wz2 = new AngularSpeed(
+                1.0, AngularSpeedUnit.RADIANS_PER_SECOND);
+        detector.getAvgZAsMeasurement(wz2);
+        assertEquals(wz1, wz2);
 
-        final AccelerationTriad triad1 = detector.getAvgSpecificForce();
-        assertEquals(triad1.getValueX(), avgSpecificForceX, 0.0);
-        assertEquals(triad1.getValueY(), avgSpecificForceY, 0.0);
-        assertEquals(triad1.getValueZ(), avgSpecificForceZ, 0.0);
-        assertEquals(triad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AngularSpeedTriad triad1 = detector.getAvgTriad();
+        assertEquals(triad1.getValueX(), avgX, 0.0);
+        assertEquals(triad1.getValueY(), avgY, 0.0);
+        assertEquals(triad1.getValueZ(), avgZ, 0.0);
+        assertEquals(triad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
 
-        final AccelerationTriad triad2 = new AccelerationTriad();
-        detector.getAvgSpecificForce(triad2);
+        final AngularSpeedTriad triad2 = new AngularSpeedTriad();
+        detector.getAvgTriad(triad2);
         assertEquals(triad1, triad2);
     }
 
     @Override
-    public void onReset(final StaticIntervalDetector detector) {
+    public void onReset(final AngularSpeedTriadStaticIntervalDetector detector) {
         mReset++;
         checkLocked(detector);
     }
@@ -1503,7 +1421,7 @@ public class StaticIntervalDetectorTest implements StaticIntervalDetectorListene
         mReset = 0;
     }
 
-    private void checkLocked(final StaticIntervalDetector detector) {
+    private void checkLocked(final AngularSpeedTriadStaticIntervalDetector detector) {
         assertTrue(detector.isRunning());
         try {
             detector.setWindowSize(0);
@@ -1535,21 +1453,21 @@ public class StaticIntervalDetectorTest implements StaticIntervalDetectorListene
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
-        final AccelerationTriad triad = new AccelerationTriad();
+        final AngularSpeedTriad triad = new AngularSpeedTriad();
         try {
-            detector.processAccelerationTriad(triad);
+            detector.process(triad);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
-        final Acceleration a = new Acceleration(0.0,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AngularSpeed w = new AngularSpeed(0.0,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
         try {
-            detector.processAccelerationTriad(a, a, a);
+            detector.process(w, w, w);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
         try {
-            detector.processAccelerationTriad(0.0, 0.0, 0.0);
+            detector.process(0.0, 0.0, 0.0);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
@@ -1615,5 +1533,4 @@ public class StaticIntervalDetectorTest implements StaticIntervalDetectorListene
     private double getGyroNoiseRootPSD() {
         return 0.01 * DEG_TO_RAD / 60.0;
     }
-
 }
