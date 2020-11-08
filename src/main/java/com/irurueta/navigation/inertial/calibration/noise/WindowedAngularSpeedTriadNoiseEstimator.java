@@ -35,6 +35,9 @@ import com.irurueta.units.AngularSpeedUnit;
  * cannot be used to determine biases. Only norm of noise estimations can be
  * safely used as an indication of variation of overall rotation rate (which is
  * indicated by norm of estimated average).
+ * Notice that if there are less than {@link #getWindowSize()} processed
+ * samples in the window, this estimator will assume that the remaining ones
+ * until the window is completed have zero values.
  * This implementation of noise estimator will use the following units:
  * - radians per second (rad/s) for angular speed, average or standard deviation values.
  * - (rad^2/s^2) fr angular speed variances.

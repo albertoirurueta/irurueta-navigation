@@ -325,6 +325,11 @@ public class WindowedAccelerationTriadNoiseEstimatorTest implements WindowedAcce
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
+        try {
+            estimator.setWindowSize(2);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
 
     @Test
@@ -470,7 +475,7 @@ public class WindowedAccelerationTriadNoiseEstimatorTest implements WindowedAcce
             valueY = triad.getValueY();
             valueZ = triad.getValueZ();
 
-            assertEquals(estimator.addTriadAndProcess(triad), i != 0);
+            estimator.addTriadAndProcess(triad);
 
             assertTrue(estimator.getLastWindowedTriad(lastTriad));
             assertEquals(lastTriad, triad);
@@ -654,7 +659,7 @@ public class WindowedAccelerationTriadNoiseEstimatorTest implements WindowedAcce
 
         triads.add(new AccelerationTriad(triad));
 
-        assertTrue(estimator.addTriadAndProcess(triad));
+        estimator.addTriadAndProcess(triad);
 
         assertEquals(windowSize + 1, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
@@ -781,7 +786,7 @@ public class WindowedAccelerationTriadNoiseEstimatorTest implements WindowedAcce
             valueY = triad.getValueY();
             valueZ = triad.getValueZ();
 
-            assertEquals(estimator.addTriadAndProcess(valueX, valueY, valueZ), i != 0);
+            estimator.addTriadAndProcess(valueX, valueY, valueZ);
 
             assertTrue(estimator.getLastWindowedTriad(lastTriad));
             assertEquals(lastTriad, triad);
@@ -965,8 +970,8 @@ public class WindowedAccelerationTriadNoiseEstimatorTest implements WindowedAcce
 
         triads.add(new AccelerationTriad(triad));
 
-        assertTrue(estimator.addTriadAndProcess(
-                triad.getValueX(), triad.getValueY(), triad.getValueZ()));
+        estimator.addTriadAndProcess(
+                triad.getValueX(), triad.getValueY(), triad.getValueZ());
 
         assertEquals(windowSize + 1, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
@@ -1093,9 +1098,8 @@ public class WindowedAccelerationTriadNoiseEstimatorTest implements WindowedAcce
             valueY = triad.getValueY();
             valueZ = triad.getValueZ();
 
-            assertEquals(estimator.addTriadAndProcess(
-                    triad.getMeasurementX(), triad.getMeasurementY(), triad.getMeasurementZ()),
-                    i != 0);
+            estimator.addTriadAndProcess(
+                    triad.getMeasurementX(), triad.getMeasurementY(), triad.getMeasurementZ());
 
             assertTrue(estimator.getLastWindowedTriad(lastTriad));
             assertEquals(lastTriad, triad);
@@ -1279,8 +1283,8 @@ public class WindowedAccelerationTriadNoiseEstimatorTest implements WindowedAcce
 
         triads.add(new AccelerationTriad(triad));
 
-        assertTrue(estimator.addTriadAndProcess(
-                triad.getMeasurementX(), triad.getMeasurementY(), triad.getMeasurementZ()));
+        estimator.addTriadAndProcess(
+                triad.getMeasurementX(), triad.getMeasurementY(), triad.getMeasurementZ());
 
         assertEquals(windowSize + 1, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());

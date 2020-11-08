@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.irurueta.navigation.inertial.calibration;
+package com.irurueta.navigation.inertial.calibration.intervals;
 
 import com.irurueta.navigation.LockedException;
+import com.irurueta.navigation.inertial.calibration.Triad;
 import com.irurueta.navigation.inertial.calibration.noise.AccumulatedTriadNoiseEstimator;
 import com.irurueta.navigation.inertial.calibration.noise.WindowedTriadNoiseEstimator;
 import com.irurueta.units.Measurement;
@@ -151,34 +152,124 @@ public abstract class TriadStaticIntervalDetector<U extends Enum<?>, M extends M
     private int mProcessedSamples;
 
     /**
-     * Gets average x-coordinate of measurement during last static period
-     * expressed in meters per squared second (m/s^2) for acceleration,
+     * Average x-coordinate of measurements accumulated during last static
+     * period expressed in meters per squared second (m/s^2) for acceleration,
      * radians per second (rad/s) for angular speed or Teslas (T) for
      * magnetic flux density.
      * This value is updated when switching from a static period to a dynamic
      * one or after completing initialization.
      */
-    private double mAvgX;
+    private double mAccumulatedAvgX;
 
     /**
-     * Gets average y-coordinate of measurement during last static period
-     * expressed in meters per squared second (m/s^2) for acceleration,
+     * Average y-coordinate of measurements accumulated during last static
+     * period expressed in meters per squared second (m/s^2) for acceleration,
      * radians per second (rad/s) for angular speed or Teslas (T) for
      * magnetic flux density.
      * This value is updated when switching from a static period to a dynamic
      * one or after completing initialization.
      */
-    private double mAvgY;
+    private double mAccumulatedAvgY;
 
     /**
-     * Gets average z-coordinate of specific force during last static period
-     * expressed in meters per squared second (m/s^2) for acceleration,
+     * Average z-coordinate of measurements accumulated during last static
+     * period expressed in meters per squared second (m/s^2) for acceleration,
      * radians per second (rad/s) for angular speed or Teslas (T) for
      * magnetic flux density.
      * This value is updated when switching from a static period to a dynamic
      * one or after completing initialization.
      */
-    private double mAvgZ;
+    private double mAccumulatedAvgZ;
+
+    /**
+     * Standard deviation of x-coordinate of measurements accumulated during
+     * last static period expressed in meters per squared second (m/s^2) for
+     * acceleration, radians per second (rad/s) for angular speed or Teslas
+     * (T) for magnetic flux density.
+     * This value is updated when switching from a static period to a dynamic
+     * one or after completing initialization.
+     */
+    private double mAccumulatedStdX;
+
+    /**
+     * Standard deviation of y-coordinate of measurements accumulated during
+     * last static period expressed in meters per squared second (m/s^2) for
+     * acceleration, radians per second (rad/s) for angular speed or Teslas
+     * (T) for magnetic flux density.
+     * This value is updated when switching from a static period to a dynamic
+     * one or after completing initialization.
+     */
+    private double mAccumulatedStdY;
+
+    /**
+     * Standard deviation of z-coordinate of measurements accumulated during
+     * last static period expressed in meters per squared second (m/s^2) for
+     * acceleration, radians per second (rad/s) for angular speed or Teslas
+     * (T) for magnetic flux density.
+     * This value is updated when switching from a static period to a dynamic
+     * one or after completing initialization.
+     */
+    private double mAccumulatedStdZ;
+
+    /**
+     * Windowed average x-coordinate of measurements for each processed triad
+     * expressed in meters per squared second (m/s^2) for acceleration,
+     * radians per second (rad/s) for angular speed or Teslas (T) for
+     * magnetic flux density.
+     * This value is updated for each processed sample containing an average
+     * value for the samples within the window.
+     */
+    private double mInstantaneousAvgX;
+
+    /**
+     * Windowed average y-coordinate of measurements for each processed triad
+     * expressed in meters per squared second (m/s^2) for acceleration,
+     * radians per second (rad/s) for angular speed or Teslas (T) for
+     * magnetic flux density.
+     * This value is updated for each processed sample containing an average
+     * value for the samples within the window.
+     */
+    private double mInstantaneousAvgY;
+
+    /**
+     * Windowed average z-coordinate of measurements for each processed triad
+     * expressed in meters per squared second (m/s^2) for acceleration,
+     * radians per second (rad/s) for angular speed or Teslas (T) for
+     * magnetic flux density.
+     * This value is updated for each processed sample containing an average
+     * value for the samples within the window.
+     */
+    private double mInstantaneousAvgZ;
+
+    /**
+     * Windowed standard deviation of x-coordinate of measurements for each
+     * processed triad expressed in meters per squared second (m/s^2) for
+     * acceleration, radians per second (rad/s) for angular speed or Teslas (T)
+     * for magnetic flux density.
+     * This value is updated for each processed sample containing measured standard
+     * deviation for the samples within the window.
+     */
+    private double mInstantaneousStdX;
+
+    /**
+     * Windowed standard deviation of y-coordinate of measurements for each
+     * processed triad expressed in meters per squared second (m/s^2) for
+     * acceleration, radians per second (rad/s) for angular speed or Teslas (T)
+     * for magnetic flux density.
+     * This value is updated for each processed sample containing measured standard
+     * deviation for the samples within the window.
+     */
+    private double mInstantaneousStdY;
+
+    /**
+     * Windowed standard deviation of z-coordinate of measurements for each
+     * processed triad expressed in meters per squared second (m/s^2) for
+     * acceleration, radians per second (rad/s) for angular speed or Teslas (T)
+     * for magnetic flux density.
+     * This value is updated for each processed sample containing measured standard
+     * deviation for the samples within the window.
+     */
+    private double mInstantaneousStdZ;
 
     /**
      * Estimator to find instantaneous measurement noise level averaged for a certain window of samples.
@@ -550,136 +641,592 @@ public abstract class TriadStaticIntervalDetector<U extends Enum<?>, M extends M
     }
 
     /**
-     * Gets average x-coordinate of measurement during last static period
-     * expressed in meters per squared second (m/s^2) for acceleration,
+     * Gets average x-coordinate of measurements accumulated during last static
+     * period expressed in meters per squared second (m/s^2) for acceleration,
      * radians per second (rad/s) for angular speed or Teslas (T) for
      * magnetic flux density.
      * This value is updated when switching from a static period to a dynamic
      * one or after completing initialization.
      *
-     * @return average x-coordinate of measurement during last static period.
+     * @return accumulated average x-coordinate of measurement during last static
+     * period.
      */
-    public double getAvgX() {
-        return mAvgX;
+    public double getAccumulatedAvgX() {
+        return mAccumulatedAvgX;
     }
 
     /**
-     * Gets average x-coordinate of measurement during last static period.
+     * Gets average x-coordinate of measurements accumulated during last static
+     * period.
      * This value is updated when switching from a static period to a dynamic
      * one or after completing initialization.
      *
-     * @return average x-coordinate of measurement during last static period.
+     * @return accumulated average x-coordinate of measurement during last static
+     * period.
      */
-    public M getAvgXAsMeasurement() {
-        return createMeasurement(mAvgX, getDefaultUnit());
+    public M getAccumulatedAvgXAsMeasurement() {
+        return createMeasurement(mAccumulatedAvgX, getDefaultUnit());
     }
 
     /**
-     * Gets average x-coordinate of measurement during last static period.
+     * Gets average x-coordinate of measurements accumulated during last static
+     * period.
      * This value is updated when switching from a static period to a dynamic
      * one or after completing initialization.
      *
      * @param result instance where result will be stored.
      */
-    public void getAvgXAsMeasurement(final M result) {
-        result.setValue(mAvgX);
+    public void getAccumulatedAvgXAsMeasurement(final M result) {
+        result.setValue(mAccumulatedAvgX);
         result.setUnit(getDefaultUnit());
     }
 
     /**
-     * Gets average y-coordinate of measurement during last static period
-     * expressed in meters per squared second (m/s^2) for acceleration,
+     * Gets average y-coordinate of measurements accumulated during last static
+     * period expressed in meters per squared second (m/s^2) for acceleration,
      * radians per second (rad/s) for angular speed or Teslas (T) for
      * magnetic flux density.
      * This value is updated when switching from a static period to a dynamic
      * one or after completing initialization.
      *
-     * @return average y-coordinate of measurement during last static period.
+     * @return accumulated average y-coordinate of measurement during last static
+     * period.
      */
-    public double getAvgY() {
-        return mAvgY;
+    public double getAccumulatedAvgY() {
+        return mAccumulatedAvgY;
     }
 
     /**
-     * Gets average y-coordinate of measurement during last static period.
+     * Gets average y-coordinate of measurements accumulated during last static
+     * period.
      * This value is updated when switching from a static period to a dynamic
      * one or after completing initialization.
      *
-     * @return average y-coordinate of measurement during last static period.
+     * @return accumulated average y-coordinate of measurement during last static
+     * period.
      */
-    public M getAvgYAsMeasurement() {
-        return createMeasurement(mAvgY, getDefaultUnit());
+    public M getAccumulatedAvgYAsMeasurement() {
+        return createMeasurement(mAccumulatedAvgY, getDefaultUnit());
     }
 
     /**
-     * Gets average y-coordinate of measurement during last static period.
+     * Gets average y-coordinate of measurements accumulated during last static
+     * period.
      * This value is updated when switching from a static period to a dynamic
      * one or after completing initialization.
      *
      * @param result instance where result will be stored.
      */
-    public void getAvgYAsMeasurement(final M result) {
-        result.setValue(mAvgY);
+    public void getAccumulatedAvgYAsMeasurement(final M result) {
+        result.setValue(mAccumulatedAvgY);
         result.setUnit(getDefaultUnit());
     }
 
     /**
-     * Gets average z-coordinate of specific force during last static period
-     * expressed in meters per squared second (m/s^2) for acceleration,
+     * Gets average z-coordinate of measurements accumulated during last static
+     * period expressed in meters per squared second (m/s^2) for acceleration,
      * radians per second (rad/s) for angular speed or Teslas (T) for
      * magnetic flux density.
      * This value is updated when switching from a static period to a dynamic
      * one or after completing initialization.
      *
-     * @return average y-coordinate of measurement during last static period.
+     * @return accumulated average y-coordinate of measurement during last static
+     * period.
      */
-    public double getAvgZ() {
-        return mAvgZ;
+    public double getAccumulatedAvgZ() {
+        return mAccumulatedAvgZ;
     }
 
     /**
-     * Gets average z-coordinate of measurement during last static period.
+     * Gets average z-coordinate of measurements accumulated during last static
+     * period.
      * This value is updated when switching from a static period to a dynamic
      * one or after completing initialization.
      *
-     * @return average z-coordinate of measurement during last static period.
+     * @return accumulated average z-coordinate of measurement during last static
+     * period.
      */
-    public M getAvgZAsMeasurement() {
-        return createMeasurement(mAvgZ, getDefaultUnit());
+    public M getAccumulatedAvgZAsMeasurement() {
+        return createMeasurement(mAccumulatedAvgZ, getDefaultUnit());
     }
 
     /**
-     * Gets average z-coordinate of measurement during last static period.
+     * Gets average z-coordinate of measurements accumulated during last static
+     * period.
      * This value is updated when switching from a static period to a dynamic
      * one or after completing initialization.
      *
      * @param result instance where result will be stored.
      */
-    public void getAvgZAsMeasurement(final M result) {
-        result.setValue(mAvgZ);
+    public void getAccumulatedAvgZAsMeasurement(final M result) {
+        result.setValue(mAccumulatedAvgZ);
         result.setUnit(getDefaultUnit());
     }
 
     /**
-     * Gets average measurement triad during last static period.
+     * Gets average measurements triad accumulated during last static period.
      * This value is updated when switching from a static period to a dynamic
      * one or after completing initialization.
      *
-     * @return average measurement triad during last static period.
+     * @return accumulated average measurements triad during last static period.
      */
-    public T getAvgTriad() {
-        return createTriad(mAvgX, mAvgY, mAvgZ, getDefaultUnit());
+    public T getAccumulatedAvgTriad() {
+        return createTriad(mAccumulatedAvgX, mAccumulatedAvgY, mAccumulatedAvgZ, getDefaultUnit());
     }
 
     /**
-     * Gets average measurement triad during last static period.
+     * Gets average measurements triad accumulated during last static period.
      * This value is updated when switching from a static period to a dynamic
      * one or after completing initialization.
      *
      * @param result instance where result will be stored.
      */
-    public void getAvgTriad(final T result) {
-        result.setValueCoordinatesAndUnit(mAvgX, mAvgY, mAvgZ,
+    public void getAccumulatedAvgTriad(final T result) {
+        result.setValueCoordinatesAndUnit(mAccumulatedAvgX, mAccumulatedAvgY, mAccumulatedAvgZ,
+                getDefaultUnit());
+    }
+
+    /**
+     * Gets standard deviation of x-coordinate of measurements accumulated during
+     * last static period expressed in meters per squared second (m/s^2) for
+     * acceleration, radians per second (rad/s) for angular speed or Teslas
+     * (T) for magnetic flux density.
+     * This value is updated when switching from a static period to a dynamic
+     * one or after completing initialization.
+     *
+     * @return standard deviation of x-coordinate of measurements accumulated
+     * during last static period.
+     */
+    public double getAccumulatedStdX() {
+        return mAccumulatedStdX;
+    }
+
+    /**
+     * Gets standard deviation of x-coordinate of measurements accumulated during
+     * last static period.
+     * This value is updated when switching from a static period to a dynamic
+     * one or after completing initialization.
+     *
+     * @return standard deviation of x-coordinate of measurements accumulated
+     * during last static period.
+     */
+    public M getAccumulatedStdXAsMeasurement() {
+        return createMeasurement(mAccumulatedStdX, getDefaultUnit());
+    }
+
+    /**
+     * Gets standard deviation of x-coordinate of measurements accumulated during
+     * last static period.
+     * This value is updated when switching from a static period to a dynamic
+     * one or after completing initialization.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getAccumulatedStdXAsMeasurement(final M result) {
+        result.setValue(mAccumulatedStdX);
+        result.setUnit(getDefaultUnit());
+    }
+
+    /**
+     * Gets standard deviation of y-coordinate of measurements accumulated during
+     * last static period expressed in meters per squared second (m/s^2) for
+     * acceleration, radians per second (rad/s) for angular speed or Teslas
+     * (T) for magnetic flux density.
+     * This value is updated when switching from a static period to a dynamic
+     * one or after completing initialization.
+     *
+     * @return standard deviation of y-coordinate of measurements accumulated
+     * during last static period.
+     */
+    public double getAccumulatedStdY() {
+        return mAccumulatedStdY;
+    }
+
+    /**
+     * Gets standard deviation of y-coordinate of measurements accumulated during
+     * last static period.
+     * This value is updated when switching from a static period to a dynamic
+     * one or after completing initialization.
+     *
+     * @return standard deviation of y-coordinate of measurements accumulated
+     * during last static period.
+     */
+    public M getAccumulatedStdYAsMeasurement() {
+        return createMeasurement(mAccumulatedStdY, getDefaultUnit());
+    }
+
+    /**
+     * Gets standard deviation of y-coordinate of measurements accumulated during
+     * last static period.
+     * This value is updated when switching from a static period to a dynamic
+     * one or after completing initialization.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getAccumulatedStdYAsMeasurement(final M result) {
+        result.setValue(mAccumulatedStdY);
+        result.setUnit(getDefaultUnit());
+    }
+
+    /**
+     * Gets standard deviation of z-coordinate of measurements accumulated during
+     * last static period expressed in meters per squared second (m/s^2) for
+     * acceleration, radians per second (rad/s) for angular speed or Teslas
+     * (T) for magnetic flux density.
+     * This value is updated when switching from a static period to a dynamic
+     * one or after completing initialization.
+     *
+     * @return standard deviation of z-coordinate of measurements accumulated
+     * during last static period.
+     */
+    public double getAccumulatedStdZ() {
+        return mAccumulatedStdZ;
+    }
+
+    /**
+     * Gets standard deviation of z-coordinate of measurements accumulated during
+     * last static period.
+     * This value is updated when switching from a static period to a dynamic
+     * one or after completing initialization.
+     *
+     * @return standard deviation of z-coordinate of measurements accumulated
+     * during last static period.
+     */
+    public M getAccumulatedStdZAsMeasurement() {
+        return createMeasurement(mAccumulatedStdZ, getDefaultUnit());
+    }
+
+    /**
+     * Gets standard deviation of z-coordinate of measurements accumulated during
+     * last static period.
+     * This value is updated when switching from a static period to a dynamic
+     * one or after completing initialization.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getAccumulatedStdZAsMeasurement(final M result) {
+        result.setValue(mAccumulatedStdZ);
+        result.setUnit(getDefaultUnit());
+    }
+
+    /**
+     * Gets standard deviation of measurements accumulated during last static
+     * period.
+     * This value is updated when switching from a static period to a dynamic
+     * one or after completing initialization.
+     *
+     * @return standard deviation of measurements accumulated during last static
+     * period.
+     */
+    public T getAccumulatedStdTriad() {
+        return createTriad(mAccumulatedStdX, mAccumulatedStdY, mAccumulatedStdZ,
+                getDefaultUnit());
+    }
+
+    /**
+     * Gets standard deviation of measurements accumulated during last static
+     * period.
+     * This value is updated when switching from a static period to a dynamic
+     * one or after completing initialization.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getAccumulatedStdTriad(final T result) {
+        result.setValueCoordinatesAndUnit(
+                mAccumulatedStdX, mAccumulatedStdY, mAccumulatedStdZ,
+                getDefaultUnit());
+    }
+
+    /**
+     * Gets windowed average x-coordinate of measurements for each processed triad
+     * expressed in meters per squared second (m/s^2) for acceleration,
+     * radians per second (rad/s) for angular speed or Teslas (T) for
+     * magnetic flux density.
+     * This value is updated for each processed sample containing an average
+     * value for the samples within the window.
+     *
+     * @return windowed average x-coordinate of measurements for each processed
+     * triad.
+     */
+    public double getInstantaneousAvgX() {
+        return mInstantaneousAvgX;
+    }
+
+    /**
+     * Gets windowed average x-coordinate of measurements for each processed triad.
+     * This value is updated for each processed sample containing an average
+     * value for the samples within the window.
+     *
+     * @return windowed average x-coordinate of measurements for each processed
+     * triad.
+     */
+    public M getInstantaneousAvgXAsMeasurement() {
+        return createMeasurement(mInstantaneousAvgX, getDefaultUnit());
+    }
+
+    /**
+     * Gets windowed average x-coordinate of measurements for each processed triad.
+     * This value is updated for each processed sample containing an average
+     * value for the samples within the window.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getInstantaneousAvgXAsMeasurement(final M result) {
+        result.setValue(mInstantaneousAvgX);
+        result.setUnit(getDefaultUnit());
+    }
+
+    /**
+     * Gets windowed average y-coordinate of measurements for each processed triad
+     * expressed in meters per squared second (m/s^2) for acceleration,
+     * radians per second (rad/s) for angular speed or Teslas (T) for
+     * magnetic flux density.
+     * This value is updated for each processed sample containing an average
+     * value for the samples within the window.
+     *
+     * @return windowed average y-coordinate of measurements for each processed
+     * triad.
+     */
+    public double getInstantaneousAvgY() {
+        return mInstantaneousAvgY;
+    }
+
+    /**
+     * Gets windowed average y-coordinate of measurements for each processed triad.
+     * This value is updated for each processed sample containing an average
+     * value for the samples within the window.
+     *
+     * @return windowed average y-coordinate of measurements for each processed
+     * triad.
+     */
+    public M getInstantaneousAvgYAsMeasurement() {
+        return createMeasurement(mInstantaneousAvgY, getDefaultUnit());
+    }
+
+    /**
+     * Gets windowed average y-coordinate of measurements for each processed triad.
+     * This value is updated for each processed sample containing an average
+     * value for the samples within the window.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getInstantaneousAvgYAsMeasurement(final M result) {
+        result.setValue(mInstantaneousAvgY);
+        result.setUnit(getDefaultUnit());
+    }
+
+    /**
+     * Gets windowed average z-coordinate of measurements for each processed triad
+     * expressed in meters per squared second (m/s^2) for acceleration,
+     * radians per second (rad/s) for angular speed or Teslas (T) for
+     * magnetic flux density.
+     * This value is updated for each processed sample containing an average
+     * value for the samples within the window.
+     *
+     * @return windowed average z-coordinate of measurements for each processed
+     * triad.
+     */
+    public double getInstantaneousAvgZ() {
+        return mInstantaneousAvgZ;
+    }
+
+    /**
+     * Gets windowed average z-coordinate of measurements for each processed triad.
+     * This value is updated for each processed sample containing an average
+     * value for the samples within the window.
+     *
+     * @return windowed average z-coordinate of measurements for each processed
+     * triad.
+     */
+    public M getInstantaneousAvgZAsMeasurement() {
+        return createMeasurement(mInstantaneousAvgZ, getDefaultUnit());
+    }
+
+    /**
+     * Gets windowed average z-coordinate of measurements for each processed triad.
+     * This value is updated for each processed sample containing an average
+     * value for the samples within the window.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getInstantaneousAvgZAsMeasurement(final M result) {
+        result.setValue(mInstantaneousAvgZ);
+        result.setUnit(getDefaultUnit());
+    }
+
+    /**
+     * Gets windowed average of measurements for each processed triad.
+     * This value is updated for each processed sample containing an average
+     * value for the samples within the window.
+     *
+     * @return windowed average of measurements for each processed triad.
+     */
+    public T getInstantaneousAvgTriad() {
+        return createTriad(
+                mInstantaneousAvgX, mInstantaneousAvgY, mInstantaneousAvgZ,
+                getDefaultUnit());
+    }
+
+    /**
+     * Gets windowed average of measurements for each processed triad.
+     * This value is updated for each processed sample containing an average
+     * value for the samples within the window.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getInstantaneousAvgTriad(final T result) {
+        result.setValueCoordinatesAndUnit(
+                mInstantaneousAvgX, mInstantaneousAvgY, mInstantaneousAvgZ,
+                getDefaultUnit());
+    }
+
+    /**
+     * Gets windowed standard deviation of x-coordinate of measurements for each
+     * processed triad expressed in meters per squared second (m/s^2) for
+     * acceleration, radians per second (rad/s) for angular speed or Teslas
+     * (T) for magnetic flux density.
+     * This value is updated for each processed sample containing measured standard
+     * deviation for the samples within the window.
+     *
+     * @return windowed standard deviation of x-coordinate of measurements for
+     * each processed triad.
+     */
+    public double getInstantaneousStdX() {
+        return mInstantaneousStdX;
+    }
+
+    /**
+     * Gets windowed standard deviation of x-coordinate of measurements for each
+     * processed triad.
+     * This value is updated for each processed sample containing measured standard
+     * deviation for the samples within the window.
+     *
+     * @return windowed standard deviation of x-coordinate of measurements for
+     * each processed triad.
+     */
+    public M getInstantaneousStdXAsMeasurement() {
+        return createMeasurement(mInstantaneousStdX, getDefaultUnit());
+    }
+
+    /**
+     * Gets windowed standard deviation of x-coordinate of measurements for each
+     * processed triad.
+     * This value is updated for each processed sample containing measured standard
+     * deviation for the samples within the window.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getInstantaneousStdXAsMeasurement(final M result) {
+        result.setValue(mInstantaneousStdX);
+        result.setUnit(getDefaultUnit());
+    }
+
+    /**
+     * Gets windowed standard deviation of y-coordinate of measurements for each
+     * processed triad expressed in meters per squared second (m/s^2) for
+     * acceleration, radians per second (rad/s) for angular speed or Teslas
+     * (T) for magnetic flux density.
+     * This value is updated for each processed sample containing measured standard
+     * deviation for the samples within the window.
+     *
+     * @return windowed standard deviation of y-coordinate of measurements for
+     * each processed triad.
+     */
+    public double getInstantaneousStdY() {
+        return mInstantaneousStdY;
+    }
+
+    /**
+     * Gets windowed standard deviation of y-coordinate of measurements for each
+     * processed triad.
+     * This value is updated for each processed sample containing measured standard
+     * deviation of the samples within the window.
+     *
+     * @return windowed standard deviation of y-coordinate of measurements for
+     * each processed triad.
+     */
+    public M getInstantaneousStdYAsMeasurement() {
+        return createMeasurement(mInstantaneousStdY, getDefaultUnit());
+    }
+
+    /**
+     * Gets windowed standard deviation of y-coordinate of measurements for each
+     * processed triad.
+     * This value is updated for each processed sample containing measured standard
+     * deviation of the samples within the window.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getInstantaneousStdYAsMeasurement(final M result) {
+        result.setValue(mInstantaneousStdY);
+        result.setUnit(getDefaultUnit());
+    }
+
+    /**
+     * Gets windowed standard deviation of z-coordinate of measurements for each
+     * processed triad expressed in meters per squared second (m/s^2) for
+     * acceleration, radians per second (rad/s) for angular speed or Teslas (T)
+     * for magnetic flux density.
+     * This value is updated for each processed sample containing measured standard
+     * deviation for the samples within the window.
+     *
+     * @return windowed standard deviation of z-coordinate of measurements for
+     * each processed triad.
+     */
+    public double getInstantaneousStdZ() {
+        return mInstantaneousStdZ;
+    }
+
+    /**
+     * Gets windowed standard deviation of z-coordinate of measurements for each
+     * processed triad.
+     * This value is updated for each processed sample containing measured standard
+     * deviation for the samples within the window.
+     *
+     * @return windowed standard deviation of z-coordinate of measurements for
+     * each processed triad.
+     */
+    public M getInstantaneousStdZAsMeasurement() {
+        return createMeasurement(mInstantaneousStdZ, getDefaultUnit());
+    }
+
+    /**
+     * Gets windowed standard deviation of z-coordinate of measurements for each
+     * processed triad.
+     * This value is updated for each processed sample containing measured standard
+     * deviation for the samples within the window.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getInstantaneousStdZAsMeasurement(final M result) {
+        result.setValue(mInstantaneousStdZ);
+        result.setUnit(getDefaultUnit());
+    }
+
+    /**
+     * Gets windowed standard deviation of measurements for each processed triad.
+     * This value is updated for each processed sample containing measured standard
+     * deviation for the samples within the window.
+     *
+     * @return windowed standard deviation of measurements for each processed
+     * triad.
+     */
+    public T getInstantaneousStdTriad() {
+        return createTriad(
+                mInstantaneousStdX, mInstantaneousStdY, mInstantaneousStdZ,
+                getDefaultUnit());
+    }
+
+    /**
+     * Gets windowed standard deviation of measurements for each processed triad.
+     * This value is updated for each processed sample containing measured standard
+     * deviation for the samples within the window.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getInstantaneousStdTriad(final T result) {
+        result.setValueCoordinatesAndUnit(
+                mInstantaneousStdX, mInstantaneousStdY, mInstantaneousStdZ,
                 getDefaultUnit());
     }
 
@@ -754,8 +1301,15 @@ public abstract class TriadStaticIntervalDetector<U extends Enum<?>, M extends M
 
         mProcessedSamples++;
 
-        final boolean windowedProcessed = mWindowedNoiseEstimator
-                .addTriadAndProcess(valueX, valueY, valueZ);
+        mWindowedNoiseEstimator.addTriadAndProcess(valueX, valueY, valueZ);
+
+        mInstantaneousAvgX = mWindowedNoiseEstimator.getAvgX();
+        mInstantaneousAvgY = mWindowedNoiseEstimator.getAvgY();
+        mInstantaneousAvgZ = mWindowedNoiseEstimator.getAvgZ();
+
+        mInstantaneousStdX = mWindowedNoiseEstimator.getStandardDeviationX();
+        mInstantaneousStdY = mWindowedNoiseEstimator.getStandardDeviationY();
+        mInstantaneousStdZ = mWindowedNoiseEstimator.getStandardDeviationZ();
 
         final double windowedStdNorm = mWindowedNoiseEstimator
                 .getStandardDeviationNorm();
@@ -764,38 +1318,39 @@ public abstract class TriadStaticIntervalDetector<U extends Enum<?>, M extends M
 
         if (mStatus == Status.INITIALIZING) {
             // process sample during initialization
-            final boolean accumulatedProcessed = mAccumulatedNoiseEstimator
-                    .addTriad(valueX, valueY, valueZ);
+            mAccumulatedNoiseEstimator.addTriad(valueX, valueY, valueZ);
             final double accumulatedStdNorm = mAccumulatedNoiseEstimator
                     .getStandardDeviationNorm();
 
             if (mProcessedSamples < mInitialStaticSamples) {
-                if (windowedProcessed && accumulatedProcessed) {
-                    if (filledWindow && (windowedStdNorm / accumulatedStdNorm > mInstantaneousNoiseLevelFactor)) {
-                        // sudden motion detected
-                        mStatus = Status.FAILED;
+                if (filledWindow && (windowedStdNorm / accumulatedStdNorm > mInstantaneousNoiseLevelFactor)) {
+                    // sudden motion detected
+                    mStatus = Status.FAILED;
 
-                        // notify error
-                        if (mListener != null) {
-                            //noinspection unchecked
-                            mListener.onError((D) this, accumulatedStdNorm,
-                                    windowedStdNorm,
-                                    ErrorReason.SUDDEN_EXCESSIVE_MOVEMENT_DETECTED);
-                        }
+                    // notify error
+                    if (mListener != null) {
+                        //noinspection unchecked
+                        mListener.onError((D) this, accumulatedStdNorm,
+                                windowedStdNorm,
+                                ErrorReason.SUDDEN_EXCESSIVE_MOVEMENT_DETECTED);
                     }
                 }
 
-            } else {
+            } else if (filledWindow) {
                 // initialization completed
                 // set base noise level and threshold
                 mBaseNoiseLevel = accumulatedStdNorm;
                 mThreshold = mBaseNoiseLevel * mThresholdFactor;
 
-                // keep average measurement triad in case we want to obtain
+                // keep average/std measurements triad in case we want to obtain
                 // its value since initial period must be static
-                mAvgX = mAccumulatedNoiseEstimator.getAvgX();
-                mAvgY = mAccumulatedNoiseEstimator.getAvgY();
-                mAvgZ = mAccumulatedNoiseEstimator.getAvgZ();
+                mAccumulatedAvgX = mAccumulatedNoiseEstimator.getAvgX();
+                mAccumulatedAvgY = mAccumulatedNoiseEstimator.getAvgY();
+                mAccumulatedAvgZ = mAccumulatedNoiseEstimator.getAvgZ();
+
+                mAccumulatedStdX = mAccumulatedNoiseEstimator.getStandardDeviationX();
+                mAccumulatedStdY = mAccumulatedNoiseEstimator.getStandardDeviationY();
+                mAccumulatedStdZ = mAccumulatedNoiseEstimator.getStandardDeviationZ();
 
                 // reset accumulated estimator so that we can estimate
                 // average specific force in static periods
@@ -832,17 +1387,16 @@ public abstract class TriadStaticIntervalDetector<U extends Enum<?>, M extends M
             // detect static or dynamic period
             final Status previousStatus = mStatus;
 
-            if (previousStatus == Status.STATIC_INTERVAL ||
-                    previousStatus == Status.INITIALIZATION_COMPLETED) {
-                // while we are in static interval (or initial static period), keep
-                // adding samples to estimate accumulated average measurement triad
-                mAccumulatedNoiseEstimator.addTriad(valueX, valueY, valueZ);
-            }
-
             if (windowedStdNorm < mThreshold) {
                 mStatus = Status.STATIC_INTERVAL;
             } else {
                 mStatus = Status.DYNAMIC_INTERVAL;
+            }
+
+            if (mStatus == Status.STATIC_INTERVAL) {
+                // while we are in static interval, keep adding samples to estimate
+                // accumulated average measurement triad
+                mAccumulatedNoiseEstimator.addTriad(valueX, valueY, valueZ);
             }
 
             if (previousStatus != mStatus) {
@@ -851,22 +1405,32 @@ public abstract class TriadStaticIntervalDetector<U extends Enum<?>, M extends M
                     case STATIC_INTERVAL:
                         if (mListener != null) {
                             //noinspection unchecked
-                            mListener.onStaticIntervalDetected((D) this);
+                            mListener.onStaticIntervalDetected((D) this,
+                                    mInstantaneousAvgX, mInstantaneousAvgY, mInstantaneousAvgZ,
+                                    mInstantaneousStdX, mInstantaneousStdY, mInstantaneousStdZ);
                         }
                         break;
                     case DYNAMIC_INTERVAL:
                         // when switching from static to dynamic interval,
-                        // pick accumulated average measurement triad
-                        mAvgX = mAccumulatedNoiseEstimator.getAvgX();
-                        mAvgY = mAccumulatedNoiseEstimator.getAvgY();
-                        mAvgZ = mAccumulatedNoiseEstimator.getAvgZ();
+                        // pick accumulated average and standard deviation measurement triads
+                        mAccumulatedAvgX = mAccumulatedNoiseEstimator.getAvgX();
+                        mAccumulatedAvgY = mAccumulatedNoiseEstimator.getAvgY();
+                        mAccumulatedAvgZ = mAccumulatedNoiseEstimator.getAvgZ();
+
+                        mAccumulatedStdX = mAccumulatedNoiseEstimator.getStandardDeviationX();
+                        mAccumulatedStdY = mAccumulatedNoiseEstimator.getStandardDeviationY();
+                        mAccumulatedStdZ = mAccumulatedNoiseEstimator.getStandardDeviationZ();
 
                         // reset accumulated estimator when switching to dynamic period
                         mAccumulatedNoiseEstimator.reset();
 
                         if (mListener != null) {
                             //noinspection unchecked
-                            mListener.onDynamicIntervalDetected((D) this, mAvgX, mAvgY, mAvgZ);
+                            mListener.onDynamicIntervalDetected((D) this,
+                                    mInstantaneousAvgX, mInstantaneousAvgY, mInstantaneousAvgZ,
+                                    mInstantaneousStdX, mInstantaneousStdY, mInstantaneousStdZ,
+                                    mAccumulatedAvgX, mAccumulatedAvgY, mAccumulatedAvgZ,
+                                    mAccumulatedStdX, mAccumulatedStdY, mAccumulatedStdZ);
                         }
                         break;
                 }
@@ -896,7 +1460,7 @@ public abstract class TriadStaticIntervalDetector<U extends Enum<?>, M extends M
 
         mWindowedNoiseEstimator.reset();
         mAccumulatedNoiseEstimator.reset();
-
+        
         if (mListener != null) {
             //noinspection unchecked
             mListener.onReset((D) this);

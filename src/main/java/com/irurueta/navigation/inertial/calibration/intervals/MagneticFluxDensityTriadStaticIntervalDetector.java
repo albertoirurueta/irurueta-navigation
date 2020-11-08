@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.irurueta.navigation.inertial.calibration;
+package com.irurueta.navigation.inertial.calibration.intervals;
 
+import com.irurueta.navigation.inertial.calibration.MagneticFluxDensityTriad;
 import com.irurueta.navigation.inertial.calibration.noise.AccumulatedMagneticFluxDensityTriadNoiseEstimator;
 import com.irurueta.navigation.inertial.calibration.noise.WindowedMagneticFluxDensityTriadNoiseEstimator;
 import com.irurueta.units.MagneticFluxDensity;

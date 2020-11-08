@@ -1175,11 +1175,9 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @param angularRateX   x coordinate of angular rate expressed in radians per second (rad/s).
      * @param angularRateY   y coordinate of angular rate expressed in radians per second (rad/s).
      * @param angularRateZ   z coordinate of angular rate expressed in radians per second (rad/s).
-     * @return true if provided measurement instance has been processed, false if it has
-     * been ignored.
      * @throws LockedException if estimator is currently running.
      */
-    public boolean addBodyKinematics(
+    public void addBodyKinematics(
             final double specificForceX, final double specificForceY, final double specificForceZ,
             final double angularRateX, final double angularRateY, final double angularRateZ)
             throws LockedException {
@@ -1200,16 +1198,14 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
         mLastBodyKinematics.setSpecificForceCoordinates(specificForceX, specificForceY, specificForceZ);
         mLastBodyKinematics.setAngularRateCoordinates(angularRateX, angularRateY, angularRateZ);
 
-        final boolean result = mAccelerationEstimator.addTriad(specificForceX, specificForceY, specificForceZ) &&
-                mAngularSpeedEstimator.addTriad(angularRateX, angularRateY, angularRateZ);
+        mAccelerationEstimator.addTriad(specificForceX, specificForceY, specificForceZ);
+        mAngularSpeedEstimator.addTriad(angularRateX, angularRateY, angularRateZ);
 
         if (mListener != null) {
             mListener.onBodyKinematicsAdded(this);
         }
 
         mRunning = false;
-
-        return result;
     }
 
     /**
@@ -1221,11 +1217,9 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @param angularRateX   x coordinate of angular rate.
      * @param angularRateY   y coordinate of angular rate.
      * @param angularRateZ   z coordinate of angular rate.
-     * @return true if provided measurement instance has been processed, false if it has
-     * been ignored.
      * @throws LockedException if estimator is currently running.
      */
-    public boolean addBodyKinematics(
+    public void addBodyKinematics(
             final Acceleration specificForceX,
             final Acceleration specificForceY,
             final Acceleration specificForceZ,
@@ -1233,7 +1227,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
             final AngularSpeed angularRateY,
             final AngularSpeed angularRateZ)
             throws LockedException {
-        return addBodyKinematics(convertAcceleration(specificForceX),
+        addBodyKinematics(convertAcceleration(specificForceX),
                 convertAcceleration(specificForceY),
                 convertAcceleration(specificForceZ),
                 convertAngularSpeed(angularRateX),
@@ -1246,15 +1240,12 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      *
      * @param specificForce specific force triad.
      * @param angularSpeed  angular speed triad.
-     * @return true if provided measurement instance has been processed, false if it has
-     * been ignored.
      * @throws LockedException if estimator is currently running.
      */
-    public boolean addBodyKinematics(
+    public void addBodyKinematics(
             final AccelerationTriad specificForce,
             final AngularSpeedTriad angularSpeed) throws LockedException {
-        return addBodyKinematics(
-                convertAcceleration(specificForce.getValueX(), specificForce.getUnit()),
+        addBodyKinematics(convertAcceleration(specificForce.getValueX(), specificForce.getUnit()),
                 convertAcceleration(specificForce.getValueY(), specificForce.getUnit()),
                 convertAcceleration(specificForce.getValueZ(), specificForce.getUnit()),
                 convertAngularSpeed(angularSpeed.getValueX(), angularSpeed.getUnit()),
@@ -1266,13 +1257,10 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * Adds body kinematics measurement.
      *
      * @param bodyKinematics body kinematics.
-     * @return true if provided measurement instance has been processed, false if it has
-     * been ignored.
      * @throws LockedException if estimator is currently running.
      */
-    public boolean addBodyKinematics(final BodyKinematics bodyKinematics) throws LockedException {
-        return addBodyKinematics(
-                bodyKinematics.getFx(),
+    public void addBodyKinematics(final BodyKinematics bodyKinematics) throws LockedException {
+        addBodyKinematics(bodyKinematics.getFx(),
                 bodyKinematics.getFy(),
                 bodyKinematics.getFz(),
                 bodyKinematics.getAngularRateX(),

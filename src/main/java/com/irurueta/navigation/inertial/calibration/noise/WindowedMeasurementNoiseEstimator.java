@@ -33,6 +33,9 @@ import java.util.Arrays;
  * at a constant provided rate equal to {@link #getTimeInterval()} seconds.
  * If not available, accelerometer sampling rate average can be estimated using
  * {@link TimeIntervalEstimator}.
+ * Notice that if there are less than {@link #getWindowSize()} processed
+ * samples in the window, this estimator will assume that the remaining ones
+ * until the window is completed have zero values.
  *
  * @param <U> a measurement unit type.
  * @param <M> a measurement type.
@@ -50,12 +53,12 @@ public abstract class WindowedMeasurementNoiseEstimator<U extends Enum<?>,
      * For an accelerometer generating 50 samples/second, this is equivalent to
      * 2 seconds.
      */
-    public static final int DEFAULT_WINDOW_SIZE = 100;
+    public static final int DEFAULT_WINDOW_SIZE = 101;
 
     /**
      * Minimum allowed window size.
      */
-    public static final int MIN_WINDOW_SIZE = 2;
+    public static final int MIN_WINDOW_SIZE = 3;
 
     /**
      * Default time interval between accelerometer samples expressed in seconds
@@ -65,7 +68,8 @@ public abstract class WindowedMeasurementNoiseEstimator<U extends Enum<?>,
 
     /**
      * Length of number of samples to keep within the window being processed.
-     * Window size must always be larger than allowed minimum value.
+     * Window size must always be larger than allowed minimum value and must
+     * have and odd value.
      */
     private int mWindowSize = DEFAULT_WINDOW_SIZE;
 
@@ -140,7 +144,8 @@ public abstract class WindowedMeasurementNoiseEstimator<U extends Enum<?>,
 
     /**
      * Gets length of number of samples to keep within the window being processed.
-     * Window size must always be larger than allowed minimum value.
+     * Window size must always be larger than allowed minimum value and must have
+     * and odd value.
      *
      * @return length of number of samples to keep within the window.
      */
@@ -150,7 +155,8 @@ public abstract class WindowedMeasurementNoiseEstimator<U extends Enum<?>,
 
     /**
      * Sets length of number of samples to keep within the window being processed.
-     * Window size must always be larger than allowed minimum value.
+     * Window size must always be larger than allowed minimum value and must have
+     * an odd value.
      *
      * @param windowSize length of number of samples to keep within the window.
      * @throws IllegalArgumentException if provided value is not valid.
@@ -163,6 +169,11 @@ public abstract class WindowedMeasurementNoiseEstimator<U extends Enum<?>,
 
         // check that window is larger than minimum allowed value
         if (windowSize < MIN_WINDOW_SIZE) {
+            throw new IllegalArgumentException();
+        }
+
+        // check that window size is not even
+        if (windowSize % 2 == 0) {
             throw new IllegalArgumentException();
         }
 
@@ -477,31 +488,36 @@ public abstract class WindowedMeasurementNoiseEstimator<U extends Enum<?>,
     /**
      * Adds a measurement value expressed in its default unit (m/s^2 for acceleration, rad/s for
      * angular speed or T for magnetic flux density) and processes current window.
+     * Notice that if there are less than {@link #getWindowSize()} processed
+     * samples in the window, the remaining ones are considered to be zero
+     * when average values and standard deviation is estimated.
      *
      * @param value value to be added.
-     * @return true if result values were updated, false if not enough samples are available yet
-     * and no average or variance values have been computed yet.
      * @throws LockedException if estimator is currently running.
      */
-    public boolean addMeasurementAndProcess(final double value) throws LockedException {
-        return internalAdd(value, true);
+    public void addMeasurementAndProcess(final double value) throws LockedException {
+        internalAdd(value, true);
     }
 
     /**
      * Adds a measurement and processes current window.
+     * Notice that if there are less than {@link #getWindowSize()} processed
+     * samples in the window, the remaining ones are considered to be zero
+     * when average values and standard deviation is estimated.
      *
      * @param value value to be added.
-     * @return true if result values were updated, false if not enough samples are available yet
-     * and no average or variance values have been computed yet.
      * @throws LockedException if estimator is currently running.
      */
-    public boolean addMeasurementAndProcess(final M value) throws LockedException {
-        return internalAdd(convertToDefaultUnit(value), true);
+    public void addMeasurementAndProcess(final M value) throws LockedException {
+        internalAdd(convertToDefaultUnit(value), true);
     }
 
     /**
      * Adds a measurement value expressed in its default unit (m/s^2 for acceleration, rad/s for
      * angular speed or T for magnetic flux density).
+     * Notice that if there are less than {@link #getWindowSize()} processed
+     * samples in the window, the remaining ones are considered to be zero
+     * when average values and standard deviation is estimated.
      *
      * @param value value to be added.
      * @throws LockedException if estimator is currently running.
@@ -512,6 +528,9 @@ public abstract class WindowedMeasurementNoiseEstimator<U extends Enum<?>,
 
     /**
      * Adds a measurement.
+     * Notice that if there are less than {@link #getWindowSize()} processed
+     * samples in the window, the remaining ones are considered to be zero
+     * when average values and standard deviation is estimated.
      *
      * @param value value to be added.
      * @throws LockedException if estimator is currently running
@@ -580,11 +599,9 @@ public abstract class WindowedMeasurementNoiseEstimator<U extends Enum<?>,
      *
      * @param value measurement value to be added.
      * @param process true if window of samples must also be processed, false otherwise.
-     * @return true if result values were updated, false if not enough samples are available yet
-     * and no average or variance values have been computed yet.
      * @throws LockedException if estimator is currently running.
      */
-    private boolean internalAdd(final double value, final boolean process) throws LockedException {
+    private void internalAdd(final double value, final boolean process) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -606,7 +623,9 @@ public abstract class WindowedMeasurementNoiseEstimator<U extends Enum<?>,
         mNumberOfAddedSamples++;
 
         // process window
-        final boolean result = process && processWindow();
+        if (process) {
+            processWindow();
+        }
 
         mRunning = false;
 
@@ -619,23 +638,15 @@ public abstract class WindowedMeasurementNoiseEstimator<U extends Enum<?>,
                 mListener.onWindowFilled((E) this);
             }
         }
-
-        return result;
     }
 
     /**
      * Processes current windowed samples.
-     *
-     * @return true if sample was processed, false if there are not enough samples to
-     * process current window.
      */
-    private boolean processWindow() {
+    private void processWindow() {
         mNumberOfProcessedSamples++;
 
         final int n = getNumberOfSamplesInWindow();
-        if (n <= 1) {
-            return false;
-        }
 
         final int endPos = Math.min(n, mWindowSize);
 
@@ -646,7 +657,7 @@ public abstract class WindowedMeasurementNoiseEstimator<U extends Enum<?>,
             avg += value;
         }
 
-        avg /= n;
+        avg /= mWindowSize;
 
         // compute variances
         double var = 0.0;
@@ -658,13 +669,11 @@ public abstract class WindowedMeasurementNoiseEstimator<U extends Enum<?>,
             var += diff2;
         }
 
-        final int nMinusOne = n -1;
+        final int m = mWindowSize - 1;
 
-        var /= nMinusOne;
+        var /= m;
 
         mAvg = avg;
         mVariance = var;
-
-        return true;
     }
 }

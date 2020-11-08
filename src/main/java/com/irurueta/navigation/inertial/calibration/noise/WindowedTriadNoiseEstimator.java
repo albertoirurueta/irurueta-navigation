@@ -39,6 +39,9 @@ import java.util.LinkedList;
  * Because body location and orientation is not known, estimated average values
  * cannot be used to determine biases. Only norm of noise estimations
  * (variance or standard deviation) can be safely used.
+ * Notice that if there are less than {@link #getWindowSize()} processed
+ * samples in the window, this estimator will assume that the remaining ones
+ * until the window is completed have zero values.
  *
  * @param <U> a measurement unit type.
  * @param <M> a measurement type.
@@ -58,12 +61,12 @@ public abstract class WindowedTriadNoiseEstimator<U extends Enum<?>,
      * For an accelerometer generating 50 samples/second, this is equivalent to
      * 2 seconds.
      */
-    public static final int DEFAULT_WINDOW_SIZE = 100;
+    public static final int DEFAULT_WINDOW_SIZE = 101;
 
     /**
      * Minimum allowed window size.
      */
-    public static final int MIN_WINDOW_SIZE = 2;
+    public static final int MIN_WINDOW_SIZE = 3;
 
     /**
      * Default time interval between accelerometer samples expressed in seconds
@@ -73,7 +76,8 @@ public abstract class WindowedTriadNoiseEstimator<U extends Enum<?>,
 
     /**
      * Length of number of samples to keep within the window being processed.
-     * Window size must always be larger than allowed minimum value.
+     * Window size must always be larger than allowed minimum value and must have
+     * an odd value.
      */
     private int mWindowSize = DEFAULT_WINDOW_SIZE;
 
@@ -159,7 +163,8 @@ public abstract class WindowedTriadNoiseEstimator<U extends Enum<?>,
 
     /**
      * Gets length of number of samples to keep within the window being processed.
-     * Window size must always be larger than allowed minimum value.
+     * Window size must always be larger than allowed minimum value and must
+     * have an odd value.
      *
      * @return length of number of samples to keep within the window.
      */
@@ -169,7 +174,8 @@ public abstract class WindowedTriadNoiseEstimator<U extends Enum<?>,
 
     /**
      * Sets length of number of samples to keep within the window being processed.
-     * Window size must always be larger than allowed minimum value.
+     * Window size must always be larger than allowed minimum value and must have
+     * an odd value.
      * When window size is modified, instance state is reset.
      *
      * @param windowSize length of number of samples to keep within the window.
@@ -183,6 +189,11 @@ public abstract class WindowedTriadNoiseEstimator<U extends Enum<?>,
 
         // check that window is larger than minimum allowed value
         if (windowSize < MIN_WINDOW_SIZE) {
+            throw new IllegalArgumentException();
+        }
+
+        // check that window size is not even
+        if (windowSize % 2 == 0) {
             throw new IllegalArgumentException();
         }
 
@@ -837,53 +848,59 @@ public abstract class WindowedTriadNoiseEstimator<U extends Enum<?>,
 
     /**
      * Adds a triad of measurement samples and processes current window.
+     * Notice that if there are less than {@link #getWindowSize()} processed
+     * samples in the window, the remaining ones are considered to be zero
+     * when average values and standard deviation is estimated.
      *
      * @param triad measurement triad to be added and processed.
-     * @return true if result values were updated, false if not enough samples are available yet
-     * and no average or variance values have been computed yet.
      * @throws LockedException if estimator is currently running.
      */
-    public boolean addTriadAndProcess(final T triad) throws LockedException {
-        return internalAdd(triad, true);
+    public void addTriadAndProcess(final T triad) throws LockedException {
+        internalAdd(triad, true);
     }
 
     /**
      * Adds a triad of measurement samples and processes current window.
      * Values are expressed in measurement default unit (m/s^2 for acceleration, rad/s for
      * angular speed or T for magnetic flux density).
+     * Notice that if there are less than {@link #getWindowSize()} processed
+     * samples in the window, the remaining ones are considered to be zero
+     * when average values and standard deviation is estimated.
      *
      * @param valueX x coordinate of measurement to be added and processed.
      * @param valueY y coordinate of measurement to be added and processed.
      * @param valueZ z coordinate of measurement to be added and processed.
-     * @return true if result values were updated, false if not enough samples are available yet
-     * and no average or variance values have been computed yet.
      * @throws LockedException if estimator is currently running.
      */
-    public boolean addTriadAndProcess(
+    public void addTriadAndProcess(
             final double valueX, final double valueY, final double valueZ)
             throws LockedException {
-        return addTriadAndProcess(createTriad(valueX, valueY, valueZ, getDefaultUnit()));
+        addTriadAndProcess(createTriad(valueX, valueY, valueZ, getDefaultUnit()));
     }
 
     /**
      * Adds a triad of measurement samples and processes current window.
+     * Notice that if there are less than {@link #getWindowSize()} processed
+     * samples in the window, the remaining ones are considered to be zero
+     * when average values and standard deviation is estimated.
      *
      * @param valueX x coordinate of measurement to be added and processed.
      * @param valueY y coordinate of measurement to be added and processed.
      * @param valueZ z coordinate of measurement to be added and processed.
-     * @return true if result values were updated, false if not enough samples are available yet
-     * and no average or variance values have been computed yet.
      * @throws LockedException if estimator is currently running.
      */
-    public boolean addTriadAndProcess(
+    public void addTriadAndProcess(
             final M valueX, final M valueY, final M valueZ)
             throws LockedException {
-        return addTriadAndProcess(createTriad(valueX, valueY, valueZ));
+        addTriadAndProcess(createTriad(valueX, valueY, valueZ));
     }
 
     /**
      * Adds a triad of measurement samples without processing current window or updating
      * result values.
+     * Notice that if there are less than {@link #getWindowSize()} processed
+     * samples in the window, the remaining ones are considered to be zero
+     * when average values and standard deviation is estimated.
      *
      * @param triad measurement triad to be added.
      * @throws LockedException if estimator is currently running.
@@ -897,6 +914,9 @@ public abstract class WindowedTriadNoiseEstimator<U extends Enum<?>,
      * result values.
      * Values are expressed in measurement default unit (m/s^2 for acceleration, rad/s for
      * angular speed or T for magnetic flux density).
+     * Notice that if there are less than {@link #getWindowSize()} processed
+     * samples in the window, the remaining ones are considered to be zero
+     * when average values and standard deviation is estimated.
      *
      * @param valueX x coordinate of measurement to be added.
      * @param valueY y coordinate of measurement to be added.
@@ -911,6 +931,9 @@ public abstract class WindowedTriadNoiseEstimator<U extends Enum<?>,
     /**
      * Adds a triad of measurement samples without processing current window or updating
      * result values.
+     * Notice that if there are less than {@link #getWindowSize()} processed
+     * samples in the window, the remaining ones are considered to be zero
+     * when average values and standard deviation is estimated.
      *
      * @param valueX x coordinate of measurement to be added.
      * @param valueY y coordinate of measurement to be added.
@@ -1005,11 +1028,9 @@ public abstract class WindowedTriadNoiseEstimator<U extends Enum<?>,
      *
      * @param triad   measurement triad to be added.
      * @param process true if window of samples must also be processed, false otherwise.
-     * @return true if result values were updated, false if not enough samples are available yet
-     * and no average or variance values have been computed yet.
      * @throws LockedException if estimator is currently running.
      */
-    private boolean internalAdd(final T triad, final boolean process)
+    private void internalAdd(final T triad, final boolean process)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -1031,7 +1052,9 @@ public abstract class WindowedTriadNoiseEstimator<U extends Enum<?>,
         mWindowedSamples.addLast(copyTriad(triad));
 
         // process window
-        final boolean result = process && processWindow();
+        if (process) {
+            processWindow();
+        }
 
         mRunning = false;
 
@@ -1044,24 +1067,14 @@ public abstract class WindowedTriadNoiseEstimator<U extends Enum<?>,
                 mListener.onWindowFilled((E) this);
             }
         }
-
-        return result;
     }
 
     /**
      * Processes current windowed samples.
-     *
-     * @return true if sample was processed, false it there are not enough samples to
-     * process current window.
      */
-    private boolean processWindow() {
+    private void processWindow() {
 
         mNumberOfProcessedSamples++;
-
-        final int n = mWindowedSamples.size();
-        if (n <= 1) {
-            return false;
-        }
 
         // compute averages
         double avgX = 0.0;
@@ -1077,9 +1090,9 @@ public abstract class WindowedTriadNoiseEstimator<U extends Enum<?>,
             avgZ += valueZ;
         }
 
-        avgX /= n;
-        avgY /= n;
-        avgZ /= n;
+        avgX /= mWindowSize;
+        avgY /= mWindowSize;
+        avgZ /= mWindowSize;
 
         // compute variances
         double varX = 0.0;
@@ -1103,11 +1116,11 @@ public abstract class WindowedTriadNoiseEstimator<U extends Enum<?>,
             varZ += diffZ2;
         }
 
-        final int nMinusOne = n - 1;
+        final int m = mWindowSize - 1;
 
-        varX /= nMinusOne;
-        varY /= nMinusOne;
-        varZ /= nMinusOne;
+        varX /= m;
+        varY /= m;
+        varZ /= m;
 
         mAvgX = avgX;
         mAvgY = avgY;
@@ -1116,7 +1129,5 @@ public abstract class WindowedTriadNoiseEstimator<U extends Enum<?>,
         mVarianceX = varX;
         mVarianceY = varY;
         mVarianceZ = varZ;
-
-        return true;
     }
 }

@@ -13,15 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.irurueta.navigation.inertial.calibration;
-
-import com.irurueta.units.MagneticFluxDensity;
-import com.irurueta.units.MagneticFluxDensityUnit;
 
 /**
- * Interface defining events generated for {@link MagneticFluxDensityTriadStaticIntervalDetector}.
+ * Contains classes to generate measurements required for the calibration of accelerometers,
+ * gyroscopes and magnetometers after detecting static and dynamic intervals.
  */
-public interface MagneticFluxDensityTriadStaticIntervalDetectorListener extends
-        TriadStaticIntervalDetectorListener<MagneticFluxDensityUnit, MagneticFluxDensity,
-                MagneticFluxDensityTriad, MagneticFluxDensityTriadStaticIntervalDetector> {
-}
+package com.irurueta.navigation.inertial.calibration.generators;

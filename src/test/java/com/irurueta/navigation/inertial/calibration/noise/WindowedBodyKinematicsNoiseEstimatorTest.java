@@ -574,6 +574,11 @@ public class WindowedBodyKinematicsNoiseEstimatorTest
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
+        try {
+            estimator.setWindowSize(2);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
 
     @Test

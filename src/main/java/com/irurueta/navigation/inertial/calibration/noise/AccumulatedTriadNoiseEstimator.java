@@ -38,6 +38,8 @@ import com.irurueta.units.TimeUnit;
  * Because body location and orientation is not known, estimated average values
  * cannot be used to determine biases. Only norm of noise estimations
  * (variance or standard deviation) can be safely used.
+ * Notice that this estimator uses a biased variance estimator, which for a large
+ * number of samples converges to the unbiased variance estimator.
  *
  * @param <U> a measurement unit type.
  * @param <M> a measurement type.
@@ -749,11 +751,9 @@ public abstract class AccumulatedTriadNoiseEstimator<U extends Enum<?>,
      * @param valueX x coordinate of measurement to be added and processed.
      * @param valueY y coordinate of measurement to be added and processed.
      * @param valueZ z coordinate of measurement to be added and processed.
-     * @return true if provided measurement instance has been processed, false if it has
-     * been ignored.
      * @throws LockedException if estimator is currently running.
      */
-    public boolean addTriad(
+    public void addTriad(
             final double valueX, final double valueY, final double valueZ)
             throws LockedException {
 
@@ -801,21 +801,16 @@ public abstract class AccumulatedTriadNoiseEstimator<U extends Enum<?>,
         }
 
         mRunning = false;
-
-        return true;
     }
 
     /**
      * Adds a triad of measurement samples.
      *
      * @param triad measurement triad to be added and processed.
-     * @return true if provided measurement instance has been processed, false if it has
-     * been ignored.
      * @throws LockedException if estimator is currently running.
      */
-    public boolean addTriad(final T triad) throws LockedException {
-        return addTriad(
-                convertToDefaultUnit(triad.getValueX(), triad.getUnit()),
+    public void addTriad(final T triad) throws LockedException {
+        addTriad(convertToDefaultUnit(triad.getValueX(), triad.getUnit()),
                 convertToDefaultUnit(triad.getValueY(), triad.getUnit()),
                 convertToDefaultUnit(triad.getValueZ(), triad.getUnit()));
     }
@@ -826,14 +821,11 @@ public abstract class AccumulatedTriadNoiseEstimator<U extends Enum<?>,
      * @param valueX x coordinate of measurement to be added and processed.
      * @param valueY y coordinate of measurement to be added and processed.
      * @param valueZ z coordinate of measurement to be added and processed.
-     * @return true if provided measurement instance has been processed, false if it has
-     * been ignored.
      * @throws LockedException if estimator is currently running.
      */
-    public boolean addTriad(final M valueX, final M valueY, final M valueZ)
+    public void addTriad(final M valueX, final M valueY, final M valueZ)
             throws LockedException {
-        return addTriad(
-                convertToDefaultUnit(valueX.getValue().doubleValue(), valueX.getUnit()),
+        addTriad(convertToDefaultUnit(valueX.getValue().doubleValue(), valueX.getUnit()),
                 convertToDefaultUnit(valueY.getValue().doubleValue(), valueY.getUnit()),
                 convertToDefaultUnit(valueZ.getValue().doubleValue(), valueZ.getUnit()));
     }

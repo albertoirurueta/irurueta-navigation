@@ -34,6 +34,9 @@ import com.irurueta.units.AccelerationUnit;
  * Because body location and orientation is not known, estimated average values
  * cannot be used to determine biases. Only norm of noise estimations can be
  * (variance or standard deviation) safely used.
+ * Notice that if there are less than {@link #getWindowSize()} processed
+ * samples in the window, this estimator will assume that the remaining ones
+ * until the window is completed have zero values.
  * This implementation of noise estimator will use the following units:
  * - meters per squared second (m/s^2) for acceleration, average or standard deviation values.
  * - (m^2/s^4) for acceleration variances.

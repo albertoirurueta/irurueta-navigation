@@ -4018,7 +4018,7 @@ public class KnownBiasEasyGyroscopeCalibrator {
     }
 
     /**
-     * Fixes provided kinematics with provided accelerometer paramenters and
+     * Fixes provided kinematics with provided accelerometer parameters and
      * current gyroscope parameters.
      *
      * @param kinematics kinematics to be fixed with current values.

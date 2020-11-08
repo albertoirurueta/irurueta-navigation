@@ -423,7 +423,7 @@ public class AccumulatedAccelerationTriadNoiseEstimatorTest implements
             valueY = triad.getValueY();
             valueZ = triad.getValueZ();
 
-            assertTrue(estimator.addTriad(valueX, valueY, valueZ));
+            estimator.addTriad(valueX, valueY, valueZ);
 
             assertTrue(estimator.getLastTriad(lastTriad));
             assertEquals(lastTriad, triad);
@@ -691,7 +691,7 @@ public class AccumulatedAccelerationTriadNoiseEstimatorTest implements
             valueY = triad.getValueY();
             valueZ = triad.getValueZ();
 
-            assertTrue(estimator.addTriad(triad));
+            estimator.addTriad(triad);
 
             assertTrue(estimator.getLastTriad(lastTriad));
             assertEquals(lastTriad, triad);
@@ -959,8 +959,8 @@ public class AccumulatedAccelerationTriadNoiseEstimatorTest implements
             valueY = triad.getValueY();
             valueZ = triad.getValueZ();
 
-            assertTrue(estimator.addTriad(
-                    triad.getMeasurementX(), triad.getMeasurementY(), triad.getMeasurementZ()));
+            estimator.addTriad(
+                    triad.getMeasurementX(), triad.getMeasurementY(), triad.getMeasurementZ());
 
             assertTrue(estimator.getLastTriad(lastTriad));
             assertEquals(lastTriad, triad);

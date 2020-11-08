@@ -1,4 +1,4 @@
-package com.irurueta.navigation.inertial.calibration;
+package com.irurueta.navigation.inertial.calibration.intervals;
 
 import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.WrongSizeException;
@@ -12,6 +12,9 @@ import com.irurueta.navigation.frames.converters.ECEFtoNEDFrameConverter;
 import com.irurueta.navigation.frames.converters.NEDtoECEFFrameConverter;
 import com.irurueta.navigation.inertial.BodyKinematics;
 import com.irurueta.navigation.inertial.NEDPosition;
+import com.irurueta.navigation.inertial.calibration.AngularSpeedTriad;
+import com.irurueta.navigation.inertial.calibration.BodyKinematicsGenerator;
+import com.irurueta.navigation.inertial.calibration.IMUErrors;
 import com.irurueta.navigation.inertial.estimators.ECEFKinematicsEstimator;
 import com.irurueta.statistics.UniformRandomizer;
 import com.irurueta.units.AngularSpeed;
@@ -44,6 +47,8 @@ public class AngularSpeedTriadStaticIntervalDetectorTest implements
     private static final double MAX_DELTA_POS_METERS = 0.01;
     private static final double MIN_DELTA_ANGLE_DEGREES = -2.0;
     private static final double MAX_DELTA_ANGLE_DEGREES = 2.0;
+
+    private static final double ABSOLUTE_ERROR = 1e-5;
 
     private int mInitializationStarted;
 
@@ -99,6 +104,150 @@ public class AngularSpeedTriadStaticIntervalDetectorTest implements
         assertEquals(w3, w4);
         assertFalse(detector.isRunning());
         assertEquals(detector.getProcessedSamples(), 0);
+
+        assertEquals(detector.getAccumulatedAvgX(), 0.0, 0.0);
+        final AngularSpeed w5 = detector.getAccumulatedAvgXAsMeasurement();
+        assertEquals(w5.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(w5.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed w6 = new AngularSpeed(
+                1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
+        detector.getAccumulatedAvgXAsMeasurement(w6);
+        assertEquals(w5, w6);
+
+        assertEquals(detector.getAccumulatedAvgY(), 0.0, 0.0);
+        final AngularSpeed w7 = detector.getAccumulatedAvgYAsMeasurement();
+        assertEquals(w7.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(w7.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed w8 = new AngularSpeed(
+                1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
+        detector.getAccumulatedAvgYAsMeasurement(w8);
+        assertEquals(w7, w8);
+
+        assertEquals(detector.getAccumulatedAvgZ(), 0.0, 0.0);
+        final AngularSpeed w9 = detector.getAccumulatedAvgZAsMeasurement();
+        assertEquals(w9.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(w9.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed w10 = new AngularSpeed(
+                1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
+        detector.getAccumulatedAvgZAsMeasurement(w10);
+        assertEquals(w9, w10);
+
+        final AngularSpeedTriad triad1 = detector.getAccumulatedAvgTriad();
+        assertEquals(triad1.getValueX(), 0.0, 0.0);
+        assertEquals(triad1.getValueY(), 0.0, 0.0);
+        assertEquals(triad1.getValueZ(), 0.0, 0.0);
+        assertEquals(triad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad triad2 = new AngularSpeedTriad();
+        detector.getAccumulatedAvgTriad(triad2);
+        assertEquals(triad1, triad2);
+
+        assertEquals(detector.getAccumulatedStdX(), 0.0, 0.0);
+        final AngularSpeed w11 = detector.getAccumulatedStdXAsMeasurement();
+        assertEquals(w11.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(w11.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed w12 = new AngularSpeed(
+                1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
+        detector.getAccumulatedStdXAsMeasurement(w12);
+        assertEquals(w11, w12);
+
+        assertEquals(detector.getAccumulatedStdY(), 0.0, 0.0);
+        final AngularSpeed w13 = detector.getAccumulatedStdYAsMeasurement();
+        assertEquals(w13.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(w13.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed w14 = new AngularSpeed(
+                1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
+        detector.getAccumulatedStdYAsMeasurement(w14);
+        assertEquals(w13, w14);
+
+        assertEquals(detector.getAccumulatedStdZ(), 0.0, 0.0);
+        final AngularSpeed w15 = detector.getAccumulatedStdZAsMeasurement();
+        assertEquals(w15.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(w15.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed w16 = new AngularSpeed(
+                1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
+        detector.getAccumulatedStdZAsMeasurement(w16);
+        assertEquals(w15, w16);
+
+        final AngularSpeedTriad triad3 = detector.getAccumulatedStdTriad();
+        assertEquals(triad3.getValueX(), 0.0, 0.0);
+        assertEquals(triad3.getValueY(), 0.0, 0.0);
+        assertEquals(triad3.getValueZ(), 0.0, 0.0);
+        assertEquals(triad3.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad triad4 = new AngularSpeedTriad();
+        detector.getAccumulatedStdTriad(triad4);
+        assertEquals(triad3, triad4);
+
+        assertEquals(detector.getInstantaneousAvgX(), 0.0, 0.0);
+        final AngularSpeed w17 = detector.getInstantaneousAvgXAsMeasurement();
+        assertEquals(w17.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(w17.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed w18 = new AngularSpeed(
+                1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
+        detector.getInstantaneousAvgXAsMeasurement(w18);
+        assertEquals(w17, w18);
+
+        assertEquals(detector.getInstantaneousAvgY(), 0.0, 0.0);
+        final AngularSpeed w19 = detector.getInstantaneousAvgYAsMeasurement();
+        assertEquals(w19.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(w19.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed w20 = new AngularSpeed(
+                1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
+        detector.getInstantaneousAvgYAsMeasurement(w20);
+        assertEquals(w19, w20);
+
+        assertEquals(detector.getInstantaneousAvgZ(), 0.0, 0.0);
+        final AngularSpeed w21 = detector.getInstantaneousAvgZAsMeasurement();
+        assertEquals(w21.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(w21.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed w22 = new AngularSpeed(
+                1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
+        detector.getInstantaneousAvgZAsMeasurement(w22);
+        assertEquals(w21, w22);
+
+        final AngularSpeedTriad triad5 = detector.getInstantaneousAvgTriad();
+        assertEquals(triad5.getValueX(), 0.0, 0.0);
+        assertEquals(triad5.getValueY(), 0.0, 0.0);
+        assertEquals(triad5.getValueZ(), 0.0, 0.0);
+        assertEquals(triad5.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad triad6 = new AngularSpeedTriad();
+        detector.getInstantaneousAvgTriad(triad6);
+        assertEquals(triad5, triad6);
+
+        assertEquals(detector.getInstantaneousStdX(), 0.0, 0.0);
+        final AngularSpeed w23 = detector.getInstantaneousStdXAsMeasurement();
+        assertEquals(w23.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(w23.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed w24 = new AngularSpeed(
+                1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
+        detector.getInstantaneousStdXAsMeasurement(w24);
+        assertEquals(w23, w24);
+
+        assertEquals(detector.getInstantaneousStdY(), 0.0, 0.0);
+        final AngularSpeed w25 = detector.getInstantaneousStdYAsMeasurement();
+        assertEquals(w25.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(w25.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed w26 = new AngularSpeed(
+                1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
+        detector.getInstantaneousStdYAsMeasurement(w26);
+        assertEquals(w25, w26);
+
+        assertEquals(detector.getInstantaneousStdZ(), 0.0, 0.0);
+        final AngularSpeed w27 = detector.getInstantaneousStdZAsMeasurement();
+        assertEquals(w27.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(w27.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed w28 = new AngularSpeed(
+                1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
+        detector.getInstantaneousStdZAsMeasurement(w28);
+        assertEquals(w27, w28);
+
+        final AngularSpeedTriad triad7 = detector.getInstantaneousStdTriad();
+        assertEquals(triad7.getValueX(), 0.0, 0.0);
+        assertEquals(triad7.getValueY(), 0.0, 0.0);
+        assertEquals(triad7.getValueZ(), 0.0, 0.0);
+        assertEquals(triad7.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad triad8 = new AngularSpeedTriad();
+        detector.getInstantaneousStdTriad(triad8);
+        assertEquals(triad7, triad8);
     }
 
     @Test
@@ -138,6 +287,150 @@ public class AngularSpeedTriadStaticIntervalDetectorTest implements
         assertEquals(w3, w4);
         assertFalse(detector.isRunning());
         assertEquals(detector.getProcessedSamples(), 0);
+
+        assertEquals(detector.getAccumulatedAvgX(), 0.0, 0.0);
+        final AngularSpeed w5 = detector.getAccumulatedAvgXAsMeasurement();
+        assertEquals(w5.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(w5.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed w6 = new AngularSpeed(
+                1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
+        detector.getAccumulatedAvgXAsMeasurement(w6);
+        assertEquals(w5, w6);
+
+        assertEquals(detector.getAccumulatedAvgY(), 0.0, 0.0);
+        final AngularSpeed w7 = detector.getAccumulatedAvgYAsMeasurement();
+        assertEquals(w7.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(w7.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed w8 = new AngularSpeed(
+                1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
+        detector.getAccumulatedAvgYAsMeasurement(w8);
+        assertEquals(w7, w8);
+
+        assertEquals(detector.getAccumulatedAvgZ(), 0.0, 0.0);
+        final AngularSpeed w9 = detector.getAccumulatedAvgZAsMeasurement();
+        assertEquals(w9.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(w9.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed w10 = new AngularSpeed(
+                1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
+        detector.getAccumulatedAvgZAsMeasurement(w10);
+        assertEquals(w9, w10);
+
+        final AngularSpeedTriad triad1 = detector.getAccumulatedAvgTriad();
+        assertEquals(triad1.getValueX(), 0.0, 0.0);
+        assertEquals(triad1.getValueY(), 0.0, 0.0);
+        assertEquals(triad1.getValueZ(), 0.0, 0.0);
+        assertEquals(triad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad triad2 = new AngularSpeedTriad();
+        detector.getAccumulatedAvgTriad(triad2);
+        assertEquals(triad1, triad2);
+
+        assertEquals(detector.getAccumulatedStdX(), 0.0, 0.0);
+        final AngularSpeed w11 = detector.getAccumulatedStdXAsMeasurement();
+        assertEquals(w11.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(w11.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed w12 = new AngularSpeed(
+                1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
+        detector.getAccumulatedStdXAsMeasurement(w12);
+        assertEquals(w11, w12);
+
+        assertEquals(detector.getAccumulatedStdY(), 0.0, 0.0);
+        final AngularSpeed w13 = detector.getAccumulatedStdYAsMeasurement();
+        assertEquals(w13.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(w13.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed w14 = new AngularSpeed(
+                1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
+        detector.getAccumulatedStdYAsMeasurement(w14);
+        assertEquals(w13, w14);
+
+        assertEquals(detector.getAccumulatedStdZ(), 0.0, 0.0);
+        final AngularSpeed w15 = detector.getAccumulatedStdZAsMeasurement();
+        assertEquals(w15.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(w15.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed w16 = new AngularSpeed(
+                1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
+        detector.getAccumulatedStdZAsMeasurement(w16);
+        assertEquals(w15, w16);
+
+        final AngularSpeedTriad triad3 = detector.getAccumulatedStdTriad();
+        assertEquals(triad3.getValueX(), 0.0, 0.0);
+        assertEquals(triad3.getValueY(), 0.0, 0.0);
+        assertEquals(triad3.getValueZ(), 0.0, 0.0);
+        assertEquals(triad3.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad triad4 = new AngularSpeedTriad();
+        detector.getAccumulatedStdTriad(triad4);
+        assertEquals(triad3, triad4);
+
+        assertEquals(detector.getInstantaneousAvgX(), 0.0, 0.0);
+        final AngularSpeed w17 = detector.getInstantaneousAvgXAsMeasurement();
+        assertEquals(w17.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(w17.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed w18 = new AngularSpeed(
+                1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
+        detector.getInstantaneousAvgXAsMeasurement(w18);
+        assertEquals(w17, w18);
+
+        assertEquals(detector.getInstantaneousAvgY(), 0.0, 0.0);
+        final AngularSpeed w19 = detector.getInstantaneousAvgYAsMeasurement();
+        assertEquals(w19.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(w19.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed w20 = new AngularSpeed(
+                1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
+        detector.getInstantaneousAvgYAsMeasurement(w20);
+        assertEquals(w19, w20);
+
+        assertEquals(detector.getInstantaneousAvgZ(), 0.0, 0.0);
+        final AngularSpeed w21 = detector.getInstantaneousAvgZAsMeasurement();
+        assertEquals(w21.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(w21.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed w22 = new AngularSpeed(
+                1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
+        detector.getInstantaneousAvgZAsMeasurement(w22);
+        assertEquals(w21, w22);
+
+        final AngularSpeedTriad triad5 = detector.getInstantaneousAvgTriad();
+        assertEquals(triad5.getValueX(), 0.0, 0.0);
+        assertEquals(triad5.getValueY(), 0.0, 0.0);
+        assertEquals(triad5.getValueZ(), 0.0, 0.0);
+        assertEquals(triad5.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad triad6 = new AngularSpeedTriad();
+        detector.getInstantaneousAvgTriad(triad6);
+        assertEquals(triad5, triad6);
+
+        assertEquals(detector.getInstantaneousStdX(), 0.0, 0.0);
+        final AngularSpeed w23 = detector.getInstantaneousStdXAsMeasurement();
+        assertEquals(w23.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(w23.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed w24 = new AngularSpeed(
+                1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
+        detector.getInstantaneousStdXAsMeasurement(w24);
+        assertEquals(w23, w24);
+
+        assertEquals(detector.getInstantaneousStdY(), 0.0, 0.0);
+        final AngularSpeed w25 = detector.getInstantaneousStdYAsMeasurement();
+        assertEquals(w25.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(w25.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed w26 = new AngularSpeed(
+                1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
+        detector.getInstantaneousStdYAsMeasurement(w26);
+        assertEquals(w25, w26);
+
+        assertEquals(detector.getInstantaneousStdZ(), 0.0, 0.0);
+        final AngularSpeed w27 = detector.getInstantaneousStdZAsMeasurement();
+        assertEquals(w27.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(w27.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed w28 = new AngularSpeed(
+                1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
+        detector.getInstantaneousStdZAsMeasurement(w28);
+        assertEquals(w27, w28);
+
+        final AngularSpeedTriad triad7 = detector.getInstantaneousStdTriad();
+        assertEquals(triad7.getValueX(), 0.0, 0.0);
+        assertEquals(triad7.getValueY(), 0.0, 0.0);
+        assertEquals(triad7.getValueZ(), 0.0, 0.0);
+        assertEquals(triad7.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad triad8 = new AngularSpeedTriad();
+        detector.getInstantaneousStdTriad(triad8);
+        assertEquals(triad7, triad8);
     }
 
     @Test
@@ -149,14 +442,19 @@ public class AngularSpeedTriadStaticIntervalDetectorTest implements
                 AngularSpeedTriadStaticIntervalDetector.DEFAULT_WINDOW_SIZE);
 
         // set new value
-        detector.setWindowSize(2);
+        detector.setWindowSize(3);
 
         // check
-        assertEquals(detector.getWindowSize(), 2);
+        assertEquals(detector.getWindowSize(), 3);
 
         // Force IllegalArgumentException
         try {
             detector.setWindowSize(1);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            detector.setWindowSize(2);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -315,6 +613,9 @@ public class AngularSpeedTriadStaticIntervalDetectorTest implements
         final double accelQuantLevel = 0.0;
         final double gyroQuantLevel = 0.0;
 
+        final double gyroNoiseStd = gyroNoiseRootPSD /
+                Math.sqrt(TIME_INTERVAL_SECONDS);
+
         final IMUErrors errors = new IMUErrors(ba, bg, ma, mg, gg, accelNoiseRootPSD,
                 gyroNoiseRootPSD, accelQuantLevel, gyroQuantLevel);
 
@@ -407,6 +708,34 @@ public class AngularSpeedTriadStaticIntervalDetectorTest implements
         detector.getThresholdAsMeasurement(w2);
         assertEquals(w1, w2);
         assertEquals(detector.getProcessedSamples(), initialStaticSamples);
+
+        assertEquals(detector.getAccumulatedStdX(), gyroNoiseStd, ABSOLUTE_ERROR);
+        assertEquals(detector.getAccumulatedStdY(), gyroNoiseStd, ABSOLUTE_ERROR);
+        assertEquals(detector.getAccumulatedStdZ(), gyroNoiseStd, ABSOLUTE_ERROR);
+        final AngularSpeed stdX1 = detector.getAccumulatedStdXAsMeasurement();
+        assertEquals(stdX1.getValue().doubleValue(), gyroNoiseStd,
+                ABSOLUTE_ERROR);
+        assertEquals(stdX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed stdX2 = new AngularSpeed(
+                1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
+        detector.getAccumulatedStdXAsMeasurement(stdX2);
+        assertEquals(stdX1, stdX2);
+        final AngularSpeed stdY1 = detector.getAccumulatedStdYAsMeasurement();
+        assertEquals(stdY1.getValue().doubleValue(), gyroNoiseStd,
+                ABSOLUTE_ERROR);
+        assertEquals(stdY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed stdY2 = new AngularSpeed(
+                1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
+        detector.getAccumulatedStdYAsMeasurement(stdY2);
+        assertEquals(stdY1, stdY2);
+        final AngularSpeed stdZ1 = detector.getAccumulatedStdZAsMeasurement();
+        assertEquals(stdZ1.getValue().doubleValue(), gyroNoiseStd,
+                ABSOLUTE_ERROR);
+        assertEquals(stdZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed stdZ2 = new AngularSpeed(
+                1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
+        detector.getAccumulatedStdZAsMeasurement(stdZ2);
+        assertEquals(stdZ1, stdZ2);
 
         // keep adding static samples for twice the window size
         int periodLength = 2 * detector.getWindowSize();
@@ -559,6 +888,9 @@ public class AngularSpeedTriadStaticIntervalDetectorTest implements
         final double accelQuantLevel = 0.0;
         final double gyroQuantLevel = 0.0;
 
+        final double gyroNoiseStd = gyroNoiseRootPSD /
+                Math.sqrt(TIME_INTERVAL_SECONDS);
+
         final IMUErrors errors = new IMUErrors(ba, bg, ma, mg, gg, accelNoiseRootPSD,
                 gyroNoiseRootPSD, accelQuantLevel, gyroQuantLevel);
 
@@ -661,6 +993,34 @@ public class AngularSpeedTriadStaticIntervalDetectorTest implements
         detector.getThresholdAsMeasurement(w2);
         assertEquals(w1, w2);
         assertEquals(detector.getProcessedSamples(), initialStaticSamples);
+
+        assertEquals(detector.getAccumulatedStdX(), gyroNoiseStd, ABSOLUTE_ERROR);
+        assertEquals(detector.getAccumulatedStdY(), gyroNoiseStd, ABSOLUTE_ERROR);
+        assertEquals(detector.getAccumulatedStdZ(), gyroNoiseStd, ABSOLUTE_ERROR);
+        final AngularSpeed stdX1 = detector.getAccumulatedStdXAsMeasurement();
+        assertEquals(stdX1.getValue().doubleValue(), gyroNoiseStd,
+                ABSOLUTE_ERROR);
+        assertEquals(stdX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed stdX2 = new AngularSpeed(
+                1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
+        detector.getAccumulatedStdXAsMeasurement(stdX2);
+        assertEquals(stdX1, stdX2);
+        final AngularSpeed stdY1 = detector.getAccumulatedStdYAsMeasurement();
+        assertEquals(stdY1.getValue().doubleValue(), gyroNoiseStd,
+                ABSOLUTE_ERROR);
+        assertEquals(stdY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed stdY2 = new AngularSpeed(
+                1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
+        detector.getAccumulatedStdYAsMeasurement(stdY2);
+        assertEquals(stdY1, stdY2);
+        final AngularSpeed stdZ1 = detector.getAccumulatedStdZAsMeasurement();
+        assertEquals(stdZ1.getValue().doubleValue(), gyroNoiseStd,
+                ABSOLUTE_ERROR);
+        assertEquals(stdZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed stdZ2 = new AngularSpeed(
+                1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
+        detector.getAccumulatedStdZAsMeasurement(stdZ2);
+        assertEquals(stdZ1, stdZ2);
 
         // keep adding static samples for twice the window size
         int periodLength = 2 * detector.getWindowSize();
@@ -822,6 +1182,9 @@ public class AngularSpeedTriadStaticIntervalDetectorTest implements
         final double accelQuantLevel = 0.0;
         final double gyroQuantLevel = 0.0;
 
+        final double gyroNoiseStd = gyroNoiseRootPSD /
+                Math.sqrt(TIME_INTERVAL_SECONDS);
+
         final IMUErrors errors = new IMUErrors(ba, bg, ma, mg, gg, accelNoiseRootPSD,
                 gyroNoiseRootPSD, accelQuantLevel, gyroQuantLevel);
 
@@ -915,6 +1278,34 @@ public class AngularSpeedTriadStaticIntervalDetectorTest implements
         detector.getThresholdAsMeasurement(w2);
         assertEquals(w1, w2);
         assertEquals(detector.getProcessedSamples(), initialStaticSamples);
+
+        assertEquals(detector.getAccumulatedStdX(), gyroNoiseStd, ABSOLUTE_ERROR);
+        assertEquals(detector.getAccumulatedStdY(), gyroNoiseStd, ABSOLUTE_ERROR);
+        assertEquals(detector.getAccumulatedStdZ(), gyroNoiseStd, ABSOLUTE_ERROR);
+        final AngularSpeed stdX1 = detector.getAccumulatedStdXAsMeasurement();
+        assertEquals(stdX1.getValue().doubleValue(), gyroNoiseStd,
+                ABSOLUTE_ERROR);
+        assertEquals(stdX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed stdX2 = new AngularSpeed(
+                1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
+        detector.getAccumulatedStdXAsMeasurement(stdX2);
+        assertEquals(stdX1, stdX2);
+        final AngularSpeed stdY1 = detector.getAccumulatedStdYAsMeasurement();
+        assertEquals(stdY1.getValue().doubleValue(), gyroNoiseStd,
+                ABSOLUTE_ERROR);
+        assertEquals(stdY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed stdY2 = new AngularSpeed(
+                1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
+        detector.getAccumulatedStdYAsMeasurement(stdY2);
+        assertEquals(stdY1, stdY2);
+        final AngularSpeed stdZ1 = detector.getAccumulatedStdZAsMeasurement();
+        assertEquals(stdZ1.getValue().doubleValue(), gyroNoiseStd,
+                ABSOLUTE_ERROR);
+        assertEquals(stdZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed stdZ2 = new AngularSpeed(
+                1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
+        detector.getAccumulatedStdZAsMeasurement(stdZ2);
+        assertEquals(stdZ1, stdZ2);
 
         // keep adding static samples for twice the window size
         int periodLength = 2 * detector.getWindowSize();
@@ -1353,57 +1744,220 @@ public class AngularSpeedTriadStaticIntervalDetectorTest implements
     }
 
     @Override
-    public void onStaticIntervalDetected(final AngularSpeedTriadStaticIntervalDetector detector) {
+    public void onStaticIntervalDetected(final AngularSpeedTriadStaticIntervalDetector detector,
+                                         final double instantaneousAvgX,
+                                         final double instantaneousAvgY,
+                                         final double instantaneousAvgZ,
+                                         final double instantaneousStdX,
+                                         final double instantaneousStdY,
+                                         final double instantaneousStdZ) {
         mStaticIntervalDetected++;
         checkLocked(detector);
         assertEquals(detector.getStatus(),
                 AngularSpeedTriadStaticIntervalDetector.Status.STATIC_INTERVAL);
+
+        assertEquals(detector.getInstantaneousAvgX(), instantaneousAvgX, 0.0);
+        final AngularSpeed w1 = detector.getInstantaneousAvgXAsMeasurement();
+        assertEquals(w1.getValue().doubleValue(), instantaneousAvgX, 0.0);
+        assertEquals(w1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed w2 = new AngularSpeed(
+                1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
+        detector.getInstantaneousAvgXAsMeasurement(w2);
+        assertEquals(w1, w2);
+
+        assertEquals(detector.getInstantaneousAvgY(), instantaneousAvgY, 0.0);
+        final AngularSpeed w3 = detector.getInstantaneousAvgYAsMeasurement();
+        assertEquals(w3.getValue().doubleValue(), instantaneousAvgY, 0.0);
+        assertEquals(w3.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed w4 = new AngularSpeed(
+                1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
+        detector.getInstantaneousAvgYAsMeasurement(w4);
+        assertEquals(w3, w4);
+
+        assertEquals(detector.getInstantaneousAvgZ(), instantaneousAvgZ, 0.0);
+        final AngularSpeed w5 = detector.getInstantaneousAvgZAsMeasurement();
+        assertEquals(w5.getValue().doubleValue(), instantaneousAvgZ, 0.0);
+        assertEquals(w5.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed w6 = new AngularSpeed(
+                1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
+        detector.getInstantaneousAvgZAsMeasurement(w6);
+        assertEquals(w5, w6);
+
+        final AngularSpeedTriad avgTriad1 = detector.getInstantaneousAvgTriad();
+        assertEquals(avgTriad1.getValueX(), instantaneousAvgX, 0.0);
+        assertEquals(avgTriad1.getValueY(), instantaneousAvgY, 0.0);
+        assertEquals(avgTriad1.getValueZ(), instantaneousAvgZ, 0.0);
+        assertEquals(avgTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad avgTriad2 = new AngularSpeedTriad();
+        detector.getInstantaneousAvgTriad(avgTriad2);
+        assertEquals(avgTriad1, avgTriad2);
+
+        assertEquals(detector.getInstantaneousStdX(), instantaneousStdX, 0.0);
+        final AngularSpeed w7 = detector.getInstantaneousStdXAsMeasurement();
+        assertEquals(w7.getValue().doubleValue(), instantaneousStdX, 0.0);
+        assertEquals(w7.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed w8 = new AngularSpeed(
+                1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
+        detector.getInstantaneousStdXAsMeasurement(w8);
+        assertEquals(w7, w8);
+
+        assertEquals(detector.getInstantaneousStdY(), instantaneousStdY, 0.0);
+        final AngularSpeed w9 = detector.getInstantaneousStdYAsMeasurement();
+        assertEquals(w9.getValue().doubleValue(), instantaneousStdY, 0.0);
+        assertEquals(w9.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed w10 = new AngularSpeed(
+                1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
+        detector.getInstantaneousStdYAsMeasurement(w10);
+        assertEquals(w9, w10);
+
+        assertEquals(detector.getInstantaneousStdZ(), instantaneousStdZ, 0.0);
+        final AngularSpeed w11 = detector.getInstantaneousStdZAsMeasurement();
+        assertEquals(w11.getValue().doubleValue(), instantaneousStdZ, 0.0);
+        assertEquals(w11.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed w12 = new AngularSpeed(
+                1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
+        detector.getInstantaneousStdZAsMeasurement(w12);
+        assertEquals(w11, w12);
+
+        final AngularSpeedTriad stdTriad1 = detector.getInstantaneousStdTriad();
+        assertTrue(stdTriad1.getNorm() < detector.getThreshold());
+        assertEquals(stdTriad1.getValueX(), instantaneousStdX, 0.0);
+        assertEquals(stdTriad1.getValueY(), instantaneousStdY, 0.0);
+        assertEquals(stdTriad1.getValueZ(), instantaneousStdZ, 0.0);
+        assertEquals(stdTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad stdTriad2 = new AngularSpeedTriad();
+        detector.getInstantaneousStdTriad(stdTriad2);
+        assertEquals(stdTriad1, stdTriad2);
     }
 
     @Override
     public void onDynamicIntervalDetected(final AngularSpeedTriadStaticIntervalDetector detector,
-                                          final double avgX, final double avgY, final double avgZ) {
+                                          final double instantaneousAvgX,
+                                          final double instantaneousAvgY,
+                                          final double instantaneousAvgZ,
+                                          final double instantaneousStdX,
+                                          final double instantaneousStdY,
+                                          final double instantaneousStdZ,
+                                          final double accumulatedAvgX,
+                                          final double accumulatedAvgY,
+                                          final double accumulatedAvgZ,
+                                          final double accumulatedStdX,
+                                          final double accumulatedStdY,
+                                          final double accumulatedStdZ) {
         mDynamicIntervalDetected++;
         checkLocked(detector);
         assertEquals(detector.getStatus(),
                 AngularSpeedTriadStaticIntervalDetector.Status.DYNAMIC_INTERVAL);
-        assertEquals(avgX, detector.getAvgX(), 0.0);
-        assertEquals(avgY, detector.getAvgY(), 0.0);
-        assertEquals(avgZ, detector.getAvgZ(), 0.0);
+        assertEquals(accumulatedAvgX, detector.getAccumulatedAvgX(), 0.0);
+        assertEquals(accumulatedAvgY, detector.getAccumulatedAvgY(), 0.0);
+        assertEquals(accumulatedAvgZ, detector.getAccumulatedAvgZ(), 0.0);
 
-        final AngularSpeed wx1 = detector.getAvgXAsMeasurement();
-        assertEquals(wx1.getValue().doubleValue(), avgX, 0.0);
+        final AngularSpeed wx1 = detector.getAccumulatedAvgXAsMeasurement();
+        assertEquals(wx1.getValue().doubleValue(), accumulatedAvgX, 0.0);
         assertEquals(wx1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed wx2 = new AngularSpeed(
                 1.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        detector.getAvgXAsMeasurement(wx2);
+        detector.getAccumulatedAvgXAsMeasurement(wx2);
         assertEquals(wx1, wx2);
 
-        final AngularSpeed wy1 = detector.getAvgYAsMeasurement();
-        assertEquals(wy1.getValue().doubleValue(), avgY, 0.0);
+        final AngularSpeed wy1 = detector.getAccumulatedAvgYAsMeasurement();
+        assertEquals(wy1.getValue().doubleValue(), accumulatedAvgY, 0.0);
         assertEquals(wy1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed wy2 = new AngularSpeed(
                 1.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        detector.getAvgYAsMeasurement(wy2);
+        detector.getAccumulatedAvgYAsMeasurement(wy2);
         assertEquals(wy1, wy2);
 
-        final AngularSpeed wz1 = detector.getAvgZAsMeasurement();
-        assertEquals(wz1.getValue().doubleValue(), avgZ, 0.0);
+        final AngularSpeed wz1 = detector.getAccumulatedAvgZAsMeasurement();
+        assertEquals(wz1.getValue().doubleValue(), accumulatedAvgZ, 0.0);
         assertEquals(wz1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed wz2 = new AngularSpeed(
                 1.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        detector.getAvgZAsMeasurement(wz2);
+        detector.getAccumulatedAvgZAsMeasurement(wz2);
         assertEquals(wz1, wz2);
 
-        final AngularSpeedTriad triad1 = detector.getAvgTriad();
-        assertEquals(triad1.getValueX(), avgX, 0.0);
-        assertEquals(triad1.getValueY(), avgY, 0.0);
-        assertEquals(triad1.getValueZ(), avgZ, 0.0);
+        final AngularSpeedTriad triad1 = detector.getAccumulatedAvgTriad();
+        assertEquals(triad1.getValueX(), accumulatedAvgX, 0.0);
+        assertEquals(triad1.getValueY(), accumulatedAvgY, 0.0);
+        assertEquals(triad1.getValueZ(), accumulatedAvgZ, 0.0);
         assertEquals(triad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
 
         final AngularSpeedTriad triad2 = new AngularSpeedTriad();
-        detector.getAvgTriad(triad2);
+        detector.getAccumulatedAvgTriad(triad2);
         assertEquals(triad1, triad2);
+
+        assertEquals(detector.getInstantaneousAvgX(), instantaneousAvgX, 0.0);
+        final AngularSpeed w1 = detector.getInstantaneousAvgXAsMeasurement();
+        assertEquals(w1.getValue().doubleValue(), instantaneousAvgX, 0.0);
+        assertEquals(w1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed w2 = new AngularSpeed(
+                1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
+        detector.getInstantaneousAvgXAsMeasurement(w2);
+        assertEquals(w1, w2);
+
+        assertEquals(detector.getInstantaneousAvgY(), instantaneousAvgY, 0.0);
+        final AngularSpeed w3 = detector.getInstantaneousAvgYAsMeasurement();
+        assertEquals(w3.getValue().doubleValue(), instantaneousAvgY, 0.0);
+        assertEquals(w3.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed w4 = new AngularSpeed(
+                1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
+        detector.getInstantaneousAvgYAsMeasurement(w4);
+        assertEquals(w3, w4);
+
+        assertEquals(detector.getInstantaneousAvgZ(), instantaneousAvgZ, 0.0);
+        final AngularSpeed w5 = detector.getInstantaneousAvgZAsMeasurement();
+        assertEquals(w5.getValue().doubleValue(), instantaneousAvgZ, 0.0);
+        assertEquals(w5.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed w6 = new AngularSpeed(
+                1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
+        detector.getInstantaneousAvgZAsMeasurement(w6);
+        assertEquals(w5, w6);
+
+        final AngularSpeedTriad avgTriad1 = detector.getInstantaneousAvgTriad();
+        assertEquals(avgTriad1.getValueX(), instantaneousAvgX, 0.0);
+        assertEquals(avgTriad1.getValueY(), instantaneousAvgY, 0.0);
+        assertEquals(avgTriad1.getValueZ(), instantaneousAvgZ, 0.0);
+        assertEquals(avgTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad avgTriad2 = new AngularSpeedTriad();
+        detector.getInstantaneousAvgTriad(avgTriad2);
+        assertEquals(avgTriad1, avgTriad2);
+
+        assertEquals(detector.getInstantaneousStdX(), instantaneousStdX, 0.0);
+        final AngularSpeed w7 = detector.getInstantaneousStdXAsMeasurement();
+        assertEquals(w7.getValue().doubleValue(), instantaneousStdX, 0.0);
+        assertEquals(w7.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed w8 = new AngularSpeed(
+                1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
+        detector.getInstantaneousStdXAsMeasurement(w8);
+        assertEquals(w7, w8);
+
+        assertEquals(detector.getInstantaneousStdY(), instantaneousStdY, 0.0);
+        final AngularSpeed w9 = detector.getInstantaneousStdYAsMeasurement();
+        assertEquals(w9.getValue().doubleValue(), instantaneousStdY, 0.0);
+        assertEquals(w9.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed w10 = new AngularSpeed(
+                1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
+        detector.getInstantaneousStdYAsMeasurement(w10);
+        assertEquals(w9, w10);
+
+        assertEquals(detector.getInstantaneousStdZ(), instantaneousStdZ, 0.0);
+        final AngularSpeed w11 = detector.getInstantaneousStdZAsMeasurement();
+        assertEquals(w11.getValue().doubleValue(), instantaneousStdZ, 0.0);
+        assertEquals(w11.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed w12 = new AngularSpeed(
+                1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
+        detector.getInstantaneousStdZAsMeasurement(w12);
+        assertEquals(w11, w12);
+
+        final AngularSpeedTriad stdTriad1 = detector.getInstantaneousStdTriad();
+        assertTrue(stdTriad1.getNorm() >= detector.getThreshold());
+        assertEquals(stdTriad1.getValueX(), instantaneousStdX, 0.0);
+        assertEquals(stdTriad1.getValueY(), instantaneousStdY, 0.0);
+        assertEquals(stdTriad1.getValueZ(), instantaneousStdZ, 0.0);
+        assertEquals(stdTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad stdTriad2 = new AngularSpeedTriad();
+        detector.getInstantaneousStdTriad(stdTriad2);
+        assertEquals(stdTriad1, stdTriad2);
     }
 
     @Override

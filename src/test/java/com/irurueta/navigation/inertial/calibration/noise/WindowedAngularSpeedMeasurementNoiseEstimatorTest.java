@@ -171,6 +171,11 @@ public class WindowedAngularSpeedMeasurementNoiseEstimatorTest implements
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
+        try {
+            estimator.setWindowSize(2);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
 
     @Test
@@ -321,7 +326,7 @@ public class WindowedAngularSpeedMeasurementNoiseEstimatorTest implements
             measurements.add(new AngularSpeed(measurement.getValue(), measurement.getUnit()));
             value = measurement.getValue().doubleValue();
 
-            assertEquals(estimator.addMeasurementAndProcess(value), i != 0);
+            estimator.addMeasurementAndProcess(value);
 
             assertTrue(estimator.getLastWindowedMeasurement(lastMeasurement));
             assertEquals(lastMeasurement, measurement);
@@ -397,7 +402,7 @@ public class WindowedAngularSpeedMeasurementNoiseEstimatorTest implements
         measurements.add(new AngularSpeed(measurement.getValue(), measurement.getUnit()));
 
         value = measurement.getValue().doubleValue();
-        assertTrue(estimator.addMeasurementAndProcess(value));
+        estimator.addMeasurementAndProcess(value);
 
         assertEquals(windowSize + 1, estimator.getNumberOfProcessedSamples());
         assertEquals(windowSize + 1, estimator.getNumberOfAddedSamples());
@@ -522,7 +527,7 @@ public class WindowedAngularSpeedMeasurementNoiseEstimatorTest implements
             measurements.add(new AngularSpeed(measurement.getValue(), measurement.getUnit()));
             value = measurement.getValue().doubleValue();
 
-            assertEquals(estimator.addMeasurementAndProcess(measurement), i != 0);
+            estimator.addMeasurementAndProcess(measurement);
 
             assertTrue(estimator.getLastWindowedMeasurement(lastMeasurement));
             assertEquals(lastMeasurement, measurement);
@@ -597,7 +602,7 @@ public class WindowedAngularSpeedMeasurementNoiseEstimatorTest implements
 
         measurements.add(new AngularSpeed(measurement.getValue(), measurement.getUnit()));
 
-        assertTrue(estimator.addMeasurementAndProcess(measurement));
+        estimator.addMeasurementAndProcess(measurement);
 
         assertEquals(windowSize + 1, estimator.getNumberOfProcessedSamples());
         assertEquals(windowSize + 1, estimator.getNumberOfAddedSamples());

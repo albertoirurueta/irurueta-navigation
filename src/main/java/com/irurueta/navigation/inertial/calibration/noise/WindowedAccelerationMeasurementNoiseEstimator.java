@@ -29,6 +29,9 @@ import com.irurueta.units.AccelerationUnit;
  * obtained at a constant provided rate equal to {@link #getTimeInterval()} seconds.
  * If not available, accelerometer sampling rate average can be estimated using
  * {@link TimeIntervalEstimator}.
+ * Notice that if there are less than {@link #getWindowSize()} processed
+ * samples in the window, this estimator will assume that the remaining ones
+ * until the window is completed have zero values.
  * This estimator does NOT require the knowledge of current location and body
  * orientation.
  * This implementation of noise estimator will use the following units:

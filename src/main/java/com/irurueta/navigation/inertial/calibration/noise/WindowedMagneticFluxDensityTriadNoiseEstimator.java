@@ -35,6 +35,9 @@ import com.irurueta.units.MagneticFluxDensityUnit;
  * Because body location and orientation is not know, estimated average values
  * cannot be used to determine biases. Only norm of noise estimations can be
  * safely used.
+ * Notice that if there are less than {@link #getWindowSize()} processed
+ * samples in the window, this estimator will assume that the remaining ones
+ * until the window is completed have zero values.
  * This implementation of noise estimator will use the following units:
  * - Teslas (T) for magnetic flux density, average or standard deviation values.
  * - squared Teslas (T^2) for magnetic flux density variances.

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.irurueta.navigation.inertial.calibration;
+package com.irurueta.navigation.inertial.calibration.intervals;
 
 import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.WrongSizeException;
@@ -27,6 +27,9 @@ import com.irurueta.navigation.frames.converters.ECEFtoNEDFrameConverter;
 import com.irurueta.navigation.frames.converters.NEDtoECEFFrameConverter;
 import com.irurueta.navigation.inertial.BodyKinematics;
 import com.irurueta.navigation.inertial.NEDPosition;
+import com.irurueta.navigation.inertial.calibration.AccelerationTriad;
+import com.irurueta.navigation.inertial.calibration.BodyKinematicsGenerator;
+import com.irurueta.navigation.inertial.calibration.IMUErrors;
 import com.irurueta.navigation.inertial.estimators.ECEFKinematicsEstimator;
 import com.irurueta.statistics.UniformRandomizer;
 import com.irurueta.units.Acceleration;
@@ -61,6 +64,8 @@ public class AccelerationTriadStaticIntervalDetectorTest implements
     private static final double MAX_DELTA_ANGLE_DEGREES = 2.0;
 
     private static final double ABSOLUTE_ERROR = 1e-1;
+
+    private static final double SMALL_ABSOLUTE_ERROR = 1e-3;
 
     private int mInitializationStarted;
 
@@ -116,6 +121,150 @@ public class AccelerationTriadStaticIntervalDetectorTest implements
         assertEquals(a3, a4);
         assertFalse(detector.isRunning());
         assertEquals(detector.getProcessedSamples(), 0);
+
+        assertEquals(detector.getAccumulatedAvgX(), 0.0, 0.0);
+        final Acceleration a5 = detector.getAccumulatedAvgXAsMeasurement();
+        assertEquals(a5.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(a5.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration a6 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        detector.getAccumulatedAvgXAsMeasurement(a6);
+        assertEquals(a5, a6);
+
+        assertEquals(detector.getAccumulatedAvgY(), 0.0, 0.0);
+        final Acceleration a7 = detector.getAccumulatedAvgYAsMeasurement();
+        assertEquals(a7.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(a7.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration a8 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        detector.getAccumulatedAvgYAsMeasurement(a8);
+        assertEquals(a7, a8);
+
+        assertEquals(detector.getAccumulatedAvgZ(), 0.0, 0.0);
+        final Acceleration a9 = detector.getAccumulatedAvgZAsMeasurement();
+        assertEquals(a9.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(a9.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration a10 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        detector.getAccumulatedAvgZAsMeasurement(a10);
+        assertEquals(a9, a10);
+
+        final AccelerationTriad triad1 = detector.getAccumulatedAvgTriad();
+        assertEquals(triad1.getValueX(), 0.0, 0.0);
+        assertEquals(triad1.getValueY(), 0.0, 0.0);
+        assertEquals(triad1.getValueZ(), 0.0, 0.0);
+        assertEquals(triad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad triad2 = new AccelerationTriad();
+        detector.getAccumulatedAvgTriad(triad2);
+        assertEquals(triad1, triad2);
+
+        assertEquals(detector.getAccumulatedStdX(), 0.0, 0.0);
+        final Acceleration a11 = detector.getAccumulatedStdXAsMeasurement();
+        assertEquals(a11.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(a11.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration a12 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        detector.getAccumulatedStdXAsMeasurement(a12);
+        assertEquals(a11, a12);
+
+        assertEquals(detector.getAccumulatedStdY(), 0.0, 0.0);
+        final Acceleration a13 = detector.getAccumulatedStdYAsMeasurement();
+        assertEquals(a13.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(a13.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration a14 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        detector.getAccumulatedStdYAsMeasurement(a14);
+        assertEquals(a13, a14);
+
+        assertEquals(detector.getAccumulatedStdZ(), 0.0, 0.0);
+        final Acceleration a15 = detector.getAccumulatedStdZAsMeasurement();
+        assertEquals(a15.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(a15.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration a16 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        detector.getAccumulatedStdZAsMeasurement(a16);
+        assertEquals(a15, a16);
+
+        final AccelerationTriad triad3 = detector.getAccumulatedStdTriad();
+        assertEquals(triad3.getValueX(), 0.0, 0.0);
+        assertEquals(triad3.getValueY(), 0.0, 0.0);
+        assertEquals(triad3.getValueZ(), 0.0, 0.0);
+        assertEquals(triad3.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad triad4 = new AccelerationTriad();
+        detector.getAccumulatedStdTriad(triad4);
+        assertEquals(triad3, triad4);
+
+        assertEquals(detector.getInstantaneousAvgX(), 0.0, 0.0);
+        final Acceleration a17 = detector.getInstantaneousAvgXAsMeasurement();
+        assertEquals(a17.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(a17.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration a18 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        detector.getInstantaneousAvgXAsMeasurement(a18);
+        assertEquals(a17, a18);
+
+        assertEquals(detector.getInstantaneousAvgY(), 0.0, 0.0);
+        final Acceleration a19 = detector.getInstantaneousAvgYAsMeasurement();
+        assertEquals(a19.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(a19.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration a20 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        detector.getInstantaneousAvgYAsMeasurement(a20);
+        assertEquals(a19, a20);
+
+        assertEquals(detector.getInstantaneousAvgZ(), 0.0, 0.0);
+        final Acceleration a21 = detector.getInstantaneousAvgZAsMeasurement();
+        assertEquals(a21.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(a21.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration a22 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        detector.getInstantaneousAvgZAsMeasurement(a22);
+        assertEquals(a21, a22);
+
+        final AccelerationTriad triad5 = detector.getInstantaneousAvgTriad();
+        assertEquals(triad5.getValueX(), 0.0, 0.0);
+        assertEquals(triad5.getValueY(), 0.0, 0.0);
+        assertEquals(triad5.getValueZ(), 0.0, 0.0);
+        assertEquals(triad5.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad triad6 = new AccelerationTriad();
+        detector.getInstantaneousAvgTriad(triad6);
+        assertEquals(triad5, triad6);
+
+        assertEquals(detector.getInstantaneousStdX(), 0.0, 0.0);
+        final Acceleration a23 = detector.getInstantaneousStdXAsMeasurement();
+        assertEquals(a23.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(a23.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration a24 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        detector.getInstantaneousStdXAsMeasurement(a24);
+        assertEquals(a23, a24);
+
+        assertEquals(detector.getInstantaneousStdY(), 0.0, 0.0);
+        final Acceleration a25 = detector.getInstantaneousStdYAsMeasurement();
+        assertEquals(a25.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(a25.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration a26 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        detector.getInstantaneousStdYAsMeasurement(a26);
+        assertEquals(a25, a26);
+
+        assertEquals(detector.getInstantaneousStdZ(), 0.0, 0.0);
+        final Acceleration a27 = detector.getInstantaneousStdZAsMeasurement();
+        assertEquals(a27.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(a27.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration a28 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        detector.getInstantaneousStdZAsMeasurement(a28);
+        assertEquals(a27, a28);
+
+        final AccelerationTriad triad7 = detector.getInstantaneousStdTriad();
+        assertEquals(triad7.getValueX(), 0.0, 0.0);
+        assertEquals(triad7.getValueY(), 0.0, 0.0);
+        assertEquals(triad7.getValueZ(), 0.0, 0.0);
+        assertEquals(triad7.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad triad8 = new AccelerationTriad();
+        detector.getInstantaneousStdTriad(triad8);
+        assertEquals(triad7, triad8);
     }
 
     @Test
@@ -155,6 +304,150 @@ public class AccelerationTriadStaticIntervalDetectorTest implements
         assertEquals(a3, a4);
         assertFalse(detector.isRunning());
         assertEquals(detector.getProcessedSamples(), 0);
+
+        assertEquals(detector.getAccumulatedAvgX(), 0.0, 0.0);
+        final Acceleration a5 = detector.getAccumulatedAvgXAsMeasurement();
+        assertEquals(a5.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(a5.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration a6 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        detector.getAccumulatedAvgXAsMeasurement(a6);
+        assertEquals(a5, a6);
+
+        assertEquals(detector.getAccumulatedAvgY(), 0.0, 0.0);
+        final Acceleration a7 = detector.getAccumulatedAvgYAsMeasurement();
+        assertEquals(a7.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(a7.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration a8 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        detector.getAccumulatedAvgYAsMeasurement(a8);
+        assertEquals(a7, a8);
+
+        assertEquals(detector.getAccumulatedAvgZ(), 0.0, 0.0);
+        final Acceleration a9 = detector.getAccumulatedAvgZAsMeasurement();
+        assertEquals(a9.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(a9.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration a10 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        detector.getAccumulatedAvgZAsMeasurement(a10);
+        assertEquals(a9, a10);
+
+        final AccelerationTriad triad1 = detector.getAccumulatedAvgTriad();
+        assertEquals(triad1.getValueX(), 0.0, 0.0);
+        assertEquals(triad1.getValueY(), 0.0, 0.0);
+        assertEquals(triad1.getValueZ(), 0.0, 0.0);
+        assertEquals(triad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad triad2 = new AccelerationTriad();
+        detector.getAccumulatedAvgTriad(triad2);
+        assertEquals(triad1, triad2);
+
+        assertEquals(detector.getAccumulatedStdX(), 0.0, 0.0);
+        final Acceleration a11 = detector.getAccumulatedStdXAsMeasurement();
+        assertEquals(a11.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(a11.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration a12 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        detector.getAccumulatedStdXAsMeasurement(a12);
+        assertEquals(a11, a12);
+
+        assertEquals(detector.getAccumulatedStdY(), 0.0, 0.0);
+        final Acceleration a13 = detector.getAccumulatedStdYAsMeasurement();
+        assertEquals(a13.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(a13.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration a14 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        detector.getAccumulatedStdYAsMeasurement(a14);
+        assertEquals(a13, a14);
+
+        assertEquals(detector.getAccumulatedStdZ(), 0.0, 0.0);
+        final Acceleration a15 = detector.getAccumulatedStdZAsMeasurement();
+        assertEquals(a15.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(a15.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration a16 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        detector.getAccumulatedStdZAsMeasurement(a16);
+        assertEquals(a15, a16);
+
+        final AccelerationTriad triad3 = detector.getAccumulatedStdTriad();
+        assertEquals(triad3.getValueX(), 0.0, 0.0);
+        assertEquals(triad3.getValueY(), 0.0, 0.0);
+        assertEquals(triad3.getValueZ(), 0.0, 0.0);
+        assertEquals(triad3.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad triad4 = new AccelerationTriad();
+        detector.getAccumulatedStdTriad(triad4);
+        assertEquals(triad3, triad4);
+
+        assertEquals(detector.getInstantaneousAvgX(), 0.0, 0.0);
+        final Acceleration a17 = detector.getInstantaneousAvgXAsMeasurement();
+        assertEquals(a17.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(a17.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration a18 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        detector.getInstantaneousAvgXAsMeasurement(a18);
+        assertEquals(a17, a18);
+
+        assertEquals(detector.getInstantaneousAvgY(), 0.0, 0.0);
+        final Acceleration a19 = detector.getInstantaneousAvgYAsMeasurement();
+        assertEquals(a19.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(a19.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration a20 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        detector.getInstantaneousAvgYAsMeasurement(a20);
+        assertEquals(a19, a20);
+
+        assertEquals(detector.getInstantaneousAvgZ(), 0.0, 0.0);
+        final Acceleration a21 = detector.getInstantaneousAvgZAsMeasurement();
+        assertEquals(a21.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(a21.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration a22 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        detector.getInstantaneousAvgZAsMeasurement(a22);
+        assertEquals(a21, a22);
+
+        final AccelerationTriad triad5 = detector.getInstantaneousAvgTriad();
+        assertEquals(triad5.getValueX(), 0.0, 0.0);
+        assertEquals(triad5.getValueY(), 0.0, 0.0);
+        assertEquals(triad5.getValueZ(), 0.0, 0.0);
+        assertEquals(triad5.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad triad6 = new AccelerationTriad();
+        detector.getInstantaneousAvgTriad(triad6);
+        assertEquals(triad5, triad6);
+
+        assertEquals(detector.getInstantaneousStdX(), 0.0, 0.0);
+        final Acceleration a23 = detector.getInstantaneousStdXAsMeasurement();
+        assertEquals(a23.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(a23.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration a24 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        detector.getInstantaneousStdXAsMeasurement(a24);
+        assertEquals(a23, a24);
+
+        assertEquals(detector.getInstantaneousStdY(), 0.0, 0.0);
+        final Acceleration a25 = detector.getInstantaneousStdYAsMeasurement();
+        assertEquals(a25.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(a25.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration a26 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        detector.getInstantaneousStdYAsMeasurement(a26);
+        assertEquals(a25, a26);
+
+        assertEquals(detector.getInstantaneousStdZ(), 0.0, 0.0);
+        final Acceleration a27 = detector.getInstantaneousStdZAsMeasurement();
+        assertEquals(a27.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(a27.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration a28 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        detector.getInstantaneousStdZAsMeasurement(a28);
+        assertEquals(a27, a28);
+
+        final AccelerationTriad triad7 = detector.getInstantaneousStdTriad();
+        assertEquals(triad7.getValueX(), 0.0, 0.0);
+        assertEquals(triad7.getValueY(), 0.0, 0.0);
+        assertEquals(triad7.getValueZ(), 0.0, 0.0);
+        assertEquals(triad7.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad triad8 = new AccelerationTriad();
+        detector.getInstantaneousStdTriad(triad8);
+        assertEquals(triad7, triad8);
     }
 
     @Test
@@ -166,14 +459,19 @@ public class AccelerationTriadStaticIntervalDetectorTest implements
                 AccelerationTriadStaticIntervalDetector.DEFAULT_WINDOW_SIZE);
 
         // set new value
-        detector.setWindowSize(2);
+        detector.setWindowSize(3);
 
         // check
-        assertEquals(detector.getWindowSize(), 2);
+        assertEquals(detector.getWindowSize(), 3);
 
         // Force IllegalArgumentException
         try {
             detector.setWindowSize(1);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            detector.setWindowSize(2);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -332,6 +630,9 @@ public class AccelerationTriadStaticIntervalDetectorTest implements
         final double accelQuantLevel = 0.0;
         final double gyroQuantLevel = 0.0;
 
+        final double accelNoiseStd = accelNoiseRootPSD /
+                Math.sqrt(TIME_INTERVAL_SECONDS);
+
         final IMUErrors errors = new IMUErrors(ba, bg, ma, mg, gg, accelNoiseRootPSD,
                 gyroNoiseRootPSD, accelQuantLevel, gyroQuantLevel);
 
@@ -361,6 +662,9 @@ public class AccelerationTriadStaticIntervalDetectorTest implements
         // position, velocity and orientation
         final BodyKinematics trueKinematics = ECEFKinematicsEstimator
                 .estimateKinematicsAndReturnNew(TIME_INTERVAL_SECONDS, ecefFrame, ecefFrame);
+
+        final AccelerationTriad lastStaticTriad =
+                trueKinematics.getSpecificForceTriad();
 
         reset();
         assertEquals(mInitializationStarted, 0);
@@ -427,6 +731,49 @@ public class AccelerationTriadStaticIntervalDetectorTest implements
         assertEquals(a1, a2);
         assertEquals(detector.getProcessedSamples(), initialStaticSamples);
 
+        assertEquals(lastStaticTriad.getValueX(),
+                detector.getAccumulatedAvgX(), ABSOLUTE_ERROR);
+        assertEquals(lastStaticTriad.getValueY(),
+                detector.getAccumulatedAvgY(), ABSOLUTE_ERROR);
+        assertEquals(lastStaticTriad.getValueZ(),
+                detector.getAccumulatedAvgZ(), ABSOLUTE_ERROR);
+        assertTrue(lastStaticTriad.getMeasurementX().equals(
+                detector.getAccumulatedAvgXAsMeasurement(), ABSOLUTE_ERROR));
+        assertTrue(lastStaticTriad.getMeasurementY().equals(
+                detector.getAccumulatedAvgYAsMeasurement(), ABSOLUTE_ERROR));
+        assertTrue(lastStaticTriad.getMeasurementZ().equals(
+                detector.getAccumulatedAvgZAsMeasurement(), ABSOLUTE_ERROR));
+        assertTrue(lastStaticTriad.equals(detector.getAccumulatedAvgTriad(),
+                ABSOLUTE_ERROR));
+
+        assertEquals(detector.getAccumulatedStdX(), accelNoiseStd, SMALL_ABSOLUTE_ERROR);
+        assertEquals(detector.getAccumulatedStdY(), accelNoiseStd, SMALL_ABSOLUTE_ERROR);
+        assertEquals(detector.getAccumulatedStdZ(), accelNoiseStd, SMALL_ABSOLUTE_ERROR);
+        final Acceleration stdX1 = detector.getAccumulatedStdXAsMeasurement();
+        assertEquals(stdX1.getValue().doubleValue(), accelNoiseStd,
+                SMALL_ABSOLUTE_ERROR);
+        assertEquals(stdX1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration stdX2 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        detector.getAccumulatedStdXAsMeasurement(stdX2);
+        assertEquals(stdX1, stdX2);
+        final Acceleration stdY1 = detector.getAccumulatedStdYAsMeasurement();
+        assertEquals(stdY1.getValue().doubleValue(), accelNoiseStd,
+                SMALL_ABSOLUTE_ERROR);
+        assertEquals(stdY1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration stdY2 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        detector.getAccumulatedStdYAsMeasurement(stdY2);
+        assertEquals(stdY1, stdY2);
+        final Acceleration stdZ1 = detector.getAccumulatedStdZAsMeasurement();
+        assertEquals(stdZ1.getValue().doubleValue(), accelNoiseStd,
+                SMALL_ABSOLUTE_ERROR);
+        assertEquals(stdZ1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration stdZ2 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        detector.getAccumulatedStdZAsMeasurement(stdZ2);
+        assertEquals(stdZ1, stdZ2);
+
         // keep adding static samples for twice the window size
         int periodLength = 2 * detector.getWindowSize();
         for (int i = 0; i < periodLength; i++) {
@@ -442,9 +789,6 @@ public class AccelerationTriadStaticIntervalDetectorTest implements
                 AccelerationTriadStaticIntervalDetector.Status.STATIC_INTERVAL);
         assertEquals(detector.getProcessedSamples(),
                 initialStaticSamples + periodLength);
-
-        final AccelerationTriad lastStaticTriad =
-                trueKinematics.getSpecificForceTriad();
 
         // add dynamic samples for twice the window size
         final double deltaX = randomizer.nextDouble(
@@ -535,18 +879,18 @@ public class AccelerationTriadStaticIntervalDetectorTest implements
         assertEquals(lastStaticTriad.getUnit(),
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
         assertEquals(lastStaticTriad.getValueX(),
-                detector.getAvgX(), ABSOLUTE_ERROR);
+                detector.getAccumulatedAvgX(), ABSOLUTE_ERROR);
         assertEquals(lastStaticTriad.getValueY(),
-                detector.getAvgY(), ABSOLUTE_ERROR);
+                detector.getAccumulatedAvgY(), ABSOLUTE_ERROR);
         assertEquals(lastStaticTriad.getValueZ(),
-                detector.getAvgZ(), ABSOLUTE_ERROR);
+                detector.getAccumulatedAvgZ(), ABSOLUTE_ERROR);
         assertTrue(lastStaticTriad.getMeasurementX().equals(
-                detector.getAvgXAsMeasurement(), ABSOLUTE_ERROR));
+                detector.getAccumulatedAvgXAsMeasurement(), ABSOLUTE_ERROR));
         assertTrue(lastStaticTriad.getMeasurementY().equals(
-                detector.getAvgYAsMeasurement(), ABSOLUTE_ERROR));
+                detector.getAccumulatedAvgYAsMeasurement(), ABSOLUTE_ERROR));
         assertTrue(lastStaticTriad.getMeasurementZ().equals(
-                detector.getAvgZAsMeasurement(), ABSOLUTE_ERROR));
-        assertTrue(lastStaticTriad.equals(detector.getAvgTriad(),
+                detector.getAccumulatedAvgZAsMeasurement(), ABSOLUTE_ERROR));
+        assertTrue(lastStaticTriad.equals(detector.getAccumulatedAvgTriad(),
                 ABSOLUTE_ERROR));
 
 
@@ -602,6 +946,9 @@ public class AccelerationTriadStaticIntervalDetectorTest implements
         final double accelQuantLevel = 0.0;
         final double gyroQuantLevel = 0.0;
 
+        final double accelNoiseStd = accelNoiseRootPSD /
+                Math.sqrt(TIME_INTERVAL_SECONDS);
+
         final IMUErrors errors = new IMUErrors(ba, bg, ma, mg, gg, accelNoiseRootPSD,
                 gyroNoiseRootPSD, accelQuantLevel, gyroQuantLevel);
 
@@ -631,6 +978,9 @@ public class AccelerationTriadStaticIntervalDetectorTest implements
         // position, velocity and orientation
         final BodyKinematics trueKinematics = ECEFKinematicsEstimator
                 .estimateKinematicsAndReturnNew(TIME_INTERVAL_SECONDS, ecefFrame, ecefFrame);
+
+        final AccelerationTriad lastStaticTriad =
+                trueKinematics.getSpecificForceTriad();
 
         reset();
         assertEquals(mInitializationStarted, 0);
@@ -707,6 +1057,49 @@ public class AccelerationTriadStaticIntervalDetectorTest implements
         assertEquals(a1, a2);
         assertEquals(detector.getProcessedSamples(), initialStaticSamples);
 
+        assertEquals(lastStaticTriad.getValueX(),
+                detector.getAccumulatedAvgX(), ABSOLUTE_ERROR);
+        assertEquals(lastStaticTriad.getValueY(),
+                detector.getAccumulatedAvgY(), ABSOLUTE_ERROR);
+        assertEquals(lastStaticTriad.getValueZ(),
+                detector.getAccumulatedAvgZ(), ABSOLUTE_ERROR);
+        assertTrue(lastStaticTriad.getMeasurementX().equals(
+                detector.getAccumulatedAvgXAsMeasurement(), ABSOLUTE_ERROR));
+        assertTrue(lastStaticTriad.getMeasurementY().equals(
+                detector.getAccumulatedAvgYAsMeasurement(), ABSOLUTE_ERROR));
+        assertTrue(lastStaticTriad.getMeasurementZ().equals(
+                detector.getAccumulatedAvgZAsMeasurement(), ABSOLUTE_ERROR));
+        assertTrue(lastStaticTriad.equals(detector.getAccumulatedAvgTriad(),
+                ABSOLUTE_ERROR));
+
+        assertEquals(detector.getAccumulatedStdX(), accelNoiseStd, SMALL_ABSOLUTE_ERROR);
+        assertEquals(detector.getAccumulatedStdY(), accelNoiseStd, SMALL_ABSOLUTE_ERROR);
+        assertEquals(detector.getAccumulatedStdZ(), accelNoiseStd, SMALL_ABSOLUTE_ERROR);
+        final Acceleration stdX1 = detector.getAccumulatedStdXAsMeasurement();
+        assertEquals(stdX1.getValue().doubleValue(), accelNoiseStd,
+                SMALL_ABSOLUTE_ERROR);
+        assertEquals(stdX1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration stdX2 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        detector.getAccumulatedStdXAsMeasurement(stdX2);
+        assertEquals(stdX1, stdX2);
+        final Acceleration stdY1 = detector.getAccumulatedStdYAsMeasurement();
+        assertEquals(stdY1.getValue().doubleValue(), accelNoiseStd,
+                SMALL_ABSOLUTE_ERROR);
+        assertEquals(stdY1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration stdY2 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        detector.getAccumulatedStdYAsMeasurement(stdY2);
+        assertEquals(stdY1, stdY2);
+        final Acceleration stdZ1 = detector.getAccumulatedStdZAsMeasurement();
+        assertEquals(stdZ1.getValue().doubleValue(), accelNoiseStd,
+                SMALL_ABSOLUTE_ERROR);
+        assertEquals(stdZ1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration stdZ2 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        detector.getAccumulatedStdZAsMeasurement(stdZ2);
+        assertEquals(stdZ1, stdZ2);
+
         // keep adding static samples for twice the window size
         int periodLength = 2 * detector.getWindowSize();
         for (int i = 0; i < periodLength; i++) {
@@ -725,9 +1118,6 @@ public class AccelerationTriadStaticIntervalDetectorTest implements
                 AccelerationTriadStaticIntervalDetector.Status.STATIC_INTERVAL);
         assertEquals(detector.getProcessedSamples(),
                 initialStaticSamples + periodLength);
-
-        final AccelerationTriad lastStaticTriad =
-                trueKinematics.getSpecificForceTriad();
 
         // add dynamic samples for twice the window size
         final double deltaX = randomizer.nextDouble(
@@ -821,18 +1211,18 @@ public class AccelerationTriadStaticIntervalDetectorTest implements
         assertEquals(lastStaticTriad.getUnit(),
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
         assertEquals(lastStaticTriad.getValueX(),
-                detector.getAvgX(), ABSOLUTE_ERROR);
+                detector.getAccumulatedAvgX(), ABSOLUTE_ERROR);
         assertEquals(lastStaticTriad.getValueY(),
-                detector.getAvgY(), ABSOLUTE_ERROR);
+                detector.getAccumulatedAvgY(), ABSOLUTE_ERROR);
         assertEquals(lastStaticTriad.getValueZ(),
-                detector.getAvgZ(), ABSOLUTE_ERROR);
+                detector.getAccumulatedAvgZ(), ABSOLUTE_ERROR);
         assertTrue(lastStaticTriad.getMeasurementX().equals(
-                detector.getAvgXAsMeasurement(), ABSOLUTE_ERROR));
+                detector.getAccumulatedAvgXAsMeasurement(), ABSOLUTE_ERROR));
         assertTrue(lastStaticTriad.getMeasurementY().equals(
-                detector.getAvgYAsMeasurement(), ABSOLUTE_ERROR));
+                detector.getAccumulatedAvgYAsMeasurement(), ABSOLUTE_ERROR));
         assertTrue(lastStaticTriad.getMeasurementZ().equals(
-                detector.getAvgZAsMeasurement(), ABSOLUTE_ERROR));
-        assertTrue(lastStaticTriad.equals(detector.getAvgTriad(),
+                detector.getAccumulatedAvgZAsMeasurement(), ABSOLUTE_ERROR));
+        assertTrue(lastStaticTriad.equals(detector.getAccumulatedAvgTriad(),
                 ABSOLUTE_ERROR));
 
 
@@ -891,6 +1281,9 @@ public class AccelerationTriadStaticIntervalDetectorTest implements
         final double accelQuantLevel = 0.0;
         final double gyroQuantLevel = 0.0;
 
+        final double accelNoiseStd = accelNoiseRootPSD /
+                Math.sqrt(TIME_INTERVAL_SECONDS);
+
         final IMUErrors errors = new IMUErrors(ba, bg, ma, mg, gg, accelNoiseRootPSD,
                 gyroNoiseRootPSD, accelQuantLevel, gyroQuantLevel);
 
@@ -920,6 +1313,9 @@ public class AccelerationTriadStaticIntervalDetectorTest implements
         // position, velocity and orientation
         final BodyKinematics trueKinematics = ECEFKinematicsEstimator
                 .estimateKinematicsAndReturnNew(TIME_INTERVAL_SECONDS, ecefFrame, ecefFrame);
+
+        final AccelerationTriad lastStaticTriad =
+                trueKinematics.getSpecificForceTriad();
 
         reset();
         assertEquals(mInitializationStarted, 0);
@@ -987,6 +1383,49 @@ public class AccelerationTriadStaticIntervalDetectorTest implements
         assertEquals(a1, a2);
         assertEquals(detector.getProcessedSamples(), initialStaticSamples);
 
+        assertEquals(lastStaticTriad.getValueX(),
+                detector.getAccumulatedAvgX(), ABSOLUTE_ERROR);
+        assertEquals(lastStaticTriad.getValueY(),
+                detector.getAccumulatedAvgY(), ABSOLUTE_ERROR);
+        assertEquals(lastStaticTriad.getValueZ(),
+                detector.getAccumulatedAvgZ(), ABSOLUTE_ERROR);
+        assertTrue(lastStaticTriad.getMeasurementX().equals(
+                detector.getAccumulatedAvgXAsMeasurement(), ABSOLUTE_ERROR));
+        assertTrue(lastStaticTriad.getMeasurementY().equals(
+                detector.getAccumulatedAvgYAsMeasurement(), ABSOLUTE_ERROR));
+        assertTrue(lastStaticTriad.getMeasurementZ().equals(
+                detector.getAccumulatedAvgZAsMeasurement(), ABSOLUTE_ERROR));
+        assertTrue(lastStaticTriad.equals(detector.getAccumulatedAvgTriad(),
+                ABSOLUTE_ERROR));
+
+        assertEquals(detector.getAccumulatedStdX(), accelNoiseStd, SMALL_ABSOLUTE_ERROR);
+        assertEquals(detector.getAccumulatedStdY(), accelNoiseStd, SMALL_ABSOLUTE_ERROR);
+        assertEquals(detector.getAccumulatedStdZ(), accelNoiseStd, SMALL_ABSOLUTE_ERROR);
+        final Acceleration stdX1 = detector.getAccumulatedStdXAsMeasurement();
+        assertEquals(stdX1.getValue().doubleValue(), accelNoiseStd,
+                SMALL_ABSOLUTE_ERROR);
+        assertEquals(stdX1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration stdX2 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        detector.getAccumulatedStdXAsMeasurement(stdX2);
+        assertEquals(stdX1, stdX2);
+        final Acceleration stdY1 = detector.getAccumulatedStdYAsMeasurement();
+        assertEquals(stdY1.getValue().doubleValue(), accelNoiseStd,
+                SMALL_ABSOLUTE_ERROR);
+        assertEquals(stdY1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration stdY2 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        detector.getAccumulatedStdYAsMeasurement(stdY2);
+        assertEquals(stdY1, stdY2);
+        final Acceleration stdZ1 = detector.getAccumulatedStdZAsMeasurement();
+        assertEquals(stdZ1.getValue().doubleValue(), accelNoiseStd,
+                SMALL_ABSOLUTE_ERROR);
+        assertEquals(stdZ1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration stdZ2 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        detector.getAccumulatedStdZAsMeasurement(stdZ2);
+        assertEquals(stdZ1, stdZ2);
+
         // keep adding static samples for twice the window size
         int periodLength = 2 * detector.getWindowSize();
         for (int i = 0; i < periodLength; i++) {
@@ -1003,9 +1442,6 @@ public class AccelerationTriadStaticIntervalDetectorTest implements
                 AccelerationTriadStaticIntervalDetector.Status.STATIC_INTERVAL);
         assertEquals(detector.getProcessedSamples(),
                 initialStaticSamples + periodLength);
-
-        final AccelerationTriad lastStaticTriad =
-                trueKinematics.getSpecificForceTriad();
 
         // add dynamic samples for twice the window size
         final double deltaX = randomizer.nextDouble(
@@ -1097,18 +1533,18 @@ public class AccelerationTriadStaticIntervalDetectorTest implements
         assertEquals(lastStaticTriad.getUnit(),
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
         assertEquals(lastStaticTriad.getValueX(),
-                detector.getAvgX(), ABSOLUTE_ERROR);
+                detector.getAccumulatedAvgX(), ABSOLUTE_ERROR);
         assertEquals(lastStaticTriad.getValueY(),
-                detector.getAvgY(), ABSOLUTE_ERROR);
+                detector.getAccumulatedAvgY(), ABSOLUTE_ERROR);
         assertEquals(lastStaticTriad.getValueZ(),
-                detector.getAvgZ(), ABSOLUTE_ERROR);
+                detector.getAccumulatedAvgZ(), ABSOLUTE_ERROR);
         assertTrue(lastStaticTriad.getMeasurementX().equals(
-                detector.getAvgXAsMeasurement(), ABSOLUTE_ERROR));
+                detector.getAccumulatedAvgXAsMeasurement(), ABSOLUTE_ERROR));
         assertTrue(lastStaticTriad.getMeasurementY().equals(
-                detector.getAvgYAsMeasurement(), ABSOLUTE_ERROR));
+                detector.getAccumulatedAvgYAsMeasurement(), ABSOLUTE_ERROR));
         assertTrue(lastStaticTriad.getMeasurementZ().equals(
-                detector.getAvgZAsMeasurement(), ABSOLUTE_ERROR));
-        assertTrue(lastStaticTriad.equals(detector.getAvgTriad(),
+                detector.getAccumulatedAvgZAsMeasurement(), ABSOLUTE_ERROR));
+        assertTrue(lastStaticTriad.equals(detector.getAccumulatedAvgTriad(),
                 ABSOLUTE_ERROR));
 
 
@@ -1448,57 +1884,220 @@ public class AccelerationTriadStaticIntervalDetectorTest implements
     }
 
     @Override
-    public void onStaticIntervalDetected(final AccelerationTriadStaticIntervalDetector detector) {
+    public void onStaticIntervalDetected(final AccelerationTriadStaticIntervalDetector detector,
+                                         final double instantaneousAvgX,
+                                         final double instantaneousAvgY,
+                                         final double instantaneousAvgZ,
+                                         final double instantaneousStdX,
+                                         final double instantaneousStdY,
+                                         final double instantaneousStdZ) {
         mStaticIntervalDetected++;
         checkLocked(detector);
         assertEquals(detector.getStatus(),
                 AccelerationTriadStaticIntervalDetector.Status.STATIC_INTERVAL);
+
+        assertEquals(detector.getInstantaneousAvgX(), instantaneousAvgX, 0.0);
+        final Acceleration a1 = detector.getInstantaneousAvgXAsMeasurement();
+        assertEquals(a1.getValue().doubleValue(), instantaneousAvgX, 0.0);
+        assertEquals(a1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration a2 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        detector.getInstantaneousAvgXAsMeasurement(a2);
+        assertEquals(a1, a2);
+
+        assertEquals(detector.getInstantaneousAvgY(), instantaneousAvgY, 0.0);
+        final Acceleration a3 = detector.getInstantaneousAvgYAsMeasurement();
+        assertEquals(a3.getValue().doubleValue(), instantaneousAvgY, 0.0);
+        assertEquals(a3.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration a4 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        detector.getInstantaneousAvgYAsMeasurement(a4);
+        assertEquals(a3, a4);
+
+        assertEquals(detector.getInstantaneousAvgZ(), instantaneousAvgZ, 0.0);
+        final Acceleration a5 = detector.getInstantaneousAvgZAsMeasurement();
+        assertEquals(a5.getValue().doubleValue(), instantaneousAvgZ, 0.0);
+        assertEquals(a5.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration a6 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        detector.getInstantaneousAvgZAsMeasurement(a6);
+        assertEquals(a5, a6);
+
+        final AccelerationTriad avgTriad1 = detector.getInstantaneousAvgTriad();
+        assertEquals(avgTriad1.getValueX(), instantaneousAvgX, 0.0);
+        assertEquals(avgTriad1.getValueY(), instantaneousAvgY, 0.0);
+        assertEquals(avgTriad1.getValueZ(), instantaneousAvgZ, 0.0);
+        assertEquals(avgTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad avgTriad2 = new AccelerationTriad();
+        detector.getInstantaneousAvgTriad(avgTriad2);
+        assertEquals(avgTriad1, avgTriad2);
+
+        assertEquals(detector.getInstantaneousStdX(), instantaneousStdX, 0.0);
+        final Acceleration a7 = detector.getInstantaneousStdXAsMeasurement();
+        assertEquals(a7.getValue().doubleValue(), instantaneousStdX, 0.0);
+        assertEquals(a7.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration a8 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        detector.getInstantaneousStdXAsMeasurement(a8);
+        assertEquals(a7, a8);
+
+        assertEquals(detector.getInstantaneousStdY(), instantaneousStdY, 0.0);
+        final Acceleration a9 = detector.getInstantaneousStdYAsMeasurement();
+        assertEquals(a9.getValue().doubleValue(), instantaneousStdY, 0.0);
+        assertEquals(a9.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration a10 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        detector.getInstantaneousStdYAsMeasurement(a10);
+        assertEquals(a9, a10);
+
+        assertEquals(detector.getInstantaneousStdZ(), instantaneousStdZ, 0.0);
+        final Acceleration a11 = detector.getInstantaneousStdZAsMeasurement();
+        assertEquals(a11.getValue().doubleValue(), instantaneousStdZ, 0.0);
+        assertEquals(a11.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration a12 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        detector.getInstantaneousStdZAsMeasurement(a12);
+        assertEquals(a11, a12);
+
+        final AccelerationTriad stdTriad1 = detector.getInstantaneousStdTriad();
+        assertTrue(stdTriad1.getNorm() < detector.getThreshold());
+        assertEquals(stdTriad1.getValueX(), instantaneousStdX, 0.0);
+        assertEquals(stdTriad1.getValueY(), instantaneousStdY, 0.0);
+        assertEquals(stdTriad1.getValueZ(), instantaneousStdZ, 0.0);
+        assertEquals(stdTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad stdTriad2 = new AccelerationTriad();
+        detector.getInstantaneousStdTriad(stdTriad2);
+        assertEquals(stdTriad1, stdTriad2);
     }
 
     @Override
     public void onDynamicIntervalDetected(final AccelerationTriadStaticIntervalDetector detector,
-                                          final double avgX, final double avgY, final double avgZ) {
+                                          final double instantaneousAvgX,
+                                          final double instantaneousAvgY,
+                                          final double instantaneousAvgZ,
+                                          final double instantaneousStdX,
+                                          final double instantaneousStdY,
+                                          final double instantaneousStdZ,
+                                          final double accumulatedAvgX,
+                                          final double accumulatedAvgY,
+                                          final double accumulatedAvgZ,
+                                          final double accumulatedStdX,
+                                          final double accumulatedStdY,
+                                          final double accumulatedStdZ) {
         mDynamicIntervalDetected++;
         checkLocked(detector);
         assertEquals(detector.getStatus(),
                 AccelerationTriadStaticIntervalDetector.Status.DYNAMIC_INTERVAL);
-        assertEquals(avgX, detector.getAvgX(), 0.0);
-        assertEquals(avgY, detector.getAvgY(), 0.0);
-        assertEquals(avgZ, detector.getAvgZ(), 0.0);
+        assertEquals(accumulatedAvgX, detector.getAccumulatedAvgX(), 0.0);
+        assertEquals(accumulatedAvgY, detector.getAccumulatedAvgY(), 0.0);
+        assertEquals(accumulatedAvgZ, detector.getAccumulatedAvgZ(), 0.0);
 
-        final Acceleration ax1 = detector.getAvgXAsMeasurement();
-        assertEquals(ax1.getValue().doubleValue(), avgX, 0.0);
+        final Acceleration ax1 = detector.getAccumulatedAvgXAsMeasurement();
+        assertEquals(ax1.getValue().doubleValue(), accumulatedAvgX, 0.0);
         assertEquals(ax1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         final Acceleration ax2 = new Acceleration(
                 1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        detector.getAvgXAsMeasurement(ax2);
+        detector.getAccumulatedAvgXAsMeasurement(ax2);
         assertEquals(ax1, ax2);
 
-        final Acceleration ay1 = detector.getAvgYAsMeasurement();
-        assertEquals(ay1.getValue().doubleValue(), avgY, 0.0);
+        final Acceleration ay1 = detector.getAccumulatedAvgYAsMeasurement();
+        assertEquals(ay1.getValue().doubleValue(), accumulatedAvgY, 0.0);
         assertEquals(ay1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         final Acceleration ay2 = new Acceleration(
                 1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        detector.getAvgYAsMeasurement(ay2);
+        detector.getAccumulatedAvgYAsMeasurement(ay2);
         assertEquals(ay1, ay2);
 
-        final Acceleration az1 = detector.getAvgZAsMeasurement();
-        assertEquals(az1.getValue().doubleValue(), avgZ, 0.0);
+        final Acceleration az1 = detector.getAccumulatedAvgZAsMeasurement();
+        assertEquals(az1.getValue().doubleValue(), accumulatedAvgZ, 0.0);
         assertEquals(az1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         final Acceleration az2 = new Acceleration(
                 1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        detector.getAvgZAsMeasurement(az2);
+        detector.getAccumulatedAvgZAsMeasurement(az2);
         assertEquals(az1, az2);
 
-        final AccelerationTriad triad1 = detector.getAvgTriad();
-        assertEquals(triad1.getValueX(), avgX, 0.0);
-        assertEquals(triad1.getValueY(), avgY, 0.0);
-        assertEquals(triad1.getValueZ(), avgZ, 0.0);
+        final AccelerationTriad triad1 = detector.getAccumulatedAvgTriad();
+        assertEquals(triad1.getValueX(), accumulatedAvgX, 0.0);
+        assertEquals(triad1.getValueY(), accumulatedAvgY, 0.0);
+        assertEquals(triad1.getValueZ(), accumulatedAvgZ, 0.0);
         assertEquals(triad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
 
         final AccelerationTriad triad2 = new AccelerationTriad();
-        detector.getAvgTriad(triad2);
+        detector.getAccumulatedAvgTriad(triad2);
         assertEquals(triad1, triad2);
+
+        assertEquals(detector.getInstantaneousAvgX(), instantaneousAvgX, 0.0);
+        final Acceleration a1 = detector.getInstantaneousAvgXAsMeasurement();
+        assertEquals(a1.getValue().doubleValue(), instantaneousAvgX, 0.0);
+        assertEquals(a1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration a2 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        detector.getInstantaneousAvgXAsMeasurement(a2);
+        assertEquals(a1, a2);
+
+        assertEquals(detector.getInstantaneousAvgY(), instantaneousAvgY, 0.0);
+        final Acceleration a3 = detector.getInstantaneousAvgYAsMeasurement();
+        assertEquals(a3.getValue().doubleValue(), instantaneousAvgY, 0.0);
+        assertEquals(a3.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration a4 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        detector.getInstantaneousAvgYAsMeasurement(a4);
+        assertEquals(a3, a4);
+
+        assertEquals(detector.getInstantaneousAvgZ(), instantaneousAvgZ, 0.0);
+        final Acceleration a5 = detector.getInstantaneousAvgZAsMeasurement();
+        assertEquals(a5.getValue().doubleValue(), instantaneousAvgZ, 0.0);
+        assertEquals(a5.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration a6 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        detector.getInstantaneousAvgZAsMeasurement(a6);
+        assertEquals(a5, a6);
+
+        final AccelerationTriad avgTriad1 = detector.getInstantaneousAvgTriad();
+        assertEquals(avgTriad1.getValueX(), instantaneousAvgX, 0.0);
+        assertEquals(avgTriad1.getValueY(), instantaneousAvgY, 0.0);
+        assertEquals(avgTriad1.getValueZ(), instantaneousAvgZ, 0.0);
+        assertEquals(avgTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad avgTriad2 = new AccelerationTriad();
+        detector.getInstantaneousAvgTriad(avgTriad2);
+        assertEquals(avgTriad1, avgTriad2);
+
+        assertEquals(detector.getInstantaneousStdX(), instantaneousStdX, 0.0);
+        final Acceleration a7 = detector.getInstantaneousStdXAsMeasurement();
+        assertEquals(a7.getValue().doubleValue(), instantaneousStdX, 0.0);
+        assertEquals(a7.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration a8 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        detector.getInstantaneousStdXAsMeasurement(a8);
+        assertEquals(a7, a8);
+
+        assertEquals(detector.getInstantaneousStdY(), instantaneousStdY, 0.0);
+        final Acceleration a9 = detector.getInstantaneousStdYAsMeasurement();
+        assertEquals(a9.getValue().doubleValue(), instantaneousStdY, 0.0);
+        assertEquals(a9.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration a10 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        detector.getInstantaneousStdYAsMeasurement(a10);
+        assertEquals(a9, a10);
+
+        assertEquals(detector.getInstantaneousStdZ(), instantaneousStdZ, 0.0);
+        final Acceleration a11 = detector.getInstantaneousStdZAsMeasurement();
+        assertEquals(a11.getValue().doubleValue(), instantaneousStdZ, 0.0);
+        assertEquals(a11.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration a12 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        detector.getInstantaneousStdZAsMeasurement(a12);
+        assertEquals(a11, a12);
+
+        final AccelerationTriad stdTriad1 = detector.getInstantaneousStdTriad();
+        assertTrue(stdTriad1.getNorm() >= detector.getThreshold());
+        assertEquals(stdTriad1.getValueX(), instantaneousStdX, 0.0);
+        assertEquals(stdTriad1.getValueY(), instantaneousStdY, 0.0);
+        assertEquals(stdTriad1.getValueZ(), instantaneousStdZ, 0.0);
+        assertEquals(stdTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad stdTriad2 = new AccelerationTriad();
+        detector.getInstantaneousStdTriad(stdTriad2);
+        assertEquals(stdTriad1, stdTriad2);
     }
 
     @Override

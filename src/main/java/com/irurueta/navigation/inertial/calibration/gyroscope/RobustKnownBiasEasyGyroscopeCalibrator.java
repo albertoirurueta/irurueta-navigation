@@ -2720,17 +2720,17 @@ public abstract class RobustKnownBiasEasyGyroscopeCalibrator {
     public int getMinimumRequiredSequences() {
         if (mCommonAxisUsed) {
             if (mEstimateGDependentCrossBiases) {
-                return EasyGyroscopeCalibrator
+                return KnownBiasEasyGyroscopeCalibrator
                         .MINIMUM_SEQUENCES_COMMON_Z_AXIS_AND_CROSS_BIASES;
             } else {
-                return EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_COMMON_Z_AXIS;
+                return KnownBiasEasyGyroscopeCalibrator.MINIMUM_SEQUENCES_COMMON_Z_AXIS;
             }
         } else {
             if (mEstimateGDependentCrossBiases) {
-                return EasyGyroscopeCalibrator
+                return KnownBiasEasyGyroscopeCalibrator
                         .MINIMUM_SEQUENCES_GENERAL_AND_CROSS_BIASES;
             } else {
-                return EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL;
+                return KnownBiasEasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL;
             }
         }
     }

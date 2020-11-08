@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.irurueta.navigation.inertial.calibration;
+package com.irurueta.navigation.inertial.calibration.intervals;
 
 import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.WrongSizeException;
@@ -29,6 +29,8 @@ import com.irurueta.navigation.geodesic.wmm.WMMEarthMagneticFluxDensityEstimator
 import com.irurueta.navigation.inertial.BodyMagneticFluxDensity;
 import com.irurueta.navigation.inertial.NEDMagneticFluxDensity;
 import com.irurueta.navigation.inertial.NEDPosition;
+import com.irurueta.navigation.inertial.calibration.BodyMagneticFluxDensityGenerator;
+import com.irurueta.navigation.inertial.calibration.MagneticFluxDensityTriad;
 import com.irurueta.navigation.inertial.estimators.BodyMagneticFluxDensityEstimator;
 import com.irurueta.statistics.GaussianRandomizer;
 import com.irurueta.statistics.UniformRandomizer;
@@ -72,6 +74,8 @@ public class MagneticFluxDensityTriadStaticIntervalDetectorTest implements
     private static final double MAX_DELTA_ANGLE_DEGREES = 2.0;
 
     private static final double ABSOLUTE_ERROR = 1e-6;
+
+    private static final double SMALL_ABSOLUTE_ERROR = 1e-8;
 
     private static final Calendar START_CALENDAR = Calendar.getInstance();
     private static final Calendar END_CALENDAR = Calendar.getInstance();
@@ -131,7 +135,7 @@ public class MagneticFluxDensityTriadStaticIntervalDetectorTest implements
         assertEquals(b1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(b1.getUnit(), MagneticFluxDensityUnit.TESLA);
         final MagneticFluxDensity b2 = new MagneticFluxDensity(
-                1.0, MagneticFluxDensityUnit.TESLA);
+                1.0, MagneticFluxDensityUnit.NANOTESLA);
         detector.getBaseNoiseLevelAsMeasurement(b2);
         assertEquals(b1, b2);
         assertEquals(detector.getThreshold(), 0.0, 0.0);
@@ -139,11 +143,155 @@ public class MagneticFluxDensityTriadStaticIntervalDetectorTest implements
         assertEquals(b3.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(b3.getUnit(), MagneticFluxDensityUnit.TESLA);
         final MagneticFluxDensity b4 = new MagneticFluxDensity(
-                1.0, MagneticFluxDensityUnit.TESLA);
+                1.0, MagneticFluxDensityUnit.NANOTESLA);
         detector.getThresholdAsMeasurement(b4);
         assertEquals(b3, b4);
         assertFalse(detector.isRunning());
         assertEquals(detector.getProcessedSamples(), 0);
+
+        assertEquals(detector.getAccumulatedAvgX(), 0.0, 0.0);
+        final MagneticFluxDensity b5 = detector.getAccumulatedAvgXAsMeasurement();
+        assertEquals(b5.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(b5.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity b6 = new MagneticFluxDensity(
+                1.0, MagneticFluxDensityUnit.NANOTESLA);
+        detector.getAccumulatedAvgXAsMeasurement(b6);
+        assertEquals(b5, b6);
+
+        assertEquals(detector.getAccumulatedAvgY(), 0.0, 0.0);
+        final MagneticFluxDensity b7 = detector.getAccumulatedAvgYAsMeasurement();
+        assertEquals(b7.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(b7.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity b8 = new MagneticFluxDensity(
+                1.0, MagneticFluxDensityUnit.NANOTESLA);
+        detector.getAccumulatedAvgYAsMeasurement(b8);
+        assertEquals(b7, b8);
+
+        assertEquals(detector.getAccumulatedAvgZ(), 0.0, 0.0);
+        final MagneticFluxDensity b9 = detector.getAccumulatedAvgZAsMeasurement();
+        assertEquals(b9.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(b9.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity b10 = new MagneticFluxDensity(
+                1.0, MagneticFluxDensityUnit.NANOTESLA);
+        detector.getAccumulatedAvgZAsMeasurement(b10);
+        assertEquals(b9, b10);
+
+        final MagneticFluxDensityTriad triad1 = detector.getAccumulatedAvgTriad();
+        assertEquals(triad1.getValueX(), 0.0, 0.0);
+        assertEquals(triad1.getValueY(), 0.0, 0.0);
+        assertEquals(triad1.getValueZ(), 0.0, 0.0);
+        assertEquals(triad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad triad2 = new MagneticFluxDensityTriad();
+        detector.getAccumulatedAvgTriad(triad2);
+        assertEquals(triad1, triad2);
+
+        assertEquals(detector.getAccumulatedStdX(), 0.0, 0.0);
+        final MagneticFluxDensity b11 = detector.getAccumulatedStdXAsMeasurement();
+        assertEquals(b11.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(b11.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity b12 = new MagneticFluxDensity(
+                1.0, MagneticFluxDensityUnit.NANOTESLA);
+        detector.getAccumulatedStdXAsMeasurement(b12);
+        assertEquals(b11, b12);
+
+        assertEquals(detector.getAccumulatedStdY(), 0.0, 0.0);
+        final MagneticFluxDensity b13 = detector.getAccumulatedStdYAsMeasurement();
+        assertEquals(b13.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(b13.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity b14 = new MagneticFluxDensity(
+                1.0, MagneticFluxDensityUnit.NANOTESLA);
+        detector.getAccumulatedStdYAsMeasurement(b14);
+        assertEquals(b13, b14);
+
+        assertEquals(detector.getAccumulatedStdZ(), 0.0, 0.0);
+        final MagneticFluxDensity b15 = detector.getAccumulatedStdZAsMeasurement();
+        assertEquals(b15.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(b15.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity b16 = new MagneticFluxDensity(
+                1.0, MagneticFluxDensityUnit.NANOTESLA);
+        detector.getAccumulatedStdZAsMeasurement(b16);
+        assertEquals(b15, b16);
+
+        final MagneticFluxDensityTriad triad3 = detector.getAccumulatedStdTriad();
+        assertEquals(triad3.getValueX(), 0.0, 0.0);
+        assertEquals(triad3.getValueY(), 0.0, 0.0);
+        assertEquals(triad3.getValueZ(), 0.0, 0.0);
+        assertEquals(triad3.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad triad4 = new MagneticFluxDensityTriad();
+        detector.getAccumulatedStdTriad(triad4);
+        assertEquals(triad3, triad4);
+
+        assertEquals(detector.getInstantaneousAvgX(), 0.0, 0.0);
+        final MagneticFluxDensity b17 = detector.getInstantaneousAvgXAsMeasurement();
+        assertEquals(b17.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(b17.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity b18 = new MagneticFluxDensity(
+                1.0, MagneticFluxDensityUnit.NANOTESLA);
+        detector.getInstantaneousAvgXAsMeasurement(b18);
+        assertEquals(b17, b18);
+
+        assertEquals(detector.getInstantaneousAvgY(), 0.0, 0.0);
+        final MagneticFluxDensity b19 = detector.getInstantaneousAvgYAsMeasurement();
+        assertEquals(b19.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(b19.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity b20 = new MagneticFluxDensity(
+                1.0, MagneticFluxDensityUnit.NANOTESLA);
+        detector.getInstantaneousAvgYAsMeasurement(b20);
+        assertEquals(b19, b20);
+
+        assertEquals(detector.getInstantaneousAvgZ(), 0.0, 0.0);
+        final MagneticFluxDensity b21 = detector.getInstantaneousAvgZAsMeasurement();
+        assertEquals(b21.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(b21.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity b22 = new MagneticFluxDensity(
+                1.0, MagneticFluxDensityUnit.NANOTESLA);
+        detector.getInstantaneousAvgZAsMeasurement(b22);
+        assertEquals(b21, b22);
+
+        final MagneticFluxDensityTriad triad5 = detector.getInstantaneousAvgTriad();
+        assertEquals(triad5.getValueX(), 0.0, 0.0);
+        assertEquals(triad5.getValueY(), 0.0, 0.0);
+        assertEquals(triad5.getValueZ(), 0.0, 0.0);
+        assertEquals(triad5.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad triad6 = new MagneticFluxDensityTriad();
+        detector.getInstantaneousAvgTriad(triad6);
+        assertEquals(triad5, triad6);
+
+        assertEquals(detector.getInstantaneousStdX(), 0.0, 0.0);
+        final MagneticFluxDensity b23 = detector.getInstantaneousStdXAsMeasurement();
+        assertEquals(b23.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(b23.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity b24 = new MagneticFluxDensity(
+                1.0, MagneticFluxDensityUnit.NANOTESLA);
+        detector.getInstantaneousStdXAsMeasurement(b24);
+        assertEquals(b23, b24);
+
+        assertEquals(detector.getInstantaneousStdY(), 0.0, 0.0);
+        final MagneticFluxDensity b25 = detector.getInstantaneousStdYAsMeasurement();
+        assertEquals(b25.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(b25.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity b26 = new MagneticFluxDensity(
+                1.0, MagneticFluxDensityUnit.NANOTESLA);
+        detector.getInstantaneousStdYAsMeasurement(b26);
+        assertEquals(b25, b26);
+
+        assertEquals(detector.getInstantaneousStdZ(), 0.0, 0.0);
+        final MagneticFluxDensity b27 = detector.getInstantaneousStdZAsMeasurement();
+        assertEquals(b27.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(b27.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity b28 = new MagneticFluxDensity(
+                1.0, MagneticFluxDensityUnit.NANOTESLA);
+        detector.getInstantaneousStdZAsMeasurement(b28);
+        assertEquals(b27, b28);
+
+        final MagneticFluxDensityTriad triad7 = detector.getInstantaneousStdTriad();
+        assertEquals(triad7.getValueX(), 0.0, 0.0);
+        assertEquals(triad7.getValueY(), 0.0, 0.0);
+        assertEquals(triad7.getValueZ(), 0.0, 0.0);
+        assertEquals(triad7.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad triad8 = new MagneticFluxDensityTriad();
+        detector.getInstantaneousStdTriad(triad8);
+        assertEquals(triad7, triad8);
     }
 
     @Test
@@ -183,6 +331,150 @@ public class MagneticFluxDensityTriadStaticIntervalDetectorTest implements
         assertEquals(b3, b4);
         assertFalse(detector.isRunning());
         assertEquals(detector.getProcessedSamples(), 0);
+
+        assertEquals(detector.getAccumulatedAvgX(), 0.0, 0.0);
+        final MagneticFluxDensity b5 = detector.getAccumulatedAvgXAsMeasurement();
+        assertEquals(b5.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(b5.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity b6 = new MagneticFluxDensity(
+                1.0, MagneticFluxDensityUnit.NANOTESLA);
+        detector.getAccumulatedAvgXAsMeasurement(b6);
+        assertEquals(b5, b6);
+
+        assertEquals(detector.getAccumulatedAvgY(), 0.0, 0.0);
+        final MagneticFluxDensity b7 = detector.getAccumulatedAvgYAsMeasurement();
+        assertEquals(b7.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(b7.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity b8 = new MagneticFluxDensity(
+                1.0, MagneticFluxDensityUnit.NANOTESLA);
+        detector.getAccumulatedAvgYAsMeasurement(b8);
+        assertEquals(b7, b8);
+
+        assertEquals(detector.getAccumulatedAvgZ(), 0.0, 0.0);
+        final MagneticFluxDensity b9 = detector.getAccumulatedAvgZAsMeasurement();
+        assertEquals(b9.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(b9.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity b10 = new MagneticFluxDensity(
+                1.0, MagneticFluxDensityUnit.NANOTESLA);
+        detector.getAccumulatedAvgZAsMeasurement(b10);
+        assertEquals(b9, b10);
+
+        final MagneticFluxDensityTriad triad1 = detector.getAccumulatedAvgTriad();
+        assertEquals(triad1.getValueX(), 0.0, 0.0);
+        assertEquals(triad1.getValueY(), 0.0, 0.0);
+        assertEquals(triad1.getValueZ(), 0.0, 0.0);
+        assertEquals(triad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad triad2 = new MagneticFluxDensityTriad();
+        detector.getAccumulatedAvgTriad(triad2);
+        assertEquals(triad1, triad2);
+
+        assertEquals(detector.getAccumulatedStdX(), 0.0, 0.0);
+        final MagneticFluxDensity b11 = detector.getAccumulatedStdXAsMeasurement();
+        assertEquals(b11.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(b11.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity b12 = new MagneticFluxDensity(
+                1.0, MagneticFluxDensityUnit.NANOTESLA);
+        detector.getAccumulatedStdXAsMeasurement(b12);
+        assertEquals(b11, b12);
+
+        assertEquals(detector.getAccumulatedStdY(), 0.0, 0.0);
+        final MagneticFluxDensity b13 = detector.getAccumulatedStdYAsMeasurement();
+        assertEquals(b13.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(b13.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity b14 = new MagneticFluxDensity(
+                1.0, MagneticFluxDensityUnit.NANOTESLA);
+        detector.getAccumulatedStdYAsMeasurement(b14);
+        assertEquals(b13, b14);
+
+        assertEquals(detector.getAccumulatedStdZ(), 0.0, 0.0);
+        final MagneticFluxDensity b15 = detector.getAccumulatedStdZAsMeasurement();
+        assertEquals(b15.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(b15.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity b16 = new MagneticFluxDensity(
+                1.0, MagneticFluxDensityUnit.NANOTESLA);
+        detector.getAccumulatedStdZAsMeasurement(b16);
+        assertEquals(b15, b16);
+
+        final MagneticFluxDensityTriad triad3 = detector.getAccumulatedStdTriad();
+        assertEquals(triad3.getValueX(), 0.0, 0.0);
+        assertEquals(triad3.getValueY(), 0.0, 0.0);
+        assertEquals(triad3.getValueZ(), 0.0, 0.0);
+        assertEquals(triad3.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad triad4 = new MagneticFluxDensityTriad();
+        detector.getAccumulatedStdTriad(triad4);
+        assertEquals(triad3, triad4);
+
+        assertEquals(detector.getInstantaneousAvgX(), 0.0, 0.0);
+        final MagneticFluxDensity b17 = detector.getInstantaneousAvgXAsMeasurement();
+        assertEquals(b17.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(b17.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity b18 = new MagneticFluxDensity(
+                1.0, MagneticFluxDensityUnit.NANOTESLA);
+        detector.getInstantaneousAvgXAsMeasurement(b18);
+        assertEquals(b17, b18);
+
+        assertEquals(detector.getInstantaneousAvgY(), 0.0, 0.0);
+        final MagneticFluxDensity b19 = detector.getInstantaneousAvgYAsMeasurement();
+        assertEquals(b19.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(b19.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity b20 = new MagneticFluxDensity(
+                1.0, MagneticFluxDensityUnit.NANOTESLA);
+        detector.getInstantaneousAvgYAsMeasurement(b20);
+        assertEquals(b19, b20);
+
+        assertEquals(detector.getInstantaneousAvgZ(), 0.0, 0.0);
+        final MagneticFluxDensity b21 = detector.getInstantaneousAvgZAsMeasurement();
+        assertEquals(b21.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(b21.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity b22 = new MagneticFluxDensity(
+                1.0, MagneticFluxDensityUnit.NANOTESLA);
+        detector.getInstantaneousAvgZAsMeasurement(b22);
+        assertEquals(b21, b22);
+
+        final MagneticFluxDensityTriad triad5 = detector.getInstantaneousAvgTriad();
+        assertEquals(triad5.getValueX(), 0.0, 0.0);
+        assertEquals(triad5.getValueY(), 0.0, 0.0);
+        assertEquals(triad5.getValueZ(), 0.0, 0.0);
+        assertEquals(triad5.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad triad6 = new MagneticFluxDensityTriad();
+        detector.getInstantaneousAvgTriad(triad6);
+        assertEquals(triad5, triad6);
+
+        assertEquals(detector.getInstantaneousStdX(), 0.0, 0.0);
+        final MagneticFluxDensity b23 = detector.getInstantaneousStdXAsMeasurement();
+        assertEquals(b23.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(b23.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity b24 = new MagneticFluxDensity(
+                1.0, MagneticFluxDensityUnit.NANOTESLA);
+        detector.getInstantaneousStdXAsMeasurement(b24);
+        assertEquals(b23, b24);
+
+        assertEquals(detector.getInstantaneousStdY(), 0.0, 0.0);
+        final MagneticFluxDensity b25 = detector.getInstantaneousStdYAsMeasurement();
+        assertEquals(b25.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(b25.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity b26 = new MagneticFluxDensity(
+                1.0, MagneticFluxDensityUnit.NANOTESLA);
+        detector.getInstantaneousStdYAsMeasurement(b26);
+        assertEquals(b25, b26);
+
+        assertEquals(detector.getInstantaneousStdZ(), 0.0, 0.0);
+        final MagneticFluxDensity b27 = detector.getInstantaneousStdZAsMeasurement();
+        assertEquals(b27.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(b27.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity b28 = new MagneticFluxDensity(
+                1.0, MagneticFluxDensityUnit.NANOTESLA);
+        detector.getInstantaneousStdZAsMeasurement(b28);
+        assertEquals(b27, b28);
+
+        final MagneticFluxDensityTriad triad7 = detector.getInstantaneousStdTriad();
+        assertEquals(triad7.getValueX(), 0.0, 0.0);
+        assertEquals(triad7.getValueY(), 0.0, 0.0);
+        assertEquals(triad7.getValueZ(), 0.0, 0.0);
+        assertEquals(triad7.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad triad8 = new MagneticFluxDensityTriad();
+        detector.getInstantaneousStdTriad(triad8);
+        assertEquals(triad7, triad8);
     }
 
     @Test
@@ -195,14 +487,19 @@ public class MagneticFluxDensityTriadStaticIntervalDetectorTest implements
                 MagneticFluxDensityTriadStaticIntervalDetector.DEFAULT_WINDOW_SIZE);
 
         // set new value
-        detector.setWindowSize(2);
+        detector.setWindowSize(3);
 
         // check
-        assertEquals(detector.getWindowSize(), 2);
+        assertEquals(detector.getWindowSize(), 3);
 
         // Force IllegalArgumentException
         try {
             detector.setWindowSize(1);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            detector.setWindowSize(2);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -386,6 +683,8 @@ public class MagneticFluxDensityTriadStaticIntervalDetectorTest implements
         MagneticFluxDensityTriad trueB = generateTriad(hardIron.getBuffer(), mm, wmmEstimator,
                 null, timestamp, nedPosition, cnb);
 
+        final MagneticFluxDensityTriad lastStaticTriad = new MagneticFluxDensityTriad(trueB);
+
         reset();
         assertEquals(mInitializationStarted, 0);
         assertEquals(mInitializationCompleted, 0);
@@ -449,6 +748,52 @@ public class MagneticFluxDensityTriadStaticIntervalDetectorTest implements
         assertEquals(b1, b2);
         assertEquals(detector.getProcessedSamples(), initialStaticSamples);
 
+        assertEquals(lastStaticTriad.getValueX(),
+                detector.getAccumulatedAvgX(), ABSOLUTE_ERROR);
+        assertEquals(lastStaticTriad.getValueY(),
+                detector.getAccumulatedAvgY(), ABSOLUTE_ERROR);
+        assertEquals(lastStaticTriad.getValueZ(),
+                detector.getAccumulatedAvgZ(), ABSOLUTE_ERROR);
+        assertTrue(lastStaticTriad.getMeasurementX().equals(
+                detector.getAccumulatedAvgXAsMeasurement(), ABSOLUTE_ERROR));
+        assertTrue(lastStaticTriad.getMeasurementY().equals(
+                detector.getAccumulatedAvgYAsMeasurement(), ABSOLUTE_ERROR));
+        assertTrue(lastStaticTriad.getMeasurementZ().equals(
+                detector.getAccumulatedAvgZAsMeasurement(), ABSOLUTE_ERROR));
+        assertTrue(lastStaticTriad.equals(detector.getAccumulatedAvgTriad(),
+                ABSOLUTE_ERROR));
+
+        assertEquals(detector.getAccumulatedStdX(), MAGNETOMETER_NOISE_STD,
+                SMALL_ABSOLUTE_ERROR);
+        assertEquals(detector.getAccumulatedStdY(), MAGNETOMETER_NOISE_STD,
+                SMALL_ABSOLUTE_ERROR);
+        assertEquals(detector.getAccumulatedStdZ(), MAGNETOMETER_NOISE_STD,
+                SMALL_ABSOLUTE_ERROR);
+        final MagneticFluxDensity stdX1 = detector.getAccumulatedStdXAsMeasurement();
+        assertEquals(stdX1.getValue().doubleValue(), MAGNETOMETER_NOISE_STD,
+                SMALL_ABSOLUTE_ERROR);
+        assertEquals(stdX1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity stdX2 = new MagneticFluxDensity(
+                1.0, MagneticFluxDensityUnit.NANOTESLA);
+        detector.getAccumulatedStdXAsMeasurement(stdX2);
+        assertEquals(stdX1, stdX2);
+        final MagneticFluxDensity stdY1 = detector.getAccumulatedStdYAsMeasurement();
+        assertEquals(stdY1.getValue().doubleValue(), MAGNETOMETER_NOISE_STD,
+                SMALL_ABSOLUTE_ERROR);
+        assertEquals(stdY1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity stdY2 = new MagneticFluxDensity(
+                1.0, MagneticFluxDensityUnit.NANOTESLA);
+        detector.getAccumulatedStdYAsMeasurement(stdY2);
+        assertEquals(stdY1, stdY2);
+        final MagneticFluxDensity stdZ1 = detector.getAccumulatedStdZAsMeasurement();
+        assertEquals(stdZ1.getValue().doubleValue(), MAGNETOMETER_NOISE_STD,
+                SMALL_ABSOLUTE_ERROR);
+        assertEquals(stdZ1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity stdZ2 = new MagneticFluxDensity(
+                1.0, MagneticFluxDensityUnit.NANOTESLA);
+        detector.getAccumulatedStdZAsMeasurement(stdZ2);
+        assertEquals(stdZ1, stdZ2);
+
         // keep adding static samples for twice the window size
         int periodLength = 2 * detector.getWindowSize();
         for (int i = 0; i < periodLength; i++) {
@@ -463,8 +808,6 @@ public class MagneticFluxDensityTriadStaticIntervalDetectorTest implements
                 MagneticFluxDensityTriadStaticIntervalDetector.Status.STATIC_INTERVAL);
         assertEquals(detector.getProcessedSamples(),
                 initialStaticSamples + periodLength);
-
-        final MagneticFluxDensityTriad lastStaticTriad = new MagneticFluxDensityTriad(trueB);
 
         // add dynamic samples for twice the window size
         final double deltaX = randomizer.nextDouble(
@@ -552,18 +895,18 @@ public class MagneticFluxDensityTriadStaticIntervalDetectorTest implements
         assertEquals(lastStaticTriad.getUnit(),
                 MagneticFluxDensityUnit.TESLA);
         assertEquals(lastStaticTriad.getValueX(),
-                detector.getAvgX(), ABSOLUTE_ERROR);
+                detector.getAccumulatedAvgX(), ABSOLUTE_ERROR);
         assertEquals(lastStaticTriad.getValueY(),
-                detector.getAvgY(), ABSOLUTE_ERROR);
+                detector.getAccumulatedAvgY(), ABSOLUTE_ERROR);
         assertEquals(lastStaticTriad.getValueZ(),
-                detector.getAvgZ(), ABSOLUTE_ERROR);
+                detector.getAccumulatedAvgZ(), ABSOLUTE_ERROR);
         assertTrue(lastStaticTriad.getMeasurementX().equals(
-                detector.getAvgXAsMeasurement(), ABSOLUTE_ERROR));
+                detector.getAccumulatedAvgXAsMeasurement(), ABSOLUTE_ERROR));
         assertTrue(lastStaticTriad.getMeasurementY().equals(
-                detector.getAvgYAsMeasurement(), ABSOLUTE_ERROR));
+                detector.getAccumulatedAvgYAsMeasurement(), ABSOLUTE_ERROR));
         assertTrue(lastStaticTriad.getMeasurementZ().equals(
-                detector.getAvgZAsMeasurement(), ABSOLUTE_ERROR));
-        assertTrue(lastStaticTriad.equals(detector.getAvgTriad(),
+                detector.getAccumulatedAvgZAsMeasurement(), ABSOLUTE_ERROR));
+        assertTrue(lastStaticTriad.equals(detector.getAccumulatedAvgTriad(),
                 ABSOLUTE_ERROR));
 
         // keep adding static samples for twice the window size to last
@@ -635,6 +978,8 @@ public class MagneticFluxDensityTriadStaticIntervalDetectorTest implements
         // timestamp, position, and orientation
         MagneticFluxDensityTriad trueB = generateTriad(hardIron.getBuffer(), mm, wmmEstimator,
                 null, timestamp, nedPosition, cnb);
+
+        final MagneticFluxDensityTriad lastStaticTriad = new MagneticFluxDensityTriad(trueB);
 
         reset();
         assertEquals(mInitializationStarted, 0);
@@ -708,6 +1053,52 @@ public class MagneticFluxDensityTriadStaticIntervalDetectorTest implements
         assertEquals(b1, b2);
         assertEquals(detector.getProcessedSamples(), initialStaticSamples);
 
+        assertEquals(lastStaticTriad.getValueX(),
+                detector.getAccumulatedAvgX(), ABSOLUTE_ERROR);
+        assertEquals(lastStaticTriad.getValueY(),
+                detector.getAccumulatedAvgY(), ABSOLUTE_ERROR);
+        assertEquals(lastStaticTriad.getValueZ(),
+                detector.getAccumulatedAvgZ(), ABSOLUTE_ERROR);
+        assertTrue(lastStaticTriad.getMeasurementX().equals(
+                detector.getAccumulatedAvgXAsMeasurement(), ABSOLUTE_ERROR));
+        assertTrue(lastStaticTriad.getMeasurementY().equals(
+                detector.getAccumulatedAvgYAsMeasurement(), ABSOLUTE_ERROR));
+        assertTrue(lastStaticTriad.getMeasurementZ().equals(
+                detector.getAccumulatedAvgZAsMeasurement(), ABSOLUTE_ERROR));
+        assertTrue(lastStaticTriad.equals(detector.getAccumulatedAvgTriad(),
+                ABSOLUTE_ERROR));
+
+        assertEquals(detector.getAccumulatedStdX(), MAGNETOMETER_NOISE_STD,
+                SMALL_ABSOLUTE_ERROR);
+        assertEquals(detector.getAccumulatedStdY(), MAGNETOMETER_NOISE_STD,
+                SMALL_ABSOLUTE_ERROR);
+        assertEquals(detector.getAccumulatedStdZ(), MAGNETOMETER_NOISE_STD,
+                SMALL_ABSOLUTE_ERROR);
+        final MagneticFluxDensity stdX1 = detector.getAccumulatedStdXAsMeasurement();
+        assertEquals(stdX1.getValue().doubleValue(), MAGNETOMETER_NOISE_STD,
+                SMALL_ABSOLUTE_ERROR);
+        assertEquals(stdX1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity stdX2 = new MagneticFluxDensity(
+                1.0, MagneticFluxDensityUnit.NANOTESLA);
+        detector.getAccumulatedStdXAsMeasurement(stdX2);
+        assertEquals(stdX1, stdX2);
+        final MagneticFluxDensity stdY1 = detector.getAccumulatedStdYAsMeasurement();
+        assertEquals(stdY1.getValue().doubleValue(), MAGNETOMETER_NOISE_STD,
+                SMALL_ABSOLUTE_ERROR);
+        assertEquals(stdY1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity stdY2 = new MagneticFluxDensity(
+                1.0, MagneticFluxDensityUnit.NANOTESLA);
+        detector.getAccumulatedStdYAsMeasurement(stdY2);
+        assertEquals(stdY1, stdY2);
+        final MagneticFluxDensity stdZ1 = detector.getAccumulatedStdZAsMeasurement();
+        assertEquals(stdZ1.getValue().doubleValue(), MAGNETOMETER_NOISE_STD,
+                SMALL_ABSOLUTE_ERROR);
+        assertEquals(stdZ1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity stdZ2 = new MagneticFluxDensity(
+                1.0, MagneticFluxDensityUnit.NANOTESLA);
+        detector.getAccumulatedStdZAsMeasurement(stdZ2);
+        assertEquals(stdZ1, stdZ2);
+
         // keep adding static samples for twice the window size
         int periodLength = 2 * detector.getWindowSize();
         for (int i = 0; i < periodLength; i++) {
@@ -725,8 +1116,6 @@ public class MagneticFluxDensityTriadStaticIntervalDetectorTest implements
                 MagneticFluxDensityTriadStaticIntervalDetector.Status.STATIC_INTERVAL);
         assertEquals(detector.getProcessedSamples(),
                 initialStaticSamples + periodLength);
-
-        final MagneticFluxDensityTriad lastStaticTriad = new MagneticFluxDensityTriad(trueB);
 
         // add dynamic samples for twice the window size
         final double deltaX = randomizer.nextDouble(
@@ -817,18 +1206,18 @@ public class MagneticFluxDensityTriadStaticIntervalDetectorTest implements
         assertEquals(lastStaticTriad.getUnit(),
                 MagneticFluxDensityUnit.TESLA);
         assertEquals(lastStaticTriad.getValueX(),
-                detector.getAvgX(), ABSOLUTE_ERROR);
+                detector.getAccumulatedAvgX(), ABSOLUTE_ERROR);
         assertEquals(lastStaticTriad.getValueY(),
-                detector.getAvgY(), ABSOLUTE_ERROR);
+                detector.getAccumulatedAvgY(), ABSOLUTE_ERROR);
         assertEquals(lastStaticTriad.getValueZ(),
-                detector.getAvgZ(), ABSOLUTE_ERROR);
+                detector.getAccumulatedAvgZ(), ABSOLUTE_ERROR);
         assertTrue(lastStaticTriad.getMeasurementX().equals(
-                detector.getAvgXAsMeasurement(), ABSOLUTE_ERROR));
+                detector.getAccumulatedAvgXAsMeasurement(), ABSOLUTE_ERROR));
         assertTrue(lastStaticTriad.getMeasurementY().equals(
-                detector.getAvgYAsMeasurement(), ABSOLUTE_ERROR));
+                detector.getAccumulatedAvgYAsMeasurement(), ABSOLUTE_ERROR));
         assertTrue(lastStaticTriad.getMeasurementZ().equals(
-                detector.getAvgZAsMeasurement(), ABSOLUTE_ERROR));
-        assertTrue(lastStaticTriad.equals(detector.getAvgTriad(),
+                detector.getAccumulatedAvgZAsMeasurement(), ABSOLUTE_ERROR));
+        assertTrue(lastStaticTriad.equals(detector.getAccumulatedAvgTriad(),
                 ABSOLUTE_ERROR));
 
         // keep adding static samples for twice the window size to last
@@ -904,6 +1293,8 @@ public class MagneticFluxDensityTriadStaticIntervalDetectorTest implements
         MagneticFluxDensityTriad trueB = generateTriad(hardIron.getBuffer(), mm, wmmEstimator,
                 null, timestamp, nedPosition, cnb);
 
+        final MagneticFluxDensityTriad lastStaticTriad = new MagneticFluxDensityTriad(trueB);
+
         reset();
         assertEquals(mInitializationStarted, 0);
         assertEquals(mInitializationCompleted, 0);
@@ -968,6 +1359,52 @@ public class MagneticFluxDensityTriadStaticIntervalDetectorTest implements
         assertEquals(b1, b2);
         assertEquals(detector.getProcessedSamples(), initialStaticSamples);
 
+        assertEquals(lastStaticTriad.getValueX(),
+                detector.getAccumulatedAvgX(), ABSOLUTE_ERROR);
+        assertEquals(lastStaticTriad.getValueY(),
+                detector.getAccumulatedAvgY(), ABSOLUTE_ERROR);
+        assertEquals(lastStaticTriad.getValueZ(),
+                detector.getAccumulatedAvgZ(), ABSOLUTE_ERROR);
+        assertTrue(lastStaticTriad.getMeasurementX().equals(
+                detector.getAccumulatedAvgXAsMeasurement(), ABSOLUTE_ERROR));
+        assertTrue(lastStaticTriad.getMeasurementY().equals(
+                detector.getAccumulatedAvgYAsMeasurement(), ABSOLUTE_ERROR));
+        assertTrue(lastStaticTriad.getMeasurementZ().equals(
+                detector.getAccumulatedAvgZAsMeasurement(), ABSOLUTE_ERROR));
+        assertTrue(lastStaticTriad.equals(detector.getAccumulatedAvgTriad(),
+                ABSOLUTE_ERROR));
+
+        assertEquals(detector.getAccumulatedStdX(), MAGNETOMETER_NOISE_STD,
+                SMALL_ABSOLUTE_ERROR);
+        assertEquals(detector.getAccumulatedStdY(), MAGNETOMETER_NOISE_STD,
+                SMALL_ABSOLUTE_ERROR);
+        assertEquals(detector.getAccumulatedStdZ(), MAGNETOMETER_NOISE_STD,
+                SMALL_ABSOLUTE_ERROR);
+        final MagneticFluxDensity stdX1 = detector.getAccumulatedStdXAsMeasurement();
+        assertEquals(stdX1.getValue().doubleValue(), MAGNETOMETER_NOISE_STD,
+                SMALL_ABSOLUTE_ERROR);
+        assertEquals(stdX1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity stdX2 = new MagneticFluxDensity(
+                1.0, MagneticFluxDensityUnit.NANOTESLA);
+        detector.getAccumulatedStdXAsMeasurement(stdX2);
+        assertEquals(stdX1, stdX2);
+        final MagneticFluxDensity stdY1 = detector.getAccumulatedStdYAsMeasurement();
+        assertEquals(stdY1.getValue().doubleValue(), MAGNETOMETER_NOISE_STD,
+                SMALL_ABSOLUTE_ERROR);
+        assertEquals(stdY1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity stdY2 = new MagneticFluxDensity(
+                1.0, MagneticFluxDensityUnit.NANOTESLA);
+        detector.getAccumulatedStdYAsMeasurement(stdY2);
+        assertEquals(stdY1, stdY2);
+        final MagneticFluxDensity stdZ1 = detector.getAccumulatedStdZAsMeasurement();
+        assertEquals(stdZ1.getValue().doubleValue(), MAGNETOMETER_NOISE_STD,
+                SMALL_ABSOLUTE_ERROR);
+        assertEquals(stdZ1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity stdZ2 = new MagneticFluxDensity(
+                1.0, MagneticFluxDensityUnit.NANOTESLA);
+        detector.getAccumulatedStdZAsMeasurement(stdZ2);
+        assertEquals(stdZ1, stdZ2);
+
         // keep adding static samples for twice the window size
         int periodLength = 2 * detector.getWindowSize();
         for (int i = 0; i < periodLength; i++) {
@@ -983,8 +1420,6 @@ public class MagneticFluxDensityTriadStaticIntervalDetectorTest implements
                 MagneticFluxDensityTriadStaticIntervalDetector.Status.STATIC_INTERVAL);
         assertEquals(detector.getProcessedSamples(),
                 initialStaticSamples + periodLength);
-
-        final MagneticFluxDensityTriad lastStaticTriad = new MagneticFluxDensityTriad(trueB);
 
         // add dynamic samples for twice the window size
         final double deltaX = randomizer.nextDouble(
@@ -1073,18 +1508,18 @@ public class MagneticFluxDensityTriadStaticIntervalDetectorTest implements
         assertEquals(lastStaticTriad.getUnit(),
                 MagneticFluxDensityUnit.TESLA);
         assertEquals(lastStaticTriad.getValueX(),
-                detector.getAvgX(), ABSOLUTE_ERROR);
+                detector.getAccumulatedAvgX(), ABSOLUTE_ERROR);
         assertEquals(lastStaticTriad.getValueY(),
-                detector.getAvgY(), ABSOLUTE_ERROR);
+                detector.getAccumulatedAvgY(), ABSOLUTE_ERROR);
         assertEquals(lastStaticTriad.getValueZ(),
-                detector.getAvgZ(), ABSOLUTE_ERROR);
+                detector.getAccumulatedAvgZ(), ABSOLUTE_ERROR);
         assertTrue(lastStaticTriad.getMeasurementX().equals(
-                detector.getAvgXAsMeasurement(), ABSOLUTE_ERROR));
+                detector.getAccumulatedAvgXAsMeasurement(), ABSOLUTE_ERROR));
         assertTrue(lastStaticTriad.getMeasurementY().equals(
-                detector.getAvgYAsMeasurement(), ABSOLUTE_ERROR));
+                detector.getAccumulatedAvgYAsMeasurement(), ABSOLUTE_ERROR));
         assertTrue(lastStaticTriad.getMeasurementZ().equals(
-                detector.getAvgZAsMeasurement(), ABSOLUTE_ERROR));
-        assertTrue(lastStaticTriad.equals(detector.getAvgTriad(),
+                detector.getAccumulatedAvgZAsMeasurement(), ABSOLUTE_ERROR));
+        assertTrue(lastStaticTriad.equals(detector.getAccumulatedAvgTriad(),
                 ABSOLUTE_ERROR));
 
         // keep adding static samples for twice the window size to last
@@ -1375,57 +1810,220 @@ public class MagneticFluxDensityTriadStaticIntervalDetectorTest implements
     }
 
     @Override
-    public void onStaticIntervalDetected(final MagneticFluxDensityTriadStaticIntervalDetector detector) {
+    public void onStaticIntervalDetected(final MagneticFluxDensityTriadStaticIntervalDetector detector,
+                                         final double instantaneousAvgX,
+                                         final double instantaneousAvgY,
+                                         final double instantaneousAvgZ,
+                                         final double instantaneousStdX,
+                                         final double instantaneousStdY,
+                                         final double instantaneousStdZ) {
         mStaticIntervalDetected++;
         checkLocked(detector);
         assertEquals(detector.getStatus(),
                 MagneticFluxDensityTriadStaticIntervalDetector.Status.STATIC_INTERVAL);
+
+        assertEquals(detector.getInstantaneousAvgX(), instantaneousAvgX, 0.0);
+        final MagneticFluxDensity b1 = detector.getInstantaneousAvgXAsMeasurement();
+        assertEquals(b1.getValue().doubleValue(), instantaneousAvgX, 0.0);
+        assertEquals(b1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity b2 = new MagneticFluxDensity(
+                1.0, MagneticFluxDensityUnit.NANOTESLA);
+        detector.getInstantaneousAvgXAsMeasurement(b2);
+        assertEquals(b1, b2);
+
+        assertEquals(detector.getInstantaneousAvgY(), instantaneousAvgY, 0.0);
+        final MagneticFluxDensity b3 = detector.getInstantaneousAvgYAsMeasurement();
+        assertEquals(b3.getValue().doubleValue(), instantaneousAvgY, 0.0);
+        assertEquals(b3.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity b4 = new MagneticFluxDensity(
+                1.0, MagneticFluxDensityUnit.NANOTESLA);
+        detector.getInstantaneousAvgYAsMeasurement(b4);
+        assertEquals(b3, b4);
+
+        assertEquals(detector.getInstantaneousAvgZ(), instantaneousAvgZ, 0.0);
+        final MagneticFluxDensity b5 = detector.getInstantaneousAvgZAsMeasurement();
+        assertEquals(b5.getValue().doubleValue(), instantaneousAvgZ, 0.0);
+        assertEquals(b5.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity b6 = new MagneticFluxDensity(
+                1.0, MagneticFluxDensityUnit.NANOTESLA);
+        detector.getInstantaneousAvgZAsMeasurement(b6);
+        assertEquals(b5, b6);
+
+        final MagneticFluxDensityTriad avgTriad1 = detector.getInstantaneousAvgTriad();
+        assertEquals(avgTriad1.getValueX(), instantaneousAvgX, 0.0);
+        assertEquals(avgTriad1.getValueY(), instantaneousAvgY, 0.0);
+        assertEquals(avgTriad1.getValueZ(), instantaneousAvgZ, 0.0);
+        assertEquals(avgTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad avgTriad2 = new MagneticFluxDensityTriad();
+        detector.getInstantaneousAvgTriad(avgTriad2);
+        assertEquals(avgTriad1, avgTriad2);
+
+        assertEquals(detector.getInstantaneousStdX(), instantaneousStdX, 0.0);
+        final MagneticFluxDensity b7 = detector.getInstantaneousStdXAsMeasurement();
+        assertEquals(b7.getValue().doubleValue(), instantaneousStdX, 0.0);
+        assertEquals(b7.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity b8 = new MagneticFluxDensity(
+                1.0, MagneticFluxDensityUnit.NANOTESLA);
+        detector.getInstantaneousStdXAsMeasurement(b8);
+        assertEquals(b7, b8);
+
+        assertEquals(detector.getInstantaneousStdY(), instantaneousStdY, 0.0);
+        final MagneticFluxDensity b9 = detector.getInstantaneousStdYAsMeasurement();
+        assertEquals(b9.getValue().doubleValue(), instantaneousStdY, 0.0);
+        assertEquals(b9.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity b10 = new MagneticFluxDensity(
+                1.0, MagneticFluxDensityUnit.NANOTESLA);
+        detector.getInstantaneousStdYAsMeasurement(b10);
+        assertEquals(b9, b10);
+
+        assertEquals(detector.getInstantaneousStdZ(), instantaneousStdZ, 0.0);
+        final MagneticFluxDensity b11 = detector.getInstantaneousStdZAsMeasurement();
+        assertEquals(b11.getValue().doubleValue(), instantaneousStdZ, 0.0);
+        assertEquals(b11.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity b12 = new MagneticFluxDensity(
+                1.0, MagneticFluxDensityUnit.NANOTESLA);
+        detector.getInstantaneousStdZAsMeasurement(b12);
+        assertEquals(b11, b12);
+
+        final MagneticFluxDensityTriad stdTriad1 = detector.getInstantaneousStdTriad();
+        assertTrue(stdTriad1.getNorm() < detector.getThreshold());
+        assertEquals(stdTriad1.getValueX(), instantaneousStdX, 0.0);
+        assertEquals(stdTriad1.getValueY(), instantaneousStdY, 0.0);
+        assertEquals(stdTriad1.getValueZ(), instantaneousStdZ, 0.0);
+        assertEquals(stdTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad stdTriad2 = new MagneticFluxDensityTriad();
+        detector.getInstantaneousStdTriad(stdTriad2);
+        assertEquals(stdTriad1, stdTriad2);
     }
 
     @Override
     public void onDynamicIntervalDetected(final MagneticFluxDensityTriadStaticIntervalDetector detector,
-                                          final double avgX, final double avgY, final double avgZ) {
+                                          final double instantaneousAvgX,
+                                          final double instantaneousAvgY,
+                                          final double instantaneousAvgZ,
+                                          final double instantaneousStdX,
+                                          final double instantaneousStdY,
+                                          final double instantaneousStdZ,
+                                          final double accumulatedAvgX,
+                                          final double accumulatedAvgY,
+                                          final double accumulatedAvgZ,
+                                          final double accumulatedStdX,
+                                          final double accumulatedStdY,
+                                          final double accumulatedStdZ) {
         mDynamicIntervalDetected++;
         checkLocked(detector);
         assertEquals(detector.getStatus(),
                 MagneticFluxDensityTriadStaticIntervalDetector.Status.DYNAMIC_INTERVAL);
-        assertEquals(avgX, detector.getAvgX(), 0.0);
-        assertEquals(avgY, detector.getAvgY(), 0.0);
-        assertEquals(avgZ, detector.getAvgZ(), 0.0);
+        assertEquals(accumulatedAvgX, detector.getAccumulatedAvgX(), 0.0);
+        assertEquals(accumulatedAvgY, detector.getAccumulatedAvgY(), 0.0);
+        assertEquals(accumulatedAvgZ, detector.getAccumulatedAvgZ(), 0.0);
 
-        final MagneticFluxDensity bx1 = detector.getAvgXAsMeasurement();
-        assertEquals(bx1.getValue().doubleValue(), avgX, 0.0);
+        final MagneticFluxDensity bx1 = detector.getAccumulatedAvgXAsMeasurement();
+        assertEquals(bx1.getValue().doubleValue(), accumulatedAvgX, 0.0);
         assertEquals(bx1.getUnit(), MagneticFluxDensityUnit.TESLA);
         final MagneticFluxDensity bx2 = new MagneticFluxDensity(
                 1.0, MagneticFluxDensityUnit.TESLA);
-        detector.getAvgXAsMeasurement(bx2);
+        detector.getAccumulatedAvgXAsMeasurement(bx2);
         assertEquals(bx1, bx2);
 
-        final MagneticFluxDensity by1 = detector.getAvgYAsMeasurement();
-        assertEquals(by1.getValue().doubleValue(), avgY, 0.0);
+        final MagneticFluxDensity by1 = detector.getAccumulatedAvgYAsMeasurement();
+        assertEquals(by1.getValue().doubleValue(), accumulatedAvgY, 0.0);
         assertEquals(by1.getUnit(), MagneticFluxDensityUnit.TESLA);
         final MagneticFluxDensity by2 = new MagneticFluxDensity(
                 1.0, MagneticFluxDensityUnit.TESLA);
-        detector.getAvgYAsMeasurement(by2);
+        detector.getAccumulatedAvgYAsMeasurement(by2);
         assertEquals(by1, by2);
 
-        final MagneticFluxDensity bz1 = detector.getAvgZAsMeasurement();
-        assertEquals(bz1.getValue().doubleValue(), avgZ, 0.0);
+        final MagneticFluxDensity bz1 = detector.getAccumulatedAvgZAsMeasurement();
+        assertEquals(bz1.getValue().doubleValue(), accumulatedAvgZ, 0.0);
         assertEquals(bz1.getUnit(), MagneticFluxDensityUnit.TESLA);
         final MagneticFluxDensity bz2 = new MagneticFluxDensity(
                 1.0, MagneticFluxDensityUnit.TESLA);
-        detector.getAvgZAsMeasurement(bz2);
+        detector.getAccumulatedAvgZAsMeasurement(bz2);
         assertEquals(bz1, bz2);
 
-        final MagneticFluxDensityTriad triad1 = detector.getAvgTriad();
-        assertEquals(triad1.getValueX(), avgX, 0.0);
-        assertEquals(triad1.getValueY(), avgY, 0.0);
-        assertEquals(triad1.getValueZ(), avgZ, 0.0);
+        final MagneticFluxDensityTriad triad1 = detector.getAccumulatedAvgTriad();
+        assertEquals(triad1.getValueX(), accumulatedAvgX, 0.0);
+        assertEquals(triad1.getValueY(), accumulatedAvgY, 0.0);
+        assertEquals(triad1.getValueZ(), accumulatedAvgZ, 0.0);
         assertEquals(triad1.getUnit(), MagneticFluxDensityUnit.TESLA);
 
         final MagneticFluxDensityTriad triad2 = new MagneticFluxDensityTriad();
-        detector.getAvgTriad(triad2);
+        detector.getAccumulatedAvgTriad(triad2);
         assertEquals(triad1, triad2);
+
+        assertEquals(detector.getInstantaneousAvgX(), instantaneousAvgX, 0.0);
+        final MagneticFluxDensity b1 = detector.getInstantaneousAvgXAsMeasurement();
+        assertEquals(b1.getValue().doubleValue(), instantaneousAvgX, 0.0);
+        assertEquals(b1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity b2 = new MagneticFluxDensity(
+                1.0, MagneticFluxDensityUnit.NANOTESLA);
+        detector.getInstantaneousAvgXAsMeasurement(b2);
+        assertEquals(b1, b2);
+
+        assertEquals(detector.getInstantaneousAvgY(), instantaneousAvgY, 0.0);
+        final MagneticFluxDensity b3 = detector.getInstantaneousAvgYAsMeasurement();
+        assertEquals(b3.getValue().doubleValue(), instantaneousAvgY, 0.0);
+        assertEquals(b3.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity b4 = new MagneticFluxDensity(
+                1.0, MagneticFluxDensityUnit.NANOTESLA);
+        detector.getInstantaneousAvgYAsMeasurement(b4);
+        assertEquals(b3, b4);
+
+        assertEquals(detector.getInstantaneousAvgZ(), instantaneousAvgZ, 0.0);
+        final MagneticFluxDensity b5 = detector.getInstantaneousAvgZAsMeasurement();
+        assertEquals(b5.getValue().doubleValue(), instantaneousAvgZ, 0.0);
+        assertEquals(b5.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity b6 = new MagneticFluxDensity(
+                1.0, MagneticFluxDensityUnit.NANOTESLA);
+        detector.getInstantaneousAvgZAsMeasurement(b6);
+        assertEquals(b5, b6);
+
+        final MagneticFluxDensityTriad avgTriad1 = detector.getInstantaneousAvgTriad();
+        assertEquals(avgTriad1.getValueX(), instantaneousAvgX, 0.0);
+        assertEquals(avgTriad1.getValueY(), instantaneousAvgY, 0.0);
+        assertEquals(avgTriad1.getValueZ(), instantaneousAvgZ, 0.0);
+        assertEquals(avgTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad avgTriad2 = new MagneticFluxDensityTriad();
+        detector.getInstantaneousAvgTriad(avgTriad2);
+        assertEquals(avgTriad1, avgTriad2);
+
+        assertEquals(detector.getInstantaneousStdX(), instantaneousStdX, 0.0);
+        final MagneticFluxDensity b7 = detector.getInstantaneousStdXAsMeasurement();
+        assertEquals(b7.getValue().doubleValue(), instantaneousStdX, 0.0);
+        assertEquals(b7.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity b8 = new MagneticFluxDensity(
+                1.0, MagneticFluxDensityUnit.NANOTESLA);
+        detector.getInstantaneousStdXAsMeasurement(b8);
+        assertEquals(b7, b8);
+
+        assertEquals(detector.getInstantaneousStdY(), instantaneousStdY, 0.0);
+        final MagneticFluxDensity b9 = detector.getInstantaneousStdYAsMeasurement();
+        assertEquals(b9.getValue().doubleValue(), instantaneousStdY, 0.0);
+        assertEquals(b9.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity b10 = new MagneticFluxDensity(
+                1.0, MagneticFluxDensityUnit.NANOTESLA);
+        detector.getInstantaneousStdYAsMeasurement(b10);
+        assertEquals(b9, b10);
+
+        assertEquals(detector.getInstantaneousStdZ(), instantaneousStdZ, 0.0);
+        final MagneticFluxDensity b11 = detector.getInstantaneousStdZAsMeasurement();
+        assertEquals(b11.getValue().doubleValue(), instantaneousStdZ, 0.0);
+        assertEquals(b11.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity b12 = new MagneticFluxDensity(
+                1.0, MagneticFluxDensityUnit.NANOTESLA);
+        detector.getInstantaneousStdZAsMeasurement(b12);
+        assertEquals(b11, b12);
+
+        final MagneticFluxDensityTriad stdTriad1 = detector.getInstantaneousStdTriad();
+        assertTrue(stdTriad1.getNorm() >= detector.getThreshold());
+        assertEquals(stdTriad1.getValueX(), instantaneousStdX, 0.0);
+        assertEquals(stdTriad1.getValueY(), instantaneousStdY, 0.0);
+        assertEquals(stdTriad1.getValueZ(), instantaneousStdZ, 0.0);
+        assertEquals(stdTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad stdTriad2 = new MagneticFluxDensityTriad();
+        detector.getInstantaneousStdTriad(stdTriad2);
+        assertEquals(stdTriad1, stdTriad2);
     }
 
     @Override
