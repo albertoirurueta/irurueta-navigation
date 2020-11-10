@@ -33,6 +33,11 @@ import java.util.List;
  * Generates measurements for the calibration of gyroscopes by alternating
  * static and dynamic intervals where device is kept static or moved.
  * Generated measurements must be used with easy gyroscope calibrators.
+ * Notice that accuracy of the gyroscope calibration is very sensitive to the
+ * accuracy of detected dynamic intervals respect the average specific forces
+ * during static intervals.
+ * In order to increase the accuracy, calibration should be repeated trying different
+ * threshold factors {@link #getThresholdFactor()}.
  * Such calibrators are the following ones:
  * - {@link com.irurueta.navigation.inertial.calibration.gyroscope.EasyGyroscopeCalibrator}
  * - {@link com.irurueta.navigation.inertial.calibration.gyroscope.KnownBiasEasyGyroscopeCalibrator}

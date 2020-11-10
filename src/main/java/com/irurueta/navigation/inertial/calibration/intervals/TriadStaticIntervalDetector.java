@@ -322,7 +322,8 @@ public abstract class TriadStaticIntervalDetector<U extends Enum<?>, M extends M
     /**
      * Sets length of number of samples to keep within the window being processed
      * to determine instantaneous accelerometer noise level.
-     * Window size must always be larger than allowed minimum value, which is 2.
+     * Window size must always be larger than allowed minimum value, which is 2 and
+     * must have and odd value.
      *
      * @param windowSize length of number of samples to keep within the window.
      * @throws LockedException          if detector is busy processing a previous sample.

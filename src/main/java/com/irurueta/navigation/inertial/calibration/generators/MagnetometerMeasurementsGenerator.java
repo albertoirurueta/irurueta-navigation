@@ -37,10 +37,10 @@ import com.irurueta.navigation.inertial.calibration.noise.AccumulatedMagneticFlu
  * - {@link com.irurueta.navigation.inertial.calibration.magnetometer.RobustKnownHardIronPositionAndInstantMagnetometerCalibrator}
  * and all its implementations.
  */
-public class MagnetometerMeasurementGenerator extends
+public class MagnetometerMeasurementsGenerator extends
         MeasurementsGenerator<StandardDeviationBodyMagneticFluxDensity,
-                MagnetometerMeasurementGenerator,
-                MagnetometerMeasurementGeneratorListener, BodyKinematicsAndMagneticFluxDensity> {
+                MagnetometerMeasurementsGenerator,
+                MagnetometerMeasurementsGeneratorListener, BodyKinematicsAndMagneticFluxDensity> {
 
     /**
      * Accumulated noise estimator for magnetic flux density measurements.
@@ -67,7 +67,7 @@ public class MagnetometerMeasurementGenerator extends
     private double mAvgBz;
 
     /**
-     * Contains standard deviatoin of magnetic flux density during initialization (i.e. base noise level)
+     * Contains standard deviation of magnetic flux density during initialization (i.e. base noise level)
      * expressed in Teslas (T).
      */
     private double mStdBNorm;
@@ -75,8 +75,18 @@ public class MagnetometerMeasurementGenerator extends
     /**
      * Constructor.
      */
-    public MagnetometerMeasurementGenerator() {
+    public MagnetometerMeasurementsGenerator() {
         super();
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param listener listener to handle events raised by this generator.
+     */
+    public MagnetometerMeasurementsGenerator(
+            final MagnetometerMeasurementsGeneratorListener listener) {
+        super(listener);
     }
 
     /**
@@ -85,10 +95,24 @@ public class MagnetometerMeasurementGenerator extends
      * @param staticIntervalDetector a static interval detector for accelerometer samples.
      * @throws LockedException if provided detector is busy.
      */
-    protected MagnetometerMeasurementGenerator(
+    protected MagnetometerMeasurementsGenerator(
             final AccelerationTriadStaticIntervalDetector staticIntervalDetector)
             throws LockedException {
         super(staticIntervalDetector);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param staticIntervalDetector a static interval detector for accelerometer samples.
+     * @param listener               listener to handle events raised by this generator.
+     * @throws LockedException if provided detector is busy.
+     */
+    protected MagnetometerMeasurementsGenerator(
+            final AccelerationTriadStaticIntervalDetector staticIntervalDetector,
+            final MagnetometerMeasurementsGeneratorListener listener)
+            throws LockedException {
+        super(staticIntervalDetector, listener);
     }
 
     /**

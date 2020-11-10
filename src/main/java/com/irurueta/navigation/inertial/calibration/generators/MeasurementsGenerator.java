@@ -22,6 +22,7 @@ import com.irurueta.navigation.inertial.calibration.intervals.AccelerationTriadS
 import com.irurueta.navigation.inertial.calibration.intervals.AccelerationTriadStaticIntervalDetectorListener;
 import com.irurueta.navigation.inertial.calibration.intervals.TriadStaticIntervalDetector;
 import com.irurueta.navigation.inertial.calibration.noise.WindowedTriadNoiseEstimator;
+import com.irurueta.units.Acceleration;
 
 /**
  * Base class to generate measurements for the calibration of accelerometers, gyroscopes or
@@ -243,6 +244,220 @@ public abstract class MeasurementsGenerator<T, G extends MeasurementsGenerator<T
     }
 
     /**
+     * Gets length of number of samples to keep within the window being processed
+     * to determine instantaneous accelerometer noise level.
+     *
+     * @return length of number of samples to keep within the window.
+     */
+    public int getWindowSize() {
+        return mStaticIntervalDetector.getWindowSize();
+    }
+
+    /**
+     * Sets length of number of samples to keep within the window being processed
+     * to determine instantaneous accelerometer noise level.
+     * Window size must always be larger than allowed minimum value, which is 2 and
+     * must have an odd value.
+     *
+     * @param windowSize length of number of samples to keep within the window.
+     * @throws LockedException          if detector is busy processing a previous sample.
+     * @throws IllegalArgumentException if provided value is not valid.
+     */
+    public void setWindowSize(final int windowSize) throws LockedException {
+        if (mRunning) {
+            throw new LockedException();
+        }
+
+        mStaticIntervalDetector.setWindowSize(windowSize);
+    }
+
+    /**
+     * Gets number of samples to be processed initially while keeping the sensor static in order
+     * to find the base noise level when device is static.
+     *
+     * @return number of samples to be processed initially.
+     */
+    public int getInitialStaticSamples() {
+        return mStaticIntervalDetector.getInitialStaticSamples();
+    }
+
+    /**
+     * Sets number of samples to be processed initially while keeping the sensor static in order
+     * to find the base noise level when device is static.
+     *
+     * @param initialStaticSamples number of samples to be processed initially.
+     * @throws LockedException          if detector is busy.
+     * @throws IllegalArgumentException if provided value is less than
+     *                                  {@link TriadStaticIntervalDetector#MINIMUM_INITIAL_STATIC_SAMPLES}
+     */
+    public void setInitialStaticSamples(final int initialStaticSamples)
+            throws LockedException {
+        if (mRunning) {
+            throw new LockedException();
+        }
+
+        mStaticIntervalDetector.setInitialStaticSamples(initialStaticSamples);
+    }
+
+    /**
+     * Gets factor to be applied to detected base noise level in order to
+     * determine threshold for static/dynamic period changes. This factor is
+     * unit-less.
+     *
+     * @return factor to be applied to detected base noise level.
+     */
+    public double getThresholdFactor() {
+        return mStaticIntervalDetector.getThresholdFactor();
+    }
+
+    /**
+     * Sets factor to be applied to detected base noise level in order to
+     * determine threshold for static/dynamic period changes. This factor is
+     * unit-less.
+     *
+     * @param thresholdFactor factor to be applied to detected base noise level.
+     * @throws LockedException          if detector is busy.
+     * @throws IllegalArgumentException if provided value is zero or negative.
+     */
+    public void setThresholdFactor(final double thresholdFactor)
+            throws LockedException {
+        if (mRunning) {
+            throw new LockedException();
+        }
+
+        mStaticIntervalDetector.setThresholdFactor(thresholdFactor);
+    }
+
+    /**
+     * Gets factor to determine that a sudden movement has occurred during
+     * initialization if instantaneous noise level exceeds accumulated noise
+     * level by this factor amount.
+     * This factor is unit-less.
+     *
+     * @return factor to determine that a sudden movement has occurred.
+     */
+    public double getInstantaneousNoiseLevelFactor() {
+        return mStaticIntervalDetector.getInstantaneousNoiseLevelFactor();
+    }
+
+    /**
+     * Sets factor to determine that a sudden movement has occurred during
+     * initialization if instantaneous noise level exceeds accumulated noise
+     * level by this factor amount.
+     * This factor is unit-less.
+     *
+     * @param instantaneousNoiseLevelFactor factor to determine that a sudden
+     *                                      movement has occurred during
+     *                                      initialization.
+     * @throws LockedException          if detector is busy.
+     * @throws IllegalArgumentException if provided value is zero or negative.
+     */
+    public void setInstantaneousNoiseLevelFactor(
+            final double instantaneousNoiseLevelFactor) throws LockedException {
+        if (mRunning) {
+            throw new LockedException();
+        }
+
+        mStaticIntervalDetector.setInstantaneousNoiseLevelFactor(
+                instantaneousNoiseLevelFactor);
+    }
+
+    /**
+     * Gets overall absolute threshold to determine whether there has been
+     * excessive motion during the whole initialization phase.
+     * Failure will be detected if estimated base noise level exceeds this
+     * threshold when initialization completes.
+     * This threshold is expressed in meters per squared second (m/s^2).
+     *
+     * @return overall absolute threshold to determine whether there has
+     * been excessive motion.
+     */
+    public double getBaseNoiseLevelAbsoluteThreshold() {
+        return mStaticIntervalDetector.getBaseNoiseLevelAbsoluteThreshold();
+    }
+
+    /**
+     * Sets overall absolute threshold to determine whether there has been
+     * excessive motion during the whole initialization phase.
+     * Failure will be detected if estimated base noise level exceeds this
+     * threshold when initialization completes.
+     * This threshold is expressed in meters per squared second (m/s^2).
+     *
+     * @param baseNoiseLevelAbsoluteThreshold overall absolute threshold to
+     *                                        determine whether there has been
+     *                                        excessive motion.
+     * @throws LockedException          if detector is busy.
+     * @throws IllegalArgumentException if provided value is zero or negative.
+     */
+    public void setBaseNoiseLevelAbsoluteThreshold(
+            final double baseNoiseLevelAbsoluteThreshold) throws LockedException {
+        if (mRunning) {
+            throw new LockedException();
+        }
+
+        mStaticIntervalDetector.setBaseNoiseLevelAbsoluteThreshold(
+                baseNoiseLevelAbsoluteThreshold);
+    }
+
+    /**
+     * Gets overall absolute threshold to determine whether there has been
+     * excessive motion during the whole initialization phase.
+     * Failure will be detected if estimated base noise level exceeds this
+     * threshold when initialization completes.
+     *
+     * @return overall absolute threshold to determine whether there has been
+     * excessive motion.
+     */
+    public Acceleration getBaseNoiseLevelAbsoluteThresholdAsMeasurement() {
+        return mStaticIntervalDetector.getBaseNoiseLevelAbsoluteThresholdAsMeasurement();
+    }
+
+    /**
+     * Gets overall absolute threshold to determine whether there has been
+     * excessive motion during the whole initialization phase.
+     * Failure will be detected if estimated base noise level exceeds this
+     * threshold when initialization completes.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getBaseNoiseLevelAbsoluteThresholdAsMeasurement(
+            final Acceleration result) {
+        mStaticIntervalDetector.getBaseNoiseLevelAbsoluteThresholdAsMeasurement(
+                result);
+    }
+
+    /**
+     * Sets overall absolute threshold to determine whether there has been
+     * excessive motion during the whole initialization phase.
+     * Failure will be detected if estimated base noise level exceeds this
+     * threshold when initialization completes.
+     *
+     * @param baseNoiseLevelAbsoluteThreshold overall absolute threshold to
+     *                                        determine whether there has been
+     *                                        excessive motion.
+     * @throws LockedException          if detector is busy.
+     * @throws IllegalArgumentException if provided value is zero or negative.
+     */
+    public void setBaseNoiseLevelAbsoluteThreshold(
+            final Acceleration baseNoiseLevelAbsoluteThreshold) throws LockedException {
+        if (mRunning) {
+            throw new LockedException();
+        }
+
+        mStaticIntervalDetector.setBaseNoiseLevelAbsoluteThreshold(
+                baseNoiseLevelAbsoluteThreshold);
+    }
+
+    /**
+     * Gets internal status of this generator.
+     *
+     * @return internal status of this generator.
+     */
+    public TriadStaticIntervalDetector.Status getStatus() {
+        return mStaticIntervalDetector.getStatus();
+    }
+
+    /**
      * Gets number of samples that have been processed in a static period so far.
      *
      * @return number of samples that have been processed in a static period so far.
@@ -360,24 +575,24 @@ public abstract class MeasurementsGenerator<T, G extends MeasurementsGenerator<T
     /**
      * Handles a static-to-dynamic interval change.
      *
-     * @param accumulatedAvgX   average x-coordinate of measurements during last
-     *                          static period expressed in meters per squared
-     *                          second (m/s^2).
-     * @param accumulatedAvgY   average y-coordinate of specific force during last
-     *                          static period expressed in meters per squared
-     *                          second (m/s^2).
-     * @param accumulatedAvgZ   average z-coordinate of specific force during last
-     *                          static period expressed in meters per squared
-     *                          second (m/s^2).
-     * @param accumulatedStdX   standard deviation of x-coordinate of measurements
-     *                          during last static period expressed in meters per
-     *                          squared second (m/s^2).
-     * @param accumulatedStdY   standard deviation of y-coordinate of measurements
-     *                          during last static period expressed in meters per
-     *                          squared second (m/s^2).
-     * @param accumulatedStdZ   standard deviation of z-coordinate of measurements
-     *                          during last static period expressed in meters per
-     *                          squared second (m/s^2).
+     * @param accumulatedAvgX average x-coordinate of measurements during last
+     *                        static period expressed in meters per squared
+     *                        second (m/s^2).
+     * @param accumulatedAvgY average y-coordinate of specific force during last
+     *                        static period expressed in meters per squared
+     *                        second (m/s^2).
+     * @param accumulatedAvgZ average z-coordinate of specific force during last
+     *                        static period expressed in meters per squared
+     *                        second (m/s^2).
+     * @param accumulatedStdX standard deviation of x-coordinate of measurements
+     *                        during last static period expressed in meters per
+     *                        squared second (m/s^2).
+     * @param accumulatedStdY standard deviation of y-coordinate of measurements
+     *                        during last static period expressed in meters per
+     *                        squared second (m/s^2).
+     * @param accumulatedStdZ standard deviation of z-coordinate of measurements
+     *                        during last static period expressed in meters per
+     *                        squared second (m/s^2).
      */
     protected abstract void handleStaticToDynamicChange(
             final double accumulatedAvgX,
