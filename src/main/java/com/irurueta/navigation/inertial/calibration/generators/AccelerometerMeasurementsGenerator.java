@@ -16,10 +16,8 @@
 
 package com.irurueta.navigation.inertial.calibration.generators;
 
-import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.inertial.BodyKinematics;
 import com.irurueta.navigation.inertial.calibration.StandardDeviationBodyKinematics;
-import com.irurueta.navigation.inertial.calibration.intervals.AccelerationTriadStaticIntervalDetector;
 
 /**
  * Generates measurements for the calibration of accelerometers by alternating
@@ -61,32 +59,6 @@ public class AccelerometerMeasurementsGenerator extends
     public AccelerometerMeasurementsGenerator(
             final AccelerometerMeasurementsGeneratorListener listener) {
         super(listener);
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param staticIntervalDetector a static interval detector for accelerometer samples.
-     * @throws LockedException if provided detector is busy.
-     */
-    protected AccelerometerMeasurementsGenerator(
-            final AccelerationTriadStaticIntervalDetector staticIntervalDetector)
-            throws LockedException {
-        super(staticIntervalDetector);
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param staticIntervalDetector a static interval detector for accelerometer samples.
-     * @param listener               listener to handle events raised by this generator.
-     * @throws LockedException if provided detector is busy.
-     */
-    protected AccelerometerMeasurementsGenerator(
-            final AccelerationTriadStaticIntervalDetector staticIntervalDetector,
-            final AccelerometerMeasurementsGeneratorListener listener)
-            throws LockedException {
-        super(staticIntervalDetector, listener);
     }
 
     /**

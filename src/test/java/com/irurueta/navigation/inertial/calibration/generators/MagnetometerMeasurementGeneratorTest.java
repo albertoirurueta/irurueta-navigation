@@ -154,16 +154,32 @@ public class MagnetometerMeasurementGeneratorTest implements MagnetometerMeasure
         assertEquals(generator.getBaseNoiseLevelAbsoluteThreshold(),
                 TriadStaticIntervalDetector.DEFAULT_BASE_NOISE_LEVEL_ABSOLUTE_THRESHOLD,
                 0.0);
-        final Acceleration threshold1 = generator.getBaseNoiseLevelAbsoluteThresholdAsMeasurement();
-        assertEquals(threshold1.getValue().doubleValue(),
+        final Acceleration errorThreshold1 = generator.getBaseNoiseLevelAbsoluteThresholdAsMeasurement();
+        assertEquals(errorThreshold1.getValue().doubleValue(),
                 generator.getBaseNoiseLevelAbsoluteThreshold(), 0.0);
+        assertEquals(errorThreshold1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration errorThreshold2 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        generator.getBaseNoiseLevelAbsoluteThresholdAsMeasurement(errorThreshold2);
+        assertEquals(errorThreshold1, errorThreshold2);
+        assertEquals(generator.getStatus(),
+                TriadStaticIntervalDetector.Status.IDLE);
+        assertEquals(generator.getBaseNoiseLevel(), 0.0, 0.0);
+        final Acceleration baseNoiseLevel1 = generator.getBaseNoiseLevelAsMeasurement();
+        assertEquals(baseNoiseLevel1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(baseNoiseLevel1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration baseNoiseLevel2 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        generator.getBaseNoiseLevelAsMeasurement(baseNoiseLevel2);
+        assertEquals(baseNoiseLevel1, baseNoiseLevel2);
+        assertEquals(generator.getThreshold(), 0.0, 0.0);
+        final Acceleration threshold1 = generator.getThresholdAsMeasurement();
+        assertEquals(threshold1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(threshold1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         final Acceleration threshold2 = new Acceleration(
                 1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        generator.getBaseNoiseLevelAbsoluteThresholdAsMeasurement(threshold2);
+        generator.getThresholdAsMeasurement(threshold2);
         assertEquals(threshold1, threshold2);
-        assertEquals(generator.getStatus(),
-                TriadStaticIntervalDetector.Status.IDLE);
     }
 
     @Test
@@ -195,103 +211,32 @@ public class MagnetometerMeasurementGeneratorTest implements MagnetometerMeasure
         assertEquals(generator.getBaseNoiseLevelAbsoluteThreshold(),
                 TriadStaticIntervalDetector.DEFAULT_BASE_NOISE_LEVEL_ABSOLUTE_THRESHOLD,
                 0.0);
-        final Acceleration threshold1 = generator.getBaseNoiseLevelAbsoluteThresholdAsMeasurement();
-        assertEquals(threshold1.getValue().doubleValue(),
+        final Acceleration errorThreshold1 = generator.getBaseNoiseLevelAbsoluteThresholdAsMeasurement();
+        assertEquals(errorThreshold1.getValue().doubleValue(),
                 generator.getBaseNoiseLevelAbsoluteThreshold(), 0.0);
+        assertEquals(errorThreshold1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration errorThreshold2 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        generator.getBaseNoiseLevelAbsoluteThresholdAsMeasurement(errorThreshold2);
+        assertEquals(errorThreshold1, errorThreshold2);
+        assertEquals(generator.getStatus(),
+                TriadStaticIntervalDetector.Status.IDLE);
+        assertEquals(generator.getBaseNoiseLevel(), 0.0, 0.0);
+        final Acceleration baseNoiseLevel1 = generator.getBaseNoiseLevelAsMeasurement();
+        assertEquals(baseNoiseLevel1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(baseNoiseLevel1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration baseNoiseLevel2 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        generator.getBaseNoiseLevelAsMeasurement(baseNoiseLevel2);
+        assertEquals(baseNoiseLevel1, baseNoiseLevel2);
+        assertEquals(generator.getThreshold(), 0.0, 0.0);
+        final Acceleration threshold1 = generator.getThresholdAsMeasurement();
+        assertEquals(threshold1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(threshold1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         final Acceleration threshold2 = new Acceleration(
                 1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        generator.getBaseNoiseLevelAbsoluteThresholdAsMeasurement(threshold2);
+        generator.getThresholdAsMeasurement(threshold2);
         assertEquals(threshold1, threshold2);
-        assertEquals(generator.getStatus(),
-                TriadStaticIntervalDetector.Status.IDLE);
-    }
-
-    @Test
-    public void testConstructor3() throws LockedException {
-        final AccelerationTriadStaticIntervalDetector staticIntervalDetector =
-                new AccelerationTriadStaticIntervalDetector();
-        final MagnetometerMeasurementsGenerator generator =
-                new MagnetometerMeasurementsGenerator(staticIntervalDetector);
-
-        // check default values
-        assertEquals(generator.getMinStaticSamples(),
-                MeasurementsGenerator.DEFAULT_MIN_STATIC_SAMPLES);
-        assertEquals(generator.getMaxDynamicSamples(),
-                MeasurementsGenerator.DEFAULT_MAX_DYNAMIC_SAMPLES);
-        assertNull(generator.getListener());
-        assertEquals(generator.getProcessedStaticSamples(), 0);
-        assertEquals(generator.getProcessedDynamicSamples(), 0);
-        assertFalse(generator.isStaticIntervalSkipped());
-        assertFalse(generator.isDynamicIntervalSkipped());
-        assertFalse(generator.isRunning());
-
-        assertEquals(generator.getWindowSize(),
-                TriadStaticIntervalDetector.DEFAULT_WINDOW_SIZE);
-        assertEquals(generator.getInitialStaticSamples(),
-                TriadStaticIntervalDetector.DEFAULT_INITIAL_STATIC_SAMPLES);
-        assertEquals(generator.getThresholdFactor(),
-                TriadStaticIntervalDetector.DEFAULT_THRESHOLD_FACTOR, 0.0);
-        assertEquals(generator.getInstantaneousNoiseLevelFactor(),
-                TriadStaticIntervalDetector.DEFAULT_INSTANTANEOUS_NOISE_LEVEL_FACTOR,
-                0.0);
-        assertEquals(generator.getBaseNoiseLevelAbsoluteThreshold(),
-                TriadStaticIntervalDetector.DEFAULT_BASE_NOISE_LEVEL_ABSOLUTE_THRESHOLD,
-                0.0);
-        final Acceleration threshold1 = generator.getBaseNoiseLevelAbsoluteThresholdAsMeasurement();
-        assertEquals(threshold1.getValue().doubleValue(),
-                generator.getBaseNoiseLevelAbsoluteThreshold(), 0.0);
-        assertEquals(threshold1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration threshold2 = new Acceleration(
-                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        generator.getBaseNoiseLevelAbsoluteThresholdAsMeasurement(threshold2);
-        assertEquals(threshold1, threshold2);
-        assertEquals(generator.getStatus(),
-                TriadStaticIntervalDetector.Status.IDLE);
-    }
-
-    @Test
-    public void testConstructor4() throws LockedException {
-        final AccelerationTriadStaticIntervalDetector staticIntervalDetector =
-                new AccelerationTriadStaticIntervalDetector();
-        final MagnetometerMeasurementsGenerator generator =
-                new MagnetometerMeasurementsGenerator(
-                        staticIntervalDetector, this);
-
-        // check default values
-        assertEquals(generator.getMinStaticSamples(),
-                MeasurementsGenerator.DEFAULT_MIN_STATIC_SAMPLES);
-        assertEquals(generator.getMaxDynamicSamples(),
-                MeasurementsGenerator.DEFAULT_MAX_DYNAMIC_SAMPLES);
-        assertSame(this, generator.getListener());
-        assertEquals(generator.getProcessedStaticSamples(), 0);
-        assertEquals(generator.getProcessedDynamicSamples(), 0);
-        assertFalse(generator.isStaticIntervalSkipped());
-        assertFalse(generator.isDynamicIntervalSkipped());
-        assertFalse(generator.isRunning());
-
-        assertEquals(generator.getWindowSize(),
-                TriadStaticIntervalDetector.DEFAULT_WINDOW_SIZE);
-        assertEquals(generator.getInitialStaticSamples(),
-                TriadStaticIntervalDetector.DEFAULT_INITIAL_STATIC_SAMPLES);
-        assertEquals(generator.getThresholdFactor(),
-                TriadStaticIntervalDetector.DEFAULT_THRESHOLD_FACTOR, 0.0);
-        assertEquals(generator.getInstantaneousNoiseLevelFactor(),
-                TriadStaticIntervalDetector.DEFAULT_INSTANTANEOUS_NOISE_LEVEL_FACTOR,
-                0.0);
-        assertEquals(generator.getBaseNoiseLevelAbsoluteThreshold(),
-                TriadStaticIntervalDetector.DEFAULT_BASE_NOISE_LEVEL_ABSOLUTE_THRESHOLD,
-                0.0);
-        final Acceleration threshold1 = generator.getBaseNoiseLevelAbsoluteThresholdAsMeasurement();
-        assertEquals(threshold1.getValue().doubleValue(),
-                generator.getBaseNoiseLevelAbsoluteThreshold(), 0.0);
-        assertEquals(threshold1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration threshold2 = new Acceleration(
-                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        generator.getBaseNoiseLevelAbsoluteThresholdAsMeasurement(threshold2);
-        assertEquals(threshold1, threshold2);
-        assertEquals(generator.getStatus(),
-                TriadStaticIntervalDetector.Status.IDLE);
     }
 
     @Test
@@ -1463,6 +1408,9 @@ public class MagnetometerMeasurementGeneratorTest implements MagnetometerMeasure
             final MagnetometerMeasurementsGenerator generator) {
         mInitializationStarted++;
         checkLocked(generator);
+
+        assertEquals(generator.getStatus(),
+                TriadStaticIntervalDetector.Status.INITIALIZING);
     }
 
     @Override
@@ -1471,6 +1419,26 @@ public class MagnetometerMeasurementGeneratorTest implements MagnetometerMeasure
             final double baseNoiseLevel) {
         mInitializationCompleted++;
         checkLocked(generator);
+
+        assertTrue(baseNoiseLevel > 0.0);
+        assertEquals(baseNoiseLevel, generator.getBaseNoiseLevel(), 0.0);
+        final Acceleration baseNoiseLevel1 = generator.getBaseNoiseLevelAsMeasurement();
+        assertEquals(baseNoiseLevel1.getValue().doubleValue(), baseNoiseLevel, 0.0);
+        assertEquals(baseNoiseLevel1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration baseNoiseLevel2 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        generator.getBaseNoiseLevelAsMeasurement(baseNoiseLevel2);
+        assertEquals(baseNoiseLevel1, baseNoiseLevel2);
+
+        assertTrue(generator.getThreshold() > 0.0);
+        final Acceleration threshold1 = generator.getThresholdAsMeasurement();
+        assertEquals(threshold1.getValue().doubleValue(), generator.getThreshold(),
+                0.0);
+        assertEquals(threshold1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration threshold2 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        generator.getThresholdAsMeasurement(threshold2);
+        assertEquals(threshold1, threshold2);
     }
 
     @Override
@@ -1479,6 +1447,9 @@ public class MagnetometerMeasurementGeneratorTest implements MagnetometerMeasure
             final TriadStaticIntervalDetector.ErrorReason reason) {
         mError++;
         checkLocked(generator);
+
+        assertEquals(generator.getStatus(),
+                TriadStaticIntervalDetector.Status.FAILED);
     }
 
     @Override
@@ -1486,6 +1457,9 @@ public class MagnetometerMeasurementGeneratorTest implements MagnetometerMeasure
             final MagnetometerMeasurementsGenerator generator) {
         mStaticIntervalDetected++;
         checkLocked(generator);
+
+        assertEquals(generator.getStatus(),
+                TriadStaticIntervalDetector.Status.STATIC_INTERVAL);
     }
 
     @Override
@@ -1493,6 +1467,9 @@ public class MagnetometerMeasurementGeneratorTest implements MagnetometerMeasure
             final MagnetometerMeasurementsGenerator generator) {
         mDynamicIntervalDetected++;
         checkLocked(generator);
+
+        assertEquals(generator.getStatus(),
+                TriadStaticIntervalDetector.Status.DYNAMIC_INTERVAL);
     }
 
     @Override
@@ -1500,6 +1477,9 @@ public class MagnetometerMeasurementGeneratorTest implements MagnetometerMeasure
             final MagnetometerMeasurementsGenerator generator) {
         mStaticIntervalSkipped++;
         checkLocked(generator);
+
+        assertEquals(generator.getStatus(),
+                TriadStaticIntervalDetector.Status.DYNAMIC_INTERVAL);
     }
 
     @Override
@@ -1507,6 +1487,9 @@ public class MagnetometerMeasurementGeneratorTest implements MagnetometerMeasure
             final MagnetometerMeasurementsGenerator generator) {
         mDynamicIntervalSkipped++;
         checkLocked(generator);
+
+        assertEquals(generator.getStatus(),
+                TriadStaticIntervalDetector.Status.DYNAMIC_INTERVAL);
     }
 
     @Override
@@ -1522,6 +1505,9 @@ public class MagnetometerMeasurementGeneratorTest implements MagnetometerMeasure
     public void onReset(
             final MagnetometerMeasurementsGenerator generator) {
         mReset++;
+
+        assertEquals(generator.getStatus(),
+                TriadStaticIntervalDetector.Status.IDLE);
     }
 
     private void reset() {

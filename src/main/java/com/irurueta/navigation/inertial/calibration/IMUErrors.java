@@ -32,6 +32,7 @@ import java.util.Objects;
  * Contains Inertial Measurement Unit (IMU) errors statistics obtained from
  * calibration.
  * This data can also be used to generate synthetic IMU data.
+ * IMU errors are related to accelerometer and gyroscope calibration parameters.
  */
 public class IMUErrors implements Serializable, Cloneable {
 

@@ -22,9 +22,10 @@ import com.irurueta.navigation.inertial.calibration.AngularSpeedTriad;
 import com.irurueta.navigation.inertial.calibration.BodyKinematicsSequence;
 import com.irurueta.navigation.inertial.calibration.StandardDeviationTimedBodyKinematics;
 import com.irurueta.navigation.inertial.calibration.TimedBodyKinematics;
-import com.irurueta.navigation.inertial.calibration.intervals.AccelerationTriadStaticIntervalDetector;
 import com.irurueta.navigation.inertial.calibration.intervals.TriadStaticIntervalDetector;
 import com.irurueta.navigation.inertial.calibration.noise.AccumulatedAngularSpeedTriadNoiseEstimator;
+import com.irurueta.units.AngularSpeed;
+import com.irurueta.units.AngularSpeedUnit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -141,32 +142,6 @@ public class GyroscopeMeasurementGenerator extends
     }
 
     /**
-     * Constructor.
-     *
-     * @param staticIntervalDetector a static interval detector for accelerometer samples.
-     * @throws LockedException if provided detector is busy.
-     */
-    protected GyroscopeMeasurementGenerator(
-            final AccelerationTriadStaticIntervalDetector staticIntervalDetector)
-            throws LockedException {
-        super(staticIntervalDetector);
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param staticIntervalDetector a static interval detector for accelerometer samples.
-     * @param listener               listener to handle events raised by this generator.
-     * @throws LockedException if provided detector is busy.
-     */
-    protected GyroscopeMeasurementGenerator(
-            final AccelerationTriadStaticIntervalDetector staticIntervalDetector,
-            final GyroscopeMeasurementGeneratorListener listener)
-            throws LockedException {
-        super(staticIntervalDetector, listener);
-    }
-
-    /**
      * Resets this generator.
      *
      * @throws LockedException if generator is busy.
@@ -209,6 +184,55 @@ public class GyroscopeMeasurementGenerator extends
      */
     public void getInitialAvgAngularSpeedTriad(final AngularSpeedTriad result) {
         mAccumulatedEstimator.getAvgTriad(result);
+    }
+
+    /**
+     * Gets estimated standard deviation of angular rate during initialization phase.
+     *
+     * @return estimated standard deviation of angular rate during initialization phase.
+     */
+    public AngularSpeedTriad getInitialAngularSpeedTriadStandardDeviation() {
+        return mAccumulatedEstimator.getStandardDeviationTriad();
+    }
+
+    /**
+     * Gets estimated standard deviation of angular rate during initialization phase.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getInitialAngularSpeedTriadStandardDeviation(final AngularSpeedTriad result) {
+        mAccumulatedEstimator.getStandardDeviationTriad(result);
+    }
+
+    /**
+     * Gets norm of estimated standard deviation of angular rate during initialization phase
+     * expressed in radians per second (rad/s).
+     *
+     * @return norm of estimated standard deviation of angular rate during initialization phase.
+     */
+    public double getInitialAngularSpeedTriadStandardDeviationNorm() {
+        return mAngularSpeedStandardDeviation;
+    }
+
+    /**
+     * Gets norm of estimated standard deviation of angular rate during initialization phase.
+     *
+     * @return norm of estimated standard deviation of angular rate during initialization phase.
+     */
+    public AngularSpeed getInitialAngularSpeedTriadStandardDeviationNormAsMeasurement() {
+        return new AngularSpeed(mAngularSpeedStandardDeviation,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+    }
+
+    /**
+     * Gets norm of estimated standard deviation of angular rate during initialization phase.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getInitialAngularSpeedTriadStandardDeviationNormAsMeasurement(
+            final AngularSpeed result) {
+        result.setValue(mAngularSpeedStandardDeviation);
+        result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);
     }
 
     /**

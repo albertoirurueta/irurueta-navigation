@@ -35,7 +35,6 @@ import com.irurueta.navigation.inertial.calibration.IMUErrors;
 import com.irurueta.navigation.inertial.calibration.StandardDeviationBodyKinematics;
 import com.irurueta.navigation.inertial.calibration.accelerometer.KnownGravityNormAccelerometerCalibrator;
 import com.irurueta.navigation.inertial.calibration.intervals.AccelerationTriadStaticIntervalDetector;
-import com.irurueta.navigation.inertial.calibration.intervals.AccelerationTriadStaticIntervalDetectorListener;
 import com.irurueta.navigation.inertial.calibration.intervals.TriadStaticIntervalDetector;
 import com.irurueta.navigation.inertial.estimators.ECEFGravityEstimator;
 import com.irurueta.navigation.inertial.estimators.ECEFKinematicsEstimator;
@@ -49,7 +48,6 @@ import java.util.List;
 import java.util.Random;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
 
 public class AccelerometerMeasurementsGeneratorTest implements
         AccelerometerMeasurementsGeneratorListener {
@@ -126,16 +124,32 @@ public class AccelerometerMeasurementsGeneratorTest implements
         assertEquals(generator.getBaseNoiseLevelAbsoluteThreshold(),
                 TriadStaticIntervalDetector.DEFAULT_BASE_NOISE_LEVEL_ABSOLUTE_THRESHOLD,
                 0.0);
-        final Acceleration threshold1 = generator.getBaseNoiseLevelAbsoluteThresholdAsMeasurement();
-        assertEquals(threshold1.getValue().doubleValue(),
+        final Acceleration errorThreshold1 = generator.getBaseNoiseLevelAbsoluteThresholdAsMeasurement();
+        assertEquals(errorThreshold1.getValue().doubleValue(),
                 generator.getBaseNoiseLevelAbsoluteThreshold(), 0.0);
+        assertEquals(errorThreshold1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration errorThreshold2 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        generator.getBaseNoiseLevelAbsoluteThresholdAsMeasurement(errorThreshold2);
+        assertEquals(errorThreshold1, errorThreshold2);
+        assertEquals(generator.getStatus(),
+                TriadStaticIntervalDetector.Status.IDLE);
+        assertEquals(generator.getBaseNoiseLevel(), 0.0, 0.0);
+        final Acceleration baseNoiseLevel1 = generator.getBaseNoiseLevelAsMeasurement();
+        assertEquals(baseNoiseLevel1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(baseNoiseLevel1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration baseNoiseLevel2 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        generator.getBaseNoiseLevelAsMeasurement(baseNoiseLevel2);
+        assertEquals(baseNoiseLevel1, baseNoiseLevel2);
+        assertEquals(generator.getThreshold(), 0.0, 0.0);
+        final Acceleration threshold1 = generator.getThresholdAsMeasurement();
+        assertEquals(threshold1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(threshold1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         final Acceleration threshold2 = new Acceleration(
                 1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        generator.getBaseNoiseLevelAbsoluteThresholdAsMeasurement(threshold2);
+        generator.getThresholdAsMeasurement(threshold2);
         assertEquals(threshold1, threshold2);
-        assertEquals(generator.getStatus(),
-                TriadStaticIntervalDetector.Status.IDLE);
     }
 
     @Test
@@ -167,103 +181,32 @@ public class AccelerometerMeasurementsGeneratorTest implements
         assertEquals(generator.getBaseNoiseLevelAbsoluteThreshold(),
                 TriadStaticIntervalDetector.DEFAULT_BASE_NOISE_LEVEL_ABSOLUTE_THRESHOLD,
                 0.0);
-        final Acceleration threshold1 = generator.getBaseNoiseLevelAbsoluteThresholdAsMeasurement();
-        assertEquals(threshold1.getValue().doubleValue(),
+        final Acceleration errorThreshold1 = generator.getBaseNoiseLevelAbsoluteThresholdAsMeasurement();
+        assertEquals(errorThreshold1.getValue().doubleValue(),
                 generator.getBaseNoiseLevelAbsoluteThreshold(), 0.0);
+        assertEquals(errorThreshold1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration errorThreshold2 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        generator.getBaseNoiseLevelAbsoluteThresholdAsMeasurement(errorThreshold2);
+        assertEquals(errorThreshold1, errorThreshold2);
+        assertEquals(generator.getStatus(),
+                TriadStaticIntervalDetector.Status.IDLE);
+        assertEquals(generator.getBaseNoiseLevel(), 0.0, 0.0);
+        final Acceleration baseNoiseLevel1 = generator.getBaseNoiseLevelAsMeasurement();
+        assertEquals(baseNoiseLevel1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(baseNoiseLevel1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration baseNoiseLevel2 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        generator.getBaseNoiseLevelAsMeasurement(baseNoiseLevel2);
+        assertEquals(baseNoiseLevel1, baseNoiseLevel2);
+        assertEquals(generator.getThreshold(), 0.0, 0.0);
+        final Acceleration threshold1 = generator.getThresholdAsMeasurement();
+        assertEquals(threshold1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(threshold1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         final Acceleration threshold2 = new Acceleration(
                 1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        generator.getBaseNoiseLevelAbsoluteThresholdAsMeasurement(threshold2);
+        generator.getThresholdAsMeasurement(threshold2);
         assertEquals(threshold1, threshold2);
-        assertEquals(generator.getStatus(),
-                TriadStaticIntervalDetector.Status.IDLE);
-    }
-
-    @Test
-    public void testConstructor3() throws LockedException {
-        final AccelerationTriadStaticIntervalDetector staticIntervalDetector =
-                new AccelerationTriadStaticIntervalDetector();
-        final AccelerometerMeasurementsGenerator generator =
-                new AccelerometerMeasurementsGenerator(staticIntervalDetector);
-
-        // check default values
-        assertEquals(generator.getMinStaticSamples(),
-                MeasurementsGenerator.DEFAULT_MIN_STATIC_SAMPLES);
-        assertEquals(generator.getMaxDynamicSamples(),
-                MeasurementsGenerator.DEFAULT_MAX_DYNAMIC_SAMPLES);
-        assertNull(generator.getListener());
-        assertEquals(generator.getProcessedStaticSamples(), 0);
-        assertEquals(generator.getProcessedDynamicSamples(), 0);
-        assertFalse(generator.isStaticIntervalSkipped());
-        assertFalse(generator.isDynamicIntervalSkipped());
-        assertFalse(generator.isRunning());
-
-        assertEquals(generator.getWindowSize(),
-                TriadStaticIntervalDetector.DEFAULT_WINDOW_SIZE);
-        assertEquals(generator.getInitialStaticSamples(),
-                TriadStaticIntervalDetector.DEFAULT_INITIAL_STATIC_SAMPLES);
-        assertEquals(generator.getThresholdFactor(),
-                TriadStaticIntervalDetector.DEFAULT_THRESHOLD_FACTOR, 0.0);
-        assertEquals(generator.getInstantaneousNoiseLevelFactor(),
-                TriadStaticIntervalDetector.DEFAULT_INSTANTANEOUS_NOISE_LEVEL_FACTOR,
-                0.0);
-        assertEquals(generator.getBaseNoiseLevelAbsoluteThreshold(),
-                TriadStaticIntervalDetector.DEFAULT_BASE_NOISE_LEVEL_ABSOLUTE_THRESHOLD,
-                0.0);
-        final Acceleration threshold1 = generator.getBaseNoiseLevelAbsoluteThresholdAsMeasurement();
-        assertEquals(threshold1.getValue().doubleValue(),
-                generator.getBaseNoiseLevelAbsoluteThreshold(), 0.0);
-        assertEquals(threshold1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration threshold2 = new Acceleration(
-                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        generator.getBaseNoiseLevelAbsoluteThresholdAsMeasurement(threshold2);
-        assertEquals(threshold1, threshold2);
-        assertEquals(generator.getStatus(),
-                TriadStaticIntervalDetector.Status.IDLE);
-    }
-
-    @Test
-    public void testConstructor4() throws LockedException {
-        final AccelerationTriadStaticIntervalDetector staticIntervalDetector =
-                new AccelerationTriadStaticIntervalDetector();
-        final AccelerometerMeasurementsGenerator generator =
-                new AccelerometerMeasurementsGenerator(
-                        staticIntervalDetector, this);
-
-        // check default values
-        assertEquals(generator.getMinStaticSamples(),
-                MeasurementsGenerator.DEFAULT_MIN_STATIC_SAMPLES);
-        assertEquals(generator.getMaxDynamicSamples(),
-                MeasurementsGenerator.DEFAULT_MAX_DYNAMIC_SAMPLES);
-        assertSame(generator.getListener(), this);
-        assertEquals(generator.getProcessedStaticSamples(), 0);
-        assertEquals(generator.getProcessedDynamicSamples(), 0);
-        assertFalse(generator.isStaticIntervalSkipped());
-        assertFalse(generator.isDynamicIntervalSkipped());
-        assertFalse(generator.isRunning());
-
-        assertEquals(generator.getWindowSize(),
-                TriadStaticIntervalDetector.DEFAULT_WINDOW_SIZE);
-        assertEquals(generator.getInitialStaticSamples(),
-                TriadStaticIntervalDetector.DEFAULT_INITIAL_STATIC_SAMPLES);
-        assertEquals(generator.getThresholdFactor(),
-                TriadStaticIntervalDetector.DEFAULT_THRESHOLD_FACTOR, 0.0);
-        assertEquals(generator.getInstantaneousNoiseLevelFactor(),
-                TriadStaticIntervalDetector.DEFAULT_INSTANTANEOUS_NOISE_LEVEL_FACTOR,
-                0.0);
-        assertEquals(generator.getBaseNoiseLevelAbsoluteThreshold(),
-                TriadStaticIntervalDetector.DEFAULT_BASE_NOISE_LEVEL_ABSOLUTE_THRESHOLD,
-                0.0);
-        final Acceleration threshold1 = generator.getBaseNoiseLevelAbsoluteThresholdAsMeasurement();
-        assertEquals(threshold1.getValue().doubleValue(),
-                generator.getBaseNoiseLevelAbsoluteThreshold(), 0.0);
-        assertEquals(threshold1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration threshold2 = new Acceleration(
-                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        generator.getBaseNoiseLevelAbsoluteThresholdAsMeasurement(threshold2);
-        assertEquals(threshold1, threshold2);
-        assertEquals(generator.getStatus(),
-                TriadStaticIntervalDetector.Status.IDLE);
     }
 
     @Test
@@ -590,140 +533,6 @@ public class AccelerometerMeasurementsGeneratorTest implements
                     new KnownGravityNormAccelerometerCalibrator(
                             gravity.getNorm(), mMeasurements,
                             false, initialBa, initialMa);
-
-            calibrator.calibrate();
-
-            final Matrix estimatedBa = calibrator.getEstimatedBiasesAsMatrix();
-            final Matrix estimatedMa = calibrator.getEstimatedMa();
-
-            if (!ba.equals(estimatedBa, LARGE_ABSOLUTE_ERROR)) {
-                continue;
-            }
-            if (!ma.equals(estimatedMa, LARGE_ABSOLUTE_ERROR)) {
-                continue;
-            }
-            assertTrue(ba.equals(estimatedBa, LARGE_ABSOLUTE_ERROR));
-            assertTrue(ma.equals(estimatedMa, LARGE_ABSOLUTE_ERROR));
-
-            numValid++;
-            break;
-        }
-
-        assertTrue(numValid > 0);
-    }
-
-    @Test
-    public void testProcessCalibrateAndResetWithExistingIntervalDetectorAndNoise()
-            throws WrongSizeException,
-            InvalidSourceAndDestinationFrameTypeException, LockedException,
-            CalibrationException, NotReadyException {
-
-        final Matrix ba = generateBa();
-        final Matrix bg = generateBg();
-        final Matrix ma = generateMaGeneral();
-        final Matrix mg = generateMg();
-        final Matrix gg = generateGg();
-
-        final double accelNoiseRootPSD = getAccelNoiseRootPSD();
-        final double gyroNoiseRootPSD = getGyroNoiseRootPSD();
-        final double accelQuantLevel = 0.0;
-        final double gyroQuantLevel = 0.0;
-
-        final IMUErrors errors = new IMUErrors(ba, bg, ma, mg, gg, accelNoiseRootPSD,
-                gyroNoiseRootPSD, accelQuantLevel, gyroQuantLevel);
-
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final Random random = new Random();
-            final UniformRandomizer randomizer = new UniformRandomizer(random);
-            final double latitude = Math.toRadians(
-                    randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
-            final double longitude = Math.toRadians(
-                    randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
-            final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-            final NEDPosition nedPosition = new NEDPosition(latitude, longitude, height);
-
-            final double roll = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double pitch = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final CoordinateTransformation nedC = new CoordinateTransformation(
-                    roll, pitch, yaw, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-
-            final NEDFrame nedFrame = new NEDFrame(nedPosition, nedC);
-            final ECEFFrame ecefFrame = NEDtoECEFFrameConverter
-                    .convertNEDtoECEFAndReturnNew(nedFrame);
-
-            // compute ground-truth kinematics that should be generated at provided
-            // position, velocity and orientation
-            final BodyKinematics trueKinematics = ECEFKinematicsEstimator
-                    .estimateKinematicsAndReturnNew(TIME_INTERVAL_SECONDS, ecefFrame, ecefFrame);
-
-            reset();
-            assertTrue(mMeasurements.isEmpty());
-            assertEquals(mInitializationStarted, 0);
-            assertEquals(mInitializationCompleted, 0);
-            assertEquals(mError, 0);
-            assertEquals(mStaticIntervalDetected, 0);
-            assertEquals(mDynamicIntervalDetected, 0);
-            assertEquals(mGeneratedMeasurement, 0);
-            assertEquals(mReset, 0);
-
-            final AccelerationTriadStaticIntervalDetector staticIntervalDetector =
-                    new AccelerationTriadStaticIntervalDetector(
-                            mock(AccelerationTriadStaticIntervalDetectorListener.class));
-            final AccelerometerMeasurementsGenerator generator =
-                    new AccelerometerMeasurementsGenerator(staticIntervalDetector,
-                            this);
-
-            // generate initial static samples
-            final int initialStaticSamples = TriadStaticIntervalDetector
-                    .DEFAULT_INITIAL_STATIC_SAMPLES;
-            generateStaticSamples(generator, initialStaticSamples, trueKinematics,
-                    errors, random);
-
-            assertEquals(mInitializationStarted, 1);
-            assertEquals(mInitializationCompleted, 1);
-
-            final int numMeasurements = KnownGravityNormAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL;
-            final int staticPeriodLength = 3 * TriadStaticIntervalDetector.DEFAULT_WINDOW_SIZE;
-            final int dynamicPeriodLength = 2 * TriadStaticIntervalDetector.DEFAULT_WINDOW_SIZE;
-
-            for (int i = 0; i < numMeasurements; i++) {
-                // generate static samples
-                generateStaticSamples(generator, staticPeriodLength, trueKinematics,
-                        errors, random);
-
-                assertEquals(mStaticIntervalDetected, i + 1);
-
-                // generate dynamic samples
-                generateDynamicSamples(generator, dynamicPeriodLength, trueKinematics,
-                        randomizer, ecefFrame, nedFrame, errors, random, true);
-
-                assertEquals(mDynamicIntervalDetected, i + 1);
-                assertEquals(mMeasurements.size(), i + 1);
-            }
-
-            if (generator.getStatus() == TriadStaticIntervalDetector.Status.FAILED) {
-                continue;
-            }
-
-            generator.reset();
-
-            assertEquals(mReset, 1);
-            assertEquals(mError, 0);
-
-            final ECEFGravity gravity = ECEFGravityEstimator
-                    .estimateGravityAndReturnNew(ecefFrame);
-
-            // we can also use the calibrator without initial bias (ba) and cross
-            // coupling matrix (ma), like shown below
-            final KnownGravityNormAccelerometerCalibrator calibrator =
-                    new KnownGravityNormAccelerometerCalibrator(
-                            gravity.getNorm(), mMeasurements,
-                            false);
 
             calibrator.calibrate();
 
@@ -1253,6 +1062,9 @@ public class AccelerometerMeasurementsGeneratorTest implements
             final AccelerometerMeasurementsGenerator generator) {
         mInitializationStarted++;
         checkLocked(generator);
+
+        assertEquals(generator.getStatus(),
+                TriadStaticIntervalDetector.Status.INITIALIZING);
     }
 
     @Override
@@ -1261,6 +1073,26 @@ public class AccelerometerMeasurementsGeneratorTest implements
             final double baseNoiseLevel) {
         mInitializationCompleted++;
         checkLocked(generator);
+
+        assertTrue(baseNoiseLevel > 0.0);
+        assertEquals(baseNoiseLevel, generator.getBaseNoiseLevel(), 0.0);
+        final Acceleration baseNoiseLevel1 = generator.getBaseNoiseLevelAsMeasurement();
+        assertEquals(baseNoiseLevel1.getValue().doubleValue(), baseNoiseLevel, 0.0);
+        assertEquals(baseNoiseLevel1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration baseNoiseLevel2 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        generator.getBaseNoiseLevelAsMeasurement(baseNoiseLevel2);
+        assertEquals(baseNoiseLevel1, baseNoiseLevel2);
+
+        assertTrue(generator.getThreshold() > 0.0);
+        final Acceleration threshold1 = generator.getThresholdAsMeasurement();
+        assertEquals(threshold1.getValue().doubleValue(), generator.getThreshold(),
+                0.0);
+        assertEquals(threshold1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration threshold2 = new Acceleration(
+                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        generator.getThresholdAsMeasurement(threshold2);
+        assertEquals(threshold1, threshold2);
     }
 
     @Override
@@ -1269,6 +1101,9 @@ public class AccelerometerMeasurementsGeneratorTest implements
             final TriadStaticIntervalDetector.ErrorReason reason) {
         mError++;
         checkLocked(generator);
+
+        assertEquals(generator.getStatus(),
+                TriadStaticIntervalDetector.Status.FAILED);
     }
 
     @Override
@@ -1276,6 +1111,9 @@ public class AccelerometerMeasurementsGeneratorTest implements
             final AccelerometerMeasurementsGenerator generator) {
         mStaticIntervalDetected++;
         checkLocked(generator);
+
+        assertEquals(generator.getStatus(),
+                TriadStaticIntervalDetector.Status.STATIC_INTERVAL);
     }
 
     @Override
@@ -1283,6 +1121,9 @@ public class AccelerometerMeasurementsGeneratorTest implements
             final AccelerometerMeasurementsGenerator generator) {
         mDynamicIntervalDetected++;
         checkLocked(generator);
+
+        assertEquals(generator.getStatus(),
+                TriadStaticIntervalDetector.Status.DYNAMIC_INTERVAL);
     }
 
     @Override
@@ -1290,6 +1131,9 @@ public class AccelerometerMeasurementsGeneratorTest implements
             final AccelerometerMeasurementsGenerator generator) {
         mStaticIntervalSkipped++;
         checkLocked(generator);
+
+        assertEquals(generator.getStatus(),
+                TriadStaticIntervalDetector.Status.DYNAMIC_INTERVAL);
     }
 
     @Override
@@ -1297,6 +1141,9 @@ public class AccelerometerMeasurementsGeneratorTest implements
             final AccelerometerMeasurementsGenerator generator) {
         mDynamicIntervalSkipped++;
         checkLocked(generator);
+
+        assertEquals(generator.getStatus(),
+                TriadStaticIntervalDetector.Status.DYNAMIC_INTERVAL);
     }
 
     @Override
@@ -1311,6 +1158,9 @@ public class AccelerometerMeasurementsGeneratorTest implements
     @Override
     public void onReset(final AccelerometerMeasurementsGenerator generator) {
         mReset++;
+
+        assertEquals(generator.getStatus(),
+                TriadStaticIntervalDetector.Status.IDLE);
     }
 
     private void reset() {

@@ -566,7 +566,7 @@ public abstract class TriadStaticIntervalDetector<U extends Enum<?>, M extends M
      * acceleration, radians per second (rad/s) for angular speed or
      * Teslas (T) for magnetic flux density.
      *
-     * @return accelerometer base noise level.
+     * @return base noise level.
      */
     public double getBaseNoiseLevel() {
         return mBaseNoiseLevel;

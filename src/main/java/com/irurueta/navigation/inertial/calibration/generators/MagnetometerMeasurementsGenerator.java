@@ -20,7 +20,6 @@ import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.inertial.BodyKinematicsAndMagneticFluxDensity;
 import com.irurueta.navigation.inertial.BodyMagneticFluxDensity;
 import com.irurueta.navigation.inertial.calibration.StandardDeviationBodyMagneticFluxDensity;
-import com.irurueta.navigation.inertial.calibration.intervals.AccelerationTriadStaticIntervalDetector;
 import com.irurueta.navigation.inertial.calibration.intervals.TriadStaticIntervalDetector;
 import com.irurueta.navigation.inertial.calibration.noise.AccumulatedMagneticFluxDensityTriadNoiseEstimator;
 
@@ -87,32 +86,6 @@ public class MagnetometerMeasurementsGenerator extends
     public MagnetometerMeasurementsGenerator(
             final MagnetometerMeasurementsGeneratorListener listener) {
         super(listener);
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param staticIntervalDetector a static interval detector for accelerometer samples.
-     * @throws LockedException if provided detector is busy.
-     */
-    protected MagnetometerMeasurementsGenerator(
-            final AccelerationTriadStaticIntervalDetector staticIntervalDetector)
-            throws LockedException {
-        super(staticIntervalDetector);
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param staticIntervalDetector a static interval detector for accelerometer samples.
-     * @param listener               listener to handle events raised by this generator.
-     * @throws LockedException if provided detector is busy.
-     */
-    protected MagnetometerMeasurementsGenerator(
-            final AccelerationTriadStaticIntervalDetector staticIntervalDetector,
-            final MagnetometerMeasurementsGeneratorListener listener)
-            throws LockedException {
-        super(staticIntervalDetector, listener);
     }
 
     /**

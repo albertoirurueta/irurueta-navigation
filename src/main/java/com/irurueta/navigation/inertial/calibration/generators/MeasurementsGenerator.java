@@ -65,18 +65,6 @@ public abstract class MeasurementsGenerator<T, G extends MeasurementsGenerator<T
     protected final AccelerationTriadStaticIntervalDetector mStaticIntervalDetector;
 
     /**
-     * Previously existing interval detector listener.
-     */
-    private AccelerationTriadStaticIntervalDetectorListener mExistingStaticIntervalDetectorListener;
-
-    /**
-     * Flag to indicate that event is being executed.
-     * This is used to prevent infinite loops when providing an interval detector
-     * that already has an existing listener.
-     */
-    private boolean mExecutingEvent;
-
-    /**
      * Indicates whether generator is running or not.
      */
     private boolean mRunning;
@@ -131,33 +119,6 @@ public abstract class MeasurementsGenerator<T, G extends MeasurementsGenerator<T
      */
     public MeasurementsGenerator(final L listener) {
         this();
-        mListener = listener;
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param staticIntervalDetector a static interval detector for accelerometer samples.
-     * @throws LockedException if provided detector is busy.
-     */
-    protected MeasurementsGenerator(
-            final AccelerationTriadStaticIntervalDetector staticIntervalDetector)
-            throws LockedException {
-        mStaticIntervalDetector = staticIntervalDetector;
-        setupListener();
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param staticIntervalDetector a static interval detector for accelerometer samples.
-     * @param listener               listener to handle events raised by this generator.
-     * @throws LockedException if provided detector is busy.
-     */
-    protected MeasurementsGenerator(
-            final AccelerationTriadStaticIntervalDetector staticIntervalDetector,
-            final L listener) throws LockedException {
-        this(staticIntervalDetector);
         mListener = listener;
     }
 
@@ -458,6 +419,68 @@ public abstract class MeasurementsGenerator<T, G extends MeasurementsGenerator<T
     }
 
     /**
+     * Gets accelerometer base noise level that has been detected during
+     * initialization expressed in meters per squared second (m/s^2).
+     * This is equal to the standard deviation of the accelerometer measurements
+     * during initialization phase.
+     *
+     * @return accelerometer base noise level.
+     */
+    public double getBaseNoiseLevel() {
+        return mStaticIntervalDetector.getBaseNoiseLevel();
+    }
+
+    /**
+     * Gets accelerometer base noise level that has been detected during
+     * initialization.
+     * This is equal to the standard deviation of the accelerometer measurements
+     * during initialization phase.
+     *
+     * @return measurement base noise level.
+     */
+    public Acceleration getBaseNoiseLevelAsMeasurement() {
+        return mStaticIntervalDetector.getBaseNoiseLevelAsMeasurement();
+    }
+
+    /**
+     * Gets accelerometer base noise level that has been detected during
+     * initialization.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getBaseNoiseLevelAsMeasurement(final Acceleration result) {
+        mStaticIntervalDetector.getBaseNoiseLevelAsMeasurement(result);
+    }
+
+    /**
+     * Gets threshold to determine static/dynamic period changes expressed in
+     * meters per squared second (m/s^2).
+     *
+     * @return threshold to determine static/dynamic period changes.
+     */
+    public double getThreshold() {
+        return mStaticIntervalDetector.getThreshold();
+    }
+
+    /**
+     * Gets threshold to determine static/dynamic period changes.
+     *
+     * @return threshold to determine static/dynamic period changes.
+     */
+    public Acceleration getThresholdAsMeasurement() {
+        return mStaticIntervalDetector.getThresholdAsMeasurement();
+    }
+
+    /**
+     * Gets threshold to determine static/dynamic period changes.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getThresholdAsMeasurement(final Acceleration result) {
+        mStaticIntervalDetector.getThresholdAsMeasurement(result);
+    }
+
+    /**
      * Gets number of samples that have been processed in a static period so far.
      *
      * @return number of samples that have been processed in a static period so far.
@@ -654,20 +677,11 @@ public abstract class MeasurementsGenerator<T, G extends MeasurementsGenerator<T
      * @throws LockedException if static interval detector is busy.
      */
     private void setupListener() throws LockedException {
-
-        mExistingStaticIntervalDetectorListener = mStaticIntervalDetector.getListener();
-
         final AccelerationTriadStaticIntervalDetectorListener listener =
                 new AccelerationTriadStaticIntervalDetectorListener() {
                     @Override
                     public void onInitializationStarted(
                             final AccelerationTriadStaticIntervalDetector detector) {
-
-                        if (mExistingStaticIntervalDetectorListener != null && !mExecutingEvent) {
-                            mExecutingEvent = true;
-                            mExistingStaticIntervalDetectorListener.onInitializationStarted(detector);
-                            mExecutingEvent = false;
-                        }
 
                         if (mListener != null) {
                             //noinspection unchecked
@@ -679,13 +693,6 @@ public abstract class MeasurementsGenerator<T, G extends MeasurementsGenerator<T
                     public void onInitializationCompleted(
                             final AccelerationTriadStaticIntervalDetector detector,
                             final double baseNoiseLevel) {
-
-                        if (mExistingStaticIntervalDetectorListener != null && !mExecutingEvent) {
-                            mExecutingEvent = true;
-                            mExistingStaticIntervalDetectorListener.onInitializationCompleted(
-                                    detector, baseNoiseLevel);
-                            mExecutingEvent = false;
-                        }
 
                         handleInitializationCompleted();
 
@@ -704,14 +711,6 @@ public abstract class MeasurementsGenerator<T, G extends MeasurementsGenerator<T
                             final double instantaneousNoiseLevel,
                             final TriadStaticIntervalDetector.ErrorReason reason) {
 
-                        if (mExistingStaticIntervalDetectorListener != null && !mExecutingEvent) {
-                            mExecutingEvent = true;
-                            mExistingStaticIntervalDetectorListener.onError(detector,
-                                    accumulatedNoiseLevel, instantaneousNoiseLevel,
-                                    reason);
-                            mExecutingEvent = false;
-                        }
-
                         handleInitializationFailed();
 
                         if (mListener != null) {
@@ -729,14 +728,6 @@ public abstract class MeasurementsGenerator<T, G extends MeasurementsGenerator<T
                             final double instantaneousStdX,
                             final double instantaneousStdY,
                             final double instantaneousStdZ) {
-
-                        if (mExistingStaticIntervalDetectorListener != null && !mExecutingEvent) {
-                            mExecutingEvent = true;
-                            mExistingStaticIntervalDetectorListener.onStaticIntervalDetected(
-                                    detector, instantaneousAvgX, instantaneousAvgY, instantaneousAvgZ,
-                                    instantaneousStdX, instantaneousStdY, instantaneousStdZ);
-                            mExecutingEvent = false;
-                        }
 
                         handleDynamicToStaticChange();
                         mSkipDynamicInterval = false;
@@ -763,16 +754,6 @@ public abstract class MeasurementsGenerator<T, G extends MeasurementsGenerator<T
                             final double accumulatedStdY,
                             final double accumulatedStdZ) {
 
-                        if (mExistingStaticIntervalDetectorListener != null && !mExecutingEvent) {
-                            mExecutingEvent = true;
-                            mExistingStaticIntervalDetectorListener.onDynamicIntervalDetected(
-                                    detector, instantaneousAvgX, instantaneousAvgY, instantaneousAvgZ,
-                                    instantaneousStdX, instantaneousStdY, instantaneousStdZ,
-                                    accumulatedAvgX, accumulatedAvgY, accumulatedAvgZ,
-                                    accumulatedStdX, accumulatedStdY, accumulatedStdZ);
-                            mExecutingEvent = false;
-                        }
-
                         if (mProcessedStaticSamples < mMinStaticSamples) {
                             final boolean wasSkipped = mSkipStaticInterval;
                             mSkipStaticInterval = true;
@@ -797,12 +778,6 @@ public abstract class MeasurementsGenerator<T, G extends MeasurementsGenerator<T
                     @Override
                     public void onReset(
                             final AccelerationTriadStaticIntervalDetector detector) {
-
-                        if (mExistingStaticIntervalDetectorListener != null && !mExecutingEvent) {
-                            mExecutingEvent = true;
-                            mExistingStaticIntervalDetectorListener.onReset(detector);
-                            mExecutingEvent = false;
-                        }
                     }
                 };
         mStaticIntervalDetector.setListener(listener);
