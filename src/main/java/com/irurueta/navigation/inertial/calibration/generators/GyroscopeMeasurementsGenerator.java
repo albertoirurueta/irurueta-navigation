@@ -47,10 +47,10 @@ import java.util.List;
  * - {@link com.irurueta.navigation.inertial.calibration.gyroscope.RobustKnownBiasEasyGyroscopeCalibrator} and all its
  * implementations.
  */
-public class GyroscopeMeasurementGenerator extends
+public class GyroscopeMeasurementsGenerator extends
         MeasurementsGenerator<
                 BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>,
-                GyroscopeMeasurementGenerator,
+                GyroscopeMeasurementsGenerator,
                 GyroscopeMeasurementGeneratorListener, TimedBodyKinematics> {
 
     /**
@@ -127,7 +127,7 @@ public class GyroscopeMeasurementGenerator extends
     /**
      * Constructor.
      */
-    public GyroscopeMeasurementGenerator() {
+    public GyroscopeMeasurementsGenerator() {
         super();
     }
 
@@ -136,7 +136,7 @@ public class GyroscopeMeasurementGenerator extends
      *
      * @param listener listener to handle events raised by this generator.
      */
-    public GyroscopeMeasurementGenerator(
+    public GyroscopeMeasurementsGenerator(
             final GyroscopeMeasurementGeneratorListener listener) {
         super(listener);
     }
