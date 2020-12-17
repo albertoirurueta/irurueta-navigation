@@ -459,7 +459,7 @@ public class MagnetometerMeasurementGeneratorTest implements MagnetometerMeasure
     @Test
     public void testProcessCalibrateAndResetWithSmallNoiseAndCommonAxis() throws WrongSizeException,
             InvalidSourceAndDestinationFrameTypeException, LockedException,
-            CalibrationException, NotReadyException, IOException {
+            NotReadyException, IOException {
 
         final Matrix ba = generateBa();
         final Matrix bg = generateBg();
@@ -568,7 +568,11 @@ public class MagnetometerMeasurementGeneratorTest implements MagnetometerMeasure
                             true);
             calibrator.setTime(timestamp);
 
-            calibrator.calibrate();
+            try {
+                calibrator.calibrate();
+            } catch (final CalibrationException ignore) {
+                continue;
+            }
 
             final Matrix estimatedHardIron = calibrator
                     .getEstimatedHardIronAsMatrix();
