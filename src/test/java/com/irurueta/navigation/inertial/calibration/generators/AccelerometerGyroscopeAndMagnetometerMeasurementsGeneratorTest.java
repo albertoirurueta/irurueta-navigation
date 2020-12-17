@@ -602,6 +602,7 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGeneratorTest impl
 
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences = new ArrayList<>();
 
+            boolean failed = false;
             int start = initialStaticSamples;
             for (int i = 0; i < n; i++) {
                 // generate static samples
@@ -621,9 +622,19 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGeneratorTest impl
                 sequences.add(sequence);
                 start += dynamicPeriodLength;
 
+                if (mDynamicIntervalDetected != i + 1 || mAccelerometerMeasurements.size() != i + 1
+                        || mGyroscopeMeasurements.size() != i) {
+                    failed = true;
+                    break;
+                }
+
                 assertEquals(mDynamicIntervalDetected, i + 1);
                 assertEquals(mAccelerometerMeasurements.size(), i + 1);
                 assertEquals(mGyroscopeMeasurements.size(), i);
+            }
+
+            if (failed) {
+                continue;
             }
 
             // as an initial value for gyroscope bias we can use the average
