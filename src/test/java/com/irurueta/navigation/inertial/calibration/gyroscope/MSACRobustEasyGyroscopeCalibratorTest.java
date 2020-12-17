@@ -8301,6 +8301,16 @@ public class MSACRobustEasyGyroscopeCalibratorTest implements
             final Matrix estimatedMg = calibrator.getEstimatedMg();
             final Matrix estimatedGg = calibrator.getEstimatedGg();
 
+            if (!bg.equals(estimatedBg, VERY_LARGE_ABSOLUTE_ERROR)) {
+                continue;
+            }
+            if (!mg.equals(estimatedMg, LARGE_ABSOLUTE_ERROR)) {
+                continue;
+            }
+            if (!gg.equals(estimatedGg, ABSOLUTE_ERROR)) {
+                continue;
+            }
+
             assertTrue(bg.equals(estimatedBg, VERY_LARGE_ABSOLUTE_ERROR));
             assertTrue(mg.equals(estimatedMg, LARGE_ABSOLUTE_ERROR));
             assertTrue(gg.equals(estimatedGg, ABSOLUTE_ERROR));

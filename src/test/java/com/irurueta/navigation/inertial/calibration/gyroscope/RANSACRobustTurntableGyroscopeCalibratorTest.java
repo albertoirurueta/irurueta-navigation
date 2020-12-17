@@ -13578,7 +13578,7 @@ public class RANSACRobustTurntableGyroscopeCalibratorTest implements
             assertTrue(mg.equals(estimatedMg, LARGE_ABSOLUTE_ERROR));
             assertTrue(gg.equals(estimatedGg, LARGE_ABSOLUTE_ERROR));
 
-            assertEstimatedResult(estimatedBg, estimatedMg, estimatedGg, calibrator, true);
+            assertEstimatedResult(estimatedBg, estimatedMg, estimatedGg, calibrator, false);
 
             numValid++;
             break;
@@ -14240,7 +14240,7 @@ public class RANSACRobustTurntableGyroscopeCalibratorTest implements
             assertTrue(mg.equals(estimatedMg, VERY_LARGE_ABSOLUTE_ERROR));
             assertTrue(gg.equals(estimatedGg, VERY_LARGE_ABSOLUTE_ERROR));
 
-            assertEstimatedResult(estimatedBg, estimatedMg, estimatedGg, calibrator, true);
+            assertEstimatedResult(estimatedBg, estimatedMg, estimatedGg, calibrator, false);
 
             numValid++;
             break;

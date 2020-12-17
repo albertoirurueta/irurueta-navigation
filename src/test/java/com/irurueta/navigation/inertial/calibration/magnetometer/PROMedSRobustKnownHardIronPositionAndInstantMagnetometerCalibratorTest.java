@@ -12622,8 +12622,6 @@ public class PROMedSRobustKnownHardIronPositionAndInstantMagnetometerCalibratorT
 
             assertEstimatedResult(estimatedMm, calibrator);
 
-            assertNotNull(calibrator.getEstimatedCovariance());
-
             numValid++;
             break;
         }
