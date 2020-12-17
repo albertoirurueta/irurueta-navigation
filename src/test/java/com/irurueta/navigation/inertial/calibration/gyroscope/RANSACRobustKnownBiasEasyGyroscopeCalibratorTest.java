@@ -29,6 +29,7 @@ import com.irurueta.navigation.frames.NEDFrame;
 import com.irurueta.navigation.frames.converters.NEDtoECEFFrameConverter;
 import com.irurueta.navigation.inertial.BodyKinematics;
 import com.irurueta.navigation.inertial.NEDPosition;
+import com.irurueta.navigation.inertial.calibration.AngularSpeedTriad;
 import com.irurueta.navigation.inertial.calibration.BodyKinematicsGenerator;
 import com.irurueta.navigation.inertial.calibration.BodyKinematicsSequence;
 import com.irurueta.navigation.inertial.calibration.CalibrationException;
@@ -192,6 +193,15 @@ public class RANSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
         calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
+
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(biasTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(biasTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
 
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -395,6 +405,15 @@ public class RANSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
         calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
+
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), bgx, 0.0);
+        assertEquals(biasTriad1.getValueY(), bgy, 0.0);
+        assertEquals(biasTriad1.getValueZ(), bgz, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
 
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -638,6 +657,15 @@ public class RANSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
         calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
+
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), bgx, 0.0);
+        assertEquals(biasTriad1.getValueY(), bgy, 0.0);
+        assertEquals(biasTriad1.getValueZ(), bgz, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
 
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -889,6 +917,15 @@ public class RANSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
 
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), bgx, 0.0);
+        assertEquals(biasTriad1.getValueY(), bgy, 0.0);
+        assertEquals(biasTriad1.getValueZ(), bgz, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
+
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
         assertEquals(calibrator.getInitialSz(), sz, 0.0);
@@ -1127,6 +1164,15 @@ public class RANSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
         calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
+
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), bgx, 0.0);
+        assertEquals(biasTriad1.getValueY(), bgy, 0.0);
+        assertEquals(biasTriad1.getValueZ(), bgz, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
 
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -1388,6 +1434,15 @@ public class RANSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
         calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
+
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), bgx, 0.0);
+        assertEquals(biasTriad1.getValueY(), bgy, 0.0);
+        assertEquals(biasTriad1.getValueZ(), bgz, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
 
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -1669,6 +1724,15 @@ public class RANSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
         calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
+
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), bgx, 0.0);
+        assertEquals(biasTriad1.getValueY(), bgy, 0.0);
+        assertEquals(biasTriad1.getValueZ(), bgz, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
 
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -1952,6 +2016,15 @@ public class RANSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
         calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
+
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), bgx, 0.0);
+        assertEquals(biasTriad1.getValueY(), bgy, 0.0);
+        assertEquals(biasTriad1.getValueZ(), bgz, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
 
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -2251,6 +2324,15 @@ public class RANSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
 
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), bgx, 0.0);
+        assertEquals(biasTriad1.getValueY(), bgy, 0.0);
+        assertEquals(biasTriad1.getValueZ(), bgz, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
+
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
         assertEquals(calibrator.getInitialSz(), sz, 0.0);
@@ -2530,6 +2612,15 @@ public class RANSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
 
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), bgx, 0.0);
+        assertEquals(biasTriad1.getValueY(), bgy, 0.0);
+        assertEquals(biasTriad1.getValueZ(), bgz, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
+
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
         assertEquals(calibrator.getInitialSz(), sz, 0.0);
@@ -2786,6 +2877,15 @@ public class RANSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
         calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
+
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), bgx, 0.0);
+        assertEquals(biasTriad1.getValueY(), bgy, 0.0);
+        assertEquals(biasTriad1.getValueZ(), bgz, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
 
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -3045,6 +3145,15 @@ public class RANSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
 
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), bgx, 0.0);
+        assertEquals(biasTriad1.getValueY(), bgy, 0.0);
+        assertEquals(biasTriad1.getValueZ(), bgz, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
+
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
         assertEquals(calibrator.getInitialSz(), sz, 0.0);
@@ -3295,6 +3404,15 @@ public class RANSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
         calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
+
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), bgx, 0.0);
+        assertEquals(biasTriad1.getValueY(), bgy, 0.0);
+        assertEquals(biasTriad1.getValueZ(), bgz, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
 
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -3563,6 +3681,15 @@ public class RANSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
         calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
+
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), bgx, 0.0);
+        assertEquals(biasTriad1.getValueY(), bgy, 0.0);
+        assertEquals(biasTriad1.getValueZ(), bgz, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
 
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -3863,6 +3990,15 @@ public class RANSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
 
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), bgx, 0.0);
+        assertEquals(biasTriad1.getValueY(), bgy, 0.0);
+        assertEquals(biasTriad1.getValueZ(), bgz, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
+
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
         assertEquals(calibrator.getInitialSz(), sz, 0.0);
@@ -4161,6 +4297,15 @@ public class RANSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
         calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
+
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), bgx, 0.0);
+        assertEquals(biasTriad1.getValueY(), bgy, 0.0);
+        assertEquals(biasTriad1.getValueZ(), bgz, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
 
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -4479,6 +4624,15 @@ public class RANSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
         calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
+
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), bgx, 0.0);
+        assertEquals(biasTriad1.getValueY(), bgy, 0.0);
+        assertEquals(biasTriad1.getValueZ(), bgz, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
 
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -5562,6 +5716,34 @@ public class RANSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertEquals(bgx, calibrator.getBiasX(), 0.0);
         assertEquals(bgy, calibrator.getBiasY(), 0.0);
         assertEquals(bgz, calibrator.getBiasZ(), 0.0);
+    }
+
+    @Test
+    public void testGetSetBiasAsTriad() throws LockedException {
+        final RANSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new RANSACRobustKnownBiasEasyGyroscopeCalibrator();
+
+        // check default values
+        final AngularSpeedTriad triad1 = calibrator.getBiasAsTriad();
+        assertEquals(triad1.getValueX(), 0.0, 0.0);
+        assertEquals(triad1.getValueY(), 0.0, 0.0);
+        assertEquals(triad1.getValueZ(), 0.0, 0.0);
+        assertEquals(triad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+
+        // set new value
+        final Matrix bg = generateBg();
+        final AngularSpeedTriad triad2 = new AngularSpeedTriad(AngularSpeedUnit.RADIANS_PER_SECOND);
+        triad2.setValueCoordinates(bg);
+
+        calibrator.setBias(triad2);
+
+        // check
+        final AngularSpeedTriad triad3 = calibrator.getBiasAsTriad();
+        final AngularSpeedTriad triad4 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(triad4);
+
+        assertEquals(triad2, triad3);
+        assertEquals(triad2, triad4);
     }
 
     @Test
@@ -8585,6 +8767,11 @@ public class RANSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         }
         try {
             calibrator.setBias(null, null, null);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
+        try {
+            calibrator.setBias((AngularSpeedTriad) null);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }

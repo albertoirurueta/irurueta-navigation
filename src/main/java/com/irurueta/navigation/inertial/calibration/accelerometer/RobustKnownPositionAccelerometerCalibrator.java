@@ -27,8 +27,11 @@ import com.irurueta.navigation.inertial.BodyKinematics;
 import com.irurueta.navigation.inertial.ECEFGravity;
 import com.irurueta.navigation.inertial.ECEFPosition;
 import com.irurueta.navigation.inertial.ECEFVelocity;
+import com.irurueta.navigation.inertial.INSLooselyCoupledKalmanInitializerConfig;
+import com.irurueta.navigation.inertial.INSTightlyCoupledKalmanInitializerConfig;
 import com.irurueta.navigation.inertial.NEDPosition;
 import com.irurueta.navigation.inertial.NEDVelocity;
+import com.irurueta.navigation.inertial.calibration.AccelerationTriad;
 import com.irurueta.navigation.inertial.calibration.CalibrationException;
 import com.irurueta.navigation.inertial.calibration.StandardDeviationBodyKinematics;
 import com.irurueta.navigation.inertial.estimators.ECEFGravityEstimator;
@@ -1362,6 +1365,42 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
     }
 
     /**
+     * Gets initial bias coordinates of accelerometer used to find a solution.
+     *
+     * @return initial bias coordinates.
+     */
+    public AccelerationTriad getInitialBiasAsTriad() {
+        return new AccelerationTriad(
+                AccelerationUnit.METERS_PER_SQUARED_SECOND,
+                mInitialBiasX, mInitialBiasY, mInitialBiasZ);
+    }
+
+    /**
+     * Gets initial bias coordinates of accelerometer used to find a solution.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getInitialBiasAsTriad(final AccelerationTriad result) {
+        result.setValueCoordinatesAndUnit(
+                mInitialBiasX, mInitialBiasY, mInitialBiasZ,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+    }
+
+    /**
+     * Sets initial bias coordinates of accelerometer used to find a solution.
+     *
+     * @param initialBias initial bias coordinates to be set.
+     */
+    public void setInitialBias(final AccelerationTriad initialBias) {
+        mInitialBiasX = convertAcceleration(
+                initialBias.getValueX(), initialBias.getUnit());
+        mInitialBiasY = convertAcceleration(
+                initialBias.getValueY(), initialBias.getUnit());
+        mInitialBiasZ = convertAcceleration(
+                initialBias.getValueZ(), initialBias.getUnit());
+    }
+
+    /**
      * Gets initial x scaling factor.
      * This is only taken into account if non-linear preliminary solutions are used.
      *
@@ -1707,6 +1746,7 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
     /**
      * Gets initial bias to be used to find a solution as a column matrix.
      * This is only taken into account if non-linear preliminary solutions are used.
+     * Values are expressed in meters per squared second (m/s^2).
      *
      * @return initial bias to be used to find a solution as a column matrix.
      */
@@ -1725,6 +1765,7 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
     /**
      * Gets initial bias to be used to find a solution as a column matrix.
      * This is only taken into account if non-linear preliminary solutions are used.
+     * Values are expressed in meters per squared second (m/s^2).
      *
      * @param result instance where result data will be copied to.
      * @throws IllegalArgumentException if provided matrix is not 3x1.
@@ -1742,6 +1783,7 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
     /**
      * Sets initial bias to be used to find a solution as an array.
      * This is only taken into account if non-linear preliminary solutions are used.
+     * Values are expressed in meters per squared second (m/s^2).
      *
      * @param initialBias initial bias to find a solution.
      * @throws LockedException          if calibrator is currently running.
@@ -2366,6 +2408,35 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
     }
 
     /**
+     * Gets estimated accelerometer bias.
+     *
+     * @return estimated accelerometer bias or null if not available.
+     */
+    public AccelerationTriad getEstimatedBiasAsTriad() {
+        return mEstimatedBiases != null ?
+                new AccelerationTriad(AccelerationUnit.METERS_PER_SQUARED_SECOND,
+                        mEstimatedBiases[0], mEstimatedBiases[1], mEstimatedBiases[2]) : null;
+    }
+
+    /**
+     * Gets estimated accelerometer bias.
+     *
+     * @param result instance where result will be stored.
+     * @return true if estimated accelerometer bias is available and result was
+     * modified, false otherwise.
+     */
+    public boolean getEstimatedBiasAsTriad(final AccelerationTriad result) {
+        if (mEstimatedBiases != null) {
+            result.setValueCoordinatesAndUnit(
+                    mEstimatedBiases[0], mEstimatedBiases[1], mEstimatedBiases[2],
+                    AccelerationUnit.METERS_PER_SQUARED_SECOND);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * Gets estimated accelerometer scale factors and ross coupling errors.
      * This is the product of matrix Ta containing cross coupling errors and Ka
      * containing scaling factors.
@@ -2510,6 +2581,279 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      */
     public Matrix getEstimatedCovariance() {
         return mEstimatedCovariance;
+    }
+
+    /**
+     * Gets variance of estimated x coordinate of accelerometer bias expressed in (m^2/s^4).
+     *
+     * @return variance of estimated x coordinate of accelerometer bias or null if not available.
+     */
+    public Double getEstimatedBiasFxVariance() {
+        return mEstimatedCovariance != null ? mEstimatedCovariance.getElementAt(0, 0) : null;
+    }
+
+    /**
+     * Gets standard deviation of estimated x coordinate of accelerometer bias expressed in
+     * meters per squared second (m/s^2).
+     *
+     * @return standard deviation of estimated x coordinate of accelerometer bias or null if not
+     * available.
+     */
+    public Double getEstimatedBiasFxStandardDeviation() {
+        final Double variance = getEstimatedBiasFxVariance();
+        return variance != null ? Math.sqrt(variance) : null;
+    }
+
+    /**
+     * Gets standard deviation of estimated x coordinate of accelerometer bias.
+     *
+     * @return standard deviation of estimated x coordinate of accelerometer bias or null if not
+     * available.
+     */
+    public Acceleration getEstimatedBiasFxStandardDeviationAsAcceleration() {
+        return mEstimatedCovariance != null ?
+                new Acceleration(getEstimatedBiasFxStandardDeviation(), AccelerationUnit.METERS_PER_SQUARED_SECOND) :
+                null;
+    }
+
+    /**
+     * Gets standard deviation of estimated x coordinate of accelerometer bias.
+     *
+     * @param result instance where result will be stored.
+     * @return true if standard deviation of estimated x coordinate of accelerometer bias is available,
+     * false otherwise.
+     */
+    public boolean getEstimatedBiasFxStandardDeviationAsAcceleration(final Acceleration result) {
+        if (mEstimatedCovariance != null) {
+            result.setValue(getEstimatedBiasFxStandardDeviation());
+            result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Gets variance of estimated y coordinate of accelerometer bias expressed in (m^2/s^4).
+     *
+     * @return variance of estimated y coordinate of accelerometer bias or null if not available.
+     */
+    public Double getEstimatedBiasFyVariance() {
+        return mEstimatedCovariance != null ? mEstimatedCovariance.getElementAt(1, 1) : null;
+    }
+
+    /**
+     * Gets standard deviation of estimated y coordinate of accelerometer bias expressed in
+     * meters per squared second (m/s^2).
+     *
+     * @return standard deviation of estimated y coordinate of accelerometer bias or null if not
+     * available.
+     */
+    public Double getEstimatedBiasFyStandardDeviation() {
+        final Double variance = getEstimatedBiasFyVariance();
+        return variance != null ? Math.sqrt(variance) : null;
+    }
+
+    /**
+     * Gets standard deviation of estimated y coordinate of accelerometer bias.
+     *
+     * @return standard deviation of estimated y coordinate of accelerometer bias or null if not
+     * available.
+     */
+    public Acceleration getEstimatedBiasFyStandardDeviationAsAcceleration() {
+        return mEstimatedCovariance != null ?
+                new Acceleration(getEstimatedBiasFyStandardDeviation(), AccelerationUnit.METERS_PER_SQUARED_SECOND) :
+                null;
+    }
+
+    /**
+     * Gets standard deviation of estimated y coordinate of accelerometer bias.
+     *
+     * @param result instance where result will be stored.
+     * @return true if standard deviation of estimated y coordinate of accelerometer bias is available,
+     * false otherwise.
+     */
+    public boolean getEstimatedBiasFyStandardDeviationAsAcceleration(final Acceleration result) {
+        if (mEstimatedCovariance != null) {
+            result.setValue(getEstimatedBiasFyStandardDeviation());
+            result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Gets variance of estimated z coordinate of accelerometer bias expressed in (m^2/s^4).
+     *
+     * @return variance of estimated z coordinate of accelerometer bias or null if not available.
+     */
+    public Double getEstimatedBiasFzVariance() {
+        return mEstimatedCovariance != null ? mEstimatedCovariance.getElementAt(2, 2) : null;
+    }
+
+    /**
+     * Gets standard deviation of estimated z coordinate of accelerometer bias expressed in
+     * meters per squared second (m/s^2).
+     *
+     * @return standard deviation of estimated z coordinate of accelerometer bias or null if not
+     * available.
+     */
+    public Double getEstimatedBiasFzStandardDeviation() {
+        final Double variance = getEstimatedBiasFzVariance();
+        return variance != null ? Math.sqrt(variance) : null;
+    }
+
+    /**
+     * Gets standard deviation of estimated z coordinate of accelerometer bias.
+     *
+     * @return standard deviation of estimated z coordinate of accelerometer bias or null if not
+     * available.
+     */
+    public Acceleration getEstimatedBiasFzStandardDeviationAsAcceleration() {
+        return mEstimatedCovariance != null ?
+                new Acceleration(getEstimatedBiasFzStandardDeviation(), AccelerationUnit.METERS_PER_SQUARED_SECOND) :
+                null;
+    }
+
+    /**
+     * Gets standard deviation of estimated z coordinate of accelerometer bias.
+     *
+     * @param result instance where result will be stored.
+     * @return true if standard deviation of estimated z coordinate of accelerometer bias is available,
+     * false otherwise.
+     */
+    public boolean getEstimatedBiasFzStandardDeviationAsAcceleration(final Acceleration result) {
+        if (mEstimatedCovariance != null) {
+            result.setValue(getEstimatedBiasFzStandardDeviation());
+            result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Gets standard deviation of estimated accelerometer bias coordinates.
+     *
+     * @return standard deviation of estimated accelerometer bias coordinates.
+     */
+    public AccelerationTriad getEstimatedBiasStandardDeviation() {
+        return mEstimatedCovariance != null ?
+                new AccelerationTriad(AccelerationUnit.METERS_PER_SQUARED_SECOND,
+                        getEstimatedBiasFxStandardDeviation(),
+                        getEstimatedBiasFyStandardDeviation(),
+                        getEstimatedBiasFzStandardDeviation()) : null;
+    }
+
+    /**
+     * Gets standard deviation of estimated accelerometer bias coordinates.
+     *
+     * @param result instance where result will be stored.
+     * @return true if standard deviation of accelerometer bias was available, false
+     * otherwise.
+     */
+    public boolean getEstimatedBiasStandardDeviation(final AccelerationTriad result) {
+        if (mEstimatedCovariance != null) {
+            result.setValueCoordinatesAndUnit(
+                    getEstimatedBiasFxStandardDeviation(),
+                    getEstimatedBiasFyStandardDeviation(),
+                    getEstimatedBiasFzStandardDeviation(),
+                    AccelerationUnit.METERS_PER_SQUARED_SECOND);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Gets average of estimated standard deviation of accelerometer bias coordinates expressed
+     * in meters per squared second (m/s^2).
+     *
+     * @return average of estimated standard deviation of accelerometer bias coordinates or null
+     * if not available.
+     */
+    public Double getEstimatedBiasStandardDeviationAverage() {
+        return mEstimatedCovariance != null ?
+                (getEstimatedBiasFxStandardDeviation() +
+                        getEstimatedBiasFyStandardDeviation() +
+                        getEstimatedBiasFzStandardDeviation()) / 3.0 : null;
+    }
+
+    /**
+     * Gets average of estimated standard deviation of accelerometer bias coordinates.
+     *
+     * @return average of estimated standard deviation of accelerometer bias coordinates or null.
+     */
+    public Acceleration getEstimatedBiasStandardDeviationAverageAsAcceleration() {
+        return mEstimatedCovariance != null ?
+                new Acceleration(getEstimatedBiasStandardDeviationAverage(),
+                        AccelerationUnit.METERS_PER_SQUARED_SECOND) : null;
+    }
+
+    /**
+     * Gets average of estimated standard deviation of accelerometer bias coordinates.
+     *
+     * @param result instance where result will be stored.
+     * @return true if average of estimated standard deviation of accelerometer bias is available,
+     * false otherwise.
+     */
+    public boolean getEstimatedBiasStandardDeviationAverageAsAcceleration(final Acceleration result) {
+        if (mEstimatedCovariance != null) {
+            result.setValue(getEstimatedBiasStandardDeviationAverage());
+            result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Gets norm of estimated standard deviation of accelerometer bias expressed in
+     * meters per squared second (m/s^2).
+     * This can be used as the initial accelerometer bias uncertainty for
+     * {@link INSLooselyCoupledKalmanInitializerConfig} or {@link INSTightlyCoupledKalmanInitializerConfig}.
+     *
+     * @return norm of estimated standard deviation of accelerometer bias or null
+     * if not available.
+     */
+    public Double getEstimatedBiasStandardDeviationNorm() {
+        return mEstimatedCovariance != null ?
+                Math.sqrt(getEstimatedBiasFxVariance() + getEstimatedBiasFyVariance() + getEstimatedBiasFzVariance()) :
+                null;
+    }
+
+    /**
+     * Gets norm of estimated standard deviation of accelerometer bias.
+     * This can be used as the initial accelerometer bias uncertainty for
+     * {@link INSLooselyCoupledKalmanInitializerConfig} or {@link INSTightlyCoupledKalmanInitializerConfig}.
+     *
+     * @return norm of estimated standard deviation of accelerometer bias or null
+     * if not available.
+     */
+    public Acceleration getEstimatedBiasStandardDeviationNormAsAcceleration() {
+        return mEstimatedCovariance != null ?
+                new Acceleration(getEstimatedBiasStandardDeviationNorm(),
+                        AccelerationUnit.METERS_PER_SQUARED_SECOND) : null;
+    }
+
+    /**
+     * Gets norm of estimated standard deviation of accelerometer bias coordinates.
+     * This can be used as the initial accelerometer bias uncertainty for
+     * {@link INSLooselyCoupledKalmanInitializerConfig} or {@link INSTightlyCoupledKalmanInitializerConfig}.
+     *
+     * @param result instance where result will be stored.
+     * @return true if norm of estimated standard deviation of accelerometer bias is
+     * available, false otherwise.
+     */
+    public boolean getEstimatedBiasStandardDeviationNormAsAcceleration(final Acceleration result) {
+        if (mEstimatedCovariance != null) {
+            result.setValue(getEstimatedBiasStandardDeviationNorm());
+            result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -6612,14 +6956,26 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
     }
 
     /**
+     * Converts acceleration value and unit to meters per squared second.
+     *
+     * @param value acceleration value.
+     * @param unit  unit of acceleration value.
+     * @return converted value.
+     */
+    private static double convertAcceleration(final double value, final AccelerationUnit unit) {
+        return AccelerationConverter.convert(value, unit,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+    }
+
+    /**
      * Converts acceleration instance to meters per squared second.
      *
      * @param acceleration acceleration instance to be converted.
      * @return converted value.
      */
     private static double convertAcceleration(final Acceleration acceleration) {
-        return AccelerationConverter.convert(acceleration.getValue().doubleValue(),
-                acceleration.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        return convertAcceleration(acceleration.getValue().doubleValue(),
+                acceleration.getUnit());
     }
 
     /**

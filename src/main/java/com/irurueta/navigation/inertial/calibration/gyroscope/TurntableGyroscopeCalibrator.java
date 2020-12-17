@@ -33,9 +33,12 @@ import com.irurueta.navigation.geodesic.Constants;
 import com.irurueta.navigation.inertial.BodyKinematics;
 import com.irurueta.navigation.inertial.ECEFPosition;
 import com.irurueta.navigation.inertial.ECEFVelocity;
+import com.irurueta.navigation.inertial.INSLooselyCoupledKalmanInitializerConfig;
+import com.irurueta.navigation.inertial.INSTightlyCoupledKalmanInitializerConfig;
 import com.irurueta.navigation.inertial.NEDPosition;
 import com.irurueta.navigation.inertial.NEDVelocity;
 import com.irurueta.navigation.inertial.calibration.AccelerationFixer;
+import com.irurueta.navigation.inertial.calibration.AngularSpeedTriad;
 import com.irurueta.navigation.inertial.calibration.CalibrationException;
 import com.irurueta.navigation.inertial.calibration.StandardDeviationBodyKinematics;
 import com.irurueta.navigation.inertial.estimators.ECEFKinematicsEstimator;
@@ -3765,6 +3768,46 @@ public class TurntableGyroscopeCalibrator {
     }
 
     /**
+     * Gets initial bias coordinates of gyroscope used to find a solution.
+     *
+     * @return initial bias coordinates.
+     */
+    public AngularSpeedTriad getInitialBiasAsTriad() {
+        return new AngularSpeedTriad(AngularSpeedUnit.RADIANS_PER_SECOND,
+                mInitialBiasX, mInitialBiasY, mInitialBiasZ);
+    }
+
+    /**
+     * Gets initial bias coordinates of gyroscope used to find a solution.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getInitialBiasAsTriad(AngularSpeedTriad result) {
+        result.setValueCoordinatesAndUnit(
+                mInitialBiasX, mInitialBiasY, mInitialBiasZ,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+    }
+
+    /**
+     * Sets initial bias coordinates of gyroscope used to find a solution.
+     *
+     * @param initialBias initial bias coordinates to be set.
+     * @throws LockedException if calibrator is currently running.
+     */
+    public void setInitialBias(AngularSpeedTriad initialBias) throws LockedException {
+        if (mRunning) {
+            throw new LockedException();
+        }
+
+        mInitialBiasX = convertAngularSpeed(
+                initialBias.getValueX(), initialBias.getUnit());
+        mInitialBiasY = convertAngularSpeed(
+                initialBias.getValueY(), initialBias.getUnit());
+        mInitialBiasZ = convertAngularSpeed(
+                initialBias.getValueZ(), initialBias.getUnit());
+    }
+
+    /**
      * Gets initial gyroscope scale factors and cross coupling errors
      * matrix.
      *
@@ -4470,6 +4513,35 @@ public class TurntableGyroscopeCalibrator {
     }
 
     /**
+     * Gets estimated gyroscope bias.
+     *
+     * @return estimated gyroscope bias or null if not available.
+     */
+    public AngularSpeedTriad getEstimatedBiasAsTriad() {
+        return mEstimatedBiases != null ?
+                new AngularSpeedTriad(AngularSpeedUnit.RADIANS_PER_SECOND,
+                        mEstimatedBiases[0], mEstimatedBiases[1], mEstimatedBiases[2]) : null;
+    }
+
+    /**
+     * Gets estimated gyroscope bias.
+     *
+     * @param result instance where result will be stored.
+     * @return true if estimated gyroscope bias is available and result was
+     * modified, false otherwise.
+     */
+    public boolean getEstimatedBiasAsTriad(final AngularSpeedTriad result) {
+        if (mEstimatedBiases != null) {
+            result.setValueCoordinatesAndUnit(
+                    mEstimatedBiases[0], mEstimatedBiases[1], mEstimatedBiases[2],
+                    AngularSpeedUnit.RADIANS_PER_SECOND);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * Gets estimated gyroscope scale factors and cross coupling errors.
      * This is the product of matrix Tg containing cross coupling errors and Kg
      * containing scaling factors.
@@ -4641,6 +4713,279 @@ public class TurntableGyroscopeCalibrator {
      */
     public double getEstimatedChiSq() {
         return mEstimatedChiSq;
+    }
+
+    /**
+     * Gets variance of estimated x coordinate of gyroscope bias expressed in (rad^2/s^2).
+     *
+     * @return variance of estimated x coordinate of gyroscope bias or null if not available.
+     */
+    public Double getEstimatedBiasXVariance() {
+        return mEstimatedCovariance != null ? mEstimatedCovariance.getElementAt(0, 0) : null;
+    }
+
+    /**
+     * Gets standard deviation of estimated x coordinate of gyroscope bias expressed in
+     * radians per second (rad/s).
+     *
+     * @return standard deviation of estimated x coordinate of gyroscope bias or null if not
+     * available.
+     */
+    public Double getEstimatedBiasXStandardDeviation() {
+        final Double variance = getEstimatedBiasXVariance();
+        return variance != null ? Math.sqrt(variance) : null;
+    }
+
+    /**
+     * Gets standard deviation of estimated x coordinate of gyroscope bias.
+     *
+     * @return standard deviation of estimated x coordinate of gyroscope bias or null if not
+     * available.
+     */
+    public AngularSpeed getEstimatedBiasXStandardDeviationAsAngularSpeed() {
+        return mEstimatedCovariance != null ?
+                new AngularSpeed(getEstimatedBiasXStandardDeviation(), AngularSpeedUnit.RADIANS_PER_SECOND) :
+                null;
+    }
+
+    /**
+     * Gets standard deviation of estimated x coordinate of gyroscope bias.
+     *
+     * @param result instance where result will be stored.
+     * @return true if standard deviation of estimated x coordinate of gyroscope bias is available,
+     * false otherwise.
+     */
+    public boolean getEstimatedBiasXStandardDeviationAsAngularSpeed(final AngularSpeed result) {
+        if (mEstimatedCovariance != null) {
+            result.setValue(getEstimatedBiasXStandardDeviation());
+            result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Gets variance of estimated y coordinate of gyroscope bias expressed in (rad^2/s^2).
+     *
+     * @return variance of estimated y coordinate of gyroscope bias or null if not available.
+     */
+    public Double getEstimatedBiasYVariance() {
+        return mEstimatedCovariance != null ? mEstimatedCovariance.getElementAt(1, 1) : null;
+    }
+
+    /**
+     * Gets standard deviation of estimated y coordinate of gyroscope bias expressed in
+     * radians per second (rad/s).
+     *
+     * @return standard deviation of estimated y coordinate of gyroscope bias or null if not
+     * available.
+     */
+    public Double getEstimatedBiasYStandardDeviation() {
+        final Double variance = getEstimatedBiasYVariance();
+        return variance != null ? Math.sqrt(variance) : null;
+    }
+
+    /**
+     * Gets standard deviation of estimated y coordinate of gyroscope bias.
+     *
+     * @return standard deviation of estimated y coordinate of gyroscope bias or null if not
+     * available.
+     */
+    public AngularSpeed getEstimatedBiasYStandardDeviationAsAngularSpeed() {
+        return mEstimatedCovariance != null ?
+                new AngularSpeed(getEstimatedBiasYStandardDeviation(), AngularSpeedUnit.RADIANS_PER_SECOND) :
+                null;
+    }
+
+    /**
+     * Gets standard deviation of estimated y coordinate of gyroscope bias.
+     *
+     * @param result instance where result will be stored.
+     * @return true if standard deviation of estimated y coordinate of gyroscope bias is available,
+     * false otherwise.
+     */
+    public boolean getEstimatedBiasYStandardDeviationAsAngularSpeed(final AngularSpeed result) {
+        if (mEstimatedCovariance != null) {
+            result.setValue(getEstimatedBiasYStandardDeviation());
+            result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Gets variance of estimated z coordinate of gyroscope bias expressed in (rad^2/s^2).
+     *
+     * @return variance of estimated z coordinate of gyroscope bias or null if not available.
+     */
+    public Double getEstimatedBiasZVariance() {
+        return mEstimatedCovariance != null ? mEstimatedCovariance.getElementAt(2, 2) : null;
+    }
+
+    /**
+     * Gets standard deviation of estimated z coordinate of gyroscope bias expressed in
+     * radians per second (rad/s).
+     *
+     * @return standard deviation of estimated z coordinate of gyroscope bias or null if not
+     * available.
+     */
+    public Double getEstimatedBiasZStandardDeviation() {
+        final Double variance = getEstimatedBiasZVariance();
+        return variance != null ? Math.sqrt(variance) : null;
+    }
+
+    /**
+     * Gets standard deviation of estimated z coordinate of gyroscope bias.
+     *
+     * @return standard deviation of estimated z coordinate of gyroscope bias or null if not
+     * available.
+     */
+    public AngularSpeed getEstimatedBiasZStandardDeviationAsAngularSpeed() {
+        return mEstimatedCovariance != null ?
+                new AngularSpeed(getEstimatedBiasZStandardDeviation(), AngularSpeedUnit.RADIANS_PER_SECOND) :
+                null;
+    }
+
+    /**
+     * Gets standard deviation of estimated z coordinate of gyroscope bias.
+     *
+     * @param result instance where result will be stored.
+     * @return true if standard deviation of estimated z coordinate of gyroscope bias is available,
+     * false otherwise.
+     */
+    public boolean getEstimatedBiasZStandardDeviationAsAngularSpeed(final AngularSpeed result) {
+        if (mEstimatedCovariance != null) {
+            result.setValue(getEstimatedBiasZStandardDeviation());
+            result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Gets standard deviation of estimated gyroscope bias coordinates.
+     *
+     * @return standard deviation of estimated gyroscope bias coordinates.
+     */
+    public AngularSpeedTriad getEstimatedBiasStandardDeviation() {
+        return mEstimatedCovariance != null ?
+                new AngularSpeedTriad(AngularSpeedUnit.RADIANS_PER_SECOND,
+                        getEstimatedBiasXStandardDeviation(),
+                        getEstimatedBiasYStandardDeviation(),
+                        getEstimatedBiasZStandardDeviation()) : null;
+    }
+
+    /**
+     * Gets standard deviation of estimated gyroscope bias coordinates.
+     *
+     * @param result instance where result will be stored.
+     * @return true if standard deviation of gyroscope bias was available, false
+     * otherwise.
+     */
+    public boolean getEstimatedBiasStandardDeviation(final AngularSpeedTriad result) {
+        if (mEstimatedCovariance != null) {
+            result.setValueCoordinatesAndUnit(
+                    getEstimatedBiasXStandardDeviation(),
+                    getEstimatedBiasYStandardDeviation(),
+                    getEstimatedBiasZStandardDeviation(),
+                    AngularSpeedUnit.RADIANS_PER_SECOND);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Gets average of estimated standard deviation of gyroscope bias coordinates expressed
+     * in radians per second (rad/s).
+     *
+     * @return average of estimated standard deviation of gyroscope bias coordinates or null
+     * if not available.
+     */
+    public Double getEstimatedBiasStandardDeviationAverage() {
+        return mEstimatedCovariance != null ?
+                (getEstimatedBiasXStandardDeviation() +
+                        getEstimatedBiasYStandardDeviation() +
+                        getEstimatedBiasZStandardDeviation()) / 3.0 : null;
+    }
+
+    /**
+     * Gets average of estimated standard deviation of gyroscope bias coordinates.
+     *
+     * @return average of estimated standard deviation of gyroscope bias coordinates or null.
+     */
+    public AngularSpeed getEstimatedBiasStandardDeviationAverageAsAngularSpeed() {
+        return mEstimatedCovariance != null ?
+                new AngularSpeed(getEstimatedBiasStandardDeviationAverage(),
+                        AngularSpeedUnit.RADIANS_PER_SECOND) : null;
+    }
+
+    /**
+     * Gets average of estimated standard deviation of gyroscope bias coordinates.
+     *
+     * @param result instance where result will be stored.
+     * @return true if average of estimated standard deviation of gyroscope bias is available,
+     * false otherwise.
+     */
+    public boolean getEstimatedBiasStandardDeviationAverageAsAngularSpeed(final AngularSpeed result) {
+        if (mEstimatedCovariance != null) {
+            result.setValue(getEstimatedBiasStandardDeviationAverage());
+            result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Gets norm of estimated standard deviation of gyroscope bias expressed in
+     * radians per second (rad/s).
+     * This can be used as the initial gyroscope bias uncertainty for
+     * {@link INSLooselyCoupledKalmanInitializerConfig} or {@link INSTightlyCoupledKalmanInitializerConfig}.
+     *
+     * @return norm of estimated standard deviation of gyroscope bias or null
+     * if not available.
+     */
+    public Double getEstimatedBiasStandardDeviationNorm() {
+        return mEstimatedCovariance != null ?
+                Math.sqrt(getEstimatedBiasXVariance() + getEstimatedBiasYVariance() + getEstimatedBiasZVariance()) :
+                null;
+    }
+
+    /**
+     * Gets norm of estimated standard deviation of gyroscope bias.
+     * This can be used as the initial gyroscope bias uncertainty for
+     * {@link INSLooselyCoupledKalmanInitializerConfig} or {@link INSTightlyCoupledKalmanInitializerConfig}.
+     *
+     * @return norm of estimated standard deviation of gyroscope bias or null
+     * if not available.
+     */
+    public AngularSpeed getEstimatedBiasStandardDeviationNormAsAngularSpeed() {
+        return mEstimatedCovariance != null ?
+                new AngularSpeed(getEstimatedBiasStandardDeviationNorm(),
+                        AngularSpeedUnit.RADIANS_PER_SECOND) : null;
+    }
+
+    /**
+     * Gets norm of estimated standard deviation of gyroscope bias coordinates.
+     * This can be used as the initial gyroscope bias uncertainty for
+     * {@link INSLooselyCoupledKalmanInitializerConfig} or {@link INSTightlyCoupledKalmanInitializerConfig}.
+     *
+     * @param result instance where result will be stored.
+     * @return true if norm of estimated standard deviation of gyroscope bias is
+     * available, false otherwise.
+     */
+    public boolean getEstimatedBiasStandardDeviationNormAsAngularSpeed(final AngularSpeed result) {
+        if (mEstimatedCovariance != null) {
+            result.setValue(getEstimatedBiasStandardDeviationNorm());
+            result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -5550,14 +5895,25 @@ public class TurntableGyroscopeCalibrator {
     }
 
     /**
+     * Converts angular speed value and unit to radians per second.
+     *
+     * @param value angular speed value.
+     * @param unit unit of angular speed value.
+     * @return converted value.
+     */
+    private static double convertAngularSpeed(final double value, final AngularSpeedUnit unit) {
+        return AngularSpeedConverter.convert(value, unit, AngularSpeedUnit.RADIANS_PER_SECOND);
+    }
+
+    /**
      * Converts angular speed instance to radians per second.
      *
      * @param angularSpeed angular speed instance to be converted.
      * @return converted value.
      */
     private static double convertAngularSpeed(final AngularSpeed angularSpeed) {
-        return AngularSpeedConverter.convert(angularSpeed.getValue().doubleValue(),
-                angularSpeed.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        return convertAngularSpeed(angularSpeed.getValue().doubleValue(),
+                angularSpeed.getUnit());
     }
 
     /**

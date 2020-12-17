@@ -17,6 +17,7 @@ package com.irurueta.navigation.inertial.calibration.accelerometer;
 
 import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.WrongSizeException;
+import com.irurueta.navigation.inertial.calibration.AccelerationTriad;
 import com.irurueta.units.Acceleration;
 
 /**
@@ -131,4 +132,20 @@ public interface UnknownBiasAccelerometerCalibrator {
      * @return true if result was updated, false if estimation is not available.
      */
     boolean getEstimatedBiasFzAsAcceleration(final Acceleration result);
+
+    /**
+     * Gets estimated accelerometer bias.
+     *
+     * @return estimated accelerometer bias or null if not available.
+     */
+    AccelerationTriad getEstimatedBiasAsTriad();
+
+    /**
+     * Gets estimated accelerometer bias.
+     *
+     * @param result instance where result will be stored.
+     * @return true if estimated accelerometer bias is available and result was
+     * modified, false otherwise.
+     */
+    boolean getEstimatedBiasAsTriad(final AccelerationTriad result);
 }

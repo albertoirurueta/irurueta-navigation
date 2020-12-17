@@ -27,6 +27,7 @@ import com.irurueta.navigation.frames.NEDFrame;
 import com.irurueta.navigation.frames.converters.NEDtoECEFFrameConverter;
 import com.irurueta.navigation.inertial.BodyKinematics;
 import com.irurueta.navigation.inertial.NEDPosition;
+import com.irurueta.navigation.inertial.calibration.AccelerationTriad;
 import com.irurueta.navigation.inertial.calibration.BodyKinematicsGenerator;
 import com.irurueta.navigation.inertial.calibration.CalibrationException;
 import com.irurueta.navigation.inertial.calibration.IMUErrors;
@@ -122,6 +123,14 @@ public class RANSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        AccelerationTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(biasTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(biasTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(biasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        AccelerationTriad biasTriad2 = new AccelerationTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -214,6 +223,14 @@ public class RANSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(biasTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(biasTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(biasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        biasTriad2 = new AccelerationTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -309,6 +326,14 @@ public class RANSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(biasTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(biasTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(biasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        biasTriad2 = new AccelerationTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -402,6 +427,14 @@ public class RANSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(biasTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(biasTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(biasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        biasTriad2 = new AccelerationTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -495,6 +528,14 @@ public class RANSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(biasTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(biasTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(biasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        biasTriad2 = new AccelerationTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -588,6 +629,14 @@ public class RANSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(biasTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(biasTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(biasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        biasTriad2 = new AccelerationTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -681,6 +730,14 @@ public class RANSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(biasTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(biasTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(biasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        biasTriad2 = new AccelerationTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -774,6 +831,14 @@ public class RANSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(biasTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(biasTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(biasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        biasTriad2 = new AccelerationTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -872,6 +937,14 @@ public class RANSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        biasTriad2 = new AccelerationTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -965,6 +1038,14 @@ public class RANSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        biasTriad2 = new AccelerationTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -1058,6 +1139,14 @@ public class RANSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        biasTriad2 = new AccelerationTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -1151,6 +1240,14 @@ public class RANSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        biasTriad2 = new AccelerationTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -1244,6 +1341,14 @@ public class RANSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        biasTriad2 = new AccelerationTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -1337,6 +1442,14 @@ public class RANSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        biasTriad2 = new AccelerationTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -1430,6 +1543,14 @@ public class RANSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        biasTriad2 = new AccelerationTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -1524,6 +1645,14 @@ public class RANSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        biasTriad2 = new AccelerationTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -1623,6 +1752,14 @@ public class RANSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        biasTriad2 = new AccelerationTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -1716,6 +1853,14 @@ public class RANSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        biasTriad2 = new AccelerationTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -1809,6 +1954,14 @@ public class RANSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        biasTriad2 = new AccelerationTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -1902,6 +2055,14 @@ public class RANSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        biasTriad2 = new AccelerationTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -1995,6 +2156,14 @@ public class RANSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        biasTriad2 = new AccelerationTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -2089,6 +2258,14 @@ public class RANSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        biasTriad2 = new AccelerationTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -2182,6 +2359,14 @@ public class RANSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        biasTriad2 = new AccelerationTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -2275,6 +2460,14 @@ public class RANSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        biasTriad2 = new AccelerationTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -2369,6 +2562,14 @@ public class RANSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        biasTriad2 = new AccelerationTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -2472,6 +2673,14 @@ public class RANSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        biasTriad2 = new AccelerationTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -2575,6 +2784,14 @@ public class RANSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        biasTriad2 = new AccelerationTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -2678,6 +2895,14 @@ public class RANSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        biasTriad2 = new AccelerationTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -2781,6 +3006,14 @@ public class RANSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        biasTriad2 = new AccelerationTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -2884,6 +3117,14 @@ public class RANSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        biasTriad2 = new AccelerationTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -2987,6 +3228,14 @@ public class RANSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        biasTriad2 = new AccelerationTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -3090,6 +3339,14 @@ public class RANSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        biasTriad2 = new AccelerationTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -3192,6 +3449,14 @@ public class RANSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        biasTriad2 = new AccelerationTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -3300,6 +3565,14 @@ public class RANSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        biasTriad2 = new AccelerationTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -3409,6 +3682,14 @@ public class RANSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        biasTriad2 = new AccelerationTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -3518,6 +3799,14 @@ public class RANSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        biasTriad2 = new AccelerationTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -3627,6 +3916,14 @@ public class RANSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        biasTriad2 = new AccelerationTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -3736,6 +4033,14 @@ public class RANSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        biasTriad2 = new AccelerationTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -3845,6 +4150,14 @@ public class RANSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        biasTriad2 = new AccelerationTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -3954,6 +4267,14 @@ public class RANSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        biasTriad2 = new AccelerationTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -4274,6 +4595,39 @@ public class RANSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
+    }
+
+    @Test
+    public void testGetSetBiasAsTriad() throws LockedException {
+        final RANSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new RANSACRobustKnownBiasAndFrameAccelerometerCalibrator();
+
+        // check default values
+        final AccelerationTriad triad1 = calibrator.getBiasAsTriad();
+        assertEquals(triad1.getValueX(), 0.0, 0.0);
+        assertEquals(triad1.getValueY(), 0.0, 0.0);
+        assertEquals(triad1.getValueZ(), 0.0, 0.0);
+        assertEquals(triad1.getUnit(),
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        // set new values
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+
+        final AccelerationTriad triad2 = new AccelerationTriad(
+                AccelerationUnit.METERS_PER_SQUARED_SECOND,
+                biasX, biasY, biasZ);
+        calibrator.setBias(triad2);
+
+        // check
+        final AccelerationTriad triad3 = calibrator.getBiasAsTriad();
+        final AccelerationTriad triad4 = new AccelerationTriad();
+        calibrator.getBiasAsTriad(triad4);
+
+        assertEquals(triad2, triad3);
+        assertEquals(triad2, triad4);
     }
 
     @Test
@@ -5740,6 +6094,11 @@ public class RANSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         }
         try {
             calibrator.setBiasCoordinates(null, null, null);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
+        try {
+            calibrator.setBias((AccelerationTriad) null);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }

@@ -31,6 +31,7 @@ import com.irurueta.navigation.inertial.ECEFPosition;
 import com.irurueta.navigation.inertial.ECEFVelocity;
 import com.irurueta.navigation.inertial.NEDPosition;
 import com.irurueta.navigation.inertial.NEDVelocity;
+import com.irurueta.navigation.inertial.calibration.AccelerationTriad;
 import com.irurueta.navigation.inertial.calibration.BodyKinematicsGenerator;
 import com.irurueta.navigation.inertial.calibration.CalibrationException;
 import com.irurueta.navigation.inertial.calibration.IMUErrors;
@@ -121,6 +122,14 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getInitialBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad initialBiasTriad2 = new AccelerationTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -179,6 +188,8 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
         assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -190,6 +201,26 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzx());
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasFxVariance());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFyVariance());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFzVariance());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
     }
@@ -227,6 +258,14 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getInitialBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad initialBiasTriad2 = new AccelerationTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -285,6 +324,8 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
         assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -296,6 +337,26 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzx());
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasFxVariance());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFyVariance());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFzVariance());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
     }
@@ -336,6 +397,14 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getInitialBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad initialBiasTriad2 = new AccelerationTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -394,6 +463,8 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
         assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -405,6 +476,26 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzx());
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasFxVariance());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFyVariance());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFzVariance());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
     }
@@ -442,6 +533,14 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getInitialBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad initialBiasTriad2 = new AccelerationTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -500,6 +599,8 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
         assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -511,6 +612,26 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzx());
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasFxVariance());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFyVariance());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFzVariance());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
     }
@@ -554,6 +675,14 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getInitialBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), by, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad initialBiasTriad2 = new AccelerationTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -610,6 +739,8 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
         assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -621,6 +752,26 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzx());
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasFxVariance());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFyVariance());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFzVariance());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
@@ -674,6 +825,14 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getInitialBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), by, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad initialBiasTriad2 = new AccelerationTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -730,6 +889,8 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
         assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -741,6 +902,26 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzx());
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasFxVariance());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFyVariance());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFzVariance());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
@@ -811,6 +992,14 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getInitialBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), by, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad initialBiasTriad2 = new AccelerationTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
         assertEquals(calibrator.getInitialSz(), sz, 0.0);
@@ -866,6 +1055,8 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
         assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -877,6 +1068,26 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzx());
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasFxVariance());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFyVariance());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFzVariance());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
@@ -955,6 +1166,14 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getInitialBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad initialBiasTriad2 = new AccelerationTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -1015,6 +1234,8 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
         assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -1026,6 +1247,26 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzx());
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasFxVariance());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFyVariance());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFzVariance());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
     }
@@ -1080,6 +1321,14 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getInitialBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad initialBiasTriad2 = new AccelerationTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -1140,6 +1389,8 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
         assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -1151,6 +1402,26 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzx());
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasFxVariance());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFyVariance());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFzVariance());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
     }
@@ -1205,6 +1476,14 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getInitialBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad initialBiasTriad2 = new AccelerationTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -1265,6 +1544,8 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
         assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -1276,6 +1557,26 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzx());
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasFxVariance());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFyVariance());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFzVariance());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
     }
@@ -1330,6 +1631,14 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getInitialBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad initialBiasTriad2 = new AccelerationTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -1390,6 +1699,8 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
         assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -1401,6 +1712,26 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzx());
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasFxVariance());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFyVariance());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFzVariance());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
     }
@@ -1455,6 +1786,14 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getInitialBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad initialBiasTriad2 = new AccelerationTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -1515,6 +1854,8 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
         assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -1526,6 +1867,26 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzx());
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasFxVariance());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFyVariance());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFzVariance());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
     }
@@ -1586,6 +1947,14 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getInitialBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), by, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad initialBiasTriad2 = new AccelerationTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -1644,6 +2013,8 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
         assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -1655,6 +2026,26 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzx());
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasFxVariance());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFyVariance());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFzVariance());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
@@ -1725,6 +2116,14 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getInitialBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), by, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad initialBiasTriad2 = new AccelerationTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -1783,6 +2182,8 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
         assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -1794,6 +2195,26 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzx());
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasFxVariance());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFyVariance());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFzVariance());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
@@ -1864,6 +2285,14 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getInitialBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), by, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad initialBiasTriad2 = new AccelerationTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -1922,6 +2351,8 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
         assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -1933,6 +2364,26 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzx());
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasFxVariance());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFyVariance());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFzVariance());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
@@ -2003,6 +2454,14 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getInitialBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), by, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad initialBiasTriad2 = new AccelerationTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -2061,6 +2520,8 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
         assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -2072,6 +2533,26 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzx());
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasFxVariance());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFyVariance());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFzVariance());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
@@ -2143,6 +2624,14 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getInitialBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), by, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad initialBiasTriad2 = new AccelerationTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -2201,6 +2690,8 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
         assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -2212,6 +2703,26 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzx());
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasFxVariance());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFyVariance());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFzVariance());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
@@ -2288,6 +2799,14 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getInitialBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), by, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad initialBiasTriad2 = new AccelerationTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -2346,6 +2865,8 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
         assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -2357,6 +2878,26 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzx());
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasFxVariance());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFyVariance());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFzVariance());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
@@ -2435,6 +2976,14 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getInitialBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), by, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad initialBiasTriad2 = new AccelerationTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -2493,6 +3042,8 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
         assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -2504,6 +3055,26 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzx());
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasFxVariance());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFyVariance());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFzVariance());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
@@ -2582,6 +3153,14 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getInitialBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), by, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad initialBiasTriad2 = new AccelerationTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -2640,6 +3219,8 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
         assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -2651,6 +3232,26 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzx());
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasFxVariance());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFyVariance());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFzVariance());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
@@ -2740,6 +3341,14 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getInitialBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), by, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad initialBiasTriad2 = new AccelerationTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
         assertEquals(calibrator.getInitialSz(), sz, 0.0);
@@ -2797,6 +3406,8 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
         assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -2808,6 +3419,26 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzx());
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasFxVariance());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFyVariance());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFzVariance());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
@@ -2907,6 +3538,14 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getInitialBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), by, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad initialBiasTriad2 = new AccelerationTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
         assertEquals(calibrator.getInitialSz(), sz, 0.0);
@@ -2964,6 +3603,8 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
         assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -2975,6 +3616,26 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzx());
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasFxVariance());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFyVariance());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFzVariance());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
@@ -3078,6 +3739,14 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getInitialBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), by, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad initialBiasTriad2 = new AccelerationTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
         assertEquals(calibrator.getInitialSz(), sz, 0.0);
@@ -3135,6 +3804,8 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
         assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -3146,6 +3817,26 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzx());
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasFxVariance());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFyVariance());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFzVariance());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
@@ -3249,6 +3940,14 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getInitialBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), by, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad initialBiasTriad2 = new AccelerationTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
         assertEquals(calibrator.getInitialSz(), sz, 0.0);
@@ -3306,6 +4005,8 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
         assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -3317,6 +4018,26 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzx());
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasFxVariance());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFyVariance());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFzVariance());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
@@ -3399,6 +4120,14 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getInitialBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad initialBiasTriad2 = new AccelerationTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -3459,6 +4188,8 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
         assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -3470,6 +4201,26 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzx());
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasFxVariance());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFyVariance());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFzVariance());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
     }
@@ -3524,6 +4275,14 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getInitialBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad initialBiasTriad2 = new AccelerationTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -3584,6 +4343,8 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
         assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -3595,6 +4356,26 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzx());
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasFxVariance());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFyVariance());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFzVariance());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
     }
@@ -3649,6 +4430,14 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getInitialBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad initialBiasTriad2 = new AccelerationTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -3709,6 +4498,8 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
         assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -3720,6 +4511,26 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzx());
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasFxVariance());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFyVariance());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFzVariance());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
     }
@@ -3774,6 +4585,14 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getInitialBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad initialBiasTriad2 = new AccelerationTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -3834,6 +4653,8 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
         assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -3845,6 +4666,26 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzx());
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasFxVariance());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFyVariance());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFzVariance());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
     }
@@ -3899,6 +4740,14 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getInitialBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad initialBiasTriad2 = new AccelerationTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -3959,6 +4808,8 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
         assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -3970,6 +4821,26 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzx());
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasFxVariance());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFyVariance());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFzVariance());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
     }
@@ -4030,6 +4901,14 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getInitialBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), by, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad initialBiasTriad2 = new AccelerationTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -4088,6 +4967,8 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
         assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -4099,6 +4980,26 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzx());
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasFxVariance());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFyVariance());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFzVariance());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
@@ -4169,6 +5070,14 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getInitialBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), by, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad initialBiasTriad2 = new AccelerationTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -4227,6 +5136,8 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
         assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -4238,6 +5149,26 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzx());
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasFxVariance());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFyVariance());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFzVariance());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
@@ -4308,6 +5239,14 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getInitialBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), by, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad initialBiasTriad2 = new AccelerationTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -4366,6 +5305,8 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
         assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -4377,6 +5318,26 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzx());
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasFxVariance());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFyVariance());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFzVariance());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
@@ -4447,6 +5408,14 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getInitialBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), by, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad initialBiasTriad2 = new AccelerationTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -4505,6 +5474,8 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
         assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -4516,6 +5487,26 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzx());
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasFxVariance());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFyVariance());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFzVariance());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
@@ -4587,6 +5578,14 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getInitialBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), by, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad initialBiasTriad2 = new AccelerationTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -4645,6 +5644,8 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
         assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -4656,6 +5657,26 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzx());
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasFxVariance());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFyVariance());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFzVariance());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
@@ -4732,6 +5753,14 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getInitialBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), by, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad initialBiasTriad2 = new AccelerationTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -4790,6 +5819,8 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
         assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -4801,6 +5832,26 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzx());
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasFxVariance());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFyVariance());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFzVariance());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
@@ -4879,6 +5930,14 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getInitialBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), by, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad initialBiasTriad2 = new AccelerationTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -4937,6 +5996,8 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
         assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -4948,6 +6009,26 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzx());
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasFxVariance());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFyVariance());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFzVariance());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
@@ -5026,6 +6107,14 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getInitialBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), by, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad initialBiasTriad2 = new AccelerationTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -5084,6 +6173,8 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
         assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -5095,6 +6186,26 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzx());
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasFxVariance());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFyVariance());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFzVariance());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
@@ -5184,6 +6295,14 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getInitialBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), by, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad initialBiasTriad2 = new AccelerationTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
         assertEquals(calibrator.getInitialSz(), sz, 0.0);
@@ -5241,6 +6360,8 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
         assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -5252,6 +6373,26 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzx());
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasFxVariance());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFyVariance());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFzVariance());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
@@ -5351,6 +6492,14 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getInitialBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), by, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad initialBiasTriad2 = new AccelerationTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
         assertEquals(calibrator.getInitialSz(), sz, 0.0);
@@ -5408,6 +6557,8 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
         assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -5419,6 +6570,26 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzx());
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasFxVariance());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFyVariance());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFzVariance());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
@@ -5522,6 +6693,14 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getInitialBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), by, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad initialBiasTriad2 = new AccelerationTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
         assertEquals(calibrator.getInitialSz(), sz, 0.0);
@@ -5579,6 +6758,8 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
         assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -5590,6 +6771,26 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzx());
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasFxVariance());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFyVariance());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFzVariance());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
@@ -5693,6 +6894,14 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getInitialBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        final AccelerationTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), by, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AccelerationTriad initialBiasTriad2 = new AccelerationTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
         assertEquals(calibrator.getInitialSz(), sz, 0.0);
@@ -5750,6 +6959,8 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
         assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -5761,6 +6972,26 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzx());
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasFxVariance());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFyVariance());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasFzVariance());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
@@ -6845,7 +8076,7 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
             assertTrue(ba.equals(estimatedBa, ABSOLUTE_ERROR));
             assertTrue(ma.equals(estimatedMa, ABSOLUTE_ERROR));
 
-            assertEstimatedResult(estimatedBa, estimatedMa, calibrator);
+            assertEstimatedResult(estimatedBa, estimatedMa, calibrator, true);
 
             assertNotNull(calibrator.getEstimatedCovariance());
 
@@ -6978,7 +8209,7 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
             assertTrue(ba.equals(estimatedBa, ABSOLUTE_ERROR));
             assertTrue(ma.equals(estimatedMa, ABSOLUTE_ERROR));
 
-            assertEstimatedResult(estimatedBa, estimatedMa, calibrator);
+            assertEstimatedResult(estimatedBa, estimatedMa, calibrator, true);
 
             assertNotNull(calibrator.getEstimatedCovariance());
 
@@ -7112,7 +8343,7 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
             assertTrue(ba.equals(estimatedBa, LARGE_ABSOLUTE_ERROR));
             assertTrue(ma.equals(estimatedMa, LARGE_ABSOLUTE_ERROR));
 
-            assertEstimatedResult(estimatedBa, estimatedMa, calibrator);
+            assertEstimatedResult(estimatedBa, estimatedMa, calibrator, true);
 
             assertNotNull(calibrator.getEstimatedCovariance());
 
@@ -7246,7 +8477,7 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
             assertTrue(ba.equals(estimatedBa, LARGE_ABSOLUTE_ERROR));
             assertTrue(ma.equals(estimatedMa, LARGE_ABSOLUTE_ERROR));
 
-            assertEstimatedResult(estimatedBa, estimatedMa, calibrator);
+            assertEstimatedResult(estimatedBa, estimatedMa, calibrator, true);
 
             assertNotNull(calibrator.getEstimatedCovariance());
 
@@ -7380,7 +8611,7 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
             assertTrue(ba.equals(estimatedBa, ABSOLUTE_ERROR));
             assertTrue(ma.equals(estimatedMa, ABSOLUTE_ERROR));
 
-            assertEstimatedResult(estimatedBa, estimatedMa, calibrator);
+            assertEstimatedResult(estimatedBa, estimatedMa, calibrator, false);
 
             assertNull(calibrator.getEstimatedCovariance());
 
@@ -7607,7 +8838,8 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
 
     private void assertEstimatedResult(
             final Matrix ba, final Matrix ma,
-            final MSACRobustKnownPositionAccelerometerCalibrator calibrator)
+            final MSACRobustKnownPositionAccelerometerCalibrator calibrator,
+            final boolean checkCovariance)
             throws WrongSizeException {
 
         final double[] estimatedBiases = calibrator.getEstimatedBiases();
@@ -7674,6 +8906,66 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
                 0.0);
         assertEquals(ma.getElementAt(2, 1), calibrator.getEstimatedMzy(),
                 0.0);
+
+        if (checkCovariance) {
+            assertCovariance(calibrator);
+        }
+    }
+
+    private void assertCovariance(
+            final MSACRobustKnownPositionAccelerometerCalibrator calibrator) {
+        assertNotNull(calibrator.getEstimatedBiasFxVariance());
+
+        assertNotNull(calibrator.getEstimatedBiasFxVariance());
+        assertNotNull(calibrator.getEstimatedBiasFxStandardDeviation());
+        final Acceleration stdBx1 = calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration();
+        assertNotNull(stdBx1);
+        final Acceleration stdBx2 = new Acceleration(1.0, AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        assertTrue(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration(stdBx2));
+        assertEquals(stdBx1, stdBx2);
+
+        assertNotNull(calibrator.getEstimatedBiasFyVariance());
+        assertNotNull(calibrator.getEstimatedBiasFyStandardDeviation());
+        final Acceleration stdBy1 = calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration();
+        assertNotNull(stdBy1);
+        final Acceleration stdBy2 = new Acceleration(1.0, AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        assertTrue(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration(stdBy2));
+        assertEquals(stdBy1, stdBy2);
+
+        assertNotNull(calibrator.getEstimatedBiasFzVariance());
+        assertNotNull(calibrator.getEstimatedBiasFzStandardDeviation());
+        final Acceleration stdBz1 = calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration();
+        assertNotNull(stdBz1);
+        final Acceleration stdBz2 = new Acceleration(1.0, AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        assertTrue(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration(stdBz2));
+        assertEquals(stdBz1, stdBz2);
+
+        final AccelerationTriad std1 = calibrator.getEstimatedBiasStandardDeviation();
+        assertEquals(calibrator.getEstimatedBiasFxStandardDeviation(), std1.getValueX(), 0.0);
+        assertEquals(calibrator.getEstimatedBiasFyStandardDeviation(), std1.getValueY(), 0.0);
+        assertEquals(calibrator.getEstimatedBiasFzStandardDeviation(), std1.getValueZ(), 0.0);
+        assertEquals(AccelerationUnit.METERS_PER_SQUARED_SECOND, std1.getUnit());
+        final AccelerationTriad std2 = new AccelerationTriad();
+        calibrator.getEstimatedBiasStandardDeviation(std2);
+
+        final double avgStd = (calibrator.getEstimatedBiasFxStandardDeviation() +
+                calibrator.getEstimatedBiasFyStandardDeviation() +
+                calibrator.getEstimatedBiasFzStandardDeviation()) / 3.0;
+        assertEquals(avgStd, calibrator.getEstimatedBiasStandardDeviationAverage(), 0.0);
+        final Acceleration avg1 = calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration();
+        assertEquals(avgStd, avg1.getValue().doubleValue(), 0.0);
+        assertEquals(AccelerationUnit.METERS_PER_SQUARED_SECOND, avg1.getUnit());
+        final Acceleration avg2 = new Acceleration(1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration(avg2);
+        assertEquals(avg1, avg2);
+
+        assertEquals(std1.getNorm(), calibrator.getEstimatedBiasStandardDeviationNorm(), ABSOLUTE_ERROR);
+        final Acceleration norm1 = calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration();
+        assertEquals(std1.getNorm(), norm1.getValue().doubleValue(), ABSOLUTE_ERROR);
+        assertEquals(AccelerationUnit.METERS_PER_SQUARED_SECOND, norm1.getUnit());
+        final Acceleration norm2 = new Acceleration(1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(norm2);
+        assertEquals(norm1, norm2);
     }
 
     private Matrix generateBa() {

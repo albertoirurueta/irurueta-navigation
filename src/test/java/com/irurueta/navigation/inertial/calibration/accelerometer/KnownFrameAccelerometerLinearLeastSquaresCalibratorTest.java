@@ -27,6 +27,7 @@ import com.irurueta.navigation.frames.NEDFrame;
 import com.irurueta.navigation.frames.converters.NEDtoECEFFrameConverter;
 import com.irurueta.navigation.inertial.BodyKinematics;
 import com.irurueta.navigation.inertial.NEDPosition;
+import com.irurueta.navigation.inertial.calibration.AccelerationTriad;
 import com.irurueta.navigation.inertial.calibration.BodyKinematicsGenerator;
 import com.irurueta.navigation.inertial.calibration.CalibrationException;
 import com.irurueta.navigation.inertial.calibration.FrameBodyKinematics;
@@ -102,6 +103,8 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
         assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -138,6 +141,8 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
         assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -176,6 +181,8 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
         assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -213,6 +220,8 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
         assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -248,6 +257,8 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
         assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -283,6 +294,8 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
         assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -318,6 +331,8 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
         assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -353,6 +368,8 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
         assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -1270,6 +1287,15 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibratorTest implements
         assertEquals(calibrator.getEstimatedBiasFz(),
                 baz1.getValue().doubleValue(), 0.0);
         assertEquals(AccelerationUnit.METERS_PER_SQUARED_SECOND, baz1.getUnit());
+
+        final AccelerationTriad bTriad1 = calibrator.getEstimatedBiasAsTriad();
+        assertEquals(calibrator.getEstimatedBiasFx(), bTriad1.getValueX(), 0.0);
+        assertEquals(calibrator.getEstimatedBiasFy(), bTriad1.getValueY(), 0.0);
+        assertEquals(calibrator.getEstimatedBiasFz(), bTriad1.getValueZ(), 0.0);
+        assertEquals(AccelerationUnit.METERS_PER_SQUARED_SECOND, bTriad1.getUnit());
+        final AccelerationTriad bTriad2 = new AccelerationTriad();
+        calibrator.getEstimatedBiasAsTriad(bTriad2);
+        assertEquals(bTriad1, bTriad2);
 
         assertEquals(ma.getElementAt(0, 0), calibrator.getEstimatedSx(),
                 0.0);

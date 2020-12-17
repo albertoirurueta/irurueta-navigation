@@ -32,11 +32,14 @@ import com.irurueta.navigation.inertial.NEDPosition;
 import com.irurueta.navigation.inertial.NEDVelocity;
 import com.irurueta.navigation.inertial.calibration.BodyMagneticFluxDensityGenerator;
 import com.irurueta.navigation.inertial.calibration.CalibrationException;
+import com.irurueta.navigation.inertial.calibration.MagneticFluxDensityTriad;
 import com.irurueta.navigation.inertial.calibration.StandardDeviationBodyMagneticFluxDensity;
 import com.irurueta.navigation.inertial.estimators.BodyMagneticFluxDensityEstimator;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
 import com.irurueta.statistics.GaussianRandomizer;
 import com.irurueta.statistics.UniformRandomizer;
+import com.irurueta.units.MagneticFluxDensity;
+import com.irurueta.units.MagneticFluxDensityUnit;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -143,6 +146,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -222,6 +250,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -304,6 +357,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -384,6 +462,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -465,6 +568,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -553,6 +681,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -651,6 +804,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -767,6 +945,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, mm);
         final Matrix mm2 = new Matrix(3, 3);
@@ -884,6 +1087,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -978,6 +1206,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -1072,6 +1325,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -1166,6 +1444,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -1260,6 +1563,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -1360,6 +1688,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -1470,6 +1823,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -1580,6 +1958,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -1691,6 +2094,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -1802,6 +2230,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -1918,6 +2371,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -2036,6 +2514,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -2155,6 +2658,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -2286,6 +2814,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, mm);
         final Matrix mm2 = new Matrix(3, 3);
@@ -2431,6 +2984,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, mm);
         final Matrix mm2 = new Matrix(3, 3);
@@ -2577,6 +3155,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, mm);
         final Matrix mm2 = new Matrix(3, 3);
@@ -2723,6 +3326,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, mm);
         final Matrix mm2 = new Matrix(3, 3);
@@ -2847,6 +3475,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -2942,6 +3595,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -3037,6 +3715,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -3132,6 +3835,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -3227,6 +3955,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -3328,6 +4081,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -3439,6 +4217,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -3550,6 +4353,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -3662,6 +4490,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -3774,6 +4627,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -3891,6 +4769,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -4010,6 +4913,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -4130,6 +5058,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -4262,6 +5215,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, mm);
         final Matrix mm2 = new Matrix(3, 3);
@@ -4408,6 +5386,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, mm);
         final Matrix mm2 = new Matrix(3, 3);
@@ -4555,6 +5558,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, mm);
         final Matrix mm2 = new Matrix(3, 3);
@@ -4702,6 +5730,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, mm);
         final Matrix mm2 = new Matrix(3, 3);
@@ -4821,6 +5874,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -4912,6 +5990,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -5004,6 +6107,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -5104,6 +6232,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -5210,6 +6363,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -5334,6 +6512,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, mm);
         final Matrix mm2 = new Matrix(3, 3);
@@ -5459,6 +6662,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -5565,6 +6793,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -5671,6 +6924,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -5778,6 +7056,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -5885,6 +7188,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -5998,6 +7326,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -6117,6 +7470,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -6237,6 +7615,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -6358,6 +7761,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -6478,6 +7906,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -6605,6 +8058,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -6733,6 +8211,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -6861,6 +8364,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -7001,6 +8529,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, mm);
         final Matrix mm2 = new Matrix(3, 3);
@@ -7155,6 +8708,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, mm);
         final Matrix mm2 = new Matrix(3, 3);
@@ -7309,6 +8887,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, mm);
         final Matrix mm2 = new Matrix(3, 3);
@@ -7463,6 +9066,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, mm);
         final Matrix mm2 = new Matrix(3, 3);
@@ -7600,6 +9228,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -7708,6 +9361,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -7816,6 +9494,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -7924,6 +9627,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -8031,6 +9759,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -8145,6 +9898,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -8265,6 +10043,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -8386,6 +10189,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -8507,6 +10335,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -8628,6 +10481,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -8755,6 +10633,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -8882,6 +10785,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -9010,6 +10938,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, new Matrix(3, 3));
         final Matrix mm2 = new Matrix(3, 3);
@@ -9153,6 +11106,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, mm);
         final Matrix mm2 = new Matrix(3, 3);
@@ -9308,6 +11286,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, mm);
         final Matrix mm2 = new Matrix(3, 3);
@@ -9464,6 +11467,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, mm);
         final Matrix mm2 = new Matrix(3, 3);
@@ -9620,6 +11648,31 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getHardIronAsMatrix(bm2);
         assertEquals(bm1, bm2);
+        MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity mb2 = new MagneticFluxDensity(1.0,
+                MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmy, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        mb1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(mb1.getValue().doubleValue(), bmz, 0.0);
+        assertEquals(mb1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(mb2);
+        assertEquals(mb1, mb2);
+        final MagneticFluxDensityTriad hardIronTriad1 = calibrator.getHardIronAsTriad();
+        assertEquals(hardIronTriad1.getValueX(), bmx, 0.0);
+        assertEquals(hardIronTriad1.getValueY(), bmy, 0.0);
+        assertEquals(hardIronTriad1.getValueZ(), bmz, 0.0);
+        assertEquals(hardIronTriad1.getUnit(), MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensityTriad hardIronTriad2 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(hardIronTriad2);
+        assertEquals(hardIronTriad1, hardIronTriad2);
         final Matrix mm1 = calibrator.getInitialMm();
         assertEquals(mm1, mm);
         final Matrix mm2 = new Matrix(3, 3);
@@ -9834,7 +11887,100 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
     }
 
     @Test
-    public void testSetHardIron() throws LockedException {
+    public void testGetSetHardIronXAsMagneticFluxDensity()
+            throws LockedException {
+        final PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibrator calibrator =
+                new PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibrator();
+
+        // check default value
+        final MagneticFluxDensity b1 = calibrator.getHardIronXAsMagneticFluxDensity();
+        assertEquals(b1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(MagneticFluxDensityUnit.TESLA, b1.getUnit());
+
+        // set new value
+        final UniformRandomizer randomizer = new UniformRandomizer(
+                new Random());
+        final double[] mb = generateHardIron(randomizer);
+        final double hardIronX = mb[0];
+        final MagneticFluxDensity b2 = new MagneticFluxDensity(
+                hardIronX, MagneticFluxDensityUnit.TESLA);
+
+        calibrator.setHardIronX(b2);
+
+        // check
+        final MagneticFluxDensity b3 = calibrator.getHardIronXAsMagneticFluxDensity();
+        final MagneticFluxDensity b4 = new MagneticFluxDensity(
+                1.0, MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronXAsMagneticFluxDensity(b4);
+
+        assertEquals(b2, b3);
+        assertEquals(b2, b4);
+    }
+
+    @Test
+    public void testGetSetHardIronYAsMagneticFluxDensity()
+            throws LockedException {
+        final PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibrator calibrator =
+                new PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibrator();
+
+        // check default value
+        final MagneticFluxDensity b1 = calibrator.getHardIronYAsMagneticFluxDensity();
+        assertEquals(b1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(MagneticFluxDensityUnit.TESLA, b1.getUnit());
+
+        // set new value
+        final UniformRandomizer randomizer = new UniformRandomizer(
+                new Random());
+        final double[] mb = generateHardIron(randomizer);
+        final double hardIronY = mb[1];
+        final MagneticFluxDensity b2 = new MagneticFluxDensity(
+                hardIronY, MagneticFluxDensityUnit.TESLA);
+
+        calibrator.setHardIronY(b2);
+
+        // check
+        final MagneticFluxDensity b3 = calibrator.getHardIronYAsMagneticFluxDensity();
+        final MagneticFluxDensity b4 = new MagneticFluxDensity(
+                1.0, MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronYAsMagneticFluxDensity(b4);
+
+        assertEquals(b2, b3);
+        assertEquals(b2, b4);
+    }
+
+    @Test
+    public void testGetSetHardIronZAsMagneticFluxDensity()
+            throws LockedException {
+        final PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibrator calibrator =
+                new PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibrator();
+
+        // check default value
+        final MagneticFluxDensity b1 = calibrator.getHardIronZAsMagneticFluxDensity();
+        assertEquals(b1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(MagneticFluxDensityUnit.TESLA, b1.getUnit());
+
+        // set new value
+        final UniformRandomizer randomizer = new UniformRandomizer(
+                new Random());
+        final double[] mb = generateHardIron(randomizer);
+        final double hardIronZ = mb[2];
+        final MagneticFluxDensity b2 = new MagneticFluxDensity(
+                hardIronZ, MagneticFluxDensityUnit.TESLA);
+
+        calibrator.setHardIronZ(b2);
+
+        // check
+        final MagneticFluxDensity b3 = calibrator.getHardIronZAsMagneticFluxDensity();
+        final MagneticFluxDensity b4 = new MagneticFluxDensity(
+                1.0, MagneticFluxDensityUnit.TESLA);
+        calibrator.getHardIronZAsMagneticFluxDensity(b4);
+
+        assertEquals(b2, b3);
+        assertEquals(b2, b4);
+    }
+
+    @Test
+    public void testSetHardIron1() throws LockedException {
         final PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibrator calibrator =
                 new PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibrator();
 
@@ -9857,6 +12003,70 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         assertEquals(calibrator.getHardIronX(), hardIronX, 0.0);
         assertEquals(calibrator.getHardIronY(), hardIronY, 0.0);
         assertEquals(calibrator.getHardIronZ(), hardIronZ, 0.0);
+    }
+
+    @Test
+    public void testSetHardIron2() throws LockedException {
+        final PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibrator calibrator =
+                new PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibrator();
+
+        // check default value
+        assertEquals(calibrator.getHardIronX(), 0.0, 0.0);
+        assertEquals(calibrator.getHardIronY(), 0.0, 0.0);
+        assertEquals(calibrator.getHardIronZ(), 0.0, 0.0);
+
+        // set new values
+        final UniformRandomizer randomizer = new UniformRandomizer(
+                new Random());
+        final double[] hardIron = generateHardIron(randomizer);
+        final MagneticFluxDensity hardIronX = new MagneticFluxDensity(
+                hardIron[0], MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity hardIronY = new MagneticFluxDensity(
+                hardIron[1], MagneticFluxDensityUnit.TESLA);
+        final MagneticFluxDensity hardIronZ = new MagneticFluxDensity(
+                hardIron[2], MagneticFluxDensityUnit.TESLA);
+
+        calibrator.setHardIron(hardIronX, hardIronY, hardIronZ);
+
+        // check
+        assertEquals(calibrator.getHardIronXAsMagneticFluxDensity(), hardIronX);
+        assertEquals(calibrator.getHardIronYAsMagneticFluxDensity(), hardIronY);
+        assertEquals(calibrator.getHardIronZAsMagneticFluxDensity(), hardIronZ);
+    }
+
+    @Test
+    public void testGetSetHardIronAsTriad() throws LockedException {
+        final PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibrator calibrator =
+                new PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibrator();
+
+        // check default values
+        final MagneticFluxDensityTriad triad1 = calibrator.getHardIronAsTriad();
+        assertEquals(triad1.getValueX(), 0.0, 0.0);
+        assertEquals(triad1.getValueY(), 0.0, 0.0);
+        assertEquals(triad1.getValueZ(), 0.0, 0.0);
+        assertEquals(triad1.getUnit(),
+                MagneticFluxDensityUnit.TESLA);
+
+        //set new values
+        final UniformRandomizer randomizer = new UniformRandomizer(
+                new Random());
+        final double[] hardIron = generateHardIron(randomizer);
+        final double hardIronX = hardIron[0];
+        final double hardIronY = hardIron[1];
+        final double hardIronZ = hardIron[2];
+
+        final MagneticFluxDensityTriad triad2 = new MagneticFluxDensityTriad(
+                MagneticFluxDensityUnit.TESLA,
+                hardIronX, hardIronY, hardIronZ);
+        calibrator.setHardIron(triad2);
+
+        // check
+        final MagneticFluxDensityTriad triad3 = calibrator.getHardIronAsTriad();
+        final MagneticFluxDensityTriad triad4 = new MagneticFluxDensityTriad();
+        calibrator.getHardIronAsTriad(triad4);
+
+        assertEquals(triad2, triad3);
+        assertEquals(triad2, triad4);
     }
 
     @Test
@@ -11228,8 +13438,34 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         } catch (final LockedException ignore) {
         }
         try {
+            calibrator.setHardIronX(null);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
+        try {
+            calibrator.setHardIronY(null);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
+        try {
+            calibrator.setHardIronZ(null);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
+        try {
             calibrator.setHardIron(
                     0.0, 0.0, 0.0);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
+        try {
+            calibrator.setHardIron(
+                    null, null, null);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
+        try {
+            calibrator.setHardIron((MagneticFluxDensityTriad) null);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }

@@ -33,9 +33,13 @@ import com.irurueta.navigation.inertial.NEDMagneticFluxDensity;
 import com.irurueta.navigation.inertial.NEDPosition;
 import com.irurueta.navigation.inertial.NEDVelocity;
 import com.irurueta.navigation.inertial.calibration.CalibrationException;
+import com.irurueta.navigation.inertial.calibration.MagneticFluxDensityTriad;
 import com.irurueta.navigation.inertial.calibration.StandardDeviationBodyMagneticFluxDensity;
 import com.irurueta.numerical.robust.InliersData;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
+import com.irurueta.units.MagneticFluxDensity;
+import com.irurueta.units.MagneticFluxDensityConverter;
+import com.irurueta.units.MagneticFluxDensityUnit;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -1368,6 +1372,120 @@ public abstract class RobustKnownPositionAndInstantMagnetometerCalibrator {
     }
 
     /**
+     * Gets initial x-coordinate of magnetometer hard iron bias to be used
+     * to find a solution.
+     *
+     * @return initial x-coordinate of magnetometer hard-iron bias.
+     */
+    public MagneticFluxDensity getInitialHardIronXAsMagneticFluxDensity() {
+        return new MagneticFluxDensity(mInitialHardIronX,
+                MagneticFluxDensityUnit.TESLA);
+    }
+
+    /**
+     * Gets initial x-coordinate of magnetometer hard iron bias to be used
+     * to find a solution.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getInitialHardIronXAsMagneticFluxDensity(
+            final MagneticFluxDensity result) {
+        result.setValue(mInitialHardIronX);
+        result.setUnit(MagneticFluxDensityUnit.TESLA);
+    }
+
+    /**
+     * Sets initial x-coordinate of magnetometer hard iron bias to be used
+     * to find a solution.
+     *
+     * @param initialHardIronX initial x-coordinate of magnetometer bias.
+     * @throws LockedException if calibrator is currently running.
+     */
+    public void setInitialHardIronX(final MagneticFluxDensity initialHardIronX)
+            throws LockedException {
+        if (mRunning) {
+            throw new LockedException();
+        }
+        mInitialHardIronX = convertMagneticFluxDensity(initialHardIronX);
+    }
+
+    /**
+     * Gets initial y-coordinate of magnetometer hard iron bias to be used
+     * to find a solution.
+     *
+     * @return initial y-coordinate of magnetometer hard-iron bias.
+     */
+    public MagneticFluxDensity getInitialHardIronYAsMagneticFluxDensity() {
+        return new MagneticFluxDensity(mInitialHardIronY,
+                MagneticFluxDensityUnit.TESLA);
+    }
+
+    /**
+     * Gets initial y-coordinate of magnetometer hard iron bias to be used
+     * to find a solution.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getInitialHardIronYAsMagneticFluxDensity(
+            final MagneticFluxDensity result) {
+        result.setValue(mInitialHardIronY);
+        result.setUnit(MagneticFluxDensityUnit.TESLA);
+    }
+
+    /**
+     * Sets initial y-coordinate of magnetometer hard iron bias to be used
+     * to find a solution.
+     *
+     * @param initialHardIronY initial y-coordinate of magnetometer bias.
+     * @throws LockedException if calibrator is currently running.
+     */
+    public void setInitialHardIronY(final MagneticFluxDensity initialHardIronY)
+            throws LockedException {
+        if (mRunning) {
+            throw new LockedException();
+        }
+        mInitialHardIronY = convertMagneticFluxDensity(initialHardIronY);
+    }
+
+    /**
+     * Gets initial z-coordinate of magnetometer hard iron bias to be used
+     * to find a solution.
+     *
+     * @return initial z-coordinate of magnetometer hard-iron bias.
+     */
+    public MagneticFluxDensity getInitialHardIronZAsMagneticFluxDensity() {
+        return new MagneticFluxDensity(mInitialHardIronZ,
+                MagneticFluxDensityUnit.TESLA);
+    }
+
+    /**
+     * Gets initial z-coordinate of magnetometer hard iron bias to be used
+     * to find a solution.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getInitialHardIronZAsMagneticFluxDensity(
+            final MagneticFluxDensity result) {
+        result.setValue(mInitialHardIronZ);
+        result.setUnit(MagneticFluxDensityUnit.TESLA);
+    }
+
+    /**
+     * Sets initial z-coordinate of magnetometer hard iron bias to be used
+     * to find a solution.
+     *
+     * @param initialHardIronZ initial z-coordinate of magnetometer bias.
+     * @throws LockedException if calibrator is currently running.
+     */
+    public void setInitialHardIronZ(final MagneticFluxDensity initialHardIronZ)
+            throws LockedException {
+        if (mRunning) {
+            throw new LockedException();
+        }
+        mInitialHardIronZ = convertMagneticFluxDensity(initialHardIronZ);
+    }
+
+    /**
      * Sets initial hard-iron bias coordinates of magnetometer used to find
      * a solution expressed in Teslas (T).
      *
@@ -1388,6 +1506,69 @@ public abstract class RobustKnownPositionAndInstantMagnetometerCalibrator {
         mInitialHardIronX = initialHardIronX;
         mInitialHardIronY = initialHardIronY;
         mInitialHardIronZ = initialHardIronZ;
+    }
+
+    /**
+     * Sets initial hard iron coordinates of magnetometer used to find a solution.
+     *
+     * @param initialHardIronX initial x-coordinate of magnetometer bias.
+     * @param initialHardIronY initial y-coordinate of magnetometer bias.
+     * @param initialHardIronZ initial z-coordinate of magnetometer bias.
+     * @throws LockedException if calibrator is currently running.
+     */
+    public void setInitialHardIron(
+            final MagneticFluxDensity initialHardIronX,
+            final MagneticFluxDensity initialHardIronY,
+            final MagneticFluxDensity initialHardIronZ) throws LockedException {
+        if (mRunning) {
+            throw new LockedException();
+        }
+
+        mInitialHardIronX = convertMagneticFluxDensity(initialHardIronX);
+        mInitialHardIronY = convertMagneticFluxDensity(initialHardIronY);
+        mInitialHardIronZ = convertMagneticFluxDensity(initialHardIronZ);
+    }
+
+    /**
+     * Gets initial hard-iron used to find a solution.
+     *
+     * @return initial hard-iron.
+     */
+    public MagneticFluxDensityTriad getInitialHardIronAsTriad() {
+        return new MagneticFluxDensityTriad(
+                MagneticFluxDensityUnit.TESLA,
+                mInitialHardIronX, mInitialHardIronY, mInitialHardIronZ);
+    }
+
+    /**
+     * Gets initial hard-iron used to find a solution.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getInitialHardIronAsTriad(final MagneticFluxDensityTriad result) {
+        result.setValueCoordinatesAndUnit(
+                mInitialHardIronX, mInitialHardIronY, mInitialHardIronZ,
+                MagneticFluxDensityUnit.TESLA);
+    }
+
+    /**
+     * Sets initial hard-iron used to find a solution.
+     *
+     * @param initialHardIron initial hard-iron to be set.
+     * @throws LockedException if calibrator is currently running.
+     */
+    public void setInitialHardIron(final MagneticFluxDensityTriad initialHardIron)
+            throws LockedException {
+        if (mRunning) {
+            throw new LockedException();
+        }
+
+        mInitialHardIronX = convertMagneticFluxDensity(
+                initialHardIron.getValueX(), initialHardIron.getUnit());
+        mInitialHardIronY = convertMagneticFluxDensity(
+                initialHardIron.getValueY(), initialHardIron.getUnit());
+        mInitialHardIronZ = convertMagneticFluxDensity(
+                initialHardIron.getValueZ(), initialHardIron.getUnit());
     }
 
     /**
@@ -1736,6 +1917,7 @@ public abstract class RobustKnownPositionAndInstantMagnetometerCalibrator {
     /**
      * Gets initial hard-iron bias to be used to find a solution as a
      * column matrix.
+     * Values are expressed in Teslas (T).
      *
      * @return initial hard-iron bias to be used to find a solution as a
      * column matrix.
@@ -1756,6 +1938,7 @@ public abstract class RobustKnownPositionAndInstantMagnetometerCalibrator {
     /**
      * Gets initial hard-iron bias to be used to find a solution as a
      * column matrix.
+     * Values are expressed in Teslas (T).
      *
      * @param result instance where result data will be copied to.
      * @throws IllegalArgumentException if provided matrix is not 3x1.
@@ -1772,7 +1955,7 @@ public abstract class RobustKnownPositionAndInstantMagnetometerCalibrator {
 
     /**
      * Sets initial hard-iron bias to be used to find a solution as a column
-     * matrix.
+     * matrix with values expressed in Teslas (T).
      *
      * @param initialHardIron initial hard-iron bias to find a solution.
      * @throws LockedException          if calibrator is currently running.
@@ -2428,6 +2611,113 @@ public abstract class RobustKnownPositionAndInstantMagnetometerCalibrator {
     }
 
     /**
+     * Gets x coordinate of estimated magnetometer bias.
+     *
+     * @return x coordinate of estimated magnetometer bias.
+     */
+    public MagneticFluxDensity getEstimatedHardIronXAsMagneticFluxDensity() {
+        return mEstimatedHardIron != null ?
+                new MagneticFluxDensity(mEstimatedHardIron[0], MagneticFluxDensityUnit.TESLA) : null;
+    }
+
+    /**
+     * Gets x coordinate of estimated magnetometer bias.
+     *
+     * @param result instance where result will be stored.
+     * @return true if estimated magnetometer bias is available, false otherwise.
+     */
+    public boolean getEstimatedHardIronXAsMagneticFluxDensity(final MagneticFluxDensity result) {
+        if (mEstimatedHardIron != null) {
+            result.setValue(mEstimatedHardIron[0]);
+            result.setUnit(MagneticFluxDensityUnit.TESLA);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Gets y coordinate of estimated magnetometer bias.
+     *
+     * @return y coordinate of estimated magnetometer bias.
+     */
+    public MagneticFluxDensity getEstimatedHardIronYAsMagneticFluxDensity() {
+        return mEstimatedHardIron != null ?
+                new MagneticFluxDensity(mEstimatedHardIron[1], MagneticFluxDensityUnit.TESLA) : null;
+    }
+
+    /**
+     * Gets y coordinate of estimated magnetometer bias.
+     *
+     * @param result instance where result will be stored.
+     * @return true if estimated magnetometer bias is available, false otherwise.
+     */
+    public boolean getEstimatedHardIronYAsMagneticFluxDensity(final MagneticFluxDensity result) {
+        if (mEstimatedHardIron != null) {
+            result.setValue(mEstimatedHardIron[1]);
+            result.setUnit(MagneticFluxDensityUnit.TESLA);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Gets z coordinate of estimated magnetometer bias.
+     *
+     * @return z coordinate of estimated magnetometer bias.
+     */
+    public MagneticFluxDensity getEstimatedHardIronZAsMagneticFluxDensity() {
+        return mEstimatedHardIron != null ?
+                new MagneticFluxDensity(mEstimatedHardIron[2], MagneticFluxDensityUnit.TESLA) : null;
+    }
+
+    /**
+     * Gets z coordinate of estimated magnetometer bias.
+     *
+     * @param result instance where result will be stored.
+     * @return true if estimated magnetometer bias is available, false otherwise.
+     */
+    public boolean getEstimatedHardIronZAsMagneticFluxDensity(final MagneticFluxDensity result) {
+        if (mEstimatedHardIron != null) {
+            result.setValue(mEstimatedHardIron[2]);
+            result.setUnit(MagneticFluxDensityUnit.TESLA);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Gets estimated magnetometer bias.
+     *
+     * @return estimated magnetometer bias or null if not available.
+     */
+    public MagneticFluxDensityTriad getEstimatedHardIronAsTriad() {
+        return mEstimatedHardIron != null ?
+                new MagneticFluxDensityTriad(MagneticFluxDensityUnit.TESLA,
+                        mEstimatedHardIron[0], mEstimatedHardIron[1], mEstimatedHardIron[2]) : null;
+    }
+
+    /**
+     * Gets estimated magnetometer bias.
+     *
+     * @param result instance where result will be stored.
+     * @return true if estimated magnetometer bias is available and result was
+     * modified, false otherwise.
+     */
+    public boolean getEstimatedHardIronAsTriad(final MagneticFluxDensityTriad result) {
+        if (mEstimatedHardIron != null) {
+            result.setValueCoordinatesAndUnit(
+                    mEstimatedHardIron[0], mEstimatedHardIron[1], mEstimatedHardIron[2],
+                    MagneticFluxDensityUnit.TESLA);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * Gets estimated magnetometer soft-iron matrix containing scale factors
      * and cross coupling errors.
      * This is the product of matrix Tm containing cross coupling errors and Km
@@ -2571,6 +2861,286 @@ public abstract class RobustKnownPositionAndInstantMagnetometerCalibrator {
      */
     public Matrix getEstimatedCovariance() {
         return mEstimatedCovariance;
+    }
+
+    /**
+     * Gets variance of estimated x coordinate of magnetometer bias expressed in
+     * squared Teslas (T^2).
+     *
+     * @return variance of estimated x coordinate of magnetometer bias or null if
+     * not available.
+     */
+    public Double getEstimatedHardIronXVariance() {
+        return mEstimatedCovariance != null ? mEstimatedCovariance.getElementAt(0, 0) : null;
+    }
+
+    /**
+     * Gets standard deviation of estimated x coordinate of magnetometer bias
+     * expressed in Teslas (T).
+     *
+     * @return standard deviation of estimated x coordinate of magnetometer bias
+     * or null if not available.
+     */
+    public Double getEstimatedHardIronXStandardDeviation() {
+        final Double variance = getEstimatedHardIronXVariance();
+        return variance != null ? Math.sqrt(variance) : null;
+    }
+
+    /**
+     * Gets standard deviation of estimated x coordinate of magnetometer bias.
+     *
+     * @return standard deviation of estimated x coordinate of magnetometer bias
+     * or null if not available.
+     */
+    public MagneticFluxDensity getEstimatedHardIronXStandardDeviationAsMagneticFluxDensity() {
+        return mEstimatedCovariance != null ?
+                new MagneticFluxDensity(getEstimatedHardIronXStandardDeviation(),
+                        MagneticFluxDensityUnit.TESLA) : null;
+    }
+
+    /**
+     * Gets standard deviation of estimated x coordinate of magnetometer bias.
+     *
+     * @param result instance where result will be stored.
+     * @return true if standard deviation of estimated x coordinate of
+     * magnetometer bias is available, false otherwise.
+     */
+    public boolean getEstimatedHardIronXStandardDeviationAsMagneticFluxDensity(
+            final MagneticFluxDensity result) {
+        if (mEstimatedCovariance != null) {
+            result.setValue(getEstimatedHardIronXStandardDeviation());
+            result.setUnit(MagneticFluxDensityUnit.TESLA);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Gets variance of estimated y coordinate of magnetometer bias expressed in
+     * squared Teslas (T^2).
+     *
+     * @return variance of estimated y coordinate of magnetometer bias or null if
+     * not available.
+     */
+    public Double getEstimatedHardIronYVariance() {
+        return mEstimatedCovariance != null ? mEstimatedCovariance.getElementAt(1, 1) : null;
+    }
+
+    /**
+     * Gets standard deviation of estimated y coordinate of magnetometer bias
+     * expressed in Teslas (T).
+     *
+     * @return standard deviation of estimated y coordinate of magnetometer bias
+     * or null if not available.
+     */
+    public Double getEstimatedHardIronYStandardDeviation() {
+        final Double variance = getEstimatedHardIronYVariance();
+        return variance != null ? Math.sqrt(variance) : null;
+    }
+
+    /**
+     * Gets standard deviation of estimated y coordinate of magnetometer bias.
+     *
+     * @return standard deviation of estimated y coordinate of magnetometer bias
+     * or null if not available.
+     */
+    public MagneticFluxDensity getEstimatedHardIronYStandardDeviationAsMagneticFluxDensity() {
+        return mEstimatedCovariance != null ?
+                new MagneticFluxDensity(getEstimatedHardIronYStandardDeviation(),
+                        MagneticFluxDensityUnit.TESLA) : null;
+    }
+
+    /**
+     * Gets standard deviation of estimated y coordinate of magnetometer bias.
+     *
+     * @param result instance where result will be stored.
+     * @return true if standard deviation of estimated y coordinate of
+     * magnetometer bias is available, false otherwise.
+     */
+    public boolean getEstimatedHardIronYStandardDeviationAsMagneticFluxDensity(
+            final MagneticFluxDensity result) {
+        if (mEstimatedCovariance != null) {
+            result.setValue(getEstimatedHardIronYStandardDeviation());
+            result.setUnit(MagneticFluxDensityUnit.TESLA);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Gets variance of estimated z coordinate of magnetometer bias expressed in
+     * squared Teslas (T^2).
+     *
+     * @return variance of estimated yzcoordinate of magnetometer bias or null if
+     * not available.
+     */
+    public Double getEstimatedHardIronZVariance() {
+        return mEstimatedCovariance != null ? mEstimatedCovariance.getElementAt(2, 2) : null;
+    }
+
+    /**
+     * Gets standard deviation of estimated z coordinate of magnetometer bias
+     * expressed in Teslas (T).
+     *
+     * @return standard deviation of estimated z coordinate of magnetometer bias
+     * or null if not available.
+     */
+    public Double getEstimatedHardIronZStandardDeviation() {
+        final Double variance = getEstimatedHardIronZVariance();
+        return variance != null ? Math.sqrt(variance) : null;
+    }
+
+    /**
+     * Gets standard deviation of estimated z coordinate of magnetometer bias.
+     *
+     * @return standard deviation of estimated z coordinate of magnetometer bias
+     * or null if not available.
+     */
+    public MagneticFluxDensity getEstimatedHardIronZStandardDeviationAsMagneticFluxDensity() {
+        return mEstimatedCovariance != null ?
+                new MagneticFluxDensity(getEstimatedHardIronZStandardDeviation(),
+                        MagneticFluxDensityUnit.TESLA) : null;
+    }
+
+    /**
+     * Gets standard deviation of estimated z coordinate of magnetometer bias.
+     *
+     * @param result instance where result will be stored.
+     * @return true if standard deviation of estimated z coordinate of
+     * magnetometer bias is available, false otherwise.
+     */
+    public boolean getEstimatedHardIronZStandardDeviationAsMagneticFluxDensity(
+            final MagneticFluxDensity result) {
+        if (mEstimatedCovariance != null) {
+            result.setValue(getEstimatedHardIronZStandardDeviation());
+            result.setUnit(MagneticFluxDensityUnit.TESLA);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Gets standard deviation of estimated magnetometer bias coordinates.
+     *
+     * @return standard deviation of estimated magnetometer bias coordinates.
+     */
+    public MagneticFluxDensityTriad getEstimatedHardIronStandardDeviation() {
+        return mEstimatedCovariance != null ?
+                new MagneticFluxDensityTriad(MagneticFluxDensityUnit.TESLA,
+                        getEstimatedHardIronXStandardDeviation(),
+                        getEstimatedHardIronYStandardDeviation(),
+                        getEstimatedHardIronZStandardDeviation()) : null;
+    }
+
+    /**
+     * Gets standard deviation of estimated magnetometer bias coordinates.
+     *
+     * @param result instance where result will be stored.
+     * @return true if standard deviation of magnetometer bias was available,
+     * false otherwise.
+     */
+    public boolean getEstimatedHardIronStandardDeviation(final MagneticFluxDensityTriad result) {
+        if (mEstimatedCovariance != null) {
+            result.setValueCoordinatesAndUnit(
+                    getEstimatedHardIronXStandardDeviation(),
+                    getEstimatedHardIronYStandardDeviation(),
+                    getEstimatedHardIronZStandardDeviation(),
+                    MagneticFluxDensityUnit.TESLA);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Gets average of estimated standard deviation of magnetometer bias coordinates
+     * expressed in Teslas (T).
+     *
+     * @return average of estimated standard deviation of magnetometer bias coordinates,
+     * or null if not available.
+     */
+    public Double getEstimatedHardIronStandardDeviationAverage() {
+        return mEstimatedCovariance != null ?
+                (getEstimatedHardIronXStandardDeviation() +
+                        getEstimatedHardIronYStandardDeviation() +
+                        getEstimatedHardIronZStandardDeviation()) / 3.0 : null;
+    }
+
+    /**
+     * Gets average of estimated standard deviation of magnetometer bias coordinates.
+     *
+     * @return average of estimated standard deviation of magnetometer bias coordinates,
+     * or null if not available.
+     */
+    public MagneticFluxDensity getEstimatedHardIronStandardDeviationAverageAsMagneticFluxDensity() {
+        return mEstimatedCovariance != null ?
+                new MagneticFluxDensity(getEstimatedHardIronStandardDeviationAverage(),
+                        MagneticFluxDensityUnit.TESLA) : null;
+    }
+
+    /**
+     * Gets average of estimated standard deviation of magnetometer bias coordinates.
+     *
+     * @param result instance where result will be stored.
+     * @return true if average of estimated standard deviation of magnetometer bias is available,
+     * false otherwise.
+     */
+    public boolean getEstimatedHardIronStandardDeviationAverageAsMagneticFluxDensity(
+            final MagneticFluxDensity result) {
+        if (mEstimatedCovariance != null) {
+            result.setValue(getEstimatedHardIronStandardDeviationAverage());
+            result.setUnit(MagneticFluxDensityUnit.TESLA);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Gets norm of estimated standard deviation of magnetometer bias expressed in
+     * Teslas (T).
+     *
+     * @return norm of estimated standard deviation of magnetometer bias or null
+     * if not available.
+     */
+    public Double getEstimatedHardIronStandardDeviationNorm() {
+        return mEstimatedCovariance != null ?
+                Math.sqrt(getEstimatedHardIronXVariance()
+                        + getEstimatedHardIronYVariance()
+                        + getEstimatedHardIronZVariance()) : null;
+    }
+
+    /**
+     * Gets norm of estimated standard deviation of magnetometer bias.
+     *
+     * @return norm of estimated standard deviation of magnetometer bias or null
+     * if not available.
+     */
+    public MagneticFluxDensity getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity() {
+        return mEstimatedCovariance != null ?
+                new MagneticFluxDensity(getEstimatedHardIronStandardDeviationNorm(),
+                        MagneticFluxDensityUnit.TESLA) : null;
+    }
+
+    /**
+     * Gets norm of estimated standard deviation of magnetometer bias.
+     *
+     * @param result instance where result will be stored.
+     * @return true if norm of estimated standard deviation of magnetometer bias
+     * is available, false otherwise.
+     */
+    public boolean getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity(
+            final MagneticFluxDensity result) {
+        if (mEstimatedCovariance != null) {
+            result.setValue(getEstimatedHardIronStandardDeviationNorm());
+            result.setUnit(MagneticFluxDensityUnit.TESLA);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -7440,6 +8010,29 @@ public abstract class RobustKnownPositionAndInstantMagnetometerCalibrator {
                 position.getX(), position.getY(), position.getZ(),
                 0.0, 0.0, 0.0, result, velocity);
         return result;
+    }
+
+    /**
+     * Converts magnetic flux density value and unit to Teslas.
+     *
+     * @param value magnetic flux density value.
+     * @param unit  unit of magnetic flux density value.
+     * @return converted value.
+     */
+    private static double convertMagneticFluxDensity(final double value, final MagneticFluxDensityUnit unit) {
+        return MagneticFluxDensityConverter.convert(value, unit,
+                MagneticFluxDensityUnit.TESLA);
+    }
+
+    /**
+     * Converts magnetic flux density instance to Teslas.
+     *
+     * @param magneticFluxDensity magnetic flux density instance to be converted.
+     * @return converted value.
+     */
+    private static double convertMagneticFluxDensity(final MagneticFluxDensity magneticFluxDensity) {
+        return convertMagneticFluxDensity(magneticFluxDensity.getValue().doubleValue(),
+                magneticFluxDensity.getUnit());
     }
 
     /**

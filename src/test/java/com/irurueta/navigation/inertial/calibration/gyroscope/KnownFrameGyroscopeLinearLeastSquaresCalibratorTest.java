@@ -27,6 +27,7 @@ import com.irurueta.navigation.frames.NEDFrame;
 import com.irurueta.navigation.frames.converters.NEDtoECEFFrameConverter;
 import com.irurueta.navigation.inertial.BodyKinematics;
 import com.irurueta.navigation.inertial.NEDPosition;
+import com.irurueta.navigation.inertial.calibration.AngularSpeedTriad;
 import com.irurueta.navigation.inertial.calibration.BodyKinematicsGenerator;
 import com.irurueta.navigation.inertial.calibration.CalibrationException;
 import com.irurueta.navigation.inertial.calibration.FrameBodyKinematics;
@@ -101,6 +102,8 @@ public class KnownFrameGyroscopeLinearLeastSquaresCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
         assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
         assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -139,6 +142,8 @@ public class KnownFrameGyroscopeLinearLeastSquaresCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
         assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
         assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -179,6 +184,8 @@ public class KnownFrameGyroscopeLinearLeastSquaresCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
         assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
         assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -217,6 +224,8 @@ public class KnownFrameGyroscopeLinearLeastSquaresCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
         assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
         assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -253,6 +262,8 @@ public class KnownFrameGyroscopeLinearLeastSquaresCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
         assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
         assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -289,6 +300,8 @@ public class KnownFrameGyroscopeLinearLeastSquaresCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
         assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
         assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -325,6 +338,8 @@ public class KnownFrameGyroscopeLinearLeastSquaresCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
         assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
         assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -361,6 +376,8 @@ public class KnownFrameGyroscopeLinearLeastSquaresCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
         assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
         assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -1134,6 +1151,15 @@ public class KnownFrameGyroscopeLinearLeastSquaresCalibratorTest implements
         assertEquals(calibrator.getEstimatedBiasZ(),
                 bgz1.getValue().doubleValue(), 0.0);
         assertEquals(AngularSpeedUnit.RADIANS_PER_SECOND, bgz1.getUnit());
+
+        final AngularSpeedTriad bTriad1 = calibrator.getEstimatedBiasAsTriad();
+        assertEquals(calibrator.getEstimatedBiasX(), bTriad1.getValueX(), 0.0);
+        assertEquals(calibrator.getEstimatedBiasY(), bTriad1.getValueY(), 0.0);
+        assertEquals(calibrator.getEstimatedBiasZ(), bTriad1.getValueZ(), 0.0);
+        assertEquals(AngularSpeedUnit.RADIANS_PER_SECOND, bTriad1.getUnit());
+        final AngularSpeedTriad bTriad2 = new AngularSpeedTriad();
+        calibrator.getEstimatedBiasAsTriad(bTriad2);
+        assertEquals(bTriad1, bTriad2);
 
         assertEquals(mg.getElementAt(0, 0), calibrator.getEstimatedSx(),
                 0.0);

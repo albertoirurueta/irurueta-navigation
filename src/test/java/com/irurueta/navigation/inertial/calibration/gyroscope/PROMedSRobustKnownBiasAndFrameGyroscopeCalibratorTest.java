@@ -27,6 +27,7 @@ import com.irurueta.navigation.frames.NEDFrame;
 import com.irurueta.navigation.frames.converters.NEDtoECEFFrameConverter;
 import com.irurueta.navigation.inertial.BodyKinematics;
 import com.irurueta.navigation.inertial.NEDPosition;
+import com.irurueta.navigation.inertial.calibration.AngularSpeedTriad;
 import com.irurueta.navigation.inertial.calibration.BodyKinematicsGenerator;
 import com.irurueta.navigation.inertial.calibration.CalibrationException;
 import com.irurueta.navigation.inertial.calibration.IMUErrors;
@@ -128,6 +129,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(biasTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(biasTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -227,6 +236,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(biasTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(biasTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -329,6 +346,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(biasTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(biasTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -432,6 +457,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(biasTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(biasTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -532,6 +565,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(biasTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(biasTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -632,6 +673,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(biasTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(biasTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -735,6 +784,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(biasTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(biasTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -838,6 +895,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(biasTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(biasTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -944,6 +1009,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -1050,6 +1123,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -1158,6 +1239,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -1266,6 +1355,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -1372,6 +1469,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -1478,6 +1583,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -1586,6 +1699,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -1694,6 +1815,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -1807,6 +1936,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -1920,6 +2057,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -2036,6 +2181,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -2152,6 +2305,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -2265,6 +2426,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -2378,6 +2547,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -2494,6 +2671,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -2610,6 +2795,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -2715,6 +2908,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -2829,6 +3030,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -2948,6 +3157,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -3067,6 +3284,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -3183,6 +3408,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -3299,6 +3532,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -3418,6 +3659,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -3537,6 +3786,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -3652,6 +3909,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -3773,6 +4038,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -3897,6 +4170,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -4022,6 +4303,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -4143,6 +4432,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -4265,6 +4562,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -4392,6 +4697,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -4519,6 +4832,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -4642,6 +4963,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(biasTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(biasTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -4757,6 +5086,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(biasTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(biasTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -4872,6 +5209,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(biasTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(biasTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -4987,6 +5332,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(biasTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(biasTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -5105,6 +5458,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -5223,6 +5584,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -5343,6 +5712,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -5463,6 +5840,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -5581,6 +5966,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -5699,6 +6092,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -5820,6 +6221,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -5941,6 +6350,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -6067,6 +6484,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -6192,6 +6617,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -6320,6 +6753,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -6448,6 +6889,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -6573,6 +7022,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -6698,6 +7155,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -6826,6 +7291,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -6954,6 +7427,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -7072,6 +7553,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -7196,6 +7685,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -7323,6 +7820,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -7450,6 +7955,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -7574,6 +8087,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -7698,6 +8219,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -7825,6 +8354,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -7952,6 +8489,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -8077,6 +8622,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -8207,6 +8760,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -8340,6 +8901,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -8473,6 +9042,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -8605,6 +9182,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -8737,6 +9322,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -8872,6 +9465,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -9007,6 +9608,14 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
+        assertEquals(biasTriad1.getValueX(), biasX, 0.0);
+        assertEquals(biasTriad1.getValueY(), biasY, 0.0);
+        assertEquals(biasTriad1.getValueZ(), biasZ, 0.0);
+        assertEquals(biasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(biasTriad2);
+        assertEquals(biasTriad1, biasTriad2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -9249,7 +9858,7 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
     }
 
     @Test
-    public void testSetInitialBias1() throws LockedException {
+    public void testSetBiasCoordinates1() throws LockedException {
         final PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
                 new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator();
 
@@ -9273,7 +9882,7 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
     }
 
     @Test
-    public void testSetInitialBias2() throws LockedException {
+    public void testSetBiasCoordinates2() throws LockedException {
         final PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
                 new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator();
 
@@ -9301,6 +9910,34 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         assertEquals(biasX, calibrator.getBiasX(), 0.0);
         assertEquals(biasY, calibrator.getBiasY(), 0.0);
         assertEquals(biasZ, calibrator.getBiasZ(), 0.0);
+    }
+
+    @Test
+    public void testGetSetBiasAsTriad() throws LockedException {
+        final PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator();
+
+        // check default values
+        final AngularSpeedTriad triad1 = calibrator.getBiasAsTriad();
+        assertEquals(triad1.getValueX(), 0.0, 0.0);
+        assertEquals(triad1.getValueY(), 0.0, 0.0);
+        assertEquals(triad1.getValueZ(), 0.0, 0.0);
+        assertEquals(triad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+
+        // set new value
+        final Matrix bg = generateBg();
+        final AngularSpeedTriad triad2 = new AngularSpeedTriad(AngularSpeedUnit.RADIANS_PER_SECOND);
+        triad2.setValueCoordinates(bg);
+
+        calibrator.setBias(triad2);
+
+        // check
+        final AngularSpeedTriad triad3 = calibrator.getBiasAsTriad();
+        final AngularSpeedTriad triad4 = new AngularSpeedTriad();
+        calibrator.getBiasAsTriad(triad4);
+
+        assertEquals(triad2, triad3);
+        assertEquals(triad2, triad4);
     }
 
     @Test
@@ -10844,6 +11481,61 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
 
     private void checkLocked(final PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator) {
         assertTrue(calibrator.isRunning());
+        try {
+            calibrator.setBiasX(0.0);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
+        try {
+            calibrator.setBiasY(0.0);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
+        try {
+            calibrator.setBiasZ(0.0);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
+        try {
+            calibrator.setBiasX(null);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
+        try {
+            calibrator.setBiasY(null);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
+        try {
+            calibrator.setBiasZ(null);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
+        try {
+            calibrator.setBiasCoordinates(0.0, 0.0, 0.0);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
+        try {
+            calibrator.setBiasCoordinates(null, null, null);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
+        try {
+            calibrator.setBias((AngularSpeedTriad) null);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
+        try {
+            calibrator.setBias((double[]) null);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
+        try {
+            calibrator.setBias((Matrix) null);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
         try {
             calibrator.setInitialSx(0.0);
             fail("LockedException expected but not thrown");

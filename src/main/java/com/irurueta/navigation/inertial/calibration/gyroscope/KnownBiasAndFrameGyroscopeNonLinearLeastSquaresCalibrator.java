@@ -22,6 +22,7 @@ import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
 import com.irurueta.navigation.frames.ECEFFrame;
 import com.irurueta.navigation.inertial.BodyKinematics;
+import com.irurueta.navigation.inertial.calibration.AngularSpeedTriad;
 import com.irurueta.navigation.inertial.calibration.CalibrationException;
 import com.irurueta.navigation.inertial.calibration.StandardDeviationFrameBodyKinematics;
 import com.irurueta.navigation.inertial.estimators.ECEFKinematicsEstimator;
@@ -2937,6 +2938,43 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
     }
 
     /**
+     * Gets known gyroscope bias.
+     *
+     * @return known gyroscope bias.
+     */
+    public AngularSpeedTriad getBiasAsTriad() {
+        return new AngularSpeedTriad(
+                AngularSpeedUnit.RADIANS_PER_SECOND,
+                mBiasX, mBiasY, mBiasZ);
+    }
+
+    /**
+     * Gets known gyroscope bias.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getBiasAsTriad(final AngularSpeedTriad result) {
+        result.setValueCoordinatesAndUnit(mBiasX, mBiasY, mBiasZ,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+    }
+
+    /**
+     * Sets known gyroscope bias.
+     *
+     * @param bias gyroscope bias to be set.
+     * @throws LockedException if calibrator is currently running.
+     */
+    public void setBias(final AngularSpeedTriad bias) throws LockedException {
+        if (mRunning) {
+            throw new LockedException();
+        }
+
+        mBiasX = convertAngularSpeed(bias.getValueX(), bias.getUnit());
+        mBiasY = convertAngularSpeed(bias.getValueY(), bias.getUnit());
+        mBiasZ = convertAngularSpeed(bias.getValueZ(), bias.getUnit());
+    }
+
+    /**
      * Gets known gyroscope bias as an array.
      * Array values are expressed in radians per second (rad/s).
      *
@@ -3973,11 +4011,23 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
     /**
      * Converts angular speed instance to radians per second (rad/s).
      *
+     * @param value angular speed value.
+     * @param unit unit of angular speed value.
+     * @return converted value.
+     */
+    private static double convertAngularSpeed(final double value, final AngularSpeedUnit unit) {
+        return AngularSpeedConverter.convert(value, unit,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+    }
+
+    /**
+     * Converts angular speed instance to radians per second (rad/s).
+     *
      * @param angularSpeed angular speed instance to be converted.
      * @return converted value.
      */
     private static double convertAngularSpeed(final AngularSpeed angularSpeed) {
-        return AngularSpeedConverter.convert(angularSpeed.getValue().doubleValue(),
-                angularSpeed.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        return convertAngularSpeed(angularSpeed.getValue().doubleValue(),
+                angularSpeed.getUnit());
     }
 }

@@ -22,6 +22,7 @@ import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
 import com.irurueta.navigation.frames.ECEFFrame;
 import com.irurueta.navigation.inertial.BodyKinematics;
+import com.irurueta.navigation.inertial.calibration.AccelerationTriad;
 import com.irurueta.navigation.inertial.calibration.CalibrationException;
 import com.irurueta.navigation.inertial.calibration.StandardDeviationFrameBodyKinematics;
 import com.irurueta.navigation.inertial.estimators.ECEFKinematicsEstimator;
@@ -2085,6 +2086,46 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator imple
     }
 
     /**
+     * Gets known accelerometer bias.
+     *
+     * @return known accelerometer bias.
+     */
+    @Override
+    public AccelerationTriad getBiasAsTriad() {
+        return new AccelerationTriad(
+                AccelerationUnit.METERS_PER_SQUARED_SECOND,
+                mBiasX, mBiasY, mBiasZ);
+    }
+
+    /**
+     * Gets known accelerometer bias.
+     *
+     * @param result instance where result will be stored.
+     */
+    @Override
+    public void getBiasAsTriad(final AccelerationTriad result) {
+        result.setValueCoordinatesAndUnit(mBiasX, mBiasY, mBiasZ,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+    }
+
+    /**
+     * Sets known accelerometer bias.
+     *
+     * @param bias accelerometer bias to be set.
+     * @throws LockedException if calibrator is currently running.
+     */
+    @Override
+    public void setBias(final AccelerationTriad bias) throws LockedException {
+        if (mRunning) {
+            throw new LockedException();
+        }
+
+        mBiasX = convertAcceleration(bias.getValueX(), bias.getUnit());
+        mBiasY = convertAcceleration(bias.getValueY(), bias.getUnit());
+        mBiasZ = convertAcceleration(bias.getValueZ(), bias.getUnit());
+    }
+
+    /**
      * Gets initial x scaling factor.
      *
      * @return initial x scaling factor.
@@ -3346,13 +3387,25 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator imple
     }
 
     /**
+     * Converts acceleration value and unit to meters per squared second.
+     *
+     * @param value acceleration value.
+     * @param unit  unit of acceleration value.
+     * @return converted value.
+     */
+    private static double convertAcceleration(final double value, final AccelerationUnit unit) {
+        return AccelerationConverter.convert(value, unit,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+    }
+
+    /**
      * Converts acceleration instance to meters per squared second.
      *
      * @param acceleration acceleration instance to be converted.
      * @return converted value.
      */
     private static double convertAcceleration(final Acceleration acceleration) {
-        return AccelerationConverter.convert(acceleration.getValue().doubleValue(),
-                acceleration.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        return convertAcceleration(acceleration.getValue().doubleValue(),
+                acceleration.getUnit());
     }
 }

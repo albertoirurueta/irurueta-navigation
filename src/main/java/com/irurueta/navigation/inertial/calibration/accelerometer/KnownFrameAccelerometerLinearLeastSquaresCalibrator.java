@@ -23,6 +23,7 @@ import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
 import com.irurueta.navigation.frames.ECEFFrame;
 import com.irurueta.navigation.inertial.BodyKinematics;
+import com.irurueta.navigation.inertial.calibration.AccelerationTriad;
 import com.irurueta.navigation.inertial.calibration.CalibrationException;
 import com.irurueta.navigation.inertial.calibration.FrameBodyKinematics;
 import com.irurueta.navigation.inertial.estimators.ECEFKinematicsEstimator;
@@ -607,6 +608,37 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator implements
         if (mEstimatedBiases != null) {
             result.setValue(mEstimatedBiases[2]);
             result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Gets estimated accelerometer bias.
+     *
+     * @return estimated accelerometer bias or null if not available.
+     */
+    @Override
+    public AccelerationTriad getEstimatedBiasAsTriad() {
+        return mEstimatedBiases != null ?
+                new AccelerationTriad(AccelerationUnit.METERS_PER_SQUARED_SECOND,
+                        mEstimatedBiases[0], mEstimatedBiases[1], mEstimatedBiases[2]) : null;
+    }
+
+    /**
+     * Gets estimated accelerometer bias.
+     *
+     * @param result instance where result will be stored.
+     * @return true if estimated accelerometer bias is available and result was
+     * modified, false otherwise.
+     */
+    @Override
+    public boolean getEstimatedBiasAsTriad(final AccelerationTriad result) {
+        if (mEstimatedBiases != null) {
+            result.setValueCoordinatesAndUnit(
+                    mEstimatedBiases[0], mEstimatedBiases[1], mEstimatedBiases[2],
+                    AccelerationUnit.METERS_PER_SQUARED_SECOND);
             return true;
         } else {
             return false;

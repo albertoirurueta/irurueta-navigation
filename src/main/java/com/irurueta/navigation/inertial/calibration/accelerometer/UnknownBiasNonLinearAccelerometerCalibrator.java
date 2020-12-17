@@ -17,6 +17,7 @@ package com.irurueta.navigation.inertial.calibration.accelerometer;
 
 import com.irurueta.algebra.Matrix;
 import com.irurueta.navigation.LockedException;
+import com.irurueta.navigation.inertial.calibration.AccelerationTriad;
 import com.irurueta.units.Acceleration;
 
 /**
@@ -220,4 +221,26 @@ public interface UnknownBiasNonLinearAccelerometerCalibrator
      * @throws IllegalArgumentException if provided matrix is not 3x1.
      */
     void setInitialBias(final Matrix initialBias) throws LockedException;
+
+    /**
+     * Gets initial bias coordinates of accelerometer used to find a solution.
+     *
+     * @return initial bias coordinates.
+     */
+    AccelerationTriad getInitialBiasAsTriad();
+
+    /**
+     * Gets initial bias coordinates of accelerometer used to find a solution.
+     *
+     * @param result instance where result will be stored.
+     */
+    void getInitialBiasAsTriad(final AccelerationTriad result);
+
+    /**
+     * Sets initial bias coordinates of accelerometer used to find a solution.
+     *
+     * @param initialBias initial bias coordinates to be set.
+     * @throws LockedException if calibrator is currently running.
+     */
+    void setInitialBias(final AccelerationTriad initialBias) throws LockedException;
 }

@@ -17,6 +17,8 @@ package com.irurueta.navigation.inertial.calibration.magnetometer;
 
 import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.WrongSizeException;
+import com.irurueta.navigation.inertial.calibration.MagneticFluxDensityTriad;
+import com.irurueta.units.MagneticFluxDensity;
 
 /**
  * Interface for magnetometer calibrator where bias is unknown and needs to
@@ -90,4 +92,65 @@ public interface UnknownHardIronMagnetometerCalibrator {
      * available.
      */
     Double getEstimatedHardIronZ();
+
+    /**
+     * Gets x coordinate of estimated magnetometer bias.
+     *
+     * @return x coordinate of estimated magnetometer bias.
+     */
+    MagneticFluxDensity getEstimatedHardIronXAsMagneticFluxDensity();
+
+    /**
+     * Gets x coordinate of estimated magnetometer bias.
+     *
+     * @param result instance where result will be stored.
+     * @return true if estimated magnetometer bias is available, false otherwise.
+     */
+    boolean getEstimatedHardIronXAsMagneticFluxDensity(final MagneticFluxDensity result);
+
+    /**
+     * Gets y coordinate of estimated magnetometer bias.
+     *
+     * @return y coordinate of estimated magnetometer bias.
+     */
+    MagneticFluxDensity getEstimatedHardIronYAsMagneticFluxDensity();
+
+    /**
+     * Gets y coordinate of estimated magnetometer bias.
+     *
+     * @param result instance where result will be stored.
+     * @return true if estimated magnetometer bias is available, false otherwise.
+     */
+    boolean getEstimatedHardIronYAsMagneticFluxDensity(final MagneticFluxDensity result);
+
+    /**
+     * Gets z coordinate of estimated magnetometer bias.
+     *
+     * @return z coordinate of estimated magnetometer bias.
+     */
+    MagneticFluxDensity getEstimatedHardIronZAsMagneticFluxDensity();
+
+    /**
+     * Gets z coordinate of estimated magnetometer bias.
+     *
+     * @param result instance where result will be stored.
+     * @return true if estimated magnetometer bias is available, false otherwise.
+     */
+    boolean getEstimatedHardIronZAsMagneticFluxDensity(final MagneticFluxDensity result);
+
+    /**
+     * Gets estimated magnetometer bias.
+     *
+     * @return estimated magnetometer bias or null if not available.
+     */
+    MagneticFluxDensityTriad getEstimatedHardIronAsTriad();
+
+    /**
+     * Gets estimated magnetometer bias.
+     *
+     * @param result instance where result will be stored.
+     * @return true if estimated magnetometer bias is available and result was
+     * modified, false otherwise.
+     */
+    boolean getEstimatedHardIronAsTriad(final MagneticFluxDensityTriad result);
 }

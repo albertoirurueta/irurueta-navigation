@@ -17,6 +17,7 @@ package com.irurueta.navigation.inertial.calibration.gyroscope;
 
 import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.WrongSizeException;
+import com.irurueta.navigation.inertial.calibration.AngularSpeedTriad;
 import com.irurueta.units.AngularSpeed;
 
 /**
@@ -131,4 +132,20 @@ public interface UnknownBiasGyroscopeCalibrator {
      * @return true if result was updated, false if estimation is not available.
      */
     boolean getEstimatedBiasAngularSpeedZ(final AngularSpeed result);
+
+    /**
+     * Gets estimated gyroscope bias.
+     *
+     * @return estimated gyroscope bias or null if not available.
+     */
+    AngularSpeedTriad getEstimatedBiasAsTriad();
+
+    /**
+     * Gets estimated gyroscope bias.
+     *
+     * @param result instance where result will be stored.
+     * @return true if estimated gyroscope bias is available and result was
+     * modified, false otherwise.
+     */
+    boolean getEstimatedBiasAsTriad(final AngularSpeedTriad result);
 }

@@ -17,6 +17,7 @@ package com.irurueta.navigation.inertial.calibration.accelerometer;
 
 import com.irurueta.algebra.Matrix;
 import com.irurueta.navigation.LockedException;
+import com.irurueta.navigation.inertial.calibration.AccelerationTriad;
 import com.irurueta.units.Acceleration;
 
 /**
@@ -163,6 +164,28 @@ public interface KnownBiasAccelerometerCalibrator {
      */
     void setBiasCoordinates(final Acceleration biasX, final Acceleration biasY,
                             final Acceleration biasZ) throws LockedException;
+
+    /**
+     * Gets known accelerometer bias.
+     *
+     * @return known accelerometer bias.
+     */
+    AccelerationTriad getBiasAsTriad();
+
+    /**
+     * Gets known accelerometer bias.
+     *
+     * @param result instance where result will be stored.
+     */
+    void getBiasAsTriad(final AccelerationTriad result);
+
+    /**
+     * Sets known accelerometer bias.
+     *
+     * @param bias accelerometer bias to be set.
+     * @throws LockedException if calibrator is currently running.
+     */
+    void setBias(final AccelerationTriad bias) throws LockedException;
 
     /**
      * Gets known accelerometer bias as an array.

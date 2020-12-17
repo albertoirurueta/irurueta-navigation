@@ -17,6 +17,7 @@ package com.irurueta.navigation.inertial.calibration.gyroscope;
 
 import com.irurueta.algebra.Matrix;
 import com.irurueta.navigation.LockedException;
+import com.irurueta.navigation.inertial.calibration.AngularSpeedTriad;
 import com.irurueta.units.AngularSpeed;
 
 /**
@@ -220,4 +221,26 @@ public interface UnknownBiasNonLinearGyroscopeCalibrator
      * @throws IllegalArgumentException if provided matrix is not 3x1.
      */
     void setInitialBias(final Matrix initialBias) throws LockedException;
+
+    /**
+     * Gets initial bias coordinates of gyroscope used to find a solution.
+     *
+     * @return initial bias coordinates.
+     */
+    AngularSpeedTriad getInitialBiasAsTriad();
+
+    /**
+     * Gets initial bias coordinates of gyroscope used to find a solution.
+     *
+     * @param result instance where result will be stored.
+     */
+    void getInitialBiasAsTriad(final AngularSpeedTriad result);
+
+    /**
+     * Sets initial bias coordinates of gyroscope used to find a solution.
+     *
+     * @param initialBias initial bias coordinates to be set.
+     * @throws LockedException if calibrator is currently running.
+     */
+    void setInitialBias(final AngularSpeedTriad initialBias) throws LockedException;
 }

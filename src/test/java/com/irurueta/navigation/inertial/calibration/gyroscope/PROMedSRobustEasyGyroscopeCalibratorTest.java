@@ -29,6 +29,7 @@ import com.irurueta.navigation.frames.NEDFrame;
 import com.irurueta.navigation.frames.converters.NEDtoECEFFrameConverter;
 import com.irurueta.navigation.inertial.BodyKinematics;
 import com.irurueta.navigation.inertial.NEDPosition;
+import com.irurueta.navigation.inertial.calibration.AngularSpeedTriad;
 import com.irurueta.navigation.inertial.calibration.BodyKinematicsGenerator;
 import com.irurueta.navigation.inertial.calibration.BodyKinematicsSequence;
 import com.irurueta.navigation.inertial.calibration.CalibrationException;
@@ -194,6 +195,15 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
 
+        final AngularSpeedTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad initialBiasTriad2 = new AngularSpeedTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
+
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -269,6 +279,8 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
         assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
         assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -281,6 +293,26 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasXVariance());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasYVariance());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasZVariance());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
     }
 
     @Test
@@ -408,6 +440,15 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
 
+        final AngularSpeedTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bgx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), bgy, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bgz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad initialBiasTriad2 = new AngularSpeedTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
+
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
         assertEquals(calibrator.getInitialSz(), sz, 0.0);
@@ -483,6 +524,8 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
         assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
         assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -495,6 +538,26 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasXVariance());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasYVariance());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasZVariance());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -662,6 +725,15 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
 
+        final AngularSpeedTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bgx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), bgy, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bgz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad initialBiasTriad2 = new AngularSpeedTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
+
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
         assertEquals(calibrator.getInitialSz(), sz, 0.0);
@@ -737,6 +809,8 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
         assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
         assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -749,6 +823,26 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasXVariance());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasYVariance());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasZVariance());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
 
         calibrator = null;
         try {
@@ -923,6 +1017,15 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
 
+        final AngularSpeedTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bgx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), bgy, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bgz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad initialBiasTriad2 = new AngularSpeedTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
+
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
         assertEquals(calibrator.getInitialSz(), sz, 0.0);
@@ -998,6 +1101,8 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
         assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
         assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -1010,6 +1115,26 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasXVariance());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasYVariance());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasZVariance());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -1173,6 +1298,15 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
 
+        final AngularSpeedTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bgx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), bgy, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bgz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad initialBiasTriad2 = new AngularSpeedTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
+
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
         assertEquals(calibrator.getInitialSz(), sz, 0.0);
@@ -1248,6 +1382,8 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
         assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
         assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -1260,6 +1396,26 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasXVariance());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasYVariance());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasZVariance());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -1445,6 +1601,15 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
 
+        final AngularSpeedTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bgx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), bgy, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bgz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad initialBiasTriad2 = new AngularSpeedTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
+
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
         assertEquals(calibrator.getInitialSz(), sz, 0.0);
@@ -1520,6 +1685,8 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
         assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
         assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -1532,6 +1699,26 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasXVariance());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasYVariance());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasZVariance());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -1737,6 +1924,15 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
 
+        final AngularSpeedTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bgx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), bgy, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bgz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad initialBiasTriad2 = new AngularSpeedTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
+
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
         assertEquals(calibrator.getInitialSz(), sz, 0.0);
@@ -1812,6 +2008,8 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
         assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
         assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -1824,6 +2022,26 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasXVariance());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasYVariance());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasZVariance());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
 
         // Force IllegalArgumentException
 
@@ -2031,6 +2249,15 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
 
+        final AngularSpeedTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bgx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), bgy, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bgz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad initialBiasTriad2 = new AngularSpeedTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
+
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
         assertEquals(calibrator.getInitialSz(), sz, 0.0);
@@ -2106,6 +2333,8 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
         assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
         assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -2118,6 +2347,26 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasXVariance());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasYVariance());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasZVariance());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
 
         // Force IllegalArgumentException
 
@@ -2340,6 +2589,15 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
 
+        final AngularSpeedTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bgx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), bgy, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bgz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad initialBiasTriad2 = new AngularSpeedTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
+
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
         assertEquals(calibrator.getInitialSz(), sz, 0.0);
@@ -2415,6 +2673,8 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
         assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
         assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -2427,6 +2687,26 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasXVariance());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasYVariance());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasZVariance());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
 
         // Force IllegalArgumentException
 
@@ -2630,6 +2910,15 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
 
+        final AngularSpeedTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bgx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), bgy, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bgz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad initialBiasTriad2 = new AngularSpeedTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
+
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
         assertEquals(calibrator.getInitialSz(), sz, 0.0);
@@ -2705,6 +2994,8 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
         assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
         assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -2717,6 +3008,26 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasXVariance());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasYVariance());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasZVariance());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2898,6 +3209,15 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
 
+        final AngularSpeedTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bgx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), bgy, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bgz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad initialBiasTriad2 = new AngularSpeedTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
+
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
         assertEquals(calibrator.getInitialSz(), sz, 0.0);
@@ -2973,6 +3293,8 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
         assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
         assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -2985,6 +3307,26 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasXVariance());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasYVariance());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasZVariance());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3167,6 +3509,15 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
 
+        final AngularSpeedTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bgx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), bgy, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bgz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad initialBiasTriad2 = new AngularSpeedTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
+
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
         assertEquals(calibrator.getInitialSz(), sz, 0.0);
@@ -3242,6 +3593,8 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
         assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
         assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -3254,6 +3607,26 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasXVariance());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasYVariance());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasZVariance());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3429,6 +3802,15 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
 
+        final AngularSpeedTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bgx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), bgy, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bgz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad initialBiasTriad2 = new AngularSpeedTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
+
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
         assertEquals(calibrator.getInitialSz(), sz, 0.0);
@@ -3504,6 +3886,8 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
         assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
         assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -3516,6 +3900,26 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasXVariance());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasYVariance());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasZVariance());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3708,6 +4112,15 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
 
+        final AngularSpeedTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bgx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), bgy, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bgz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad initialBiasTriad2 = new AngularSpeedTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
+
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
         assertEquals(calibrator.getInitialSz(), sz, 0.0);
@@ -3783,6 +4196,8 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
         assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
         assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -3795,6 +4210,26 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasXVariance());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasYVariance());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasZVariance());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4018,6 +4453,15 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
 
+        final AngularSpeedTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bgx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), bgy, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bgz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad initialBiasTriad2 = new AngularSpeedTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
+
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
         assertEquals(calibrator.getInitialSz(), sz, 0.0);
@@ -4093,6 +4537,8 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
         assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
         assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -4105,6 +4551,26 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasXVariance());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasYVariance());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasZVariance());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4328,6 +4794,15 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
 
+        final AngularSpeedTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bgx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), bgy, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bgz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad initialBiasTriad2 = new AngularSpeedTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
+
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
         assertEquals(calibrator.getInitialSz(), sz, 0.0);
@@ -4403,6 +4878,8 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
         assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
         assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -4415,6 +4892,26 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasXVariance());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasYVariance());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasZVariance());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
 
         // Force IllegalArgumentException
 
@@ -4657,6 +5154,15 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
 
+        final AngularSpeedTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bgx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), bgy, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bgz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad initialBiasTriad2 = new AngularSpeedTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
+
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
         assertEquals(calibrator.getInitialSz(), sz, 0.0);
@@ -4732,6 +5238,8 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
         assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
         assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -4744,6 +5252,26 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasXVariance());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasYVariance());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasZVariance());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
 
         // Force IllegalArgumentException
 
@@ -4943,6 +5471,15 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
 
+        final AngularSpeedTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), 0.0, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), 0.0, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), 0.0, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad initialBiasTriad2 = new AngularSpeedTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
+
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -5018,6 +5555,8 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
         assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
         assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -5030,6 +5569,26 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasXVariance());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasYVariance());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasZVariance());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -5168,6 +5727,15 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
 
+        final AngularSpeedTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bgx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), bgy, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bgz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad initialBiasTriad2 = new AngularSpeedTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
+
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
         assertEquals(calibrator.getInitialSz(), sz, 0.0);
@@ -5243,6 +5811,8 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
         assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
         assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -5255,6 +5825,26 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasXVariance());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasYVariance());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasZVariance());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -5435,6 +6025,15 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
 
+        final AngularSpeedTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bgx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), bgy, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bgz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad initialBiasTriad2 = new AngularSpeedTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
+
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
         assertEquals(calibrator.getInitialSz(), sz, 0.0);
@@ -5510,6 +6109,8 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
         assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
         assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -5522,6 +6123,26 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasXVariance());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasYVariance());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasZVariance());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
 
         calibrator = null;
         try {
@@ -5709,6 +6330,15 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
 
+        final AngularSpeedTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bgx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), bgy, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bgz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad initialBiasTriad2 = new AngularSpeedTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
+
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
         assertEquals(calibrator.getInitialSz(), sz, 0.0);
@@ -5784,6 +6414,8 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
         assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
         assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -5796,6 +6428,26 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasXVariance());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasYVariance());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasZVariance());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -5970,6 +6622,15 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
 
+        final AngularSpeedTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bgx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), bgy, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bgz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad initialBiasTriad2 = new AngularSpeedTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
+
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
         assertEquals(calibrator.getInitialSz(), sz, 0.0);
@@ -6045,6 +6706,8 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
         assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
         assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -6057,6 +6720,26 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasXVariance());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasYVariance());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasZVariance());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -6254,6 +6937,15 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
 
+        final AngularSpeedTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bgx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), bgy, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bgz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad initialBiasTriad2 = new AngularSpeedTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
+
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
         assertEquals(calibrator.getInitialSz(), sz, 0.0);
@@ -6329,6 +7021,8 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
         assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
         assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -6341,6 +7035,26 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasXVariance());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasYVariance());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasZVariance());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -6559,6 +7273,15 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
 
+        final AngularSpeedTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bgx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), bgy, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bgz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad initialBiasTriad2 = new AngularSpeedTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
+
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
         assertEquals(calibrator.getInitialSz(), sz, 0.0);
@@ -6634,6 +7357,8 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
         assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
         assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -6646,6 +7371,26 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasXVariance());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasYVariance());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasZVariance());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
 
         // Force IllegalArgumentException
 
@@ -6866,6 +7611,15 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
 
+        final AngularSpeedTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bgx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), bgy, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bgz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad initialBiasTriad2 = new AngularSpeedTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
+
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
         assertEquals(calibrator.getInitialSz(), sz, 0.0);
@@ -6941,6 +7695,10 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
         assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
         assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -6953,6 +7711,26 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasXVariance());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasYVariance());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasZVariance());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
 
         // Force IllegalArgumentException
 
@@ -7191,6 +7969,15 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
 
+        final AngularSpeedTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bgx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), bgy, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bgz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad initialBiasTriad2 = new AngularSpeedTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
+
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
         assertEquals(calibrator.getInitialSz(), sz, 0.0);
@@ -7266,6 +8053,8 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
         assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
         assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -7278,6 +8067,26 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasXVariance());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasYVariance());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasZVariance());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
 
         // Force IllegalArgumentException
 
@@ -7497,6 +8306,15 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
 
+        final AngularSpeedTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bgx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), bgy, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bgz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad initialBiasTriad2 = new AngularSpeedTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
+
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
         assertEquals(calibrator.getInitialSz(), sz, 0.0);
@@ -7572,6 +8390,8 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
         assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
         assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -7584,6 +8404,26 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasXVariance());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasYVariance());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasZVariance());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -7774,6 +8614,15 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
 
+        final AngularSpeedTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bgx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), bgy, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bgz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad initialBiasTriad2 = new AngularSpeedTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
+
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
         assertEquals(calibrator.getInitialSz(), sz, 0.0);
@@ -7849,6 +8698,8 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
         assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
         assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -7861,6 +8712,26 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasXVariance());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasYVariance());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasZVariance());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -8052,6 +8923,15 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
 
+        final AngularSpeedTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bgx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), bgy, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bgz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad initialBiasTriad2 = new AngularSpeedTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
+
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
         assertEquals(calibrator.getInitialSz(), sz, 0.0);
@@ -8127,6 +9007,8 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
         assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
         assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -8139,6 +9021,26 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasXVariance());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasYVariance());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasZVariance());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -8323,6 +9225,15 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
 
+        final AngularSpeedTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bgx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), bgy, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bgz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad initialBiasTriad2 = new AngularSpeedTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
+
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
         assertEquals(calibrator.getInitialSz(), sz, 0.0);
@@ -8398,6 +9309,8 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
         assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
         assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -8410,6 +9323,26 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasXVariance());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasYVariance());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasZVariance());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -8611,6 +9544,15 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
 
+        final AngularSpeedTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bgx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), bgy, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bgz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad initialBiasTriad2 = new AngularSpeedTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
+
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
         assertEquals(calibrator.getInitialSz(), sz, 0.0);
@@ -8686,6 +9628,8 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
         assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
         assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -8698,6 +9642,26 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasXVariance());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasYVariance());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasZVariance());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -8930,6 +9894,15 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
 
+        final AngularSpeedTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bgx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), bgy, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bgz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad initialBiasTriad2 = new AngularSpeedTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
+
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
         assertEquals(calibrator.getInitialSz(), sz, 0.0);
@@ -9005,6 +9978,8 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
         assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
         assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -9017,6 +9992,26 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasXVariance());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasYVariance());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasZVariance());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -9249,6 +10244,15 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
 
+        final AngularSpeedTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bgx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), bgy, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bgz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad initialBiasTriad2 = new AngularSpeedTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
+
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
         assertEquals(calibrator.getInitialSz(), sz, 0.0);
@@ -9324,6 +10328,8 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
         assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
         assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -9336,6 +10342,26 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasXVariance());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasYVariance());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasZVariance());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
 
         // Force IllegalArgumentException
 
@@ -9587,6 +10613,15 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
 
+        final AngularSpeedTriad initialBiasTriad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(initialBiasTriad1.getValueX(), bgx, 0.0);
+        assertEquals(initialBiasTriad1.getValueY(), bgy, 0.0);
+        assertEquals(initialBiasTriad1.getValueZ(), bgz, 0.0);
+        assertEquals(initialBiasTriad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad initialBiasTriad2 = new AngularSpeedTriad();
+        calibrator.getInitialBiasAsTriad(initialBiasTriad2);
+        assertEquals(initialBiasTriad1, initialBiasTriad2);
+
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
         assertEquals(calibrator.getInitialSz(), sz, 0.0);
@@ -9662,6 +10697,8 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
         assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
         assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
+        assertNull(calibrator.getEstimatedBiasAsTriad());
+        assertFalse(calibrator.getEstimatedBiasAsTriad(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -9674,6 +10711,26 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
+        assertNull(calibrator.getEstimatedBiasXVariance());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasYVariance());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasZVariance());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviation());
+        assertNull(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviation());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviation(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverage());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed(null));
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
+        assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
+        assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
 
         // Force IllegalArgumentException
 
@@ -10658,6 +11715,40 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         assertEquals(bgx, calibrator.getInitialBiasX(), 0.0);
         assertEquals(bgy, calibrator.getInitialBiasY(), 0.0);
         assertEquals(bgz, calibrator.getInitialBiasZ(), 0.0);
+    }
+
+    @Test
+    public void testGetSetInitialBiasAsTriad() throws LockedException {
+        final PROMedSRobustEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustEasyGyroscopeCalibrator();
+
+        // check default values
+        final AngularSpeedTriad triad1 = calibrator.getInitialBiasAsTriad();
+        assertEquals(triad1.getValueX(), 0.0, 0.0);
+        assertEquals(triad1.getValueY(), 0.0, 0.0);
+        assertEquals(triad1.getValueZ(), 0.0, 0.0);
+        assertEquals(triad1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeedTriad triad2 = new AngularSpeedTriad();
+        calibrator.getInitialBiasAsTriad(triad2);
+        assertEquals(triad1, triad2);
+
+        // set new values
+        final Matrix bg = generateBg();
+        final double initialBiasX = bg.getElementAtIndex(0);
+        final double initialBiasY = bg.getElementAtIndex(1);
+        final double initialBiasZ = bg.getElementAtIndex(2);
+
+        final AngularSpeedTriad triad3 = new AngularSpeedTriad(
+                AngularSpeedUnit.RADIANS_PER_SECOND,
+                initialBiasX, initialBiasY, initialBiasZ);
+        calibrator.setInitialBias(triad3);
+
+        final AngularSpeedTriad triad4 = calibrator.getInitialBiasAsTriad();
+        final AngularSpeedTriad triad5 = new AngularSpeedTriad();
+        calibrator.getInitialBiasAsTriad(triad5);
+
+        assertEquals(triad3, triad4);
+        assertEquals(triad3, triad5);
     }
 
     @Test
@@ -13827,6 +14918,11 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         } catch (final LockedException ignore) {
         }
         try {
+            calibrator.setInitialBias((AngularSpeedTriad) null);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
+        try {
             calibrator.setInitialSx(0.0);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
@@ -14052,6 +15148,64 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
                 0.0);
 
         assertEquals(gg, calibrator.getEstimatedGg());
+
+        assertCovariance(calibrator);
+    }
+
+    private void assertCovariance(
+            final RobustEasyGyroscopeCalibrator calibrator) {
+        assertNotNull(calibrator.getEstimatedBiasXVariance());
+
+        assertNotNull(calibrator.getEstimatedBiasXVariance());
+        assertNotNull(calibrator.getEstimatedBiasXStandardDeviation());
+        final AngularSpeed stdBx1 = calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed();
+        assertNotNull(stdBx1);
+        final AngularSpeed stdBx2 = new AngularSpeed(1.0, AngularSpeedUnit.RADIANS_PER_SECOND);
+        assertTrue(calibrator.getEstimatedBiasXStandardDeviationAsAngularSpeed(stdBx2));
+        assertEquals(stdBx1, stdBx2);
+
+        assertNotNull(calibrator.getEstimatedBiasYVariance());
+        assertNotNull(calibrator.getEstimatedBiasYStandardDeviation());
+        final AngularSpeed stdBy1 = calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed();
+        assertNotNull(stdBy1);
+        final AngularSpeed stdBy2 = new AngularSpeed(1.0, AngularSpeedUnit.RADIANS_PER_SECOND);
+        assertTrue(calibrator.getEstimatedBiasYStandardDeviationAsAngularSpeed(stdBy2));
+        assertEquals(stdBy1, stdBy2);
+
+        assertNotNull(calibrator.getEstimatedBiasZVariance());
+        assertNotNull(calibrator.getEstimatedBiasZStandardDeviation());
+        final AngularSpeed stdBz1 = calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed();
+        assertNotNull(stdBz1);
+        final AngularSpeed stdBz2 = new AngularSpeed(1.0, AngularSpeedUnit.RADIANS_PER_SECOND);
+        assertTrue(calibrator.getEstimatedBiasZStandardDeviationAsAngularSpeed(stdBz2));
+        assertEquals(stdBz1, stdBz2);
+
+        final AngularSpeedTriad std1 = calibrator.getEstimatedBiasStandardDeviation();
+        assertEquals(calibrator.getEstimatedBiasXStandardDeviation(), std1.getValueX(), 0.0);
+        assertEquals(calibrator.getEstimatedBiasYStandardDeviation(), std1.getValueY(), 0.0);
+        assertEquals(calibrator.getEstimatedBiasZStandardDeviation(), std1.getValueZ(), 0.0);
+        assertEquals(AngularSpeedUnit.RADIANS_PER_SECOND, std1.getUnit());
+        final AngularSpeedTriad std2 = new AngularSpeedTriad();
+        calibrator.getEstimatedBiasStandardDeviation(std2);
+
+        final double avgStd = (calibrator.getEstimatedBiasXStandardDeviation() +
+                calibrator.getEstimatedBiasYStandardDeviation() +
+                calibrator.getEstimatedBiasZStandardDeviation()) / 3.0;
+        assertEquals(avgStd, calibrator.getEstimatedBiasStandardDeviationAverage(), 0.0);
+        final AngularSpeed avg1 = calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed();
+        assertEquals(avgStd, avg1.getValue().doubleValue(), 0.0);
+        assertEquals(AngularSpeedUnit.RADIANS_PER_SECOND, avg1.getUnit());
+        final AngularSpeed avg2 = new AngularSpeed(1.0, AngularSpeedUnit.RADIANS_PER_SECOND);
+        calibrator.getEstimatedBiasStandardDeviationAverageAsAngularSpeed(avg2);
+        assertEquals(avg1, avg2);
+
+        assertEquals(std1.getNorm(), calibrator.getEstimatedBiasStandardDeviationNorm(), ABSOLUTE_ERROR);
+        final AngularSpeed norm1 = calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed();
+        assertEquals(std1.getNorm(), norm1.getValue().doubleValue(), ABSOLUTE_ERROR);
+        assertEquals(AngularSpeedUnit.RADIANS_PER_SECOND, norm1.getUnit());
+        final AngularSpeed norm2 = new AngularSpeed(1.0, AngularSpeedUnit.RADIANS_PER_SECOND);
+        calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(norm2);
+        assertEquals(norm1, norm2);
     }
 
     private Matrix generateBa() {

@@ -32,7 +32,11 @@ import com.irurueta.navigation.inertial.BodyMagneticFluxDensity;
 import com.irurueta.navigation.inertial.NEDMagneticFluxDensity;
 import com.irurueta.navigation.inertial.calibration.CalibrationException;
 import com.irurueta.navigation.inertial.calibration.FrameBodyMagneticFluxDensity;
+import com.irurueta.navigation.inertial.calibration.MagneticFluxDensityTriad;
 import com.irurueta.navigation.inertial.estimators.BodyMagneticFluxDensityEstimator;
+import com.irurueta.units.MagneticFluxDensity;
+import com.irurueta.units.MagneticFluxDensityConverter;
+import com.irurueta.units.MagneticFluxDensityUnit;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -1463,6 +1467,120 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator imple
     }
 
     /**
+     * Gets known x coordinate of magnetometer hard-iron.
+     *
+     * @return x coordinate of magnetometer hard-iron.
+     */
+    @Override
+    public MagneticFluxDensity getHardIronXAsMagneticFluxDensity() {
+        return new MagneticFluxDensity(mHardIronX,
+                MagneticFluxDensityUnit.TESLA);
+    }
+
+    /**
+     * Gets known x coordinate of magnetometer hard-iron.
+     *
+     * @param result instance where result will be stored.
+     */
+    @Override
+    public void getHardIronXAsMagneticFluxDensity(
+            final MagneticFluxDensity result) {
+        result.setValue(mHardIronX);
+        result.setUnit(MagneticFluxDensityUnit.TESLA);
+    }
+
+    /**
+     * Sets known x-coordinate of magnetometer hard-iron.
+     *
+     * @param hardIronX known x-coordinate of magnetometer hard-iron.
+     * @throws LockedException if calibrator is currently running.
+     */
+    @Override
+    public void setHardIronX(final MagneticFluxDensity hardIronX)
+            throws LockedException {
+        if (mRunning) {
+            throw new LockedException();
+        }
+        mHardIronX = convertMagneticFluxDensity(hardIronX);
+    }
+
+    /**
+     * Gets known y coordinate of magnetometer hard-iron.
+     *
+     * @return y coordinate of magnetometer hard-iron.
+     */
+    @Override
+    public MagneticFluxDensity getHardIronYAsMagneticFluxDensity() {
+        return new MagneticFluxDensity(mHardIronY,
+                MagneticFluxDensityUnit.TESLA);
+    }
+
+    /**
+     * Gets known y coordinate of magnetometer hard-iron.
+     *
+     * @param result instance where result will be stored.
+     */
+    @Override
+    public void getHardIronYAsMagneticFluxDensity(
+            final MagneticFluxDensity result) {
+        result.setValue(mHardIronY);
+        result.setUnit(MagneticFluxDensityUnit.TESLA);
+    }
+
+    /**
+     * Sets known y-coordinate of magnetometer hard-iron.
+     *
+     * @param hardIronY known y-coordinate of magnetometer hard-iron.
+     * @throws LockedException if calibrator is currently running.
+     */
+    @Override
+    public void setHardIronY(final MagneticFluxDensity hardIronY)
+            throws LockedException {
+        if (mRunning) {
+            throw new LockedException();
+        }
+        mHardIronY = convertMagneticFluxDensity(hardIronY);
+    }
+
+    /**
+     * Gets known z coordinate of magnetometer hard-iron.
+     *
+     * @return z coordinate of magnetometer hard-iron.
+     */
+    @Override
+    public MagneticFluxDensity getHardIronZAsMagneticFluxDensity() {
+        return new MagneticFluxDensity(mHardIronZ,
+                MagneticFluxDensityUnit.TESLA);
+    }
+
+    /**
+     * Gets known z coordinate of magnetometer hard-iron.
+     *
+     * @param result instance where result will be stored.
+     */
+    @Override
+    public void getHardIronZAsMagneticFluxDensity(
+            final MagneticFluxDensity result) {
+        result.setValue(mHardIronZ);
+        result.setUnit(MagneticFluxDensityUnit.TESLA);
+    }
+
+    /**
+     * Sets known z-coordinate of magnetometer hard-iron.
+     *
+     * @param hardIronZ known z-coordinate of magnetometer hard-iron.
+     * @throws LockedException if calibrator is currently running.
+     */
+    @Override
+    public void setHardIronZ(final MagneticFluxDensity hardIronZ)
+            throws LockedException {
+        if (mRunning) {
+            throw new LockedException();
+        }
+        mHardIronZ = convertMagneticFluxDensity(hardIronZ);
+    }
+
+    /**
      * Sets known hard-iron bias coordinates of magnetometer expressed
      * in Teslas (T).
      *
@@ -1482,6 +1600,68 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator imple
         mHardIronX = hardIronX;
         mHardIronY = hardIronY;
         mHardIronZ = hardIronZ;
+    }
+
+    /**
+     * Sets known hard-iron coordinates.
+     *
+     * @param hardIronX x-coordinate of magnetometer hard-iron.
+     * @param hardIronY y-coordinate of magnetometer hard-iron.
+     * @param hardIronZ z-coordinate of magnetometer hard-iron.
+     * @throws LockedException if calibrator is currently running.
+     */
+    @Override
+    public void setHardIronCoordinates(
+            final MagneticFluxDensity hardIronX,
+            final MagneticFluxDensity hardIronY,
+            final MagneticFluxDensity hardIronZ) throws LockedException {
+        if (mRunning) {
+            throw new LockedException();
+        }
+        mHardIronX = convertMagneticFluxDensity(hardIronX);
+        mHardIronY = convertMagneticFluxDensity(hardIronY);
+        mHardIronZ = convertMagneticFluxDensity(hardIronZ);
+    }
+
+    /**
+     * Gets known hard-iron.
+     *
+     * @return known hard-iron.
+     */
+    @Override
+    public MagneticFluxDensityTriad getHardIronAsTriad() {
+        return new MagneticFluxDensityTriad(MagneticFluxDensityUnit.TESLA,
+                mHardIronX, mHardIronY, mHardIronZ);
+    }
+
+    /**
+     * Gets known hard-iron.
+     *
+     * @param result instance where result will be stored.
+     */
+    @Override
+    public void getHardIronAsTriad(final MagneticFluxDensityTriad result) {
+        result.setValueCoordinatesAndUnit(
+                mHardIronX, mHardIronY, mHardIronZ,
+                MagneticFluxDensityUnit.TESLA);
+    }
+
+    /**
+     * Sets known hard-iron.
+     *
+     * @param hardIron hard-iron to be set.
+     * @throws LockedException if calibrator is currently running.
+     */
+    @Override
+    public void setHardIron(final MagneticFluxDensityTriad hardIron)
+            throws LockedException {
+        if (mRunning) {
+            throw new LockedException();
+        }
+
+        mHardIronX = convertMagneticFluxDensity(hardIron.getValueX(), hardIron.getUnit());
+        mHardIronY = convertMagneticFluxDensity(hardIron.getValueY(), hardIron.getUnit());
+        mHardIronZ = convertMagneticFluxDensity(hardIron.getValueZ(), hardIron.getUnit());
     }
 
     /**
@@ -2281,5 +2461,28 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator imple
         mEstimatedMm.setElementAt(0, 2, mxz);
         mEstimatedMm.setElementAt(1, 2, myz);
         mEstimatedMm.setElementAt(2, 2, sz);
+    }
+
+    /**
+     * Converts magnetic flux density value and unit to Teslas.
+     *
+     * @param value magnetic flux density value.
+     * @param unit unit of magnetic flux density value.
+     * @return converted value.
+     */
+    private static double convertMagneticFluxDensity(final double value, final MagneticFluxDensityUnit unit) {
+        return MagneticFluxDensityConverter.convert(value, unit,
+                MagneticFluxDensityUnit.TESLA);
+    }
+
+    /**
+     * Converts magnetic flux density instance to Teslas.
+     *
+     * @param magneticFluxDensity magnetic flux density instance to be converted.
+     * @return converted value.
+     */
+    private static double convertMagneticFluxDensity(final MagneticFluxDensity magneticFluxDensity) {
+        return convertMagneticFluxDensity(magneticFluxDensity.getValue().doubleValue(),
+                magneticFluxDensity.getUnit());
     }
 }

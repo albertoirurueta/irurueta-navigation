@@ -32,7 +32,10 @@ import com.irurueta.navigation.inertial.BodyMagneticFluxDensity;
 import com.irurueta.navigation.inertial.NEDMagneticFluxDensity;
 import com.irurueta.navigation.inertial.calibration.CalibrationException;
 import com.irurueta.navigation.inertial.calibration.FrameBodyMagneticFluxDensity;
+import com.irurueta.navigation.inertial.calibration.MagneticFluxDensityTriad;
 import com.irurueta.navigation.inertial.estimators.BodyMagneticFluxDensityEstimator;
+import com.irurueta.units.MagneticFluxDensity;
+import com.irurueta.units.MagneticFluxDensityUnit;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -703,6 +706,121 @@ public class KnownFrameMagnetometerLinearLeastSquaresCalibrator implements
     @Override
     public Double getEstimatedHardIronZ() {
         return mEstimatedHardIron != null ? mEstimatedHardIron[2] : null;
+    }
+
+    /**
+     * Gets x coordinate of estimated magnetometer bias.
+     *
+     * @return x coordinate of estimated magnetometer bias.
+     */
+    @Override
+    public MagneticFluxDensity getEstimatedHardIronXAsMagneticFluxDensity() {
+        return mEstimatedHardIron != null ?
+                new MagneticFluxDensity(mEstimatedHardIron[0], MagneticFluxDensityUnit.TESLA) : null;
+    }
+
+    /**
+     * Gets x coordinate of estimated magnetometer bias.
+     *
+     * @param result instance where result will be stored.
+     * @return true if estimated magnetometer bias is available, false otherwise.
+     */
+    @Override
+    public boolean getEstimatedHardIronXAsMagneticFluxDensity(final MagneticFluxDensity result) {
+        if (mEstimatedHardIron != null) {
+            result.setValue(mEstimatedHardIron[0]);
+            result.setUnit(MagneticFluxDensityUnit.TESLA);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Gets y coordinate of estimated magnetometer bias.
+     *
+     * @return y coordinate of estimated magnetometer bias.
+     */
+    @Override
+    public MagneticFluxDensity getEstimatedHardIronYAsMagneticFluxDensity() {
+        return mEstimatedHardIron != null ?
+                new MagneticFluxDensity(mEstimatedHardIron[1], MagneticFluxDensityUnit.TESLA) : null;
+    }
+
+    /**
+     * Gets y coordinate of estimated magnetometer bias.
+     *
+     * @param result instance where result will be stored.
+     * @return true if estimated magnetometer bias is available, false otherwise.
+     */
+    @Override
+    public boolean getEstimatedHardIronYAsMagneticFluxDensity(final MagneticFluxDensity result) {
+        if (mEstimatedHardIron != null) {
+            result.setValue(mEstimatedHardIron[1]);
+            result.setUnit(MagneticFluxDensityUnit.TESLA);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Gets z coordinate of estimated magnetometer bias.
+     *
+     * @return z coordinate of estimated magnetometer bias.
+     */
+    @Override
+    public MagneticFluxDensity getEstimatedHardIronZAsMagneticFluxDensity() {
+        return mEstimatedHardIron != null ?
+                new MagneticFluxDensity(mEstimatedHardIron[2], MagneticFluxDensityUnit.TESLA) : null;
+    }
+
+    /**
+     * Gets z coordinate of estimated magnetometer bias.
+     *
+     * @param result instance where result will be stored.
+     * @return true if estimated magnetometer bias is available, false otherwise.
+     */
+    @Override
+    public boolean getEstimatedHardIronZAsMagneticFluxDensity(final MagneticFluxDensity result) {
+        if (mEstimatedHardIron != null) {
+            result.setValue(mEstimatedHardIron[2]);
+            result.setUnit(MagneticFluxDensityUnit.TESLA);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Gets estimated magnetometer bias.
+     *
+     * @return estimated magnetometer bias or null if not available.
+     */
+    @Override
+    public MagneticFluxDensityTriad getEstimatedHardIronAsTriad() {
+        return mEstimatedHardIron != null ?
+                new MagneticFluxDensityTriad(MagneticFluxDensityUnit.TESLA,
+                        mEstimatedHardIron[0], mEstimatedHardIron[1], mEstimatedHardIron[2]) : null;
+    }
+
+    /**
+     * Gets estimated magnetometer bias.
+     *
+     * @param result instance where result will be stored.
+     * @return true if estimated magnetometer bias is available and result was
+     * modified, false otherwise.
+     */
+    @Override
+    public boolean getEstimatedHardIronAsTriad(final MagneticFluxDensityTriad result) {
+        if (mEstimatedHardIron != null) {
+            result.setValueCoordinatesAndUnit(
+                    mEstimatedHardIron[0], mEstimatedHardIron[1], mEstimatedHardIron[2],
+                    MagneticFluxDensityUnit.TESLA);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**

@@ -23,6 +23,7 @@ import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
 import com.irurueta.navigation.frames.ECEFFrame;
 import com.irurueta.navigation.inertial.BodyKinematics;
+import com.irurueta.navigation.inertial.calibration.AngularSpeedTriad;
 import com.irurueta.navigation.inertial.calibration.CalibrationException;
 import com.irurueta.navigation.inertial.calibration.FrameBodyKinematics;
 import com.irurueta.navigation.inertial.estimators.ECEFKinematicsEstimator;
@@ -622,6 +623,37 @@ public class KnownFrameGyroscopeLinearLeastSquaresCalibrator implements
         if (mEstimatedBiases != null) {
             result.setValue(mEstimatedBiases[2]);
             result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Gets estimated gyroscope bias.
+     *
+     * @return estimated gyroscope bias or null if not available.
+     */
+    @Override
+    public AngularSpeedTriad getEstimatedBiasAsTriad() {
+        return mEstimatedBiases != null ?
+                new AngularSpeedTriad(AngularSpeedUnit.RADIANS_PER_SECOND,
+                        mEstimatedBiases[0], mEstimatedBiases[1], mEstimatedBiases[2]) : null;
+    }
+
+    /**
+     * Gets estimated gyroscope bias.
+     *
+     * @param result instance where result will be stored.
+     * @return true if estimated gyroscope bias is available and result was
+     * modified, false otherwise.
+     */
+    @Override
+    public boolean getEstimatedBiasAsTriad(final AngularSpeedTriad result) {
+        if (mEstimatedBiases != null) {
+            result.setValueCoordinatesAndUnit(
+                    mEstimatedBiases[0], mEstimatedBiases[1], mEstimatedBiases[2],
+                    AngularSpeedUnit.RADIANS_PER_SECOND);
             return true;
         } else {
             return false;
