@@ -21,6 +21,9 @@ import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
 import com.irurueta.navigation.frames.ECEFFrame;
 import com.irurueta.navigation.inertial.BodyKinematics;
+import com.irurueta.navigation.inertial.INSLooselyCoupledKalmanInitializerConfig;
+import com.irurueta.navigation.inertial.INSTightlyCoupledKalmanInitializerConfig;
+import com.irurueta.navigation.inertial.calibration.AngularSpeedTriad;
 import com.irurueta.navigation.inertial.calibration.CalibrationException;
 import com.irurueta.navigation.inertial.calibration.StandardDeviationFrameBodyKinematics;
 import com.irurueta.navigation.inertial.estimators.ECEFKinematicsEstimator;
@@ -90,7 +93,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
     /**
      * Default robust estimator method when none is provided.
      */
-<span class="fc" id="L93">    public static final RobustEstimatorMethod DEFAULT_ROBUST_METHOD =</span>
+<span class="fc" id="L96">    public static final RobustEstimatorMethod DEFAULT_ROBUST_METHOD =</span>
             RobustEstimatorMethod.LMedS;
 
     /**
@@ -177,21 +180,21 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
     /**
      * Amount of progress variation before notifying a progress change during calibration.
      */
-<span class="fc" id="L180">    protected float mProgressDelta = DEFAULT_PROGRESS_DELTA;</span>
+<span class="fc" id="L183">    protected float mProgressDelta = DEFAULT_PROGRESS_DELTA;</span>
 
     /**
      * Amount of confidence expressed as a value between 0.0 and 1.0 (which is equivalent
      * to 100%). The amount of confidence indicates the probability that the estimated
      * result is correct. Usually this value will be close to 1.0, but not exactly 1.0.
      */
-<span class="fc" id="L187">    protected double mConfidence = DEFAULT_CONFIDENCE;</span>
+<span class="fc" id="L190">    protected double mConfidence = DEFAULT_CONFIDENCE;</span>
 
     /**
      * Maximum allowed number of iterations. When the maximum number of iterations is
      * exceeded, result will not be available, however an approximate result will be
      * available for retrieval.
      */
-<span class="fc" id="L194">    protected int mMaxIterations = DEFAULT_MAX_ITERATIONS;</span>
+<span class="fc" id="L197">    protected int mMaxIterations = DEFAULT_MAX_ITERATIONS;</span>
 
     /**
      * Data related to inliers found after calibration.
@@ -204,19 +207,19 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * If true, inliers will be computed and kept in any implementation regardless of the
      * settings.
      */
-<span class="fc" id="L207">    protected boolean mRefineResult = DEFAULT_REFINE_RESULT;</span>
+<span class="fc" id="L210">    protected boolean mRefineResult = DEFAULT_REFINE_RESULT;</span>
 
     /**
      * Size of subsets to be checked during robust estimation.
      */
-<span class="fc" id="L212">    protected int mPreliminarySubsetSize = MINIMUM_MEASUREMENTS;</span>
+<span class="fc" id="L215">    protected int mPreliminarySubsetSize = MINIMUM_MEASUREMENTS;</span>
 
     /**
      * This flag indicates whether z-axis is assumed to be common for accelerometer
      * and gyroscope.
      * When enabled, this eliminates 3 variables from Ma matrix.
      */
-<span class="fc" id="L219">    private boolean mCommonAxisUsed = DEFAULT_USE_COMMON_Z_AXIS;</span>
+<span class="fc" id="L222">    private boolean mCommonAxisUsed = DEFAULT_USE_COMMON_Z_AXIS;</span>
 
     /**
      * Initial x-coordinate of gyroscope bias to be used to find a solution.
@@ -291,13 +294,13 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * Indicates whether a linear calibrator is used or not for preliminary
      * solutions.
      */
-<span class="fc" id="L294">    private boolean mUseLinearCalibrator = DEFAULT_USE_LINEAR_CALIBRATOR;</span>
+<span class="fc" id="L297">    private boolean mUseLinearCalibrator = DEFAULT_USE_LINEAR_CALIBRATOR;</span>
 
     /**
      * Indicates whether preliminary solutions must be refined after an initial linear solution
      * is found.
      */
-<span class="fc" id="L300">    private boolean mRefinePreliminarySolutions = DEFAULT_REFINE_PRELIMINARY_SOLUTIONS;</span>
+<span class="fc" id="L303">    private boolean mRefinePreliminarySolutions = DEFAULT_REFINE_PRELIMINARY_SOLUTIONS;</span>
 
     /**
      * Estimated gyroscope biases for each IMU axis expressed in radians per second
@@ -357,7 +360,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * Indicates whether covariance must be kept after refining result.
      * This setting is only taken into account if result is refined.
      */
-<span class="fc" id="L360">    private boolean mKeepCovariance = DEFAULT_KEEP_COVARIANCE;</span>
+<span class="fc" id="L363">    private boolean mKeepCovariance = DEFAULT_KEEP_COVARIANCE;</span>
 
     /**
      * Estimated covariance of estimated position.
@@ -368,26 +371,26 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
     /**
      * A linear least squares calibrator.
      */
-<span class="fc" id="L371">    private final KnownFrameGyroscopeLinearLeastSquaresCalibrator mLinearCalibrator =</span>
+<span class="fc" id="L374">    private final KnownFrameGyroscopeLinearLeastSquaresCalibrator mLinearCalibrator =</span>
             new KnownFrameGyroscopeLinearLeastSquaresCalibrator();
 
     /**
      * A non-linear least squares calibrator.
      */
-<span class="fc" id="L377">    private final KnownFrameGyroscopeNonLinearLeastSquaresCalibrator mNonLinearCalibrator =</span>
+<span class="fc" id="L380">    private final KnownFrameGyroscopeNonLinearLeastSquaresCalibrator mNonLinearCalibrator =</span>
             new KnownFrameGyroscopeNonLinearLeastSquaresCalibrator();
 
     /**
      * Constructor.
      */
-<span class="fc" id="L383">    public RobustKnownFrameGyroscopeCalibrator() {</span>
+<span class="fc" id="L386">    public RobustKnownFrameGyroscopeCalibrator() {</span>
         try {
-<span class="fc" id="L385">            mInitialGg = new Matrix(BodyKinematics.COMPONENTS,</span>
+<span class="fc" id="L388">            mInitialGg = new Matrix(BodyKinematics.COMPONENTS,</span>
                     BodyKinematics.COMPONENTS);
-<span class="nc" id="L387">        } catch (final WrongSizeException ignore) {</span>
+<span class="nc" id="L390">        } catch (final WrongSizeException ignore) {</span>
             // never happens
-<span class="fc" id="L389">        }</span>
-<span class="fc" id="L390">    }</span>
+<span class="fc" id="L392">        }</span>
+<span class="fc" id="L393">    }</span>
 
     /**
      * Constructor.
@@ -397,9 +400,9 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      */
     public RobustKnownFrameGyroscopeCalibrator(
             final RobustKnownFrameGyroscopeCalibratorListener listener) {
-<span class="fc" id="L400">        this();</span>
-<span class="fc" id="L401">        mListener = listener;</span>
-<span class="fc" id="L402">    }</span>
+<span class="fc" id="L403">        this();</span>
+<span class="fc" id="L404">        mListener = listener;</span>
+<span class="fc" id="L405">    }</span>
 
     /**
      * Constructor.
@@ -410,9 +413,9 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      */
     public RobustKnownFrameGyroscopeCalibrator(
             final List&lt;StandardDeviationFrameBodyKinematics&gt; measurements) {
-<span class="fc" id="L413">        this();</span>
-<span class="fc" id="L414">        mMeasurements = measurements;</span>
-<span class="fc" id="L415">    }</span>
+<span class="fc" id="L416">        this();</span>
+<span class="fc" id="L417">        mMeasurements = measurements;</span>
+<span class="fc" id="L418">    }</span>
 
     /**
      * Constructor.
@@ -426,9 +429,9 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
     public RobustKnownFrameGyroscopeCalibrator(
             final List&lt;StandardDeviationFrameBodyKinematics&gt; measurements,
             final RobustKnownFrameGyroscopeCalibratorListener listener) {
-<span class="fc" id="L429">        this(measurements);</span>
-<span class="fc" id="L430">        mListener = listener;</span>
-<span class="fc" id="L431">    }</span>
+<span class="fc" id="L432">        this(measurements);</span>
+<span class="fc" id="L433">        mListener = listener;</span>
+<span class="fc" id="L434">    }</span>
 
     /**
      * Constructor.
@@ -437,9 +440,9 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      *                       accelerometer and gyroscope.
      */
     public RobustKnownFrameGyroscopeCalibrator(final boolean commonAxisUsed) {
-<span class="fc" id="L440">        this();</span>
-<span class="fc" id="L441">        mCommonAxisUsed = commonAxisUsed;</span>
-<span class="fc" id="L442">    }</span>
+<span class="fc" id="L443">        this();</span>
+<span class="fc" id="L444">        mCommonAxisUsed = commonAxisUsed;</span>
+<span class="fc" id="L445">    }</span>
 
     /**
      * Constructor.
@@ -451,9 +454,9 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
     public RobustKnownFrameGyroscopeCalibrator(
             final boolean commonAxisUsed,
             final RobustKnownFrameGyroscopeCalibratorListener listener) {
-<span class="fc" id="L454">        this(commonAxisUsed);</span>
-<span class="fc" id="L455">        mListener = listener;</span>
-<span class="fc" id="L456">    }</span>
+<span class="fc" id="L457">        this(commonAxisUsed);</span>
+<span class="fc" id="L458">        mListener = listener;</span>
+<span class="fc" id="L459">    }</span>
 
     /**
      * Constructor.
@@ -467,9 +470,9 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
     public RobustKnownFrameGyroscopeCalibrator(
             final List&lt;StandardDeviationFrameBodyKinematics&gt; measurements,
             final boolean commonAxisUsed) {
-<span class="fc" id="L470">        this(measurements);</span>
-<span class="fc" id="L471">        mCommonAxisUsed = commonAxisUsed;</span>
-<span class="fc" id="L472">    }</span>
+<span class="fc" id="L473">        this(measurements);</span>
+<span class="fc" id="L474">        mCommonAxisUsed = commonAxisUsed;</span>
+<span class="fc" id="L475">    }</span>
 
     /**
      * Constructor.
@@ -485,9 +488,9 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
             final List&lt;StandardDeviationFrameBodyKinematics&gt; measurements,
             final boolean commonAxisUsed,
             final RobustKnownFrameGyroscopeCalibratorListener listener) {
-<span class="fc" id="L488">        this(measurements, commonAxisUsed);</span>
-<span class="fc" id="L489">        mListener = listener;</span>
-<span class="fc" id="L490">    }</span>
+<span class="fc" id="L491">        this(measurements, commonAxisUsed);</span>
+<span class="fc" id="L492">        mListener = listener;</span>
+<span class="fc" id="L493">    }</span>
 
     /**
      * Gets initial x-coordinate of gyroscope bias to be used to find a solutions.
@@ -497,7 +500,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @return initial x-coordinate of gyroscope bias.
      */
     public double getInitialBiasX() {
-<span class="fc" id="L500">        return mInitialBiasX;</span>
+<span class="fc" id="L503">        return mInitialBiasX;</span>
     }
 
     /**
@@ -509,11 +512,11 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @throws LockedException if calibrator is currently running.
      */
     public void setInitialBiasX(final double initialBiasX) throws LockedException {
-<span class="fc bfc" id="L512" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L513">            throw new LockedException();</span>
+<span class="fc bfc" id="L515" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L516">            throw new LockedException();</span>
         }
-<span class="fc" id="L515">        mInitialBiasX = initialBiasX;</span>
-<span class="fc" id="L516">    }</span>
+<span class="fc" id="L518">        mInitialBiasX = initialBiasX;</span>
+<span class="fc" id="L519">    }</span>
 
     /**
      * Gets initial y-coordinate of gyroscope bias to be used to find a solution.
@@ -523,7 +526,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @return initial y-coordinate of gyroscope bias.
      */
     public double getInitialBiasY() {
-<span class="fc" id="L526">        return mInitialBiasY;</span>
+<span class="fc" id="L529">        return mInitialBiasY;</span>
     }
 
     /**
@@ -535,11 +538,11 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @throws LockedException if calibrator is currently running.
      */
     public void setInitialBiasY(final double initialBiasY) throws LockedException {
-<span class="fc bfc" id="L538" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L539">            throw new LockedException();</span>
+<span class="fc bfc" id="L541" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L542">            throw new LockedException();</span>
         }
-<span class="fc" id="L541">        mInitialBiasY = initialBiasY;</span>
-<span class="fc" id="L542">    }</span>
+<span class="fc" id="L544">        mInitialBiasY = initialBiasY;</span>
+<span class="fc" id="L545">    }</span>
 
     /**
      * Gets initial z-coordinate of gyroscope bias to be used to find a solution.
@@ -549,7 +552,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @return initial z-coordinate of gyroscope bias.
      */
     public double getInitialBiasZ() {
-<span class="fc" id="L552">        return mInitialBiasZ;</span>
+<span class="fc" id="L555">        return mInitialBiasZ;</span>
     }
 
     /**
@@ -561,11 +564,11 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @throws LockedException if calibrator is currently running.
      */
     public void setInitialBiasZ(final double initialBiasZ) throws LockedException {
-<span class="fc bfc" id="L564" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L565">            throw new LockedException();</span>
+<span class="fc bfc" id="L567" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L568">            throw new LockedException();</span>
         }
-<span class="fc" id="L567">        mInitialBiasZ = initialBiasZ;</span>
-<span class="fc" id="L568">    }</span>
+<span class="fc" id="L570">        mInitialBiasZ = initialBiasZ;</span>
+<span class="fc" id="L571">    }</span>
 
     /**
      * Gets initial x-coordinate of gyroscope bias to be used to find a solution.
@@ -573,7 +576,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @return initial x-coordinate of gyroscope bias.
      */
     public AngularSpeed getInitialBiasAngularSpeedX() {
-<span class="fc" id="L576">        return new AngularSpeed(mInitialBiasX,</span>
+<span class="fc" id="L579">        return new AngularSpeed(mInitialBiasX,</span>
                 AngularSpeedUnit.RADIANS_PER_SECOND);
     }
 
@@ -583,9 +586,9 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @param result instance where result data will be stored.
      */
     public void getInitialBiasAngularSpeedX(final AngularSpeed result) {
-<span class="fc" id="L586">        result.setValue(mInitialBiasX);</span>
-<span class="fc" id="L587">        result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);</span>
-<span class="fc" id="L588">    }</span>
+<span class="fc" id="L589">        result.setValue(mInitialBiasX);</span>
+<span class="fc" id="L590">        result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);</span>
+<span class="fc" id="L591">    }</span>
 
     /**
      * Sets initial x-coordinate of gyroscope bias to be used to find a solution.
@@ -595,11 +598,11 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      */
     public void setInitialBiasX(final AngularSpeed initialBiasX)
             throws LockedException {
-<span class="fc bfc" id="L598" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L599">            throw new LockedException();</span>
+<span class="fc bfc" id="L601" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L602">            throw new LockedException();</span>
         }
-<span class="fc" id="L601">        mInitialBiasX = convertAngularSpeed(initialBiasX);</span>
-<span class="fc" id="L602">    }</span>
+<span class="fc" id="L604">        mInitialBiasX = convertAngularSpeed(initialBiasX);</span>
+<span class="fc" id="L605">    }</span>
 
     /**
      * Gets initial y-coordinate of gyroscope bias to be used to find a solution.
@@ -607,7 +610,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @return initial y-coordinate of gyroscope bias.
      */
     public AngularSpeed getInitialBiasAngularSpeedY() {
-<span class="fc" id="L610">        return new AngularSpeed(mInitialBiasY,</span>
+<span class="fc" id="L613">        return new AngularSpeed(mInitialBiasY,</span>
                 AngularSpeedUnit.RADIANS_PER_SECOND);
     }
 
@@ -617,9 +620,9 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @param result instance where result data will be stored.
      */
     public void getInitialBiasAngularSpeedY(final AngularSpeed result) {
-<span class="fc" id="L620">        result.setValue(mInitialBiasY);</span>
-<span class="fc" id="L621">        result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);</span>
-<span class="fc" id="L622">    }</span>
+<span class="fc" id="L623">        result.setValue(mInitialBiasY);</span>
+<span class="fc" id="L624">        result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);</span>
+<span class="fc" id="L625">    }</span>
 
     /**
      * Sets initial y-coordinate of gyroscope bias to be used to find a solution.
@@ -629,11 +632,11 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      */
     public void setInitialBiasY(final AngularSpeed initialBiasY)
             throws LockedException {
-<span class="fc bfc" id="L632" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L633">            throw new LockedException();</span>
+<span class="fc bfc" id="L635" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L636">            throw new LockedException();</span>
         }
-<span class="fc" id="L635">        mInitialBiasY = convertAngularSpeed(initialBiasY);</span>
-<span class="fc" id="L636">    }</span>
+<span class="fc" id="L638">        mInitialBiasY = convertAngularSpeed(initialBiasY);</span>
+<span class="fc" id="L639">    }</span>
 
     /**
      * Gets initial z-coordinate of gyroscope bias to be used to find a solution.
@@ -641,7 +644,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @return initial z-coordinate of gyroscope bias.
      */
     public AngularSpeed getInitialBiasAngularSpeedZ() {
-<span class="fc" id="L644">        return new AngularSpeed(mInitialBiasZ,</span>
+<span class="fc" id="L647">        return new AngularSpeed(mInitialBiasZ,</span>
                 AngularSpeedUnit.RADIANS_PER_SECOND);
     }
 
@@ -651,9 +654,9 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @param result instance where result data will be stored.
      */
     public void getInitialBiasAngularSpeedZ(final AngularSpeed result) {
-<span class="fc" id="L654">        result.setValue(mInitialBiasZ);</span>
-<span class="fc" id="L655">        result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);</span>
-<span class="fc" id="L656">    }</span>
+<span class="fc" id="L657">        result.setValue(mInitialBiasZ);</span>
+<span class="fc" id="L658">        result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);</span>
+<span class="fc" id="L659">    }</span>
 
     /**
      * Sets initial z-coordinate of gyroscope bias to be used to find a solution.
@@ -663,11 +666,11 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      */
     public void setInitialBiasZ(final AngularSpeed initialBiasZ)
             throws LockedException {
-<span class="fc bfc" id="L666" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L667">            throw new LockedException();</span>
+<span class="fc bfc" id="L669" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L670">            throw new LockedException();</span>
         }
-<span class="fc" id="L669">        mInitialBiasZ = convertAngularSpeed(initialBiasZ);</span>
-<span class="fc" id="L670">    }</span>
+<span class="fc" id="L672">        mInitialBiasZ = convertAngularSpeed(initialBiasZ);</span>
+<span class="fc" id="L673">    }</span>
 
     /**
      * Sets initial bias coordinates of gyroscope used to find a solution
@@ -680,13 +683,13 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      */
     public void setInitialBias(final double initialBiasX, final double initialBiasY,
                                final double initialBiasZ) throws LockedException {
-<span class="fc bfc" id="L683" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L684">            throw new LockedException();</span>
+<span class="fc bfc" id="L686" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L687">            throw new LockedException();</span>
         }
-<span class="fc" id="L686">        mInitialBiasX = initialBiasX;</span>
-<span class="fc" id="L687">        mInitialBiasY = initialBiasY;</span>
-<span class="fc" id="L688">        mInitialBiasZ = initialBiasZ;</span>
-<span class="fc" id="L689">    }</span>
+<span class="fc" id="L689">        mInitialBiasX = initialBiasX;</span>
+<span class="fc" id="L690">        mInitialBiasY = initialBiasY;</span>
+<span class="fc" id="L691">        mInitialBiasZ = initialBiasZ;</span>
+<span class="fc" id="L692">    }</span>
 
     /**
      * Sets initial bias coordinates of gyroscope used to find a solution.
@@ -701,13 +704,13 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
                                final AngularSpeed initialBiasZ)
             throws LockedException {
 
-<span class="fc bfc" id="L704" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L705">            throw new LockedException();</span>
+<span class="fc bfc" id="L707" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L708">            throw new LockedException();</span>
         }
-<span class="fc" id="L707">        mInitialBiasX = convertAngularSpeed(initialBiasX);</span>
-<span class="fc" id="L708">        mInitialBiasY = convertAngularSpeed(initialBiasY);</span>
-<span class="fc" id="L709">        mInitialBiasZ = convertAngularSpeed(initialBiasZ);</span>
-<span class="fc" id="L710">    }</span>
+<span class="fc" id="L710">        mInitialBiasX = convertAngularSpeed(initialBiasX);</span>
+<span class="fc" id="L711">        mInitialBiasY = convertAngularSpeed(initialBiasY);</span>
+<span class="fc" id="L712">        mInitialBiasZ = convertAngularSpeed(initialBiasZ);</span>
+<span class="fc" id="L713">    }</span>
 
     /**
      * Gets initial x scaling factor.
@@ -716,7 +719,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @return initial x scaling factor.
      */
     public double getInitialSx() {
-<span class="fc" id="L719">        return mInitialSx;</span>
+<span class="fc" id="L722">        return mInitialSx;</span>
     }
 
     /**
@@ -727,11 +730,11 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @throws LockedException if calibrator is currently running.
      */
     public void setInitialSx(final double initialSx) throws LockedException {
-<span class="fc bfc" id="L730" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L731">            throw new LockedException();</span>
+<span class="fc bfc" id="L733" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L734">            throw new LockedException();</span>
         }
-<span class="fc" id="L733">        mInitialSx = initialSx;</span>
-<span class="fc" id="L734">    }</span>
+<span class="fc" id="L736">        mInitialSx = initialSx;</span>
+<span class="fc" id="L737">    }</span>
 
     /**
      * Gets initial y scaling factor.
@@ -740,7 +743,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @return initial y scaling factor.
      */
     public double getInitialSy() {
-<span class="fc" id="L743">        return mInitialSy;</span>
+<span class="fc" id="L746">        return mInitialSy;</span>
     }
 
     /**
@@ -751,11 +754,11 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @throws LockedException if calibrator is currently running.
      */
     public void setInitialSy(final double initialSy) throws LockedException {
-<span class="fc bfc" id="L754" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L755">            throw new LockedException();</span>
+<span class="fc bfc" id="L757" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L758">            throw new LockedException();</span>
         }
-<span class="fc" id="L757">        mInitialSy = initialSy;</span>
-<span class="fc" id="L758">    }</span>
+<span class="fc" id="L760">        mInitialSy = initialSy;</span>
+<span class="fc" id="L761">    }</span>
 
     /**
      * Gets initial z scaling factor.
@@ -764,7 +767,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @return initial z scaling factor.
      */
     public double getInitialSz() {
-<span class="fc" id="L767">        return mInitialSz;</span>
+<span class="fc" id="L770">        return mInitialSz;</span>
     }
 
     /**
@@ -775,11 +778,11 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @throws LockedException if calibrator is currently running.
      */
     public void setInitialSz(final double initialSz) throws LockedException {
-<span class="fc bfc" id="L778" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L779">            throw new LockedException();</span>
+<span class="fc bfc" id="L781" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L782">            throw new LockedException();</span>
         }
-<span class="fc" id="L781">        mInitialSz = initialSz;</span>
-<span class="fc" id="L782">    }</span>
+<span class="fc" id="L784">        mInitialSz = initialSz;</span>
+<span class="fc" id="L785">    }</span>
 
     /**
      * Gets initial x-y cross coupling error.
@@ -788,7 +791,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @return initial x-y cross coupling error.
      */
     public double getInitialMxy() {
-<span class="fc" id="L791">        return mInitialMxy;</span>
+<span class="fc" id="L794">        return mInitialMxy;</span>
     }
 
     /**
@@ -799,11 +802,11 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @throws LockedException if calibrator is currently running.
      */
     public void setInitialMxy(final double initialMxy) throws LockedException {
-<span class="fc bfc" id="L802" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L803">            throw new LockedException();</span>
+<span class="fc bfc" id="L805" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L806">            throw new LockedException();</span>
         }
-<span class="fc" id="L805">        mInitialMxy = initialMxy;</span>
-<span class="fc" id="L806">    }</span>
+<span class="fc" id="L808">        mInitialMxy = initialMxy;</span>
+<span class="fc" id="L809">    }</span>
 
     /**
      * Gets initial x-z cross coupling error.
@@ -812,7 +815,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @return initial x-z cross coupling error.
      */
     public double getInitialMxz() {
-<span class="fc" id="L815">        return mInitialMxz;</span>
+<span class="fc" id="L818">        return mInitialMxz;</span>
     }
 
     /**
@@ -823,11 +826,11 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @throws LockedException if calibrator is currently running.
      */
     public void setInitialMxz(final double initialMxz) throws LockedException {
-<span class="fc bfc" id="L826" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L827">            throw new LockedException();</span>
+<span class="fc bfc" id="L829" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L830">            throw new LockedException();</span>
         }
-<span class="fc" id="L829">        mInitialMxz = initialMxz;</span>
-<span class="fc" id="L830">    }</span>
+<span class="fc" id="L832">        mInitialMxz = initialMxz;</span>
+<span class="fc" id="L833">    }</span>
 
     /**
      * Gets initial y-x cross coupling error.
@@ -836,7 +839,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @return initial y-x cross coupling error.
      */
     public double getInitialMyx() {
-<span class="fc" id="L839">        return mInitialMyx;</span>
+<span class="fc" id="L842">        return mInitialMyx;</span>
     }
 
     /**
@@ -847,11 +850,11 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @throws LockedException if calibrator is currently running.
      */
     public void setInitialMyx(final double initialMyx) throws LockedException {
-<span class="fc bfc" id="L850" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L851">            throw new LockedException();</span>
+<span class="fc bfc" id="L853" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L854">            throw new LockedException();</span>
         }
-<span class="fc" id="L853">        mInitialMyx = initialMyx;</span>
-<span class="fc" id="L854">    }</span>
+<span class="fc" id="L856">        mInitialMyx = initialMyx;</span>
+<span class="fc" id="L857">    }</span>
 
     /**
      * Gets initial y-z cross coupling error.
@@ -860,7 +863,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @return initial y-z cross coupling error.
      */
     public double getInitialMyz() {
-<span class="fc" id="L863">        return mInitialMyz;</span>
+<span class="fc" id="L866">        return mInitialMyz;</span>
     }
 
     /**
@@ -871,11 +874,11 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @throws LockedException if calibrator is currently running.
      */
     public void setInitialMyz(final double initialMyz) throws LockedException {
-<span class="fc bfc" id="L874" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L875">            throw new LockedException();</span>
+<span class="fc bfc" id="L877" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L878">            throw new LockedException();</span>
         }
-<span class="fc" id="L877">        mInitialMyz = initialMyz;</span>
-<span class="fc" id="L878">    }</span>
+<span class="fc" id="L880">        mInitialMyz = initialMyz;</span>
+<span class="fc" id="L881">    }</span>
 
     /**
      * Gets initial z-x cross coupling error.
@@ -884,7 +887,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @return initial z-x cross coupling error.
      */
     public double getInitialMzx() {
-<span class="fc" id="L887">        return mInitialMzx;</span>
+<span class="fc" id="L890">        return mInitialMzx;</span>
     }
 
     /**
@@ -895,11 +898,11 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @throws LockedException if calibrator is currently running.
      */
     public void setInitialMzx(final double initialMzx) throws LockedException {
-<span class="fc bfc" id="L898" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L899">            throw new LockedException();</span>
+<span class="fc bfc" id="L901" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L902">            throw new LockedException();</span>
         }
-<span class="fc" id="L901">        mInitialMzx = initialMzx;</span>
-<span class="fc" id="L902">    }</span>
+<span class="fc" id="L904">        mInitialMzx = initialMzx;</span>
+<span class="fc" id="L905">    }</span>
 
     /**
      * Gets initial z-y cross coupling error.
@@ -908,7 +911,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @return initial z-y cross coupling error.
      */
     public double getInitialMzy() {
-<span class="fc" id="L911">        return mInitialMzy;</span>
+<span class="fc" id="L914">        return mInitialMzy;</span>
     }
 
     /**
@@ -919,11 +922,11 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @throws LockedException if calibrator is currently running.
      */
     public void setInitialMzy(final double initialMzy) throws LockedException {
-<span class="fc bfc" id="L922" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L923">            throw new LockedException();</span>
+<span class="fc bfc" id="L925" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L926">            throw new LockedException();</span>
         }
-<span class="fc" id="L925">        mInitialMzy = initialMzy;</span>
-<span class="fc" id="L926">    }</span>
+<span class="fc" id="L928">        mInitialMzy = initialMzy;</span>
+<span class="fc" id="L929">    }</span>
 
     /**
      * Sets initial scaling factors.
@@ -937,13 +940,13 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
     public void setInitialScalingFactors(
             final double initialSx, final double initialSy, final double initialSz)
             throws LockedException {
-<span class="fc bfc" id="L940" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L941">            throw new LockedException();</span>
+<span class="fc bfc" id="L943" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L944">            throw new LockedException();</span>
         }
-<span class="fc" id="L943">        mInitialSx = initialSx;</span>
-<span class="fc" id="L944">        mInitialSy = initialSy;</span>
-<span class="fc" id="L945">        mInitialSz = initialSz;</span>
-<span class="fc" id="L946">    }</span>
+<span class="fc" id="L946">        mInitialSx = initialSx;</span>
+<span class="fc" id="L947">        mInitialSy = initialSy;</span>
+<span class="fc" id="L948">        mInitialSz = initialSz;</span>
+<span class="fc" id="L949">    }</span>
 
     /**
      * Sets initial cross coupling errors.
@@ -961,16 +964,16 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
             final double initialMxy, final double initialMxz, final double initialMyx,
             final double initialMyz, final double initialMzx, final double initialMzy)
             throws LockedException {
-<span class="fc bfc" id="L964" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L965">            throw new LockedException();</span>
+<span class="fc bfc" id="L967" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L968">            throw new LockedException();</span>
         }
-<span class="fc" id="L967">        mInitialMxy = initialMxy;</span>
-<span class="fc" id="L968">        mInitialMxz = initialMxz;</span>
-<span class="fc" id="L969">        mInitialMyx = initialMyx;</span>
-<span class="fc" id="L970">        mInitialMyz = initialMyz;</span>
-<span class="fc" id="L971">        mInitialMzx = initialMzx;</span>
-<span class="fc" id="L972">        mInitialMzy = initialMzy;</span>
-<span class="fc" id="L973">    }</span>
+<span class="fc" id="L970">        mInitialMxy = initialMxy;</span>
+<span class="fc" id="L971">        mInitialMxz = initialMxz;</span>
+<span class="fc" id="L972">        mInitialMyx = initialMyx;</span>
+<span class="fc" id="L973">        mInitialMyz = initialMyz;</span>
+<span class="fc" id="L974">        mInitialMzx = initialMzx;</span>
+<span class="fc" id="L975">        mInitialMzy = initialMzy;</span>
+<span class="fc" id="L976">    }</span>
 
     /**
      * Sets initial scaling factors and cross coupling errors.
@@ -992,13 +995,13 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
             final double initialMxy, final double initialMxz, final double initialMyx,
             final double initialMyz, final double initialMzx, final double initialMzy)
             throws LockedException {
-<span class="fc bfc" id="L995" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L996">            throw new LockedException();</span>
+<span class="fc bfc" id="L998" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L999">            throw new LockedException();</span>
         }
-<span class="fc" id="L998">        setInitialScalingFactors(initialSx, initialSy, initialSz);</span>
-<span class="fc" id="L999">        setInitialCrossCouplingErrors(initialMxy, initialMxz, initialMyx,</span>
+<span class="fc" id="L1001">        setInitialScalingFactors(initialSx, initialSy, initialSz);</span>
+<span class="fc" id="L1002">        setInitialCrossCouplingErrors(initialMxy, initialMxz, initialMyx,</span>
                 initialMyz, initialMzx, initialMzy);
-<span class="fc" id="L1001">    }</span>
+<span class="fc" id="L1004">    }</span>
 
     /**
      * Gets initial bias to be used to find a solution as an array.
@@ -1007,9 +1010,9 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @return array containing coordinates of initial bias.
      */
     public double[] getInitialBias() {
-<span class="fc" id="L1010">        final double[] result = new double[BodyKinematics.COMPONENTS];</span>
-<span class="fc" id="L1011">        getInitialBias(result);</span>
-<span class="fc" id="L1012">        return result;</span>
+<span class="fc" id="L1013">        final double[] result = new double[BodyKinematics.COMPONENTS];</span>
+<span class="fc" id="L1014">        getInitialBias(result);</span>
+<span class="fc" id="L1015">        return result;</span>
     }
 
     /**
@@ -1020,13 +1023,13 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @throws IllegalArgumentException if provided array does not have length 3.
      */
     public void getInitialBias(final double[] result) {
-<span class="pc bpc" id="L1023" title="1 of 2 branches missed.">        if (result.length != BodyKinematics.COMPONENTS) {</span>
-<span class="nc" id="L1024">            throw new IllegalArgumentException();</span>
+<span class="pc bpc" id="L1026" title="1 of 2 branches missed.">        if (result.length != BodyKinematics.COMPONENTS) {</span>
+<span class="nc" id="L1027">            throw new IllegalArgumentException();</span>
         }
-<span class="fc" id="L1026">        result[0] = mInitialBiasX;</span>
-<span class="fc" id="L1027">        result[1] = mInitialBiasY;</span>
-<span class="fc" id="L1028">        result[2] = mInitialBiasZ;</span>
-<span class="fc" id="L1029">    }</span>
+<span class="fc" id="L1029">        result[0] = mInitialBiasX;</span>
+<span class="fc" id="L1030">        result[1] = mInitialBiasY;</span>
+<span class="fc" id="L1031">        result[2] = mInitialBiasZ;</span>
+<span class="fc" id="L1032">    }</span>
 
     /**
      * Sets initial bias to be used to find a solution as an array.
@@ -1037,71 +1040,114 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @throws IllegalArgumentException if provided array does not have length 3.
      */
     public void setInitialBias(final double[] initialBias) throws LockedException {
-<span class="fc bfc" id="L1040" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L1041">            throw new LockedException();</span>
+<span class="fc bfc" id="L1043" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L1044">            throw new LockedException();</span>
         }
 
-<span class="fc bfc" id="L1044" title="All 2 branches covered.">        if (initialBias.length != BodyKinematics.COMPONENTS) {</span>
-<span class="fc" id="L1045">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L1047" title="All 2 branches covered.">        if (initialBias.length != BodyKinematics.COMPONENTS) {</span>
+<span class="fc" id="L1048">            throw new IllegalArgumentException();</span>
         }
-<span class="fc" id="L1047">        mInitialBiasX = initialBias[0];</span>
-<span class="fc" id="L1048">        mInitialBiasY = initialBias[1];</span>
-<span class="fc" id="L1049">        mInitialBiasZ = initialBias[2];</span>
-<span class="fc" id="L1050">    }</span>
+<span class="fc" id="L1050">        mInitialBiasX = initialBias[0];</span>
+<span class="fc" id="L1051">        mInitialBiasY = initialBias[1];</span>
+<span class="fc" id="L1052">        mInitialBiasZ = initialBias[2];</span>
+<span class="fc" id="L1053">    }</span>
 
     /**
      * Gets initial bias to be used to find a solution as a column matrix.
+     * Values are expressed in radians per second (rad/s).
      *
      * @return initial bias to be used to find a solution as a column matrix.
      */
     public Matrix getInitialBiasAsMatrix() {
         Matrix result;
         try {
-<span class="fc" id="L1060">            result = new Matrix(BodyKinematics.COMPONENTS, 1);</span>
-<span class="fc" id="L1061">            getInitialBiasAsMatrix(result);</span>
-<span class="nc" id="L1062">        } catch (final WrongSizeException ignore) {</span>
+<span class="fc" id="L1064">            result = new Matrix(BodyKinematics.COMPONENTS, 1);</span>
+<span class="fc" id="L1065">            getInitialBiasAsMatrix(result);</span>
+<span class="nc" id="L1066">        } catch (final WrongSizeException ignore) {</span>
             // never happens
-<span class="nc" id="L1064">            result = null;</span>
-<span class="fc" id="L1065">        }</span>
-<span class="fc" id="L1066">        return result;</span>
+<span class="nc" id="L1068">            result = null;</span>
+<span class="fc" id="L1069">        }</span>
+<span class="fc" id="L1070">        return result;</span>
     }
 
     /**
      * Gets initial bias to be used to find a solution as a column matrix.
+     * Values are expressed in radians per second (rad/s).
      *
      * @param result instance where result data will be copied to.
      * @throws IllegalArgumentException if provided matrix is not 3x1.
      */
     public void getInitialBiasAsMatrix(final Matrix result) {
-<span class="fc bfc" id="L1076" title="All 2 branches covered.">        if (result.getRows() != BodyKinematics.COMPONENTS</span>
-<span class="fc bfc" id="L1077" title="All 2 branches covered.">                || result.getColumns() != 1) {</span>
-<span class="fc" id="L1078">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L1081" title="All 2 branches covered.">        if (result.getRows() != BodyKinematics.COMPONENTS</span>
+<span class="fc bfc" id="L1082" title="All 2 branches covered.">                || result.getColumns() != 1) {</span>
+<span class="fc" id="L1083">            throw new IllegalArgumentException();</span>
         }
-<span class="fc" id="L1080">        result.setElementAtIndex(0, mInitialBiasX);</span>
-<span class="fc" id="L1081">        result.setElementAtIndex(1, mInitialBiasY);</span>
-<span class="fc" id="L1082">        result.setElementAtIndex(2, mInitialBiasZ);</span>
-<span class="fc" id="L1083">    }</span>
+<span class="fc" id="L1085">        result.setElementAtIndex(0, mInitialBiasX);</span>
+<span class="fc" id="L1086">        result.setElementAtIndex(1, mInitialBiasY);</span>
+<span class="fc" id="L1087">        result.setElementAtIndex(2, mInitialBiasZ);</span>
+<span class="fc" id="L1088">    }</span>
 
     /**
-     * Sets initial bias to be used to find a solution as an array.
+     * Sets initial bias to be used to find a solution as a column matrix
+     * with values expressed in radians per second (rad/s).
      *
      * @param initialBias initial bias to find a solution.
      * @throws LockedException          if calibrator is currently running.
      * @throws IllegalArgumentException if provided matrix is not 3x1.
      */
     public void setInitialBias(final Matrix initialBias) throws LockedException {
-<span class="fc bfc" id="L1093" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L1094">            throw new LockedException();</span>
+<span class="fc bfc" id="L1099" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L1100">            throw new LockedException();</span>
         }
-<span class="fc bfc" id="L1096" title="All 2 branches covered.">        if (initialBias.getRows() != BodyKinematics.COMPONENTS</span>
-<span class="fc bfc" id="L1097" title="All 2 branches covered.">                || initialBias.getColumns() != 1) {</span>
-<span class="fc" id="L1098">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L1102" title="All 2 branches covered.">        if (initialBias.getRows() != BodyKinematics.COMPONENTS</span>
+<span class="fc bfc" id="L1103" title="All 2 branches covered.">                || initialBias.getColumns() != 1) {</span>
+<span class="fc" id="L1104">            throw new IllegalArgumentException();</span>
         }
 
-<span class="fc" id="L1101">        mInitialBiasX = initialBias.getElementAtIndex(0);</span>
-<span class="fc" id="L1102">        mInitialBiasY = initialBias.getElementAtIndex(1);</span>
-<span class="fc" id="L1103">        mInitialBiasZ = initialBias.getElementAtIndex(2);</span>
-<span class="fc" id="L1104">    }</span>
+<span class="fc" id="L1107">        mInitialBiasX = initialBias.getElementAtIndex(0);</span>
+<span class="fc" id="L1108">        mInitialBiasY = initialBias.getElementAtIndex(1);</span>
+<span class="fc" id="L1109">        mInitialBiasZ = initialBias.getElementAtIndex(2);</span>
+<span class="fc" id="L1110">    }</span>
+
+    /**
+     * Gets initial bias coordinates of gyroscope used to find a solution.
+     *
+     * @return initial bias coordinates.
+     */
+    public AngularSpeedTriad getInitialBiasAsTriad() {
+<span class="fc" id="L1118">        return new AngularSpeedTriad(AngularSpeedUnit.RADIANS_PER_SECOND,</span>
+                mInitialBiasX, mInitialBiasY, mInitialBiasZ);
+    }
+
+    /**
+     * Gets initial bias coordinates of gyroscope used to find a solution.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getInitialBiasAsTriad(AngularSpeedTriad result) {
+<span class="fc" id="L1128">        result.setValueCoordinatesAndUnit(</span>
+                mInitialBiasX, mInitialBiasY, mInitialBiasZ,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+<span class="fc" id="L1131">    }</span>
+
+    /**
+     * Sets initial bias coordinates of gyroscope used to find a solution.
+     *
+     * @param initialBias initial bias coordinates to be set.
+     * @throws LockedException if calibrator is currently running.
+     */
+    public void setInitialBias(AngularSpeedTriad initialBias) throws LockedException {
+<span class="fc bfc" id="L1140" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L1141">            throw new LockedException();</span>
+        }
+
+<span class="fc" id="L1144">        mInitialBiasX = convertAngularSpeed(</span>
+<span class="fc" id="L1145">                initialBias.getValueX(), initialBias.getUnit());</span>
+<span class="fc" id="L1146">        mInitialBiasY = convertAngularSpeed(</span>
+<span class="fc" id="L1147">                initialBias.getValueY(), initialBias.getUnit());</span>
+<span class="fc" id="L1148">        mInitialBiasZ = convertAngularSpeed(</span>
+<span class="fc" id="L1149">                initialBias.getValueZ(), initialBias.getUnit());</span>
+<span class="fc" id="L1150">    }</span>
 
     /**
      * Gets initial scale factors and cross coupling errors matrix.
@@ -1111,14 +1157,14 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
     public Matrix getInitialMg() {
         Matrix result;
         try {
-<span class="fc" id="L1114">            result = new Matrix(BodyKinematics.COMPONENTS,</span>
+<span class="fc" id="L1160">            result = new Matrix(BodyKinematics.COMPONENTS,</span>
                     BodyKinematics.COMPONENTS);
-<span class="fc" id="L1116">            getInitialMg(result);</span>
-<span class="nc" id="L1117">        } catch (final WrongSizeException ignore) {</span>
+<span class="fc" id="L1162">            getInitialMg(result);</span>
+<span class="nc" id="L1163">        } catch (final WrongSizeException ignore) {</span>
             // never happens
-<span class="nc" id="L1119">            result = null;</span>
-<span class="fc" id="L1120">        }</span>
-<span class="fc" id="L1121">        return result;</span>
+<span class="nc" id="L1165">            result = null;</span>
+<span class="fc" id="L1166">        }</span>
+<span class="fc" id="L1167">        return result;</span>
     }
 
     /**
@@ -1128,22 +1174,22 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @throws IllegalArgumentException if provided matrix is not 3x3.
      */
     public void getInitialMg(final Matrix result) {
-<span class="fc bfc" id="L1131" title="All 2 branches covered.">        if (result.getRows() != BodyKinematics.COMPONENTS ||</span>
-<span class="fc bfc" id="L1132" title="All 2 branches covered.">                result.getColumns() != BodyKinematics.COMPONENTS) {</span>
-<span class="fc" id="L1133">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L1177" title="All 2 branches covered.">        if (result.getRows() != BodyKinematics.COMPONENTS ||</span>
+<span class="fc bfc" id="L1178" title="All 2 branches covered.">                result.getColumns() != BodyKinematics.COMPONENTS) {</span>
+<span class="fc" id="L1179">            throw new IllegalArgumentException();</span>
         }
-<span class="fc" id="L1135">        result.setElementAtIndex(0, mInitialSx);</span>
-<span class="fc" id="L1136">        result.setElementAtIndex(1, mInitialMyx);</span>
-<span class="fc" id="L1137">        result.setElementAtIndex(2, mInitialMzx);</span>
+<span class="fc" id="L1181">        result.setElementAtIndex(0, mInitialSx);</span>
+<span class="fc" id="L1182">        result.setElementAtIndex(1, mInitialMyx);</span>
+<span class="fc" id="L1183">        result.setElementAtIndex(2, mInitialMzx);</span>
 
-<span class="fc" id="L1139">        result.setElementAtIndex(3, mInitialMxy);</span>
-<span class="fc" id="L1140">        result.setElementAtIndex(4, mInitialSy);</span>
-<span class="fc" id="L1141">        result.setElementAtIndex(5, mInitialMzy);</span>
+<span class="fc" id="L1185">        result.setElementAtIndex(3, mInitialMxy);</span>
+<span class="fc" id="L1186">        result.setElementAtIndex(4, mInitialSy);</span>
+<span class="fc" id="L1187">        result.setElementAtIndex(5, mInitialMzy);</span>
 
-<span class="fc" id="L1143">        result.setElementAtIndex(6, mInitialMxz);</span>
-<span class="fc" id="L1144">        result.setElementAtIndex(7, mInitialMyz);</span>
-<span class="fc" id="L1145">        result.setElementAtIndex(8, mInitialSz);</span>
-<span class="fc" id="L1146">    }</span>
+<span class="fc" id="L1189">        result.setElementAtIndex(6, mInitialMxz);</span>
+<span class="fc" id="L1190">        result.setElementAtIndex(7, mInitialMyz);</span>
+<span class="fc" id="L1191">        result.setElementAtIndex(8, mInitialSz);</span>
+<span class="fc" id="L1192">    }</span>
 
     /**
      * Sets initial scale factors and cross coupling errors matrix.
@@ -1153,26 +1199,26 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @throws LockedException          if calibrator is currently running.
      */
     public void setInitialMg(final Matrix initialMg) throws LockedException {
-<span class="fc bfc" id="L1156" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L1157">            throw new LockedException();</span>
+<span class="fc bfc" id="L1202" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L1203">            throw new LockedException();</span>
         }
-<span class="fc bfc" id="L1159" title="All 2 branches covered.">        if (initialMg.getRows() != BodyKinematics.COMPONENTS ||</span>
-<span class="fc bfc" id="L1160" title="All 2 branches covered.">                initialMg.getColumns() != BodyKinematics.COMPONENTS) {</span>
-<span class="fc" id="L1161">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L1205" title="All 2 branches covered.">        if (initialMg.getRows() != BodyKinematics.COMPONENTS ||</span>
+<span class="fc bfc" id="L1206" title="All 2 branches covered.">                initialMg.getColumns() != BodyKinematics.COMPONENTS) {</span>
+<span class="fc" id="L1207">            throw new IllegalArgumentException();</span>
         }
 
-<span class="fc" id="L1164">        mInitialSx = initialMg.getElementAtIndex(0);</span>
-<span class="fc" id="L1165">        mInitialMyx = initialMg.getElementAtIndex(1);</span>
-<span class="fc" id="L1166">        mInitialMzx = initialMg.getElementAtIndex(2);</span>
+<span class="fc" id="L1210">        mInitialSx = initialMg.getElementAtIndex(0);</span>
+<span class="fc" id="L1211">        mInitialMyx = initialMg.getElementAtIndex(1);</span>
+<span class="fc" id="L1212">        mInitialMzx = initialMg.getElementAtIndex(2);</span>
 
-<span class="fc" id="L1168">        mInitialMxy = initialMg.getElementAtIndex(3);</span>
-<span class="fc" id="L1169">        mInitialSy = initialMg.getElementAtIndex(4);</span>
-<span class="fc" id="L1170">        mInitialMzy = initialMg.getElementAtIndex(5);</span>
+<span class="fc" id="L1214">        mInitialMxy = initialMg.getElementAtIndex(3);</span>
+<span class="fc" id="L1215">        mInitialSy = initialMg.getElementAtIndex(4);</span>
+<span class="fc" id="L1216">        mInitialMzy = initialMg.getElementAtIndex(5);</span>
 
-<span class="fc" id="L1172">        mInitialMxz = initialMg.getElementAtIndex(6);</span>
-<span class="fc" id="L1173">        mInitialMyz = initialMg.getElementAtIndex(7);</span>
-<span class="fc" id="L1174">        mInitialSz = initialMg.getElementAtIndex(8);</span>
-<span class="fc" id="L1175">    }</span>
+<span class="fc" id="L1218">        mInitialMxz = initialMg.getElementAtIndex(6);</span>
+<span class="fc" id="L1219">        mInitialMyz = initialMg.getElementAtIndex(7);</span>
+<span class="fc" id="L1220">        mInitialSz = initialMg.getElementAtIndex(8);</span>
+<span class="fc" id="L1221">    }</span>
 
     /**
      * Gets initial G-dependent cross biases introduced on the gyroscope by the
@@ -1181,7 +1227,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @return a 3x3 matrix containing initial g-dependent cross biases.
      */
     public Matrix getInitialGg() {
-<span class="fc" id="L1184">        return new Matrix(mInitialGg);</span>
+<span class="fc" id="L1230">        return new Matrix(mInitialGg);</span>
     }
 
     /**
@@ -1193,13 +1239,13 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      */
     public void getInitialGg(final Matrix result) {
 
-<span class="fc bfc" id="L1196" title="All 2 branches covered.">        if (result.getRows() != BodyKinematics.COMPONENTS</span>
-<span class="fc bfc" id="L1197" title="All 2 branches covered.">                || result.getColumns() != BodyKinematics.COMPONENTS) {</span>
-<span class="fc" id="L1198">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L1242" title="All 2 branches covered.">        if (result.getRows() != BodyKinematics.COMPONENTS</span>
+<span class="fc bfc" id="L1243" title="All 2 branches covered.">                || result.getColumns() != BodyKinematics.COMPONENTS) {</span>
+<span class="fc" id="L1244">            throw new IllegalArgumentException();</span>
         }
 
-<span class="fc" id="L1201">        result.copyFrom(mInitialGg);</span>
-<span class="fc" id="L1202">    }</span>
+<span class="fc" id="L1247">        result.copyFrom(mInitialGg);</span>
+<span class="fc" id="L1248">    }</span>
 
     /**
      * Sets initial G-dependent cross biases introduced on the gyroscope by the
@@ -1210,17 +1256,17 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @throws IllegalArgumentException if provided matrix is not 3x3.
      */
     public void setInitialGg(final Matrix initialGg) throws LockedException {
-<span class="fc bfc" id="L1213" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L1214">            throw new LockedException();</span>
+<span class="fc bfc" id="L1259" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L1260">            throw new LockedException();</span>
         }
 
-<span class="fc bfc" id="L1217" title="All 2 branches covered.">        if (initialGg.getRows() != BodyKinematics.COMPONENTS</span>
-<span class="fc bfc" id="L1218" title="All 2 branches covered.">                || initialGg.getColumns() != BodyKinematics.COMPONENTS) {</span>
-<span class="fc" id="L1219">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L1263" title="All 2 branches covered.">        if (initialGg.getRows() != BodyKinematics.COMPONENTS</span>
+<span class="fc bfc" id="L1264" title="All 2 branches covered.">                || initialGg.getColumns() != BodyKinematics.COMPONENTS) {</span>
+<span class="fc" id="L1265">            throw new IllegalArgumentException();</span>
         }
 
-<span class="fc" id="L1222">        initialGg.copyTo(mInitialGg);</span>
-<span class="fc" id="L1223">    }</span>
+<span class="fc" id="L1268">        initialGg.copyTo(mInitialGg);</span>
+<span class="fc" id="L1269">    }</span>
 
     /**
      * Gets a list of body kinematics measurements taken at different
@@ -1240,7 +1286,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * frames (positions, orientations and velocities).
      */
     public List&lt;StandardDeviationFrameBodyKinematics&gt; getMeasurements() {
-<span class="fc" id="L1243">        return mMeasurements;</span>
+<span class="fc" id="L1289">        return mMeasurements;</span>
     }
 
     /**
@@ -1264,11 +1310,11 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
     public void setMeasurements(
             final List&lt;StandardDeviationFrameBodyKinematics&gt; measurements)
             throws LockedException {
-<span class="fc bfc" id="L1267" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L1268">            throw new LockedException();</span>
+<span class="fc bfc" id="L1313" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L1314">            throw new LockedException();</span>
         }
-<span class="fc" id="L1270">        mMeasurements = measurements;</span>
-<span class="fc" id="L1271">    }</span>
+<span class="fc" id="L1316">        mMeasurements = measurements;</span>
+<span class="fc" id="L1317">    }</span>
 
     /**
      * Indicates whether z-axis is assumed to be common for accelerometer and
@@ -1279,7 +1325,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * false otherwise.
      */
     public boolean isCommonAxisUsed() {
-<span class="fc" id="L1282">        return mCommonAxisUsed;</span>
+<span class="fc" id="L1328">        return mCommonAxisUsed;</span>
     }
 
     /**
@@ -1293,12 +1339,12 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      */
     public void setCommonAxisUsed(final boolean commonAxisUsed)
             throws LockedException {
-<span class="fc bfc" id="L1296" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L1297">            throw new LockedException();</span>
+<span class="fc bfc" id="L1342" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L1343">            throw new LockedException();</span>
         }
 
-<span class="fc" id="L1300">        mCommonAxisUsed = commonAxisUsed;</span>
-<span class="fc" id="L1301">    }</span>
+<span class="fc" id="L1346">        mCommonAxisUsed = commonAxisUsed;</span>
+<span class="fc" id="L1347">    }</span>
 
     /**
      * Gets listener to handle events raised by this estimator.
@@ -1306,7 +1352,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @return listener to handle events raised by this estimator.
      */
     public RobustKnownFrameGyroscopeCalibratorListener getListener() {
-<span class="fc" id="L1309">        return mListener;</span>
+<span class="fc" id="L1355">        return mListener;</span>
     }
 
     /**
@@ -1317,12 +1363,12 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      */
     public void setListener(final RobustKnownFrameGyroscopeCalibratorListener listener)
             throws LockedException {
-<span class="fc bfc" id="L1320" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L1321">            throw new LockedException();</span>
+<span class="fc bfc" id="L1366" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L1367">            throw new LockedException();</span>
         }
 
-<span class="fc" id="L1324">        mListener = listener;</span>
-<span class="fc" id="L1325">    }</span>
+<span class="fc" id="L1370">        mListener = listener;</span>
+<span class="fc" id="L1371">    }</span>
 
     /**
      * Indicates whether calibrator is ready to start.
@@ -1330,7 +1376,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @return true if calibrator is ready, false otherwise.
      */
     public boolean isReady() {
-<span class="fc bfc" id="L1333" title="All 4 branches covered.">        return mMeasurements != null &amp;&amp; mMeasurements.size() &gt;= MINIMUM_MEASUREMENTS;</span>
+<span class="fc bfc" id="L1379" title="All 4 branches covered.">        return mMeasurements != null &amp;&amp; mMeasurements.size() &gt;= MINIMUM_MEASUREMENTS;</span>
     }
 
     /**
@@ -1339,7 +1385,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @return true if calibrator is running, false otherwise.
      */
     public boolean isRunning() {
-<span class="fc" id="L1342">        return mRunning;</span>
+<span class="fc" id="L1388">        return mRunning;</span>
     }
 
     /**
@@ -1350,7 +1396,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * preliminary solutions.
      */
     public boolean isLinearCalibratorUsed() {
-<span class="fc" id="L1353">        return mUseLinearCalibrator;</span>
+<span class="fc" id="L1399">        return mUseLinearCalibrator;</span>
     }
 
     /**
@@ -1363,11 +1409,11 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      */
     public void setLinearCalibratorUsed(final boolean linearCalibratorUsed)
             throws LockedException {
-<span class="fc bfc" id="L1366" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L1367">            throw new LockedException();</span>
+<span class="fc bfc" id="L1412" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L1413">            throw new LockedException();</span>
         }
-<span class="fc" id="L1369">        mUseLinearCalibrator = linearCalibratorUsed;</span>
-<span class="fc" id="L1370">    }</span>
+<span class="fc" id="L1415">        mUseLinearCalibrator = linearCalibratorUsed;</span>
+<span class="fc" id="L1416">    }</span>
 
     /**
      * Indicates whether preliminary solutions must be refined after an initial linear solution is found.
@@ -1379,7 +1425,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * otherwise.
      */
     public boolean isPreliminarySolutionRefined() {
-<span class="fc" id="L1382">        return mRefinePreliminarySolutions;</span>
+<span class="fc" id="L1428">        return mRefinePreliminarySolutions;</span>
     }
 
     /**
@@ -1394,12 +1440,12 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      */
     public void setPreliminarySolutionRefined(final boolean preliminarySolutionRefined)
             throws LockedException {
-<span class="fc bfc" id="L1397" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L1398">            throw new LockedException();</span>
+<span class="fc bfc" id="L1443" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L1444">            throw new LockedException();</span>
         }
 
-<span class="fc" id="L1401">        mRefinePreliminarySolutions = preliminarySolutionRefined;</span>
-<span class="fc" id="L1402">    }</span>
+<span class="fc" id="L1447">        mRefinePreliminarySolutions = preliminarySolutionRefined;</span>
+<span class="fc" id="L1448">    }</span>
 
     /**
      * Returns amount of progress variation before notifying a progress change during
@@ -1409,7 +1455,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * calibration.
      */
     public float getProgressDelta() {
-<span class="fc" id="L1412">        return mProgressDelta;</span>
+<span class="fc" id="L1458">        return mProgressDelta;</span>
     }
 
     /**
@@ -1422,15 +1468,15 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @throws LockedException          if calibrator is currently running.
      */
     public void setProgressDelta(final float progressDelta) throws LockedException {
-<span class="fc bfc" id="L1425" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L1426">            throw new LockedException();</span>
+<span class="fc bfc" id="L1471" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L1472">            throw new LockedException();</span>
         }
-<span class="fc bfc" id="L1428" title="All 4 branches covered.">        if (progressDelta &lt; MIN_PROGRESS_DELTA ||</span>
+<span class="fc bfc" id="L1474" title="All 4 branches covered.">        if (progressDelta &lt; MIN_PROGRESS_DELTA ||</span>
                 progressDelta &gt; MAX_PROGRESS_DELTA) {
-<span class="fc" id="L1430">            throw new IllegalArgumentException();</span>
+<span class="fc" id="L1476">            throw new IllegalArgumentException();</span>
         }
-<span class="fc" id="L1432">        mProgressDelta = progressDelta;</span>
-<span class="fc" id="L1433">    }</span>
+<span class="fc" id="L1478">        mProgressDelta = progressDelta;</span>
+<span class="fc" id="L1479">    }</span>
 
     /**
      * Returns amount of confidence expressed as a value between 0.0 and 1.0
@@ -1441,7 +1487,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @return amount of confidence as a value between 0.0 and 1.0.
      */
     public double getConfidence() {
-<span class="fc" id="L1444">        return mConfidence;</span>
+<span class="fc" id="L1490">        return mConfidence;</span>
     }
 
     /**
@@ -1455,14 +1501,14 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @throws LockedException          if calibrator is currently running.
      */
     public void setConfidence(final double confidence) throws LockedException {
-<span class="fc bfc" id="L1458" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L1459">            throw new LockedException();</span>
+<span class="fc bfc" id="L1504" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L1505">            throw new LockedException();</span>
         }
-<span class="fc bfc" id="L1461" title="All 4 branches covered.">        if (confidence &lt; MIN_CONFIDENCE || confidence &gt; MAX_CONFIDENCE) {</span>
-<span class="fc" id="L1462">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L1507" title="All 4 branches covered.">        if (confidence &lt; MIN_CONFIDENCE || confidence &gt; MAX_CONFIDENCE) {</span>
+<span class="fc" id="L1508">            throw new IllegalArgumentException();</span>
         }
-<span class="fc" id="L1464">        mConfidence = confidence;</span>
-<span class="fc" id="L1465">    }</span>
+<span class="fc" id="L1510">        mConfidence = confidence;</span>
+<span class="fc" id="L1511">    }</span>
 
     /**
      * Returns maximum allowed number of iterations. If maximum allowed number of
@@ -1472,7 +1518,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @return maximum allowed number of iterations.
      */
     public int getMaxIterations() {
-<span class="fc" id="L1475">        return mMaxIterations;</span>
+<span class="fc" id="L1521">        return mMaxIterations;</span>
     }
 
     /**
@@ -1485,14 +1531,14 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @throws LockedException          if calibrator is currently running.
      */
     public void setMaxIterations(final int maxIterations) throws LockedException {
-<span class="fc bfc" id="L1488" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L1489">            throw new LockedException();</span>
+<span class="fc bfc" id="L1534" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L1535">            throw new LockedException();</span>
         }
-<span class="fc bfc" id="L1491" title="All 2 branches covered.">        if (maxIterations &lt; MIN_ITERATIONS) {</span>
-<span class="fc" id="L1492">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L1537" title="All 2 branches covered.">        if (maxIterations &lt; MIN_ITERATIONS) {</span>
+<span class="fc" id="L1538">            throw new IllegalArgumentException();</span>
         }
-<span class="fc" id="L1494">        mMaxIterations = maxIterations;</span>
-<span class="fc" id="L1495">    }</span>
+<span class="fc" id="L1540">        mMaxIterations = maxIterations;</span>
+<span class="fc" id="L1541">    }</span>
 
     /**
      * Gets data related to inliers found after estimation.
@@ -1500,7 +1546,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @return data related to inliers found after estimation.
      */
     public InliersData getInliersData() {
-<span class="fc" id="L1503">        return mInliersData;</span>
+<span class="fc" id="L1549">        return mInliersData;</span>
     }
 
     /**
@@ -1510,7 +1556,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * without further refining.
      */
     public boolean isResultRefined() {
-<span class="fc" id="L1513">        return mRefineResult;</span>
+<span class="fc" id="L1559">        return mRefineResult;</span>
     }
 
     /**
@@ -1521,11 +1567,11 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @throws LockedException if calibrator is currently running.
      */
     public void setResultRefined(final boolean refineResult) throws LockedException {
-<span class="fc bfc" id="L1524" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L1525">            throw new LockedException();</span>
+<span class="fc bfc" id="L1570" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L1571">            throw new LockedException();</span>
         }
-<span class="fc" id="L1527">        mRefineResult = refineResult;</span>
-<span class="fc" id="L1528">    }</span>
+<span class="fc" id="L1573">        mRefineResult = refineResult;</span>
+<span class="fc" id="L1574">    }</span>
 
     /**
      * Indicates whether covariance must be kept after refining result.
@@ -1534,7 +1580,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @return true if covariance must be kept after refining result, false otherwise.
      */
     public boolean isCovarianceKept() {
-<span class="fc" id="L1537">        return mKeepCovariance;</span>
+<span class="fc" id="L1583">        return mKeepCovariance;</span>
     }
 
     /**
@@ -1547,11 +1593,11 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      */
     public void setCovarianceKept(final boolean keepCovariance)
             throws LockedException {
-<span class="fc bfc" id="L1550" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L1551">            throw new LockedException();</span>
+<span class="fc bfc" id="L1596" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L1597">            throw new LockedException();</span>
         }
-<span class="fc" id="L1553">        mKeepCovariance = keepCovariance;</span>
-<span class="fc" id="L1554">    }</span>
+<span class="fc" id="L1599">        mKeepCovariance = keepCovariance;</span>
+<span class="fc" id="L1600">    }</span>
 
     /**
      * Returns quality scores corresponding to each measurement.
@@ -1562,7 +1608,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @return quality scores corresponding to each sample.
      */
     public double[] getQualityScores() {
-<span class="fc" id="L1565">        return null;</span>
+<span class="fc" id="L1611">        return null;</span>
     }
 
     /**
@@ -1579,7 +1625,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      */
     public void setQualityScores(final double[] qualityScores)
             throws LockedException {
-<span class="fc" id="L1582">    }</span>
+<span class="fc" id="L1628">    }</span>
 
     /**
      * Gets array containing x,y,z components of estimated gyroscope biases
@@ -1588,7 +1634,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @return array containing x,y,z components of estimated gyroscope biases.
      */
     public double[] getEstimatedBiases() {
-<span class="fc" id="L1591">        return mEstimatedBiases;</span>
+<span class="fc" id="L1637">        return mEstimatedBiases;</span>
     }
 
     /**
@@ -1600,12 +1646,12 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * is not yet available).
      */
     public boolean getEstimatedBiases(final double[] result) {
-<span class="fc bfc" id="L1603" title="All 2 branches covered.">        if (mEstimatedBiases != null) {</span>
-<span class="fc" id="L1604">            System.arraycopy(mEstimatedBiases, 0, result,</span>
+<span class="fc bfc" id="L1649" title="All 2 branches covered.">        if (mEstimatedBiases != null) {</span>
+<span class="fc" id="L1650">            System.arraycopy(mEstimatedBiases, 0, result,</span>
                     0, mEstimatedBiases.length);
-<span class="fc" id="L1606">            return true;</span>
+<span class="fc" id="L1652">            return true;</span>
         } else {
-<span class="fc" id="L1608">            return false;</span>
+<span class="fc" id="L1654">            return false;</span>
         }
     }
 
@@ -1617,7 +1663,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * biases.
      */
     public Matrix getEstimatedBiasesAsMatrix() {
-<span class="fc bfc" id="L1620" title="All 2 branches covered.">        return mEstimatedBiases != null ? Matrix.newFromArray(mEstimatedBiases) : null;</span>
+<span class="fc bfc" id="L1666" title="All 2 branches covered.">        return mEstimatedBiases != null ? Matrix.newFromArray(mEstimatedBiases) : null;</span>
     }
 
     /**
@@ -1630,11 +1676,11 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      */
     public boolean getEstimatedBiasesAsMatrix(final Matrix result)
             throws WrongSizeException {
-<span class="fc bfc" id="L1633" title="All 2 branches covered.">        if (mEstimatedBiases != null) {</span>
-<span class="fc" id="L1634">            result.fromArray(mEstimatedBiases);</span>
-<span class="fc" id="L1635">            return true;</span>
+<span class="fc bfc" id="L1679" title="All 2 branches covered.">        if (mEstimatedBiases != null) {</span>
+<span class="fc" id="L1680">            result.fromArray(mEstimatedBiases);</span>
+<span class="fc" id="L1681">            return true;</span>
         } else {
-<span class="fc" id="L1637">            return false;</span>
+<span class="fc" id="L1683">            return false;</span>
         }
     }
 
@@ -1645,7 +1691,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @return x coordinate of estimated gyroscope bias or null if not available.
      */
     public Double getEstimatedBiasX() {
-<span class="fc bfc" id="L1648" title="All 2 branches covered.">        return mEstimatedBiases != null ? mEstimatedBiases[0] : null;</span>
+<span class="fc bfc" id="L1694" title="All 2 branches covered.">        return mEstimatedBiases != null ? mEstimatedBiases[0] : null;</span>
     }
 
     /**
@@ -1655,7 +1701,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @return y coordinate of estimated gyroscope bias or null if not available.
      */
     public Double getEstimatedBiasY() {
-<span class="fc bfc" id="L1658" title="All 2 branches covered.">        return mEstimatedBiases != null ? mEstimatedBiases[1] : null;</span>
+<span class="fc bfc" id="L1704" title="All 2 branches covered.">        return mEstimatedBiases != null ? mEstimatedBiases[1] : null;</span>
     }
 
     /**
@@ -1665,7 +1711,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @return z coordinate of estimated gyroscope bias or null if not available.
      */
     public Double getEstimatedBiasZ() {
-<span class="fc bfc" id="L1668" title="All 2 branches covered.">        return mEstimatedBiases != null ? mEstimatedBiases[2] : null;</span>
+<span class="fc bfc" id="L1714" title="All 2 branches covered.">        return mEstimatedBiases != null ? mEstimatedBiases[2] : null;</span>
     }
 
     /**
@@ -1674,9 +1720,9 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @return x coordinate of estimated gyroscope bias or null if not available.
      */
     public AngularSpeed getEstimatedBiasAngularSpeedX() {
-<span class="fc bfc" id="L1677" title="All 2 branches covered.">        return mEstimatedBiases != null ?</span>
-<span class="fc" id="L1678">                new AngularSpeed(mEstimatedBiases[0],</span>
-<span class="fc" id="L1679">                        AngularSpeedUnit.RADIANS_PER_SECOND) : null;</span>
+<span class="fc bfc" id="L1723" title="All 2 branches covered.">        return mEstimatedBiases != null ?</span>
+<span class="fc" id="L1724">                new AngularSpeed(mEstimatedBiases[0],</span>
+<span class="fc" id="L1725">                        AngularSpeedUnit.RADIANS_PER_SECOND) : null;</span>
     }
 
     /**
@@ -1686,12 +1732,12 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @return true if result was updated, false if estimation is not available.
      */
     public boolean getEstimatedBiasAngularSpeedX(final AngularSpeed result) {
-<span class="fc bfc" id="L1689" title="All 2 branches covered.">        if (mEstimatedBiases != null) {</span>
-<span class="fc" id="L1690">            result.setValue(mEstimatedBiases[0]);</span>
-<span class="fc" id="L1691">            result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);</span>
-<span class="fc" id="L1692">            return true;</span>
+<span class="fc bfc" id="L1735" title="All 2 branches covered.">        if (mEstimatedBiases != null) {</span>
+<span class="fc" id="L1736">            result.setValue(mEstimatedBiases[0]);</span>
+<span class="fc" id="L1737">            result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);</span>
+<span class="fc" id="L1738">            return true;</span>
         } else {
-<span class="fc" id="L1694">            return false;</span>
+<span class="fc" id="L1740">            return false;</span>
         }
     }
 
@@ -1701,9 +1747,9 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @return y coordinate of estimated gyroscope bias or null if not available.
      */
     public AngularSpeed getEstimatedBiasAngularSpeedY() {
-<span class="fc bfc" id="L1704" title="All 2 branches covered.">        return mEstimatedBiases != null ?</span>
-<span class="fc" id="L1705">                new AngularSpeed(mEstimatedBiases[1],</span>
-<span class="fc" id="L1706">                        AngularSpeedUnit.RADIANS_PER_SECOND) : null;</span>
+<span class="fc bfc" id="L1750" title="All 2 branches covered.">        return mEstimatedBiases != null ?</span>
+<span class="fc" id="L1751">                new AngularSpeed(mEstimatedBiases[1],</span>
+<span class="fc" id="L1752">                        AngularSpeedUnit.RADIANS_PER_SECOND) : null;</span>
     }
 
     /**
@@ -1713,12 +1759,12 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @return true if result was updated, false if estimation is not available.
      */
     public boolean getEstimatedBiasAngularSpeedY(final AngularSpeed result) {
-<span class="fc bfc" id="L1716" title="All 2 branches covered.">        if (mEstimatedBiases != null) {</span>
-<span class="fc" id="L1717">            result.setValue(mEstimatedBiases[1]);</span>
-<span class="fc" id="L1718">            result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);</span>
-<span class="fc" id="L1719">            return true;</span>
+<span class="fc bfc" id="L1762" title="All 2 branches covered.">        if (mEstimatedBiases != null) {</span>
+<span class="fc" id="L1763">            result.setValue(mEstimatedBiases[1]);</span>
+<span class="fc" id="L1764">            result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);</span>
+<span class="fc" id="L1765">            return true;</span>
         } else {
-<span class="fc" id="L1721">            return false;</span>
+<span class="fc" id="L1767">            return false;</span>
         }
     }
 
@@ -1728,9 +1774,9 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @return z coordinate of estimated gyroscope bias or null if not available.
      */
     public AngularSpeed getEstimatedBiasAngularSpeedZ() {
-<span class="fc bfc" id="L1731" title="All 2 branches covered.">        return mEstimatedBiases != null ?</span>
-<span class="fc" id="L1732">                new AngularSpeed(mEstimatedBiases[2],</span>
-<span class="fc" id="L1733">                        AngularSpeedUnit.RADIANS_PER_SECOND) : null;</span>
+<span class="fc bfc" id="L1777" title="All 2 branches covered.">        return mEstimatedBiases != null ?</span>
+<span class="fc" id="L1778">                new AngularSpeed(mEstimatedBiases[2],</span>
+<span class="fc" id="L1779">                        AngularSpeedUnit.RADIANS_PER_SECOND) : null;</span>
     }
 
     /**
@@ -1740,12 +1786,41 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @return true if result was updated, false if estimation is not available.
      */
     public boolean getEstimatedBiasAngularSpeedZ(final AngularSpeed result) {
-<span class="fc bfc" id="L1743" title="All 2 branches covered.">        if (mEstimatedBiases != null) {</span>
-<span class="fc" id="L1744">            result.setValue(mEstimatedBiases[2]);</span>
-<span class="fc" id="L1745">            result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);</span>
-<span class="fc" id="L1746">            return true;</span>
+<span class="fc bfc" id="L1789" title="All 2 branches covered.">        if (mEstimatedBiases != null) {</span>
+<span class="fc" id="L1790">            result.setValue(mEstimatedBiases[2]);</span>
+<span class="fc" id="L1791">            result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);</span>
+<span class="fc" id="L1792">            return true;</span>
         } else {
-<span class="fc" id="L1748">            return false;</span>
+<span class="fc" id="L1794">            return false;</span>
+        }
+    }
+
+    /**
+     * Gets estimated gyroscope bias.
+     *
+     * @return estimated gyroscope bias or null if not available.
+     */
+    public AngularSpeedTriad getEstimatedBiasAsTriad() {
+<span class="pc bpc" id="L1804" title="1 of 2 branches missed.">        return mEstimatedBiases != null ?</span>
+<span class="nc" id="L1805">                new AngularSpeedTriad(AngularSpeedUnit.RADIANS_PER_SECOND,</span>
+<span class="fc" id="L1806">                        mEstimatedBiases[0], mEstimatedBiases[1], mEstimatedBiases[2]) : null;</span>
+    }
+
+    /**
+     * Gets estimated gyroscope bias.
+     *
+     * @param result instance where result will be stored.
+     * @return true if estimated gyroscope bias is available and result was
+     * modified, false otherwise.
+     */
+    public boolean getEstimatedBiasAsTriad(final AngularSpeedTriad result) {
+<span class="pc bpc" id="L1817" title="1 of 2 branches missed.">        if (mEstimatedBiases != null) {</span>
+<span class="nc" id="L1818">            result.setValueCoordinatesAndUnit(</span>
+                    mEstimatedBiases[0], mEstimatedBiases[1], mEstimatedBiases[2],
+                    AngularSpeedUnit.RADIANS_PER_SECOND);
+<span class="nc" id="L1821">            return true;</span>
+        } else {
+<span class="fc" id="L1823">            return false;</span>
         }
     }
 
@@ -1792,7 +1867,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * if not available.
      */
     public Matrix getEstimatedMg() {
-<span class="fc" id="L1795">        return mEstimatedMg;</span>
+<span class="fc" id="L1870">        return mEstimatedMg;</span>
     }
 
     /**
@@ -1801,8 +1876,8 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @return estimated x-axis scale factor or null if not available.
      */
     public Double getEstimatedSx() {
-<span class="fc bfc" id="L1804" title="All 2 branches covered.">        return mEstimatedMg != null ?</span>
-<span class="fc" id="L1805">                mEstimatedMg.getElementAt(0, 0) : null;</span>
+<span class="fc bfc" id="L1879" title="All 2 branches covered.">        return mEstimatedMg != null ?</span>
+<span class="fc" id="L1880">                mEstimatedMg.getElementAt(0, 0) : null;</span>
     }
 
     /**
@@ -1811,8 +1886,8 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @return estimated y-axis scale factor or null if not available.
      */
     public Double getEstimatedSy() {
-<span class="fc bfc" id="L1814" title="All 2 branches covered.">        return mEstimatedMg != null ?</span>
-<span class="fc" id="L1815">                mEstimatedMg.getElementAt(1, 1) : null;</span>
+<span class="fc bfc" id="L1889" title="All 2 branches covered.">        return mEstimatedMg != null ?</span>
+<span class="fc" id="L1890">                mEstimatedMg.getElementAt(1, 1) : null;</span>
     }
 
     /**
@@ -1821,8 +1896,8 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @return estimated z-axis scale factor or null if not available.
      */
     public Double getEstimatedSz() {
-<span class="fc bfc" id="L1824" title="All 2 branches covered.">        return mEstimatedMg != null ?</span>
-<span class="fc" id="L1825">                mEstimatedMg.getElementAt(2, 2) : null;</span>
+<span class="fc bfc" id="L1899" title="All 2 branches covered.">        return mEstimatedMg != null ?</span>
+<span class="fc" id="L1900">                mEstimatedMg.getElementAt(2, 2) : null;</span>
     }
 
     /**
@@ -1831,8 +1906,8 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @return estimated x-y cross-coupling error or null if not available.
      */
     public Double getEstimatedMxy() {
-<span class="fc bfc" id="L1834" title="All 2 branches covered.">        return mEstimatedMg != null ?</span>
-<span class="fc" id="L1835">                mEstimatedMg.getElementAt(0, 1) : null;</span>
+<span class="fc bfc" id="L1909" title="All 2 branches covered.">        return mEstimatedMg != null ?</span>
+<span class="fc" id="L1910">                mEstimatedMg.getElementAt(0, 1) : null;</span>
     }
 
     /**
@@ -1841,8 +1916,8 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @return estimated x-z cross-coupling error or null if not available.
      */
     public Double getEstimatedMxz() {
-<span class="fc bfc" id="L1844" title="All 2 branches covered.">        return mEstimatedMg != null ?</span>
-<span class="fc" id="L1845">                mEstimatedMg.getElementAt(0, 2) : null;</span>
+<span class="fc bfc" id="L1919" title="All 2 branches covered.">        return mEstimatedMg != null ?</span>
+<span class="fc" id="L1920">                mEstimatedMg.getElementAt(0, 2) : null;</span>
     }
 
     /**
@@ -1851,8 +1926,8 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @return estimated y-x cross-coupling error or null if not available.
      */
     public Double getEstimatedMyx() {
-<span class="fc bfc" id="L1854" title="All 2 branches covered.">        return mEstimatedMg != null ?</span>
-<span class="fc" id="L1855">                mEstimatedMg.getElementAt(1, 0) : null;</span>
+<span class="fc bfc" id="L1929" title="All 2 branches covered.">        return mEstimatedMg != null ?</span>
+<span class="fc" id="L1930">                mEstimatedMg.getElementAt(1, 0) : null;</span>
     }
 
     /**
@@ -1861,8 +1936,8 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @return estimated y-z cross-coupling error or null if not available.
      */
     public Double getEstimatedMyz() {
-<span class="fc bfc" id="L1864" title="All 2 branches covered.">        return mEstimatedMg != null ?</span>
-<span class="fc" id="L1865">                mEstimatedMg.getElementAt(1, 2) : null;</span>
+<span class="fc bfc" id="L1939" title="All 2 branches covered.">        return mEstimatedMg != null ?</span>
+<span class="fc" id="L1940">                mEstimatedMg.getElementAt(1, 2) : null;</span>
     }
 
     /**
@@ -1871,8 +1946,8 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @return estimated z-x cross-coupling error or null if not available.
      */
     public Double getEstimatedMzx() {
-<span class="fc bfc" id="L1874" title="All 2 branches covered.">        return mEstimatedMg != null ?</span>
-<span class="fc" id="L1875">                mEstimatedMg.getElementAt(2, 0) : null;</span>
+<span class="fc bfc" id="L1949" title="All 2 branches covered.">        return mEstimatedMg != null ?</span>
+<span class="fc" id="L1950">                mEstimatedMg.getElementAt(2, 0) : null;</span>
     }
 
     /**
@@ -1881,8 +1956,8 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @return estimated z-y cross-coupling error or null if not available.
      */
     public Double getEstimatedMzy() {
-<span class="fc bfc" id="L1884" title="All 2 branches covered.">        return mEstimatedMg != null ?</span>
-<span class="fc" id="L1885">                mEstimatedMg.getElementAt(2, 1) : null;</span>
+<span class="fc bfc" id="L1959" title="All 2 branches covered.">        return mEstimatedMg != null ?</span>
+<span class="fc" id="L1960">                mEstimatedMg.getElementAt(2, 1) : null;</span>
     }
 
     /**
@@ -1893,7 +1968,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @return estimated G-dependent cross biases.
      */
     public Matrix getEstimatedGg() {
-<span class="fc" id="L1896">        return mEstimatedGg;</span>
+<span class="fc" id="L1971">        return mEstimatedGg;</span>
     }
 
     /**
@@ -1904,7 +1979,280 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @return estimated covariance matrix for estimated position.
      */
     public Matrix getEstimatedCovariance() {
-<span class="fc" id="L1907">        return mEstimatedCovariance;</span>
+<span class="fc" id="L1982">        return mEstimatedCovariance;</span>
+    }
+
+    /**
+     * Gets variance of estimated x coordinate of gyroscope bias expressed in (rad^2/s^2).
+     *
+     * @return variance of estimated x coordinate of gyroscope bias or null if not available.
+     */
+    public Double getEstimatedBiasXVariance() {
+<span class="fc bfc" id="L1991" title="All 2 branches covered.">        return mEstimatedCovariance != null ? mEstimatedCovariance.getElementAt(0, 0) : null;</span>
+    }
+
+    /**
+     * Gets standard deviation of estimated x coordinate of gyroscope bias expressed in
+     * radians per second (rad/s).
+     *
+     * @return standard deviation of estimated x coordinate of gyroscope bias or null if not
+     * available.
+     */
+    public Double getEstimatedBiasXStandardDeviation() {
+<span class="fc" id="L2002">        final Double variance = getEstimatedBiasXVariance();</span>
+<span class="fc bfc" id="L2003" title="All 2 branches covered.">        return variance != null ? Math.sqrt(variance) : null;</span>
+    }
+
+    /**
+     * Gets standard deviation of estimated x coordinate of gyroscope bias.
+     *
+     * @return standard deviation of estimated x coordinate of gyroscope bias or null if not
+     * available.
+     */
+    public AngularSpeed getEstimatedBiasXStandardDeviationAsAngularSpeed() {
+<span class="fc bfc" id="L2013" title="All 2 branches covered.">        return mEstimatedCovariance != null ?</span>
+<span class="fc" id="L2014">                new AngularSpeed(getEstimatedBiasXStandardDeviation(), AngularSpeedUnit.RADIANS_PER_SECOND) :</span>
+<span class="fc" id="L2015">                null;</span>
+    }
+
+    /**
+     * Gets standard deviation of estimated x coordinate of gyroscope bias.
+     *
+     * @param result instance where result will be stored.
+     * @return true if standard deviation of estimated x coordinate of gyroscope bias is available,
+     * false otherwise.
+     */
+    public boolean getEstimatedBiasXStandardDeviationAsAngularSpeed(final AngularSpeed result) {
+<span class="fc bfc" id="L2026" title="All 2 branches covered.">        if (mEstimatedCovariance != null) {</span>
+<span class="fc" id="L2027">            result.setValue(getEstimatedBiasXStandardDeviation());</span>
+<span class="fc" id="L2028">            result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);</span>
+<span class="fc" id="L2029">            return true;</span>
+        } else {
+<span class="fc" id="L2031">            return false;</span>
+        }
+    }
+
+    /**
+     * Gets variance of estimated y coordinate of gyroscope bias expressed in (rad^2/s^2).
+     *
+     * @return variance of estimated y coordinate of gyroscope bias or null if not available.
+     */
+    public Double getEstimatedBiasYVariance() {
+<span class="fc bfc" id="L2041" title="All 2 branches covered.">        return mEstimatedCovariance != null ? mEstimatedCovariance.getElementAt(1, 1) : null;</span>
+    }
+
+    /**
+     * Gets standard deviation of estimated y coordinate of gyroscope bias expressed in
+     * radians per second (rad/s).
+     *
+     * @return standard deviation of estimated y coordinate of gyroscope bias or null if not
+     * available.
+     */
+    public Double getEstimatedBiasYStandardDeviation() {
+<span class="fc" id="L2052">        final Double variance = getEstimatedBiasYVariance();</span>
+<span class="fc bfc" id="L2053" title="All 2 branches covered.">        return variance != null ? Math.sqrt(variance) : null;</span>
+    }
+
+    /**
+     * Gets standard deviation of estimated y coordinate of gyroscope bias.
+     *
+     * @return standard deviation of estimated y coordinate of gyroscope bias or null if not
+     * available.
+     */
+    public AngularSpeed getEstimatedBiasYStandardDeviationAsAngularSpeed() {
+<span class="fc bfc" id="L2063" title="All 2 branches covered.">        return mEstimatedCovariance != null ?</span>
+<span class="fc" id="L2064">                new AngularSpeed(getEstimatedBiasYStandardDeviation(), AngularSpeedUnit.RADIANS_PER_SECOND) :</span>
+<span class="fc" id="L2065">                null;</span>
+    }
+
+    /**
+     * Gets standard deviation of estimated y coordinate of gyroscope bias.
+     *
+     * @param result instance where result will be stored.
+     * @return true if standard deviation of estimated y coordinate of gyroscope bias is available,
+     * false otherwise.
+     */
+    public boolean getEstimatedBiasYStandardDeviationAsAngularSpeed(final AngularSpeed result) {
+<span class="fc bfc" id="L2076" title="All 2 branches covered.">        if (mEstimatedCovariance != null) {</span>
+<span class="fc" id="L2077">            result.setValue(getEstimatedBiasYStandardDeviation());</span>
+<span class="fc" id="L2078">            result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);</span>
+<span class="fc" id="L2079">            return true;</span>
+        } else {
+<span class="fc" id="L2081">            return false;</span>
+        }
+    }
+
+    /**
+     * Gets variance of estimated z coordinate of gyroscope bias expressed in (rad^2/s^2).
+     *
+     * @return variance of estimated z coordinate of gyroscope bias or null if not available.
+     */
+    public Double getEstimatedBiasZVariance() {
+<span class="fc bfc" id="L2091" title="All 2 branches covered.">        return mEstimatedCovariance != null ? mEstimatedCovariance.getElementAt(2, 2) : null;</span>
+    }
+
+    /**
+     * Gets standard deviation of estimated z coordinate of gyroscope bias expressed in
+     * radians per second (rad/s).
+     *
+     * @return standard deviation of estimated z coordinate of gyroscope bias or null if not
+     * available.
+     */
+    public Double getEstimatedBiasZStandardDeviation() {
+<span class="fc" id="L2102">        final Double variance = getEstimatedBiasZVariance();</span>
+<span class="fc bfc" id="L2103" title="All 2 branches covered.">        return variance != null ? Math.sqrt(variance) : null;</span>
+    }
+
+    /**
+     * Gets standard deviation of estimated z coordinate of gyroscope bias.
+     *
+     * @return standard deviation of estimated z coordinate of gyroscope bias or null if not
+     * available.
+     */
+    public AngularSpeed getEstimatedBiasZStandardDeviationAsAngularSpeed() {
+<span class="fc bfc" id="L2113" title="All 2 branches covered.">        return mEstimatedCovariance != null ?</span>
+<span class="fc" id="L2114">                new AngularSpeed(getEstimatedBiasZStandardDeviation(), AngularSpeedUnit.RADIANS_PER_SECOND) :</span>
+<span class="fc" id="L2115">                null;</span>
+    }
+
+    /**
+     * Gets standard deviation of estimated z coordinate of gyroscope bias.
+     *
+     * @param result instance where result will be stored.
+     * @return true if standard deviation of estimated z coordinate of gyroscope bias is available,
+     * false otherwise.
+     */
+    public boolean getEstimatedBiasZStandardDeviationAsAngularSpeed(final AngularSpeed result) {
+<span class="fc bfc" id="L2126" title="All 2 branches covered.">        if (mEstimatedCovariance != null) {</span>
+<span class="fc" id="L2127">            result.setValue(getEstimatedBiasZStandardDeviation());</span>
+<span class="fc" id="L2128">            result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);</span>
+<span class="fc" id="L2129">            return true;</span>
+        } else {
+<span class="fc" id="L2131">            return false;</span>
+        }
+    }
+
+    /**
+     * Gets standard deviation of estimated gyroscope bias coordinates.
+     *
+     * @return standard deviation of estimated gyroscope bias coordinates.
+     */
+    public AngularSpeedTriad getEstimatedBiasStandardDeviation() {
+<span class="fc bfc" id="L2141" title="All 2 branches covered.">        return mEstimatedCovariance != null ?</span>
+<span class="fc" id="L2142">                new AngularSpeedTriad(AngularSpeedUnit.RADIANS_PER_SECOND,</span>
+<span class="fc" id="L2143">                        getEstimatedBiasXStandardDeviation(),</span>
+<span class="fc" id="L2144">                        getEstimatedBiasYStandardDeviation(),</span>
+<span class="fc" id="L2145">                        getEstimatedBiasZStandardDeviation()) : null;</span>
+    }
+
+    /**
+     * Gets standard deviation of estimated gyroscope bias coordinates.
+     *
+     * @param result instance where result will be stored.
+     * @return true if standard deviation of gyroscope bias was available, false
+     * otherwise.
+     */
+    public boolean getEstimatedBiasStandardDeviation(final AngularSpeedTriad result) {
+<span class="fc bfc" id="L2156" title="All 2 branches covered.">        if (mEstimatedCovariance != null) {</span>
+<span class="fc" id="L2157">            result.setValueCoordinatesAndUnit(</span>
+<span class="fc" id="L2158">                    getEstimatedBiasXStandardDeviation(),</span>
+<span class="fc" id="L2159">                    getEstimatedBiasYStandardDeviation(),</span>
+<span class="fc" id="L2160">                    getEstimatedBiasZStandardDeviation(),</span>
+                    AngularSpeedUnit.RADIANS_PER_SECOND);
+<span class="fc" id="L2162">            return true;</span>
+        } else {
+<span class="fc" id="L2164">            return false;</span>
+        }
+    }
+
+    /**
+     * Gets average of estimated standard deviation of gyroscope bias coordinates expressed
+     * in radians per second (rad/s).
+     *
+     * @return average of estimated standard deviation of gyroscope bias coordinates or null
+     * if not available.
+     */
+    public Double getEstimatedBiasStandardDeviationAverage() {
+<span class="fc bfc" id="L2176" title="All 2 branches covered.">        return mEstimatedCovariance != null ?</span>
+<span class="fc" id="L2177">                (getEstimatedBiasXStandardDeviation() +</span>
+<span class="fc" id="L2178">                        getEstimatedBiasYStandardDeviation() +</span>
+<span class="fc" id="L2179">                        getEstimatedBiasZStandardDeviation()) / 3.0 : null;</span>
+    }
+
+    /**
+     * Gets average of estimated standard deviation of gyroscope bias coordinates.
+     *
+     * @return average of estimated standard deviation of gyroscope bias coordinates or null.
+     */
+    public AngularSpeed getEstimatedBiasStandardDeviationAverageAsAngularSpeed() {
+<span class="fc bfc" id="L2188" title="All 2 branches covered.">        return mEstimatedCovariance != null ?</span>
+<span class="fc" id="L2189">                new AngularSpeed(getEstimatedBiasStandardDeviationAverage(),</span>
+<span class="fc" id="L2190">                        AngularSpeedUnit.RADIANS_PER_SECOND) : null;</span>
+    }
+
+    /**
+     * Gets average of estimated standard deviation of gyroscope bias coordinates.
+     *
+     * @param result instance where result will be stored.
+     * @return true if average of estimated standard deviation of gyroscope bias is available,
+     * false otherwise.
+     */
+    public boolean getEstimatedBiasStandardDeviationAverageAsAngularSpeed(final AngularSpeed result) {
+<span class="fc bfc" id="L2201" title="All 2 branches covered.">        if (mEstimatedCovariance != null) {</span>
+<span class="fc" id="L2202">            result.setValue(getEstimatedBiasStandardDeviationAverage());</span>
+<span class="fc" id="L2203">            result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);</span>
+<span class="fc" id="L2204">            return true;</span>
+        } else {
+<span class="fc" id="L2206">            return false;</span>
+        }
+    }
+
+    /**
+     * Gets norm of estimated standard deviation of gyroscope bias expressed in
+     * radians per second (rad/s).
+     * This can be used as the initial gyroscope bias uncertainty for
+     * {@link INSLooselyCoupledKalmanInitializerConfig} or {@link INSTightlyCoupledKalmanInitializerConfig}.
+     *
+     * @return norm of estimated standard deviation of gyroscope bias or null
+     * if not available.
+     */
+    public Double getEstimatedBiasStandardDeviationNorm() {
+<span class="fc bfc" id="L2220" title="All 2 branches covered.">        return mEstimatedCovariance != null ?</span>
+<span class="fc" id="L2221">                Math.sqrt(getEstimatedBiasXVariance() + getEstimatedBiasYVariance() + getEstimatedBiasZVariance()) :</span>
+<span class="fc" id="L2222">                null;</span>
+    }
+
+    /**
+     * Gets norm of estimated standard deviation of gyroscope bias.
+     * This can be used as the initial gyroscope bias uncertainty for
+     * {@link INSLooselyCoupledKalmanInitializerConfig} or {@link INSTightlyCoupledKalmanInitializerConfig}.
+     *
+     * @return norm of estimated standard deviation of gyroscope bias or null
+     * if not available.
+     */
+    public AngularSpeed getEstimatedBiasStandardDeviationNormAsAngularSpeed() {
+<span class="fc bfc" id="L2234" title="All 2 branches covered.">        return mEstimatedCovariance != null ?</span>
+<span class="fc" id="L2235">                new AngularSpeed(getEstimatedBiasStandardDeviationNorm(),</span>
+<span class="fc" id="L2236">                        AngularSpeedUnit.RADIANS_PER_SECOND) : null;</span>
+    }
+
+    /**
+     * Gets norm of estimated standard deviation of gyroscope bias coordinates.
+     * This can be used as the initial gyroscope bias uncertainty for
+     * {@link INSLooselyCoupledKalmanInitializerConfig} or {@link INSTightlyCoupledKalmanInitializerConfig}.
+     *
+     * @param result instance where result will be stored.
+     * @return true if norm of estimated standard deviation of gyroscope bias is
+     * available, false otherwise.
+     */
+    public boolean getEstimatedBiasStandardDeviationNormAsAngularSpeed(final AngularSpeed result) {
+<span class="fc bfc" id="L2249" title="All 2 branches covered.">        if (mEstimatedCovariance != null) {</span>
+<span class="fc" id="L2250">            result.setValue(getEstimatedBiasStandardDeviationNorm());</span>
+<span class="fc" id="L2251">            result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);</span>
+<span class="fc" id="L2252">            return true;</span>
+        } else {
+<span class="fc" id="L2254">            return false;</span>
+        }
     }
 
     /**
@@ -1914,7 +2262,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @return size of subsets to be checked during robust estimation.
      */
     public int getPreliminarySubsetSize() {
-<span class="fc" id="L1917">        return mPreliminarySubsetSize;</span>
+<span class="fc" id="L2265">        return mPreliminarySubsetSize;</span>
     }
 
     /**
@@ -1927,15 +2275,15 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      */
     public void setPreliminarySubsetSize(final int preliminarySubsetSize)
             throws LockedException {
-<span class="fc bfc" id="L1930" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L1931">            throw new LockedException();</span>
+<span class="fc bfc" id="L2278" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L2279">            throw new LockedException();</span>
         }
-<span class="fc bfc" id="L1933" title="All 2 branches covered.">        if (preliminarySubsetSize &lt; MINIMUM_MEASUREMENTS) {</span>
-<span class="fc" id="L1934">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L2281" title="All 2 branches covered.">        if (preliminarySubsetSize &lt; MINIMUM_MEASUREMENTS) {</span>
+<span class="fc" id="L2282">            throw new IllegalArgumentException();</span>
         }
 
-<span class="fc" id="L1937">        mPreliminarySubsetSize = preliminarySubsetSize;</span>
-<span class="fc" id="L1938">    }</span>
+<span class="fc" id="L2285">        mPreliminarySubsetSize = preliminarySubsetSize;</span>
+<span class="fc" id="L2286">    }</span>
 
     /**
      * Estimates gyroscope calibration parameters containing bias, scale factors
@@ -1963,18 +2311,18 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      */
     public static RobustKnownFrameGyroscopeCalibrator create(
             final RobustEstimatorMethod method) {
-<span class="fc bfc" id="L1966" title="All 5 branches covered.">        switch (method) {</span>
+<span class="fc bfc" id="L2314" title="All 5 branches covered.">        switch (method) {</span>
             case RANSAC:
-<span class="fc" id="L1968">                return new RANSACRobustKnownFrameGyroscopeCalibrator();</span>
+<span class="fc" id="L2316">                return new RANSACRobustKnownFrameGyroscopeCalibrator();</span>
             case LMedS:
-<span class="fc" id="L1970">                return new LMedSRobustKnownFrameGyroscopeCalibrator();</span>
+<span class="fc" id="L2318">                return new LMedSRobustKnownFrameGyroscopeCalibrator();</span>
             case MSAC:
-<span class="fc" id="L1972">                return new MSACRobustKnownFrameGyroscopeCalibrator();</span>
+<span class="fc" id="L2320">                return new MSACRobustKnownFrameGyroscopeCalibrator();</span>
             case PROSAC:
-<span class="fc" id="L1974">                return new PROSACRobustKnownFrameGyroscopeCalibrator();</span>
+<span class="fc" id="L2322">                return new PROSACRobustKnownFrameGyroscopeCalibrator();</span>
             case PROMedS:
             default:
-<span class="fc" id="L1977">                return new PROMedSRobustKnownFrameGyroscopeCalibrator();</span>
+<span class="fc" id="L2325">                return new PROMedSRobustKnownFrameGyroscopeCalibrator();</span>
         }
     }
 
@@ -1989,18 +2337,18 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
     public static RobustKnownFrameGyroscopeCalibrator create(
             final RobustKnownFrameGyroscopeCalibratorListener listener,
             final RobustEstimatorMethod method) {
-<span class="fc bfc" id="L1992" title="All 5 branches covered.">        switch (method) {</span>
+<span class="fc bfc" id="L2340" title="All 5 branches covered.">        switch (method) {</span>
             case RANSAC:
-<span class="fc" id="L1994">                return new RANSACRobustKnownFrameGyroscopeCalibrator(listener);</span>
+<span class="fc" id="L2342">                return new RANSACRobustKnownFrameGyroscopeCalibrator(listener);</span>
             case LMedS:
-<span class="fc" id="L1996">                return new LMedSRobustKnownFrameGyroscopeCalibrator(listener);</span>
+<span class="fc" id="L2344">                return new LMedSRobustKnownFrameGyroscopeCalibrator(listener);</span>
             case MSAC:
-<span class="fc" id="L1998">                return new MSACRobustKnownFrameGyroscopeCalibrator(listener);</span>
+<span class="fc" id="L2346">                return new MSACRobustKnownFrameGyroscopeCalibrator(listener);</span>
             case PROSAC:
-<span class="fc" id="L2000">                return new PROSACRobustKnownFrameGyroscopeCalibrator(listener);</span>
+<span class="fc" id="L2348">                return new PROSACRobustKnownFrameGyroscopeCalibrator(listener);</span>
             case PROMedS:
             default:
-<span class="fc" id="L2003">                return new PROMedSRobustKnownFrameGyroscopeCalibrator(listener);</span>
+<span class="fc" id="L2351">                return new PROMedSRobustKnownFrameGyroscopeCalibrator(listener);</span>
         }
     }
 
@@ -2016,18 +2364,18 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
     public static RobustKnownFrameGyroscopeCalibrator create(
             final List&lt;StandardDeviationFrameBodyKinematics&gt; measurements,
             final RobustEstimatorMethod method) {
-<span class="fc bfc" id="L2019" title="All 5 branches covered.">        switch (method) {</span>
+<span class="fc bfc" id="L2367" title="All 5 branches covered.">        switch (method) {</span>
             case RANSAC:
-<span class="fc" id="L2021">                return new RANSACRobustKnownFrameGyroscopeCalibrator(measurements);</span>
+<span class="fc" id="L2369">                return new RANSACRobustKnownFrameGyroscopeCalibrator(measurements);</span>
             case LMedS:
-<span class="fc" id="L2023">                return new LMedSRobustKnownFrameGyroscopeCalibrator(measurements);</span>
+<span class="fc" id="L2371">                return new LMedSRobustKnownFrameGyroscopeCalibrator(measurements);</span>
             case MSAC:
-<span class="fc" id="L2025">                return new MSACRobustKnownFrameGyroscopeCalibrator(measurements);</span>
+<span class="fc" id="L2373">                return new MSACRobustKnownFrameGyroscopeCalibrator(measurements);</span>
             case PROSAC:
-<span class="fc" id="L2027">                return new PROSACRobustKnownFrameGyroscopeCalibrator(measurements);</span>
+<span class="fc" id="L2375">                return new PROSACRobustKnownFrameGyroscopeCalibrator(measurements);</span>
             case PROMedS:
             default:
-<span class="fc" id="L2030">                return new PROMedSRobustKnownFrameGyroscopeCalibrator(measurements);</span>
+<span class="fc" id="L2378">                return new PROMedSRobustKnownFrameGyroscopeCalibrator(measurements);</span>
         }
     }
 
@@ -2045,22 +2393,22 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
             final List&lt;StandardDeviationFrameBodyKinematics&gt; measurements,
             final RobustKnownFrameGyroscopeCalibratorListener listener,
             final RobustEstimatorMethod method) {
-<span class="fc bfc" id="L2048" title="All 5 branches covered.">        switch (method) {</span>
+<span class="fc bfc" id="L2396" title="All 5 branches covered.">        switch (method) {</span>
             case RANSAC:
-<span class="fc" id="L2050">                return new RANSACRobustKnownFrameGyroscopeCalibrator(measurements,</span>
+<span class="fc" id="L2398">                return new RANSACRobustKnownFrameGyroscopeCalibrator(measurements,</span>
                         listener);
             case LMedS:
-<span class="fc" id="L2053">                return new LMedSRobustKnownFrameGyroscopeCalibrator(measurements,</span>
+<span class="fc" id="L2401">                return new LMedSRobustKnownFrameGyroscopeCalibrator(measurements,</span>
                         listener);
             case MSAC:
-<span class="fc" id="L2056">                return new MSACRobustKnownFrameGyroscopeCalibrator(measurements,</span>
+<span class="fc" id="L2404">                return new MSACRobustKnownFrameGyroscopeCalibrator(measurements,</span>
                         listener);
             case PROSAC:
-<span class="fc" id="L2059">                return new PROSACRobustKnownFrameGyroscopeCalibrator(measurements,</span>
+<span class="fc" id="L2407">                return new PROSACRobustKnownFrameGyroscopeCalibrator(measurements,</span>
                         listener);
             case PROMedS:
             default:
-<span class="fc" id="L2063">                return new PROMedSRobustKnownFrameGyroscopeCalibrator(measurements,</span>
+<span class="fc" id="L2411">                return new PROMedSRobustKnownFrameGyroscopeCalibrator(measurements,</span>
                         listener);
         }
     }
@@ -2076,18 +2424,18 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
     public static RobustKnownFrameGyroscopeCalibrator create(
             final boolean commonAxisUsed,
             final RobustEstimatorMethod method) {
-<span class="fc bfc" id="L2079" title="All 5 branches covered.">        switch (method) {</span>
+<span class="fc bfc" id="L2427" title="All 5 branches covered.">        switch (method) {</span>
             case RANSAC:
-<span class="fc" id="L2081">                return new RANSACRobustKnownFrameGyroscopeCalibrator(commonAxisUsed);</span>
+<span class="fc" id="L2429">                return new RANSACRobustKnownFrameGyroscopeCalibrator(commonAxisUsed);</span>
             case LMedS:
-<span class="fc" id="L2083">                return new LMedSRobustKnownFrameGyroscopeCalibrator(commonAxisUsed);</span>
+<span class="fc" id="L2431">                return new LMedSRobustKnownFrameGyroscopeCalibrator(commonAxisUsed);</span>
             case MSAC:
-<span class="fc" id="L2085">                return new MSACRobustKnownFrameGyroscopeCalibrator(commonAxisUsed);</span>
+<span class="fc" id="L2433">                return new MSACRobustKnownFrameGyroscopeCalibrator(commonAxisUsed);</span>
             case PROSAC:
-<span class="fc" id="L2087">                return new PROSACRobustKnownFrameGyroscopeCalibrator(commonAxisUsed);</span>
+<span class="fc" id="L2435">                return new PROSACRobustKnownFrameGyroscopeCalibrator(commonAxisUsed);</span>
             case PROMedS:
             default:
-<span class="fc" id="L2090">                return new PROMedSRobustKnownFrameGyroscopeCalibrator(commonAxisUsed);</span>
+<span class="fc" id="L2438">                return new PROMedSRobustKnownFrameGyroscopeCalibrator(commonAxisUsed);</span>
         }
     }
 
@@ -2104,22 +2452,22 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
             final boolean commonAxisUsed,
             final RobustKnownFrameGyroscopeCalibratorListener listener,
             final RobustEstimatorMethod method) {
-<span class="fc bfc" id="L2107" title="All 5 branches covered.">        switch (method) {</span>
+<span class="fc bfc" id="L2455" title="All 5 branches covered.">        switch (method) {</span>
             case RANSAC:
-<span class="fc" id="L2109">                return new RANSACRobustKnownFrameGyroscopeCalibrator(commonAxisUsed,</span>
+<span class="fc" id="L2457">                return new RANSACRobustKnownFrameGyroscopeCalibrator(commonAxisUsed,</span>
                         listener);
             case LMedS:
-<span class="fc" id="L2112">                return new LMedSRobustKnownFrameGyroscopeCalibrator(commonAxisUsed,</span>
+<span class="fc" id="L2460">                return new LMedSRobustKnownFrameGyroscopeCalibrator(commonAxisUsed,</span>
                         listener);
             case MSAC:
-<span class="fc" id="L2115">                return new MSACRobustKnownFrameGyroscopeCalibrator(commonAxisUsed,</span>
+<span class="fc" id="L2463">                return new MSACRobustKnownFrameGyroscopeCalibrator(commonAxisUsed,</span>
                         listener);
             case PROSAC:
-<span class="fc" id="L2118">                return new PROSACRobustKnownFrameGyroscopeCalibrator(commonAxisUsed,</span>
+<span class="fc" id="L2466">                return new PROSACRobustKnownFrameGyroscopeCalibrator(commonAxisUsed,</span>
                         listener);
             case PROMedS:
             default:
-<span class="fc" id="L2122">                return new PROMedSRobustKnownFrameGyroscopeCalibrator(commonAxisUsed,</span>
+<span class="fc" id="L2470">                return new PROMedSRobustKnownFrameGyroscopeCalibrator(commonAxisUsed,</span>
                         listener);
         }
     }
@@ -2139,22 +2487,22 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
             final List&lt;StandardDeviationFrameBodyKinematics&gt; measurements,
             final boolean commonAxisUsed,
             final RobustEstimatorMethod method) {
-<span class="fc bfc" id="L2142" title="All 5 branches covered.">        switch (method) {</span>
+<span class="fc bfc" id="L2490" title="All 5 branches covered.">        switch (method) {</span>
             case RANSAC:
-<span class="fc" id="L2144">                return new RANSACRobustKnownFrameGyroscopeCalibrator(</span>
+<span class="fc" id="L2492">                return new RANSACRobustKnownFrameGyroscopeCalibrator(</span>
                         measurements, commonAxisUsed);
             case LMedS:
-<span class="fc" id="L2147">                return new LMedSRobustKnownFrameGyroscopeCalibrator(</span>
+<span class="fc" id="L2495">                return new LMedSRobustKnownFrameGyroscopeCalibrator(</span>
                         measurements, commonAxisUsed);
             case MSAC:
-<span class="fc" id="L2150">                return new MSACRobustKnownFrameGyroscopeCalibrator(</span>
+<span class="fc" id="L2498">                return new MSACRobustKnownFrameGyroscopeCalibrator(</span>
                         measurements, commonAxisUsed);
             case PROSAC:
-<span class="fc" id="L2153">                return new PROSACRobustKnownFrameGyroscopeCalibrator(</span>
+<span class="fc" id="L2501">                return new PROSACRobustKnownFrameGyroscopeCalibrator(</span>
                         measurements, commonAxisUsed);
             case PROMedS:
             default:
-<span class="fc" id="L2157">                return new PROMedSRobustKnownFrameGyroscopeCalibrator(</span>
+<span class="fc" id="L2505">                return new PROMedSRobustKnownFrameGyroscopeCalibrator(</span>
                         measurements, commonAxisUsed);
         }
     }
@@ -2176,22 +2524,22 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
             final boolean commonAxisUsed,
             final RobustKnownFrameGyroscopeCalibratorListener listener,
             final RobustEstimatorMethod method) {
-<span class="fc bfc" id="L2179" title="All 5 branches covered.">        switch (method) {</span>
+<span class="fc bfc" id="L2527" title="All 5 branches covered.">        switch (method) {</span>
             case RANSAC:
-<span class="fc" id="L2181">                return new RANSACRobustKnownFrameGyroscopeCalibrator(</span>
+<span class="fc" id="L2529">                return new RANSACRobustKnownFrameGyroscopeCalibrator(</span>
                         measurements, commonAxisUsed, listener);
             case LMedS:
-<span class="fc" id="L2184">                return new LMedSRobustKnownFrameGyroscopeCalibrator(</span>
+<span class="fc" id="L2532">                return new LMedSRobustKnownFrameGyroscopeCalibrator(</span>
                         measurements, commonAxisUsed, listener);
             case MSAC:
-<span class="fc" id="L2187">                return new MSACRobustKnownFrameGyroscopeCalibrator(</span>
+<span class="fc" id="L2535">                return new MSACRobustKnownFrameGyroscopeCalibrator(</span>
                         measurements, commonAxisUsed, listener);
             case PROSAC:
-<span class="fc" id="L2190">                return new PROSACRobustKnownFrameGyroscopeCalibrator(</span>
+<span class="fc" id="L2538">                return new PROSACRobustKnownFrameGyroscopeCalibrator(</span>
                         measurements, commonAxisUsed, listener);
             case PROMedS:
             default:
-<span class="fc" id="L2194">                return new PROMedSRobustKnownFrameGyroscopeCalibrator(</span>
+<span class="fc" id="L2542">                return new PROMedSRobustKnownFrameGyroscopeCalibrator(</span>
                         measurements, commonAxisUsed, listener);
         }
     }
@@ -2208,18 +2556,18 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
     public static RobustKnownFrameGyroscopeCalibrator create(
             final double[] qualityScores,
             final RobustEstimatorMethod method) {
-<span class="fc bfc" id="L2211" title="All 5 branches covered.">        switch (method) {</span>
+<span class="fc bfc" id="L2559" title="All 5 branches covered.">        switch (method) {</span>
             case RANSAC:
-<span class="fc" id="L2213">                return new RANSACRobustKnownFrameGyroscopeCalibrator();</span>
+<span class="fc" id="L2561">                return new RANSACRobustKnownFrameGyroscopeCalibrator();</span>
             case LMedS:
-<span class="fc" id="L2215">                return new LMedSRobustKnownFrameGyroscopeCalibrator();</span>
+<span class="fc" id="L2563">                return new LMedSRobustKnownFrameGyroscopeCalibrator();</span>
             case MSAC:
-<span class="fc" id="L2217">                return new MSACRobustKnownFrameGyroscopeCalibrator();</span>
+<span class="fc" id="L2565">                return new MSACRobustKnownFrameGyroscopeCalibrator();</span>
             case PROSAC:
-<span class="fc" id="L2219">                return new PROSACRobustKnownFrameGyroscopeCalibrator(qualityScores);</span>
+<span class="fc" id="L2567">                return new PROSACRobustKnownFrameGyroscopeCalibrator(qualityScores);</span>
             case PROMedS:
             default:
-<span class="fc" id="L2222">                return new PROMedSRobustKnownFrameGyroscopeCalibrator(qualityScores);</span>
+<span class="fc" id="L2570">                return new PROMedSRobustKnownFrameGyroscopeCalibrator(qualityScores);</span>
         }
     }
 
@@ -2238,19 +2586,19 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
             final double[] qualityScores,
             final RobustKnownFrameGyroscopeCalibratorListener listener,
             final RobustEstimatorMethod method) {
-<span class="fc bfc" id="L2241" title="All 5 branches covered.">        switch (method) {</span>
+<span class="fc bfc" id="L2589" title="All 5 branches covered.">        switch (method) {</span>
             case RANSAC:
-<span class="fc" id="L2243">                return new RANSACRobustKnownFrameGyroscopeCalibrator(listener);</span>
+<span class="fc" id="L2591">                return new RANSACRobustKnownFrameGyroscopeCalibrator(listener);</span>
             case LMedS:
-<span class="fc" id="L2245">                return new LMedSRobustKnownFrameGyroscopeCalibrator(listener);</span>
+<span class="fc" id="L2593">                return new LMedSRobustKnownFrameGyroscopeCalibrator(listener);</span>
             case MSAC:
-<span class="fc" id="L2247">                return new MSACRobustKnownFrameGyroscopeCalibrator(listener);</span>
+<span class="fc" id="L2595">                return new MSACRobustKnownFrameGyroscopeCalibrator(listener);</span>
             case PROSAC:
-<span class="fc" id="L2249">                return new PROSACRobustKnownFrameGyroscopeCalibrator(</span>
+<span class="fc" id="L2597">                return new PROSACRobustKnownFrameGyroscopeCalibrator(</span>
                         qualityScores, listener);
             case PROMedS:
             default:
-<span class="fc" id="L2253">                return new PROMedSRobustKnownFrameGyroscopeCalibrator(</span>
+<span class="fc" id="L2601">                return new PROMedSRobustKnownFrameGyroscopeCalibrator(</span>
                         qualityScores, listener);
         }
     }
@@ -2271,19 +2619,19 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
             final double[] qualityScores,
             final List&lt;StandardDeviationFrameBodyKinematics&gt; measurements,
             final RobustEstimatorMethod method) {
-<span class="fc bfc" id="L2274" title="All 5 branches covered.">        switch (method) {</span>
+<span class="fc bfc" id="L2622" title="All 5 branches covered.">        switch (method) {</span>
             case RANSAC:
-<span class="fc" id="L2276">                return new RANSACRobustKnownFrameGyroscopeCalibrator(measurements);</span>
+<span class="fc" id="L2624">                return new RANSACRobustKnownFrameGyroscopeCalibrator(measurements);</span>
             case LMedS:
-<span class="fc" id="L2278">                return new LMedSRobustKnownFrameGyroscopeCalibrator(measurements);</span>
+<span class="fc" id="L2626">                return new LMedSRobustKnownFrameGyroscopeCalibrator(measurements);</span>
             case MSAC:
-<span class="fc" id="L2280">                return new MSACRobustKnownFrameGyroscopeCalibrator(measurements);</span>
+<span class="fc" id="L2628">                return new MSACRobustKnownFrameGyroscopeCalibrator(measurements);</span>
             case PROSAC:
-<span class="fc" id="L2282">                return new PROSACRobustKnownFrameGyroscopeCalibrator(qualityScores,</span>
+<span class="fc" id="L2630">                return new PROSACRobustKnownFrameGyroscopeCalibrator(qualityScores,</span>
                         measurements);
             case PROMedS:
             default:
-<span class="fc" id="L2286">                return new PROMedSRobustKnownFrameGyroscopeCalibrator(qualityScores,</span>
+<span class="fc" id="L2634">                return new PROMedSRobustKnownFrameGyroscopeCalibrator(qualityScores,</span>
                         measurements);
         }
     }
@@ -2306,22 +2654,22 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
             final List&lt;StandardDeviationFrameBodyKinematics&gt; measurements,
             final RobustKnownFrameGyroscopeCalibratorListener listener,
             final RobustEstimatorMethod method) {
-<span class="fc bfc" id="L2309" title="All 5 branches covered.">        switch (method) {</span>
+<span class="fc bfc" id="L2657" title="All 5 branches covered.">        switch (method) {</span>
             case RANSAC:
-<span class="fc" id="L2311">                return new RANSACRobustKnownFrameGyroscopeCalibrator(measurements,</span>
+<span class="fc" id="L2659">                return new RANSACRobustKnownFrameGyroscopeCalibrator(measurements,</span>
                         listener);
             case LMedS:
-<span class="fc" id="L2314">                return new LMedSRobustKnownFrameGyroscopeCalibrator(measurements,</span>
+<span class="fc" id="L2662">                return new LMedSRobustKnownFrameGyroscopeCalibrator(measurements,</span>
                         listener);
             case MSAC:
-<span class="fc" id="L2317">                return new MSACRobustKnownFrameGyroscopeCalibrator(measurements,</span>
+<span class="fc" id="L2665">                return new MSACRobustKnownFrameGyroscopeCalibrator(measurements,</span>
                         listener);
             case PROSAC:
-<span class="fc" id="L2320">                return new PROSACRobustKnownFrameGyroscopeCalibrator(qualityScores,</span>
+<span class="fc" id="L2668">                return new PROSACRobustKnownFrameGyroscopeCalibrator(qualityScores,</span>
                         measurements, listener);
             case PROMedS:
             default:
-<span class="fc" id="L2324">                return new PROMedSRobustKnownFrameGyroscopeCalibrator(qualityScores,</span>
+<span class="fc" id="L2672">                return new PROMedSRobustKnownFrameGyroscopeCalibrator(qualityScores,</span>
                         measurements, listener);
         }
     }
@@ -2341,19 +2689,19 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
             final double[] qualityScores,
             final boolean commonAxisUsed,
             final RobustEstimatorMethod method) {
-<span class="fc bfc" id="L2344" title="All 5 branches covered.">        switch (method) {</span>
+<span class="fc bfc" id="L2692" title="All 5 branches covered.">        switch (method) {</span>
             case RANSAC:
-<span class="fc" id="L2346">                return new RANSACRobustKnownFrameGyroscopeCalibrator(commonAxisUsed);</span>
+<span class="fc" id="L2694">                return new RANSACRobustKnownFrameGyroscopeCalibrator(commonAxisUsed);</span>
             case LMedS:
-<span class="fc" id="L2348">                return new LMedSRobustKnownFrameGyroscopeCalibrator(commonAxisUsed);</span>
+<span class="fc" id="L2696">                return new LMedSRobustKnownFrameGyroscopeCalibrator(commonAxisUsed);</span>
             case MSAC:
-<span class="fc" id="L2350">                return new MSACRobustKnownFrameGyroscopeCalibrator(commonAxisUsed);</span>
+<span class="fc" id="L2698">                return new MSACRobustKnownFrameGyroscopeCalibrator(commonAxisUsed);</span>
             case PROSAC:
-<span class="fc" id="L2352">                return new PROSACRobustKnownFrameGyroscopeCalibrator(qualityScores,</span>
+<span class="fc" id="L2700">                return new PROSACRobustKnownFrameGyroscopeCalibrator(qualityScores,</span>
                         commonAxisUsed);
             case PROMedS:
             default:
-<span class="fc" id="L2356">                return new PROMedSRobustKnownFrameGyroscopeCalibrator(qualityScores,</span>
+<span class="fc" id="L2704">                return new PROMedSRobustKnownFrameGyroscopeCalibrator(qualityScores,</span>
                         commonAxisUsed);
         }
     }
@@ -2375,22 +2723,22 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
             final boolean commonAxisUsed,
             final RobustKnownFrameGyroscopeCalibratorListener listener,
             final RobustEstimatorMethod method) {
-<span class="fc bfc" id="L2378" title="All 5 branches covered.">        switch (method) {</span>
+<span class="fc bfc" id="L2726" title="All 5 branches covered.">        switch (method) {</span>
             case RANSAC:
-<span class="fc" id="L2380">                return new RANSACRobustKnownFrameGyroscopeCalibrator(commonAxisUsed,</span>
+<span class="fc" id="L2728">                return new RANSACRobustKnownFrameGyroscopeCalibrator(commonAxisUsed,</span>
                         listener);
             case LMedS:
-<span class="fc" id="L2383">                return new LMedSRobustKnownFrameGyroscopeCalibrator(commonAxisUsed,</span>
+<span class="fc" id="L2731">                return new LMedSRobustKnownFrameGyroscopeCalibrator(commonAxisUsed,</span>
                         listener);
             case MSAC:
-<span class="fc" id="L2386">                return new MSACRobustKnownFrameGyroscopeCalibrator(commonAxisUsed,</span>
+<span class="fc" id="L2734">                return new MSACRobustKnownFrameGyroscopeCalibrator(commonAxisUsed,</span>
                         listener);
             case PROSAC:
-<span class="fc" id="L2389">                return new PROSACRobustKnownFrameGyroscopeCalibrator(qualityScores,</span>
+<span class="fc" id="L2737">                return new PROSACRobustKnownFrameGyroscopeCalibrator(qualityScores,</span>
                         commonAxisUsed, listener);
             case PROMedS:
             default:
-<span class="fc" id="L2393">                return new PROMedSRobustKnownFrameGyroscopeCalibrator(qualityScores,</span>
+<span class="fc" id="L2741">                return new PROMedSRobustKnownFrameGyroscopeCalibrator(qualityScores,</span>
                         commonAxisUsed, listener);
         }
     }
@@ -2414,22 +2762,22 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
             final List&lt;StandardDeviationFrameBodyKinematics&gt; measurements,
             final boolean commonAxisUsed,
             final RobustEstimatorMethod method) {
-<span class="fc bfc" id="L2417" title="All 5 branches covered.">        switch (method) {</span>
+<span class="fc bfc" id="L2765" title="All 5 branches covered.">        switch (method) {</span>
             case RANSAC:
-<span class="fc" id="L2419">                return new RANSACRobustKnownFrameGyroscopeCalibrator(</span>
+<span class="fc" id="L2767">                return new RANSACRobustKnownFrameGyroscopeCalibrator(</span>
                         measurements, commonAxisUsed);
             case LMedS:
-<span class="fc" id="L2422">                return new LMedSRobustKnownFrameGyroscopeCalibrator(</span>
+<span class="fc" id="L2770">                return new LMedSRobustKnownFrameGyroscopeCalibrator(</span>
                         measurements, commonAxisUsed);
             case MSAC:
-<span class="fc" id="L2425">                return new MSACRobustKnownFrameGyroscopeCalibrator(</span>
+<span class="fc" id="L2773">                return new MSACRobustKnownFrameGyroscopeCalibrator(</span>
                         measurements, commonAxisUsed);
             case PROSAC:
-<span class="fc" id="L2428">                return new PROSACRobustKnownFrameGyroscopeCalibrator(</span>
+<span class="fc" id="L2776">                return new PROSACRobustKnownFrameGyroscopeCalibrator(</span>
                         qualityScores, measurements, commonAxisUsed);
             case PROMedS:
             default:
-<span class="fc" id="L2432">                return new PROMedSRobustKnownFrameGyroscopeCalibrator(</span>
+<span class="fc" id="L2780">                return new PROMedSRobustKnownFrameGyroscopeCalibrator(</span>
                         qualityScores, measurements, commonAxisUsed);
         }
     }
@@ -2455,22 +2803,22 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
             final boolean commonAxisUsed,
             final RobustKnownFrameGyroscopeCalibratorListener listener,
             final RobustEstimatorMethod method) {
-<span class="fc bfc" id="L2458" title="All 5 branches covered.">        switch (method) {</span>
+<span class="fc bfc" id="L2806" title="All 5 branches covered.">        switch (method) {</span>
             case RANSAC:
-<span class="fc" id="L2460">                return new RANSACRobustKnownFrameGyroscopeCalibrator(</span>
+<span class="fc" id="L2808">                return new RANSACRobustKnownFrameGyroscopeCalibrator(</span>
                         measurements, commonAxisUsed, listener);
             case LMedS:
-<span class="fc" id="L2463">                return new LMedSRobustKnownFrameGyroscopeCalibrator(</span>
+<span class="fc" id="L2811">                return new LMedSRobustKnownFrameGyroscopeCalibrator(</span>
                         measurements, commonAxisUsed, listener);
             case MSAC:
-<span class="fc" id="L2466">                return new MSACRobustKnownFrameGyroscopeCalibrator(</span>
+<span class="fc" id="L2814">                return new MSACRobustKnownFrameGyroscopeCalibrator(</span>
                         measurements, commonAxisUsed, listener);
             case PROSAC:
-<span class="fc" id="L2469">                return new PROSACRobustKnownFrameGyroscopeCalibrator(</span>
+<span class="fc" id="L2817">                return new PROSACRobustKnownFrameGyroscopeCalibrator(</span>
                         qualityScores, measurements, commonAxisUsed, listener);
             case PROMedS:
             default:
-<span class="fc" id="L2473">                return new PROMedSRobustKnownFrameGyroscopeCalibrator(</span>
+<span class="fc" id="L2821">                return new PROMedSRobustKnownFrameGyroscopeCalibrator(</span>
                         qualityScores, measurements, commonAxisUsed, listener);
         }
     }
@@ -2481,7 +2829,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @return a robust gyroscope calibrator.
      */
     public static RobustKnownFrameGyroscopeCalibrator create() {
-<span class="fc" id="L2484">        return create(DEFAULT_ROBUST_METHOD);</span>
+<span class="fc" id="L2832">        return create(DEFAULT_ROBUST_METHOD);</span>
     }
 
     /**
@@ -2493,7 +2841,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      */
     public static RobustKnownFrameGyroscopeCalibrator create(
             final RobustKnownFrameGyroscopeCalibratorListener listener) {
-<span class="fc" id="L2496">        return create(listener, DEFAULT_ROBUST_METHOD);</span>
+<span class="fc" id="L2844">        return create(listener, DEFAULT_ROBUST_METHOD);</span>
     }
 
     /**
@@ -2506,7 +2854,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      */
     public static RobustKnownFrameGyroscopeCalibrator create(
             final List&lt;StandardDeviationFrameBodyKinematics&gt; measurements) {
-<span class="fc" id="L2509">        return create(measurements, DEFAULT_ROBUST_METHOD);</span>
+<span class="fc" id="L2857">        return create(measurements, DEFAULT_ROBUST_METHOD);</span>
     }
 
     /**
@@ -2521,7 +2869,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
     public static RobustKnownFrameGyroscopeCalibrator create(
             final List&lt;StandardDeviationFrameBodyKinematics&gt; measurements,
             final RobustKnownFrameGyroscopeCalibratorListener listener) {
-<span class="fc" id="L2524">        return create(measurements, listener, DEFAULT_ROBUST_METHOD);</span>
+<span class="fc" id="L2872">        return create(measurements, listener, DEFAULT_ROBUST_METHOD);</span>
     }
 
     /**
@@ -2533,7 +2881,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      */
     public static RobustKnownFrameGyroscopeCalibrator create(
             final boolean commonAxisUsed) {
-<span class="fc" id="L2536">        return create(commonAxisUsed, DEFAULT_ROBUST_METHOD);</span>
+<span class="fc" id="L2884">        return create(commonAxisUsed, DEFAULT_ROBUST_METHOD);</span>
     }
 
     /**
@@ -2547,7 +2895,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
     public static RobustKnownFrameGyroscopeCalibrator create(
             final boolean commonAxisUsed,
             final RobustKnownFrameGyroscopeCalibratorListener listener) {
-<span class="fc" id="L2550">        return create(commonAxisUsed, listener, DEFAULT_ROBUST_METHOD);</span>
+<span class="fc" id="L2898">        return create(commonAxisUsed, listener, DEFAULT_ROBUST_METHOD);</span>
     }
 
     /**
@@ -2563,7 +2911,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
     public static RobustKnownFrameGyroscopeCalibrator create(
             final List&lt;StandardDeviationFrameBodyKinematics&gt; measurements,
             final boolean commonAxisUsed) {
-<span class="fc" id="L2566">        return create(measurements, commonAxisUsed, DEFAULT_ROBUST_METHOD);</span>
+<span class="fc" id="L2914">        return create(measurements, commonAxisUsed, DEFAULT_ROBUST_METHOD);</span>
     }
 
     /**
@@ -2581,7 +2929,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
             final List&lt;StandardDeviationFrameBodyKinematics&gt; measurements,
             final boolean commonAxisUsed,
             final RobustKnownFrameGyroscopeCalibratorListener listener) {
-<span class="fc" id="L2584">        return create(measurements, commonAxisUsed, listener, DEFAULT_ROBUST_METHOD);</span>
+<span class="fc" id="L2932">        return create(measurements, commonAxisUsed, listener, DEFAULT_ROBUST_METHOD);</span>
     }
 
     /**
@@ -2594,7 +2942,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      */
     public static RobustKnownFrameGyroscopeCalibrator create(
             final double[] qualityScores) {
-<span class="fc" id="L2597">        return create(qualityScores, DEFAULT_ROBUST_METHOD);</span>
+<span class="fc" id="L2945">        return create(qualityScores, DEFAULT_ROBUST_METHOD);</span>
     }
 
     /**
@@ -2610,7 +2958,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
     public static RobustKnownFrameGyroscopeCalibrator create(
             final double[] qualityScores,
             final RobustKnownFrameGyroscopeCalibratorListener listener) {
-<span class="fc" id="L2613">        return create(qualityScores, listener, DEFAULT_ROBUST_METHOD);</span>
+<span class="fc" id="L2961">        return create(qualityScores, listener, DEFAULT_ROBUST_METHOD);</span>
     }
 
     /**
@@ -2627,7 +2975,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
     public static RobustKnownFrameGyroscopeCalibrator create(
             final double[] qualityScores,
             final List&lt;StandardDeviationFrameBodyKinematics&gt; measurements) {
-<span class="fc" id="L2630">        return create(qualityScores, measurements, DEFAULT_ROBUST_METHOD);</span>
+<span class="fc" id="L2978">        return create(qualityScores, measurements, DEFAULT_ROBUST_METHOD);</span>
     }
 
     /**
@@ -2646,7 +2994,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
             final double[] qualityScores,
             final List&lt;StandardDeviationFrameBodyKinematics&gt; measurements,
             final RobustKnownFrameGyroscopeCalibratorListener listener) {
-<span class="fc" id="L2649">        return create(qualityScores, measurements, listener, DEFAULT_ROBUST_METHOD);</span>
+<span class="fc" id="L2997">        return create(qualityScores, measurements, listener, DEFAULT_ROBUST_METHOD);</span>
     }
 
     /**
@@ -2662,7 +3010,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
     public static RobustKnownFrameGyroscopeCalibrator create(
             final double[] qualityScores,
             final boolean commonAxisUsed) {
-<span class="fc" id="L2665">        return create(qualityScores, commonAxisUsed, DEFAULT_ROBUST_METHOD);</span>
+<span class="fc" id="L3013">        return create(qualityScores, commonAxisUsed, DEFAULT_ROBUST_METHOD);</span>
     }
 
     /**
@@ -2680,7 +3028,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
             final double[] qualityScores,
             final boolean commonAxisUsed,
             final RobustKnownFrameGyroscopeCalibratorListener listener) {
-<span class="fc" id="L2683">        return create(qualityScores, commonAxisUsed, listener, DEFAULT_ROBUST_METHOD);</span>
+<span class="fc" id="L3031">        return create(qualityScores, commonAxisUsed, listener, DEFAULT_ROBUST_METHOD);</span>
     }
 
     /**
@@ -2700,7 +3048,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
             final double[] qualityScores,
             final List&lt;StandardDeviationFrameBodyKinematics&gt; measurements,
             final boolean commonAxisUsed) {
-<span class="fc" id="L2703">        return create(qualityScores, measurements, commonAxisUsed,</span>
+<span class="fc" id="L3051">        return create(qualityScores, measurements, commonAxisUsed,</span>
                 DEFAULT_ROBUST_METHOD);
     }
 
@@ -2723,7 +3071,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
             final List&lt;StandardDeviationFrameBodyKinematics&gt; measurements,
             final boolean commonAxisUsed,
             final RobustKnownFrameGyroscopeCalibratorListener listener) {
-<span class="fc" id="L2726">        return create(qualityScores, measurements, commonAxisUsed, listener,</span>
+<span class="fc" id="L3074">        return create(qualityScores, measurements, commonAxisUsed, listener,</span>
                 DEFAULT_ROBUST_METHOD);
     }
 
@@ -2746,68 +3094,68 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
         // [Ωmeasy]   [by]     [0   1   0]   [myx   sy     myz]  [Ωtruey]   [g21   g22   g23][ftruey]
         // [Ωmeasz]   [bz]     [0   0   1]   [mzx   mzy    sz ]  [Ωtruez]   [g31   g32   g33][ftruez]
 
-<span class="fc" id="L2749">        final BodyKinematics measuredKinematics = measurement.getKinematics();</span>
-<span class="fc" id="L2750">        final ECEFFrame ecefFrame = measurement.getFrame();</span>
-<span class="fc" id="L2751">        final ECEFFrame previousEcefFrame = measurement.getPreviousFrame();</span>
-<span class="fc" id="L2752">        final double timeInterval = measurement.getTimeInterval();</span>
+<span class="fc" id="L3097">        final BodyKinematics measuredKinematics = measurement.getKinematics();</span>
+<span class="fc" id="L3098">        final ECEFFrame ecefFrame = measurement.getFrame();</span>
+<span class="fc" id="L3099">        final ECEFFrame previousEcefFrame = measurement.getPreviousFrame();</span>
+<span class="fc" id="L3100">        final double timeInterval = measurement.getTimeInterval();</span>
 
-<span class="fc" id="L2754">        final BodyKinematics expectedKinematics = ECEFKinematicsEstimator</span>
-<span class="fc" id="L2755">                .estimateKinematicsAndReturnNew(timeInterval, ecefFrame,</span>
+<span class="fc" id="L3102">        final BodyKinematics expectedKinematics = ECEFKinematicsEstimator</span>
+<span class="fc" id="L3103">                .estimateKinematicsAndReturnNew(timeInterval, ecefFrame,</span>
                         previousEcefFrame);
 
-<span class="fc" id="L2758">        final double angularRateMeasX1 = measuredKinematics.getAngularRateX();</span>
-<span class="fc" id="L2759">        final double angularRateMeasY1 = measuredKinematics.getAngularRateY();</span>
-<span class="fc" id="L2760">        final double angularRateMeasZ1 = measuredKinematics.getAngularRateZ();</span>
+<span class="fc" id="L3106">        final double angularRateMeasX1 = measuredKinematics.getAngularRateX();</span>
+<span class="fc" id="L3107">        final double angularRateMeasY1 = measuredKinematics.getAngularRateY();</span>
+<span class="fc" id="L3108">        final double angularRateMeasZ1 = measuredKinematics.getAngularRateZ();</span>
 
-<span class="fc" id="L2762">        final double angularRateTrueX = expectedKinematics.getAngularRateX();</span>
-<span class="fc" id="L2763">        final double angularRateTrueY = expectedKinematics.getAngularRateY();</span>
-<span class="fc" id="L2764">        final double angularRateTrueZ = expectedKinematics.getAngularRateZ();</span>
+<span class="fc" id="L3110">        final double angularRateTrueX = expectedKinematics.getAngularRateX();</span>
+<span class="fc" id="L3111">        final double angularRateTrueY = expectedKinematics.getAngularRateY();</span>
+<span class="fc" id="L3112">        final double angularRateTrueZ = expectedKinematics.getAngularRateZ();</span>
 
-<span class="fc" id="L2766">        final double fTrueX = expectedKinematics.getFx();</span>
-<span class="fc" id="L2767">        final double fTrueY = expectedKinematics.getFy();</span>
-<span class="fc" id="L2768">        final double fTrueZ = expectedKinematics.getFz();</span>
+<span class="fc" id="L3114">        final double fTrueX = expectedKinematics.getFx();</span>
+<span class="fc" id="L3115">        final double fTrueY = expectedKinematics.getFy();</span>
+<span class="fc" id="L3116">        final double fTrueZ = expectedKinematics.getFz();</span>
 
-<span class="fc" id="L2770">        final double[] b = preliminaryResult.mEstimatedBiases;</span>
-<span class="fc" id="L2771">        final double bx = b[0];</span>
-<span class="fc" id="L2772">        final double by = b[1];</span>
-<span class="fc" id="L2773">        final double bz = b[2];</span>
+<span class="fc" id="L3118">        final double[] b = preliminaryResult.mEstimatedBiases;</span>
+<span class="fc" id="L3119">        final double bx = b[0];</span>
+<span class="fc" id="L3120">        final double by = b[1];</span>
+<span class="fc" id="L3121">        final double bz = b[2];</span>
 
-<span class="fc" id="L2775">        final Matrix mg = preliminaryResult.mEstimatedMg;</span>
+<span class="fc" id="L3123">        final Matrix mg = preliminaryResult.mEstimatedMg;</span>
 
-<span class="fc" id="L2777">        final Matrix gg = preliminaryResult.mEstimatedGg;</span>
+<span class="fc" id="L3125">        final Matrix gg = preliminaryResult.mEstimatedGg;</span>
 
         try {
-<span class="fc" id="L2780">            final Matrix m1 = Matrix.identity(BodyKinematics.COMPONENTS,</span>
+<span class="fc" id="L3128">            final Matrix m1 = Matrix.identity(BodyKinematics.COMPONENTS,</span>
                     BodyKinematics.COMPONENTS);
-<span class="fc" id="L2782">            m1.add(mg);</span>
+<span class="fc" id="L3130">            m1.add(mg);</span>
 
-<span class="fc" id="L2784">            final Matrix angularRateTrue = new Matrix(BodyKinematics.COMPONENTS, 1);</span>
-<span class="fc" id="L2785">            angularRateTrue.setElementAtIndex(0, angularRateTrueX);</span>
-<span class="fc" id="L2786">            angularRateTrue.setElementAtIndex(1, angularRateTrueY);</span>
-<span class="fc" id="L2787">            angularRateTrue.setElementAtIndex(2, angularRateTrueZ);</span>
+<span class="fc" id="L3132">            final Matrix angularRateTrue = new Matrix(BodyKinematics.COMPONENTS, 1);</span>
+<span class="fc" id="L3133">            angularRateTrue.setElementAtIndex(0, angularRateTrueX);</span>
+<span class="fc" id="L3134">            angularRateTrue.setElementAtIndex(1, angularRateTrueY);</span>
+<span class="fc" id="L3135">            angularRateTrue.setElementAtIndex(2, angularRateTrueZ);</span>
 
-<span class="fc" id="L2789">            m1.multiply(angularRateTrue);</span>
+<span class="fc" id="L3137">            m1.multiply(angularRateTrue);</span>
 
-<span class="fc" id="L2791">            final Matrix fTrue = new Matrix(BodyKinematics.COMPONENTS, 1);</span>
-<span class="fc" id="L2792">            fTrue.setElementAtIndex(0, fTrueX);</span>
-<span class="fc" id="L2793">            fTrue.setElementAtIndex(1, fTrueY);</span>
-<span class="fc" id="L2794">            fTrue.setElementAtIndex(2, fTrueZ);</span>
-<span class="fc" id="L2795">            final Matrix m2 = gg.multiplyAndReturnNew(fTrue);</span>
+<span class="fc" id="L3139">            final Matrix fTrue = new Matrix(BodyKinematics.COMPONENTS, 1);</span>
+<span class="fc" id="L3140">            fTrue.setElementAtIndex(0, fTrueX);</span>
+<span class="fc" id="L3141">            fTrue.setElementAtIndex(1, fTrueY);</span>
+<span class="fc" id="L3142">            fTrue.setElementAtIndex(2, fTrueZ);</span>
+<span class="fc" id="L3143">            final Matrix m2 = gg.multiplyAndReturnNew(fTrue);</span>
 
-<span class="fc" id="L2797">            m1.add(m2);</span>
+<span class="fc" id="L3145">            m1.add(m2);</span>
 
-<span class="fc" id="L2799">            final double angularRateMeasX2 = bx + m1.getElementAtIndex(0);</span>
-<span class="fc" id="L2800">            final double angularRateMeasY2 = by + m1.getElementAtIndex(1);</span>
-<span class="fc" id="L2801">            final double angularRateMeasZ2 = bz + m1.getElementAtIndex(2);</span>
+<span class="fc" id="L3147">            final double angularRateMeasX2 = bx + m1.getElementAtIndex(0);</span>
+<span class="fc" id="L3148">            final double angularRateMeasY2 = by + m1.getElementAtIndex(1);</span>
+<span class="fc" id="L3149">            final double angularRateMeasZ2 = bz + m1.getElementAtIndex(2);</span>
 
-<span class="fc" id="L2803">            final double diffX = angularRateMeasX2 - angularRateMeasX1;</span>
-<span class="fc" id="L2804">            final double diffY = angularRateMeasY2 - angularRateMeasY1;</span>
-<span class="fc" id="L2805">            final double diffZ = angularRateMeasZ2 - angularRateMeasZ1;</span>
+<span class="fc" id="L3151">            final double diffX = angularRateMeasX2 - angularRateMeasX1;</span>
+<span class="fc" id="L3152">            final double diffY = angularRateMeasY2 - angularRateMeasY1;</span>
+<span class="fc" id="L3153">            final double diffZ = angularRateMeasZ2 - angularRateMeasZ1;</span>
 
-<span class="fc" id="L2807">            return Math.sqrt(diffX * diffX + diffY * diffY + diffZ * diffZ);</span>
+<span class="fc" id="L3155">            return Math.sqrt(diffX * diffX + diffY * diffY + diffZ * diffZ);</span>
 
-<span class="nc" id="L2809">        } catch (final WrongSizeException e) {</span>
-<span class="nc" id="L2810">            return Double.MAX_VALUE;</span>
+<span class="nc" id="L3157">        } catch (final WrongSizeException e) {</span>
+<span class="nc" id="L3158">            return Double.MAX_VALUE;</span>
         }
     }
 
@@ -2821,46 +3169,46 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
             final int[] samplesIndices,
             final List&lt;PreliminaryResult&gt; solutions) {
 
-<span class="fc" id="L2824">        final List&lt;StandardDeviationFrameBodyKinematics&gt; measurements = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L3172">        final List&lt;StandardDeviationFrameBodyKinematics&gt; measurements = new ArrayList&lt;&gt;();</span>
 
-<span class="fc bfc" id="L2826" title="All 2 branches covered.">        for (final int samplesIndex : samplesIndices) {</span>
-<span class="fc" id="L2827">            measurements.add(mMeasurements.get(samplesIndex));</span>
+<span class="fc bfc" id="L3174" title="All 2 branches covered.">        for (final int samplesIndex : samplesIndices) {</span>
+<span class="fc" id="L3175">            measurements.add(mMeasurements.get(samplesIndex));</span>
         }
 
         try {
-<span class="fc" id="L2831">            final PreliminaryResult result = new PreliminaryResult();</span>
-<span class="fc" id="L2832">            result.mEstimatedBiases = getInitialBias();</span>
-<span class="fc" id="L2833">            result.mEstimatedMg = getInitialMg();</span>
-<span class="fc" id="L2834">            result.mEstimatedGg = getInitialGg();</span>
+<span class="fc" id="L3179">            final PreliminaryResult result = new PreliminaryResult();</span>
+<span class="fc" id="L3180">            result.mEstimatedBiases = getInitialBias();</span>
+<span class="fc" id="L3181">            result.mEstimatedMg = getInitialMg();</span>
+<span class="fc" id="L3182">            result.mEstimatedGg = getInitialGg();</span>
 
-<span class="fc bfc" id="L2836" title="All 2 branches covered.">            if (mUseLinearCalibrator) {</span>
-<span class="fc" id="L2837">                mLinearCalibrator.setCommonAxisUsed(mCommonAxisUsed);</span>
-<span class="fc" id="L2838">                mLinearCalibrator.setMeasurements(measurements);</span>
-<span class="fc" id="L2839">                mLinearCalibrator.calibrate();</span>
+<span class="fc bfc" id="L3184" title="All 2 branches covered.">            if (mUseLinearCalibrator) {</span>
+<span class="fc" id="L3185">                mLinearCalibrator.setCommonAxisUsed(mCommonAxisUsed);</span>
+<span class="fc" id="L3186">                mLinearCalibrator.setMeasurements(measurements);</span>
+<span class="fc" id="L3187">                mLinearCalibrator.calibrate();</span>
 
-<span class="fc" id="L2841">                mLinearCalibrator.getEstimatedBiases(result.mEstimatedBiases);</span>
-<span class="fc" id="L2842">                result.mEstimatedMg = mLinearCalibrator.getEstimatedMg();</span>
-<span class="fc" id="L2843">                result.mEstimatedGg = mLinearCalibrator.getEstimatedGg();</span>
+<span class="fc" id="L3189">                mLinearCalibrator.getEstimatedBiases(result.mEstimatedBiases);</span>
+<span class="fc" id="L3190">                result.mEstimatedMg = mLinearCalibrator.getEstimatedMg();</span>
+<span class="fc" id="L3191">                result.mEstimatedGg = mLinearCalibrator.getEstimatedGg();</span>
             }
 
-<span class="pc bpc" id="L2846" title="1 of 2 branches missed.">            if (mRefinePreliminarySolutions) {</span>
-<span class="nc" id="L2847">                mNonLinearCalibrator.setInitialBias(result.mEstimatedBiases);</span>
-<span class="nc" id="L2848">                mNonLinearCalibrator.setInitialMg(result.mEstimatedMg);</span>
-<span class="nc" id="L2849">                mNonLinearCalibrator.setInitialGg(result.mEstimatedGg);</span>
-<span class="nc" id="L2850">                mNonLinearCalibrator.setCommonAxisUsed(mCommonAxisUsed);</span>
-<span class="nc" id="L2851">                mNonLinearCalibrator.setMeasurements(measurements);</span>
-<span class="nc" id="L2852">                mNonLinearCalibrator.calibrate();</span>
+<span class="pc bpc" id="L3194" title="1 of 2 branches missed.">            if (mRefinePreliminarySolutions) {</span>
+<span class="nc" id="L3195">                mNonLinearCalibrator.setInitialBias(result.mEstimatedBiases);</span>
+<span class="nc" id="L3196">                mNonLinearCalibrator.setInitialMg(result.mEstimatedMg);</span>
+<span class="nc" id="L3197">                mNonLinearCalibrator.setInitialGg(result.mEstimatedGg);</span>
+<span class="nc" id="L3198">                mNonLinearCalibrator.setCommonAxisUsed(mCommonAxisUsed);</span>
+<span class="nc" id="L3199">                mNonLinearCalibrator.setMeasurements(measurements);</span>
+<span class="nc" id="L3200">                mNonLinearCalibrator.calibrate();</span>
 
-<span class="nc" id="L2854">                mNonLinearCalibrator.getEstimatedBiases(result.mEstimatedBiases);</span>
-<span class="nc" id="L2855">                result.mEstimatedMg = mNonLinearCalibrator.getEstimatedMg();</span>
-<span class="nc" id="L2856">                result.mEstimatedGg = mNonLinearCalibrator.getEstimatedGg();</span>
+<span class="nc" id="L3202">                mNonLinearCalibrator.getEstimatedBiases(result.mEstimatedBiases);</span>
+<span class="nc" id="L3203">                result.mEstimatedMg = mNonLinearCalibrator.getEstimatedMg();</span>
+<span class="nc" id="L3204">                result.mEstimatedGg = mNonLinearCalibrator.getEstimatedGg();</span>
             }
 
-<span class="fc" id="L2859">            solutions.add(result);</span>
-<span class="nc" id="L2860">        } catch (final LockedException | CalibrationException | NotReadyException e) {</span>
-<span class="nc" id="L2861">            solutions.clear();</span>
-<span class="fc" id="L2862">        }</span>
-<span class="fc" id="L2863">    }</span>
+<span class="fc" id="L3207">            solutions.add(result);</span>
+<span class="nc" id="L3208">        } catch (final LockedException | CalibrationException | NotReadyException e) {</span>
+<span class="nc" id="L3209">            solutions.clear();</span>
+<span class="fc" id="L3210">        }</span>
+<span class="fc" id="L3211">    }</span>
 
     /**
      * Attempts to refine calibration parameters if refinement is requested.
@@ -2872,50 +3220,61 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @param preliminaryResult a preliminary result.
      */
     protected void attemptRefine(final PreliminaryResult preliminaryResult) {
-<span class="pc bpc" id="L2875" title="1 of 4 branches missed.">        if (mRefineResult &amp;&amp; mInliersData != null) {</span>
-<span class="fc" id="L2876">            final BitSet inliers = mInliersData.getInliers();</span>
-<span class="fc" id="L2877">            final int nSamples = mMeasurements.size();</span>
+<span class="pc bpc" id="L3223" title="1 of 4 branches missed.">        if (mRefineResult &amp;&amp; mInliersData != null) {</span>
+<span class="fc" id="L3224">            final BitSet inliers = mInliersData.getInliers();</span>
+<span class="fc" id="L3225">            final int nSamples = mMeasurements.size();</span>
 
-<span class="fc" id="L2879">            final List&lt;StandardDeviationFrameBodyKinematics&gt; inlierMeasurements =</span>
+<span class="fc" id="L3227">            final List&lt;StandardDeviationFrameBodyKinematics&gt; inlierMeasurements =</span>
                     new ArrayList&lt;&gt;();
-<span class="fc bfc" id="L2881" title="All 2 branches covered.">            for (int i = 0; i &lt; nSamples; i++) {</span>
-<span class="fc bfc" id="L2882" title="All 2 branches covered.">                if (inliers.get(i)) {</span>
+<span class="fc bfc" id="L3229" title="All 2 branches covered.">            for (int i = 0; i &lt; nSamples; i++) {</span>
+<span class="fc bfc" id="L3230" title="All 2 branches covered.">                if (inliers.get(i)) {</span>
                     // sample is inlier
-<span class="fc" id="L2884">                    inlierMeasurements.add(mMeasurements.get(i));</span>
+<span class="fc" id="L3232">                    inlierMeasurements.add(mMeasurements.get(i));</span>
                 }
             }
 
             try {
-<span class="fc" id="L2889">                mNonLinearCalibrator.setInitialBias(preliminaryResult.mEstimatedBiases);</span>
-<span class="fc" id="L2890">                mNonLinearCalibrator.setInitialMg(preliminaryResult.mEstimatedMg);</span>
-<span class="fc" id="L2891">                mNonLinearCalibrator.setInitialGg(preliminaryResult.mEstimatedGg);</span>
-<span class="fc" id="L2892">                mNonLinearCalibrator.setCommonAxisUsed(mCommonAxisUsed);</span>
-<span class="fc" id="L2893">                mNonLinearCalibrator.setMeasurements(inlierMeasurements);</span>
-<span class="fc" id="L2894">                mNonLinearCalibrator.calibrate();</span>
+<span class="fc" id="L3237">                mNonLinearCalibrator.setInitialBias(preliminaryResult.mEstimatedBiases);</span>
+<span class="fc" id="L3238">                mNonLinearCalibrator.setInitialMg(preliminaryResult.mEstimatedMg);</span>
+<span class="fc" id="L3239">                mNonLinearCalibrator.setInitialGg(preliminaryResult.mEstimatedGg);</span>
+<span class="fc" id="L3240">                mNonLinearCalibrator.setCommonAxisUsed(mCommonAxisUsed);</span>
+<span class="fc" id="L3241">                mNonLinearCalibrator.setMeasurements(inlierMeasurements);</span>
+<span class="fc" id="L3242">                mNonLinearCalibrator.calibrate();</span>
 
-<span class="fc" id="L2896">                mEstimatedBiases = mNonLinearCalibrator.getEstimatedBiases();</span>
-<span class="fc" id="L2897">                mEstimatedMg = mNonLinearCalibrator.getEstimatedMg();</span>
-<span class="fc" id="L2898">                mEstimatedGg = mNonLinearCalibrator.getEstimatedGg();</span>
+<span class="fc" id="L3244">                mEstimatedBiases = mNonLinearCalibrator.getEstimatedBiases();</span>
+<span class="fc" id="L3245">                mEstimatedMg = mNonLinearCalibrator.getEstimatedMg();</span>
+<span class="fc" id="L3246">                mEstimatedGg = mNonLinearCalibrator.getEstimatedGg();</span>
 
-<span class="pc bpc" id="L2900" title="1 of 2 branches missed.">                if (mKeepCovariance) {</span>
-<span class="fc" id="L2901">                    mEstimatedCovariance = mNonLinearCalibrator.getEstimatedCovariance();</span>
+<span class="pc bpc" id="L3248" title="1 of 2 branches missed.">                if (mKeepCovariance) {</span>
+<span class="fc" id="L3249">                    mEstimatedCovariance = mNonLinearCalibrator.getEstimatedCovariance();</span>
                 } else {
-<span class="nc" id="L2903">                    mEstimatedCovariance = null;</span>
+<span class="nc" id="L3251">                    mEstimatedCovariance = null;</span>
                 }
 
-<span class="nc" id="L2906">            } catch (final LockedException | CalibrationException | NotReadyException e) {</span>
-<span class="nc" id="L2907">                mEstimatedCovariance = null;</span>
-<span class="nc" id="L2908">                mEstimatedBiases = preliminaryResult.mEstimatedBiases;</span>
-<span class="nc" id="L2909">                mEstimatedMg = preliminaryResult.mEstimatedMg;</span>
-<span class="nc" id="L2910">                mEstimatedGg = preliminaryResult.mEstimatedGg;</span>
-<span class="fc" id="L2911">            }</span>
-<span class="fc" id="L2912">        } else {</span>
-<span class="fc" id="L2913">            mEstimatedCovariance = null;</span>
-<span class="fc" id="L2914">            mEstimatedBiases = preliminaryResult.mEstimatedBiases;</span>
-<span class="fc" id="L2915">            mEstimatedMg = preliminaryResult.mEstimatedMg;</span>
-<span class="fc" id="L2916">            mEstimatedGg = preliminaryResult.mEstimatedGg;</span>
+<span class="nc" id="L3254">            } catch (final LockedException | CalibrationException | NotReadyException e) {</span>
+<span class="nc" id="L3255">                mEstimatedCovariance = null;</span>
+<span class="nc" id="L3256">                mEstimatedBiases = preliminaryResult.mEstimatedBiases;</span>
+<span class="nc" id="L3257">                mEstimatedMg = preliminaryResult.mEstimatedMg;</span>
+<span class="nc" id="L3258">                mEstimatedGg = preliminaryResult.mEstimatedGg;</span>
+<span class="fc" id="L3259">            }</span>
+<span class="fc" id="L3260">        } else {</span>
+<span class="fc" id="L3261">            mEstimatedCovariance = null;</span>
+<span class="fc" id="L3262">            mEstimatedBiases = preliminaryResult.mEstimatedBiases;</span>
+<span class="fc" id="L3263">            mEstimatedMg = preliminaryResult.mEstimatedMg;</span>
+<span class="fc" id="L3264">            mEstimatedGg = preliminaryResult.mEstimatedGg;</span>
         }
-<span class="fc" id="L2918">    }</span>
+<span class="fc" id="L3266">    }</span>
+
+    /**
+     * Converts angular speed value and unit to radians per second.
+     *
+     * @param value angular speed value.
+     * @param unit unit of angular speed value.
+     * @return converted value.
+     */
+    private static double convertAngularSpeed(final double value, final AngularSpeedUnit unit) {
+<span class="fc" id="L3276">        return AngularSpeedConverter.convert(value, unit, AngularSpeedUnit.RADIANS_PER_SECOND);</span>
+    }
 
     /**
      * Converts angular speed instance to radians per second.
@@ -2924,14 +3283,14 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @return converted value.
      */
     private static double convertAngularSpeed(final AngularSpeed angularSpeed) {
-<span class="fc" id="L2927">        return AngularSpeedConverter.convert(angularSpeed.getValue().doubleValue(),</span>
-<span class="fc" id="L2928">                angularSpeed.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);</span>
+<span class="fc" id="L3286">        return convertAngularSpeed(angularSpeed.getValue().doubleValue(),</span>
+<span class="fc" id="L3287">                angularSpeed.getUnit());</span>
     }
 
     /**
      * Internal class containing estimated preliminary result.
      */
-<span class="fc" id="L2934">    protected static class PreliminaryResult {</span>
+<span class="fc" id="L3293">    protected static class PreliminaryResult {</span>
         /**
          * Estimated gyroscope biases for each IMU axis expressed in radians per second
          * (rad/s).

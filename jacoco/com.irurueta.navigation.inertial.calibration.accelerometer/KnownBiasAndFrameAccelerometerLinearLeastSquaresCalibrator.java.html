@@ -23,6 +23,7 @@ import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
 import com.irurueta.navigation.frames.ECEFFrame;
 import com.irurueta.navigation.inertial.BodyKinematics;
+import com.irurueta.navigation.inertial.calibration.AccelerationTriad;
 import com.irurueta.navigation.inertial.calibration.CalibrationException;
 import com.irurueta.navigation.inertial.calibration.FrameBodyKinematics;
 import com.irurueta.navigation.inertial.estimators.ECEFKinematicsEstimator;
@@ -108,7 +109,7 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
      * and gyroscope.
      * When enabled, this eliminates 3 variables from Ma matrix.
      */
-<span class="fc" id="L111">    private boolean mCommonAxisUsed = DEFAULT_USE_COMMON_Z_AXIS;</span>
+<span class="fc" id="L112">    private boolean mCommonAxisUsed = DEFAULT_USE_COMMON_Z_AXIS;</span>
 
     /**
      * Listener to handle events raised by this estimator.
@@ -182,8 +183,8 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
     /**
      * Constructor.
      */
-<span class="fc" id="L185">    public KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator() {</span>
-<span class="fc" id="L186">    }</span>
+<span class="fc" id="L186">    public KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator() {</span>
+<span class="fc" id="L187">    }</span>
 
     /**
      * Constructor.
@@ -191,9 +192,9 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
      * @param listener listener to handle events raised by this calibrator.
      */
     public KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator(
-<span class="fc" id="L194">            final KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorListener listener) {</span>
-<span class="fc" id="L195">        mListener = listener;</span>
-<span class="fc" id="L196">    }</span>
+<span class="fc" id="L195">            final KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorListener listener) {</span>
+<span class="fc" id="L196">        mListener = listener;</span>
+<span class="fc" id="L197">    }</span>
 
     /**
      * Constructor.
@@ -202,9 +203,9 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
      *                     different frames (positions, orientations and velocities).
      */
     public KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator(
-<span class="fc" id="L205">            final Collection&lt;FrameBodyKinematics&gt; measurements) {</span>
-<span class="fc" id="L206">        mMeasurements = measurements;</span>
-<span class="fc" id="L207">    }</span>
+<span class="fc" id="L206">            final Collection&lt;FrameBodyKinematics&gt; measurements) {</span>
+<span class="fc" id="L207">        mMeasurements = measurements;</span>
+<span class="fc" id="L208">    }</span>
 
     /**
      * Constructor.
@@ -216,9 +217,9 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
     public KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator(
             final Collection&lt;FrameBodyKinematics&gt; measurements,
             final KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L219">        this(measurements);</span>
-<span class="fc" id="L220">        mListener = listener;</span>
-<span class="fc" id="L221">    }</span>
+<span class="fc" id="L220">        this(measurements);</span>
+<span class="fc" id="L221">        mListener = listener;</span>
+<span class="fc" id="L222">    }</span>
 
     /**
      * Constructor.
@@ -227,9 +228,9 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
      *                       accelerometer and gyroscope.
      */
     public KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator(
-<span class="fc" id="L230">            final boolean commonAxisUsed) {</span>
-<span class="fc" id="L231">        mCommonAxisUsed = commonAxisUsed;</span>
-<span class="fc" id="L232">    }</span>
+<span class="fc" id="L231">            final boolean commonAxisUsed) {</span>
+<span class="fc" id="L232">        mCommonAxisUsed = commonAxisUsed;</span>
+<span class="fc" id="L233">    }</span>
 
     /**
      * Constructor.
@@ -241,9 +242,9 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
     public KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator(
             final boolean commonAxisUsed,
             final KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L244">        this(commonAxisUsed);</span>
-<span class="fc" id="L245">        mListener = listener;</span>
-<span class="fc" id="L246">    }</span>
+<span class="fc" id="L245">        this(commonAxisUsed);</span>
+<span class="fc" id="L246">        mListener = listener;</span>
+<span class="fc" id="L247">    }</span>
 
     /**
      * Constructor.
@@ -256,9 +257,9 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
     public KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator(
             final Collection&lt;FrameBodyKinematics&gt; measurements,
             final boolean commonAxisUsed) {
-<span class="fc" id="L259">        this(measurements);</span>
-<span class="fc" id="L260">        mCommonAxisUsed = commonAxisUsed;</span>
-<span class="fc" id="L261">    }</span>
+<span class="fc" id="L260">        this(measurements);</span>
+<span class="fc" id="L261">        mCommonAxisUsed = commonAxisUsed;</span>
+<span class="fc" id="L262">    }</span>
 
     /**
      * Constructor.
@@ -273,9 +274,9 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
             final Collection&lt;FrameBodyKinematics&gt; measurements,
             final boolean commonAxisUsed,
             final KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L276">        this(measurements, commonAxisUsed);</span>
-<span class="fc" id="L277">        mListener = listener;</span>
-<span class="fc" id="L278">    }</span>
+<span class="fc" id="L277">        this(measurements, commonAxisUsed);</span>
+<span class="fc" id="L278">        mListener = listener;</span>
+<span class="fc" id="L279">    }</span>
 
     /**
      * Constructor.
@@ -288,13 +289,13 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
      *              squared second (m/s^2).
      */
     public KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator(
-<span class="fc" id="L291">            final double biasX, final double biasY, final double biasZ) {</span>
+<span class="fc" id="L292">            final double biasX, final double biasY, final double biasZ) {</span>
         try {
-<span class="fc" id="L293">            setBiasCoordinates(biasX, biasY, biasZ);</span>
-<span class="nc" id="L294">        } catch (final LockedException ignore) {</span>
+<span class="fc" id="L294">            setBiasCoordinates(biasX, biasY, biasZ);</span>
+<span class="nc" id="L295">        } catch (final LockedException ignore) {</span>
             // never happens
-<span class="fc" id="L296">        }</span>
-<span class="fc" id="L297">    }</span>
+<span class="fc" id="L297">        }</span>
+<span class="fc" id="L298">    }</span>
 
     /**
      * Constructor.
@@ -310,9 +311,9 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
     public KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator(
             final double biasX, final double biasY, final double biasZ,
             final KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L313">        this(biasX, biasY, biasZ);</span>
-<span class="fc" id="L314">        mListener = listener;</span>
-<span class="fc" id="L315">    }</span>
+<span class="fc" id="L314">        this(biasX, biasY, biasZ);</span>
+<span class="fc" id="L315">        mListener = listener;</span>
+<span class="fc" id="L316">    }</span>
 
     /**
      * Constructor.
@@ -329,9 +330,9 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
     public KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator(
             final Collection&lt;FrameBodyKinematics&gt; measurements,
             final double biasX, final double biasY, final double biasZ) {
-<span class="fc" id="L332">        this(biasX, biasY, biasZ);</span>
-<span class="fc" id="L333">        mMeasurements = measurements;</span>
-<span class="fc" id="L334">    }</span>
+<span class="fc" id="L333">        this(biasX, biasY, biasZ);</span>
+<span class="fc" id="L334">        mMeasurements = measurements;</span>
+<span class="fc" id="L335">    }</span>
 
     /**
      * Constructor.
@@ -350,9 +351,9 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
             final Collection&lt;FrameBodyKinematics&gt; measurements,
             final double biasX, final double biasY, final double biasZ,
             final KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L353">        this(measurements, biasX, biasY, biasZ);</span>
-<span class="fc" id="L354">        mListener = listener;</span>
-<span class="fc" id="L355">    }</span>
+<span class="fc" id="L354">        this(measurements, biasX, biasY, biasZ);</span>
+<span class="fc" id="L355">        mListener = listener;</span>
+<span class="fc" id="L356">    }</span>
 
     /**
      * Constructor.
@@ -369,9 +370,9 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
     public KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator(
             final double biasX, final double biasY, final double biasZ,
             final boolean commonAxisUsed) {
-<span class="fc" id="L372">        this(biasX, biasY, biasZ);</span>
-<span class="fc" id="L373">        mCommonAxisUsed = commonAxisUsed;</span>
-<span class="fc" id="L374">    }</span>
+<span class="fc" id="L373">        this(biasX, biasY, biasZ);</span>
+<span class="fc" id="L374">        mCommonAxisUsed = commonAxisUsed;</span>
+<span class="fc" id="L375">    }</span>
 
     /**
      * Constructor.
@@ -390,9 +391,9 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
             final double biasX, final double biasY, final double biasZ,
             final boolean commonAxisUsed,
             final KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L393">        this(biasX, biasY, biasZ, commonAxisUsed);</span>
-<span class="fc" id="L394">        mListener = listener;</span>
-<span class="fc" id="L395">    }</span>
+<span class="fc" id="L394">        this(biasX, biasY, biasZ, commonAxisUsed);</span>
+<span class="fc" id="L395">        mListener = listener;</span>
+<span class="fc" id="L396">    }</span>
 
     /**
      * Constructor.
@@ -412,9 +413,9 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
             final Collection&lt;FrameBodyKinematics&gt; measurements,
             final double biasX, final double biasY, final double biasZ,
             final boolean commonAxisUsed) {
-<span class="fc" id="L415">        this(measurements, biasX, biasY, biasZ);</span>
-<span class="fc" id="L416">        mCommonAxisUsed = commonAxisUsed;</span>
-<span class="fc" id="L417">    }</span>
+<span class="fc" id="L416">        this(measurements, biasX, biasY, biasZ);</span>
+<span class="fc" id="L417">        mCommonAxisUsed = commonAxisUsed;</span>
+<span class="fc" id="L418">    }</span>
 
     /**
      * Constructor.
@@ -436,9 +437,9 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
             final double biasX, final double biasY, final double biasZ,
             final boolean commonAxisUsed,
             final KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L439">        this(measurements, biasX, biasY, biasZ, commonAxisUsed);</span>
-<span class="fc" id="L440">        mListener = listener;</span>
-<span class="fc" id="L441">    }</span>
+<span class="fc" id="L440">        this(measurements, biasX, biasY, biasZ, commonAxisUsed);</span>
+<span class="fc" id="L441">        mListener = listener;</span>
+<span class="fc" id="L442">    }</span>
 
     /**
      * Constructor.
@@ -449,13 +450,13 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
      */
     public KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator(
             final Acceleration biasX, final Acceleration biasY,
-<span class="fc" id="L452">            final Acceleration biasZ) {</span>
+<span class="fc" id="L453">            final Acceleration biasZ) {</span>
         try {
-<span class="fc" id="L454">            setBiasCoordinates(biasX, biasY, biasZ);</span>
-<span class="nc" id="L455">        } catch (final LockedException ignore) {</span>
+<span class="fc" id="L455">            setBiasCoordinates(biasX, biasY, biasZ);</span>
+<span class="nc" id="L456">        } catch (final LockedException ignore) {</span>
             // never happens
-<span class="fc" id="L457">        }</span>
-<span class="fc" id="L458">    }</span>
+<span class="fc" id="L458">        }</span>
+<span class="fc" id="L459">    }</span>
 
     /**
      * Constructor.
@@ -469,9 +470,9 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
             final Acceleration biasX, final Acceleration biasY,
             final Acceleration biasZ,
             final KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L472">        this(biasX, biasY, biasZ);</span>
-<span class="fc" id="L473">        mListener = listener;</span>
-<span class="fc" id="L474">    }</span>
+<span class="fc" id="L473">        this(biasX, biasY, biasZ);</span>
+<span class="fc" id="L474">        mListener = listener;</span>
+<span class="fc" id="L475">    }</span>
 
     /**
      * Constructor.
@@ -486,9 +487,9 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
             final Collection&lt;FrameBodyKinematics&gt; measurements,
             final Acceleration biasX, final Acceleration biasY,
             final Acceleration biasZ) {
-<span class="fc" id="L489">        this(biasX, biasY, biasZ);</span>
-<span class="fc" id="L490">        mMeasurements = measurements;</span>
-<span class="fc" id="L491">    }</span>
+<span class="fc" id="L490">        this(biasX, biasY, biasZ);</span>
+<span class="fc" id="L491">        mMeasurements = measurements;</span>
+<span class="fc" id="L492">    }</span>
 
     /**
      * Constructor.
@@ -505,9 +506,9 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
             final Acceleration biasX, final Acceleration biasY,
             final Acceleration biasZ,
             final KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L508">        this(measurements, biasX, biasY, biasZ);</span>
-<span class="fc" id="L509">        mListener = listener;</span>
-<span class="fc" id="L510">    }</span>
+<span class="fc" id="L509">        this(measurements, biasX, biasY, biasZ);</span>
+<span class="fc" id="L510">        mListener = listener;</span>
+<span class="fc" id="L511">    }</span>
 
     /**
      * Constructor.
@@ -521,9 +522,9 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
     public KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator(
             final Acceleration biasX, final Acceleration biasY,
             final Acceleration biasZ, final boolean commonAxisUsed) {
-<span class="fc" id="L524">        this(biasX, biasY, biasZ);</span>
-<span class="fc" id="L525">        mCommonAxisUsed = commonAxisUsed;</span>
-<span class="fc" id="L526">    }</span>
+<span class="fc" id="L525">        this(biasX, biasY, biasZ);</span>
+<span class="fc" id="L526">        mCommonAxisUsed = commonAxisUsed;</span>
+<span class="fc" id="L527">    }</span>
 
     /**
      * Constructor.
@@ -539,9 +540,9 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
             final Acceleration biasX, final Acceleration biasY,
             final Acceleration biasZ, final boolean commonAxisUsed,
             final KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L542">        this(biasX, biasY, biasZ, commonAxisUsed);</span>
-<span class="fc" id="L543">        mListener = listener;</span>
-<span class="fc" id="L544">    }</span>
+<span class="fc" id="L543">        this(biasX, biasY, biasZ, commonAxisUsed);</span>
+<span class="fc" id="L544">        mListener = listener;</span>
+<span class="fc" id="L545">    }</span>
 
     /**
      * Constructor.
@@ -558,9 +559,9 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
             final Collection&lt;FrameBodyKinematics&gt; measurements,
             final Acceleration biasX, final Acceleration biasY,
             final Acceleration biasZ, final boolean commonAxisUsed) {
-<span class="fc" id="L561">        this(measurements, biasX, biasY, biasZ);</span>
-<span class="fc" id="L562">        mCommonAxisUsed = commonAxisUsed;</span>
-<span class="fc" id="L563">    }</span>
+<span class="fc" id="L562">        this(measurements, biasX, biasY, biasZ);</span>
+<span class="fc" id="L563">        mCommonAxisUsed = commonAxisUsed;</span>
+<span class="fc" id="L564">    }</span>
 
     /**
      * Constructor.
@@ -579,9 +580,9 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
             final Acceleration biasX, final Acceleration biasY,
             final Acceleration biasZ, final boolean commonAxisUsed,
             final KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L582">        this(measurements, biasX, biasY, biasZ, commonAxisUsed);</span>
-<span class="fc" id="L583">        mListener = listener;</span>
-<span class="fc" id="L584">    }</span>
+<span class="fc" id="L583">        this(measurements, biasX, biasY, biasZ, commonAxisUsed);</span>
+<span class="fc" id="L584">        mListener = listener;</span>
+<span class="fc" id="L585">    }</span>
 
     /**
      * Gets a collection of body kinematics measurements taken at different
@@ -601,7 +602,7 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
      */
     @Override
     public Collection&lt;? extends FrameBodyKinematics&gt; getMeasurements() {
-<span class="fc" id="L604">        return mMeasurements;</span>
+<span class="fc" id="L605">        return mMeasurements;</span>
     }
 
     /**
@@ -624,11 +625,11 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
     @Override
     public void setMeasurements(final Collection&lt;? extends FrameBodyKinematics&gt; measurements)
             throws LockedException {
-<span class="fc bfc" id="L627" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L628">            throw new LockedException();</span>
+<span class="fc bfc" id="L628" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L629">            throw new LockedException();</span>
         }
-<span class="fc" id="L630">        mMeasurements = measurements;</span>
-<span class="fc" id="L631">    }</span>
+<span class="fc" id="L631">        mMeasurements = measurements;</span>
+<span class="fc" id="L632">    }</span>
 
     /**
      * Indicates whether z-axis is assumed to be common for accelerometer and
@@ -640,7 +641,7 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
      */
     @Override
     public boolean isCommonAxisUsed() {
-<span class="fc" id="L643">        return mCommonAxisUsed;</span>
+<span class="fc" id="L644">        return mCommonAxisUsed;</span>
     }
 
     /**
@@ -654,12 +655,12 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
      */
     @Override
     public void setCommonAxisUsed(final boolean commonAxisUsed) throws LockedException {
-<span class="fc bfc" id="L657" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L658">            throw new LockedException();</span>
+<span class="fc bfc" id="L658" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L659">            throw new LockedException();</span>
         }
 
-<span class="fc" id="L661">        mCommonAxisUsed = commonAxisUsed;</span>
-<span class="fc" id="L662">    }</span>
+<span class="fc" id="L662">        mCommonAxisUsed = commonAxisUsed;</span>
+<span class="fc" id="L663">    }</span>
 
     /**
      * Gets listener to handle events raised by this estimator.
@@ -668,7 +669,7 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
      */
     @Override
     public KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorListener getListener() {
-<span class="fc" id="L671">        return mListener;</span>
+<span class="fc" id="L672">        return mListener;</span>
     }
 
     /**
@@ -681,12 +682,12 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
     public void setListener(
             final KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorListener listener)
             throws LockedException {
-<span class="fc bfc" id="L684" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L685">            throw new LockedException();</span>
+<span class="fc bfc" id="L685" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L686">            throw new LockedException();</span>
         }
 
-<span class="fc" id="L688">        mListener = listener;</span>
-<span class="fc" id="L689">    }</span>
+<span class="fc" id="L689">        mListener = listener;</span>
+<span class="fc" id="L690">    }</span>
 
     /**
      * Gets known x coordinate of accelerometer bias expressed in meters per squared
@@ -696,7 +697,7 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
      */
     @Override
     public double getBiasX() {
-<span class="fc" id="L699">        return mBiasX;</span>
+<span class="fc" id="L700">        return mBiasX;</span>
     }
 
     /**
@@ -708,11 +709,11 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
      */
     @Override
     public void setBiasX(final double biasX) throws LockedException {
-<span class="fc bfc" id="L711" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L712">            throw new LockedException();</span>
+<span class="fc bfc" id="L712" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L713">            throw new LockedException();</span>
         }
-<span class="fc" id="L714">        mBiasX = biasX;</span>
-<span class="fc" id="L715">    }</span>
+<span class="fc" id="L715">        mBiasX = biasX;</span>
+<span class="fc" id="L716">    }</span>
 
     /**
      * Gets known y coordinate of accelerometer bias expressed in meters per squared
@@ -722,7 +723,7 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
      */
     @Override
     public double getBiasY() {
-<span class="fc" id="L725">        return mBiasY;</span>
+<span class="fc" id="L726">        return mBiasY;</span>
     }
 
     /**
@@ -734,12 +735,12 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
      */
     @Override
     public void setBiasY(final double biasY) throws LockedException {
-<span class="fc bfc" id="L737" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L738">            throw new LockedException();</span>
+<span class="fc bfc" id="L738" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L739">            throw new LockedException();</span>
         }
 
-<span class="fc" id="L741">        mBiasY = biasY;</span>
-<span class="fc" id="L742">    }</span>
+<span class="fc" id="L742">        mBiasY = biasY;</span>
+<span class="fc" id="L743">    }</span>
 
     /**
      * Gets known z coordinate of accelerometer bias expressed in meters per squared
@@ -749,7 +750,7 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
      */
     @Override
     public double getBiasZ() {
-<span class="fc" id="L752">        return mBiasZ;</span>
+<span class="fc" id="L753">        return mBiasZ;</span>
     }
 
     /**
@@ -761,12 +762,12 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
      */
     @Override
     public void setBiasZ(final double biasZ) throws LockedException {
-<span class="fc bfc" id="L764" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L765">            throw new LockedException();</span>
+<span class="fc bfc" id="L765" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L766">            throw new LockedException();</span>
         }
 
-<span class="fc" id="L768">        mBiasZ = biasZ;</span>
-<span class="fc" id="L769">    }</span>
+<span class="fc" id="L769">        mBiasZ = biasZ;</span>
+<span class="fc" id="L770">    }</span>
 
     /**
      * Gets known x coordinate of accelerometer bias.
@@ -775,7 +776,7 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
      */
     @Override
     public Acceleration getBiasXAsAcceleration() {
-<span class="fc" id="L778">        return new Acceleration(mBiasX, AccelerationUnit.METERS_PER_SQUARED_SECOND);</span>
+<span class="fc" id="L779">        return new Acceleration(mBiasX, AccelerationUnit.METERS_PER_SQUARED_SECOND);</span>
     }
 
     /**
@@ -785,9 +786,9 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
      */
     @Override
     public void getBiasXAsAcceleration(final Acceleration result) {
-<span class="fc" id="L788">        result.setValue(mBiasX);</span>
-<span class="fc" id="L789">        result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);</span>
-<span class="fc" id="L790">    }</span>
+<span class="fc" id="L789">        result.setValue(mBiasX);</span>
+<span class="fc" id="L790">        result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);</span>
+<span class="fc" id="L791">    }</span>
 
     /**
      * Sets known x coordinate of accelerometer bias.
@@ -797,12 +798,12 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
      */
     @Override
     public void setBiasX(final Acceleration biasX) throws LockedException {
-<span class="fc bfc" id="L800" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L801">            throw new LockedException();</span>
+<span class="fc bfc" id="L801" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L802">            throw new LockedException();</span>
         }
 
-<span class="fc" id="L804">        mBiasX = convertAcceleration(biasX);</span>
-<span class="fc" id="L805">    }</span>
+<span class="fc" id="L805">        mBiasX = convertAcceleration(biasX);</span>
+<span class="fc" id="L806">    }</span>
 
     /**
      * Gets known y coordinate of accelerometer bias.
@@ -811,7 +812,7 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
      */
     @Override
     public Acceleration getBiasYAsAcceleration() {
-<span class="fc" id="L814">        return new Acceleration(mBiasY, AccelerationUnit.METERS_PER_SQUARED_SECOND);</span>
+<span class="fc" id="L815">        return new Acceleration(mBiasY, AccelerationUnit.METERS_PER_SQUARED_SECOND);</span>
     }
 
     /**
@@ -821,9 +822,9 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
      */
     @Override
     public void getBiasYAsAcceleration(final Acceleration result) {
-<span class="fc" id="L824">        result.setValue(mBiasY);</span>
-<span class="fc" id="L825">        result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);</span>
-<span class="fc" id="L826">    }</span>
+<span class="fc" id="L825">        result.setValue(mBiasY);</span>
+<span class="fc" id="L826">        result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);</span>
+<span class="fc" id="L827">    }</span>
 
     /**
      * Sets known y coordinate of accelerometer bias.
@@ -833,12 +834,12 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
      */
     @Override
     public void setBiasY(final Acceleration biasY) throws LockedException {
-<span class="fc bfc" id="L836" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L837">            throw new LockedException();</span>
+<span class="fc bfc" id="L837" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L838">            throw new LockedException();</span>
         }
 
-<span class="fc" id="L840">        mBiasY = convertAcceleration(biasY);</span>
-<span class="fc" id="L841">    }</span>
+<span class="fc" id="L841">        mBiasY = convertAcceleration(biasY);</span>
+<span class="fc" id="L842">    }</span>
 
     /**
      * Gets known z coordinate of accelerometer bias.
@@ -847,7 +848,7 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
      */
     @Override
     public Acceleration getBiasZAsAcceleration() {
-<span class="fc" id="L850">        return new Acceleration(mBiasZ, AccelerationUnit.METERS_PER_SQUARED_SECOND);</span>
+<span class="fc" id="L851">        return new Acceleration(mBiasZ, AccelerationUnit.METERS_PER_SQUARED_SECOND);</span>
     }
 
     /**
@@ -857,9 +858,9 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
      */
     @Override
     public void getBiasZAsAcceleration(final Acceleration result) {
-<span class="fc" id="L860">        result.setValue(mBiasZ);</span>
-<span class="fc" id="L861">        result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);</span>
-<span class="fc" id="L862">    }</span>
+<span class="fc" id="L861">        result.setValue(mBiasZ);</span>
+<span class="fc" id="L862">        result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);</span>
+<span class="fc" id="L863">    }</span>
 
     /**
      * Sets known z coordinate of accelerometer bias.
@@ -869,12 +870,12 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
      */
     @Override
     public void setBiasZ(final Acceleration biasZ) throws LockedException {
-<span class="fc bfc" id="L872" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L873">            throw new LockedException();</span>
+<span class="fc bfc" id="L873" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L874">            throw new LockedException();</span>
         }
 
-<span class="fc" id="L876">        mBiasZ = convertAcceleration(biasZ);</span>
-<span class="fc" id="L877">    }</span>
+<span class="fc" id="L877">        mBiasZ = convertAcceleration(biasZ);</span>
+<span class="fc" id="L878">    }</span>
 
     /**
      * Sets known accelerometer bias coordinates expressed in meters per squared
@@ -889,14 +890,14 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
     public void setBiasCoordinates(
             final double biasX, final double biasY, final double biasZ)
             throws LockedException {
-<span class="fc bfc" id="L892" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L893">            throw new LockedException();</span>
+<span class="fc bfc" id="L893" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L894">            throw new LockedException();</span>
         }
 
-<span class="fc" id="L896">        mBiasX = biasX;</span>
-<span class="fc" id="L897">        mBiasY = biasY;</span>
-<span class="fc" id="L898">        mBiasZ = biasZ;</span>
-<span class="fc" id="L899">    }</span>
+<span class="fc" id="L897">        mBiasX = biasX;</span>
+<span class="fc" id="L898">        mBiasY = biasY;</span>
+<span class="fc" id="L899">        mBiasZ = biasZ;</span>
+<span class="fc" id="L900">    }</span>
 
     /**
      * Sets known accelerometer bias coordinates.
@@ -909,14 +910,54 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
     @Override
     public void setBiasCoordinates(final Acceleration biasX, final Acceleration biasY,
                                    final Acceleration biasZ) throws LockedException {
-<span class="fc bfc" id="L912" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L913">            throw new LockedException();</span>
+<span class="fc bfc" id="L913" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L914">            throw new LockedException();</span>
         }
 
-<span class="fc" id="L916">        mBiasX = convertAcceleration(biasX);</span>
-<span class="fc" id="L917">        mBiasY = convertAcceleration(biasY);</span>
-<span class="fc" id="L918">        mBiasZ = convertAcceleration(biasZ);</span>
-<span class="fc" id="L919">    }</span>
+<span class="fc" id="L917">        mBiasX = convertAcceleration(biasX);</span>
+<span class="fc" id="L918">        mBiasY = convertAcceleration(biasY);</span>
+<span class="fc" id="L919">        mBiasZ = convertAcceleration(biasZ);</span>
+<span class="fc" id="L920">    }</span>
+
+    /**
+     * Gets known accelerometer bias.
+     *
+     * @return known accelerometer bias.
+     */
+    @Override
+    public AccelerationTriad getBiasAsTriad() {
+<span class="fc" id="L929">        return new AccelerationTriad(</span>
+                AccelerationUnit.METERS_PER_SQUARED_SECOND,
+                mBiasX, mBiasY, mBiasZ);
+    }
+
+    /**
+     * Gets known accelerometer bias.
+     *
+     * @param result instance where result will be stored.
+     */
+    @Override
+    public void getBiasAsTriad(final AccelerationTriad result) {
+<span class="fc" id="L941">        result.setValueCoordinatesAndUnit(mBiasX, mBiasY, mBiasZ,</span>
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+<span class="fc" id="L943">    }</span>
+
+    /**
+     * Sets known accelerometer bias.
+     *
+     * @param bias accelerometer bias to be set.
+     * @throws LockedException if calibrator is currently running.
+     */
+    @Override
+    public void setBias(final AccelerationTriad bias) throws LockedException {
+<span class="fc bfc" id="L953" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L954">            throw new LockedException();</span>
+        }
+
+<span class="fc" id="L957">        mBiasX = convertAcceleration(bias.getValueX(), bias.getUnit());</span>
+<span class="fc" id="L958">        mBiasY = convertAcceleration(bias.getValueY(), bias.getUnit());</span>
+<span class="fc" id="L959">        mBiasZ = convertAcceleration(bias.getValueZ(), bias.getUnit());</span>
+<span class="fc" id="L960">    }</span>
 
     /**
      * Gets known accelerometer bias as an array.
@@ -926,9 +967,9 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
      */
     @Override
     public double[] getBias() {
-<span class="fc" id="L929">        final double[] result = new double[BodyKinematics.COMPONENTS];</span>
-<span class="fc" id="L930">        getBias(result);</span>
-<span class="fc" id="L931">        return result;</span>
+<span class="fc" id="L970">        final double[] result = new double[BodyKinematics.COMPONENTS];</span>
+<span class="fc" id="L971">        getBias(result);</span>
+<span class="fc" id="L972">        return result;</span>
     }
 
     /**
@@ -940,13 +981,13 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
      */
     @Override
     public void getBias(final double[] result) {
-<span class="fc bfc" id="L943" title="All 2 branches covered.">        if (result.length != BodyKinematics.COMPONENTS) {</span>
-<span class="fc" id="L944">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L984" title="All 2 branches covered.">        if (result.length != BodyKinematics.COMPONENTS) {</span>
+<span class="fc" id="L985">            throw new IllegalArgumentException();</span>
         }
-<span class="fc" id="L946">        result[0] = mBiasX;</span>
-<span class="fc" id="L947">        result[1] = mBiasY;</span>
-<span class="fc" id="L948">        result[2] = mBiasZ;</span>
-<span class="fc" id="L949">    }</span>
+<span class="fc" id="L987">        result[0] = mBiasX;</span>
+<span class="fc" id="L988">        result[1] = mBiasY;</span>
+<span class="fc" id="L989">        result[2] = mBiasZ;</span>
+<span class="fc" id="L990">    }</span>
 
     /**
      * Sets known accelerometer bias as an array.
@@ -958,17 +999,17 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
      */
     @Override
     public void setBias(final double[] bias) throws LockedException {
-<span class="fc bfc" id="L961" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L962">            throw new LockedException();</span>
+<span class="fc bfc" id="L1002" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L1003">            throw new LockedException();</span>
         }
 
-<span class="fc bfc" id="L965" title="All 2 branches covered.">        if (bias.length != BodyKinematics.COMPONENTS) {</span>
-<span class="fc" id="L966">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L1006" title="All 2 branches covered.">        if (bias.length != BodyKinematics.COMPONENTS) {</span>
+<span class="fc" id="L1007">            throw new IllegalArgumentException();</span>
         }
-<span class="fc" id="L968">        mBiasX = bias[0];</span>
-<span class="fc" id="L969">        mBiasY = bias[1];</span>
-<span class="fc" id="L970">        mBiasZ = bias[2];</span>
-<span class="fc" id="L971">    }</span>
+<span class="fc" id="L1009">        mBiasX = bias[0];</span>
+<span class="fc" id="L1010">        mBiasY = bias[1];</span>
+<span class="fc" id="L1011">        mBiasZ = bias[2];</span>
+<span class="fc" id="L1012">    }</span>
 
     /**
      * Gets known accelerometer bias as a column matrix.
@@ -979,13 +1020,13 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
     public Matrix getBiasAsMatrix() {
         Matrix result;
         try {
-<span class="fc" id="L982">            result = new Matrix(BodyKinematics.COMPONENTS, 1);</span>
-<span class="fc" id="L983">            getBiasAsMatrix(result);</span>
-<span class="nc" id="L984">        } catch (final WrongSizeException ignore) {</span>
+<span class="fc" id="L1023">            result = new Matrix(BodyKinematics.COMPONENTS, 1);</span>
+<span class="fc" id="L1024">            getBiasAsMatrix(result);</span>
+<span class="nc" id="L1025">        } catch (final WrongSizeException ignore) {</span>
             // never happens
-<span class="nc" id="L986">            result = null;</span>
-<span class="fc" id="L987">        }</span>
-<span class="fc" id="L988">        return result;</span>
+<span class="nc" id="L1027">            result = null;</span>
+<span class="fc" id="L1028">        }</span>
+<span class="fc" id="L1029">        return result;</span>
     }
 
     /**
@@ -996,14 +1037,14 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
      */
     @Override
     public void getBiasAsMatrix(final Matrix result) {
-<span class="fc bfc" id="L999" title="All 2 branches covered.">        if (result.getRows() != BodyKinematics.COMPONENTS</span>
-<span class="fc bfc" id="L1000" title="All 2 branches covered.">                || result.getColumns() != 1) {</span>
-<span class="fc" id="L1001">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L1040" title="All 2 branches covered.">        if (result.getRows() != BodyKinematics.COMPONENTS</span>
+<span class="fc bfc" id="L1041" title="All 2 branches covered.">                || result.getColumns() != 1) {</span>
+<span class="fc" id="L1042">            throw new IllegalArgumentException();</span>
         }
-<span class="fc" id="L1003">        result.setElementAtIndex(0, mBiasX);</span>
-<span class="fc" id="L1004">        result.setElementAtIndex(1, mBiasY);</span>
-<span class="fc" id="L1005">        result.setElementAtIndex(2, mBiasZ);</span>
-<span class="fc" id="L1006">    }</span>
+<span class="fc" id="L1044">        result.setElementAtIndex(0, mBiasX);</span>
+<span class="fc" id="L1045">        result.setElementAtIndex(1, mBiasY);</span>
+<span class="fc" id="L1046">        result.setElementAtIndex(2, mBiasZ);</span>
+<span class="fc" id="L1047">    }</span>
 
     /**
      * Sets known accelerometer bias as a column matrix.
@@ -1014,18 +1055,18 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
      */
     @Override
     public void setBias(final Matrix bias) throws LockedException {
-<span class="fc bfc" id="L1017" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L1018">            throw new LockedException();</span>
+<span class="fc bfc" id="L1058" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L1059">            throw new LockedException();</span>
         }
-<span class="fc bfc" id="L1020" title="All 2 branches covered.">        if (bias.getRows() != BodyKinematics.COMPONENTS</span>
-<span class="fc bfc" id="L1021" title="All 2 branches covered.">                || bias.getColumns() != 1) {</span>
-<span class="fc" id="L1022">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L1061" title="All 2 branches covered.">        if (bias.getRows() != BodyKinematics.COMPONENTS</span>
+<span class="fc bfc" id="L1062" title="All 2 branches covered.">                || bias.getColumns() != 1) {</span>
+<span class="fc" id="L1063">            throw new IllegalArgumentException();</span>
         }
 
-<span class="fc" id="L1025">        mBiasX = bias.getElementAtIndex(0);</span>
-<span class="fc" id="L1026">        mBiasY = bias.getElementAtIndex(1);</span>
-<span class="fc" id="L1027">        mBiasZ = bias.getElementAtIndex(2);</span>
-<span class="fc" id="L1028">    }</span>
+<span class="fc" id="L1066">        mBiasX = bias.getElementAtIndex(0);</span>
+<span class="fc" id="L1067">        mBiasY = bias.getElementAtIndex(1);</span>
+<span class="fc" id="L1068">        mBiasZ = bias.getElementAtIndex(2);</span>
+<span class="fc" id="L1069">    }</span>
 
     /**
      * Indicates whether estimator is ready to start the estimator.
@@ -1034,8 +1075,8 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
      */
     @Override
     public boolean isReady() {
-<span class="fc bfc" id="L1037" title="All 2 branches covered.">        return mMeasurements != null</span>
-<span class="fc bfc" id="L1038" title="All 2 branches covered.">                &amp;&amp; mMeasurements.size() &gt;= MINIMUM_MEASUREMENTS;</span>
+<span class="fc bfc" id="L1078" title="All 2 branches covered.">        return mMeasurements != null</span>
+<span class="fc bfc" id="L1079" title="All 2 branches covered.">                &amp;&amp; mMeasurements.size() &gt;= MINIMUM_MEASUREMENTS;</span>
     }
 
     /**
@@ -1045,7 +1086,7 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
      */
     @Override
     public boolean isRunning() {
-<span class="fc" id="L1048">        return mRunning;</span>
+<span class="fc" id="L1089">        return mRunning;</span>
     }
 
     /**
@@ -1058,37 +1099,37 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
      */
     @Override
     public void calibrate() throws LockedException, NotReadyException, CalibrationException {
-<span class="fc bfc" id="L1061" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L1062">            throw new LockedException();</span>
+<span class="fc bfc" id="L1102" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L1103">            throw new LockedException();</span>
         }
 
-<span class="pc bpc" id="L1065" title="1 of 2 branches missed.">        if (!isReady()) {</span>
-<span class="nc" id="L1066">            throw new NotReadyException();</span>
+<span class="pc bpc" id="L1106" title="1 of 2 branches missed.">        if (!isReady()) {</span>
+<span class="nc" id="L1107">            throw new NotReadyException();</span>
         }
 
         try {
-<span class="fc" id="L1070">            mRunning = true;</span>
+<span class="fc" id="L1111">            mRunning = true;</span>
 
-<span class="fc bfc" id="L1072" title="All 2 branches covered.">            if (mListener != null) {</span>
-<span class="fc" id="L1073">                mListener.onCalibrateStart(this);</span>
+<span class="fc bfc" id="L1113" title="All 2 branches covered.">            if (mListener != null) {</span>
+<span class="fc" id="L1114">                mListener.onCalibrateStart(this);</span>
             }
 
-<span class="fc bfc" id="L1076" title="All 2 branches covered.">            if (mCommonAxisUsed) {</span>
-<span class="fc" id="L1077">                calibrateCommonAxis();</span>
+<span class="fc bfc" id="L1117" title="All 2 branches covered.">            if (mCommonAxisUsed) {</span>
+<span class="fc" id="L1118">                calibrateCommonAxis();</span>
             } else {
-<span class="fc" id="L1079">                calibrateGeneral();</span>
+<span class="fc" id="L1120">                calibrateGeneral();</span>
             }
 
-<span class="fc bfc" id="L1082" title="All 2 branches covered.">            if (mListener != null) {</span>
-<span class="fc" id="L1083">                mListener.onCalibrateEnd(this);</span>
+<span class="fc bfc" id="L1123" title="All 2 branches covered.">            if (mListener != null) {</span>
+<span class="fc" id="L1124">                mListener.onCalibrateEnd(this);</span>
             }
 
-<span class="nc" id="L1086">        } catch (final AlgebraException e) {</span>
-<span class="nc" id="L1087">            throw new CalibrationException(e);</span>
+<span class="nc" id="L1127">        } catch (final AlgebraException e) {</span>
+<span class="nc" id="L1128">            throw new CalibrationException(e);</span>
         } finally {
-<span class="fc" id="L1089">            mRunning = false;</span>
+<span class="fc" id="L1130">            mRunning = false;</span>
         }
-<span class="fc" id="L1091">    }</span>
+<span class="fc" id="L1132">    }</span>
 
     /**
      * Gets estimated accelerometer scale factors and ross coupling errors.
@@ -1134,7 +1175,7 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
      */
     @Override
     public Matrix getEstimatedMa() {
-<span class="fc" id="L1137">        return mEstimatedMa;</span>
+<span class="fc" id="L1178">        return mEstimatedMa;</span>
     }
 
     /**
@@ -1144,8 +1185,8 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
      */
     @Override
     public Double getEstimatedSx() {
-<span class="fc bfc" id="L1147" title="All 2 branches covered.">        return mEstimatedMa != null ?</span>
-<span class="fc" id="L1148">                mEstimatedMa.getElementAt(0, 0) : null;</span>
+<span class="fc bfc" id="L1188" title="All 2 branches covered.">        return mEstimatedMa != null ?</span>
+<span class="fc" id="L1189">                mEstimatedMa.getElementAt(0, 0) : null;</span>
     }
 
     /**
@@ -1155,8 +1196,8 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
      */
     @Override
     public Double getEstimatedSy() {
-<span class="fc bfc" id="L1158" title="All 2 branches covered.">        return mEstimatedMa != null ?</span>
-<span class="fc" id="L1159">                mEstimatedMa.getElementAt(1, 1) : null;</span>
+<span class="fc bfc" id="L1199" title="All 2 branches covered.">        return mEstimatedMa != null ?</span>
+<span class="fc" id="L1200">                mEstimatedMa.getElementAt(1, 1) : null;</span>
     }
 
     /**
@@ -1166,8 +1207,8 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
      */
     @Override
     public Double getEstimatedSz() {
-<span class="fc bfc" id="L1169" title="All 2 branches covered.">        return mEstimatedMa != null ?</span>
-<span class="fc" id="L1170">                mEstimatedMa.getElementAt(2, 2) : null;</span>
+<span class="fc bfc" id="L1210" title="All 2 branches covered.">        return mEstimatedMa != null ?</span>
+<span class="fc" id="L1211">                mEstimatedMa.getElementAt(2, 2) : null;</span>
     }
 
     /**
@@ -1177,8 +1218,8 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
      */
     @Override
     public Double getEstimatedMxy() {
-<span class="fc bfc" id="L1180" title="All 2 branches covered.">        return mEstimatedMa != null ?</span>
-<span class="fc" id="L1181">                mEstimatedMa.getElementAt(0, 1) : null;</span>
+<span class="fc bfc" id="L1221" title="All 2 branches covered.">        return mEstimatedMa != null ?</span>
+<span class="fc" id="L1222">                mEstimatedMa.getElementAt(0, 1) : null;</span>
     }
 
     /**
@@ -1188,8 +1229,8 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
      */
     @Override
     public Double getEstimatedMxz() {
-<span class="fc bfc" id="L1191" title="All 2 branches covered.">        return mEstimatedMa != null ?</span>
-<span class="fc" id="L1192">                mEstimatedMa.getElementAt(0, 2) : null;</span>
+<span class="fc bfc" id="L1232" title="All 2 branches covered.">        return mEstimatedMa != null ?</span>
+<span class="fc" id="L1233">                mEstimatedMa.getElementAt(0, 2) : null;</span>
     }
 
     /**
@@ -1199,8 +1240,8 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
      */
     @Override
     public Double getEstimatedMyx() {
-<span class="fc bfc" id="L1202" title="All 2 branches covered.">        return mEstimatedMa != null ?</span>
-<span class="fc" id="L1203">                mEstimatedMa.getElementAt(1, 0) : null;</span>
+<span class="fc bfc" id="L1243" title="All 2 branches covered.">        return mEstimatedMa != null ?</span>
+<span class="fc" id="L1244">                mEstimatedMa.getElementAt(1, 0) : null;</span>
     }
 
     /**
@@ -1210,8 +1251,8 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
      */
     @Override
     public Double getEstimatedMyz() {
-<span class="fc bfc" id="L1213" title="All 2 branches covered.">        return mEstimatedMa != null ?</span>
-<span class="fc" id="L1214">                mEstimatedMa.getElementAt(1, 2) : null;</span>
+<span class="fc bfc" id="L1254" title="All 2 branches covered.">        return mEstimatedMa != null ?</span>
+<span class="fc" id="L1255">                mEstimatedMa.getElementAt(1, 2) : null;</span>
     }
 
     /**
@@ -1221,8 +1262,8 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
      */
     @Override
     public Double getEstimatedMzx() {
-<span class="fc bfc" id="L1224" title="All 2 branches covered.">        return mEstimatedMa != null ?</span>
-<span class="fc" id="L1225">                mEstimatedMa.getElementAt(2, 0) : null;</span>
+<span class="fc bfc" id="L1265" title="All 2 branches covered.">        return mEstimatedMa != null ?</span>
+<span class="fc" id="L1266">                mEstimatedMa.getElementAt(2, 0) : null;</span>
     }
 
     /**
@@ -1232,8 +1273,8 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
      */
     @Override
     public Double getEstimatedMzy() {
-<span class="fc bfc" id="L1235" title="All 2 branches covered.">        return mEstimatedMa != null ?</span>
-<span class="fc" id="L1236">                mEstimatedMa.getElementAt(2, 1) : null;</span>
+<span class="fc bfc" id="L1276" title="All 2 branches covered.">        return mEstimatedMa != null ?</span>
+<span class="fc" id="L1277">                mEstimatedMa.getElementAt(2, 1) : null;</span>
     }
 
     /**
@@ -1286,71 +1327,71 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
         //                                                 [mxz]
         //                                                 [myz]
 
-<span class="fc" id="L1289">        final BodyKinematics expectedKinematics = new BodyKinematics();</span>
+<span class="fc" id="L1330">        final BodyKinematics expectedKinematics = new BodyKinematics();</span>
 
-<span class="fc" id="L1291">        final int rows = EQUATIONS_PER_MEASUREMENT * mMeasurements.size();</span>
-<span class="fc" id="L1292">        final Matrix a = new Matrix(rows, COMMON_Z_AXIS_UNKNOWNS);</span>
-<span class="fc" id="L1293">        final Matrix b = new Matrix(rows, 1);</span>
-<span class="fc" id="L1294">        int i = 0;</span>
-<span class="fc bfc" id="L1295" title="All 2 branches covered.">        for (final FrameBodyKinematics measurement : mMeasurements) {</span>
-<span class="fc" id="L1296">            final BodyKinematics measuredKinematics = measurement.getKinematics();</span>
-<span class="fc" id="L1297">            final ECEFFrame ecefFrame = measurement.getFrame();</span>
-<span class="fc" id="L1298">            final ECEFFrame previousEcefFrame = measurement.getPreviousFrame();</span>
-<span class="fc" id="L1299">            final double timeInterval = measurement.getTimeInterval();</span>
+<span class="fc" id="L1332">        final int rows = EQUATIONS_PER_MEASUREMENT * mMeasurements.size();</span>
+<span class="fc" id="L1333">        final Matrix a = new Matrix(rows, COMMON_Z_AXIS_UNKNOWNS);</span>
+<span class="fc" id="L1334">        final Matrix b = new Matrix(rows, 1);</span>
+<span class="fc" id="L1335">        int i = 0;</span>
+<span class="fc bfc" id="L1336" title="All 2 branches covered.">        for (final FrameBodyKinematics measurement : mMeasurements) {</span>
+<span class="fc" id="L1337">            final BodyKinematics measuredKinematics = measurement.getKinematics();</span>
+<span class="fc" id="L1338">            final ECEFFrame ecefFrame = measurement.getFrame();</span>
+<span class="fc" id="L1339">            final ECEFFrame previousEcefFrame = measurement.getPreviousFrame();</span>
+<span class="fc" id="L1340">            final double timeInterval = measurement.getTimeInterval();</span>
 
-<span class="fc" id="L1301">            ECEFKinematicsEstimator.estimateKinematics(timeInterval, ecefFrame,</span>
+<span class="fc" id="L1342">            ECEFKinematicsEstimator.estimateKinematics(timeInterval, ecefFrame,</span>
                     previousEcefFrame, expectedKinematics);
 
-<span class="fc" id="L1304">            final double fMeasX = measuredKinematics.getFx();</span>
-<span class="fc" id="L1305">            final double fMeasY = measuredKinematics.getFy();</span>
-<span class="fc" id="L1306">            final double fMeasZ = measuredKinematics.getFz();</span>
+<span class="fc" id="L1345">            final double fMeasX = measuredKinematics.getFx();</span>
+<span class="fc" id="L1346">            final double fMeasY = measuredKinematics.getFy();</span>
+<span class="fc" id="L1347">            final double fMeasZ = measuredKinematics.getFz();</span>
 
-<span class="fc" id="L1308">            final double fTrueX = expectedKinematics.getFx();</span>
-<span class="fc" id="L1309">            final double fTrueY = expectedKinematics.getFy();</span>
-<span class="fc" id="L1310">            final double fTrueZ = expectedKinematics.getFz();</span>
+<span class="fc" id="L1349">            final double fTrueX = expectedKinematics.getFx();</span>
+<span class="fc" id="L1350">            final double fTrueY = expectedKinematics.getFy();</span>
+<span class="fc" id="L1351">            final double fTrueZ = expectedKinematics.getFz();</span>
 
-<span class="fc" id="L1312">            a.setElementAt(i, 0, fTrueX);</span>
-<span class="fc" id="L1313">            a.setElementAt(i, 1, 0.0);</span>
-<span class="fc" id="L1314">            a.setElementAt(i, 2, 0.0);</span>
-<span class="fc" id="L1315">            a.setElementAt(i, 3, fTrueY);</span>
-<span class="fc" id="L1316">            a.setElementAt(i, 4, fTrueZ);</span>
-<span class="fc" id="L1317">            a.setElementAt(i, 5, 0.0);</span>
+<span class="fc" id="L1353">            a.setElementAt(i, 0, fTrueX);</span>
+<span class="fc" id="L1354">            a.setElementAt(i, 1, 0.0);</span>
+<span class="fc" id="L1355">            a.setElementAt(i, 2, 0.0);</span>
+<span class="fc" id="L1356">            a.setElementAt(i, 3, fTrueY);</span>
+<span class="fc" id="L1357">            a.setElementAt(i, 4, fTrueZ);</span>
+<span class="fc" id="L1358">            a.setElementAt(i, 5, 0.0);</span>
 
-<span class="fc" id="L1319">            b.setElementAtIndex(i, fMeasX - fTrueX - mBiasX);</span>
-<span class="fc" id="L1320">            i++;</span>
+<span class="fc" id="L1360">            b.setElementAtIndex(i, fMeasX - fTrueX - mBiasX);</span>
+<span class="fc" id="L1361">            i++;</span>
 
-<span class="fc" id="L1322">            a.setElementAt(i, 0, 0.0);</span>
-<span class="fc" id="L1323">            a.setElementAt(i, 1, fTrueY);</span>
-<span class="fc" id="L1324">            a.setElementAt(i, 2, 0.0);</span>
-<span class="fc" id="L1325">            a.setElementAt(i, 3, 0.0);</span>
-<span class="fc" id="L1326">            a.setElementAt(i, 4, 0.0);</span>
-<span class="fc" id="L1327">            a.setElementAt(i, 5, fTrueZ);</span>
+<span class="fc" id="L1363">            a.setElementAt(i, 0, 0.0);</span>
+<span class="fc" id="L1364">            a.setElementAt(i, 1, fTrueY);</span>
+<span class="fc" id="L1365">            a.setElementAt(i, 2, 0.0);</span>
+<span class="fc" id="L1366">            a.setElementAt(i, 3, 0.0);</span>
+<span class="fc" id="L1367">            a.setElementAt(i, 4, 0.0);</span>
+<span class="fc" id="L1368">            a.setElementAt(i, 5, fTrueZ);</span>
 
-<span class="fc" id="L1329">            b.setElementAtIndex(i, fMeasY - fTrueY - mBiasY);</span>
-<span class="fc" id="L1330">            i++;</span>
+<span class="fc" id="L1370">            b.setElementAtIndex(i, fMeasY - fTrueY - mBiasY);</span>
+<span class="fc" id="L1371">            i++;</span>
 
-<span class="fc" id="L1332">            a.setElementAt(i, 0, 0.0);</span>
-<span class="fc" id="L1333">            a.setElementAt(i, 1, 0.0);</span>
-<span class="fc" id="L1334">            a.setElementAt(i, 2, fTrueZ);</span>
-<span class="fc" id="L1335">            a.setElementAt(i, 3, 0.0);</span>
-<span class="fc" id="L1336">            a.setElementAt(i, 4, 0.0);</span>
-<span class="fc" id="L1337">            a.setElementAt(i, 5, 0.0);</span>
+<span class="fc" id="L1373">            a.setElementAt(i, 0, 0.0);</span>
+<span class="fc" id="L1374">            a.setElementAt(i, 1, 0.0);</span>
+<span class="fc" id="L1375">            a.setElementAt(i, 2, fTrueZ);</span>
+<span class="fc" id="L1376">            a.setElementAt(i, 3, 0.0);</span>
+<span class="fc" id="L1377">            a.setElementAt(i, 4, 0.0);</span>
+<span class="fc" id="L1378">            a.setElementAt(i, 5, 0.0);</span>
 
-<span class="fc" id="L1339">            b.setElementAtIndex(i, fMeasZ - fTrueZ - mBiasZ);</span>
-<span class="fc" id="L1340">            i++;</span>
-<span class="fc" id="L1341">        }</span>
+<span class="fc" id="L1380">            b.setElementAtIndex(i, fMeasZ - fTrueZ - mBiasZ);</span>
+<span class="fc" id="L1381">            i++;</span>
+<span class="fc" id="L1382">        }</span>
 
-<span class="fc" id="L1343">        final Matrix unknowns = Utils.solve(a, b);</span>
+<span class="fc" id="L1384">        final Matrix unknowns = Utils.solve(a, b);</span>
 
-<span class="fc" id="L1345">        final double sx = unknowns.getElementAtIndex(0);</span>
-<span class="fc" id="L1346">        final double sy = unknowns.getElementAtIndex(1);</span>
-<span class="fc" id="L1347">        final double sz = unknowns.getElementAtIndex(2);</span>
-<span class="fc" id="L1348">        final double mxy = unknowns.getElementAtIndex(3);</span>
-<span class="fc" id="L1349">        final double mxz = unknowns.getElementAtIndex(4);</span>
-<span class="fc" id="L1350">        final double myz = unknowns.getElementAtIndex(5);</span>
+<span class="fc" id="L1386">        final double sx = unknowns.getElementAtIndex(0);</span>
+<span class="fc" id="L1387">        final double sy = unknowns.getElementAtIndex(1);</span>
+<span class="fc" id="L1388">        final double sz = unknowns.getElementAtIndex(2);</span>
+<span class="fc" id="L1389">        final double mxy = unknowns.getElementAtIndex(3);</span>
+<span class="fc" id="L1390">        final double mxz = unknowns.getElementAtIndex(4);</span>
+<span class="fc" id="L1391">        final double myz = unknowns.getElementAtIndex(5);</span>
 
-<span class="fc" id="L1352">        fillMa(sx, sy, sz, mxy, mxz, 0.0, myz, 0.0, 0.0);</span>
-<span class="fc" id="L1353">    }</span>
+<span class="fc" id="L1393">        fillMa(sx, sy, sz, mxy, mxz, 0.0, myz, 0.0, 0.0);</span>
+<span class="fc" id="L1394">    }</span>
 
     /**
      * Internal method to perform general calibration.
@@ -1397,83 +1438,83 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
         //                                                                         [mzx]
         //                                                                         [mzy]
 
-<span class="fc" id="L1400">        final BodyKinematics expectedKinematics = new BodyKinematics();</span>
+<span class="fc" id="L1441">        final BodyKinematics expectedKinematics = new BodyKinematics();</span>
 
-<span class="fc" id="L1402">        final int rows = EQUATIONS_PER_MEASUREMENT * mMeasurements.size();</span>
-<span class="fc" id="L1403">        final Matrix a = new Matrix(rows, GENERAL_UNKNOWNS);</span>
-<span class="fc" id="L1404">        final Matrix b = new Matrix(rows, 1);</span>
-<span class="fc" id="L1405">        int i = 0;</span>
-<span class="fc bfc" id="L1406" title="All 2 branches covered.">        for (final FrameBodyKinematics measurement : mMeasurements) {</span>
-<span class="fc" id="L1407">            final BodyKinematics measuredKinematics = measurement.getKinematics();</span>
-<span class="fc" id="L1408">            final ECEFFrame ecefFrame = measurement.getFrame();</span>
-<span class="fc" id="L1409">            final ECEFFrame previousEcefFrame = measurement.getPreviousFrame();</span>
-<span class="fc" id="L1410">            final double timeInterval = measurement.getTimeInterval();</span>
+<span class="fc" id="L1443">        final int rows = EQUATIONS_PER_MEASUREMENT * mMeasurements.size();</span>
+<span class="fc" id="L1444">        final Matrix a = new Matrix(rows, GENERAL_UNKNOWNS);</span>
+<span class="fc" id="L1445">        final Matrix b = new Matrix(rows, 1);</span>
+<span class="fc" id="L1446">        int i = 0;</span>
+<span class="fc bfc" id="L1447" title="All 2 branches covered.">        for (final FrameBodyKinematics measurement : mMeasurements) {</span>
+<span class="fc" id="L1448">            final BodyKinematics measuredKinematics = measurement.getKinematics();</span>
+<span class="fc" id="L1449">            final ECEFFrame ecefFrame = measurement.getFrame();</span>
+<span class="fc" id="L1450">            final ECEFFrame previousEcefFrame = measurement.getPreviousFrame();</span>
+<span class="fc" id="L1451">            final double timeInterval = measurement.getTimeInterval();</span>
 
-<span class="fc" id="L1412">            ECEFKinematicsEstimator.estimateKinematics(timeInterval, ecefFrame,</span>
+<span class="fc" id="L1453">            ECEFKinematicsEstimator.estimateKinematics(timeInterval, ecefFrame,</span>
                     previousEcefFrame, expectedKinematics);
 
-<span class="fc" id="L1415">            final double fMeasX = measuredKinematics.getFx();</span>
-<span class="fc" id="L1416">            final double fMeasY = measuredKinematics.getFy();</span>
-<span class="fc" id="L1417">            final double fMeasZ = measuredKinematics.getFz();</span>
+<span class="fc" id="L1456">            final double fMeasX = measuredKinematics.getFx();</span>
+<span class="fc" id="L1457">            final double fMeasY = measuredKinematics.getFy();</span>
+<span class="fc" id="L1458">            final double fMeasZ = measuredKinematics.getFz();</span>
 
-<span class="fc" id="L1419">            final double fTrueX = expectedKinematics.getFx();</span>
-<span class="fc" id="L1420">            final double fTrueY = expectedKinematics.getFy();</span>
-<span class="fc" id="L1421">            final double fTrueZ = expectedKinematics.getFz();</span>
+<span class="fc" id="L1460">            final double fTrueX = expectedKinematics.getFx();</span>
+<span class="fc" id="L1461">            final double fTrueY = expectedKinematics.getFy();</span>
+<span class="fc" id="L1462">            final double fTrueZ = expectedKinematics.getFz();</span>
 
-<span class="fc" id="L1423">            a.setElementAt(i, 0, fTrueX);</span>
-<span class="fc" id="L1424">            a.setElementAt(i, 1, 0.0);</span>
-<span class="fc" id="L1425">            a.setElementAt(i, 2, 0.0);</span>
-<span class="fc" id="L1426">            a.setElementAt(i, 3, fTrueY);</span>
-<span class="fc" id="L1427">            a.setElementAt(i, 4, fTrueZ);</span>
-<span class="fc" id="L1428">            a.setElementAt(i, 5, 0.0);</span>
-<span class="fc" id="L1429">            a.setElementAt(i, 6, 0.0);</span>
-<span class="fc" id="L1430">            a.setElementAt(i, 7, 0.0);</span>
-<span class="fc" id="L1431">            a.setElementAt(i, 8, 0.0);</span>
+<span class="fc" id="L1464">            a.setElementAt(i, 0, fTrueX);</span>
+<span class="fc" id="L1465">            a.setElementAt(i, 1, 0.0);</span>
+<span class="fc" id="L1466">            a.setElementAt(i, 2, 0.0);</span>
+<span class="fc" id="L1467">            a.setElementAt(i, 3, fTrueY);</span>
+<span class="fc" id="L1468">            a.setElementAt(i, 4, fTrueZ);</span>
+<span class="fc" id="L1469">            a.setElementAt(i, 5, 0.0);</span>
+<span class="fc" id="L1470">            a.setElementAt(i, 6, 0.0);</span>
+<span class="fc" id="L1471">            a.setElementAt(i, 7, 0.0);</span>
+<span class="fc" id="L1472">            a.setElementAt(i, 8, 0.0);</span>
 
-<span class="fc" id="L1433">            b.setElementAtIndex(i, fMeasX - fTrueX - mBiasX);</span>
-<span class="fc" id="L1434">            i++;</span>
+<span class="fc" id="L1474">            b.setElementAtIndex(i, fMeasX - fTrueX - mBiasX);</span>
+<span class="fc" id="L1475">            i++;</span>
 
-<span class="fc" id="L1436">            a.setElementAt(i, 0, 0.0);</span>
-<span class="fc" id="L1437">            a.setElementAt(i, 1, fTrueY);</span>
-<span class="fc" id="L1438">            a.setElementAt(i, 2, 0.0);</span>
-<span class="fc" id="L1439">            a.setElementAt(i, 3, 0.0);</span>
-<span class="fc" id="L1440">            a.setElementAt(i, 4, 0.0);</span>
-<span class="fc" id="L1441">            a.setElementAt(i, 5, fTrueX);</span>
-<span class="fc" id="L1442">            a.setElementAt(i, 6, fTrueZ);</span>
-<span class="fc" id="L1443">            a.setElementAt(i, 7, 0.0);</span>
-<span class="fc" id="L1444">            a.setElementAt(i, 8, 0.0);</span>
+<span class="fc" id="L1477">            a.setElementAt(i, 0, 0.0);</span>
+<span class="fc" id="L1478">            a.setElementAt(i, 1, fTrueY);</span>
+<span class="fc" id="L1479">            a.setElementAt(i, 2, 0.0);</span>
+<span class="fc" id="L1480">            a.setElementAt(i, 3, 0.0);</span>
+<span class="fc" id="L1481">            a.setElementAt(i, 4, 0.0);</span>
+<span class="fc" id="L1482">            a.setElementAt(i, 5, fTrueX);</span>
+<span class="fc" id="L1483">            a.setElementAt(i, 6, fTrueZ);</span>
+<span class="fc" id="L1484">            a.setElementAt(i, 7, 0.0);</span>
+<span class="fc" id="L1485">            a.setElementAt(i, 8, 0.0);</span>
 
-<span class="fc" id="L1446">            b.setElementAtIndex(i, fMeasY - fTrueY - mBiasY);</span>
-<span class="fc" id="L1447">            i++;</span>
+<span class="fc" id="L1487">            b.setElementAtIndex(i, fMeasY - fTrueY - mBiasY);</span>
+<span class="fc" id="L1488">            i++;</span>
 
-<span class="fc" id="L1449">            a.setElementAt(i, 0, 0.0);</span>
-<span class="fc" id="L1450">            a.setElementAt(i, 1, 0.0);</span>
-<span class="fc" id="L1451">            a.setElementAt(i, 2, fTrueZ);</span>
-<span class="fc" id="L1452">            a.setElementAt(i, 3, 0.0);</span>
-<span class="fc" id="L1453">            a.setElementAt(i, 4, 0.0);</span>
-<span class="fc" id="L1454">            a.setElementAt(i, 5, 0.0);</span>
-<span class="fc" id="L1455">            a.setElementAt(i, 6, 0.0);</span>
-<span class="fc" id="L1456">            a.setElementAt(i, 7, fTrueX);</span>
-<span class="fc" id="L1457">            a.setElementAt(i, 8, fTrueY);</span>
+<span class="fc" id="L1490">            a.setElementAt(i, 0, 0.0);</span>
+<span class="fc" id="L1491">            a.setElementAt(i, 1, 0.0);</span>
+<span class="fc" id="L1492">            a.setElementAt(i, 2, fTrueZ);</span>
+<span class="fc" id="L1493">            a.setElementAt(i, 3, 0.0);</span>
+<span class="fc" id="L1494">            a.setElementAt(i, 4, 0.0);</span>
+<span class="fc" id="L1495">            a.setElementAt(i, 5, 0.0);</span>
+<span class="fc" id="L1496">            a.setElementAt(i, 6, 0.0);</span>
+<span class="fc" id="L1497">            a.setElementAt(i, 7, fTrueX);</span>
+<span class="fc" id="L1498">            a.setElementAt(i, 8, fTrueY);</span>
 
-<span class="fc" id="L1459">            b.setElementAtIndex(i, fMeasZ - fTrueZ - mBiasZ);</span>
-<span class="fc" id="L1460">            i++;</span>
-<span class="fc" id="L1461">        }</span>
+<span class="fc" id="L1500">            b.setElementAtIndex(i, fMeasZ - fTrueZ - mBiasZ);</span>
+<span class="fc" id="L1501">            i++;</span>
+<span class="fc" id="L1502">        }</span>
 
-<span class="fc" id="L1463">        final Matrix unknowns = Utils.solve(a, b);</span>
+<span class="fc" id="L1504">        final Matrix unknowns = Utils.solve(a, b);</span>
 
-<span class="fc" id="L1465">        final double sx = unknowns.getElementAtIndex(0);</span>
-<span class="fc" id="L1466">        final double sy = unknowns.getElementAtIndex(1);</span>
-<span class="fc" id="L1467">        final double sz = unknowns.getElementAtIndex(2);</span>
-<span class="fc" id="L1468">        final double mxy = unknowns.getElementAtIndex(3);</span>
-<span class="fc" id="L1469">        final double mxz = unknowns.getElementAtIndex(4);</span>
-<span class="fc" id="L1470">        final double myx = unknowns.getElementAtIndex(5);</span>
-<span class="fc" id="L1471">        final double myz = unknowns.getElementAtIndex(6);</span>
-<span class="fc" id="L1472">        final double mzx = unknowns.getElementAtIndex(7);</span>
-<span class="fc" id="L1473">        final double mzy = unknowns.getElementAtIndex(8);</span>
+<span class="fc" id="L1506">        final double sx = unknowns.getElementAtIndex(0);</span>
+<span class="fc" id="L1507">        final double sy = unknowns.getElementAtIndex(1);</span>
+<span class="fc" id="L1508">        final double sz = unknowns.getElementAtIndex(2);</span>
+<span class="fc" id="L1509">        final double mxy = unknowns.getElementAtIndex(3);</span>
+<span class="fc" id="L1510">        final double mxz = unknowns.getElementAtIndex(4);</span>
+<span class="fc" id="L1511">        final double myx = unknowns.getElementAtIndex(5);</span>
+<span class="fc" id="L1512">        final double myz = unknowns.getElementAtIndex(6);</span>
+<span class="fc" id="L1513">        final double mzx = unknowns.getElementAtIndex(7);</span>
+<span class="fc" id="L1514">        final double mzy = unknowns.getElementAtIndex(8);</span>
 
-<span class="fc" id="L1475">        fillMa(sx, sy, sz, mxy, mxz, myx, myz, mzx, mzy);</span>
-<span class="fc" id="L1476">    }</span>
+<span class="fc" id="L1516">        fillMa(sx, sy, sz, mxy, mxz, myx, myz, mzx, mzy);</span>
+<span class="fc" id="L1517">    }</span>
 
     /**
      * Fills scale factor and cross coupling error matrix with estimated values.
@@ -1493,33 +1534,45 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
                         final double mxy, final double mxz, final double myx,
                         final double myz, final double mzx, final double mzy)
             throws WrongSizeException {
-<span class="fc bfc" id="L1496" title="All 2 branches covered.">        if (mEstimatedMa == null) {</span>
-<span class="fc" id="L1497">            mEstimatedMa = new Matrix(BodyKinematics.COMPONENTS,</span>
+<span class="fc bfc" id="L1537" title="All 2 branches covered.">        if (mEstimatedMa == null) {</span>
+<span class="fc" id="L1538">            mEstimatedMa = new Matrix(BodyKinematics.COMPONENTS,</span>
                     BodyKinematics.COMPONENTS);
         }
 
-<span class="fc" id="L1501">        mEstimatedMa.setElementAt(0, 0, sx);</span>
-<span class="fc" id="L1502">        mEstimatedMa.setElementAt(1, 0, myx);</span>
-<span class="fc" id="L1503">        mEstimatedMa.setElementAt(2, 0, mzx);</span>
+<span class="fc" id="L1542">        mEstimatedMa.setElementAt(0, 0, sx);</span>
+<span class="fc" id="L1543">        mEstimatedMa.setElementAt(1, 0, myx);</span>
+<span class="fc" id="L1544">        mEstimatedMa.setElementAt(2, 0, mzx);</span>
 
-<span class="fc" id="L1505">        mEstimatedMa.setElementAt(0, 1, mxy);</span>
-<span class="fc" id="L1506">        mEstimatedMa.setElementAt(1, 1, sy);</span>
-<span class="fc" id="L1507">        mEstimatedMa.setElementAt(2, 1, mzy);</span>
+<span class="fc" id="L1546">        mEstimatedMa.setElementAt(0, 1, mxy);</span>
+<span class="fc" id="L1547">        mEstimatedMa.setElementAt(1, 1, sy);</span>
+<span class="fc" id="L1548">        mEstimatedMa.setElementAt(2, 1, mzy);</span>
 
-<span class="fc" id="L1509">        mEstimatedMa.setElementAt(0, 2, mxz);</span>
-<span class="fc" id="L1510">        mEstimatedMa.setElementAt(1, 2, myz);</span>
-<span class="fc" id="L1511">        mEstimatedMa.setElementAt(2, 2, sz);</span>
-<span class="fc" id="L1512">    }</span>
+<span class="fc" id="L1550">        mEstimatedMa.setElementAt(0, 2, mxz);</span>
+<span class="fc" id="L1551">        mEstimatedMa.setElementAt(1, 2, myz);</span>
+<span class="fc" id="L1552">        mEstimatedMa.setElementAt(2, 2, sz);</span>
+<span class="fc" id="L1553">    }</span>
 
     /**
-     * Converts acceleration instance to meters per squared second (m/s^2).
+     * Converts acceleration value and unit to meters per squared second.
+     *
+     * @param value acceleration value.
+     * @param unit  unit of acceleration value.
+     * @return converted value.
+     */
+    private static double convertAcceleration(final double value, final AccelerationUnit unit) {
+<span class="fc" id="L1563">        return AccelerationConverter.convert(value, unit,</span>
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+    }
+
+    /**
+     * Converts acceleration instance to meters per squared second.
      *
      * @param acceleration acceleration instance to be converted.
      * @return converted value.
      */
     private static double convertAcceleration(final Acceleration acceleration) {
-<span class="fc" id="L1521">        return AccelerationConverter.convert(acceleration.getValue().doubleValue(),</span>
-<span class="fc" id="L1522">                acceleration.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);</span>
+<span class="fc" id="L1574">        return convertAcceleration(acceleration.getValue().doubleValue(),</span>
+<span class="fc" id="L1575">                acceleration.getUnit());</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
