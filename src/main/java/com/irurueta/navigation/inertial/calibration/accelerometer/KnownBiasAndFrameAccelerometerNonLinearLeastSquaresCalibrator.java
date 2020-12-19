@@ -2917,9 +2917,12 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator imple
     }
 
     /**
-     * Gets estimated covariance matrix for estimated position.
+     * Gets estimated covariance matrix for estimated calibration parameters.
+     * Diagonal elements of the matrix contains variance for the following
+     * parameters (following indicated order): sx, sy, sz, mxy, mxz, myx,
+     * myz, mzx, mzy.
      *
-     * @return estimated covariance matrix for estimated position.
+     * @return estimated covariance matrix for estimated calibration parameters.
      */
     @Override
     public Matrix getEstimatedCovariance() {
@@ -3121,7 +3124,7 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator imple
         mEstimatedCovariance = mFitter.getCovar();
 
         // propagate covariance matrix so that all parameters are taken into
-        // acount in the order: sx, sy, sz, mxy, mxz, myx, myz, mzx, mzy
+        // account in the order: sx, sy, sz, mxy, mxz, myx, myz, mzx, mzy
 
         // We define a lineal function mapping original parameters for the common
         // axis case to the general case

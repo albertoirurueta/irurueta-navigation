@@ -5039,9 +5039,12 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
     }
 
     /**
-     * Gets estimated covariance matrix for estimated position.
+     * Gets estimated covariance matrix for estimated calibration parameters.
+     * Diagonal elements of the matrix contains variance for the following
+     * parameters (following indicated order): sx, sy, sz, mxy, mxz, myx,
+     * myz, mzx, mzy.
      *
-     * @return estimated covariance matrix for estimated position.
+     * @return estimated covariance matrix for estimated calibration parameters.
      */
     public Matrix getEstimatedCovariance() {
         return mEstimatedCovariance;
@@ -5399,6 +5402,45 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
         m.setElementAtIndex(8, m33);
 
         setResult(m);
+
+        // taking into account that:
+        // Ma = [sx  mxy  mxz] = [m11  m12  m13]
+        //      [myx sy   myz]   [m21  m22  m23]
+        //      [mzx mzy  sz ]   [m31  m32  m33]
+
+        // propagate covariance so that all parameters are taken into account
+        // in the order: sx, sy, sz, mxy, mxz, myx, myz, mzx, mzy
+
+        // Since estimated values are:
+        // (m11, m12, m22, m13, m23, m33) = (sx, mxy, sy, mxz, myz, sz)
+
+        // We define a lineal function mapping original parameters for the
+        // common axis case to the general case
+        //[sx'] = [1  0  0  0  0  0][sx ]
+        //[sy']   [0  0  1  0  0  0][mxy]
+        //[sz']   [0  0  0  0  0  1][sy ]
+        //[mxy']  [0  1  0  0  0  0][mxz]
+        //[mxz']  [0  0  0  1  0  0][myz]
+        //[myx']  [0  0  0  0  0  0][sz ]
+        //[myz']  [0  0  0  0  1  0]
+        //[mzx']  [0  0  0  0  0  0]
+        //[mzy']  [0  0  0  0  0  0]
+
+        // As defined in com.irurueta.statistics.MultivariateNormalDist,
+        // if we consider the jacobian of the lineal application the matrix shown
+        // above, then covariance can be propagated as follows
+        final Matrix jacobian = new Matrix(GENERAL_UNKNOWNS, COMMON_Z_AXIS_UNKNOWNS);
+        jacobian.setElementAt(0, 0, 1.0);
+        jacobian.setElementAt(1, 2, 1.0);
+        jacobian.setElementAt(2, 5, 1.0);
+        jacobian.setElementAt(3, 1, 1.0);
+        jacobian.setElementAt(4, 3, 1.0);
+        jacobian.setElementAt(6, 4, 1.0);
+        // propagated covariance is J * Cov * J'
+        final Matrix jacobianTrans = jacobian.transposeAndReturnNew();
+        jacobian.multiply(mEstimatedCovariance);
+        jacobian.multiply(jacobianTrans);
+        mEstimatedCovariance = jacobian;
     }
 
     /**
@@ -5424,6 +5466,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
                     mEstimatedMa.getElementAt(i, i) - 1.0);
         }
 
+        // since only a constant term is subtracted, covariance is preserved
         mEstimatedCovariance = mFitter.getCovar();
         mEstimatedChiSq = mFitter.getChisq();
     }
