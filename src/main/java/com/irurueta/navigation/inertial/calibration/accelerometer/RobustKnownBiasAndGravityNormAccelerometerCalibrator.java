@@ -2389,6 +2389,9 @@ public abstract class RobustKnownBiasAndGravityNormAccelerometerCalibrator {
 
     /**
      * Gets estimated covariance matrix for estimated calibration solution.
+     * Diagonal elements of the matrix contains variance for the following
+     * parameters (following indicated order): sx, sy, sz, mxy, mxz, myx,
+     * myz, mzx, mzy.
      * This is only available when result has been refined and covariance
      * is kept.
      *

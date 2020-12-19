@@ -2142,6 +2142,7 @@ public class LMedSRobustKnownFrameAccelerometerCalibratorTest implements
         assertEstimatedResult(estimatedBa, estimatedMa, calibrator, true);
 
         assertNotNull(calibrator.getEstimatedCovariance());
+        checkGeneralCovariance(calibrator.getEstimatedCovariance());
     }
 
     @Test
@@ -2258,6 +2259,7 @@ public class LMedSRobustKnownFrameAccelerometerCalibratorTest implements
         assertTrue(ma.equals(estimatedMa, ABSOLUTE_ERROR));
 
         assertEstimatedResult(estimatedBa, estimatedMa, calibrator, true);
+        checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
 
         assertNotNull(calibrator.getEstimatedCovariance());
     }
@@ -2388,6 +2390,7 @@ public class LMedSRobustKnownFrameAccelerometerCalibratorTest implements
             assertEstimatedResult(estimatedBa, estimatedMa, calibrator, true);
 
             assertNotNull(calibrator.getEstimatedCovariance());
+            checkGeneralCovariance(calibrator.getEstimatedCovariance());
 
             numValid++;
             break;
@@ -2522,6 +2525,7 @@ public class LMedSRobustKnownFrameAccelerometerCalibratorTest implements
             assertEstimatedResult(estimatedBa, estimatedMa, calibrator, true);
 
             assertNotNull(calibrator.getEstimatedCovariance());
+            checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
 
             numValid++;
             break;
@@ -2795,6 +2799,7 @@ public class LMedSRobustKnownFrameAccelerometerCalibratorTest implements
             assertEstimatedResult(estimatedBa, estimatedMa, calibrator, true);
 
             assertNotNull(calibrator.getEstimatedCovariance());
+            checkGeneralCovariance(calibrator.getEstimatedCovariance());
 
             numValid++;
             break;
@@ -3165,6 +3170,30 @@ public class LMedSRobustKnownFrameAccelerometerCalibratorTest implements
         final Acceleration norm2 = new Acceleration(1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(norm2);
         assertEquals(norm1, norm2);
+    }
+
+    private void checkCommonAxisCovariance(final Matrix covariance) {
+        assertEquals(covariance.getRows(), 12);
+        assertEquals(covariance.getColumns(), 12);
+
+        for (int j = 0; j < 12; j++) {
+            final boolean colIsZero = j == 8 || j == 10 || j == 11;
+            for (int i = 0; i < 12; i++) {
+                final boolean rowIsZero = i == 8 || i == 10 || i == 11;
+                if (colIsZero || rowIsZero) {
+                    assertEquals(covariance.getElementAt(i, j), 0.0, 0.0);
+                }
+            }
+        }
+    }
+
+    private void checkGeneralCovariance(final Matrix covariance) {
+        assertEquals(covariance.getRows(), 12);
+        assertEquals(covariance.getColumns(), 12);
+
+        for (int i = 0; i < 12; i++) {
+            assertNotEquals(covariance.getElementAt(i, i), 0.0);
+        }
     }
 
     private Matrix generateBa() {
