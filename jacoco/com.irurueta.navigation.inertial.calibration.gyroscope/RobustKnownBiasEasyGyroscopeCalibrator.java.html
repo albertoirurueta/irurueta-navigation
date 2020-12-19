@@ -6070,10 +6070,10 @@ public abstract class RobustKnownBiasEasyGyroscopeCalibrator {
 <span class="fc" id="L6070">                mEstimatedGg = mInnerCalibrator.getEstimatedGg();</span>
 <span class="fc" id="L6071">                mEstimatedCovariance = mInnerCalibrator.getEstimatedCovariance();</span>
 
-<span class="nc" id="L6073">            } catch (final LockedException | CalibrationException | NotReadyException e) {</span>
-<span class="nc" id="L6074">                mEstimatedCovariance = preliminaryResult.mCovariance;</span>
-<span class="nc" id="L6075">                mEstimatedMg = preliminaryResult.mEstimatedMg;</span>
-<span class="nc" id="L6076">                mEstimatedGg = preliminaryResult.mEstimatedGg;</span>
+<span class="fc" id="L6073">            } catch (final LockedException | CalibrationException | NotReadyException e) {</span>
+<span class="fc" id="L6074">                mEstimatedCovariance = preliminaryResult.mCovariance;</span>
+<span class="fc" id="L6075">                mEstimatedMg = preliminaryResult.mEstimatedMg;</span>
+<span class="fc" id="L6076">                mEstimatedGg = preliminaryResult.mEstimatedGg;</span>
 <span class="fc" id="L6077">            }</span>
 <span class="fc" id="L6078">        } else {</span>
 <span class="nc" id="L6079">            mEstimatedCovariance = preliminaryResult.mCovariance;</span>

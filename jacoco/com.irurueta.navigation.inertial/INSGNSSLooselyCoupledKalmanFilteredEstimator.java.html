@@ -1686,8 +1686,8 @@ public class INSGNSSLooselyCoupledKalmanFilteredEstimator {
 <span class="pc bpc" id="L1686" title="1 of 2 branches missed.">            if (mListener != null) {</span>
 <span class="fc" id="L1687">                mListener.onUpdateGNSSMeasurementsEnd(this);</span>
             }
-<span class="fc" id="L1689">        } catch (final GNSSException e) {</span>
-<span class="fc" id="L1690">            throw new INSGNSSException(e);</span>
+<span class="nc" id="L1689">        } catch (final GNSSException e) {</span>
+<span class="nc" id="L1690">            throw new INSGNSSException(e);</span>
         } finally {
 <span class="fc" id="L1692">            mRunning = false;</span>
         }

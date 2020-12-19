@@ -26,7 +26,7 @@ under the License.
     <copyright>&#169;2018 - 2020</copyright>
     <item>
       <title>File: 686,
-             Errors: 8944,
+             Errors: 8999,
              Warnings: 0,
              Infos: 0
       </title>
@@ -853,7 +853,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  128
+                  132
                 </td>
               </tr>
                           <tr>
@@ -1665,7 +1665,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  110
+                  155
                 </td>
               </tr>
                           <tr>
@@ -1763,7 +1763,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  97
+                  103
                 </td>
               </tr>
                           <tr>
