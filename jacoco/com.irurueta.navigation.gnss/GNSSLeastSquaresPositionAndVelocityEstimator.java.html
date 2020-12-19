@@ -814,8 +814,8 @@ public class GNSSLeastSquaresPositionAndVelocityEstimator {
 <span class="fc" id="L814">            final double resultClockDrift = mXEst.getElementAtIndex(3);</span>
 <span class="fc" id="L815">            result.setClockDrift(resultClockDrift);</span>
 
-<span class="nc" id="L817">        } catch (final AlgebraException e) {</span>
-<span class="nc" id="L818">            throw new GNSSException(e);</span>
+<span class="fc" id="L817">        } catch (final AlgebraException e) {</span>
+<span class="fc" id="L818">            throw new GNSSException(e);</span>
         } finally {
 
 <span class="fc bfc" id="L821" title="All 2 branches covered.">            if (mListener != null) {</span>

@@ -6540,8 +6540,8 @@ public abstract class RobustEasyGyroscopeCalibrator {
             }
 
 <span class="fc" id="L6542">            solutions.add(result);</span>
-<span class="fc" id="L6543">        } catch (final LockedException | CalibrationException | NotReadyException e) {</span>
-<span class="fc" id="L6544">            solutions.clear();</span>
+<span class="nc" id="L6543">        } catch (final LockedException | CalibrationException | NotReadyException e) {</span>
+<span class="nc" id="L6544">            solutions.clear();</span>
 <span class="fc" id="L6545">        }</span>
 <span class="fc" id="L6546">    }</span>
 
@@ -6588,11 +6588,11 @@ public abstract class RobustEasyGyroscopeCalibrator {
 <span class="fc" id="L6588">                mEstimatedGg = mInnerCalibrator.getEstimatedGg();</span>
 <span class="fc" id="L6589">                mEstimatedCovariance = mInnerCalibrator.getEstimatedCovariance();</span>
 
-<span class="fc" id="L6591">            } catch (LockedException | CalibrationException | NotReadyException e) {</span>
-<span class="fc" id="L6592">                mEstimatedCovariance = preliminaryResult.mCovariance;</span>
-<span class="fc" id="L6593">                mEstimatedBiases = preliminaryResult.mEstimatedBiases;</span>
-<span class="fc" id="L6594">                mEstimatedMg = preliminaryResult.mEstimatedMg;</span>
-<span class="fc" id="L6595">                mEstimatedGg = preliminaryResult.mEstimatedGg;</span>
+<span class="nc" id="L6591">            } catch (LockedException | CalibrationException | NotReadyException e) {</span>
+<span class="nc" id="L6592">                mEstimatedCovariance = preliminaryResult.mCovariance;</span>
+<span class="nc" id="L6593">                mEstimatedBiases = preliminaryResult.mEstimatedBiases;</span>
+<span class="nc" id="L6594">                mEstimatedMg = preliminaryResult.mEstimatedMg;</span>
+<span class="nc" id="L6595">                mEstimatedGg = preliminaryResult.mEstimatedGg;</span>
 <span class="fc" id="L6596">            }</span>
 <span class="fc" id="L6597">        } else {</span>
 <span class="nc" id="L6598">            mEstimatedCovariance = preliminaryResult.mCovariance;</span>

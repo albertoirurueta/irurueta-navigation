@@ -14710,733 +14710,759 @@
 <a class="jxr_linenumber" name="L14702" href="#L14702">14702</a>             assertEstimatedResult(estimatedBa, estimatedMa, calibrator, <strong class="jxr_keyword">true</strong>);
 <a class="jxr_linenumber" name="L14703" href="#L14703">14703</a> 
 <a class="jxr_linenumber" name="L14704" href="#L14704">14704</a>             assertNotNull(calibrator.getEstimatedCovariance());
-<a class="jxr_linenumber" name="L14705" href="#L14705">14705</a> 
-<a class="jxr_linenumber" name="L14706" href="#L14706">14706</a>             numValid++;
-<a class="jxr_linenumber" name="L14707" href="#L14707">14707</a>             <strong class="jxr_keyword">break</strong>;
-<a class="jxr_linenumber" name="L14708" href="#L14708">14708</a>         }
-<a class="jxr_linenumber" name="L14709" href="#L14709">14709</a> 
-<a class="jxr_linenumber" name="L14710" href="#L14710">14710</a>         assertTrue(numValid &gt; 0);
-<a class="jxr_linenumber" name="L14711" href="#L14711">14711</a>     }
-<a class="jxr_linenumber" name="L14712" href="#L14712">14712</a> 
-<a class="jxr_linenumber" name="L14713" href="#L14713">14713</a>     @Test
-<a class="jxr_linenumber" name="L14714" href="#L14714">14714</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testCalibrateCommonAxisNoNoiseInlier() <strong class="jxr_keyword">throws</strong> WrongSizeException,
-<a class="jxr_linenumber" name="L14715" href="#L14715">14715</a>             InvalidSourceAndDestinationFrameTypeException, LockedException,
-<a class="jxr_linenumber" name="L14716" href="#L14716">14716</a>             CalibrationException, NotReadyException {
-<a class="jxr_linenumber" name="L14717" href="#L14717">14717</a>         <strong class="jxr_keyword">int</strong> numValid = 0;
-<a class="jxr_linenumber" name="L14718" href="#L14718">14718</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> t = 0; t &lt; TIMES; t++) {
-<a class="jxr_linenumber" name="L14719" href="#L14719">14719</a>             <strong class="jxr_keyword">final</strong> Matrix ba = generateBa();
-<a class="jxr_linenumber" name="L14720" href="#L14720">14720</a>             <strong class="jxr_keyword">final</strong> Matrix bg = generateBg();
-<a class="jxr_linenumber" name="L14721" href="#L14721">14721</a>             <strong class="jxr_keyword">final</strong> Matrix ma = generateMaCommonAxis();
-<a class="jxr_linenumber" name="L14722" href="#L14722">14722</a>             <strong class="jxr_keyword">final</strong> Matrix mg = generateMg();
-<a class="jxr_linenumber" name="L14723" href="#L14723">14723</a>             <strong class="jxr_keyword">final</strong> Matrix gg = generateGg();
-<a class="jxr_linenumber" name="L14724" href="#L14724">14724</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> accelNoiseRootPSD = getAccelNoiseRootPSD();
-<a class="jxr_linenumber" name="L14725" href="#L14725">14725</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> gyroNoiseRootPSD = getGyroNoiseRootPSD();
-<a class="jxr_linenumber" name="L14726" href="#L14726">14726</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> accelQuantLevel = 0.0;
-<a class="jxr_linenumber" name="L14727" href="#L14727">14727</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> gyroQuantLevel = 0.0;
-<a class="jxr_linenumber" name="L14728" href="#L14728">14728</a> 
-<a class="jxr_linenumber" name="L14729" href="#L14729">14729</a>             <strong class="jxr_keyword">final</strong> IMUErrors errorsOutlier = <strong class="jxr_keyword">new</strong> IMUErrors(ba, bg, ma, mg, gg,
-<a class="jxr_linenumber" name="L14730" href="#L14730">14730</a>                     OUTLIER_ERROR_FACTOR * accelNoiseRootPSD,
-<a class="jxr_linenumber" name="L14731" href="#L14731">14731</a>                     OUTLIER_ERROR_FACTOR * gyroNoiseRootPSD,
-<a class="jxr_linenumber" name="L14732" href="#L14732">14732</a>                     accelQuantLevel, gyroQuantLevel);
-<a class="jxr_linenumber" name="L14733" href="#L14733">14733</a>             <strong class="jxr_keyword">final</strong> IMUErrors errorsInlier = <strong class="jxr_keyword">new</strong> IMUErrors(ba, bg, ma, mg, gg,
-<a class="jxr_linenumber" name="L14734" href="#L14734">14734</a>                     0.0, 0.0, accelQuantLevel,
-<a class="jxr_linenumber" name="L14735" href="#L14735">14735</a>                     gyroQuantLevel);
-<a class="jxr_linenumber" name="L14736" href="#L14736">14736</a> 
+<a class="jxr_linenumber" name="L14705" href="#L14705">14705</a>             checkGeneralCovariance(calibrator.getEstimatedCovariance());
+<a class="jxr_linenumber" name="L14706" href="#L14706">14706</a> 
+<a class="jxr_linenumber" name="L14707" href="#L14707">14707</a>             numValid++;
+<a class="jxr_linenumber" name="L14708" href="#L14708">14708</a>             <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L14709" href="#L14709">14709</a>         }
+<a class="jxr_linenumber" name="L14710" href="#L14710">14710</a> 
+<a class="jxr_linenumber" name="L14711" href="#L14711">14711</a>         assertTrue(numValid &gt; 0);
+<a class="jxr_linenumber" name="L14712" href="#L14712">14712</a>     }
+<a class="jxr_linenumber" name="L14713" href="#L14713">14713</a> 
+<a class="jxr_linenumber" name="L14714" href="#L14714">14714</a>     @Test
+<a class="jxr_linenumber" name="L14715" href="#L14715">14715</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testCalibrateCommonAxisNoNoiseInlier() <strong class="jxr_keyword">throws</strong> WrongSizeException,
+<a class="jxr_linenumber" name="L14716" href="#L14716">14716</a>             InvalidSourceAndDestinationFrameTypeException, LockedException,
+<a class="jxr_linenumber" name="L14717" href="#L14717">14717</a>             CalibrationException, NotReadyException {
+<a class="jxr_linenumber" name="L14718" href="#L14718">14718</a>         <strong class="jxr_keyword">int</strong> numValid = 0;
+<a class="jxr_linenumber" name="L14719" href="#L14719">14719</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> t = 0; t &lt; TIMES; t++) {
+<a class="jxr_linenumber" name="L14720" href="#L14720">14720</a>             <strong class="jxr_keyword">final</strong> Matrix ba = generateBa();
+<a class="jxr_linenumber" name="L14721" href="#L14721">14721</a>             <strong class="jxr_keyword">final</strong> Matrix bg = generateBg();
+<a class="jxr_linenumber" name="L14722" href="#L14722">14722</a>             <strong class="jxr_keyword">final</strong> Matrix ma = generateMaCommonAxis();
+<a class="jxr_linenumber" name="L14723" href="#L14723">14723</a>             <strong class="jxr_keyword">final</strong> Matrix mg = generateMg();
+<a class="jxr_linenumber" name="L14724" href="#L14724">14724</a>             <strong class="jxr_keyword">final</strong> Matrix gg = generateGg();
+<a class="jxr_linenumber" name="L14725" href="#L14725">14725</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> accelNoiseRootPSD = getAccelNoiseRootPSD();
+<a class="jxr_linenumber" name="L14726" href="#L14726">14726</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> gyroNoiseRootPSD = getGyroNoiseRootPSD();
+<a class="jxr_linenumber" name="L14727" href="#L14727">14727</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> accelQuantLevel = 0.0;
+<a class="jxr_linenumber" name="L14728" href="#L14728">14728</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> gyroQuantLevel = 0.0;
+<a class="jxr_linenumber" name="L14729" href="#L14729">14729</a> 
+<a class="jxr_linenumber" name="L14730" href="#L14730">14730</a>             <strong class="jxr_keyword">final</strong> IMUErrors errorsOutlier = <strong class="jxr_keyword">new</strong> IMUErrors(ba, bg, ma, mg, gg,
+<a class="jxr_linenumber" name="L14731" href="#L14731">14731</a>                     OUTLIER_ERROR_FACTOR * accelNoiseRootPSD,
+<a class="jxr_linenumber" name="L14732" href="#L14732">14732</a>                     OUTLIER_ERROR_FACTOR * gyroNoiseRootPSD,
+<a class="jxr_linenumber" name="L14733" href="#L14733">14733</a>                     accelQuantLevel, gyroQuantLevel);
+<a class="jxr_linenumber" name="L14734" href="#L14734">14734</a>             <strong class="jxr_keyword">final</strong> IMUErrors errorsInlier = <strong class="jxr_keyword">new</strong> IMUErrors(ba, bg, ma, mg, gg,
+<a class="jxr_linenumber" name="L14735" href="#L14735">14735</a>                     0.0, 0.0, accelQuantLevel,
+<a class="jxr_linenumber" name="L14736" href="#L14736">14736</a>                     gyroQuantLevel);
 <a class="jxr_linenumber" name="L14737" href="#L14737">14737</a> 
-<a class="jxr_linenumber" name="L14738" href="#L14738">14738</a>             <strong class="jxr_keyword">final</strong> Random random = <strong class="jxr_keyword">new</strong> Random();
-<a class="jxr_linenumber" name="L14739" href="#L14739">14739</a>             <strong class="jxr_keyword">final</strong> UniformRandomizer randomizer = <strong class="jxr_keyword">new</strong> UniformRandomizer(random);
-<a class="jxr_linenumber" name="L14740" href="#L14740">14740</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> latitude = Math.toRadians(
-<a class="jxr_linenumber" name="L14741" href="#L14741">14741</a>                     randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
-<a class="jxr_linenumber" name="L14742" href="#L14742">14742</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> longitude = Math.toRadians(
-<a class="jxr_linenumber" name="L14743" href="#L14743">14743</a>                     randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
-<a class="jxr_linenumber" name="L14744" href="#L14744">14744</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-<a class="jxr_linenumber" name="L14745" href="#L14745">14745</a>             <strong class="jxr_keyword">final</strong> NEDPosition nedPosition = <strong class="jxr_keyword">new</strong> NEDPosition(latitude, longitude, height);
-<a class="jxr_linenumber" name="L14746" href="#L14746">14746</a>             <strong class="jxr_keyword">final</strong> NEDVelocity nedVelocity = <strong class="jxr_keyword">new</strong> NEDVelocity();
-<a class="jxr_linenumber" name="L14747" href="#L14747">14747</a>             <strong class="jxr_keyword">final</strong> ECEFPosition ecefPosition = <strong class="jxr_keyword">new</strong> ECEFPosition();
-<a class="jxr_linenumber" name="L14748" href="#L14748">14748</a>             <strong class="jxr_keyword">final</strong> ECEFVelocity ecefVelocity = <strong class="jxr_keyword">new</strong> ECEFVelocity();
-<a class="jxr_linenumber" name="L14749" href="#L14749">14749</a>             NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
-<a class="jxr_linenumber" name="L14750" href="#L14750">14750</a>                     ecefPosition, ecefVelocity);
-<a class="jxr_linenumber" name="L14751" href="#L14751">14751</a>             <strong class="jxr_keyword">final</strong> ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-<a class="jxr_linenumber" name="L14752" href="#L14752">14752</a>                     ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
-<a class="jxr_linenumber" name="L14753" href="#L14753">14753</a> 
-<a class="jxr_linenumber" name="L14754" href="#L14754">14754</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> sqrtTimeInterval = Math.sqrt(TIME_INTERVAL_SECONDS);
-<a class="jxr_linenumber" name="L14755" href="#L14755">14755</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> specificForceStandardDeviation = getAccelNoiseRootPSD()
-<a class="jxr_linenumber" name="L14756" href="#L14756">14756</a>                     / sqrtTimeInterval;
-<a class="jxr_linenumber" name="L14757" href="#L14757">14757</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> angularRateStandardDeviation = getGyroNoiseRootPSD()
-<a class="jxr_linenumber" name="L14758" href="#L14758">14758</a>                     / sqrtTimeInterval;
-<a class="jxr_linenumber" name="L14759" href="#L14759">14759</a> 
-<a class="jxr_linenumber" name="L14760" href="#L14760">14760</a>             <strong class="jxr_keyword">final</strong> GaussianRandomizer errorRandomizer = <strong class="jxr_keyword">new</strong> GaussianRandomizer(
-<a class="jxr_linenumber" name="L14761" href="#L14761">14761</a>                     random, 0.0, specificForceStandardDeviation);
-<a class="jxr_linenumber" name="L14762" href="#L14762">14762</a> 
-<a class="jxr_linenumber" name="L14763" href="#L14763">14763</a>             <strong class="jxr_keyword">final</strong> List&lt;StandardDeviationBodyKinematics&gt; measurements =
-<a class="jxr_linenumber" name="L14764" href="#L14764">14764</a>                     <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
-<a class="jxr_linenumber" name="L14765" href="#L14765">14765</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] qualityScores = <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">double</strong>[MEASUREMENT_NUMBER];
-<a class="jxr_linenumber" name="L14766" href="#L14766">14766</a>             <strong class="jxr_keyword">double</strong> error;
-<a class="jxr_linenumber" name="L14767" href="#L14767">14767</a>             <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; MEASUREMENT_NUMBER; i++) {
-<a class="jxr_linenumber" name="L14768" href="#L14768">14768</a>                 <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> roll = Math.toRadians(
-<a class="jxr_linenumber" name="L14769" href="#L14769">14769</a>                         randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-<a class="jxr_linenumber" name="L14770" href="#L14770">14770</a>                 <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> pitch = Math.toRadians(
-<a class="jxr_linenumber" name="L14771" href="#L14771">14771</a>                         randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-<a class="jxr_linenumber" name="L14772" href="#L14772">14772</a>                 <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> yaw = Math.toRadians(
-<a class="jxr_linenumber" name="L14773" href="#L14773">14773</a>                         randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-<a class="jxr_linenumber" name="L14774" href="#L14774">14774</a>                 <strong class="jxr_keyword">final</strong> CoordinateTransformation nedC = <strong class="jxr_keyword">new</strong> CoordinateTransformation(
-<a class="jxr_linenumber" name="L14775" href="#L14775">14775</a>                         roll, pitch, yaw, FrameType.BODY_FRAME,
-<a class="jxr_linenumber" name="L14776" href="#L14776">14776</a>                         FrameType.LOCAL_NAVIGATION_FRAME);
-<a class="jxr_linenumber" name="L14777" href="#L14777">14777</a> 
-<a class="jxr_linenumber" name="L14778" href="#L14778">14778</a>                 <strong class="jxr_keyword">final</strong> NEDFrame nedFrame = <strong class="jxr_keyword">new</strong> NEDFrame(nedPosition, nedC);
-<a class="jxr_linenumber" name="L14779" href="#L14779">14779</a>                 <strong class="jxr_keyword">final</strong> ECEFFrame ecefFrame = NEDtoECEFFrameConverter
-<a class="jxr_linenumber" name="L14780" href="#L14780">14780</a>                         .convertNEDtoECEFAndReturnNew(nedFrame);
-<a class="jxr_linenumber" name="L14781" href="#L14781">14781</a> 
-<a class="jxr_linenumber" name="L14782" href="#L14782">14782</a>                 <em class="jxr_comment">// compute ground-truth kinematics that should be generated at provided</em>
-<a class="jxr_linenumber" name="L14783" href="#L14783">14783</a>                 <em class="jxr_comment">// position, velocity and orientation</em>
-<a class="jxr_linenumber" name="L14784" href="#L14784">14784</a>                 <strong class="jxr_keyword">final</strong> BodyKinematics trueKinematics = ECEFKinematicsEstimator
-<a class="jxr_linenumber" name="L14785" href="#L14785">14785</a>                         .estimateKinematicsAndReturnNew(TIME_INTERVAL_SECONDS, ecefFrame,
-<a class="jxr_linenumber" name="L14786" href="#L14786">14786</a>                                 ecefFrame);
-<a class="jxr_linenumber" name="L14787" href="#L14787">14787</a> 
-<a class="jxr_linenumber" name="L14788" href="#L14788">14788</a>                 <em class="jxr_comment">// apply known calibration parameters to distort ground-truth and generate a</em>
-<a class="jxr_linenumber" name="L14789" href="#L14789">14789</a>                 <em class="jxr_comment">// measured kinematics sample</em>
-<a class="jxr_linenumber" name="L14790" href="#L14790">14790</a>                 <strong class="jxr_keyword">final</strong> BodyKinematics measuredKinematics;
-<a class="jxr_linenumber" name="L14791" href="#L14791">14791</a>                 <strong class="jxr_keyword">if</strong> (randomizer.nextInt(0, 100) &lt; OUTLIER_PERCENTAGE) {
-<a class="jxr_linenumber" name="L14792" href="#L14792">14792</a>                     <em class="jxr_comment">// outlier</em>
-<a class="jxr_linenumber" name="L14793" href="#L14793">14793</a>                     measuredKinematics = BodyKinematicsGenerator
-<a class="jxr_linenumber" name="L14794" href="#L14794">14794</a>                             .generate(TIME_INTERVAL_SECONDS, trueKinematics,
-<a class="jxr_linenumber" name="L14795" href="#L14795">14795</a>                                     errorsOutlier, random);
-<a class="jxr_linenumber" name="L14796" href="#L14796">14796</a>                     error = Math.abs(errorRandomizer.nextDouble());
-<a class="jxr_linenumber" name="L14797" href="#L14797">14797</a> 
-<a class="jxr_linenumber" name="L14798" href="#L14798">14798</a>                 } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L14799" href="#L14799">14799</a>                     <em class="jxr_comment">// inlier</em>
-<a class="jxr_linenumber" name="L14800" href="#L14800">14800</a>                     measuredKinematics = BodyKinematicsGenerator
-<a class="jxr_linenumber" name="L14801" href="#L14801">14801</a>                             .generate(TIME_INTERVAL_SECONDS, trueKinematics,
-<a class="jxr_linenumber" name="L14802" href="#L14802">14802</a>                                     errorsInlier, random);
-<a class="jxr_linenumber" name="L14803" href="#L14803">14803</a>                     error = 0.0;
-<a class="jxr_linenumber" name="L14804" href="#L14804">14804</a>                 }
-<a class="jxr_linenumber" name="L14805" href="#L14805">14805</a> 
-<a class="jxr_linenumber" name="L14806" href="#L14806">14806</a>                 <strong class="jxr_keyword">final</strong> StandardDeviationBodyKinematics measurement =
-<a class="jxr_linenumber" name="L14807" href="#L14807">14807</a>                         <strong class="jxr_keyword">new</strong> StandardDeviationBodyKinematics(measuredKinematics,
-<a class="jxr_linenumber" name="L14808" href="#L14808">14808</a>                                 specificForceStandardDeviation,
-<a class="jxr_linenumber" name="L14809" href="#L14809">14809</a>                                 angularRateStandardDeviation);
-<a class="jxr_linenumber" name="L14810" href="#L14810">14810</a>                 measurements.add(measurement);
-<a class="jxr_linenumber" name="L14811" href="#L14811">14811</a> 
-<a class="jxr_linenumber" name="L14812" href="#L14812">14812</a>                 qualityScores[i] = 1.0 / (1.0 + error);
-<a class="jxr_linenumber" name="L14813" href="#L14813">14813</a>             }
-<a class="jxr_linenumber" name="L14814" href="#L14814">14814</a> 
-<a class="jxr_linenumber" name="L14815" href="#L14815">14815</a>             <strong class="jxr_keyword">final</strong> PROMedSRobustKnownGravityNormAccelerometerCalibrator calibrator =
-<a class="jxr_linenumber" name="L14816" href="#L14816">14816</a>                     <strong class="jxr_keyword">new</strong> PROMedSRobustKnownGravityNormAccelerometerCalibrator(
-<a class="jxr_linenumber" name="L14817" href="#L14817">14817</a>                             qualityScores, gravity.getNorm(), measurements,
-<a class="jxr_linenumber" name="L14818" href="#L14818">14818</a>                             <strong class="jxr_keyword">true</strong>, ba, ma, <strong class="jxr_keyword">this</strong>);
-<a class="jxr_linenumber" name="L14819" href="#L14819">14819</a>             calibrator.setStopThreshold(THRESHOLD);
-<a class="jxr_linenumber" name="L14820" href="#L14820">14820</a> 
-<a class="jxr_linenumber" name="L14821" href="#L14821">14821</a>             <em class="jxr_comment">// estimate</em>
-<a class="jxr_linenumber" name="L14822" href="#L14822">14822</a>             reset();
-<a class="jxr_linenumber" name="L14823" href="#L14823">14823</a>             assertTrue(calibrator.isReady());
-<a class="jxr_linenumber" name="L14824" href="#L14824">14824</a>             assertFalse(calibrator.isRunning());
-<a class="jxr_linenumber" name="L14825" href="#L14825">14825</a>             assertEquals(mCalibrateStart, 0);
-<a class="jxr_linenumber" name="L14826" href="#L14826">14826</a>             assertEquals(mCalibrateEnd, 0);
-<a class="jxr_linenumber" name="L14827" href="#L14827">14827</a>             assertEquals(mCalibrateNextIteration, 0);
-<a class="jxr_linenumber" name="L14828" href="#L14828">14828</a>             assertEquals(mCalibrateProgressChange, 0);
-<a class="jxr_linenumber" name="L14829" href="#L14829">14829</a> 
-<a class="jxr_linenumber" name="L14830" href="#L14830">14830</a>             calibrator.calibrate();
-<a class="jxr_linenumber" name="L14831" href="#L14831">14831</a> 
-<a class="jxr_linenumber" name="L14832" href="#L14832">14832</a>             <em class="jxr_comment">// check</em>
-<a class="jxr_linenumber" name="L14833" href="#L14833">14833</a>             assertTrue(calibrator.isReady());
-<a class="jxr_linenumber" name="L14834" href="#L14834">14834</a>             assertFalse(calibrator.isRunning());
-<a class="jxr_linenumber" name="L14835" href="#L14835">14835</a>             assertEquals(mCalibrateStart, 1);
-<a class="jxr_linenumber" name="L14836" href="#L14836">14836</a>             assertEquals(mCalibrateEnd, 1);
-<a class="jxr_linenumber" name="L14837" href="#L14837">14837</a>             assertTrue(mCalibrateNextIteration &gt; 0);
-<a class="jxr_linenumber" name="L14838" href="#L14838">14838</a>             assertTrue(mCalibrateProgressChange &gt;= 0);
-<a class="jxr_linenumber" name="L14839" href="#L14839">14839</a> 
-<a class="jxr_linenumber" name="L14840" href="#L14840">14840</a>             <strong class="jxr_keyword">final</strong> Matrix estimatedBa = calibrator.getEstimatedBiasesAsMatrix();
-<a class="jxr_linenumber" name="L14841" href="#L14841">14841</a>             <strong class="jxr_keyword">final</strong> Matrix estimatedMa = calibrator.getEstimatedMa();
-<a class="jxr_linenumber" name="L14842" href="#L14842">14842</a> 
-<a class="jxr_linenumber" name="L14843" href="#L14843">14843</a>             <strong class="jxr_keyword">if</strong> (!ba.equals(estimatedBa, ABSOLUTE_ERROR)) {
-<a class="jxr_linenumber" name="L14844" href="#L14844">14844</a>                 <strong class="jxr_keyword">continue</strong>;
-<a class="jxr_linenumber" name="L14845" href="#L14845">14845</a>             }
-<a class="jxr_linenumber" name="L14846" href="#L14846">14846</a>             <strong class="jxr_keyword">if</strong> (!ma.equals(estimatedMa, ABSOLUTE_ERROR)) {
-<a class="jxr_linenumber" name="L14847" href="#L14847">14847</a>                 <strong class="jxr_keyword">continue</strong>;
-<a class="jxr_linenumber" name="L14848" href="#L14848">14848</a>             }
-<a class="jxr_linenumber" name="L14849" href="#L14849">14849</a>             assertTrue(ba.equals(estimatedBa, ABSOLUTE_ERROR));
-<a class="jxr_linenumber" name="L14850" href="#L14850">14850</a>             assertTrue(ma.equals(estimatedMa, ABSOLUTE_ERROR));
-<a class="jxr_linenumber" name="L14851" href="#L14851">14851</a> 
-<a class="jxr_linenumber" name="L14852" href="#L14852">14852</a>             assertEstimatedResult(estimatedBa, estimatedMa, calibrator, <strong class="jxr_keyword">true</strong>);
-<a class="jxr_linenumber" name="L14853" href="#L14853">14853</a> 
-<a class="jxr_linenumber" name="L14854" href="#L14854">14854</a>             assertNotNull(calibrator.getEstimatedCovariance());
-<a class="jxr_linenumber" name="L14855" href="#L14855">14855</a> 
-<a class="jxr_linenumber" name="L14856" href="#L14856">14856</a>             numValid++;
-<a class="jxr_linenumber" name="L14857" href="#L14857">14857</a>             <strong class="jxr_keyword">break</strong>;
-<a class="jxr_linenumber" name="L14858" href="#L14858">14858</a>         }
-<a class="jxr_linenumber" name="L14859" href="#L14859">14859</a> 
-<a class="jxr_linenumber" name="L14860" href="#L14860">14860</a>         assertTrue(numValid &gt; 0);
-<a class="jxr_linenumber" name="L14861" href="#L14861">14861</a>     }
-<a class="jxr_linenumber" name="L14862" href="#L14862">14862</a> 
-<a class="jxr_linenumber" name="L14863" href="#L14863">14863</a>     @Test
-<a class="jxr_linenumber" name="L14864" href="#L14864">14864</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testCalibrateGeneralNoRefinement() <strong class="jxr_keyword">throws</strong> WrongSizeException,
-<a class="jxr_linenumber" name="L14865" href="#L14865">14865</a>             InvalidSourceAndDestinationFrameTypeException, LockedException,
-<a class="jxr_linenumber" name="L14866" href="#L14866">14866</a>             CalibrationException, NotReadyException {
-<a class="jxr_linenumber" name="L14867" href="#L14867">14867</a>         <strong class="jxr_keyword">int</strong> numValid = 0;
-<a class="jxr_linenumber" name="L14868" href="#L14868">14868</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> t = 0; t &lt; TIMES; t++) {
-<a class="jxr_linenumber" name="L14869" href="#L14869">14869</a>             <strong class="jxr_keyword">final</strong> Matrix ba = generateBa();
-<a class="jxr_linenumber" name="L14870" href="#L14870">14870</a>             <strong class="jxr_keyword">final</strong> Matrix bg = generateBg();
-<a class="jxr_linenumber" name="L14871" href="#L14871">14871</a>             <strong class="jxr_keyword">final</strong> Matrix ma = generateMaGeneral();
-<a class="jxr_linenumber" name="L14872" href="#L14872">14872</a>             <strong class="jxr_keyword">final</strong> Matrix mg = generateMg();
-<a class="jxr_linenumber" name="L14873" href="#L14873">14873</a>             <strong class="jxr_keyword">final</strong> Matrix gg = generateGg();
-<a class="jxr_linenumber" name="L14874" href="#L14874">14874</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> accelNoiseRootPSD = getAccelNoiseRootPSD();
-<a class="jxr_linenumber" name="L14875" href="#L14875">14875</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> gyroNoiseRootPSD = getGyroNoiseRootPSD();
-<a class="jxr_linenumber" name="L14876" href="#L14876">14876</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> accelQuantLevel = 0.0;
-<a class="jxr_linenumber" name="L14877" href="#L14877">14877</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> gyroQuantLevel = 0.0;
-<a class="jxr_linenumber" name="L14878" href="#L14878">14878</a> 
-<a class="jxr_linenumber" name="L14879" href="#L14879">14879</a>             <strong class="jxr_keyword">final</strong> IMUErrors errorsOutlier = <strong class="jxr_keyword">new</strong> IMUErrors(ba, bg, ma, mg, gg,
-<a class="jxr_linenumber" name="L14880" href="#L14880">14880</a>                     OUTLIER_ERROR_FACTOR * accelNoiseRootPSD,
-<a class="jxr_linenumber" name="L14881" href="#L14881">14881</a>                     OUTLIER_ERROR_FACTOR * gyroNoiseRootPSD,
-<a class="jxr_linenumber" name="L14882" href="#L14882">14882</a>                     accelQuantLevel, gyroQuantLevel);
-<a class="jxr_linenumber" name="L14883" href="#L14883">14883</a>             <strong class="jxr_keyword">final</strong> IMUErrors errorsInlier = <strong class="jxr_keyword">new</strong> IMUErrors(ba, bg, ma, mg, gg,
-<a class="jxr_linenumber" name="L14884" href="#L14884">14884</a>                     0.0, 0.0, accelQuantLevel,
-<a class="jxr_linenumber" name="L14885" href="#L14885">14885</a>                     gyroQuantLevel);
-<a class="jxr_linenumber" name="L14886" href="#L14886">14886</a> 
-<a class="jxr_linenumber" name="L14887" href="#L14887">14887</a> 
-<a class="jxr_linenumber" name="L14888" href="#L14888">14888</a>             <strong class="jxr_keyword">final</strong> Random random = <strong class="jxr_keyword">new</strong> Random();
-<a class="jxr_linenumber" name="L14889" href="#L14889">14889</a>             <strong class="jxr_keyword">final</strong> UniformRandomizer randomizer = <strong class="jxr_keyword">new</strong> UniformRandomizer(random);
-<a class="jxr_linenumber" name="L14890" href="#L14890">14890</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> latitude = Math.toRadians(
-<a class="jxr_linenumber" name="L14891" href="#L14891">14891</a>                     randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
-<a class="jxr_linenumber" name="L14892" href="#L14892">14892</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> longitude = Math.toRadians(
-<a class="jxr_linenumber" name="L14893" href="#L14893">14893</a>                     randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
-<a class="jxr_linenumber" name="L14894" href="#L14894">14894</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-<a class="jxr_linenumber" name="L14895" href="#L14895">14895</a>             <strong class="jxr_keyword">final</strong> NEDPosition nedPosition = <strong class="jxr_keyword">new</strong> NEDPosition(latitude, longitude, height);
-<a class="jxr_linenumber" name="L14896" href="#L14896">14896</a>             <strong class="jxr_keyword">final</strong> NEDVelocity nedVelocity = <strong class="jxr_keyword">new</strong> NEDVelocity();
-<a class="jxr_linenumber" name="L14897" href="#L14897">14897</a>             <strong class="jxr_keyword">final</strong> ECEFPosition ecefPosition = <strong class="jxr_keyword">new</strong> ECEFPosition();
-<a class="jxr_linenumber" name="L14898" href="#L14898">14898</a>             <strong class="jxr_keyword">final</strong> ECEFVelocity ecefVelocity = <strong class="jxr_keyword">new</strong> ECEFVelocity();
-<a class="jxr_linenumber" name="L14899" href="#L14899">14899</a>             NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
-<a class="jxr_linenumber" name="L14900" href="#L14900">14900</a>                     ecefPosition, ecefVelocity);
-<a class="jxr_linenumber" name="L14901" href="#L14901">14901</a>             <strong class="jxr_keyword">final</strong> ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-<a class="jxr_linenumber" name="L14902" href="#L14902">14902</a>                     ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
-<a class="jxr_linenumber" name="L14903" href="#L14903">14903</a> 
-<a class="jxr_linenumber" name="L14904" href="#L14904">14904</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> sqrtTimeInterval = Math.sqrt(TIME_INTERVAL_SECONDS);
-<a class="jxr_linenumber" name="L14905" href="#L14905">14905</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> specificForceStandardDeviation = getAccelNoiseRootPSD()
-<a class="jxr_linenumber" name="L14906" href="#L14906">14906</a>                     / sqrtTimeInterval;
-<a class="jxr_linenumber" name="L14907" href="#L14907">14907</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> angularRateStandardDeviation = getGyroNoiseRootPSD()
+<a class="jxr_linenumber" name="L14738" href="#L14738">14738</a> 
+<a class="jxr_linenumber" name="L14739" href="#L14739">14739</a>             <strong class="jxr_keyword">final</strong> Random random = <strong class="jxr_keyword">new</strong> Random();
+<a class="jxr_linenumber" name="L14740" href="#L14740">14740</a>             <strong class="jxr_keyword">final</strong> UniformRandomizer randomizer = <strong class="jxr_keyword">new</strong> UniformRandomizer(random);
+<a class="jxr_linenumber" name="L14741" href="#L14741">14741</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> latitude = Math.toRadians(
+<a class="jxr_linenumber" name="L14742" href="#L14742">14742</a>                     randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
+<a class="jxr_linenumber" name="L14743" href="#L14743">14743</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> longitude = Math.toRadians(
+<a class="jxr_linenumber" name="L14744" href="#L14744">14744</a>                     randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
+<a class="jxr_linenumber" name="L14745" href="#L14745">14745</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+<a class="jxr_linenumber" name="L14746" href="#L14746">14746</a>             <strong class="jxr_keyword">final</strong> NEDPosition nedPosition = <strong class="jxr_keyword">new</strong> NEDPosition(latitude, longitude, height);
+<a class="jxr_linenumber" name="L14747" href="#L14747">14747</a>             <strong class="jxr_keyword">final</strong> NEDVelocity nedVelocity = <strong class="jxr_keyword">new</strong> NEDVelocity();
+<a class="jxr_linenumber" name="L14748" href="#L14748">14748</a>             <strong class="jxr_keyword">final</strong> ECEFPosition ecefPosition = <strong class="jxr_keyword">new</strong> ECEFPosition();
+<a class="jxr_linenumber" name="L14749" href="#L14749">14749</a>             <strong class="jxr_keyword">final</strong> ECEFVelocity ecefVelocity = <strong class="jxr_keyword">new</strong> ECEFVelocity();
+<a class="jxr_linenumber" name="L14750" href="#L14750">14750</a>             NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
+<a class="jxr_linenumber" name="L14751" href="#L14751">14751</a>                     ecefPosition, ecefVelocity);
+<a class="jxr_linenumber" name="L14752" href="#L14752">14752</a>             <strong class="jxr_keyword">final</strong> ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+<a class="jxr_linenumber" name="L14753" href="#L14753">14753</a>                     ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+<a class="jxr_linenumber" name="L14754" href="#L14754">14754</a> 
+<a class="jxr_linenumber" name="L14755" href="#L14755">14755</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> sqrtTimeInterval = Math.sqrt(TIME_INTERVAL_SECONDS);
+<a class="jxr_linenumber" name="L14756" href="#L14756">14756</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> specificForceStandardDeviation = getAccelNoiseRootPSD()
+<a class="jxr_linenumber" name="L14757" href="#L14757">14757</a>                     / sqrtTimeInterval;
+<a class="jxr_linenumber" name="L14758" href="#L14758">14758</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> angularRateStandardDeviation = getGyroNoiseRootPSD()
+<a class="jxr_linenumber" name="L14759" href="#L14759">14759</a>                     / sqrtTimeInterval;
+<a class="jxr_linenumber" name="L14760" href="#L14760">14760</a> 
+<a class="jxr_linenumber" name="L14761" href="#L14761">14761</a>             <strong class="jxr_keyword">final</strong> GaussianRandomizer errorRandomizer = <strong class="jxr_keyword">new</strong> GaussianRandomizer(
+<a class="jxr_linenumber" name="L14762" href="#L14762">14762</a>                     random, 0.0, specificForceStandardDeviation);
+<a class="jxr_linenumber" name="L14763" href="#L14763">14763</a> 
+<a class="jxr_linenumber" name="L14764" href="#L14764">14764</a>             <strong class="jxr_keyword">final</strong> List&lt;StandardDeviationBodyKinematics&gt; measurements =
+<a class="jxr_linenumber" name="L14765" href="#L14765">14765</a>                     <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
+<a class="jxr_linenumber" name="L14766" href="#L14766">14766</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] qualityScores = <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">double</strong>[MEASUREMENT_NUMBER];
+<a class="jxr_linenumber" name="L14767" href="#L14767">14767</a>             <strong class="jxr_keyword">double</strong> error;
+<a class="jxr_linenumber" name="L14768" href="#L14768">14768</a>             <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; MEASUREMENT_NUMBER; i++) {
+<a class="jxr_linenumber" name="L14769" href="#L14769">14769</a>                 <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> roll = Math.toRadians(
+<a class="jxr_linenumber" name="L14770" href="#L14770">14770</a>                         randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+<a class="jxr_linenumber" name="L14771" href="#L14771">14771</a>                 <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> pitch = Math.toRadians(
+<a class="jxr_linenumber" name="L14772" href="#L14772">14772</a>                         randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+<a class="jxr_linenumber" name="L14773" href="#L14773">14773</a>                 <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> yaw = Math.toRadians(
+<a class="jxr_linenumber" name="L14774" href="#L14774">14774</a>                         randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+<a class="jxr_linenumber" name="L14775" href="#L14775">14775</a>                 <strong class="jxr_keyword">final</strong> CoordinateTransformation nedC = <strong class="jxr_keyword">new</strong> CoordinateTransformation(
+<a class="jxr_linenumber" name="L14776" href="#L14776">14776</a>                         roll, pitch, yaw, FrameType.BODY_FRAME,
+<a class="jxr_linenumber" name="L14777" href="#L14777">14777</a>                         FrameType.LOCAL_NAVIGATION_FRAME);
+<a class="jxr_linenumber" name="L14778" href="#L14778">14778</a> 
+<a class="jxr_linenumber" name="L14779" href="#L14779">14779</a>                 <strong class="jxr_keyword">final</strong> NEDFrame nedFrame = <strong class="jxr_keyword">new</strong> NEDFrame(nedPosition, nedC);
+<a class="jxr_linenumber" name="L14780" href="#L14780">14780</a>                 <strong class="jxr_keyword">final</strong> ECEFFrame ecefFrame = NEDtoECEFFrameConverter
+<a class="jxr_linenumber" name="L14781" href="#L14781">14781</a>                         .convertNEDtoECEFAndReturnNew(nedFrame);
+<a class="jxr_linenumber" name="L14782" href="#L14782">14782</a> 
+<a class="jxr_linenumber" name="L14783" href="#L14783">14783</a>                 <em class="jxr_comment">// compute ground-truth kinematics that should be generated at provided</em>
+<a class="jxr_linenumber" name="L14784" href="#L14784">14784</a>                 <em class="jxr_comment">// position, velocity and orientation</em>
+<a class="jxr_linenumber" name="L14785" href="#L14785">14785</a>                 <strong class="jxr_keyword">final</strong> BodyKinematics trueKinematics = ECEFKinematicsEstimator
+<a class="jxr_linenumber" name="L14786" href="#L14786">14786</a>                         .estimateKinematicsAndReturnNew(TIME_INTERVAL_SECONDS, ecefFrame,
+<a class="jxr_linenumber" name="L14787" href="#L14787">14787</a>                                 ecefFrame);
+<a class="jxr_linenumber" name="L14788" href="#L14788">14788</a> 
+<a class="jxr_linenumber" name="L14789" href="#L14789">14789</a>                 <em class="jxr_comment">// apply known calibration parameters to distort ground-truth and generate a</em>
+<a class="jxr_linenumber" name="L14790" href="#L14790">14790</a>                 <em class="jxr_comment">// measured kinematics sample</em>
+<a class="jxr_linenumber" name="L14791" href="#L14791">14791</a>                 <strong class="jxr_keyword">final</strong> BodyKinematics measuredKinematics;
+<a class="jxr_linenumber" name="L14792" href="#L14792">14792</a>                 <strong class="jxr_keyword">if</strong> (randomizer.nextInt(0, 100) &lt; OUTLIER_PERCENTAGE) {
+<a class="jxr_linenumber" name="L14793" href="#L14793">14793</a>                     <em class="jxr_comment">// outlier</em>
+<a class="jxr_linenumber" name="L14794" href="#L14794">14794</a>                     measuredKinematics = BodyKinematicsGenerator
+<a class="jxr_linenumber" name="L14795" href="#L14795">14795</a>                             .generate(TIME_INTERVAL_SECONDS, trueKinematics,
+<a class="jxr_linenumber" name="L14796" href="#L14796">14796</a>                                     errorsOutlier, random);
+<a class="jxr_linenumber" name="L14797" href="#L14797">14797</a>                     error = Math.abs(errorRandomizer.nextDouble());
+<a class="jxr_linenumber" name="L14798" href="#L14798">14798</a> 
+<a class="jxr_linenumber" name="L14799" href="#L14799">14799</a>                 } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L14800" href="#L14800">14800</a>                     <em class="jxr_comment">// inlier</em>
+<a class="jxr_linenumber" name="L14801" href="#L14801">14801</a>                     measuredKinematics = BodyKinematicsGenerator
+<a class="jxr_linenumber" name="L14802" href="#L14802">14802</a>                             .generate(TIME_INTERVAL_SECONDS, trueKinematics,
+<a class="jxr_linenumber" name="L14803" href="#L14803">14803</a>                                     errorsInlier, random);
+<a class="jxr_linenumber" name="L14804" href="#L14804">14804</a>                     error = 0.0;
+<a class="jxr_linenumber" name="L14805" href="#L14805">14805</a>                 }
+<a class="jxr_linenumber" name="L14806" href="#L14806">14806</a> 
+<a class="jxr_linenumber" name="L14807" href="#L14807">14807</a>                 <strong class="jxr_keyword">final</strong> StandardDeviationBodyKinematics measurement =
+<a class="jxr_linenumber" name="L14808" href="#L14808">14808</a>                         <strong class="jxr_keyword">new</strong> StandardDeviationBodyKinematics(measuredKinematics,
+<a class="jxr_linenumber" name="L14809" href="#L14809">14809</a>                                 specificForceStandardDeviation,
+<a class="jxr_linenumber" name="L14810" href="#L14810">14810</a>                                 angularRateStandardDeviation);
+<a class="jxr_linenumber" name="L14811" href="#L14811">14811</a>                 measurements.add(measurement);
+<a class="jxr_linenumber" name="L14812" href="#L14812">14812</a> 
+<a class="jxr_linenumber" name="L14813" href="#L14813">14813</a>                 qualityScores[i] = 1.0 / (1.0 + error);
+<a class="jxr_linenumber" name="L14814" href="#L14814">14814</a>             }
+<a class="jxr_linenumber" name="L14815" href="#L14815">14815</a> 
+<a class="jxr_linenumber" name="L14816" href="#L14816">14816</a>             <strong class="jxr_keyword">final</strong> PROMedSRobustKnownGravityNormAccelerometerCalibrator calibrator =
+<a class="jxr_linenumber" name="L14817" href="#L14817">14817</a>                     <strong class="jxr_keyword">new</strong> PROMedSRobustKnownGravityNormAccelerometerCalibrator(
+<a class="jxr_linenumber" name="L14818" href="#L14818">14818</a>                             qualityScores, gravity.getNorm(), measurements,
+<a class="jxr_linenumber" name="L14819" href="#L14819">14819</a>                             <strong class="jxr_keyword">true</strong>, ba, ma, <strong class="jxr_keyword">this</strong>);
+<a class="jxr_linenumber" name="L14820" href="#L14820">14820</a>             calibrator.setStopThreshold(THRESHOLD);
+<a class="jxr_linenumber" name="L14821" href="#L14821">14821</a> 
+<a class="jxr_linenumber" name="L14822" href="#L14822">14822</a>             <em class="jxr_comment">// estimate</em>
+<a class="jxr_linenumber" name="L14823" href="#L14823">14823</a>             reset();
+<a class="jxr_linenumber" name="L14824" href="#L14824">14824</a>             assertTrue(calibrator.isReady());
+<a class="jxr_linenumber" name="L14825" href="#L14825">14825</a>             assertFalse(calibrator.isRunning());
+<a class="jxr_linenumber" name="L14826" href="#L14826">14826</a>             assertEquals(mCalibrateStart, 0);
+<a class="jxr_linenumber" name="L14827" href="#L14827">14827</a>             assertEquals(mCalibrateEnd, 0);
+<a class="jxr_linenumber" name="L14828" href="#L14828">14828</a>             assertEquals(mCalibrateNextIteration, 0);
+<a class="jxr_linenumber" name="L14829" href="#L14829">14829</a>             assertEquals(mCalibrateProgressChange, 0);
+<a class="jxr_linenumber" name="L14830" href="#L14830">14830</a> 
+<a class="jxr_linenumber" name="L14831" href="#L14831">14831</a>             calibrator.calibrate();
+<a class="jxr_linenumber" name="L14832" href="#L14832">14832</a> 
+<a class="jxr_linenumber" name="L14833" href="#L14833">14833</a>             <em class="jxr_comment">// check</em>
+<a class="jxr_linenumber" name="L14834" href="#L14834">14834</a>             assertTrue(calibrator.isReady());
+<a class="jxr_linenumber" name="L14835" href="#L14835">14835</a>             assertFalse(calibrator.isRunning());
+<a class="jxr_linenumber" name="L14836" href="#L14836">14836</a>             assertEquals(mCalibrateStart, 1);
+<a class="jxr_linenumber" name="L14837" href="#L14837">14837</a>             assertEquals(mCalibrateEnd, 1);
+<a class="jxr_linenumber" name="L14838" href="#L14838">14838</a>             assertTrue(mCalibrateNextIteration &gt; 0);
+<a class="jxr_linenumber" name="L14839" href="#L14839">14839</a>             assertTrue(mCalibrateProgressChange &gt;= 0);
+<a class="jxr_linenumber" name="L14840" href="#L14840">14840</a> 
+<a class="jxr_linenumber" name="L14841" href="#L14841">14841</a>             <strong class="jxr_keyword">final</strong> Matrix estimatedBa = calibrator.getEstimatedBiasesAsMatrix();
+<a class="jxr_linenumber" name="L14842" href="#L14842">14842</a>             <strong class="jxr_keyword">final</strong> Matrix estimatedMa = calibrator.getEstimatedMa();
+<a class="jxr_linenumber" name="L14843" href="#L14843">14843</a> 
+<a class="jxr_linenumber" name="L14844" href="#L14844">14844</a>             <strong class="jxr_keyword">if</strong> (!ba.equals(estimatedBa, ABSOLUTE_ERROR)) {
+<a class="jxr_linenumber" name="L14845" href="#L14845">14845</a>                 <strong class="jxr_keyword">continue</strong>;
+<a class="jxr_linenumber" name="L14846" href="#L14846">14846</a>             }
+<a class="jxr_linenumber" name="L14847" href="#L14847">14847</a>             <strong class="jxr_keyword">if</strong> (!ma.equals(estimatedMa, ABSOLUTE_ERROR)) {
+<a class="jxr_linenumber" name="L14848" href="#L14848">14848</a>                 <strong class="jxr_keyword">continue</strong>;
+<a class="jxr_linenumber" name="L14849" href="#L14849">14849</a>             }
+<a class="jxr_linenumber" name="L14850" href="#L14850">14850</a>             assertTrue(ba.equals(estimatedBa, ABSOLUTE_ERROR));
+<a class="jxr_linenumber" name="L14851" href="#L14851">14851</a>             assertTrue(ma.equals(estimatedMa, ABSOLUTE_ERROR));
+<a class="jxr_linenumber" name="L14852" href="#L14852">14852</a> 
+<a class="jxr_linenumber" name="L14853" href="#L14853">14853</a>             assertEstimatedResult(estimatedBa, estimatedMa, calibrator, <strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L14854" href="#L14854">14854</a> 
+<a class="jxr_linenumber" name="L14855" href="#L14855">14855</a>             assertNotNull(calibrator.getEstimatedCovariance());
+<a class="jxr_linenumber" name="L14856" href="#L14856">14856</a>             checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
+<a class="jxr_linenumber" name="L14857" href="#L14857">14857</a> 
+<a class="jxr_linenumber" name="L14858" href="#L14858">14858</a>             numValid++;
+<a class="jxr_linenumber" name="L14859" href="#L14859">14859</a>             <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L14860" href="#L14860">14860</a>         }
+<a class="jxr_linenumber" name="L14861" href="#L14861">14861</a> 
+<a class="jxr_linenumber" name="L14862" href="#L14862">14862</a>         assertTrue(numValid &gt; 0);
+<a class="jxr_linenumber" name="L14863" href="#L14863">14863</a>     }
+<a class="jxr_linenumber" name="L14864" href="#L14864">14864</a> 
+<a class="jxr_linenumber" name="L14865" href="#L14865">14865</a>     @Test
+<a class="jxr_linenumber" name="L14866" href="#L14866">14866</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testCalibrateGeneralNoRefinement() <strong class="jxr_keyword">throws</strong> WrongSizeException,
+<a class="jxr_linenumber" name="L14867" href="#L14867">14867</a>             InvalidSourceAndDestinationFrameTypeException, LockedException,
+<a class="jxr_linenumber" name="L14868" href="#L14868">14868</a>             CalibrationException, NotReadyException {
+<a class="jxr_linenumber" name="L14869" href="#L14869">14869</a>         <strong class="jxr_keyword">int</strong> numValid = 0;
+<a class="jxr_linenumber" name="L14870" href="#L14870">14870</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> t = 0; t &lt; TIMES; t++) {
+<a class="jxr_linenumber" name="L14871" href="#L14871">14871</a>             <strong class="jxr_keyword">final</strong> Matrix ba = generateBa();
+<a class="jxr_linenumber" name="L14872" href="#L14872">14872</a>             <strong class="jxr_keyword">final</strong> Matrix bg = generateBg();
+<a class="jxr_linenumber" name="L14873" href="#L14873">14873</a>             <strong class="jxr_keyword">final</strong> Matrix ma = generateMaGeneral();
+<a class="jxr_linenumber" name="L14874" href="#L14874">14874</a>             <strong class="jxr_keyword">final</strong> Matrix mg = generateMg();
+<a class="jxr_linenumber" name="L14875" href="#L14875">14875</a>             <strong class="jxr_keyword">final</strong> Matrix gg = generateGg();
+<a class="jxr_linenumber" name="L14876" href="#L14876">14876</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> accelNoiseRootPSD = getAccelNoiseRootPSD();
+<a class="jxr_linenumber" name="L14877" href="#L14877">14877</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> gyroNoiseRootPSD = getGyroNoiseRootPSD();
+<a class="jxr_linenumber" name="L14878" href="#L14878">14878</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> accelQuantLevel = 0.0;
+<a class="jxr_linenumber" name="L14879" href="#L14879">14879</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> gyroQuantLevel = 0.0;
+<a class="jxr_linenumber" name="L14880" href="#L14880">14880</a> 
+<a class="jxr_linenumber" name="L14881" href="#L14881">14881</a>             <strong class="jxr_keyword">final</strong> IMUErrors errorsOutlier = <strong class="jxr_keyword">new</strong> IMUErrors(ba, bg, ma, mg, gg,
+<a class="jxr_linenumber" name="L14882" href="#L14882">14882</a>                     OUTLIER_ERROR_FACTOR * accelNoiseRootPSD,
+<a class="jxr_linenumber" name="L14883" href="#L14883">14883</a>                     OUTLIER_ERROR_FACTOR * gyroNoiseRootPSD,
+<a class="jxr_linenumber" name="L14884" href="#L14884">14884</a>                     accelQuantLevel, gyroQuantLevel);
+<a class="jxr_linenumber" name="L14885" href="#L14885">14885</a>             <strong class="jxr_keyword">final</strong> IMUErrors errorsInlier = <strong class="jxr_keyword">new</strong> IMUErrors(ba, bg, ma, mg, gg,
+<a class="jxr_linenumber" name="L14886" href="#L14886">14886</a>                     0.0, 0.0, accelQuantLevel,
+<a class="jxr_linenumber" name="L14887" href="#L14887">14887</a>                     gyroQuantLevel);
+<a class="jxr_linenumber" name="L14888" href="#L14888">14888</a> 
+<a class="jxr_linenumber" name="L14889" href="#L14889">14889</a> 
+<a class="jxr_linenumber" name="L14890" href="#L14890">14890</a>             <strong class="jxr_keyword">final</strong> Random random = <strong class="jxr_keyword">new</strong> Random();
+<a class="jxr_linenumber" name="L14891" href="#L14891">14891</a>             <strong class="jxr_keyword">final</strong> UniformRandomizer randomizer = <strong class="jxr_keyword">new</strong> UniformRandomizer(random);
+<a class="jxr_linenumber" name="L14892" href="#L14892">14892</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> latitude = Math.toRadians(
+<a class="jxr_linenumber" name="L14893" href="#L14893">14893</a>                     randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
+<a class="jxr_linenumber" name="L14894" href="#L14894">14894</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> longitude = Math.toRadians(
+<a class="jxr_linenumber" name="L14895" href="#L14895">14895</a>                     randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
+<a class="jxr_linenumber" name="L14896" href="#L14896">14896</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+<a class="jxr_linenumber" name="L14897" href="#L14897">14897</a>             <strong class="jxr_keyword">final</strong> NEDPosition nedPosition = <strong class="jxr_keyword">new</strong> NEDPosition(latitude, longitude, height);
+<a class="jxr_linenumber" name="L14898" href="#L14898">14898</a>             <strong class="jxr_keyword">final</strong> NEDVelocity nedVelocity = <strong class="jxr_keyword">new</strong> NEDVelocity();
+<a class="jxr_linenumber" name="L14899" href="#L14899">14899</a>             <strong class="jxr_keyword">final</strong> ECEFPosition ecefPosition = <strong class="jxr_keyword">new</strong> ECEFPosition();
+<a class="jxr_linenumber" name="L14900" href="#L14900">14900</a>             <strong class="jxr_keyword">final</strong> ECEFVelocity ecefVelocity = <strong class="jxr_keyword">new</strong> ECEFVelocity();
+<a class="jxr_linenumber" name="L14901" href="#L14901">14901</a>             NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
+<a class="jxr_linenumber" name="L14902" href="#L14902">14902</a>                     ecefPosition, ecefVelocity);
+<a class="jxr_linenumber" name="L14903" href="#L14903">14903</a>             <strong class="jxr_keyword">final</strong> ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+<a class="jxr_linenumber" name="L14904" href="#L14904">14904</a>                     ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+<a class="jxr_linenumber" name="L14905" href="#L14905">14905</a> 
+<a class="jxr_linenumber" name="L14906" href="#L14906">14906</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> sqrtTimeInterval = Math.sqrt(TIME_INTERVAL_SECONDS);
+<a class="jxr_linenumber" name="L14907" href="#L14907">14907</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> specificForceStandardDeviation = getAccelNoiseRootPSD()
 <a class="jxr_linenumber" name="L14908" href="#L14908">14908</a>                     / sqrtTimeInterval;
-<a class="jxr_linenumber" name="L14909" href="#L14909">14909</a> 
-<a class="jxr_linenumber" name="L14910" href="#L14910">14910</a>             <strong class="jxr_keyword">final</strong> GaussianRandomizer errorRandomizer = <strong class="jxr_keyword">new</strong> GaussianRandomizer(
-<a class="jxr_linenumber" name="L14911" href="#L14911">14911</a>                     random, 0.0, specificForceStandardDeviation);
-<a class="jxr_linenumber" name="L14912" href="#L14912">14912</a> 
-<a class="jxr_linenumber" name="L14913" href="#L14913">14913</a>             <strong class="jxr_keyword">final</strong> List&lt;StandardDeviationBodyKinematics&gt; measurements =
-<a class="jxr_linenumber" name="L14914" href="#L14914">14914</a>                     <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
-<a class="jxr_linenumber" name="L14915" href="#L14915">14915</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] qualityScores = <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">double</strong>[MEASUREMENT_NUMBER];
-<a class="jxr_linenumber" name="L14916" href="#L14916">14916</a>             <strong class="jxr_keyword">double</strong> error;
-<a class="jxr_linenumber" name="L14917" href="#L14917">14917</a>             <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; MEASUREMENT_NUMBER; i++) {
-<a class="jxr_linenumber" name="L14918" href="#L14918">14918</a>                 <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> roll = Math.toRadians(
-<a class="jxr_linenumber" name="L14919" href="#L14919">14919</a>                         randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-<a class="jxr_linenumber" name="L14920" href="#L14920">14920</a>                 <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> pitch = Math.toRadians(
+<a class="jxr_linenumber" name="L14909" href="#L14909">14909</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> angularRateStandardDeviation = getGyroNoiseRootPSD()
+<a class="jxr_linenumber" name="L14910" href="#L14910">14910</a>                     / sqrtTimeInterval;
+<a class="jxr_linenumber" name="L14911" href="#L14911">14911</a> 
+<a class="jxr_linenumber" name="L14912" href="#L14912">14912</a>             <strong class="jxr_keyword">final</strong> GaussianRandomizer errorRandomizer = <strong class="jxr_keyword">new</strong> GaussianRandomizer(
+<a class="jxr_linenumber" name="L14913" href="#L14913">14913</a>                     random, 0.0, specificForceStandardDeviation);
+<a class="jxr_linenumber" name="L14914" href="#L14914">14914</a> 
+<a class="jxr_linenumber" name="L14915" href="#L14915">14915</a>             <strong class="jxr_keyword">final</strong> List&lt;StandardDeviationBodyKinematics&gt; measurements =
+<a class="jxr_linenumber" name="L14916" href="#L14916">14916</a>                     <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
+<a class="jxr_linenumber" name="L14917" href="#L14917">14917</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] qualityScores = <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">double</strong>[MEASUREMENT_NUMBER];
+<a class="jxr_linenumber" name="L14918" href="#L14918">14918</a>             <strong class="jxr_keyword">double</strong> error;
+<a class="jxr_linenumber" name="L14919" href="#L14919">14919</a>             <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; MEASUREMENT_NUMBER; i++) {
+<a class="jxr_linenumber" name="L14920" href="#L14920">14920</a>                 <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> roll = Math.toRadians(
 <a class="jxr_linenumber" name="L14921" href="#L14921">14921</a>                         randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-<a class="jxr_linenumber" name="L14922" href="#L14922">14922</a>                 <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> yaw = Math.toRadians(
+<a class="jxr_linenumber" name="L14922" href="#L14922">14922</a>                 <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> pitch = Math.toRadians(
 <a class="jxr_linenumber" name="L14923" href="#L14923">14923</a>                         randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-<a class="jxr_linenumber" name="L14924" href="#L14924">14924</a>                 <strong class="jxr_keyword">final</strong> CoordinateTransformation nedC = <strong class="jxr_keyword">new</strong> CoordinateTransformation(
-<a class="jxr_linenumber" name="L14925" href="#L14925">14925</a>                         roll, pitch, yaw, FrameType.BODY_FRAME,
-<a class="jxr_linenumber" name="L14926" href="#L14926">14926</a>                         FrameType.LOCAL_NAVIGATION_FRAME);
-<a class="jxr_linenumber" name="L14927" href="#L14927">14927</a> 
-<a class="jxr_linenumber" name="L14928" href="#L14928">14928</a>                 <strong class="jxr_keyword">final</strong> NEDFrame nedFrame = <strong class="jxr_keyword">new</strong> NEDFrame(nedPosition, nedC);
-<a class="jxr_linenumber" name="L14929" href="#L14929">14929</a>                 <strong class="jxr_keyword">final</strong> ECEFFrame ecefFrame = NEDtoECEFFrameConverter
-<a class="jxr_linenumber" name="L14930" href="#L14930">14930</a>                         .convertNEDtoECEFAndReturnNew(nedFrame);
-<a class="jxr_linenumber" name="L14931" href="#L14931">14931</a> 
-<a class="jxr_linenumber" name="L14932" href="#L14932">14932</a>                 <em class="jxr_comment">// compute ground-truth kinematics that should be generated at provided</em>
-<a class="jxr_linenumber" name="L14933" href="#L14933">14933</a>                 <em class="jxr_comment">// position, velocity and orientation</em>
-<a class="jxr_linenumber" name="L14934" href="#L14934">14934</a>                 <strong class="jxr_keyword">final</strong> BodyKinematics trueKinematics = ECEFKinematicsEstimator
-<a class="jxr_linenumber" name="L14935" href="#L14935">14935</a>                         .estimateKinematicsAndReturnNew(TIME_INTERVAL_SECONDS, ecefFrame,
-<a class="jxr_linenumber" name="L14936" href="#L14936">14936</a>                                 ecefFrame);
-<a class="jxr_linenumber" name="L14937" href="#L14937">14937</a> 
-<a class="jxr_linenumber" name="L14938" href="#L14938">14938</a>                 <em class="jxr_comment">// apply known calibration parameters to distort ground-truth and generate a</em>
-<a class="jxr_linenumber" name="L14939" href="#L14939">14939</a>                 <em class="jxr_comment">// measured kinematics sample</em>
-<a class="jxr_linenumber" name="L14940" href="#L14940">14940</a>                 <strong class="jxr_keyword">final</strong> BodyKinematics measuredKinematics;
-<a class="jxr_linenumber" name="L14941" href="#L14941">14941</a>                 <strong class="jxr_keyword">if</strong> (randomizer.nextInt(0, 100) &lt; OUTLIER_PERCENTAGE) {
-<a class="jxr_linenumber" name="L14942" href="#L14942">14942</a>                     <em class="jxr_comment">// outlier</em>
-<a class="jxr_linenumber" name="L14943" href="#L14943">14943</a>                     measuredKinematics = BodyKinematicsGenerator
-<a class="jxr_linenumber" name="L14944" href="#L14944">14944</a>                             .generate(TIME_INTERVAL_SECONDS, trueKinematics,
-<a class="jxr_linenumber" name="L14945" href="#L14945">14945</a>                                     errorsOutlier, random);
-<a class="jxr_linenumber" name="L14946" href="#L14946">14946</a>                     error = Math.abs(errorRandomizer.nextDouble());
-<a class="jxr_linenumber" name="L14947" href="#L14947">14947</a> 
-<a class="jxr_linenumber" name="L14948" href="#L14948">14948</a>                 } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L14949" href="#L14949">14949</a>                     <em class="jxr_comment">// inlier</em>
-<a class="jxr_linenumber" name="L14950" href="#L14950">14950</a>                     measuredKinematics = BodyKinematicsGenerator
-<a class="jxr_linenumber" name="L14951" href="#L14951">14951</a>                             .generate(TIME_INTERVAL_SECONDS, trueKinematics,
-<a class="jxr_linenumber" name="L14952" href="#L14952">14952</a>                                     errorsInlier, random);
-<a class="jxr_linenumber" name="L14953" href="#L14953">14953</a>                     error = 0.0;
-<a class="jxr_linenumber" name="L14954" href="#L14954">14954</a>                 }
-<a class="jxr_linenumber" name="L14955" href="#L14955">14955</a> 
-<a class="jxr_linenumber" name="L14956" href="#L14956">14956</a>                 <strong class="jxr_keyword">final</strong> StandardDeviationBodyKinematics measurement =
-<a class="jxr_linenumber" name="L14957" href="#L14957">14957</a>                         <strong class="jxr_keyword">new</strong> StandardDeviationBodyKinematics(measuredKinematics,
-<a class="jxr_linenumber" name="L14958" href="#L14958">14958</a>                                 specificForceStandardDeviation,
-<a class="jxr_linenumber" name="L14959" href="#L14959">14959</a>                                 angularRateStandardDeviation);
-<a class="jxr_linenumber" name="L14960" href="#L14960">14960</a>                 measurements.add(measurement);
-<a class="jxr_linenumber" name="L14961" href="#L14961">14961</a> 
-<a class="jxr_linenumber" name="L14962" href="#L14962">14962</a>                 qualityScores[i] = 1.0 / (1.0 + error);
-<a class="jxr_linenumber" name="L14963" href="#L14963">14963</a>             }
-<a class="jxr_linenumber" name="L14964" href="#L14964">14964</a> 
-<a class="jxr_linenumber" name="L14965" href="#L14965">14965</a>             <strong class="jxr_keyword">final</strong> PROMedSRobustKnownGravityNormAccelerometerCalibrator calibrator =
-<a class="jxr_linenumber" name="L14966" href="#L14966">14966</a>                     <strong class="jxr_keyword">new</strong> PROMedSRobustKnownGravityNormAccelerometerCalibrator(
-<a class="jxr_linenumber" name="L14967" href="#L14967">14967</a>                             qualityScores, gravity.getNorm(), measurements,
-<a class="jxr_linenumber" name="L14968" href="#L14968">14968</a>                             false, ba, ma, <strong class="jxr_keyword">this</strong>);
-<a class="jxr_linenumber" name="L14969" href="#L14969">14969</a>             calibrator.setStopThreshold(THRESHOLD);
-<a class="jxr_linenumber" name="L14970" href="#L14970">14970</a>             calibrator.setResultRefined(false);
-<a class="jxr_linenumber" name="L14971" href="#L14971">14971</a> 
-<a class="jxr_linenumber" name="L14972" href="#L14972">14972</a>             <em class="jxr_comment">// estimate</em>
-<a class="jxr_linenumber" name="L14973" href="#L14973">14973</a>             reset();
-<a class="jxr_linenumber" name="L14974" href="#L14974">14974</a>             assertTrue(calibrator.isReady());
-<a class="jxr_linenumber" name="L14975" href="#L14975">14975</a>             assertFalse(calibrator.isRunning());
-<a class="jxr_linenumber" name="L14976" href="#L14976">14976</a>             assertEquals(mCalibrateStart, 0);
-<a class="jxr_linenumber" name="L14977" href="#L14977">14977</a>             assertEquals(mCalibrateEnd, 0);
-<a class="jxr_linenumber" name="L14978" href="#L14978">14978</a>             assertEquals(mCalibrateNextIteration, 0);
-<a class="jxr_linenumber" name="L14979" href="#L14979">14979</a>             assertEquals(mCalibrateProgressChange, 0);
-<a class="jxr_linenumber" name="L14980" href="#L14980">14980</a> 
-<a class="jxr_linenumber" name="L14981" href="#L14981">14981</a>             calibrator.calibrate();
+<a class="jxr_linenumber" name="L14924" href="#L14924">14924</a>                 <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> yaw = Math.toRadians(
+<a class="jxr_linenumber" name="L14925" href="#L14925">14925</a>                         randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+<a class="jxr_linenumber" name="L14926" href="#L14926">14926</a>                 <strong class="jxr_keyword">final</strong> CoordinateTransformation nedC = <strong class="jxr_keyword">new</strong> CoordinateTransformation(
+<a class="jxr_linenumber" name="L14927" href="#L14927">14927</a>                         roll, pitch, yaw, FrameType.BODY_FRAME,
+<a class="jxr_linenumber" name="L14928" href="#L14928">14928</a>                         FrameType.LOCAL_NAVIGATION_FRAME);
+<a class="jxr_linenumber" name="L14929" href="#L14929">14929</a> 
+<a class="jxr_linenumber" name="L14930" href="#L14930">14930</a>                 <strong class="jxr_keyword">final</strong> NEDFrame nedFrame = <strong class="jxr_keyword">new</strong> NEDFrame(nedPosition, nedC);
+<a class="jxr_linenumber" name="L14931" href="#L14931">14931</a>                 <strong class="jxr_keyword">final</strong> ECEFFrame ecefFrame = NEDtoECEFFrameConverter
+<a class="jxr_linenumber" name="L14932" href="#L14932">14932</a>                         .convertNEDtoECEFAndReturnNew(nedFrame);
+<a class="jxr_linenumber" name="L14933" href="#L14933">14933</a> 
+<a class="jxr_linenumber" name="L14934" href="#L14934">14934</a>                 <em class="jxr_comment">// compute ground-truth kinematics that should be generated at provided</em>
+<a class="jxr_linenumber" name="L14935" href="#L14935">14935</a>                 <em class="jxr_comment">// position, velocity and orientation</em>
+<a class="jxr_linenumber" name="L14936" href="#L14936">14936</a>                 <strong class="jxr_keyword">final</strong> BodyKinematics trueKinematics = ECEFKinematicsEstimator
+<a class="jxr_linenumber" name="L14937" href="#L14937">14937</a>                         .estimateKinematicsAndReturnNew(TIME_INTERVAL_SECONDS, ecefFrame,
+<a class="jxr_linenumber" name="L14938" href="#L14938">14938</a>                                 ecefFrame);
+<a class="jxr_linenumber" name="L14939" href="#L14939">14939</a> 
+<a class="jxr_linenumber" name="L14940" href="#L14940">14940</a>                 <em class="jxr_comment">// apply known calibration parameters to distort ground-truth and generate a</em>
+<a class="jxr_linenumber" name="L14941" href="#L14941">14941</a>                 <em class="jxr_comment">// measured kinematics sample</em>
+<a class="jxr_linenumber" name="L14942" href="#L14942">14942</a>                 <strong class="jxr_keyword">final</strong> BodyKinematics measuredKinematics;
+<a class="jxr_linenumber" name="L14943" href="#L14943">14943</a>                 <strong class="jxr_keyword">if</strong> (randomizer.nextInt(0, 100) &lt; OUTLIER_PERCENTAGE) {
+<a class="jxr_linenumber" name="L14944" href="#L14944">14944</a>                     <em class="jxr_comment">// outlier</em>
+<a class="jxr_linenumber" name="L14945" href="#L14945">14945</a>                     measuredKinematics = BodyKinematicsGenerator
+<a class="jxr_linenumber" name="L14946" href="#L14946">14946</a>                             .generate(TIME_INTERVAL_SECONDS, trueKinematics,
+<a class="jxr_linenumber" name="L14947" href="#L14947">14947</a>                                     errorsOutlier, random);
+<a class="jxr_linenumber" name="L14948" href="#L14948">14948</a>                     error = Math.abs(errorRandomizer.nextDouble());
+<a class="jxr_linenumber" name="L14949" href="#L14949">14949</a> 
+<a class="jxr_linenumber" name="L14950" href="#L14950">14950</a>                 } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L14951" href="#L14951">14951</a>                     <em class="jxr_comment">// inlier</em>
+<a class="jxr_linenumber" name="L14952" href="#L14952">14952</a>                     measuredKinematics = BodyKinematicsGenerator
+<a class="jxr_linenumber" name="L14953" href="#L14953">14953</a>                             .generate(TIME_INTERVAL_SECONDS, trueKinematics,
+<a class="jxr_linenumber" name="L14954" href="#L14954">14954</a>                                     errorsInlier, random);
+<a class="jxr_linenumber" name="L14955" href="#L14955">14955</a>                     error = 0.0;
+<a class="jxr_linenumber" name="L14956" href="#L14956">14956</a>                 }
+<a class="jxr_linenumber" name="L14957" href="#L14957">14957</a> 
+<a class="jxr_linenumber" name="L14958" href="#L14958">14958</a>                 <strong class="jxr_keyword">final</strong> StandardDeviationBodyKinematics measurement =
+<a class="jxr_linenumber" name="L14959" href="#L14959">14959</a>                         <strong class="jxr_keyword">new</strong> StandardDeviationBodyKinematics(measuredKinematics,
+<a class="jxr_linenumber" name="L14960" href="#L14960">14960</a>                                 specificForceStandardDeviation,
+<a class="jxr_linenumber" name="L14961" href="#L14961">14961</a>                                 angularRateStandardDeviation);
+<a class="jxr_linenumber" name="L14962" href="#L14962">14962</a>                 measurements.add(measurement);
+<a class="jxr_linenumber" name="L14963" href="#L14963">14963</a> 
+<a class="jxr_linenumber" name="L14964" href="#L14964">14964</a>                 qualityScores[i] = 1.0 / (1.0 + error);
+<a class="jxr_linenumber" name="L14965" href="#L14965">14965</a>             }
+<a class="jxr_linenumber" name="L14966" href="#L14966">14966</a> 
+<a class="jxr_linenumber" name="L14967" href="#L14967">14967</a>             <strong class="jxr_keyword">final</strong> PROMedSRobustKnownGravityNormAccelerometerCalibrator calibrator =
+<a class="jxr_linenumber" name="L14968" href="#L14968">14968</a>                     <strong class="jxr_keyword">new</strong> PROMedSRobustKnownGravityNormAccelerometerCalibrator(
+<a class="jxr_linenumber" name="L14969" href="#L14969">14969</a>                             qualityScores, gravity.getNorm(), measurements,
+<a class="jxr_linenumber" name="L14970" href="#L14970">14970</a>                             false, ba, ma, <strong class="jxr_keyword">this</strong>);
+<a class="jxr_linenumber" name="L14971" href="#L14971">14971</a>             calibrator.setStopThreshold(THRESHOLD);
+<a class="jxr_linenumber" name="L14972" href="#L14972">14972</a>             calibrator.setResultRefined(false);
+<a class="jxr_linenumber" name="L14973" href="#L14973">14973</a> 
+<a class="jxr_linenumber" name="L14974" href="#L14974">14974</a>             <em class="jxr_comment">// estimate</em>
+<a class="jxr_linenumber" name="L14975" href="#L14975">14975</a>             reset();
+<a class="jxr_linenumber" name="L14976" href="#L14976">14976</a>             assertTrue(calibrator.isReady());
+<a class="jxr_linenumber" name="L14977" href="#L14977">14977</a>             assertFalse(calibrator.isRunning());
+<a class="jxr_linenumber" name="L14978" href="#L14978">14978</a>             assertEquals(mCalibrateStart, 0);
+<a class="jxr_linenumber" name="L14979" href="#L14979">14979</a>             assertEquals(mCalibrateEnd, 0);
+<a class="jxr_linenumber" name="L14980" href="#L14980">14980</a>             assertEquals(mCalibrateNextIteration, 0);
+<a class="jxr_linenumber" name="L14981" href="#L14981">14981</a>             assertEquals(mCalibrateProgressChange, 0);
 <a class="jxr_linenumber" name="L14982" href="#L14982">14982</a> 
-<a class="jxr_linenumber" name="L14983" href="#L14983">14983</a>             <em class="jxr_comment">// check</em>
-<a class="jxr_linenumber" name="L14984" href="#L14984">14984</a>             assertTrue(calibrator.isReady());
-<a class="jxr_linenumber" name="L14985" href="#L14985">14985</a>             assertFalse(calibrator.isRunning());
-<a class="jxr_linenumber" name="L14986" href="#L14986">14986</a>             assertEquals(mCalibrateStart, 1);
-<a class="jxr_linenumber" name="L14987" href="#L14987">14987</a>             assertEquals(mCalibrateEnd, 1);
-<a class="jxr_linenumber" name="L14988" href="#L14988">14988</a>             assertTrue(mCalibrateNextIteration &gt; 0);
-<a class="jxr_linenumber" name="L14989" href="#L14989">14989</a>             assertTrue(mCalibrateProgressChange &gt;= 0);
-<a class="jxr_linenumber" name="L14990" href="#L14990">14990</a> 
-<a class="jxr_linenumber" name="L14991" href="#L14991">14991</a>             <strong class="jxr_keyword">final</strong> Matrix estimatedBa = calibrator.getEstimatedBiasesAsMatrix();
-<a class="jxr_linenumber" name="L14992" href="#L14992">14992</a>             <strong class="jxr_keyword">final</strong> Matrix estimatedMa = calibrator.getEstimatedMa();
-<a class="jxr_linenumber" name="L14993" href="#L14993">14993</a> 
-<a class="jxr_linenumber" name="L14994" href="#L14994">14994</a>             <strong class="jxr_keyword">if</strong> (!ba.equals(estimatedBa, ABSOLUTE_ERROR)) {
-<a class="jxr_linenumber" name="L14995" href="#L14995">14995</a>                 <strong class="jxr_keyword">continue</strong>;
-<a class="jxr_linenumber" name="L14996" href="#L14996">14996</a>             }
-<a class="jxr_linenumber" name="L14997" href="#L14997">14997</a>             <strong class="jxr_keyword">if</strong> (!ma.equals(estimatedMa, ABSOLUTE_ERROR)) {
-<a class="jxr_linenumber" name="L14998" href="#L14998">14998</a>                 <strong class="jxr_keyword">continue</strong>;
-<a class="jxr_linenumber" name="L14999" href="#L14999">14999</a>             }
-<a class="jxr_linenumber" name="L15000" href="#L15000">15000</a>             assertTrue(ba.equals(estimatedBa, ABSOLUTE_ERROR));
-<a class="jxr_linenumber" name="L15001" href="#L15001">15001</a>             assertTrue(ma.equals(estimatedMa, ABSOLUTE_ERROR));
-<a class="jxr_linenumber" name="L15002" href="#L15002">15002</a> 
-<a class="jxr_linenumber" name="L15003" href="#L15003">15003</a>             assertEstimatedResult(estimatedBa, estimatedMa, calibrator, false);
+<a class="jxr_linenumber" name="L14983" href="#L14983">14983</a>             calibrator.calibrate();
+<a class="jxr_linenumber" name="L14984" href="#L14984">14984</a> 
+<a class="jxr_linenumber" name="L14985" href="#L14985">14985</a>             <em class="jxr_comment">// check</em>
+<a class="jxr_linenumber" name="L14986" href="#L14986">14986</a>             assertTrue(calibrator.isReady());
+<a class="jxr_linenumber" name="L14987" href="#L14987">14987</a>             assertFalse(calibrator.isRunning());
+<a class="jxr_linenumber" name="L14988" href="#L14988">14988</a>             assertEquals(mCalibrateStart, 1);
+<a class="jxr_linenumber" name="L14989" href="#L14989">14989</a>             assertEquals(mCalibrateEnd, 1);
+<a class="jxr_linenumber" name="L14990" href="#L14990">14990</a>             assertTrue(mCalibrateNextIteration &gt; 0);
+<a class="jxr_linenumber" name="L14991" href="#L14991">14991</a>             assertTrue(mCalibrateProgressChange &gt;= 0);
+<a class="jxr_linenumber" name="L14992" href="#L14992">14992</a> 
+<a class="jxr_linenumber" name="L14993" href="#L14993">14993</a>             <strong class="jxr_keyword">final</strong> Matrix estimatedBa = calibrator.getEstimatedBiasesAsMatrix();
+<a class="jxr_linenumber" name="L14994" href="#L14994">14994</a>             <strong class="jxr_keyword">final</strong> Matrix estimatedMa = calibrator.getEstimatedMa();
+<a class="jxr_linenumber" name="L14995" href="#L14995">14995</a> 
+<a class="jxr_linenumber" name="L14996" href="#L14996">14996</a>             <strong class="jxr_keyword">if</strong> (!ba.equals(estimatedBa, ABSOLUTE_ERROR)) {
+<a class="jxr_linenumber" name="L14997" href="#L14997">14997</a>                 <strong class="jxr_keyword">continue</strong>;
+<a class="jxr_linenumber" name="L14998" href="#L14998">14998</a>             }
+<a class="jxr_linenumber" name="L14999" href="#L14999">14999</a>             <strong class="jxr_keyword">if</strong> (!ma.equals(estimatedMa, ABSOLUTE_ERROR)) {
+<a class="jxr_linenumber" name="L15000" href="#L15000">15000</a>                 <strong class="jxr_keyword">continue</strong>;
+<a class="jxr_linenumber" name="L15001" href="#L15001">15001</a>             }
+<a class="jxr_linenumber" name="L15002" href="#L15002">15002</a>             assertTrue(ba.equals(estimatedBa, ABSOLUTE_ERROR));
+<a class="jxr_linenumber" name="L15003" href="#L15003">15003</a>             assertTrue(ma.equals(estimatedMa, ABSOLUTE_ERROR));
 <a class="jxr_linenumber" name="L15004" href="#L15004">15004</a> 
-<a class="jxr_linenumber" name="L15005" href="#L15005">15005</a>             assertNull(calibrator.getEstimatedCovariance());
+<a class="jxr_linenumber" name="L15005" href="#L15005">15005</a>             assertEstimatedResult(estimatedBa, estimatedMa, calibrator, false);
 <a class="jxr_linenumber" name="L15006" href="#L15006">15006</a> 
-<a class="jxr_linenumber" name="L15007" href="#L15007">15007</a>             numValid++;
-<a class="jxr_linenumber" name="L15008" href="#L15008">15008</a>             <strong class="jxr_keyword">break</strong>;
-<a class="jxr_linenumber" name="L15009" href="#L15009">15009</a>         }
-<a class="jxr_linenumber" name="L15010" href="#L15010">15010</a> 
-<a class="jxr_linenumber" name="L15011" href="#L15011">15011</a>         assertTrue(numValid &gt; 0);
-<a class="jxr_linenumber" name="L15012" href="#L15012">15012</a>     }
-<a class="jxr_linenumber" name="L15013" href="#L15013">15013</a> 
-<a class="jxr_linenumber" name="L15014" href="#L15014">15014</a>     @Override
-<a class="jxr_linenumber" name="L15015" href="#L15015">15015</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> onCalibrateStart(
-<a class="jxr_linenumber" name="L15016" href="#L15016">15016</a>             <strong class="jxr_keyword">final</strong> RobustKnownGravityNormAccelerometerCalibrator calibrator) {
-<a class="jxr_linenumber" name="L15017" href="#L15017">15017</a>         checkLocked((PROMedSRobustKnownGravityNormAccelerometerCalibrator) calibrator);
-<a class="jxr_linenumber" name="L15018" href="#L15018">15018</a>         mCalibrateStart++;
-<a class="jxr_linenumber" name="L15019" href="#L15019">15019</a>     }
-<a class="jxr_linenumber" name="L15020" href="#L15020">15020</a> 
-<a class="jxr_linenumber" name="L15021" href="#L15021">15021</a>     @Override
-<a class="jxr_linenumber" name="L15022" href="#L15022">15022</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> onCalibrateEnd(
-<a class="jxr_linenumber" name="L15023" href="#L15023">15023</a>             <strong class="jxr_keyword">final</strong> RobustKnownGravityNormAccelerometerCalibrator calibrator) {
-<a class="jxr_linenumber" name="L15024" href="#L15024">15024</a>         checkLocked((PROMedSRobustKnownGravityNormAccelerometerCalibrator) calibrator);
-<a class="jxr_linenumber" name="L15025" href="#L15025">15025</a>         mCalibrateEnd++;
-<a class="jxr_linenumber" name="L15026" href="#L15026">15026</a>     }
-<a class="jxr_linenumber" name="L15027" href="#L15027">15027</a> 
-<a class="jxr_linenumber" name="L15028" href="#L15028">15028</a>     @Override
-<a class="jxr_linenumber" name="L15029" href="#L15029">15029</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> onCalibrateNextIteration(
-<a class="jxr_linenumber" name="L15030" href="#L15030">15030</a>             <strong class="jxr_keyword">final</strong> RobustKnownGravityNormAccelerometerCalibrator calibrator,
-<a class="jxr_linenumber" name="L15031" href="#L15031">15031</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> iteration) {
-<a class="jxr_linenumber" name="L15032" href="#L15032">15032</a>         checkLocked((PROMedSRobustKnownGravityNormAccelerometerCalibrator) calibrator);
-<a class="jxr_linenumber" name="L15033" href="#L15033">15033</a>         mCalibrateNextIteration++;
-<a class="jxr_linenumber" name="L15034" href="#L15034">15034</a> 
-<a class="jxr_linenumber" name="L15035" href="#L15035">15035</a>     }
+<a class="jxr_linenumber" name="L15007" href="#L15007">15007</a>             assertNull(calibrator.getEstimatedCovariance());
+<a class="jxr_linenumber" name="L15008" href="#L15008">15008</a> 
+<a class="jxr_linenumber" name="L15009" href="#L15009">15009</a>             numValid++;
+<a class="jxr_linenumber" name="L15010" href="#L15010">15010</a>             <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L15011" href="#L15011">15011</a>         }
+<a class="jxr_linenumber" name="L15012" href="#L15012">15012</a> 
+<a class="jxr_linenumber" name="L15013" href="#L15013">15013</a>         assertTrue(numValid &gt; 0);
+<a class="jxr_linenumber" name="L15014" href="#L15014">15014</a>     }
+<a class="jxr_linenumber" name="L15015" href="#L15015">15015</a> 
+<a class="jxr_linenumber" name="L15016" href="#L15016">15016</a>     @Override
+<a class="jxr_linenumber" name="L15017" href="#L15017">15017</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> onCalibrateStart(
+<a class="jxr_linenumber" name="L15018" href="#L15018">15018</a>             <strong class="jxr_keyword">final</strong> RobustKnownGravityNormAccelerometerCalibrator calibrator) {
+<a class="jxr_linenumber" name="L15019" href="#L15019">15019</a>         checkLocked((PROMedSRobustKnownGravityNormAccelerometerCalibrator) calibrator);
+<a class="jxr_linenumber" name="L15020" href="#L15020">15020</a>         mCalibrateStart++;
+<a class="jxr_linenumber" name="L15021" href="#L15021">15021</a>     }
+<a class="jxr_linenumber" name="L15022" href="#L15022">15022</a> 
+<a class="jxr_linenumber" name="L15023" href="#L15023">15023</a>     @Override
+<a class="jxr_linenumber" name="L15024" href="#L15024">15024</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> onCalibrateEnd(
+<a class="jxr_linenumber" name="L15025" href="#L15025">15025</a>             <strong class="jxr_keyword">final</strong> RobustKnownGravityNormAccelerometerCalibrator calibrator) {
+<a class="jxr_linenumber" name="L15026" href="#L15026">15026</a>         checkLocked((PROMedSRobustKnownGravityNormAccelerometerCalibrator) calibrator);
+<a class="jxr_linenumber" name="L15027" href="#L15027">15027</a>         mCalibrateEnd++;
+<a class="jxr_linenumber" name="L15028" href="#L15028">15028</a>     }
+<a class="jxr_linenumber" name="L15029" href="#L15029">15029</a> 
+<a class="jxr_linenumber" name="L15030" href="#L15030">15030</a>     @Override
+<a class="jxr_linenumber" name="L15031" href="#L15031">15031</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> onCalibrateNextIteration(
+<a class="jxr_linenumber" name="L15032" href="#L15032">15032</a>             <strong class="jxr_keyword">final</strong> RobustKnownGravityNormAccelerometerCalibrator calibrator,
+<a class="jxr_linenumber" name="L15033" href="#L15033">15033</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> iteration) {
+<a class="jxr_linenumber" name="L15034" href="#L15034">15034</a>         checkLocked((PROMedSRobustKnownGravityNormAccelerometerCalibrator) calibrator);
+<a class="jxr_linenumber" name="L15035" href="#L15035">15035</a>         mCalibrateNextIteration++;
 <a class="jxr_linenumber" name="L15036" href="#L15036">15036</a> 
-<a class="jxr_linenumber" name="L15037" href="#L15037">15037</a>     @Override
-<a class="jxr_linenumber" name="L15038" href="#L15038">15038</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> onCalibrateProgressChange(
-<a class="jxr_linenumber" name="L15039" href="#L15039">15039</a>             <strong class="jxr_keyword">final</strong> RobustKnownGravityNormAccelerometerCalibrator calibrator,
-<a class="jxr_linenumber" name="L15040" href="#L15040">15040</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">float</strong> progress) {
-<a class="jxr_linenumber" name="L15041" href="#L15041">15041</a>         checkLocked((PROMedSRobustKnownGravityNormAccelerometerCalibrator) calibrator);
-<a class="jxr_linenumber" name="L15042" href="#L15042">15042</a>         mCalibrateProgressChange++;
-<a class="jxr_linenumber" name="L15043" href="#L15043">15043</a>     }
-<a class="jxr_linenumber" name="L15044" href="#L15044">15044</a> 
-<a class="jxr_linenumber" name="L15045" href="#L15045">15045</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> reset() {
-<a class="jxr_linenumber" name="L15046" href="#L15046">15046</a>         mCalibrateStart = 0;
-<a class="jxr_linenumber" name="L15047" href="#L15047">15047</a>         mCalibrateEnd = 0;
-<a class="jxr_linenumber" name="L15048" href="#L15048">15048</a>         mCalibrateNextIteration = 0;
-<a class="jxr_linenumber" name="L15049" href="#L15049">15049</a>         mCalibrateProgressChange = 0;
-<a class="jxr_linenumber" name="L15050" href="#L15050">15050</a>     }
-<a class="jxr_linenumber" name="L15051" href="#L15051">15051</a> 
-<a class="jxr_linenumber" name="L15052" href="#L15052">15052</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> checkLocked(<strong class="jxr_keyword">final</strong> PROMedSRobustKnownGravityNormAccelerometerCalibrator calibrator) {
-<a class="jxr_linenumber" name="L15053" href="#L15053">15053</a>         assertTrue(calibrator.isRunning());
-<a class="jxr_linenumber" name="L15054" href="#L15054">15054</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L15055" href="#L15055">15055</a>             calibrator.setInitialBiasX(0.0);
-<a class="jxr_linenumber" name="L15056" href="#L15056">15056</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
-<a class="jxr_linenumber" name="L15057" href="#L15057">15057</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
-<a class="jxr_linenumber" name="L15058" href="#L15058">15058</a>         }
-<a class="jxr_linenumber" name="L15059" href="#L15059">15059</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L15060" href="#L15060">15060</a>             calibrator.setInitialBiasY(0.0);
-<a class="jxr_linenumber" name="L15061" href="#L15061">15061</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
-<a class="jxr_linenumber" name="L15062" href="#L15062">15062</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
-<a class="jxr_linenumber" name="L15063" href="#L15063">15063</a>         }
-<a class="jxr_linenumber" name="L15064" href="#L15064">15064</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L15065" href="#L15065">15065</a>             calibrator.setInitialBiasZ(0.0);
-<a class="jxr_linenumber" name="L15066" href="#L15066">15066</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
-<a class="jxr_linenumber" name="L15067" href="#L15067">15067</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
-<a class="jxr_linenumber" name="L15068" href="#L15068">15068</a>         }
-<a class="jxr_linenumber" name="L15069" href="#L15069">15069</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L15070" href="#L15070">15070</a>             calibrator.setInitialBiasX(<strong class="jxr_keyword">null</strong>);
-<a class="jxr_linenumber" name="L15071" href="#L15071">15071</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
-<a class="jxr_linenumber" name="L15072" href="#L15072">15072</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
-<a class="jxr_linenumber" name="L15073" href="#L15073">15073</a>         }
-<a class="jxr_linenumber" name="L15074" href="#L15074">15074</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L15075" href="#L15075">15075</a>             calibrator.setInitialBiasY(<strong class="jxr_keyword">null</strong>);
-<a class="jxr_linenumber" name="L15076" href="#L15076">15076</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
-<a class="jxr_linenumber" name="L15077" href="#L15077">15077</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
-<a class="jxr_linenumber" name="L15078" href="#L15078">15078</a>         }
-<a class="jxr_linenumber" name="L15079" href="#L15079">15079</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L15080" href="#L15080">15080</a>             calibrator.setInitialBiasZ(<strong class="jxr_keyword">null</strong>);
-<a class="jxr_linenumber" name="L15081" href="#L15081">15081</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
-<a class="jxr_linenumber" name="L15082" href="#L15082">15082</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
-<a class="jxr_linenumber" name="L15083" href="#L15083">15083</a>         }
-<a class="jxr_linenumber" name="L15084" href="#L15084">15084</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L15085" href="#L15085">15085</a>             calibrator.setInitialBias(0.0, 0.0, 0.0);
-<a class="jxr_linenumber" name="L15086" href="#L15086">15086</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
-<a class="jxr_linenumber" name="L15087" href="#L15087">15087</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
-<a class="jxr_linenumber" name="L15088" href="#L15088">15088</a>         }
-<a class="jxr_linenumber" name="L15089" href="#L15089">15089</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L15090" href="#L15090">15090</a>             calibrator.setInitialBias(<strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>);
-<a class="jxr_linenumber" name="L15091" href="#L15091">15091</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
-<a class="jxr_linenumber" name="L15092" href="#L15092">15092</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
-<a class="jxr_linenumber" name="L15093" href="#L15093">15093</a>         }
-<a class="jxr_linenumber" name="L15094" href="#L15094">15094</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L15095" href="#L15095">15095</a>             calibrator.setInitialSx(0.0);
-<a class="jxr_linenumber" name="L15096" href="#L15096">15096</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
-<a class="jxr_linenumber" name="L15097" href="#L15097">15097</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
-<a class="jxr_linenumber" name="L15098" href="#L15098">15098</a>         }
-<a class="jxr_linenumber" name="L15099" href="#L15099">15099</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L15100" href="#L15100">15100</a>             calibrator.setInitialSy(0.0);
-<a class="jxr_linenumber" name="L15101" href="#L15101">15101</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
-<a class="jxr_linenumber" name="L15102" href="#L15102">15102</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
-<a class="jxr_linenumber" name="L15103" href="#L15103">15103</a>         }
-<a class="jxr_linenumber" name="L15104" href="#L15104">15104</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L15105" href="#L15105">15105</a>             calibrator.setInitialSz(0.0);
-<a class="jxr_linenumber" name="L15106" href="#L15106">15106</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
-<a class="jxr_linenumber" name="L15107" href="#L15107">15107</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
-<a class="jxr_linenumber" name="L15108" href="#L15108">15108</a>         }
-<a class="jxr_linenumber" name="L15109" href="#L15109">15109</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L15110" href="#L15110">15110</a>             calibrator.setInitialMxy(0.0);
-<a class="jxr_linenumber" name="L15111" href="#L15111">15111</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
-<a class="jxr_linenumber" name="L15112" href="#L15112">15112</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
-<a class="jxr_linenumber" name="L15113" href="#L15113">15113</a>         }
-<a class="jxr_linenumber" name="L15114" href="#L15114">15114</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L15115" href="#L15115">15115</a>             calibrator.setInitialMxz(0.0);
-<a class="jxr_linenumber" name="L15116" href="#L15116">15116</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
-<a class="jxr_linenumber" name="L15117" href="#L15117">15117</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
-<a class="jxr_linenumber" name="L15118" href="#L15118">15118</a>         }
-<a class="jxr_linenumber" name="L15119" href="#L15119">15119</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L15120" href="#L15120">15120</a>             calibrator.setInitialMyx(0.0);
-<a class="jxr_linenumber" name="L15121" href="#L15121">15121</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
-<a class="jxr_linenumber" name="L15122" href="#L15122">15122</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
-<a class="jxr_linenumber" name="L15123" href="#L15123">15123</a>         }
-<a class="jxr_linenumber" name="L15124" href="#L15124">15124</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L15125" href="#L15125">15125</a>             calibrator.setInitialMyz(0.0);
-<a class="jxr_linenumber" name="L15126" href="#L15126">15126</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
-<a class="jxr_linenumber" name="L15127" href="#L15127">15127</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
-<a class="jxr_linenumber" name="L15128" href="#L15128">15128</a>         }
-<a class="jxr_linenumber" name="L15129" href="#L15129">15129</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L15130" href="#L15130">15130</a>             calibrator.setInitialMzx(0.0);
-<a class="jxr_linenumber" name="L15131" href="#L15131">15131</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
-<a class="jxr_linenumber" name="L15132" href="#L15132">15132</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
-<a class="jxr_linenumber" name="L15133" href="#L15133">15133</a>         }
-<a class="jxr_linenumber" name="L15134" href="#L15134">15134</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L15135" href="#L15135">15135</a>             calibrator.setInitialMzy(0.0);
-<a class="jxr_linenumber" name="L15136" href="#L15136">15136</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
-<a class="jxr_linenumber" name="L15137" href="#L15137">15137</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
-<a class="jxr_linenumber" name="L15138" href="#L15138">15138</a>         }
-<a class="jxr_linenumber" name="L15139" href="#L15139">15139</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L15140" href="#L15140">15140</a>             calibrator.setInitialScalingFactors(0.0, 0.0, 0.0);
-<a class="jxr_linenumber" name="L15141" href="#L15141">15141</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
-<a class="jxr_linenumber" name="L15142" href="#L15142">15142</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
-<a class="jxr_linenumber" name="L15143" href="#L15143">15143</a>         }
-<a class="jxr_linenumber" name="L15144" href="#L15144">15144</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L15145" href="#L15145">15145</a>             calibrator.setInitialCrossCouplingErrors(
-<a class="jxr_linenumber" name="L15146" href="#L15146">15146</a>                     0.0, 0.0, 0.0,
-<a class="jxr_linenumber" name="L15147" href="#L15147">15147</a>                     0.0, 0.0, 0.0);
-<a class="jxr_linenumber" name="L15148" href="#L15148">15148</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
-<a class="jxr_linenumber" name="L15149" href="#L15149">15149</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
-<a class="jxr_linenumber" name="L15150" href="#L15150">15150</a>         }
-<a class="jxr_linenumber" name="L15151" href="#L15151">15151</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L15152" href="#L15152">15152</a>             calibrator.setInitialScalingFactorsAndCrossCouplingErrors(
-<a class="jxr_linenumber" name="L15153" href="#L15153">15153</a>                     0.0, 0.0, 0.0,
-<a class="jxr_linenumber" name="L15154" href="#L15154">15154</a>                     0.0, 0.0, 0.0,
-<a class="jxr_linenumber" name="L15155" href="#L15155">15155</a>                     0.0, 0.0, 0.0);
-<a class="jxr_linenumber" name="L15156" href="#L15156">15156</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
-<a class="jxr_linenumber" name="L15157" href="#L15157">15157</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
-<a class="jxr_linenumber" name="L15158" href="#L15158">15158</a>         }
-<a class="jxr_linenumber" name="L15159" href="#L15159">15159</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L15160" href="#L15160">15160</a>             calibrator.setInitialBias((<strong class="jxr_keyword">double</strong>[]) <strong class="jxr_keyword">null</strong>);
-<a class="jxr_linenumber" name="L15161" href="#L15161">15161</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
-<a class="jxr_linenumber" name="L15162" href="#L15162">15162</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
-<a class="jxr_linenumber" name="L15163" href="#L15163">15163</a>         }
-<a class="jxr_linenumber" name="L15164" href="#L15164">15164</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L15165" href="#L15165">15165</a>             calibrator.setInitialBias((Matrix) <strong class="jxr_keyword">null</strong>);
-<a class="jxr_linenumber" name="L15166" href="#L15166">15166</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
-<a class="jxr_linenumber" name="L15167" href="#L15167">15167</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
-<a class="jxr_linenumber" name="L15168" href="#L15168">15168</a>         }
-<a class="jxr_linenumber" name="L15169" href="#L15169">15169</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L15170" href="#L15170">15170</a>             calibrator.setInitialMa(<strong class="jxr_keyword">null</strong>);
-<a class="jxr_linenumber" name="L15171" href="#L15171">15171</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
-<a class="jxr_linenumber" name="L15172" href="#L15172">15172</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
-<a class="jxr_linenumber" name="L15173" href="#L15173">15173</a>         }
-<a class="jxr_linenumber" name="L15174" href="#L15174">15174</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L15175" href="#L15175">15175</a>             calibrator.setMeasurements(<strong class="jxr_keyword">null</strong>);
-<a class="jxr_linenumber" name="L15176" href="#L15176">15176</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
-<a class="jxr_linenumber" name="L15177" href="#L15177">15177</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
-<a class="jxr_linenumber" name="L15178" href="#L15178">15178</a>         }
-<a class="jxr_linenumber" name="L15179" href="#L15179">15179</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L15180" href="#L15180">15180</a>             calibrator.setCommonAxisUsed(<strong class="jxr_keyword">true</strong>);
-<a class="jxr_linenumber" name="L15181" href="#L15181">15181</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
-<a class="jxr_linenumber" name="L15182" href="#L15182">15182</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
-<a class="jxr_linenumber" name="L15183" href="#L15183">15183</a>         }
-<a class="jxr_linenumber" name="L15184" href="#L15184">15184</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L15185" href="#L15185">15185</a>             calibrator.setListener(<strong class="jxr_keyword">this</strong>);
-<a class="jxr_linenumber" name="L15186" href="#L15186">15186</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
-<a class="jxr_linenumber" name="L15187" href="#L15187">15187</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
-<a class="jxr_linenumber" name="L15188" href="#L15188">15188</a>         }
-<a class="jxr_linenumber" name="L15189" href="#L15189">15189</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L15190" href="#L15190">15190</a>             calibrator.setProgressDelta(0.5f);
-<a class="jxr_linenumber" name="L15191" href="#L15191">15191</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
-<a class="jxr_linenumber" name="L15192" href="#L15192">15192</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
-<a class="jxr_linenumber" name="L15193" href="#L15193">15193</a>         }
-<a class="jxr_linenumber" name="L15194" href="#L15194">15194</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L15195" href="#L15195">15195</a>             calibrator.setConfidence(0.5);
-<a class="jxr_linenumber" name="L15196" href="#L15196">15196</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
-<a class="jxr_linenumber" name="L15197" href="#L15197">15197</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
-<a class="jxr_linenumber" name="L15198" href="#L15198">15198</a>         }
-<a class="jxr_linenumber" name="L15199" href="#L15199">15199</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L15200" href="#L15200">15200</a>             calibrator.setMaxIterations(500);
-<a class="jxr_linenumber" name="L15201" href="#L15201">15201</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
-<a class="jxr_linenumber" name="L15202" href="#L15202">15202</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
-<a class="jxr_linenumber" name="L15203" href="#L15203">15203</a>         }
-<a class="jxr_linenumber" name="L15204" href="#L15204">15204</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L15205" href="#L15205">15205</a>             calibrator.setResultRefined(<strong class="jxr_keyword">true</strong>);
-<a class="jxr_linenumber" name="L15206" href="#L15206">15206</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
-<a class="jxr_linenumber" name="L15207" href="#L15207">15207</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
-<a class="jxr_linenumber" name="L15208" href="#L15208">15208</a>         }
-<a class="jxr_linenumber" name="L15209" href="#L15209">15209</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L15210" href="#L15210">15210</a>             calibrator.setCovarianceKept(<strong class="jxr_keyword">true</strong>);
-<a class="jxr_linenumber" name="L15211" href="#L15211">15211</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
-<a class="jxr_linenumber" name="L15212" href="#L15212">15212</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
-<a class="jxr_linenumber" name="L15213" href="#L15213">15213</a>         }
-<a class="jxr_linenumber" name="L15214" href="#L15214">15214</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L15215" href="#L15215">15215</a>             calibrator.setPreliminarySubsetSize(5);
-<a class="jxr_linenumber" name="L15216" href="#L15216">15216</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
-<a class="jxr_linenumber" name="L15217" href="#L15217">15217</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
-<a class="jxr_linenumber" name="L15218" href="#L15218">15218</a>         }
-<a class="jxr_linenumber" name="L15219" href="#L15219">15219</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L15220" href="#L15220">15220</a>             calibrator.calibrate();
-<a class="jxr_linenumber" name="L15221" href="#L15221">15221</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
-<a class="jxr_linenumber" name="L15222" href="#L15222">15222</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
-<a class="jxr_linenumber" name="L15223" href="#L15223">15223</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> Exception e) {
-<a class="jxr_linenumber" name="L15224" href="#L15224">15224</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
-<a class="jxr_linenumber" name="L15225" href="#L15225">15225</a>         }
-<a class="jxr_linenumber" name="L15226" href="#L15226">15226</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L15227" href="#L15227">15227</a>             calibrator.setStopThreshold(0.1);
-<a class="jxr_linenumber" name="L15228" href="#L15228">15228</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
-<a class="jxr_linenumber" name="L15229" href="#L15229">15229</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
-<a class="jxr_linenumber" name="L15230" href="#L15230">15230</a>         }
-<a class="jxr_linenumber" name="L15231" href="#L15231">15231</a>     }
-<a class="jxr_linenumber" name="L15232" href="#L15232">15232</a> 
-<a class="jxr_linenumber" name="L15233" href="#L15233">15233</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> assertEstimatedResult(
-<a class="jxr_linenumber" name="L15234" href="#L15234">15234</a>             <strong class="jxr_keyword">final</strong> Matrix ba, <strong class="jxr_keyword">final</strong> Matrix ma,
-<a class="jxr_linenumber" name="L15235" href="#L15235">15235</a>             <strong class="jxr_keyword">final</strong> PROMedSRobustKnownGravityNormAccelerometerCalibrator calibrator,
-<a class="jxr_linenumber" name="L15236" href="#L15236">15236</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">boolean</strong> checkCovariance)
-<a class="jxr_linenumber" name="L15237" href="#L15237">15237</a>             <strong class="jxr_keyword">throws</strong> WrongSizeException {
-<a class="jxr_linenumber" name="L15238" href="#L15238">15238</a> 
-<a class="jxr_linenumber" name="L15239" href="#L15239">15239</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] estimatedBiases = calibrator.getEstimatedBiases();
-<a class="jxr_linenumber" name="L15240" href="#L15240">15240</a>         assertArrayEquals(ba.getBuffer(), estimatedBiases, 0.0);
-<a class="jxr_linenumber" name="L15241" href="#L15241">15241</a> 
-<a class="jxr_linenumber" name="L15242" href="#L15242">15242</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] estimatedBiases2 = <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">double</strong>[3];
-<a class="jxr_linenumber" name="L15243" href="#L15243">15243</a>         calibrator.getEstimatedBiases(estimatedBiases2);
-<a class="jxr_linenumber" name="L15244" href="#L15244">15244</a>         assertArrayEquals(estimatedBiases, estimatedBiases2, 0.0);
-<a class="jxr_linenumber" name="L15245" href="#L15245">15245</a> 
-<a class="jxr_linenumber" name="L15246" href="#L15246">15246</a>         <strong class="jxr_keyword">final</strong> Matrix ba2 = <strong class="jxr_keyword">new</strong> Matrix(3, 1);
-<a class="jxr_linenumber" name="L15247" href="#L15247">15247</a>         calibrator.getEstimatedBiasesAsMatrix(ba2);
-<a class="jxr_linenumber" name="L15248" href="#L15248">15248</a> 
-<a class="jxr_linenumber" name="L15249" href="#L15249">15249</a>         assertEquals(ba, ba2);
+<a class="jxr_linenumber" name="L15037" href="#L15037">15037</a>     }
+<a class="jxr_linenumber" name="L15038" href="#L15038">15038</a> 
+<a class="jxr_linenumber" name="L15039" href="#L15039">15039</a>     @Override
+<a class="jxr_linenumber" name="L15040" href="#L15040">15040</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> onCalibrateProgressChange(
+<a class="jxr_linenumber" name="L15041" href="#L15041">15041</a>             <strong class="jxr_keyword">final</strong> RobustKnownGravityNormAccelerometerCalibrator calibrator,
+<a class="jxr_linenumber" name="L15042" href="#L15042">15042</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">float</strong> progress) {
+<a class="jxr_linenumber" name="L15043" href="#L15043">15043</a>         checkLocked((PROMedSRobustKnownGravityNormAccelerometerCalibrator) calibrator);
+<a class="jxr_linenumber" name="L15044" href="#L15044">15044</a>         mCalibrateProgressChange++;
+<a class="jxr_linenumber" name="L15045" href="#L15045">15045</a>     }
+<a class="jxr_linenumber" name="L15046" href="#L15046">15046</a> 
+<a class="jxr_linenumber" name="L15047" href="#L15047">15047</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> reset() {
+<a class="jxr_linenumber" name="L15048" href="#L15048">15048</a>         mCalibrateStart = 0;
+<a class="jxr_linenumber" name="L15049" href="#L15049">15049</a>         mCalibrateEnd = 0;
+<a class="jxr_linenumber" name="L15050" href="#L15050">15050</a>         mCalibrateNextIteration = 0;
+<a class="jxr_linenumber" name="L15051" href="#L15051">15051</a>         mCalibrateProgressChange = 0;
+<a class="jxr_linenumber" name="L15052" href="#L15052">15052</a>     }
+<a class="jxr_linenumber" name="L15053" href="#L15053">15053</a> 
+<a class="jxr_linenumber" name="L15054" href="#L15054">15054</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> checkLocked(<strong class="jxr_keyword">final</strong> PROMedSRobustKnownGravityNormAccelerometerCalibrator calibrator) {
+<a class="jxr_linenumber" name="L15055" href="#L15055">15055</a>         assertTrue(calibrator.isRunning());
+<a class="jxr_linenumber" name="L15056" href="#L15056">15056</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L15057" href="#L15057">15057</a>             calibrator.setInitialBiasX(0.0);
+<a class="jxr_linenumber" name="L15058" href="#L15058">15058</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
+<a class="jxr_linenumber" name="L15059" href="#L15059">15059</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
+<a class="jxr_linenumber" name="L15060" href="#L15060">15060</a>         }
+<a class="jxr_linenumber" name="L15061" href="#L15061">15061</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L15062" href="#L15062">15062</a>             calibrator.setInitialBiasY(0.0);
+<a class="jxr_linenumber" name="L15063" href="#L15063">15063</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
+<a class="jxr_linenumber" name="L15064" href="#L15064">15064</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
+<a class="jxr_linenumber" name="L15065" href="#L15065">15065</a>         }
+<a class="jxr_linenumber" name="L15066" href="#L15066">15066</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L15067" href="#L15067">15067</a>             calibrator.setInitialBiasZ(0.0);
+<a class="jxr_linenumber" name="L15068" href="#L15068">15068</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
+<a class="jxr_linenumber" name="L15069" href="#L15069">15069</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
+<a class="jxr_linenumber" name="L15070" href="#L15070">15070</a>         }
+<a class="jxr_linenumber" name="L15071" href="#L15071">15071</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L15072" href="#L15072">15072</a>             calibrator.setInitialBiasX(<strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L15073" href="#L15073">15073</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
+<a class="jxr_linenumber" name="L15074" href="#L15074">15074</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
+<a class="jxr_linenumber" name="L15075" href="#L15075">15075</a>         }
+<a class="jxr_linenumber" name="L15076" href="#L15076">15076</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L15077" href="#L15077">15077</a>             calibrator.setInitialBiasY(<strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L15078" href="#L15078">15078</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
+<a class="jxr_linenumber" name="L15079" href="#L15079">15079</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
+<a class="jxr_linenumber" name="L15080" href="#L15080">15080</a>         }
+<a class="jxr_linenumber" name="L15081" href="#L15081">15081</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L15082" href="#L15082">15082</a>             calibrator.setInitialBiasZ(<strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L15083" href="#L15083">15083</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
+<a class="jxr_linenumber" name="L15084" href="#L15084">15084</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
+<a class="jxr_linenumber" name="L15085" href="#L15085">15085</a>         }
+<a class="jxr_linenumber" name="L15086" href="#L15086">15086</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L15087" href="#L15087">15087</a>             calibrator.setInitialBias(0.0, 0.0, 0.0);
+<a class="jxr_linenumber" name="L15088" href="#L15088">15088</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
+<a class="jxr_linenumber" name="L15089" href="#L15089">15089</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
+<a class="jxr_linenumber" name="L15090" href="#L15090">15090</a>         }
+<a class="jxr_linenumber" name="L15091" href="#L15091">15091</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L15092" href="#L15092">15092</a>             calibrator.setInitialBias(<strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L15093" href="#L15093">15093</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
+<a class="jxr_linenumber" name="L15094" href="#L15094">15094</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
+<a class="jxr_linenumber" name="L15095" href="#L15095">15095</a>         }
+<a class="jxr_linenumber" name="L15096" href="#L15096">15096</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L15097" href="#L15097">15097</a>             calibrator.setInitialSx(0.0);
+<a class="jxr_linenumber" name="L15098" href="#L15098">15098</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
+<a class="jxr_linenumber" name="L15099" href="#L15099">15099</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
+<a class="jxr_linenumber" name="L15100" href="#L15100">15100</a>         }
+<a class="jxr_linenumber" name="L15101" href="#L15101">15101</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L15102" href="#L15102">15102</a>             calibrator.setInitialSy(0.0);
+<a class="jxr_linenumber" name="L15103" href="#L15103">15103</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
+<a class="jxr_linenumber" name="L15104" href="#L15104">15104</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
+<a class="jxr_linenumber" name="L15105" href="#L15105">15105</a>         }
+<a class="jxr_linenumber" name="L15106" href="#L15106">15106</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L15107" href="#L15107">15107</a>             calibrator.setInitialSz(0.0);
+<a class="jxr_linenumber" name="L15108" href="#L15108">15108</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
+<a class="jxr_linenumber" name="L15109" href="#L15109">15109</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
+<a class="jxr_linenumber" name="L15110" href="#L15110">15110</a>         }
+<a class="jxr_linenumber" name="L15111" href="#L15111">15111</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L15112" href="#L15112">15112</a>             calibrator.setInitialMxy(0.0);
+<a class="jxr_linenumber" name="L15113" href="#L15113">15113</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
+<a class="jxr_linenumber" name="L15114" href="#L15114">15114</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
+<a class="jxr_linenumber" name="L15115" href="#L15115">15115</a>         }
+<a class="jxr_linenumber" name="L15116" href="#L15116">15116</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L15117" href="#L15117">15117</a>             calibrator.setInitialMxz(0.0);
+<a class="jxr_linenumber" name="L15118" href="#L15118">15118</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
+<a class="jxr_linenumber" name="L15119" href="#L15119">15119</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
+<a class="jxr_linenumber" name="L15120" href="#L15120">15120</a>         }
+<a class="jxr_linenumber" name="L15121" href="#L15121">15121</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L15122" href="#L15122">15122</a>             calibrator.setInitialMyx(0.0);
+<a class="jxr_linenumber" name="L15123" href="#L15123">15123</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
+<a class="jxr_linenumber" name="L15124" href="#L15124">15124</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
+<a class="jxr_linenumber" name="L15125" href="#L15125">15125</a>         }
+<a class="jxr_linenumber" name="L15126" href="#L15126">15126</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L15127" href="#L15127">15127</a>             calibrator.setInitialMyz(0.0);
+<a class="jxr_linenumber" name="L15128" href="#L15128">15128</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
+<a class="jxr_linenumber" name="L15129" href="#L15129">15129</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
+<a class="jxr_linenumber" name="L15130" href="#L15130">15130</a>         }
+<a class="jxr_linenumber" name="L15131" href="#L15131">15131</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L15132" href="#L15132">15132</a>             calibrator.setInitialMzx(0.0);
+<a class="jxr_linenumber" name="L15133" href="#L15133">15133</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
+<a class="jxr_linenumber" name="L15134" href="#L15134">15134</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
+<a class="jxr_linenumber" name="L15135" href="#L15135">15135</a>         }
+<a class="jxr_linenumber" name="L15136" href="#L15136">15136</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L15137" href="#L15137">15137</a>             calibrator.setInitialMzy(0.0);
+<a class="jxr_linenumber" name="L15138" href="#L15138">15138</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
+<a class="jxr_linenumber" name="L15139" href="#L15139">15139</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
+<a class="jxr_linenumber" name="L15140" href="#L15140">15140</a>         }
+<a class="jxr_linenumber" name="L15141" href="#L15141">15141</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L15142" href="#L15142">15142</a>             calibrator.setInitialScalingFactors(0.0, 0.0, 0.0);
+<a class="jxr_linenumber" name="L15143" href="#L15143">15143</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
+<a class="jxr_linenumber" name="L15144" href="#L15144">15144</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
+<a class="jxr_linenumber" name="L15145" href="#L15145">15145</a>         }
+<a class="jxr_linenumber" name="L15146" href="#L15146">15146</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L15147" href="#L15147">15147</a>             calibrator.setInitialCrossCouplingErrors(
+<a class="jxr_linenumber" name="L15148" href="#L15148">15148</a>                     0.0, 0.0, 0.0,
+<a class="jxr_linenumber" name="L15149" href="#L15149">15149</a>                     0.0, 0.0, 0.0);
+<a class="jxr_linenumber" name="L15150" href="#L15150">15150</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
+<a class="jxr_linenumber" name="L15151" href="#L15151">15151</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
+<a class="jxr_linenumber" name="L15152" href="#L15152">15152</a>         }
+<a class="jxr_linenumber" name="L15153" href="#L15153">15153</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L15154" href="#L15154">15154</a>             calibrator.setInitialScalingFactorsAndCrossCouplingErrors(
+<a class="jxr_linenumber" name="L15155" href="#L15155">15155</a>                     0.0, 0.0, 0.0,
+<a class="jxr_linenumber" name="L15156" href="#L15156">15156</a>                     0.0, 0.0, 0.0,
+<a class="jxr_linenumber" name="L15157" href="#L15157">15157</a>                     0.0, 0.0, 0.0);
+<a class="jxr_linenumber" name="L15158" href="#L15158">15158</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
+<a class="jxr_linenumber" name="L15159" href="#L15159">15159</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
+<a class="jxr_linenumber" name="L15160" href="#L15160">15160</a>         }
+<a class="jxr_linenumber" name="L15161" href="#L15161">15161</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L15162" href="#L15162">15162</a>             calibrator.setInitialBias((<strong class="jxr_keyword">double</strong>[]) <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L15163" href="#L15163">15163</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
+<a class="jxr_linenumber" name="L15164" href="#L15164">15164</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
+<a class="jxr_linenumber" name="L15165" href="#L15165">15165</a>         }
+<a class="jxr_linenumber" name="L15166" href="#L15166">15166</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L15167" href="#L15167">15167</a>             calibrator.setInitialBias((Matrix) <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L15168" href="#L15168">15168</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
+<a class="jxr_linenumber" name="L15169" href="#L15169">15169</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
+<a class="jxr_linenumber" name="L15170" href="#L15170">15170</a>         }
+<a class="jxr_linenumber" name="L15171" href="#L15171">15171</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L15172" href="#L15172">15172</a>             calibrator.setInitialMa(<strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L15173" href="#L15173">15173</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
+<a class="jxr_linenumber" name="L15174" href="#L15174">15174</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
+<a class="jxr_linenumber" name="L15175" href="#L15175">15175</a>         }
+<a class="jxr_linenumber" name="L15176" href="#L15176">15176</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L15177" href="#L15177">15177</a>             calibrator.setMeasurements(<strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L15178" href="#L15178">15178</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
+<a class="jxr_linenumber" name="L15179" href="#L15179">15179</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
+<a class="jxr_linenumber" name="L15180" href="#L15180">15180</a>         }
+<a class="jxr_linenumber" name="L15181" href="#L15181">15181</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L15182" href="#L15182">15182</a>             calibrator.setCommonAxisUsed(<strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L15183" href="#L15183">15183</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
+<a class="jxr_linenumber" name="L15184" href="#L15184">15184</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
+<a class="jxr_linenumber" name="L15185" href="#L15185">15185</a>         }
+<a class="jxr_linenumber" name="L15186" href="#L15186">15186</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L15187" href="#L15187">15187</a>             calibrator.setListener(<strong class="jxr_keyword">this</strong>);
+<a class="jxr_linenumber" name="L15188" href="#L15188">15188</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
+<a class="jxr_linenumber" name="L15189" href="#L15189">15189</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
+<a class="jxr_linenumber" name="L15190" href="#L15190">15190</a>         }
+<a class="jxr_linenumber" name="L15191" href="#L15191">15191</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L15192" href="#L15192">15192</a>             calibrator.setProgressDelta(0.5f);
+<a class="jxr_linenumber" name="L15193" href="#L15193">15193</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
+<a class="jxr_linenumber" name="L15194" href="#L15194">15194</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
+<a class="jxr_linenumber" name="L15195" href="#L15195">15195</a>         }
+<a class="jxr_linenumber" name="L15196" href="#L15196">15196</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L15197" href="#L15197">15197</a>             calibrator.setConfidence(0.5);
+<a class="jxr_linenumber" name="L15198" href="#L15198">15198</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
+<a class="jxr_linenumber" name="L15199" href="#L15199">15199</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
+<a class="jxr_linenumber" name="L15200" href="#L15200">15200</a>         }
+<a class="jxr_linenumber" name="L15201" href="#L15201">15201</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L15202" href="#L15202">15202</a>             calibrator.setMaxIterations(500);
+<a class="jxr_linenumber" name="L15203" href="#L15203">15203</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
+<a class="jxr_linenumber" name="L15204" href="#L15204">15204</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
+<a class="jxr_linenumber" name="L15205" href="#L15205">15205</a>         }
+<a class="jxr_linenumber" name="L15206" href="#L15206">15206</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L15207" href="#L15207">15207</a>             calibrator.setResultRefined(<strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L15208" href="#L15208">15208</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
+<a class="jxr_linenumber" name="L15209" href="#L15209">15209</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
+<a class="jxr_linenumber" name="L15210" href="#L15210">15210</a>         }
+<a class="jxr_linenumber" name="L15211" href="#L15211">15211</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L15212" href="#L15212">15212</a>             calibrator.setCovarianceKept(<strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L15213" href="#L15213">15213</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
+<a class="jxr_linenumber" name="L15214" href="#L15214">15214</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
+<a class="jxr_linenumber" name="L15215" href="#L15215">15215</a>         }
+<a class="jxr_linenumber" name="L15216" href="#L15216">15216</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L15217" href="#L15217">15217</a>             calibrator.setPreliminarySubsetSize(5);
+<a class="jxr_linenumber" name="L15218" href="#L15218">15218</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
+<a class="jxr_linenumber" name="L15219" href="#L15219">15219</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
+<a class="jxr_linenumber" name="L15220" href="#L15220">15220</a>         }
+<a class="jxr_linenumber" name="L15221" href="#L15221">15221</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L15222" href="#L15222">15222</a>             calibrator.calibrate();
+<a class="jxr_linenumber" name="L15223" href="#L15223">15223</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
+<a class="jxr_linenumber" name="L15224" href="#L15224">15224</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
+<a class="jxr_linenumber" name="L15225" href="#L15225">15225</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> Exception e) {
+<a class="jxr_linenumber" name="L15226" href="#L15226">15226</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
+<a class="jxr_linenumber" name="L15227" href="#L15227">15227</a>         }
+<a class="jxr_linenumber" name="L15228" href="#L15228">15228</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L15229" href="#L15229">15229</a>             calibrator.setStopThreshold(0.1);
+<a class="jxr_linenumber" name="L15230" href="#L15230">15230</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
+<a class="jxr_linenumber" name="L15231" href="#L15231">15231</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
+<a class="jxr_linenumber" name="L15232" href="#L15232">15232</a>         }
+<a class="jxr_linenumber" name="L15233" href="#L15233">15233</a>     }
+<a class="jxr_linenumber" name="L15234" href="#L15234">15234</a> 
+<a class="jxr_linenumber" name="L15235" href="#L15235">15235</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> assertEstimatedResult(
+<a class="jxr_linenumber" name="L15236" href="#L15236">15236</a>             <strong class="jxr_keyword">final</strong> Matrix ba, <strong class="jxr_keyword">final</strong> Matrix ma,
+<a class="jxr_linenumber" name="L15237" href="#L15237">15237</a>             <strong class="jxr_keyword">final</strong> PROMedSRobustKnownGravityNormAccelerometerCalibrator calibrator,
+<a class="jxr_linenumber" name="L15238" href="#L15238">15238</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">boolean</strong> checkCovariance)
+<a class="jxr_linenumber" name="L15239" href="#L15239">15239</a>             <strong class="jxr_keyword">throws</strong> WrongSizeException {
+<a class="jxr_linenumber" name="L15240" href="#L15240">15240</a> 
+<a class="jxr_linenumber" name="L15241" href="#L15241">15241</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] estimatedBiases = calibrator.getEstimatedBiases();
+<a class="jxr_linenumber" name="L15242" href="#L15242">15242</a>         assertArrayEquals(ba.getBuffer(), estimatedBiases, 0.0);
+<a class="jxr_linenumber" name="L15243" href="#L15243">15243</a> 
+<a class="jxr_linenumber" name="L15244" href="#L15244">15244</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] estimatedBiases2 = <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">double</strong>[3];
+<a class="jxr_linenumber" name="L15245" href="#L15245">15245</a>         calibrator.getEstimatedBiases(estimatedBiases2);
+<a class="jxr_linenumber" name="L15246" href="#L15246">15246</a>         assertArrayEquals(estimatedBiases, estimatedBiases2, 0.0);
+<a class="jxr_linenumber" name="L15247" href="#L15247">15247</a> 
+<a class="jxr_linenumber" name="L15248" href="#L15248">15248</a>         <strong class="jxr_keyword">final</strong> Matrix ba2 = <strong class="jxr_keyword">new</strong> Matrix(3, 1);
+<a class="jxr_linenumber" name="L15249" href="#L15249">15249</a>         calibrator.getEstimatedBiasesAsMatrix(ba2);
 <a class="jxr_linenumber" name="L15250" href="#L15250">15250</a> 
-<a class="jxr_linenumber" name="L15251" href="#L15251">15251</a>         assertEquals(ba.getElementAtIndex(0), calibrator.getEstimatedBiasFx(),
-<a class="jxr_linenumber" name="L15252" href="#L15252">15252</a>                 0.0);
-<a class="jxr_linenumber" name="L15253" href="#L15253">15253</a>         assertEquals(ba.getElementAtIndex(1), calibrator.getEstimatedBiasFy(),
+<a class="jxr_linenumber" name="L15251" href="#L15251">15251</a>         assertEquals(ba, ba2);
+<a class="jxr_linenumber" name="L15252" href="#L15252">15252</a> 
+<a class="jxr_linenumber" name="L15253" href="#L15253">15253</a>         assertEquals(ba.getElementAtIndex(0), calibrator.getEstimatedBiasFx(),
 <a class="jxr_linenumber" name="L15254" href="#L15254">15254</a>                 0.0);
-<a class="jxr_linenumber" name="L15255" href="#L15255">15255</a>         assertEquals(ba.getElementAtIndex(2), calibrator.getEstimatedBiasFz(),
+<a class="jxr_linenumber" name="L15255" href="#L15255">15255</a>         assertEquals(ba.getElementAtIndex(1), calibrator.getEstimatedBiasFy(),
 <a class="jxr_linenumber" name="L15256" href="#L15256">15256</a>                 0.0);
-<a class="jxr_linenumber" name="L15257" href="#L15257">15257</a> 
-<a class="jxr_linenumber" name="L15258" href="#L15258">15258</a>         <strong class="jxr_keyword">final</strong> Acceleration bax1 = calibrator.getEstimatedBiasFxAsAcceleration();
-<a class="jxr_linenumber" name="L15259" href="#L15259">15259</a>         <strong class="jxr_keyword">final</strong> Acceleration bax2 = <strong class="jxr_keyword">new</strong> Acceleration(0.0,
-<a class="jxr_linenumber" name="L15260" href="#L15260">15260</a>                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-<a class="jxr_linenumber" name="L15261" href="#L15261">15261</a>         calibrator.getEstimatedBiasFxAsAcceleration(bax2);
-<a class="jxr_linenumber" name="L15262" href="#L15262">15262</a>         assertEquals(bax1, bax2);
-<a class="jxr_linenumber" name="L15263" href="#L15263">15263</a>         assertEquals(calibrator.getEstimatedBiasFx(),
-<a class="jxr_linenumber" name="L15264" href="#L15264">15264</a>                 bax1.getValue().doubleValue(), 0.0);
-<a class="jxr_linenumber" name="L15265" href="#L15265">15265</a>         assertEquals(AccelerationUnit.METERS_PER_SQUARED_SECOND, bax1.getUnit());
-<a class="jxr_linenumber" name="L15266" href="#L15266">15266</a> 
-<a class="jxr_linenumber" name="L15267" href="#L15267">15267</a>         <strong class="jxr_keyword">final</strong> Acceleration bay1 = calibrator.getEstimatedBiasFyAsAcceleration();
-<a class="jxr_linenumber" name="L15268" href="#L15268">15268</a>         <strong class="jxr_keyword">final</strong> Acceleration bay2 = <strong class="jxr_keyword">new</strong> Acceleration(0.0,
-<a class="jxr_linenumber" name="L15269" href="#L15269">15269</a>                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-<a class="jxr_linenumber" name="L15270" href="#L15270">15270</a>         calibrator.getEstimatedBiasFyAsAcceleration(bay2);
-<a class="jxr_linenumber" name="L15271" href="#L15271">15271</a>         assertEquals(bay1, bay2);
-<a class="jxr_linenumber" name="L15272" href="#L15272">15272</a>         assertEquals(calibrator.getEstimatedBiasFy(),
-<a class="jxr_linenumber" name="L15273" href="#L15273">15273</a>                 bay1.getValue().doubleValue(), 0.0);
-<a class="jxr_linenumber" name="L15274" href="#L15274">15274</a>         assertEquals(AccelerationUnit.METERS_PER_SQUARED_SECOND, bay1.getUnit());
-<a class="jxr_linenumber" name="L15275" href="#L15275">15275</a> 
-<a class="jxr_linenumber" name="L15276" href="#L15276">15276</a>         <strong class="jxr_keyword">final</strong> Acceleration baz1 = calibrator.getEstimatedBiasFzAsAcceleration();
-<a class="jxr_linenumber" name="L15277" href="#L15277">15277</a>         <strong class="jxr_keyword">final</strong> Acceleration baz2 = <strong class="jxr_keyword">new</strong> Acceleration(0.0,
-<a class="jxr_linenumber" name="L15278" href="#L15278">15278</a>                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-<a class="jxr_linenumber" name="L15279" href="#L15279">15279</a>         calibrator.getEstimatedBiasFzAsAcceleration(baz2);
-<a class="jxr_linenumber" name="L15280" href="#L15280">15280</a>         assertEquals(baz1, baz2);
-<a class="jxr_linenumber" name="L15281" href="#L15281">15281</a>         assertEquals(calibrator.getEstimatedBiasFz(),
-<a class="jxr_linenumber" name="L15282" href="#L15282">15282</a>                 baz1.getValue().doubleValue(), 0.0);
-<a class="jxr_linenumber" name="L15283" href="#L15283">15283</a>         assertEquals(AccelerationUnit.METERS_PER_SQUARED_SECOND, baz1.getUnit());
-<a class="jxr_linenumber" name="L15284" href="#L15284">15284</a> 
-<a class="jxr_linenumber" name="L15285" href="#L15285">15285</a>         assertEquals(ma.getElementAt(0, 0), calibrator.getEstimatedSx(),
-<a class="jxr_linenumber" name="L15286" href="#L15286">15286</a>                 0.0);
-<a class="jxr_linenumber" name="L15287" href="#L15287">15287</a>         assertEquals(ma.getElementAt(1, 1), calibrator.getEstimatedSy(),
+<a class="jxr_linenumber" name="L15257" href="#L15257">15257</a>         assertEquals(ba.getElementAtIndex(2), calibrator.getEstimatedBiasFz(),
+<a class="jxr_linenumber" name="L15258" href="#L15258">15258</a>                 0.0);
+<a class="jxr_linenumber" name="L15259" href="#L15259">15259</a> 
+<a class="jxr_linenumber" name="L15260" href="#L15260">15260</a>         <strong class="jxr_keyword">final</strong> Acceleration bax1 = calibrator.getEstimatedBiasFxAsAcceleration();
+<a class="jxr_linenumber" name="L15261" href="#L15261">15261</a>         <strong class="jxr_keyword">final</strong> Acceleration bax2 = <strong class="jxr_keyword">new</strong> Acceleration(0.0,
+<a class="jxr_linenumber" name="L15262" href="#L15262">15262</a>                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
+<a class="jxr_linenumber" name="L15263" href="#L15263">15263</a>         calibrator.getEstimatedBiasFxAsAcceleration(bax2);
+<a class="jxr_linenumber" name="L15264" href="#L15264">15264</a>         assertEquals(bax1, bax2);
+<a class="jxr_linenumber" name="L15265" href="#L15265">15265</a>         assertEquals(calibrator.getEstimatedBiasFx(),
+<a class="jxr_linenumber" name="L15266" href="#L15266">15266</a>                 bax1.getValue().doubleValue(), 0.0);
+<a class="jxr_linenumber" name="L15267" href="#L15267">15267</a>         assertEquals(AccelerationUnit.METERS_PER_SQUARED_SECOND, bax1.getUnit());
+<a class="jxr_linenumber" name="L15268" href="#L15268">15268</a> 
+<a class="jxr_linenumber" name="L15269" href="#L15269">15269</a>         <strong class="jxr_keyword">final</strong> Acceleration bay1 = calibrator.getEstimatedBiasFyAsAcceleration();
+<a class="jxr_linenumber" name="L15270" href="#L15270">15270</a>         <strong class="jxr_keyword">final</strong> Acceleration bay2 = <strong class="jxr_keyword">new</strong> Acceleration(0.0,
+<a class="jxr_linenumber" name="L15271" href="#L15271">15271</a>                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
+<a class="jxr_linenumber" name="L15272" href="#L15272">15272</a>         calibrator.getEstimatedBiasFyAsAcceleration(bay2);
+<a class="jxr_linenumber" name="L15273" href="#L15273">15273</a>         assertEquals(bay1, bay2);
+<a class="jxr_linenumber" name="L15274" href="#L15274">15274</a>         assertEquals(calibrator.getEstimatedBiasFy(),
+<a class="jxr_linenumber" name="L15275" href="#L15275">15275</a>                 bay1.getValue().doubleValue(), 0.0);
+<a class="jxr_linenumber" name="L15276" href="#L15276">15276</a>         assertEquals(AccelerationUnit.METERS_PER_SQUARED_SECOND, bay1.getUnit());
+<a class="jxr_linenumber" name="L15277" href="#L15277">15277</a> 
+<a class="jxr_linenumber" name="L15278" href="#L15278">15278</a>         <strong class="jxr_keyword">final</strong> Acceleration baz1 = calibrator.getEstimatedBiasFzAsAcceleration();
+<a class="jxr_linenumber" name="L15279" href="#L15279">15279</a>         <strong class="jxr_keyword">final</strong> Acceleration baz2 = <strong class="jxr_keyword">new</strong> Acceleration(0.0,
+<a class="jxr_linenumber" name="L15280" href="#L15280">15280</a>                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
+<a class="jxr_linenumber" name="L15281" href="#L15281">15281</a>         calibrator.getEstimatedBiasFzAsAcceleration(baz2);
+<a class="jxr_linenumber" name="L15282" href="#L15282">15282</a>         assertEquals(baz1, baz2);
+<a class="jxr_linenumber" name="L15283" href="#L15283">15283</a>         assertEquals(calibrator.getEstimatedBiasFz(),
+<a class="jxr_linenumber" name="L15284" href="#L15284">15284</a>                 baz1.getValue().doubleValue(), 0.0);
+<a class="jxr_linenumber" name="L15285" href="#L15285">15285</a>         assertEquals(AccelerationUnit.METERS_PER_SQUARED_SECOND, baz1.getUnit());
+<a class="jxr_linenumber" name="L15286" href="#L15286">15286</a> 
+<a class="jxr_linenumber" name="L15287" href="#L15287">15287</a>         assertEquals(ma.getElementAt(0, 0), calibrator.getEstimatedSx(),
 <a class="jxr_linenumber" name="L15288" href="#L15288">15288</a>                 0.0);
-<a class="jxr_linenumber" name="L15289" href="#L15289">15289</a>         assertEquals(ma.getElementAt(2, 2), calibrator.getEstimatedSz(),
+<a class="jxr_linenumber" name="L15289" href="#L15289">15289</a>         assertEquals(ma.getElementAt(1, 1), calibrator.getEstimatedSy(),
 <a class="jxr_linenumber" name="L15290" href="#L15290">15290</a>                 0.0);
-<a class="jxr_linenumber" name="L15291" href="#L15291">15291</a>         assertEquals(ma.getElementAt(0, 1), calibrator.getEstimatedMxy(),
+<a class="jxr_linenumber" name="L15291" href="#L15291">15291</a>         assertEquals(ma.getElementAt(2, 2), calibrator.getEstimatedSz(),
 <a class="jxr_linenumber" name="L15292" href="#L15292">15292</a>                 0.0);
-<a class="jxr_linenumber" name="L15293" href="#L15293">15293</a>         assertEquals(ma.getElementAt(0, 2), calibrator.getEstimatedMxz(),
+<a class="jxr_linenumber" name="L15293" href="#L15293">15293</a>         assertEquals(ma.getElementAt(0, 1), calibrator.getEstimatedMxy(),
 <a class="jxr_linenumber" name="L15294" href="#L15294">15294</a>                 0.0);
-<a class="jxr_linenumber" name="L15295" href="#L15295">15295</a>         assertEquals(ma.getElementAt(1, 0), calibrator.getEstimatedMyx(),
+<a class="jxr_linenumber" name="L15295" href="#L15295">15295</a>         assertEquals(ma.getElementAt(0, 2), calibrator.getEstimatedMxz(),
 <a class="jxr_linenumber" name="L15296" href="#L15296">15296</a>                 0.0);
-<a class="jxr_linenumber" name="L15297" href="#L15297">15297</a>         assertEquals(ma.getElementAt(1, 2), calibrator.getEstimatedMyz(),
+<a class="jxr_linenumber" name="L15297" href="#L15297">15297</a>         assertEquals(ma.getElementAt(1, 0), calibrator.getEstimatedMyx(),
 <a class="jxr_linenumber" name="L15298" href="#L15298">15298</a>                 0.0);
-<a class="jxr_linenumber" name="L15299" href="#L15299">15299</a>         assertEquals(ma.getElementAt(2, 0), calibrator.getEstimatedMzx(),
+<a class="jxr_linenumber" name="L15299" href="#L15299">15299</a>         assertEquals(ma.getElementAt(1, 2), calibrator.getEstimatedMyz(),
 <a class="jxr_linenumber" name="L15300" href="#L15300">15300</a>                 0.0);
-<a class="jxr_linenumber" name="L15301" href="#L15301">15301</a>         assertEquals(ma.getElementAt(2, 1), calibrator.getEstimatedMzy(),
+<a class="jxr_linenumber" name="L15301" href="#L15301">15301</a>         assertEquals(ma.getElementAt(2, 0), calibrator.getEstimatedMzx(),
 <a class="jxr_linenumber" name="L15302" href="#L15302">15302</a>                 0.0);
-<a class="jxr_linenumber" name="L15303" href="#L15303">15303</a> 
-<a class="jxr_linenumber" name="L15304" href="#L15304">15304</a>         <strong class="jxr_keyword">if</strong> (checkCovariance) {
-<a class="jxr_linenumber" name="L15305" href="#L15305">15305</a>             assertCovariance(calibrator);
-<a class="jxr_linenumber" name="L15306" href="#L15306">15306</a>         }
-<a class="jxr_linenumber" name="L15307" href="#L15307">15307</a>     }
-<a class="jxr_linenumber" name="L15308" href="#L15308">15308</a> 
-<a class="jxr_linenumber" name="L15309" href="#L15309">15309</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> assertCovariance(
-<a class="jxr_linenumber" name="L15310" href="#L15310">15310</a>             <strong class="jxr_keyword">final</strong> PROMedSRobustKnownGravityNormAccelerometerCalibrator calibrator) {
-<a class="jxr_linenumber" name="L15311" href="#L15311">15311</a>         assertNotNull(calibrator.getEstimatedBiasFxVariance());
-<a class="jxr_linenumber" name="L15312" href="#L15312">15312</a> 
+<a class="jxr_linenumber" name="L15303" href="#L15303">15303</a>         assertEquals(ma.getElementAt(2, 1), calibrator.getEstimatedMzy(),
+<a class="jxr_linenumber" name="L15304" href="#L15304">15304</a>                 0.0);
+<a class="jxr_linenumber" name="L15305" href="#L15305">15305</a> 
+<a class="jxr_linenumber" name="L15306" href="#L15306">15306</a>         <strong class="jxr_keyword">if</strong> (checkCovariance) {
+<a class="jxr_linenumber" name="L15307" href="#L15307">15307</a>             assertCovariance(calibrator);
+<a class="jxr_linenumber" name="L15308" href="#L15308">15308</a>         }
+<a class="jxr_linenumber" name="L15309" href="#L15309">15309</a>     }
+<a class="jxr_linenumber" name="L15310" href="#L15310">15310</a> 
+<a class="jxr_linenumber" name="L15311" href="#L15311">15311</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> assertCovariance(
+<a class="jxr_linenumber" name="L15312" href="#L15312">15312</a>             <strong class="jxr_keyword">final</strong> PROMedSRobustKnownGravityNormAccelerometerCalibrator calibrator) {
 <a class="jxr_linenumber" name="L15313" href="#L15313">15313</a>         assertNotNull(calibrator.getEstimatedBiasFxVariance());
-<a class="jxr_linenumber" name="L15314" href="#L15314">15314</a>         assertNotNull(calibrator.getEstimatedBiasFxStandardDeviation());
-<a class="jxr_linenumber" name="L15315" href="#L15315">15315</a>         <strong class="jxr_keyword">final</strong> Acceleration stdBx1 = calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration();
-<a class="jxr_linenumber" name="L15316" href="#L15316">15316</a>         assertNotNull(stdBx1);
-<a class="jxr_linenumber" name="L15317" href="#L15317">15317</a>         <strong class="jxr_keyword">final</strong> Acceleration stdBx2 = <strong class="jxr_keyword">new</strong> Acceleration(1.0, AccelerationUnit.METERS_PER_SQUARED_SECOND);
-<a class="jxr_linenumber" name="L15318" href="#L15318">15318</a>         assertTrue(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration(stdBx2));
-<a class="jxr_linenumber" name="L15319" href="#L15319">15319</a>         assertEquals(stdBx1, stdBx2);
-<a class="jxr_linenumber" name="L15320" href="#L15320">15320</a> 
-<a class="jxr_linenumber" name="L15321" href="#L15321">15321</a>         assertNotNull(calibrator.getEstimatedBiasFyVariance());
-<a class="jxr_linenumber" name="L15322" href="#L15322">15322</a>         assertNotNull(calibrator.getEstimatedBiasFyStandardDeviation());
-<a class="jxr_linenumber" name="L15323" href="#L15323">15323</a>         <strong class="jxr_keyword">final</strong> Acceleration stdBy1 = calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration();
-<a class="jxr_linenumber" name="L15324" href="#L15324">15324</a>         assertNotNull(stdBy1);
-<a class="jxr_linenumber" name="L15325" href="#L15325">15325</a>         <strong class="jxr_keyword">final</strong> Acceleration stdBy2 = <strong class="jxr_keyword">new</strong> Acceleration(1.0, AccelerationUnit.METERS_PER_SQUARED_SECOND);
-<a class="jxr_linenumber" name="L15326" href="#L15326">15326</a>         assertTrue(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration(stdBy2));
-<a class="jxr_linenumber" name="L15327" href="#L15327">15327</a>         assertEquals(stdBy1, stdBy2);
-<a class="jxr_linenumber" name="L15328" href="#L15328">15328</a> 
-<a class="jxr_linenumber" name="L15329" href="#L15329">15329</a>         assertNotNull(calibrator.getEstimatedBiasFzVariance());
-<a class="jxr_linenumber" name="L15330" href="#L15330">15330</a>         assertNotNull(calibrator.getEstimatedBiasFzStandardDeviation());
-<a class="jxr_linenumber" name="L15331" href="#L15331">15331</a>         <strong class="jxr_keyword">final</strong> Acceleration stdBz1 = calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration();
-<a class="jxr_linenumber" name="L15332" href="#L15332">15332</a>         assertNotNull(stdBz1);
-<a class="jxr_linenumber" name="L15333" href="#L15333">15333</a>         <strong class="jxr_keyword">final</strong> Acceleration stdBz2 = <strong class="jxr_keyword">new</strong> Acceleration(1.0, AccelerationUnit.METERS_PER_SQUARED_SECOND);
-<a class="jxr_linenumber" name="L15334" href="#L15334">15334</a>         assertTrue(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration(stdBz2));
-<a class="jxr_linenumber" name="L15335" href="#L15335">15335</a>         assertEquals(stdBz1, stdBz2);
-<a class="jxr_linenumber" name="L15336" href="#L15336">15336</a> 
-<a class="jxr_linenumber" name="L15337" href="#L15337">15337</a>         <strong class="jxr_keyword">final</strong> AccelerationTriad std1 = calibrator.getEstimatedBiasStandardDeviation();
-<a class="jxr_linenumber" name="L15338" href="#L15338">15338</a>         assertEquals(calibrator.getEstimatedBiasFxStandardDeviation(), std1.getValueX(), 0.0);
-<a class="jxr_linenumber" name="L15339" href="#L15339">15339</a>         assertEquals(calibrator.getEstimatedBiasFyStandardDeviation(), std1.getValueY(), 0.0);
-<a class="jxr_linenumber" name="L15340" href="#L15340">15340</a>         assertEquals(calibrator.getEstimatedBiasFzStandardDeviation(), std1.getValueZ(), 0.0);
-<a class="jxr_linenumber" name="L15341" href="#L15341">15341</a>         assertEquals(AccelerationUnit.METERS_PER_SQUARED_SECOND, std1.getUnit());
-<a class="jxr_linenumber" name="L15342" href="#L15342">15342</a>         <strong class="jxr_keyword">final</strong> AccelerationTriad std2 = <strong class="jxr_keyword">new</strong> AccelerationTriad();
-<a class="jxr_linenumber" name="L15343" href="#L15343">15343</a>         calibrator.getEstimatedBiasStandardDeviation(std2);
-<a class="jxr_linenumber" name="L15344" href="#L15344">15344</a> 
-<a class="jxr_linenumber" name="L15345" href="#L15345">15345</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> avgStd = (calibrator.getEstimatedBiasFxStandardDeviation() +
-<a class="jxr_linenumber" name="L15346" href="#L15346">15346</a>                 calibrator.getEstimatedBiasFyStandardDeviation() +
-<a class="jxr_linenumber" name="L15347" href="#L15347">15347</a>                 calibrator.getEstimatedBiasFzStandardDeviation()) / 3.0;
-<a class="jxr_linenumber" name="L15348" href="#L15348">15348</a>         assertEquals(avgStd, calibrator.getEstimatedBiasStandardDeviationAverage(), 0.0);
-<a class="jxr_linenumber" name="L15349" href="#L15349">15349</a>         <strong class="jxr_keyword">final</strong> Acceleration avg1 = calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration();
-<a class="jxr_linenumber" name="L15350" href="#L15350">15350</a>         assertEquals(avgStd, avg1.getValue().doubleValue(), 0.0);
-<a class="jxr_linenumber" name="L15351" href="#L15351">15351</a>         assertEquals(AccelerationUnit.METERS_PER_SQUARED_SECOND, avg1.getUnit());
-<a class="jxr_linenumber" name="L15352" href="#L15352">15352</a>         <strong class="jxr_keyword">final</strong> Acceleration avg2 = <strong class="jxr_keyword">new</strong> Acceleration(1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
-<a class="jxr_linenumber" name="L15353" href="#L15353">15353</a>         calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration(avg2);
-<a class="jxr_linenumber" name="L15354" href="#L15354">15354</a>         assertEquals(avg1, avg2);
-<a class="jxr_linenumber" name="L15355" href="#L15355">15355</a> 
-<a class="jxr_linenumber" name="L15356" href="#L15356">15356</a>         assertEquals(std1.getNorm(), calibrator.getEstimatedBiasStandardDeviationNorm(), ABSOLUTE_ERROR);
-<a class="jxr_linenumber" name="L15357" href="#L15357">15357</a>         <strong class="jxr_keyword">final</strong> Acceleration norm1 = calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration();
-<a class="jxr_linenumber" name="L15358" href="#L15358">15358</a>         assertEquals(std1.getNorm(), norm1.getValue().doubleValue(), ABSOLUTE_ERROR);
-<a class="jxr_linenumber" name="L15359" href="#L15359">15359</a>         assertEquals(AccelerationUnit.METERS_PER_SQUARED_SECOND, norm1.getUnit());
-<a class="jxr_linenumber" name="L15360" href="#L15360">15360</a>         <strong class="jxr_keyword">final</strong> Acceleration norm2 = <strong class="jxr_keyword">new</strong> Acceleration(1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
-<a class="jxr_linenumber" name="L15361" href="#L15361">15361</a>         calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(norm2);
-<a class="jxr_linenumber" name="L15362" href="#L15362">15362</a>         assertEquals(norm1, norm2);
-<a class="jxr_linenumber" name="L15363" href="#L15363">15363</a>     }
-<a class="jxr_linenumber" name="L15364" href="#L15364">15364</a> 
-<a class="jxr_linenumber" name="L15365" href="#L15365">15365</a>     <strong class="jxr_keyword">private</strong> Matrix generateBa() {
-<a class="jxr_linenumber" name="L15366" href="#L15366">15366</a>         <strong class="jxr_keyword">return</strong> Matrix.newFromArray(<strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">double</strong>[]{
-<a class="jxr_linenumber" name="L15367" href="#L15367">15367</a>                 900 * MICRO_G_TO_METERS_PER_SECOND_SQUARED,
-<a class="jxr_linenumber" name="L15368" href="#L15368">15368</a>                 -1300 * MICRO_G_TO_METERS_PER_SECOND_SQUARED,
-<a class="jxr_linenumber" name="L15369" href="#L15369">15369</a>                 800 * MICRO_G_TO_METERS_PER_SECOND_SQUARED});
-<a class="jxr_linenumber" name="L15370" href="#L15370">15370</a>     }
-<a class="jxr_linenumber" name="L15371" href="#L15371">15371</a> 
-<a class="jxr_linenumber" name="L15372" href="#L15372">15372</a>     <strong class="jxr_keyword">private</strong> Matrix generateBg() {
-<a class="jxr_linenumber" name="L15373" href="#L15373">15373</a>         <strong class="jxr_keyword">return</strong> Matrix.newFromArray(<strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">double</strong>[]{
-<a class="jxr_linenumber" name="L15374" href="#L15374">15374</a>                 -9 * DEG_TO_RAD / 3600.0,
-<a class="jxr_linenumber" name="L15375" href="#L15375">15375</a>                 13 * DEG_TO_RAD / 3600.0,
-<a class="jxr_linenumber" name="L15376" href="#L15376">15376</a>                 -8 * DEG_TO_RAD / 3600.0});
-<a class="jxr_linenumber" name="L15377" href="#L15377">15377</a>     }
-<a class="jxr_linenumber" name="L15378" href="#L15378">15378</a> 
-<a class="jxr_linenumber" name="L15379" href="#L15379">15379</a>     <strong class="jxr_keyword">private</strong> Matrix generateMaGeneral() <strong class="jxr_keyword">throws</strong> WrongSizeException {
-<a class="jxr_linenumber" name="L15380" href="#L15380">15380</a>         <strong class="jxr_keyword">final</strong> Matrix result = <strong class="jxr_keyword">new</strong> Matrix(3, 3);
-<a class="jxr_linenumber" name="L15381" href="#L15381">15381</a>         result.fromArray(<strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">double</strong>[]{
-<a class="jxr_linenumber" name="L15382" href="#L15382">15382</a>                 500e-6, -300e-6, 200e-6,
-<a class="jxr_linenumber" name="L15383" href="#L15383">15383</a>                 -150e-6, -600e-6, 250e-6,
-<a class="jxr_linenumber" name="L15384" href="#L15384">15384</a>                 -250e-6, 100e-6, 450e-6
-<a class="jxr_linenumber" name="L15385" href="#L15385">15385</a>         }, false);
-<a class="jxr_linenumber" name="L15386" href="#L15386">15386</a> 
-<a class="jxr_linenumber" name="L15387" href="#L15387">15387</a>         <strong class="jxr_keyword">return</strong> result;
-<a class="jxr_linenumber" name="L15388" href="#L15388">15388</a>     }
-<a class="jxr_linenumber" name="L15389" href="#L15389">15389</a> 
-<a class="jxr_linenumber" name="L15390" href="#L15390">15390</a>     <strong class="jxr_keyword">private</strong> Matrix generateMaCommonAxis() <strong class="jxr_keyword">throws</strong> WrongSizeException {
-<a class="jxr_linenumber" name="L15391" href="#L15391">15391</a>         <strong class="jxr_keyword">final</strong> Matrix result = <strong class="jxr_keyword">new</strong> Matrix(3, 3);
-<a class="jxr_linenumber" name="L15392" href="#L15392">15392</a>         result.fromArray(<strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">double</strong>[]{
-<a class="jxr_linenumber" name="L15393" href="#L15393">15393</a>                 500e-6, -300e-6, 200e-6,
-<a class="jxr_linenumber" name="L15394" href="#L15394">15394</a>                 0.0, -600e-6, 250e-6,
-<a class="jxr_linenumber" name="L15395" href="#L15395">15395</a>                 0.0, 0.0, 450e-6
-<a class="jxr_linenumber" name="L15396" href="#L15396">15396</a>         }, false);
+<a class="jxr_linenumber" name="L15314" href="#L15314">15314</a> 
+<a class="jxr_linenumber" name="L15315" href="#L15315">15315</a>         assertNotNull(calibrator.getEstimatedBiasFxVariance());
+<a class="jxr_linenumber" name="L15316" href="#L15316">15316</a>         assertNotNull(calibrator.getEstimatedBiasFxStandardDeviation());
+<a class="jxr_linenumber" name="L15317" href="#L15317">15317</a>         <strong class="jxr_keyword">final</strong> Acceleration stdBx1 = calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration();
+<a class="jxr_linenumber" name="L15318" href="#L15318">15318</a>         assertNotNull(stdBx1);
+<a class="jxr_linenumber" name="L15319" href="#L15319">15319</a>         <strong class="jxr_keyword">final</strong> Acceleration stdBx2 = <strong class="jxr_keyword">new</strong> Acceleration(1.0, AccelerationUnit.METERS_PER_SQUARED_SECOND);
+<a class="jxr_linenumber" name="L15320" href="#L15320">15320</a>         assertTrue(calibrator.getEstimatedBiasFxStandardDeviationAsAcceleration(stdBx2));
+<a class="jxr_linenumber" name="L15321" href="#L15321">15321</a>         assertEquals(stdBx1, stdBx2);
+<a class="jxr_linenumber" name="L15322" href="#L15322">15322</a> 
+<a class="jxr_linenumber" name="L15323" href="#L15323">15323</a>         assertNotNull(calibrator.getEstimatedBiasFyVariance());
+<a class="jxr_linenumber" name="L15324" href="#L15324">15324</a>         assertNotNull(calibrator.getEstimatedBiasFyStandardDeviation());
+<a class="jxr_linenumber" name="L15325" href="#L15325">15325</a>         <strong class="jxr_keyword">final</strong> Acceleration stdBy1 = calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration();
+<a class="jxr_linenumber" name="L15326" href="#L15326">15326</a>         assertNotNull(stdBy1);
+<a class="jxr_linenumber" name="L15327" href="#L15327">15327</a>         <strong class="jxr_keyword">final</strong> Acceleration stdBy2 = <strong class="jxr_keyword">new</strong> Acceleration(1.0, AccelerationUnit.METERS_PER_SQUARED_SECOND);
+<a class="jxr_linenumber" name="L15328" href="#L15328">15328</a>         assertTrue(calibrator.getEstimatedBiasFyStandardDeviationAsAcceleration(stdBy2));
+<a class="jxr_linenumber" name="L15329" href="#L15329">15329</a>         assertEquals(stdBy1, stdBy2);
+<a class="jxr_linenumber" name="L15330" href="#L15330">15330</a> 
+<a class="jxr_linenumber" name="L15331" href="#L15331">15331</a>         assertNotNull(calibrator.getEstimatedBiasFzVariance());
+<a class="jxr_linenumber" name="L15332" href="#L15332">15332</a>         assertNotNull(calibrator.getEstimatedBiasFzStandardDeviation());
+<a class="jxr_linenumber" name="L15333" href="#L15333">15333</a>         <strong class="jxr_keyword">final</strong> Acceleration stdBz1 = calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration();
+<a class="jxr_linenumber" name="L15334" href="#L15334">15334</a>         assertNotNull(stdBz1);
+<a class="jxr_linenumber" name="L15335" href="#L15335">15335</a>         <strong class="jxr_keyword">final</strong> Acceleration stdBz2 = <strong class="jxr_keyword">new</strong> Acceleration(1.0, AccelerationUnit.METERS_PER_SQUARED_SECOND);
+<a class="jxr_linenumber" name="L15336" href="#L15336">15336</a>         assertTrue(calibrator.getEstimatedBiasFzStandardDeviationAsAcceleration(stdBz2));
+<a class="jxr_linenumber" name="L15337" href="#L15337">15337</a>         assertEquals(stdBz1, stdBz2);
+<a class="jxr_linenumber" name="L15338" href="#L15338">15338</a> 
+<a class="jxr_linenumber" name="L15339" href="#L15339">15339</a>         <strong class="jxr_keyword">final</strong> AccelerationTriad std1 = calibrator.getEstimatedBiasStandardDeviation();
+<a class="jxr_linenumber" name="L15340" href="#L15340">15340</a>         assertEquals(calibrator.getEstimatedBiasFxStandardDeviation(), std1.getValueX(), 0.0);
+<a class="jxr_linenumber" name="L15341" href="#L15341">15341</a>         assertEquals(calibrator.getEstimatedBiasFyStandardDeviation(), std1.getValueY(), 0.0);
+<a class="jxr_linenumber" name="L15342" href="#L15342">15342</a>         assertEquals(calibrator.getEstimatedBiasFzStandardDeviation(), std1.getValueZ(), 0.0);
+<a class="jxr_linenumber" name="L15343" href="#L15343">15343</a>         assertEquals(AccelerationUnit.METERS_PER_SQUARED_SECOND, std1.getUnit());
+<a class="jxr_linenumber" name="L15344" href="#L15344">15344</a>         <strong class="jxr_keyword">final</strong> AccelerationTriad std2 = <strong class="jxr_keyword">new</strong> AccelerationTriad();
+<a class="jxr_linenumber" name="L15345" href="#L15345">15345</a>         calibrator.getEstimatedBiasStandardDeviation(std2);
+<a class="jxr_linenumber" name="L15346" href="#L15346">15346</a> 
+<a class="jxr_linenumber" name="L15347" href="#L15347">15347</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> avgStd = (calibrator.getEstimatedBiasFxStandardDeviation() +
+<a class="jxr_linenumber" name="L15348" href="#L15348">15348</a>                 calibrator.getEstimatedBiasFyStandardDeviation() +
+<a class="jxr_linenumber" name="L15349" href="#L15349">15349</a>                 calibrator.getEstimatedBiasFzStandardDeviation()) / 3.0;
+<a class="jxr_linenumber" name="L15350" href="#L15350">15350</a>         assertEquals(avgStd, calibrator.getEstimatedBiasStandardDeviationAverage(), 0.0);
+<a class="jxr_linenumber" name="L15351" href="#L15351">15351</a>         <strong class="jxr_keyword">final</strong> Acceleration avg1 = calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration();
+<a class="jxr_linenumber" name="L15352" href="#L15352">15352</a>         assertEquals(avgStd, avg1.getValue().doubleValue(), 0.0);
+<a class="jxr_linenumber" name="L15353" href="#L15353">15353</a>         assertEquals(AccelerationUnit.METERS_PER_SQUARED_SECOND, avg1.getUnit());
+<a class="jxr_linenumber" name="L15354" href="#L15354">15354</a>         <strong class="jxr_keyword">final</strong> Acceleration avg2 = <strong class="jxr_keyword">new</strong> Acceleration(1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+<a class="jxr_linenumber" name="L15355" href="#L15355">15355</a>         calibrator.getEstimatedBiasStandardDeviationAverageAsAcceleration(avg2);
+<a class="jxr_linenumber" name="L15356" href="#L15356">15356</a>         assertEquals(avg1, avg2);
+<a class="jxr_linenumber" name="L15357" href="#L15357">15357</a> 
+<a class="jxr_linenumber" name="L15358" href="#L15358">15358</a>         assertEquals(std1.getNorm(), calibrator.getEstimatedBiasStandardDeviationNorm(), ABSOLUTE_ERROR);
+<a class="jxr_linenumber" name="L15359" href="#L15359">15359</a>         <strong class="jxr_keyword">final</strong> Acceleration norm1 = calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration();
+<a class="jxr_linenumber" name="L15360" href="#L15360">15360</a>         assertEquals(std1.getNorm(), norm1.getValue().doubleValue(), ABSOLUTE_ERROR);
+<a class="jxr_linenumber" name="L15361" href="#L15361">15361</a>         assertEquals(AccelerationUnit.METERS_PER_SQUARED_SECOND, norm1.getUnit());
+<a class="jxr_linenumber" name="L15362" href="#L15362">15362</a>         <strong class="jxr_keyword">final</strong> Acceleration norm2 = <strong class="jxr_keyword">new</strong> Acceleration(1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+<a class="jxr_linenumber" name="L15363" href="#L15363">15363</a>         calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(norm2);
+<a class="jxr_linenumber" name="L15364" href="#L15364">15364</a>         assertEquals(norm1, norm2);
+<a class="jxr_linenumber" name="L15365" href="#L15365">15365</a>     }
+<a class="jxr_linenumber" name="L15366" href="#L15366">15366</a> 
+<a class="jxr_linenumber" name="L15367" href="#L15367">15367</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> checkCommonAxisCovariance(<strong class="jxr_keyword">final</strong> Matrix covariance) {
+<a class="jxr_linenumber" name="L15368" href="#L15368">15368</a>         assertEquals(covariance.getRows(), 12);
+<a class="jxr_linenumber" name="L15369" href="#L15369">15369</a>         assertEquals(covariance.getColumns(), 12);
+<a class="jxr_linenumber" name="L15370" href="#L15370">15370</a> 
+<a class="jxr_linenumber" name="L15371" href="#L15371">15371</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> j = 0; j &lt; 12; j++) {
+<a class="jxr_linenumber" name="L15372" href="#L15372">15372</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">boolean</strong> colIsZero = j == 8 || j == 10 || j == 11;
+<a class="jxr_linenumber" name="L15373" href="#L15373">15373</a>             <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; 12; i++) {
+<a class="jxr_linenumber" name="L15374" href="#L15374">15374</a>                 <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">boolean</strong> rowIsZero = i == 8 || i == 10 || i == 11;
+<a class="jxr_linenumber" name="L15375" href="#L15375">15375</a>                 <strong class="jxr_keyword">if</strong> (colIsZero || rowIsZero) {
+<a class="jxr_linenumber" name="L15376" href="#L15376">15376</a>                     assertEquals(covariance.getElementAt(i, j), 0.0, 0.0);
+<a class="jxr_linenumber" name="L15377" href="#L15377">15377</a>                 }
+<a class="jxr_linenumber" name="L15378" href="#L15378">15378</a>             }
+<a class="jxr_linenumber" name="L15379" href="#L15379">15379</a>         }
+<a class="jxr_linenumber" name="L15380" href="#L15380">15380</a>     }
+<a class="jxr_linenumber" name="L15381" href="#L15381">15381</a> 
+<a class="jxr_linenumber" name="L15382" href="#L15382">15382</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> checkGeneralCovariance(<strong class="jxr_keyword">final</strong> Matrix covariance) {
+<a class="jxr_linenumber" name="L15383" href="#L15383">15383</a>         assertEquals(covariance.getRows(), 12);
+<a class="jxr_linenumber" name="L15384" href="#L15384">15384</a>         assertEquals(covariance.getColumns(), 12);
+<a class="jxr_linenumber" name="L15385" href="#L15385">15385</a> 
+<a class="jxr_linenumber" name="L15386" href="#L15386">15386</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; 12; i++) {
+<a class="jxr_linenumber" name="L15387" href="#L15387">15387</a>             assertNotEquals(covariance.getElementAt(i, i), 0.0);
+<a class="jxr_linenumber" name="L15388" href="#L15388">15388</a>         }
+<a class="jxr_linenumber" name="L15389" href="#L15389">15389</a>     }
+<a class="jxr_linenumber" name="L15390" href="#L15390">15390</a> 
+<a class="jxr_linenumber" name="L15391" href="#L15391">15391</a>     <strong class="jxr_keyword">private</strong> Matrix generateBa() {
+<a class="jxr_linenumber" name="L15392" href="#L15392">15392</a>         <strong class="jxr_keyword">return</strong> Matrix.newFromArray(<strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">double</strong>[]{
+<a class="jxr_linenumber" name="L15393" href="#L15393">15393</a>                 900 * MICRO_G_TO_METERS_PER_SECOND_SQUARED,
+<a class="jxr_linenumber" name="L15394" href="#L15394">15394</a>                 -1300 * MICRO_G_TO_METERS_PER_SECOND_SQUARED,
+<a class="jxr_linenumber" name="L15395" href="#L15395">15395</a>                 800 * MICRO_G_TO_METERS_PER_SECOND_SQUARED});
+<a class="jxr_linenumber" name="L15396" href="#L15396">15396</a>     }
 <a class="jxr_linenumber" name="L15397" href="#L15397">15397</a> 
-<a class="jxr_linenumber" name="L15398" href="#L15398">15398</a>         <strong class="jxr_keyword">return</strong> result;
-<a class="jxr_linenumber" name="L15399" href="#L15399">15399</a>     }
-<a class="jxr_linenumber" name="L15400" href="#L15400">15400</a> 
-<a class="jxr_linenumber" name="L15401" href="#L15401">15401</a>     <strong class="jxr_keyword">private</strong> Matrix generateMg() <strong class="jxr_keyword">throws</strong> WrongSizeException {
-<a class="jxr_linenumber" name="L15402" href="#L15402">15402</a>         <strong class="jxr_keyword">final</strong> Matrix result = <strong class="jxr_keyword">new</strong> Matrix(3, 3);
-<a class="jxr_linenumber" name="L15403" href="#L15403">15403</a>         result.fromArray(<strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">double</strong>[]{
-<a class="jxr_linenumber" name="L15404" href="#L15404">15404</a>                 400e-6, -300e-6, 250e-6,
-<a class="jxr_linenumber" name="L15405" href="#L15405">15405</a>                 0.0, -300e-6, -150e-6,
-<a class="jxr_linenumber" name="L15406" href="#L15406">15406</a>                 0.0, 0.0, -350e-6
-<a class="jxr_linenumber" name="L15407" href="#L15407">15407</a>         }, false);
-<a class="jxr_linenumber" name="L15408" href="#L15408">15408</a> 
-<a class="jxr_linenumber" name="L15409" href="#L15409">15409</a>         <strong class="jxr_keyword">return</strong> result;
-<a class="jxr_linenumber" name="L15410" href="#L15410">15410</a>     }
-<a class="jxr_linenumber" name="L15411" href="#L15411">15411</a> 
-<a class="jxr_linenumber" name="L15412" href="#L15412">15412</a>     <strong class="jxr_keyword">private</strong> Matrix generateGg() <strong class="jxr_keyword">throws</strong> WrongSizeException {
-<a class="jxr_linenumber" name="L15413" href="#L15413">15413</a>         <strong class="jxr_keyword">final</strong> Matrix result = <strong class="jxr_keyword">new</strong> Matrix(3, 3);
-<a class="jxr_linenumber" name="L15414" href="#L15414">15414</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> tmp = DEG_TO_RAD / (3600 * 9.80665);
-<a class="jxr_linenumber" name="L15415" href="#L15415">15415</a>         result.fromArray(<strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">double</strong>[]{
-<a class="jxr_linenumber" name="L15416" href="#L15416">15416</a>                 0.9 * tmp, -1.1 * tmp, -0.6 * tmp,
-<a class="jxr_linenumber" name="L15417" href="#L15417">15417</a>                 -0.5 * tmp, 1.9 * tmp, -1.6 * tmp,
-<a class="jxr_linenumber" name="L15418" href="#L15418">15418</a>                 0.3 * tmp, 1.1 * tmp, -1.3 * tmp
-<a class="jxr_linenumber" name="L15419" href="#L15419">15419</a>         }, false);
-<a class="jxr_linenumber" name="L15420" href="#L15420">15420</a> 
-<a class="jxr_linenumber" name="L15421" href="#L15421">15421</a>         <strong class="jxr_keyword">return</strong> result;
-<a class="jxr_linenumber" name="L15422" href="#L15422">15422</a>     }
+<a class="jxr_linenumber" name="L15398" href="#L15398">15398</a>     <strong class="jxr_keyword">private</strong> Matrix generateBg() {
+<a class="jxr_linenumber" name="L15399" href="#L15399">15399</a>         <strong class="jxr_keyword">return</strong> Matrix.newFromArray(<strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">double</strong>[]{
+<a class="jxr_linenumber" name="L15400" href="#L15400">15400</a>                 -9 * DEG_TO_RAD / 3600.0,
+<a class="jxr_linenumber" name="L15401" href="#L15401">15401</a>                 13 * DEG_TO_RAD / 3600.0,
+<a class="jxr_linenumber" name="L15402" href="#L15402">15402</a>                 -8 * DEG_TO_RAD / 3600.0});
+<a class="jxr_linenumber" name="L15403" href="#L15403">15403</a>     }
+<a class="jxr_linenumber" name="L15404" href="#L15404">15404</a> 
+<a class="jxr_linenumber" name="L15405" href="#L15405">15405</a>     <strong class="jxr_keyword">private</strong> Matrix generateMaGeneral() <strong class="jxr_keyword">throws</strong> WrongSizeException {
+<a class="jxr_linenumber" name="L15406" href="#L15406">15406</a>         <strong class="jxr_keyword">final</strong> Matrix result = <strong class="jxr_keyword">new</strong> Matrix(3, 3);
+<a class="jxr_linenumber" name="L15407" href="#L15407">15407</a>         result.fromArray(<strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">double</strong>[]{
+<a class="jxr_linenumber" name="L15408" href="#L15408">15408</a>                 500e-6, -300e-6, 200e-6,
+<a class="jxr_linenumber" name="L15409" href="#L15409">15409</a>                 -150e-6, -600e-6, 250e-6,
+<a class="jxr_linenumber" name="L15410" href="#L15410">15410</a>                 -250e-6, 100e-6, 450e-6
+<a class="jxr_linenumber" name="L15411" href="#L15411">15411</a>         }, false);
+<a class="jxr_linenumber" name="L15412" href="#L15412">15412</a> 
+<a class="jxr_linenumber" name="L15413" href="#L15413">15413</a>         <strong class="jxr_keyword">return</strong> result;
+<a class="jxr_linenumber" name="L15414" href="#L15414">15414</a>     }
+<a class="jxr_linenumber" name="L15415" href="#L15415">15415</a> 
+<a class="jxr_linenumber" name="L15416" href="#L15416">15416</a>     <strong class="jxr_keyword">private</strong> Matrix generateMaCommonAxis() <strong class="jxr_keyword">throws</strong> WrongSizeException {
+<a class="jxr_linenumber" name="L15417" href="#L15417">15417</a>         <strong class="jxr_keyword">final</strong> Matrix result = <strong class="jxr_keyword">new</strong> Matrix(3, 3);
+<a class="jxr_linenumber" name="L15418" href="#L15418">15418</a>         result.fromArray(<strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">double</strong>[]{
+<a class="jxr_linenumber" name="L15419" href="#L15419">15419</a>                 500e-6, -300e-6, 200e-6,
+<a class="jxr_linenumber" name="L15420" href="#L15420">15420</a>                 0.0, -600e-6, 250e-6,
+<a class="jxr_linenumber" name="L15421" href="#L15421">15421</a>                 0.0, 0.0, 450e-6
+<a class="jxr_linenumber" name="L15422" href="#L15422">15422</a>         }, false);
 <a class="jxr_linenumber" name="L15423" href="#L15423">15423</a> 
-<a class="jxr_linenumber" name="L15424" href="#L15424">15424</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">double</strong> getAccelNoiseRootPSD() {
-<a class="jxr_linenumber" name="L15425" href="#L15425">15425</a>         <strong class="jxr_keyword">return</strong> 100.0 * MICRO_G_TO_METERS_PER_SECOND_SQUARED;
-<a class="jxr_linenumber" name="L15426" href="#L15426">15426</a>     }
-<a class="jxr_linenumber" name="L15427" href="#L15427">15427</a> 
-<a class="jxr_linenumber" name="L15428" href="#L15428">15428</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">double</strong> getGyroNoiseRootPSD() {
-<a class="jxr_linenumber" name="L15429" href="#L15429">15429</a>         <strong class="jxr_keyword">return</strong> 0.01 * DEG_TO_RAD / 60.0;
-<a class="jxr_linenumber" name="L15430" href="#L15430">15430</a>     }
-<a class="jxr_linenumber" name="L15431" href="#L15431">15431</a> }
+<a class="jxr_linenumber" name="L15424" href="#L15424">15424</a>         <strong class="jxr_keyword">return</strong> result;
+<a class="jxr_linenumber" name="L15425" href="#L15425">15425</a>     }
+<a class="jxr_linenumber" name="L15426" href="#L15426">15426</a> 
+<a class="jxr_linenumber" name="L15427" href="#L15427">15427</a>     <strong class="jxr_keyword">private</strong> Matrix generateMg() <strong class="jxr_keyword">throws</strong> WrongSizeException {
+<a class="jxr_linenumber" name="L15428" href="#L15428">15428</a>         <strong class="jxr_keyword">final</strong> Matrix result = <strong class="jxr_keyword">new</strong> Matrix(3, 3);
+<a class="jxr_linenumber" name="L15429" href="#L15429">15429</a>         result.fromArray(<strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">double</strong>[]{
+<a class="jxr_linenumber" name="L15430" href="#L15430">15430</a>                 400e-6, -300e-6, 250e-6,
+<a class="jxr_linenumber" name="L15431" href="#L15431">15431</a>                 0.0, -300e-6, -150e-6,
+<a class="jxr_linenumber" name="L15432" href="#L15432">15432</a>                 0.0, 0.0, -350e-6
+<a class="jxr_linenumber" name="L15433" href="#L15433">15433</a>         }, false);
+<a class="jxr_linenumber" name="L15434" href="#L15434">15434</a> 
+<a class="jxr_linenumber" name="L15435" href="#L15435">15435</a>         <strong class="jxr_keyword">return</strong> result;
+<a class="jxr_linenumber" name="L15436" href="#L15436">15436</a>     }
+<a class="jxr_linenumber" name="L15437" href="#L15437">15437</a> 
+<a class="jxr_linenumber" name="L15438" href="#L15438">15438</a>     <strong class="jxr_keyword">private</strong> Matrix generateGg() <strong class="jxr_keyword">throws</strong> WrongSizeException {
+<a class="jxr_linenumber" name="L15439" href="#L15439">15439</a>         <strong class="jxr_keyword">final</strong> Matrix result = <strong class="jxr_keyword">new</strong> Matrix(3, 3);
+<a class="jxr_linenumber" name="L15440" href="#L15440">15440</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> tmp = DEG_TO_RAD / (3600 * 9.80665);
+<a class="jxr_linenumber" name="L15441" href="#L15441">15441</a>         result.fromArray(<strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">double</strong>[]{
+<a class="jxr_linenumber" name="L15442" href="#L15442">15442</a>                 0.9 * tmp, -1.1 * tmp, -0.6 * tmp,
+<a class="jxr_linenumber" name="L15443" href="#L15443">15443</a>                 -0.5 * tmp, 1.9 * tmp, -1.6 * tmp,
+<a class="jxr_linenumber" name="L15444" href="#L15444">15444</a>                 0.3 * tmp, 1.1 * tmp, -1.3 * tmp
+<a class="jxr_linenumber" name="L15445" href="#L15445">15445</a>         }, false);
+<a class="jxr_linenumber" name="L15446" href="#L15446">15446</a> 
+<a class="jxr_linenumber" name="L15447" href="#L15447">15447</a>         <strong class="jxr_keyword">return</strong> result;
+<a class="jxr_linenumber" name="L15448" href="#L15448">15448</a>     }
+<a class="jxr_linenumber" name="L15449" href="#L15449">15449</a> 
+<a class="jxr_linenumber" name="L15450" href="#L15450">15450</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">double</strong> getAccelNoiseRootPSD() {
+<a class="jxr_linenumber" name="L15451" href="#L15451">15451</a>         <strong class="jxr_keyword">return</strong> 100.0 * MICRO_G_TO_METERS_PER_SECOND_SQUARED;
+<a class="jxr_linenumber" name="L15452" href="#L15452">15452</a>     }
+<a class="jxr_linenumber" name="L15453" href="#L15453">15453</a> 
+<a class="jxr_linenumber" name="L15454" href="#L15454">15454</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">double</strong> getGyroNoiseRootPSD() {
+<a class="jxr_linenumber" name="L15455" href="#L15455">15455</a>         <strong class="jxr_keyword">return</strong> 0.01 * DEG_TO_RAD / 60.0;
+<a class="jxr_linenumber" name="L15456" href="#L15456">15456</a>     }
+<a class="jxr_linenumber" name="L15457" href="#L15457">15457</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2018&#x2013;2020. All rights reserved.</div>

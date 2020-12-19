@@ -4114,12 +4114,12 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
                             public void onEstimateProgressChange(
                                     final RobustEstimator&lt;PreliminaryResult&gt; estimator,
                                     final float progress) {
-<span class="nc bnc" id="L4117" title="All 2 branches missed.">                                if (mListener != null) {</span>
-<span class="nc" id="L4118">                                    mListener.onCalibrateProgressChange(</span>
+<span class="pc bpc" id="L4117" title="1 of 2 branches missed.">                                if (mListener != null) {</span>
+<span class="fc" id="L4118">                                    mListener.onCalibrateProgressChange(</span>
                                             PROSACRobustTurntableGyroscopeCalibrator.this,
                                             progress);
                                 }
-<span class="nc" id="L4122">                            }</span>
+<span class="fc" id="L4122">                            }</span>
                         });
 
         try {
