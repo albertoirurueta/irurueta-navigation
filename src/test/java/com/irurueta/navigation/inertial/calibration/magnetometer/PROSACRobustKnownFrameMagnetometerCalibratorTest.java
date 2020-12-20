@@ -3463,6 +3463,7 @@ public class PROSACRobustKnownFrameMagnetometerCalibratorTest implements
             assertEstimatedResult(estimatedHardIron, estimatedMm, calibrator, true);
 
             assertNotNull(calibrator.getEstimatedCovariance());
+            checkGeneralCovariance(calibrator.getEstimatedCovariance());
 
             numValid++;
             break;
@@ -3550,6 +3551,7 @@ public class PROSACRobustKnownFrameMagnetometerCalibratorTest implements
         assertEstimatedResult(estimatedHardIron, estimatedMm, calibrator, true);
 
         assertNotNull(calibrator.getEstimatedCovariance());
+        checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
     }
 
     @Test
@@ -3642,6 +3644,7 @@ public class PROSACRobustKnownFrameMagnetometerCalibratorTest implements
             assertEstimatedResult(estimatedHardIron, estimatedMm, calibrator, true);
 
             assertNotNull(calibrator.getEstimatedCovariance());
+            checkGeneralCovariance(calibrator.getEstimatedCovariance());
 
             numValid++;
             break;
@@ -3740,6 +3743,7 @@ public class PROSACRobustKnownFrameMagnetometerCalibratorTest implements
             assertEstimatedResult(estimatedHardIron, estimatedMm, calibrator, true);
 
             assertNotNull(calibrator.getEstimatedCovariance());
+            checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
 
             numValid++;
             break;
@@ -3936,6 +3940,7 @@ public class PROSACRobustKnownFrameMagnetometerCalibratorTest implements
             assertEstimatedResult(estimatedHardIron, estimatedMm, calibrator, true);
 
             assertNotNull(calibrator.getEstimatedCovariance());
+            checkGeneralCovariance(calibrator.getEstimatedCovariance());
 
             numValid++;
             break;
@@ -4315,6 +4320,30 @@ public class PROSACRobustKnownFrameMagnetometerCalibratorTest implements
         final MagneticFluxDensity norm2 = new MagneticFluxDensity(1.0, MagneticFluxDensityUnit.TESLA);
         calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity(norm2);
         assertEquals(norm1, norm2);
+    }
+
+    private void checkCommonAxisCovariance(final Matrix covariance) {
+        assertEquals(covariance.getRows(), 12);
+        assertEquals(covariance.getColumns(), 12);
+
+        for (int j = 0; j < 12; j++) {
+            final boolean colIsZero = j == 8 || j == 10 || j == 11;
+            for (int i = 0; i < 12; i++) {
+                final boolean rowIsZero = i == 8 || i == 10 || i == 11;
+                if (colIsZero || rowIsZero) {
+                    assertEquals(covariance.getElementAt(i, j), 0.0, 0.0);
+                }
+            }
+        }
+    }
+
+    private void checkGeneralCovariance(final Matrix covariance) {
+        assertEquals(covariance.getRows(), 12);
+        assertEquals(covariance.getColumns(), 12);
+
+        for (int i = 0; i < 12; i++) {
+            assertNotEquals(covariance.getElementAt(i, i), 0.0);
+        }
     }
 
     private static List<StandardDeviationFrameBodyMagneticFluxDensity>

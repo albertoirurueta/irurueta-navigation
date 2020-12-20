@@ -1158,7 +1158,7 @@ public class KnownFrameGyroscopeLinearLeastSquaresCalibratorTest implements
         assertEquals(calibrator.getEstimatedBiasZ(), bTriad1.getValueZ(), 0.0);
         assertEquals(AngularSpeedUnit.RADIANS_PER_SECOND, bTriad1.getUnit());
         final AngularSpeedTriad bTriad2 = new AngularSpeedTriad();
-        calibrator.getEstimatedBiasAsTriad(bTriad2);
+        assertTrue(calibrator.getEstimatedBiasAsTriad(bTriad2));
         assertEquals(bTriad1, bTriad2);
 
         assertEquals(mg.getElementAt(0, 0), calibrator.getEstimatedSx(),

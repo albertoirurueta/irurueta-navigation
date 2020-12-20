@@ -12482,6 +12482,9 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertTrue(mm.equals(estimatedMm, ABSOLUTE_ERROR));
 
         assertEstimatedResult(estimatedMm, calibrator);
+
+        assertNotNull(calibrator.getEstimatedCovariance());
+        checkGeneralCovariance(calibrator.getEstimatedCovariance());
     }
 
     @Test
@@ -12528,6 +12531,9 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertTrue(mm.equals(estimatedMm, ABSOLUTE_ERROR));
 
         assertEstimatedResult(estimatedMm, calibrator);
+
+        assertNotNull(calibrator.getEstimatedCovariance());
+        checkGeneralCovariance(calibrator.getEstimatedCovariance());
     }
 
     @Test
@@ -12583,6 +12589,9 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
                     VERY_LARGE_ABSOLUTE_ERROR));
 
             assertEstimatedResult(estimatedMm, calibrator);
+
+            assertNotNull(calibrator.getEstimatedCovariance());
+            checkGeneralCovariance(calibrator.getEstimatedCovariance());
 
             numValid++;
             break;
@@ -12644,6 +12653,9 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
 
             assertEstimatedResult(estimatedMm, calibrator);
 
+            assertNotNull(calibrator.getEstimatedCovariance());
+            checkGeneralCovariance(calibrator.getEstimatedCovariance());
+
             numValid++;
             break;
         }
@@ -12699,6 +12711,9 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
 
             assertEstimatedResult(estimatedMm, calibrator);
 
+            assertNotNull(calibrator.getEstimatedCovariance());
+            checkGeneralCovariance(calibrator.getEstimatedCovariance());
+
             numValid++;
             break;
         }
@@ -12749,6 +12764,9 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertTrue(mm.equals(estimatedMm, ABSOLUTE_ERROR));
 
         assertEstimatedResult(estimatedMm, calibrator);
+
+        assertNotNull(calibrator.getEstimatedCovariance());
+        checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
     }
 
     @Test
@@ -12795,6 +12813,9 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertTrue(mm.equals(estimatedMm, ABSOLUTE_ERROR));
 
         assertEstimatedResult(estimatedMm, calibrator);
+
+        assertNotNull(calibrator.getEstimatedCovariance());
+        checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
     }
 
     @Test
@@ -12850,6 +12871,9 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
                     VERY_LARGE_ABSOLUTE_ERROR));
 
             assertEstimatedResult(estimatedMm, calibrator);
+
+            assertNotNull(calibrator.getEstimatedCovariance());
+            checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
 
             numValid++;
             break;
@@ -12911,6 +12935,9 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
 
             assertEstimatedResult(estimatedMm, calibrator);
 
+            assertNotNull(calibrator.getEstimatedCovariance());
+            checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
+
             numValid++;
             break;
         }
@@ -12965,6 +12992,9 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
             assertTrue(mm.equals(estimatedMm, ABSOLUTE_ERROR));
 
             assertEstimatedResult(estimatedMm, calibrator);
+
+            assertNotNull(calibrator.getEstimatedCovariance());
+            checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
 
             numValid++;
             break;
@@ -13173,6 +13203,30 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
                 0.0);
         assertEquals(mm.getElementAt(2, 1), calibrator.getEstimatedMzy(),
                 0.0);
+    }
+
+    private void checkCommonAxisCovariance(final Matrix covariance) {
+        assertEquals(covariance.getRows(), 9);
+        assertEquals(covariance.getColumns(), 9);
+
+        for (int j = 0; j < 9; j++) {
+            final boolean colIsZero = j == 5 || j == 7 || j == 8;
+            for (int i = 0; i < 9; i++) {
+                final boolean rowIsZero = i == 5 || i == 7 || i == 8;
+                if (colIsZero || rowIsZero) {
+                    assertEquals(covariance.getElementAt(i, j), 0.0, 0.0);
+                }
+            }
+        }
+    }
+
+    private void checkGeneralCovariance(final Matrix covariance) {
+        assertEquals(covariance.getRows(), 9);
+        assertEquals(covariance.getColumns(), 9);
+
+        for (int i = 0; i < 9; i++) {
+            assertNotEquals(covariance.getElementAt(i, i), 0.0);
+        }
     }
 
     private static List<StandardDeviationFrameBodyMagneticFluxDensity>

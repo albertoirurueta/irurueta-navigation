@@ -2625,7 +2625,10 @@ public abstract class RobustKnownHardIronPositionAndInstantMagnetometerCalibrato
     }
 
     /**
-     * Gets estimated covariance matrix for estimated position.
+     * Gets estimated covariance matrix for estimated calibration parameters.
+     * Diagonal elements of the matrix contains variance for the following
+     * parameters (following indicated order): sx, sy, sz, mxy, mxz, myx,
+     * myz, mzx, mzy.
      *
      * @return estimated covariance matrix for estimated position.
      */

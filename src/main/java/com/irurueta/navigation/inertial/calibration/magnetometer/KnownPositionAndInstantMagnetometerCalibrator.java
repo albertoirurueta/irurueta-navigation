@@ -2648,9 +2648,12 @@ public class KnownPositionAndInstantMagnetometerCalibrator {
     }
 
     /**
-     * Gets estimated covariance matrix for estimated position.
+     * Gets estimated covariance matrix for estimated calibration parameters.
+     * Diagonal elements of the matrix contains variance for the following
+     * parameters (following indicated order): bx, by, bz, sx, sy, sz,
+     * mxy, mxz, myx, myz, mzx, mzy.
      *
-     * @return estimated covariance matrix for estimated position.
+     * @return estimated covariance matrix for estimated calibration parameters.
      */
     public Matrix getEstimatedCovariance() {
         return mEstimatedCovariance;
@@ -3150,6 +3153,107 @@ public class KnownPositionAndInstantMagnetometerCalibrator {
         m.setElementAtIndex(8, m33);
 
         setResult(m, b);
+
+        // at this point covariance is expressed in terms of b and M, and must
+        // be expressed in terms of ba and Ma.
+        // We know that:
+
+        // b = [bx]
+        //     [by]
+        //     [bz]
+
+        // M = [m11 	m12 	m13]
+        //     [m21 	m22 	m23]
+        //     [m31 	m32 	m33]
+
+        // and that ba and Ma are expressed as:
+        // Mm = M - I
+        // bm = M * b
+
+        // Mm = [m11 - 1    m12         m13    ] =  [sx     mxy     mxz]
+        //      [m21        m22 - 1     m23    ]    [myx    sy      myz]
+        //      [m31        m32         m33 - 1]    [mzx    mzy     sz ]
+
+        // bm = [m11 * bx + m12 * by + m13 * bz] = 	[bmx]
+        //      [m21 * bx + m22 * by + m23 * bz]	[bmy]
+        //      [m31 * bx + m32 * by + m33 * bz]	[bmz]
+
+        // Defining the linear application:
+        // F(b, M) = F(bx, by, bz, m11, m21, m31, m12, m22, m32, m13, m23, m33)
+        // as:
+        //[bmx] = 	[m11 * bx + m12 * by + m13 * bz]
+        //[bmy]		[m21 * bx + m22 * by + m23 * bz]
+        //[bmz]		[m31 * bx + m32 * by + m33 * bz]
+        //[sx]		[m11 - 1]
+        //[sy]		[m22 - 1]
+        //[sz]		[m33 -1]
+        //[mxy]	    [m12]
+        //[mxz]	    [m13]
+        //[myx]	    [m21]
+        //[myz]	    [m23]
+        //[mzx]	    [m31]
+        //[mzy]	    [m32]
+
+        // Then the Jacobian of F(b, M) is:
+        // J = 	[m11  m12  m13  bx  0   0   by  0   0   bz  0   0 ]
+        //	    [m21  m22  m23  0   bx  0   0   by  0   0   bz  0 ]
+        //	    [m31  m32  m33  0   0   bx  0   0   by  0   0   bz]
+        //	    [0    0    0    1   0   0   0   0   0   0   0   0 ]
+        //	    [0    0    0    0   0   0   0   1   0   0   0   0 ]
+        //	    [0    0    0    0   0   0   0   0   0   0   0   1 ]
+        //	    [0    0    0    0   0   0   1   0   0   0   0   0 ]
+        //	    [0    0    0    0   0   0   0   0   0   1   0   0 ]
+        //	    [0    0    0    0   1   0   0   0   0   0   0   0 ]
+        //	    [0    0    0    0   0   0   0   0   0   0   1   0 ]
+        //	    [0    0    0    0   0   1   0   0   0   0   0   0 ]
+        //	    [0    0    0    0   0   0   0   0   1   0   0   0 ]
+
+        // We know that the propagated covariance is J * Cov * J', hence:
+        final Matrix jacobian = new Matrix(GENERAL_UNKNOWNS, GENERAL_UNKNOWNS);
+
+        jacobian.setElementAt(0, 0, m11);
+        jacobian.setElementAt(1, 0, m21);
+        jacobian.setElementAt(2, 0, m31);
+
+        jacobian.setElementAt(0, 1, m12);
+        jacobian.setElementAt(1, 1, m22);
+        jacobian.setElementAt(2, 1, m32);
+
+        jacobian.setElementAt(0, 2, m13);
+        jacobian.setElementAt(1, 2, m23);
+        jacobian.setElementAt(2, 2, m33);
+
+        jacobian.setElementAt(0, 3, bx);
+        jacobian.setElementAt(3, 3, 1.0);
+
+        jacobian.setElementAt(1, 4, bx);
+        jacobian.setElementAt(8, 4, 1.0);
+
+        jacobian.setElementAt(2, 5, bx);
+        jacobian.setElementAt(10, 5, 1.0);
+
+        jacobian.setElementAt(0, 6, by);
+        jacobian.setElementAt(6, 6, 1.0);
+
+        jacobian.setElementAt(1, 7, by);
+        jacobian.setElementAt(4, 7, 1.0);
+
+        jacobian.setElementAt(2, 8, by);
+        jacobian.setElementAt(11, 8, 1.0);
+
+        jacobian.setElementAt(0, 9, bz);
+        jacobian.setElementAt(7, 9, 1.0);
+
+        jacobian.setElementAt(1, 10, bz);
+        jacobian.setElementAt(9, 10, 1.0);
+
+        jacobian.setElementAt(2, 11, bz);
+        jacobian.setElementAt(5, 11, 1.0);
+
+        final Matrix jacobianTrans = jacobian.transposeAndReturnNew();
+        jacobian.multiply(mEstimatedCovariance);
+        jacobian.multiply(jacobianTrans);
+        mEstimatedCovariance = jacobian;
     }
 
     /**
@@ -3316,6 +3420,97 @@ public class KnownPositionAndInstantMagnetometerCalibrator {
         m.setElementAtIndex(8, m33);
 
         setResult(m, b);
+
+        // at this point covariance is expressed in terms of b and M, and must
+        // be expressed in terms of ba and Ma.
+        // We know that:
+
+        // b = [bx]
+        //     [by]
+        //     [bz]
+
+        // M = [m11 	m12 	m13]
+        //     [0    	m22 	m23]
+        //     [0    	0    	m33]
+
+        // m21 = m31 = m32 = 0
+
+        // and that ba and Ma are expressed as:
+        // Ma = M - I
+        // ba = M * b
+
+        // Ma = [m11 - 1    m12         m13    ] =  [sx     mxy     mxz]
+        //      [0          m22 - 1     m23    ]    [0      sy      myz]
+        //      [0          0           m33 - 1]    [0      0       sz ]
+
+        // ba = [m11 * bx + m12 * by + m13 * bz] = 	[bax]
+        //      [           m22 * by + m23 * bz]	[bay]
+        //      [                      m33 * bz]	[baz]
+
+        // Defining the linear application:
+        // F(b, M) = F(bx, by, bz, m11, m12, m22, m13, m23, m33)
+        // as:
+        //[bax] = 	[m11 * bx + m12 * by + m13 * bz]
+        //[bay]		[m22 * by + m23 * bz]
+        //[baz]		[m33 * bz]
+        //[sx]		[m11 - 1]
+        //[sy]		[m22 - 1]
+        //[sz]		[m33 -1]
+        //[mxy]	    [m12]
+        //[mxz]	    [m13]
+        //[myx]	    [0]
+        //[myz]	    [m23]
+        //[mzx]	    [0]
+        //[mzy]	    [0]
+
+        // Then the Jacobian of F(b, M) is:
+        // J = 	[m11  m12  m13  bx  by  0   bz  0   0 ]
+        //	    [0    m22  m23  0   0   by  0   bz  0 ]
+        //	    [0    0    m33  0   0   0   0   0   bz]
+        //	    [0    0    0    1   0   0   0   0   0 ]
+        //	    [0    0    0    0   0   1   0   0   0 ]
+        //	    [0    0    0    0   0   0   0   0   1 ]
+        //	    [0    0    0    0   1   0   0   0   0 ]
+        //	    [0    0    0    0   0   0   1   0   0 ]
+        //	    [0    0    0    0   0   0   0   0   0 ]
+        //	    [0    0    0    0   0   0   0   1   0 ]
+        //	    [0    0    0    0   0   0   0   0   0 ]
+        //	    [0    0    0    0   0   0   0   0   0 ]
+
+        // We know that the propagated covariance is J * Cov * J', hence:
+        final Matrix jacobian = new Matrix(GENERAL_UNKNOWNS, COMMON_Z_AXIS_UNKNOWNS);
+
+        jacobian.setElementAt(0, 0, m11);
+
+        jacobian.setElementAt(0, 1, m12);
+        jacobian.setElementAt(1, 1, m22);
+
+        jacobian.setElementAt(0, 2, m13);
+        jacobian.setElementAt(1, 2, m23);
+        jacobian.setElementAt(2, 2, m33);
+
+        jacobian.setElementAt(0, 3, bx);
+        jacobian.setElementAt(3, 3, 1.0);
+
+        jacobian.setElementAt(0, 4, by);
+        jacobian.setElementAt(6, 4, 1.0);
+
+        jacobian.setElementAt(1, 5, by);
+        jacobian.setElementAt(4, 5, 1.0);
+
+        jacobian.setElementAt(0, 6, bz);
+        jacobian.setElementAt(7, 6, 1.0);
+
+        jacobian.setElementAt(1, 7, bz);
+        jacobian.setElementAt(9, 7, 1.0);
+
+        jacobian.setElementAt(2, 8, bz);
+        jacobian.setElementAt(5, 8, 1.0);
+
+        final Matrix jacobianTrans = jacobian.transposeAndReturnNew();
+        jacobian.multiply(mEstimatedCovariance);
+        jacobian.multiply(jacobianTrans);
+        mEstimatedCovariance = jacobian;
     }
 
     /**
