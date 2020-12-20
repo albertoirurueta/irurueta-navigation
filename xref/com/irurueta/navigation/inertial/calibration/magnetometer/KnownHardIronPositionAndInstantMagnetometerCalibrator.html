@@ -2425,607 +2425,650 @@
 <a class="jxr_linenumber" name="L2417" href="#L2417">2417</a>     }
 <a class="jxr_linenumber" name="L2418" href="#L2418">2418</a> 
 <a class="jxr_linenumber" name="L2419" href="#L2419">2419</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2420" href="#L2420">2420</a> <em class="jxr_javadoccomment">     * Gets estimated covariance matrix for estimated position.</em>
-<a class="jxr_linenumber" name="L2421" href="#L2421">2421</a> <em class="jxr_javadoccomment">     *</em>
-<a class="jxr_linenumber" name="L2422" href="#L2422">2422</a> <em class="jxr_javadoccomment">     * @return estimated covariance matrix for estimated position.</em>
-<a class="jxr_linenumber" name="L2423" href="#L2423">2423</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L2424" href="#L2424">2424</a>     <strong class="jxr_keyword">public</strong> Matrix getEstimatedCovariance() {
-<a class="jxr_linenumber" name="L2425" href="#L2425">2425</a>         <strong class="jxr_keyword">return</strong> mEstimatedCovariance;
-<a class="jxr_linenumber" name="L2426" href="#L2426">2426</a>     }
-<a class="jxr_linenumber" name="L2427" href="#L2427">2427</a> 
-<a class="jxr_linenumber" name="L2428" href="#L2428">2428</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2429" href="#L2429">2429</a> <em class="jxr_javadoccomment">     * Gets estimated chi square value.</em>
-<a class="jxr_linenumber" name="L2430" href="#L2430">2430</a> <em class="jxr_javadoccomment">     *</em>
-<a class="jxr_linenumber" name="L2431" href="#L2431">2431</a> <em class="jxr_javadoccomment">     * @return estimated chi square value.</em>
-<a class="jxr_linenumber" name="L2432" href="#L2432">2432</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L2433" href="#L2433">2433</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">double</strong> getEstimatedChiSq() {
-<a class="jxr_linenumber" name="L2434" href="#L2434">2434</a>         <strong class="jxr_keyword">return</strong> mEstimatedChiSq;
-<a class="jxr_linenumber" name="L2435" href="#L2435">2435</a>     }
-<a class="jxr_linenumber" name="L2436" href="#L2436">2436</a> 
-<a class="jxr_linenumber" name="L2437" href="#L2437">2437</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2438" href="#L2438">2438</a> <em class="jxr_javadoccomment">     * Sets input data into Levenberg-Marquardt fitter.</em>
-<a class="jxr_linenumber" name="L2439" href="#L2439">2439</a> <em class="jxr_javadoccomment">     *</em>
-<a class="jxr_linenumber" name="L2440" href="#L2440">2440</a> <em class="jxr_javadoccomment">     * @throws WrongSizeException never happens.</em>
-<a class="jxr_linenumber" name="L2441" href="#L2441">2441</a> <em class="jxr_javadoccomment">     * @throws IOException        if world magnetic model cannot be loaded.</em>
-<a class="jxr_linenumber" name="L2442" href="#L2442">2442</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L2443" href="#L2443">2443</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> setInputData() <strong class="jxr_keyword">throws</strong> WrongSizeException, IOException {
-<a class="jxr_linenumber" name="L2444" href="#L2444">2444</a> 
-<a class="jxr_linenumber" name="L2445" href="#L2445">2445</a>         <strong class="jxr_keyword">final</strong> <a href="../../../../../../com/irurueta/navigation/geodesic/wmm/WMMEarthMagneticFluxDensityEstimator.html">WMMEarthMagneticFluxDensityEstimator</a> wmmEstimator;
-<a class="jxr_linenumber" name="L2446" href="#L2446">2446</a>         <strong class="jxr_keyword">if</strong> (mMagneticModel != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L2447" href="#L2447">2447</a>             wmmEstimator = <strong class="jxr_keyword">new</strong> <a href="../../../../../../com/irurueta/navigation/geodesic/wmm/WMMEarthMagneticFluxDensityEstimator.html">WMMEarthMagneticFluxDensityEstimator</a>(mMagneticModel);
-<a class="jxr_linenumber" name="L2448" href="#L2448">2448</a>         } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L2449" href="#L2449">2449</a>             wmmEstimator = <strong class="jxr_keyword">new</strong> <a href="../../../../../../com/irurueta/navigation/geodesic/wmm/WMMEarthMagneticFluxDensityEstimator.html">WMMEarthMagneticFluxDensityEstimator</a>();
-<a class="jxr_linenumber" name="L2450" href="#L2450">2450</a>         }
-<a class="jxr_linenumber" name="L2451" href="#L2451">2451</a> 
-<a class="jxr_linenumber" name="L2452" href="#L2452">2452</a>         <strong class="jxr_keyword">final</strong> <a href="../../../../../../com/irurueta/navigation/inertial/NEDPosition.html">NEDPosition</a> position = getNedPosition();
-<a class="jxr_linenumber" name="L2453" href="#L2453">2453</a>         <strong class="jxr_keyword">final</strong> <a href="../../../../../../com/irurueta/navigation/inertial/NEDMagneticFluxDensity.html">NEDMagneticFluxDensity</a> earthB = wmmEstimator.estimate(
-<a class="jxr_linenumber" name="L2454" href="#L2454">2454</a>                 position, mYear);
-<a class="jxr_linenumber" name="L2455" href="#L2455">2455</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> b = earthB.getNorm();
-<a class="jxr_linenumber" name="L2456" href="#L2456">2456</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> b2 = b * b;
-<a class="jxr_linenumber" name="L2457" href="#L2457">2457</a> 
-<a class="jxr_linenumber" name="L2458" href="#L2458">2458</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> numMeasurements = mMeasurements.size();
-<a class="jxr_linenumber" name="L2459" href="#L2459">2459</a>         <strong class="jxr_keyword">final</strong> Matrix x = <strong class="jxr_keyword">new</strong> Matrix(numMeasurements,
-<a class="jxr_linenumber" name="L2460" href="#L2460">2460</a>                 BodyMagneticFluxDensity.COMPONENTS);
-<a class="jxr_linenumber" name="L2461" href="#L2461">2461</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] y = <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">double</strong>[numMeasurements];
-<a class="jxr_linenumber" name="L2462" href="#L2462">2462</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] specificForceStandardDeviations = <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">double</strong>[numMeasurements];
-<a class="jxr_linenumber" name="L2463" href="#L2463">2463</a>         <strong class="jxr_keyword">int</strong> i = 0;
-<a class="jxr_linenumber" name="L2464" href="#L2464">2464</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> StandardDeviationBodyMagneticFluxDensity measurement : mMeasurements) {
-<a class="jxr_linenumber" name="L2465" href="#L2465">2465</a>             <strong class="jxr_keyword">final</strong> <a href="../../../../../../com/irurueta/navigation/inertial/BodyMagneticFluxDensity.html">BodyMagneticFluxDensity</a> measuredMagneticFluxDensity =
-<a class="jxr_linenumber" name="L2466" href="#L2466">2466</a>                     measurement.getMagneticFluxDensity();
-<a class="jxr_linenumber" name="L2467" href="#L2467">2467</a> 
-<a class="jxr_linenumber" name="L2468" href="#L2468">2468</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> bmeasX = measuredMagneticFluxDensity.getBx();
-<a class="jxr_linenumber" name="L2469" href="#L2469">2469</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> bmeasY = measuredMagneticFluxDensity.getBy();
-<a class="jxr_linenumber" name="L2470" href="#L2470">2470</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> bmeasZ = measuredMagneticFluxDensity.getBz();
-<a class="jxr_linenumber" name="L2471" href="#L2471">2471</a> 
-<a class="jxr_linenumber" name="L2472" href="#L2472">2472</a>             x.setElementAt(i, 0, bmeasX);
-<a class="jxr_linenumber" name="L2473" href="#L2473">2473</a>             x.setElementAt(i, 1, bmeasY);
-<a class="jxr_linenumber" name="L2474" href="#L2474">2474</a>             x.setElementAt(i, 2, bmeasZ);
-<a class="jxr_linenumber" name="L2475" href="#L2475">2475</a> 
-<a class="jxr_linenumber" name="L2476" href="#L2476">2476</a>             y[i] = b2;
-<a class="jxr_linenumber" name="L2477" href="#L2477">2477</a> 
-<a class="jxr_linenumber" name="L2478" href="#L2478">2478</a>             specificForceStandardDeviations[i] =
-<a class="jxr_linenumber" name="L2479" href="#L2479">2479</a>                     measurement.getMagneticFluxDensityStandardDeviation();
+<a class="jxr_linenumber" name="L2420" href="#L2420">2420</a> <em class="jxr_javadoccomment">     * Gets estimated covariance matrix for estimated calibration parameters.</em>
+<a class="jxr_linenumber" name="L2421" href="#L2421">2421</a> <em class="jxr_javadoccomment">     * Diagonal elements of the matrix contains variance for the following</em>
+<a class="jxr_linenumber" name="L2422" href="#L2422">2422</a> <em class="jxr_javadoccomment">     * parameters (following indicated order): sx, sy, sz, mxy, mxz, myx,</em>
+<a class="jxr_linenumber" name="L2423" href="#L2423">2423</a> <em class="jxr_javadoccomment">     * myz, mzx, mzy.</em>
+<a class="jxr_linenumber" name="L2424" href="#L2424">2424</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L2425" href="#L2425">2425</a> <em class="jxr_javadoccomment">     * @return estimated covariance matrix for estimated position.</em>
+<a class="jxr_linenumber" name="L2426" href="#L2426">2426</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L2427" href="#L2427">2427</a>     <strong class="jxr_keyword">public</strong> Matrix getEstimatedCovariance() {
+<a class="jxr_linenumber" name="L2428" href="#L2428">2428</a>         <strong class="jxr_keyword">return</strong> mEstimatedCovariance;
+<a class="jxr_linenumber" name="L2429" href="#L2429">2429</a>     }
+<a class="jxr_linenumber" name="L2430" href="#L2430">2430</a> 
+<a class="jxr_linenumber" name="L2431" href="#L2431">2431</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L2432" href="#L2432">2432</a> <em class="jxr_javadoccomment">     * Gets estimated chi square value.</em>
+<a class="jxr_linenumber" name="L2433" href="#L2433">2433</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L2434" href="#L2434">2434</a> <em class="jxr_javadoccomment">     * @return estimated chi square value.</em>
+<a class="jxr_linenumber" name="L2435" href="#L2435">2435</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L2436" href="#L2436">2436</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">double</strong> getEstimatedChiSq() {
+<a class="jxr_linenumber" name="L2437" href="#L2437">2437</a>         <strong class="jxr_keyword">return</strong> mEstimatedChiSq;
+<a class="jxr_linenumber" name="L2438" href="#L2438">2438</a>     }
+<a class="jxr_linenumber" name="L2439" href="#L2439">2439</a> 
+<a class="jxr_linenumber" name="L2440" href="#L2440">2440</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L2441" href="#L2441">2441</a> <em class="jxr_javadoccomment">     * Sets input data into Levenberg-Marquardt fitter.</em>
+<a class="jxr_linenumber" name="L2442" href="#L2442">2442</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L2443" href="#L2443">2443</a> <em class="jxr_javadoccomment">     * @throws WrongSizeException never happens.</em>
+<a class="jxr_linenumber" name="L2444" href="#L2444">2444</a> <em class="jxr_javadoccomment">     * @throws IOException        if world magnetic model cannot be loaded.</em>
+<a class="jxr_linenumber" name="L2445" href="#L2445">2445</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L2446" href="#L2446">2446</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> setInputData() <strong class="jxr_keyword">throws</strong> WrongSizeException, IOException {
+<a class="jxr_linenumber" name="L2447" href="#L2447">2447</a> 
+<a class="jxr_linenumber" name="L2448" href="#L2448">2448</a>         <strong class="jxr_keyword">final</strong> <a href="../../../../../../com/irurueta/navigation/geodesic/wmm/WMMEarthMagneticFluxDensityEstimator.html">WMMEarthMagneticFluxDensityEstimator</a> wmmEstimator;
+<a class="jxr_linenumber" name="L2449" href="#L2449">2449</a>         <strong class="jxr_keyword">if</strong> (mMagneticModel != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L2450" href="#L2450">2450</a>             wmmEstimator = <strong class="jxr_keyword">new</strong> <a href="../../../../../../com/irurueta/navigation/geodesic/wmm/WMMEarthMagneticFluxDensityEstimator.html">WMMEarthMagneticFluxDensityEstimator</a>(mMagneticModel);
+<a class="jxr_linenumber" name="L2451" href="#L2451">2451</a>         } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L2452" href="#L2452">2452</a>             wmmEstimator = <strong class="jxr_keyword">new</strong> <a href="../../../../../../com/irurueta/navigation/geodesic/wmm/WMMEarthMagneticFluxDensityEstimator.html">WMMEarthMagneticFluxDensityEstimator</a>();
+<a class="jxr_linenumber" name="L2453" href="#L2453">2453</a>         }
+<a class="jxr_linenumber" name="L2454" href="#L2454">2454</a> 
+<a class="jxr_linenumber" name="L2455" href="#L2455">2455</a>         <strong class="jxr_keyword">final</strong> <a href="../../../../../../com/irurueta/navigation/inertial/NEDPosition.html">NEDPosition</a> position = getNedPosition();
+<a class="jxr_linenumber" name="L2456" href="#L2456">2456</a>         <strong class="jxr_keyword">final</strong> <a href="../../../../../../com/irurueta/navigation/inertial/NEDMagneticFluxDensity.html">NEDMagneticFluxDensity</a> earthB = wmmEstimator.estimate(
+<a class="jxr_linenumber" name="L2457" href="#L2457">2457</a>                 position, mYear);
+<a class="jxr_linenumber" name="L2458" href="#L2458">2458</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> b = earthB.getNorm();
+<a class="jxr_linenumber" name="L2459" href="#L2459">2459</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> b2 = b * b;
+<a class="jxr_linenumber" name="L2460" href="#L2460">2460</a> 
+<a class="jxr_linenumber" name="L2461" href="#L2461">2461</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> numMeasurements = mMeasurements.size();
+<a class="jxr_linenumber" name="L2462" href="#L2462">2462</a>         <strong class="jxr_keyword">final</strong> Matrix x = <strong class="jxr_keyword">new</strong> Matrix(numMeasurements,
+<a class="jxr_linenumber" name="L2463" href="#L2463">2463</a>                 BodyMagneticFluxDensity.COMPONENTS);
+<a class="jxr_linenumber" name="L2464" href="#L2464">2464</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] y = <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">double</strong>[numMeasurements];
+<a class="jxr_linenumber" name="L2465" href="#L2465">2465</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] specificForceStandardDeviations = <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">double</strong>[numMeasurements];
+<a class="jxr_linenumber" name="L2466" href="#L2466">2466</a>         <strong class="jxr_keyword">int</strong> i = 0;
+<a class="jxr_linenumber" name="L2467" href="#L2467">2467</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> StandardDeviationBodyMagneticFluxDensity measurement : mMeasurements) {
+<a class="jxr_linenumber" name="L2468" href="#L2468">2468</a>             <strong class="jxr_keyword">final</strong> <a href="../../../../../../com/irurueta/navigation/inertial/BodyMagneticFluxDensity.html">BodyMagneticFluxDensity</a> measuredMagneticFluxDensity =
+<a class="jxr_linenumber" name="L2469" href="#L2469">2469</a>                     measurement.getMagneticFluxDensity();
+<a class="jxr_linenumber" name="L2470" href="#L2470">2470</a> 
+<a class="jxr_linenumber" name="L2471" href="#L2471">2471</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> bmeasX = measuredMagneticFluxDensity.getBx();
+<a class="jxr_linenumber" name="L2472" href="#L2472">2472</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> bmeasY = measuredMagneticFluxDensity.getBy();
+<a class="jxr_linenumber" name="L2473" href="#L2473">2473</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> bmeasZ = measuredMagneticFluxDensity.getBz();
+<a class="jxr_linenumber" name="L2474" href="#L2474">2474</a> 
+<a class="jxr_linenumber" name="L2475" href="#L2475">2475</a>             x.setElementAt(i, 0, bmeasX);
+<a class="jxr_linenumber" name="L2476" href="#L2476">2476</a>             x.setElementAt(i, 1, bmeasY);
+<a class="jxr_linenumber" name="L2477" href="#L2477">2477</a>             x.setElementAt(i, 2, bmeasZ);
+<a class="jxr_linenumber" name="L2478" href="#L2478">2478</a> 
+<a class="jxr_linenumber" name="L2479" href="#L2479">2479</a>             y[i] = b2;
 <a class="jxr_linenumber" name="L2480" href="#L2480">2480</a> 
-<a class="jxr_linenumber" name="L2481" href="#L2481">2481</a>             i++;
-<a class="jxr_linenumber" name="L2482" href="#L2482">2482</a>         }
+<a class="jxr_linenumber" name="L2481" href="#L2481">2481</a>             specificForceStandardDeviations[i] =
+<a class="jxr_linenumber" name="L2482" href="#L2482">2482</a>                     measurement.getMagneticFluxDensityStandardDeviation();
 <a class="jxr_linenumber" name="L2483" href="#L2483">2483</a> 
-<a class="jxr_linenumber" name="L2484" href="#L2484">2484</a>         mFitter.setInputData(x, y, specificForceStandardDeviations);
-<a class="jxr_linenumber" name="L2485" href="#L2485">2485</a>     }
+<a class="jxr_linenumber" name="L2484" href="#L2484">2484</a>             i++;
+<a class="jxr_linenumber" name="L2485" href="#L2485">2485</a>         }
 <a class="jxr_linenumber" name="L2486" href="#L2486">2486</a> 
-<a class="jxr_linenumber" name="L2487" href="#L2487">2487</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2488" href="#L2488">2488</a> <em class="jxr_javadoccomment">     * Internal method to perform general calibration.</em>
-<a class="jxr_linenumber" name="L2489" href="#L2489">2489</a> <em class="jxr_javadoccomment">     *</em>
-<a class="jxr_linenumber" name="L2490" href="#L2490">2490</a> <em class="jxr_javadoccomment">     * @throws FittingException                         if Levenberg-Marquardt fails for numerical reasons.</em>
-<a class="jxr_linenumber" name="L2491" href="#L2491">2491</a> <em class="jxr_javadoccomment">     * @throws AlgebraException                         if there are numerical instabilities that prevent</em>
-<a class="jxr_linenumber" name="L2492" href="#L2492">2492</a> <em class="jxr_javadoccomment">     *                                                  matrix inversion.</em>
-<a class="jxr_linenumber" name="L2493" href="#L2493">2493</a> <em class="jxr_javadoccomment">     * @throws com.irurueta.numerical.NotReadyException never happens.</em>
-<a class="jxr_linenumber" name="L2494" href="#L2494">2494</a> <em class="jxr_javadoccomment">     * @throws IOException                              if world magnetic model cannot be loaded.</em>
-<a class="jxr_linenumber" name="L2495" href="#L2495">2495</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L2496" href="#L2496">2496</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> calibrateGeneral() <strong class="jxr_keyword">throws</strong> AlgebraException, FittingException,
-<a class="jxr_linenumber" name="L2497" href="#L2497">2497</a>             com.irurueta.numerical.NotReadyException, IOException {
-<a class="jxr_linenumber" name="L2498" href="#L2498">2498</a>         <em class="jxr_comment">// The magnetometer model is:</em>
-<a class="jxr_linenumber" name="L2499" href="#L2499">2499</a>         <em class="jxr_comment">// bmeas = bm + (I + Mm) * btrue + w</em>
-<a class="jxr_linenumber" name="L2500" href="#L2500">2500</a> 
-<a class="jxr_linenumber" name="L2501" href="#L2501">2501</a>         <em class="jxr_comment">// Ideally a least squares solution tries to minimize noise component, so:</em>
-<a class="jxr_linenumber" name="L2502" href="#L2502">2502</a>         <em class="jxr_comment">// bmeas = bm + (I + Mm) * btrue</em>
+<a class="jxr_linenumber" name="L2487" href="#L2487">2487</a>         mFitter.setInputData(x, y, specificForceStandardDeviations);
+<a class="jxr_linenumber" name="L2488" href="#L2488">2488</a>     }
+<a class="jxr_linenumber" name="L2489" href="#L2489">2489</a> 
+<a class="jxr_linenumber" name="L2490" href="#L2490">2490</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L2491" href="#L2491">2491</a> <em class="jxr_javadoccomment">     * Internal method to perform general calibration.</em>
+<a class="jxr_linenumber" name="L2492" href="#L2492">2492</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L2493" href="#L2493">2493</a> <em class="jxr_javadoccomment">     * @throws FittingException                         if Levenberg-Marquardt fails for numerical reasons.</em>
+<a class="jxr_linenumber" name="L2494" href="#L2494">2494</a> <em class="jxr_javadoccomment">     * @throws AlgebraException                         if there are numerical instabilities that prevent</em>
+<a class="jxr_linenumber" name="L2495" href="#L2495">2495</a> <em class="jxr_javadoccomment">     *                                                  matrix inversion.</em>
+<a class="jxr_linenumber" name="L2496" href="#L2496">2496</a> <em class="jxr_javadoccomment">     * @throws com.irurueta.numerical.NotReadyException never happens.</em>
+<a class="jxr_linenumber" name="L2497" href="#L2497">2497</a> <em class="jxr_javadoccomment">     * @throws IOException                              if world magnetic model cannot be loaded.</em>
+<a class="jxr_linenumber" name="L2498" href="#L2498">2498</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L2499" href="#L2499">2499</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> calibrateGeneral() <strong class="jxr_keyword">throws</strong> AlgebraException, FittingException,
+<a class="jxr_linenumber" name="L2500" href="#L2500">2500</a>             com.irurueta.numerical.NotReadyException, IOException {
+<a class="jxr_linenumber" name="L2501" href="#L2501">2501</a>         <em class="jxr_comment">// The magnetometer model is:</em>
+<a class="jxr_linenumber" name="L2502" href="#L2502">2502</a>         <em class="jxr_comment">// bmeas = bm + (I + Mm) * btrue + w</em>
 <a class="jxr_linenumber" name="L2503" href="#L2503">2503</a> 
-<a class="jxr_linenumber" name="L2504" href="#L2504">2504</a>         <em class="jxr_comment">// For convergence purposes of the Levenberg-Marquardt algorithm, the</em>
-<a class="jxr_linenumber" name="L2505" href="#L2505">2505</a>         <em class="jxr_comment">// magnetometer model can be better expressed as:</em>
-<a class="jxr_linenumber" name="L2506" href="#L2506">2506</a>         <em class="jxr_comment">// bmeas = T*K*(btrue + b)</em>
-<a class="jxr_linenumber" name="L2507" href="#L2507">2507</a>         <em class="jxr_comment">// bmeas = M*(btrue + b)</em>
-<a class="jxr_linenumber" name="L2508" href="#L2508">2508</a>         <em class="jxr_comment">// bmeas = M*btrue + M*b</em>
-<a class="jxr_linenumber" name="L2509" href="#L2509">2509</a> 
-<a class="jxr_linenumber" name="L2510" href="#L2510">2510</a>         <em class="jxr_comment">// where:</em>
-<a class="jxr_linenumber" name="L2511" href="#L2511">2511</a>         <em class="jxr_comment">// M = I + Mm</em>
-<a class="jxr_linenumber" name="L2512" href="#L2512">2512</a>         <em class="jxr_comment">// bm = M*b = (I + Mm)*b --&gt; b = M^-1*bm</em>
-<a class="jxr_linenumber" name="L2513" href="#L2513">2513</a> 
-<a class="jxr_linenumber" name="L2514" href="#L2514">2514</a>         <em class="jxr_comment">// We know that the norm of the true body magnetic flux density</em>
-<a class="jxr_linenumber" name="L2515" href="#L2515">2515</a>         <em class="jxr_comment">// is equal to the amount of Earth magnetic flux density at provided</em>
-<a class="jxr_linenumber" name="L2516" href="#L2516">2516</a>         <em class="jxr_comment">// position and timestamp</em>
-<a class="jxr_linenumber" name="L2517" href="#L2517">2517</a>         <em class="jxr_comment">// ||btrue|| = ||bEarth|| --&gt; from 30 µT to 60 µT</em>
-<a class="jxr_linenumber" name="L2518" href="#L2518">2518</a> 
-<a class="jxr_linenumber" name="L2519" href="#L2519">2519</a>         <em class="jxr_comment">// Hence:</em>
-<a class="jxr_linenumber" name="L2520" href="#L2520">2520</a>         <em class="jxr_comment">// bmeas - M*b = M*btrue</em>
+<a class="jxr_linenumber" name="L2504" href="#L2504">2504</a>         <em class="jxr_comment">// Ideally a least squares solution tries to minimize noise component, so:</em>
+<a class="jxr_linenumber" name="L2505" href="#L2505">2505</a>         <em class="jxr_comment">// bmeas = bm + (I + Mm) * btrue</em>
+<a class="jxr_linenumber" name="L2506" href="#L2506">2506</a> 
+<a class="jxr_linenumber" name="L2507" href="#L2507">2507</a>         <em class="jxr_comment">// For convergence purposes of the Levenberg-Marquardt algorithm, the</em>
+<a class="jxr_linenumber" name="L2508" href="#L2508">2508</a>         <em class="jxr_comment">// magnetometer model can be better expressed as:</em>
+<a class="jxr_linenumber" name="L2509" href="#L2509">2509</a>         <em class="jxr_comment">// bmeas = T*K*(btrue + b)</em>
+<a class="jxr_linenumber" name="L2510" href="#L2510">2510</a>         <em class="jxr_comment">// bmeas = M*(btrue + b)</em>
+<a class="jxr_linenumber" name="L2511" href="#L2511">2511</a>         <em class="jxr_comment">// bmeas = M*btrue + M*b</em>
+<a class="jxr_linenumber" name="L2512" href="#L2512">2512</a> 
+<a class="jxr_linenumber" name="L2513" href="#L2513">2513</a>         <em class="jxr_comment">// where:</em>
+<a class="jxr_linenumber" name="L2514" href="#L2514">2514</a>         <em class="jxr_comment">// M = I + Mm</em>
+<a class="jxr_linenumber" name="L2515" href="#L2515">2515</a>         <em class="jxr_comment">// bm = M*b = (I + Mm)*b --&gt; b = M^-1*bm</em>
+<a class="jxr_linenumber" name="L2516" href="#L2516">2516</a> 
+<a class="jxr_linenumber" name="L2517" href="#L2517">2517</a>         <em class="jxr_comment">// We know that the norm of the true body magnetic flux density</em>
+<a class="jxr_linenumber" name="L2518" href="#L2518">2518</a>         <em class="jxr_comment">// is equal to the amount of Earth magnetic flux density at provided</em>
+<a class="jxr_linenumber" name="L2519" href="#L2519">2519</a>         <em class="jxr_comment">// position and timestamp</em>
+<a class="jxr_linenumber" name="L2520" href="#L2520">2520</a>         <em class="jxr_comment">// ||btrue|| = ||bEarth|| --&gt; from 30 µT to 60 µT</em>
 <a class="jxr_linenumber" name="L2521" href="#L2521">2521</a> 
-<a class="jxr_linenumber" name="L2522" href="#L2522">2522</a>         <em class="jxr_comment">// M^-1 * (bmeas - M*b) = btrue</em>
-<a class="jxr_linenumber" name="L2523" href="#L2523">2523</a> 
-<a class="jxr_linenumber" name="L2524" href="#L2524">2524</a>         <em class="jxr_comment">// ||bEarth||^2 = ||btrue||^2 = (M^-1 * (bmeas - M*b))^T * (M^-1 * (bmeas - M*b))</em>
-<a class="jxr_linenumber" name="L2525" href="#L2525">2525</a>         <em class="jxr_comment">// ||bEarth||^2 = (bmeas - M*b)^T*(M^-1)^T * M^-1 * (bmeas - M*b)</em>
-<a class="jxr_linenumber" name="L2526" href="#L2526">2526</a>         <em class="jxr_comment">// ||bEarth||^2 = (bmeas - M * b)^T * ||M^-1||^2 * (bmeas - M * b)</em>
-<a class="jxr_linenumber" name="L2527" href="#L2527">2527</a>         <em class="jxr_comment">// ||bEarth||^2 = ||bmeas - M * b||^2 * ||M^-1||^2</em>
-<a class="jxr_linenumber" name="L2528" href="#L2528">2528</a> 
-<a class="jxr_linenumber" name="L2529" href="#L2529">2529</a>         <em class="jxr_comment">// Where:</em>
-<a class="jxr_linenumber" name="L2530" href="#L2530">2530</a> 
-<a class="jxr_linenumber" name="L2531" href="#L2531">2531</a>         <em class="jxr_comment">// b = [bx]</em>
-<a class="jxr_linenumber" name="L2532" href="#L2532">2532</a>         <em class="jxr_comment">//     [by]</em>
-<a class="jxr_linenumber" name="L2533" href="#L2533">2533</a>         <em class="jxr_comment">//     [bz]</em>
-<a class="jxr_linenumber" name="L2534" href="#L2534">2534</a> 
-<a class="jxr_linenumber" name="L2535" href="#L2535">2535</a>         <em class="jxr_comment">// M = [m11 	m12 	m13]</em>
-<a class="jxr_linenumber" name="L2536" href="#L2536">2536</a>         <em class="jxr_comment">//     [m21 	m22 	m23]</em>
-<a class="jxr_linenumber" name="L2537" href="#L2537">2537</a>         <em class="jxr_comment">//     [m31 	m32 	m33]</em>
-<a class="jxr_linenumber" name="L2538" href="#L2538">2538</a> 
-<a class="jxr_linenumber" name="L2539" href="#L2539">2539</a>         <strong class="jxr_keyword">final</strong> GradientEstimator gradientEstimator = <strong class="jxr_keyword">new</strong> GradientEstimator(
-<a class="jxr_linenumber" name="L2540" href="#L2540">2540</a>                 <strong class="jxr_keyword">new</strong> MultiDimensionFunctionEvaluatorListener() {
-<a class="jxr_linenumber" name="L2541" href="#L2541">2541</a>                     @Override
-<a class="jxr_linenumber" name="L2542" href="#L2542">2542</a>                     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">double</strong> evaluate(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] point)
-<a class="jxr_linenumber" name="L2543" href="#L2543">2543</a>                             <strong class="jxr_keyword">throws</strong> EvaluationException {
-<a class="jxr_linenumber" name="L2544" href="#L2544">2544</a>                         <strong class="jxr_keyword">return</strong> evaluateGeneral(point);
-<a class="jxr_linenumber" name="L2545" href="#L2545">2545</a>                     }
-<a class="jxr_linenumber" name="L2546" href="#L2546">2546</a>                 });
-<a class="jxr_linenumber" name="L2547" href="#L2547">2547</a> 
-<a class="jxr_linenumber" name="L2548" href="#L2548">2548</a>         <strong class="jxr_keyword">final</strong> Matrix initialM = Matrix.identity(BodyMagneticFluxDensity.COMPONENTS,
-<a class="jxr_linenumber" name="L2549" href="#L2549">2549</a>                 BodyMagneticFluxDensity.COMPONENTS);
-<a class="jxr_linenumber" name="L2550" href="#L2550">2550</a>         initialM.add(getInitialMm());
-<a class="jxr_linenumber" name="L2551" href="#L2551">2551</a> 
-<a class="jxr_linenumber" name="L2552" href="#L2552">2552</a>         mFitter.setFunctionEvaluator(
-<a class="jxr_linenumber" name="L2553" href="#L2553">2553</a>                 <strong class="jxr_keyword">new</strong> LevenbergMarquardtMultiDimensionFunctionEvaluator() {
-<a class="jxr_linenumber" name="L2554" href="#L2554">2554</a>                     @Override
-<a class="jxr_linenumber" name="L2555" href="#L2555">2555</a>                     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> getNumberOfDimensions() {
-<a class="jxr_linenumber" name="L2556" href="#L2556">2556</a>                         <em class="jxr_comment">// Input points are measured magnetic flux density coordinates</em>
-<a class="jxr_linenumber" name="L2557" href="#L2557">2557</a>                         <strong class="jxr_keyword">return</strong> BodyMagneticFluxDensity.COMPONENTS;
-<a class="jxr_linenumber" name="L2558" href="#L2558">2558</a>                     }
-<a class="jxr_linenumber" name="L2559" href="#L2559">2559</a> 
-<a class="jxr_linenumber" name="L2560" href="#L2560">2560</a>                     @Override
-<a class="jxr_linenumber" name="L2561" href="#L2561">2561</a>                     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">double</strong>[] createInitialParametersArray() {
-<a class="jxr_linenumber" name="L2562" href="#L2562">2562</a>                         <em class="jxr_comment">// cross coupling errors M</em>
-<a class="jxr_linenumber" name="L2563" href="#L2563">2563</a>                         <strong class="jxr_keyword">return</strong> initialM.toArray();
-<a class="jxr_linenumber" name="L2564" href="#L2564">2564</a>                     }
-<a class="jxr_linenumber" name="L2565" href="#L2565">2565</a> 
-<a class="jxr_linenumber" name="L2566" href="#L2566">2566</a>                     @Override
-<a class="jxr_linenumber" name="L2567" href="#L2567">2567</a>                     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">double</strong> evaluate(
-<a class="jxr_linenumber" name="L2568" href="#L2568">2568</a>                             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> i, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] point,
-<a class="jxr_linenumber" name="L2569" href="#L2569">2569</a>                             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] params, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] derivatives)
-<a class="jxr_linenumber" name="L2570" href="#L2570">2570</a>                             <strong class="jxr_keyword">throws</strong> EvaluationException {
-<a class="jxr_linenumber" name="L2571" href="#L2571">2571</a> 
-<a class="jxr_linenumber" name="L2572" href="#L2572">2572</a>                         mBmeasX = point[0];
-<a class="jxr_linenumber" name="L2573" href="#L2573">2573</a>                         mBmeasY = point[1];
-<a class="jxr_linenumber" name="L2574" href="#L2574">2574</a>                         mBmeasZ = point[2];
-<a class="jxr_linenumber" name="L2575" href="#L2575">2575</a> 
-<a class="jxr_linenumber" name="L2576" href="#L2576">2576</a>                         gradientEstimator.gradient(params, derivatives);
-<a class="jxr_linenumber" name="L2577" href="#L2577">2577</a> 
-<a class="jxr_linenumber" name="L2578" href="#L2578">2578</a>                         <strong class="jxr_keyword">return</strong> evaluateGeneral(params);
-<a class="jxr_linenumber" name="L2579" href="#L2579">2579</a>                     }
-<a class="jxr_linenumber" name="L2580" href="#L2580">2580</a>                 });
-<a class="jxr_linenumber" name="L2581" href="#L2581">2581</a> 
-<a class="jxr_linenumber" name="L2582" href="#L2582">2582</a>         setInputData();
-<a class="jxr_linenumber" name="L2583" href="#L2583">2583</a> 
-<a class="jxr_linenumber" name="L2584" href="#L2584">2584</a>         mFitter.fit();
-<a class="jxr_linenumber" name="L2585" href="#L2585">2585</a> 
-<a class="jxr_linenumber" name="L2586" href="#L2586">2586</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] result = mFitter.getA();
-<a class="jxr_linenumber" name="L2587" href="#L2587">2587</a> 
-<a class="jxr_linenumber" name="L2588" href="#L2588">2588</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m11 = result[0];
-<a class="jxr_linenumber" name="L2589" href="#L2589">2589</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m21 = result[1];
-<a class="jxr_linenumber" name="L2590" href="#L2590">2590</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m31 = result[2];
-<a class="jxr_linenumber" name="L2591" href="#L2591">2591</a> 
-<a class="jxr_linenumber" name="L2592" href="#L2592">2592</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m12 = result[3];
-<a class="jxr_linenumber" name="L2593" href="#L2593">2593</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m22 = result[4];
-<a class="jxr_linenumber" name="L2594" href="#L2594">2594</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m32 = result[5];
-<a class="jxr_linenumber" name="L2595" href="#L2595">2595</a> 
-<a class="jxr_linenumber" name="L2596" href="#L2596">2596</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m13 = result[6];
-<a class="jxr_linenumber" name="L2597" href="#L2597">2597</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m23 = result[7];
-<a class="jxr_linenumber" name="L2598" href="#L2598">2598</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m33 = result[8];
-<a class="jxr_linenumber" name="L2599" href="#L2599">2599</a> 
-<a class="jxr_linenumber" name="L2600" href="#L2600">2600</a>         <strong class="jxr_keyword">final</strong> Matrix m = <strong class="jxr_keyword">new</strong> Matrix(BodyMagneticFluxDensity.COMPONENTS,
-<a class="jxr_linenumber" name="L2601" href="#L2601">2601</a>                 BodyMagneticFluxDensity.COMPONENTS);
-<a class="jxr_linenumber" name="L2602" href="#L2602">2602</a>         m.setElementAtIndex(0, m11);
-<a class="jxr_linenumber" name="L2603" href="#L2603">2603</a>         m.setElementAtIndex(1, m21);
-<a class="jxr_linenumber" name="L2604" href="#L2604">2604</a>         m.setElementAtIndex(2, m31);
-<a class="jxr_linenumber" name="L2605" href="#L2605">2605</a> 
-<a class="jxr_linenumber" name="L2606" href="#L2606">2606</a>         m.setElementAtIndex(3, m12);
-<a class="jxr_linenumber" name="L2607" href="#L2607">2607</a>         m.setElementAtIndex(4, m22);
-<a class="jxr_linenumber" name="L2608" href="#L2608">2608</a>         m.setElementAtIndex(5, m32);
-<a class="jxr_linenumber" name="L2609" href="#L2609">2609</a> 
-<a class="jxr_linenumber" name="L2610" href="#L2610">2610</a>         m.setElementAtIndex(6, m13);
-<a class="jxr_linenumber" name="L2611" href="#L2611">2611</a>         m.setElementAtIndex(7, m23);
-<a class="jxr_linenumber" name="L2612" href="#L2612">2612</a>         m.setElementAtIndex(8, m33);
-<a class="jxr_linenumber" name="L2613" href="#L2613">2613</a> 
-<a class="jxr_linenumber" name="L2614" href="#L2614">2614</a>         setResult(m);
-<a class="jxr_linenumber" name="L2615" href="#L2615">2615</a>     }
+<a class="jxr_linenumber" name="L2522" href="#L2522">2522</a>         <em class="jxr_comment">// Hence:</em>
+<a class="jxr_linenumber" name="L2523" href="#L2523">2523</a>         <em class="jxr_comment">// bmeas - M*b = M*btrue</em>
+<a class="jxr_linenumber" name="L2524" href="#L2524">2524</a> 
+<a class="jxr_linenumber" name="L2525" href="#L2525">2525</a>         <em class="jxr_comment">// M^-1 * (bmeas - M*b) = btrue</em>
+<a class="jxr_linenumber" name="L2526" href="#L2526">2526</a> 
+<a class="jxr_linenumber" name="L2527" href="#L2527">2527</a>         <em class="jxr_comment">// ||bEarth||^2 = ||btrue||^2 = (M^-1 * (bmeas - M*b))^T * (M^-1 * (bmeas - M*b))</em>
+<a class="jxr_linenumber" name="L2528" href="#L2528">2528</a>         <em class="jxr_comment">// ||bEarth||^2 = (bmeas - M*b)^T*(M^-1)^T * M^-1 * (bmeas - M*b)</em>
+<a class="jxr_linenumber" name="L2529" href="#L2529">2529</a>         <em class="jxr_comment">// ||bEarth||^2 = (bmeas - M * b)^T * ||M^-1||^2 * (bmeas - M * b)</em>
+<a class="jxr_linenumber" name="L2530" href="#L2530">2530</a>         <em class="jxr_comment">// ||bEarth||^2 = ||bmeas - M * b||^2 * ||M^-1||^2</em>
+<a class="jxr_linenumber" name="L2531" href="#L2531">2531</a> 
+<a class="jxr_linenumber" name="L2532" href="#L2532">2532</a>         <em class="jxr_comment">// Where:</em>
+<a class="jxr_linenumber" name="L2533" href="#L2533">2533</a> 
+<a class="jxr_linenumber" name="L2534" href="#L2534">2534</a>         <em class="jxr_comment">// b = [bx]</em>
+<a class="jxr_linenumber" name="L2535" href="#L2535">2535</a>         <em class="jxr_comment">//     [by]</em>
+<a class="jxr_linenumber" name="L2536" href="#L2536">2536</a>         <em class="jxr_comment">//     [bz]</em>
+<a class="jxr_linenumber" name="L2537" href="#L2537">2537</a> 
+<a class="jxr_linenumber" name="L2538" href="#L2538">2538</a>         <em class="jxr_comment">// M = [m11 	m12 	m13]</em>
+<a class="jxr_linenumber" name="L2539" href="#L2539">2539</a>         <em class="jxr_comment">//     [m21 	m22 	m23]</em>
+<a class="jxr_linenumber" name="L2540" href="#L2540">2540</a>         <em class="jxr_comment">//     [m31 	m32 	m33]</em>
+<a class="jxr_linenumber" name="L2541" href="#L2541">2541</a> 
+<a class="jxr_linenumber" name="L2542" href="#L2542">2542</a>         <strong class="jxr_keyword">final</strong> GradientEstimator gradientEstimator = <strong class="jxr_keyword">new</strong> GradientEstimator(
+<a class="jxr_linenumber" name="L2543" href="#L2543">2543</a>                 <strong class="jxr_keyword">new</strong> MultiDimensionFunctionEvaluatorListener() {
+<a class="jxr_linenumber" name="L2544" href="#L2544">2544</a>                     @Override
+<a class="jxr_linenumber" name="L2545" href="#L2545">2545</a>                     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">double</strong> evaluate(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] point)
+<a class="jxr_linenumber" name="L2546" href="#L2546">2546</a>                             <strong class="jxr_keyword">throws</strong> EvaluationException {
+<a class="jxr_linenumber" name="L2547" href="#L2547">2547</a>                         <strong class="jxr_keyword">return</strong> evaluateGeneral(point);
+<a class="jxr_linenumber" name="L2548" href="#L2548">2548</a>                     }
+<a class="jxr_linenumber" name="L2549" href="#L2549">2549</a>                 });
+<a class="jxr_linenumber" name="L2550" href="#L2550">2550</a> 
+<a class="jxr_linenumber" name="L2551" href="#L2551">2551</a>         <strong class="jxr_keyword">final</strong> Matrix initialM = Matrix.identity(BodyMagneticFluxDensity.COMPONENTS,
+<a class="jxr_linenumber" name="L2552" href="#L2552">2552</a>                 BodyMagneticFluxDensity.COMPONENTS);
+<a class="jxr_linenumber" name="L2553" href="#L2553">2553</a>         initialM.add(getInitialMm());
+<a class="jxr_linenumber" name="L2554" href="#L2554">2554</a> 
+<a class="jxr_linenumber" name="L2555" href="#L2555">2555</a>         mFitter.setFunctionEvaluator(
+<a class="jxr_linenumber" name="L2556" href="#L2556">2556</a>                 <strong class="jxr_keyword">new</strong> LevenbergMarquardtMultiDimensionFunctionEvaluator() {
+<a class="jxr_linenumber" name="L2557" href="#L2557">2557</a>                     @Override
+<a class="jxr_linenumber" name="L2558" href="#L2558">2558</a>                     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> getNumberOfDimensions() {
+<a class="jxr_linenumber" name="L2559" href="#L2559">2559</a>                         <em class="jxr_comment">// Input points are measured magnetic flux density coordinates</em>
+<a class="jxr_linenumber" name="L2560" href="#L2560">2560</a>                         <strong class="jxr_keyword">return</strong> BodyMagneticFluxDensity.COMPONENTS;
+<a class="jxr_linenumber" name="L2561" href="#L2561">2561</a>                     }
+<a class="jxr_linenumber" name="L2562" href="#L2562">2562</a> 
+<a class="jxr_linenumber" name="L2563" href="#L2563">2563</a>                     @Override
+<a class="jxr_linenumber" name="L2564" href="#L2564">2564</a>                     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">double</strong>[] createInitialParametersArray() {
+<a class="jxr_linenumber" name="L2565" href="#L2565">2565</a>                         <em class="jxr_comment">// cross coupling errors M</em>
+<a class="jxr_linenumber" name="L2566" href="#L2566">2566</a>                         <strong class="jxr_keyword">return</strong> initialM.toArray();
+<a class="jxr_linenumber" name="L2567" href="#L2567">2567</a>                     }
+<a class="jxr_linenumber" name="L2568" href="#L2568">2568</a> 
+<a class="jxr_linenumber" name="L2569" href="#L2569">2569</a>                     @Override
+<a class="jxr_linenumber" name="L2570" href="#L2570">2570</a>                     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">double</strong> evaluate(
+<a class="jxr_linenumber" name="L2571" href="#L2571">2571</a>                             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> i, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] point,
+<a class="jxr_linenumber" name="L2572" href="#L2572">2572</a>                             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] params, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] derivatives)
+<a class="jxr_linenumber" name="L2573" href="#L2573">2573</a>                             <strong class="jxr_keyword">throws</strong> EvaluationException {
+<a class="jxr_linenumber" name="L2574" href="#L2574">2574</a> 
+<a class="jxr_linenumber" name="L2575" href="#L2575">2575</a>                         mBmeasX = point[0];
+<a class="jxr_linenumber" name="L2576" href="#L2576">2576</a>                         mBmeasY = point[1];
+<a class="jxr_linenumber" name="L2577" href="#L2577">2577</a>                         mBmeasZ = point[2];
+<a class="jxr_linenumber" name="L2578" href="#L2578">2578</a> 
+<a class="jxr_linenumber" name="L2579" href="#L2579">2579</a>                         gradientEstimator.gradient(params, derivatives);
+<a class="jxr_linenumber" name="L2580" href="#L2580">2580</a> 
+<a class="jxr_linenumber" name="L2581" href="#L2581">2581</a>                         <strong class="jxr_keyword">return</strong> evaluateGeneral(params);
+<a class="jxr_linenumber" name="L2582" href="#L2582">2582</a>                     }
+<a class="jxr_linenumber" name="L2583" href="#L2583">2583</a>                 });
+<a class="jxr_linenumber" name="L2584" href="#L2584">2584</a> 
+<a class="jxr_linenumber" name="L2585" href="#L2585">2585</a>         setInputData();
+<a class="jxr_linenumber" name="L2586" href="#L2586">2586</a> 
+<a class="jxr_linenumber" name="L2587" href="#L2587">2587</a>         mFitter.fit();
+<a class="jxr_linenumber" name="L2588" href="#L2588">2588</a> 
+<a class="jxr_linenumber" name="L2589" href="#L2589">2589</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] result = mFitter.getA();
+<a class="jxr_linenumber" name="L2590" href="#L2590">2590</a> 
+<a class="jxr_linenumber" name="L2591" href="#L2591">2591</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m11 = result[0];
+<a class="jxr_linenumber" name="L2592" href="#L2592">2592</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m21 = result[1];
+<a class="jxr_linenumber" name="L2593" href="#L2593">2593</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m31 = result[2];
+<a class="jxr_linenumber" name="L2594" href="#L2594">2594</a> 
+<a class="jxr_linenumber" name="L2595" href="#L2595">2595</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m12 = result[3];
+<a class="jxr_linenumber" name="L2596" href="#L2596">2596</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m22 = result[4];
+<a class="jxr_linenumber" name="L2597" href="#L2597">2597</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m32 = result[5];
+<a class="jxr_linenumber" name="L2598" href="#L2598">2598</a> 
+<a class="jxr_linenumber" name="L2599" href="#L2599">2599</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m13 = result[6];
+<a class="jxr_linenumber" name="L2600" href="#L2600">2600</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m23 = result[7];
+<a class="jxr_linenumber" name="L2601" href="#L2601">2601</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m33 = result[8];
+<a class="jxr_linenumber" name="L2602" href="#L2602">2602</a> 
+<a class="jxr_linenumber" name="L2603" href="#L2603">2603</a>         <strong class="jxr_keyword">final</strong> Matrix m = <strong class="jxr_keyword">new</strong> Matrix(BodyMagneticFluxDensity.COMPONENTS,
+<a class="jxr_linenumber" name="L2604" href="#L2604">2604</a>                 BodyMagneticFluxDensity.COMPONENTS);
+<a class="jxr_linenumber" name="L2605" href="#L2605">2605</a>         m.setElementAtIndex(0, m11);
+<a class="jxr_linenumber" name="L2606" href="#L2606">2606</a>         m.setElementAtIndex(1, m21);
+<a class="jxr_linenumber" name="L2607" href="#L2607">2607</a>         m.setElementAtIndex(2, m31);
+<a class="jxr_linenumber" name="L2608" href="#L2608">2608</a> 
+<a class="jxr_linenumber" name="L2609" href="#L2609">2609</a>         m.setElementAtIndex(3, m12);
+<a class="jxr_linenumber" name="L2610" href="#L2610">2610</a>         m.setElementAtIndex(4, m22);
+<a class="jxr_linenumber" name="L2611" href="#L2611">2611</a>         m.setElementAtIndex(5, m32);
+<a class="jxr_linenumber" name="L2612" href="#L2612">2612</a> 
+<a class="jxr_linenumber" name="L2613" href="#L2613">2613</a>         m.setElementAtIndex(6, m13);
+<a class="jxr_linenumber" name="L2614" href="#L2614">2614</a>         m.setElementAtIndex(7, m23);
+<a class="jxr_linenumber" name="L2615" href="#L2615">2615</a>         m.setElementAtIndex(8, m33);
 <a class="jxr_linenumber" name="L2616" href="#L2616">2616</a> 
-<a class="jxr_linenumber" name="L2617" href="#L2617">2617</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2618" href="#L2618">2618</a> <em class="jxr_javadoccomment">     * Internal method to perform calibration when common z-axis is assumed for both</em>
-<a class="jxr_linenumber" name="L2619" href="#L2619">2619</a> <em class="jxr_javadoccomment">     * the accelerometer and gyroscope.</em>
-<a class="jxr_linenumber" name="L2620" href="#L2620">2620</a> <em class="jxr_javadoccomment">     *</em>
-<a class="jxr_linenumber" name="L2621" href="#L2621">2621</a> <em class="jxr_javadoccomment">     * @throws FittingException                         if Levenberg-Marquardt fails for numerical reasons.</em>
-<a class="jxr_linenumber" name="L2622" href="#L2622">2622</a> <em class="jxr_javadoccomment">     * @throws AlgebraException                         if there are numerical instabilities that prevent</em>
-<a class="jxr_linenumber" name="L2623" href="#L2623">2623</a> <em class="jxr_javadoccomment">     *                                                  matrix inversion.</em>
-<a class="jxr_linenumber" name="L2624" href="#L2624">2624</a> <em class="jxr_javadoccomment">     * @throws com.irurueta.numerical.NotReadyException never happens.</em>
-<a class="jxr_linenumber" name="L2625" href="#L2625">2625</a> <em class="jxr_javadoccomment">     * @throws IOException                              if world magnetic model cannot be loaded.</em>
-<a class="jxr_linenumber" name="L2626" href="#L2626">2626</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L2627" href="#L2627">2627</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> calibrateCommonAxis() <strong class="jxr_keyword">throws</strong> AlgebraException, FittingException,
-<a class="jxr_linenumber" name="L2628" href="#L2628">2628</a>             com.irurueta.numerical.NotReadyException, IOException {
-<a class="jxr_linenumber" name="L2629" href="#L2629">2629</a>         <em class="jxr_comment">// The magnetometer model is:</em>
-<a class="jxr_linenumber" name="L2630" href="#L2630">2630</a>         <em class="jxr_comment">// bmeas = bm + (I + Mm) * btrue + w</em>
-<a class="jxr_linenumber" name="L2631" href="#L2631">2631</a> 
-<a class="jxr_linenumber" name="L2632" href="#L2632">2632</a>         <em class="jxr_comment">// Ideally a least squares solution tries to minimize noise component, so:</em>
-<a class="jxr_linenumber" name="L2633" href="#L2633">2633</a>         <em class="jxr_comment">// bmeas = bm + (I + Mm) * btrue</em>
+<a class="jxr_linenumber" name="L2617" href="#L2617">2617</a>         setResult(m);
+<a class="jxr_linenumber" name="L2618" href="#L2618">2618</a>     }
+<a class="jxr_linenumber" name="L2619" href="#L2619">2619</a> 
+<a class="jxr_linenumber" name="L2620" href="#L2620">2620</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L2621" href="#L2621">2621</a> <em class="jxr_javadoccomment">     * Internal method to perform calibration when common z-axis is assumed for both</em>
+<a class="jxr_linenumber" name="L2622" href="#L2622">2622</a> <em class="jxr_javadoccomment">     * the accelerometer and gyroscope.</em>
+<a class="jxr_linenumber" name="L2623" href="#L2623">2623</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L2624" href="#L2624">2624</a> <em class="jxr_javadoccomment">     * @throws FittingException                         if Levenberg-Marquardt fails for numerical reasons.</em>
+<a class="jxr_linenumber" name="L2625" href="#L2625">2625</a> <em class="jxr_javadoccomment">     * @throws AlgebraException                         if there are numerical instabilities that prevent</em>
+<a class="jxr_linenumber" name="L2626" href="#L2626">2626</a> <em class="jxr_javadoccomment">     *                                                  matrix inversion.</em>
+<a class="jxr_linenumber" name="L2627" href="#L2627">2627</a> <em class="jxr_javadoccomment">     * @throws com.irurueta.numerical.NotReadyException never happens.</em>
+<a class="jxr_linenumber" name="L2628" href="#L2628">2628</a> <em class="jxr_javadoccomment">     * @throws IOException                              if world magnetic model cannot be loaded.</em>
+<a class="jxr_linenumber" name="L2629" href="#L2629">2629</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L2630" href="#L2630">2630</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> calibrateCommonAxis() <strong class="jxr_keyword">throws</strong> AlgebraException, FittingException,
+<a class="jxr_linenumber" name="L2631" href="#L2631">2631</a>             com.irurueta.numerical.NotReadyException, IOException {
+<a class="jxr_linenumber" name="L2632" href="#L2632">2632</a>         <em class="jxr_comment">// The magnetometer model is:</em>
+<a class="jxr_linenumber" name="L2633" href="#L2633">2633</a>         <em class="jxr_comment">// bmeas = bm + (I + Mm) * btrue + w</em>
 <a class="jxr_linenumber" name="L2634" href="#L2634">2634</a> 
-<a class="jxr_linenumber" name="L2635" href="#L2635">2635</a>         <em class="jxr_comment">// For convergence purposes of the Levenberg-Marquardt algorithm, the</em>
-<a class="jxr_linenumber" name="L2636" href="#L2636">2636</a>         <em class="jxr_comment">// magnetometer model can be better expressed as:</em>
-<a class="jxr_linenumber" name="L2637" href="#L2637">2637</a>         <em class="jxr_comment">// bmeas = T*K*(btrue + b)</em>
-<a class="jxr_linenumber" name="L2638" href="#L2638">2638</a>         <em class="jxr_comment">// bmeas = M*(btrue + b)</em>
-<a class="jxr_linenumber" name="L2639" href="#L2639">2639</a>         <em class="jxr_comment">// bmeas = M*btrue + M*b</em>
-<a class="jxr_linenumber" name="L2640" href="#L2640">2640</a> 
-<a class="jxr_linenumber" name="L2641" href="#L2641">2641</a>         <em class="jxr_comment">//where:</em>
-<a class="jxr_linenumber" name="L2642" href="#L2642">2642</a>         <em class="jxr_comment">// M = I + Mm</em>
-<a class="jxr_linenumber" name="L2643" href="#L2643">2643</a>         <em class="jxr_comment">// bm = M*b = (I + Mm)*b --&gt; b = M^-1*bm</em>
-<a class="jxr_linenumber" name="L2644" href="#L2644">2644</a> 
-<a class="jxr_linenumber" name="L2645" href="#L2645">2645</a>         <em class="jxr_comment">// We know that the norm of the true body magnetic flux density</em>
-<a class="jxr_linenumber" name="L2646" href="#L2646">2646</a>         <em class="jxr_comment">// is equal to the amount of Earth magnetic flux density at provided</em>
-<a class="jxr_linenumber" name="L2647" href="#L2647">2647</a>         <em class="jxr_comment">// position and timestamp</em>
-<a class="jxr_linenumber" name="L2648" href="#L2648">2648</a>         <em class="jxr_comment">// ||btrue|| = ||bEarth|| --&gt; from 30 µT to 60 µT</em>
-<a class="jxr_linenumber" name="L2649" href="#L2649">2649</a> 
-<a class="jxr_linenumber" name="L2650" href="#L2650">2650</a>         <em class="jxr_comment">// Hence:</em>
-<a class="jxr_linenumber" name="L2651" href="#L2651">2651</a>         <em class="jxr_comment">// bmeas - M*b = M*btrue</em>
+<a class="jxr_linenumber" name="L2635" href="#L2635">2635</a>         <em class="jxr_comment">// Ideally a least squares solution tries to minimize noise component, so:</em>
+<a class="jxr_linenumber" name="L2636" href="#L2636">2636</a>         <em class="jxr_comment">// bmeas = bm + (I + Mm) * btrue</em>
+<a class="jxr_linenumber" name="L2637" href="#L2637">2637</a> 
+<a class="jxr_linenumber" name="L2638" href="#L2638">2638</a>         <em class="jxr_comment">// For convergence purposes of the Levenberg-Marquardt algorithm, the</em>
+<a class="jxr_linenumber" name="L2639" href="#L2639">2639</a>         <em class="jxr_comment">// magnetometer model can be better expressed as:</em>
+<a class="jxr_linenumber" name="L2640" href="#L2640">2640</a>         <em class="jxr_comment">// bmeas = T*K*(btrue + b)</em>
+<a class="jxr_linenumber" name="L2641" href="#L2641">2641</a>         <em class="jxr_comment">// bmeas = M*(btrue + b)</em>
+<a class="jxr_linenumber" name="L2642" href="#L2642">2642</a>         <em class="jxr_comment">// bmeas = M*btrue + M*b</em>
+<a class="jxr_linenumber" name="L2643" href="#L2643">2643</a> 
+<a class="jxr_linenumber" name="L2644" href="#L2644">2644</a>         <em class="jxr_comment">//where:</em>
+<a class="jxr_linenumber" name="L2645" href="#L2645">2645</a>         <em class="jxr_comment">// M = I + Mm</em>
+<a class="jxr_linenumber" name="L2646" href="#L2646">2646</a>         <em class="jxr_comment">// bm = M*b = (I + Mm)*b --&gt; b = M^-1*bm</em>
+<a class="jxr_linenumber" name="L2647" href="#L2647">2647</a> 
+<a class="jxr_linenumber" name="L2648" href="#L2648">2648</a>         <em class="jxr_comment">// We know that the norm of the true body magnetic flux density</em>
+<a class="jxr_linenumber" name="L2649" href="#L2649">2649</a>         <em class="jxr_comment">// is equal to the amount of Earth magnetic flux density at provided</em>
+<a class="jxr_linenumber" name="L2650" href="#L2650">2650</a>         <em class="jxr_comment">// position and timestamp</em>
+<a class="jxr_linenumber" name="L2651" href="#L2651">2651</a>         <em class="jxr_comment">// ||btrue|| = ||bEarth|| --&gt; from 30 µT to 60 µT</em>
 <a class="jxr_linenumber" name="L2652" href="#L2652">2652</a> 
-<a class="jxr_linenumber" name="L2653" href="#L2653">2653</a>         <em class="jxr_comment">// M^-1 * (bmeas - M*b) = btrue</em>
-<a class="jxr_linenumber" name="L2654" href="#L2654">2654</a> 
-<a class="jxr_linenumber" name="L2655" href="#L2655">2655</a>         <em class="jxr_comment">// ||bEarth||^2 = ||btrue||^2 = (M^-1 * (bmeas - M*b))^T * (M^-1 * (bmeas - M*b))</em>
-<a class="jxr_linenumber" name="L2656" href="#L2656">2656</a>         <em class="jxr_comment">// ||bEarth||^2 = (bmeas - M*b)^T*(M^-1)^T * M^-1 * (bmeas - M*b)</em>
-<a class="jxr_linenumber" name="L2657" href="#L2657">2657</a>         <em class="jxr_comment">// ||bEarth||^2 = (bmeas - M * b)^T * ||M^-1||^2 * (bmeas - M * b)</em>
-<a class="jxr_linenumber" name="L2658" href="#L2658">2658</a>         <em class="jxr_comment">// ||bEarth||^2 = ||bmeas - M * b||^2 * ||M^-1||^2</em>
-<a class="jxr_linenumber" name="L2659" href="#L2659">2659</a> 
-<a class="jxr_linenumber" name="L2660" href="#L2660">2660</a>         <em class="jxr_comment">// Where:</em>
-<a class="jxr_linenumber" name="L2661" href="#L2661">2661</a> 
-<a class="jxr_linenumber" name="L2662" href="#L2662">2662</a>         <em class="jxr_comment">// b = [bx]</em>
-<a class="jxr_linenumber" name="L2663" href="#L2663">2663</a>         <em class="jxr_comment">//     [by]</em>
-<a class="jxr_linenumber" name="L2664" href="#L2664">2664</a>         <em class="jxr_comment">//     [bz]</em>
-<a class="jxr_linenumber" name="L2665" href="#L2665">2665</a> 
-<a class="jxr_linenumber" name="L2666" href="#L2666">2666</a>         <em class="jxr_comment">// M = [m11 	m12 	m13]</em>
-<a class="jxr_linenumber" name="L2667" href="#L2667">2667</a>         <em class="jxr_comment">//     [0 		m22 	m23]</em>
-<a class="jxr_linenumber" name="L2668" href="#L2668">2668</a>         <em class="jxr_comment">//     [0 	 	0 		m33]</em>
-<a class="jxr_linenumber" name="L2669" href="#L2669">2669</a> 
-<a class="jxr_linenumber" name="L2670" href="#L2670">2670</a> 
-<a class="jxr_linenumber" name="L2671" href="#L2671">2671</a>         <strong class="jxr_keyword">final</strong> GradientEstimator gradientEstimator = <strong class="jxr_keyword">new</strong> GradientEstimator(
-<a class="jxr_linenumber" name="L2672" href="#L2672">2672</a>                 <strong class="jxr_keyword">new</strong> MultiDimensionFunctionEvaluatorListener() {
-<a class="jxr_linenumber" name="L2673" href="#L2673">2673</a>                     @Override
-<a class="jxr_linenumber" name="L2674" href="#L2674">2674</a>                     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">double</strong> evaluate(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] point)
-<a class="jxr_linenumber" name="L2675" href="#L2675">2675</a>                             <strong class="jxr_keyword">throws</strong> EvaluationException {
-<a class="jxr_linenumber" name="L2676" href="#L2676">2676</a>                         <strong class="jxr_keyword">return</strong> evaluateCommonAxis(point);
-<a class="jxr_linenumber" name="L2677" href="#L2677">2677</a>                     }
-<a class="jxr_linenumber" name="L2678" href="#L2678">2678</a>                 });
-<a class="jxr_linenumber" name="L2679" href="#L2679">2679</a> 
-<a class="jxr_linenumber" name="L2680" href="#L2680">2680</a>         <strong class="jxr_keyword">final</strong> Matrix initialM = Matrix.identity(
-<a class="jxr_linenumber" name="L2681" href="#L2681">2681</a>                 BodyMagneticFluxDensity.COMPONENTS,
-<a class="jxr_linenumber" name="L2682" href="#L2682">2682</a>                 BodyMagneticFluxDensity.COMPONENTS);
-<a class="jxr_linenumber" name="L2683" href="#L2683">2683</a>         initialM.add(getInitialMm());
-<a class="jxr_linenumber" name="L2684" href="#L2684">2684</a> 
-<a class="jxr_linenumber" name="L2685" href="#L2685">2685</a>         <em class="jxr_comment">// Force initial M to be upper diagonal</em>
-<a class="jxr_linenumber" name="L2686" href="#L2686">2686</a>         initialM.setElementAt(1, 0, 0.0);
-<a class="jxr_linenumber" name="L2687" href="#L2687">2687</a>         initialM.setElementAt(2, 0, 0.0);
-<a class="jxr_linenumber" name="L2688" href="#L2688">2688</a>         initialM.setElementAt(2, 1, 0.0);
-<a class="jxr_linenumber" name="L2689" href="#L2689">2689</a> 
-<a class="jxr_linenumber" name="L2690" href="#L2690">2690</a>         mFitter.setFunctionEvaluator(
-<a class="jxr_linenumber" name="L2691" href="#L2691">2691</a>                 <strong class="jxr_keyword">new</strong> LevenbergMarquardtMultiDimensionFunctionEvaluator() {
-<a class="jxr_linenumber" name="L2692" href="#L2692">2692</a>                     @Override
-<a class="jxr_linenumber" name="L2693" href="#L2693">2693</a>                     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> getNumberOfDimensions() {
-<a class="jxr_linenumber" name="L2694" href="#L2694">2694</a>                         <em class="jxr_comment">// Input points are measured magnetic flux density coordinates</em>
-<a class="jxr_linenumber" name="L2695" href="#L2695">2695</a>                         <strong class="jxr_keyword">return</strong> BodyKinematics.COMPONENTS;
-<a class="jxr_linenumber" name="L2696" href="#L2696">2696</a>                     }
-<a class="jxr_linenumber" name="L2697" href="#L2697">2697</a> 
-<a class="jxr_linenumber" name="L2698" href="#L2698">2698</a>                     @Override
-<a class="jxr_linenumber" name="L2699" href="#L2699">2699</a>                     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">double</strong>[] createInitialParametersArray() {
-<a class="jxr_linenumber" name="L2700" href="#L2700">2700</a>                         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] initial = <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">double</strong>[COMMON_Z_AXIS_UNKNOWNS];
-<a class="jxr_linenumber" name="L2701" href="#L2701">2701</a> 
-<a class="jxr_linenumber" name="L2702" href="#L2702">2702</a>                         <em class="jxr_comment">// upper diagonal cross coupling errors M</em>
-<a class="jxr_linenumber" name="L2703" href="#L2703">2703</a>                         <strong class="jxr_keyword">int</strong> k = 0;
-<a class="jxr_linenumber" name="L2704" href="#L2704">2704</a>                         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> j = 0; j &lt; BodyMagneticFluxDensity.COMPONENTS; j++) {
-<a class="jxr_linenumber" name="L2705" href="#L2705">2705</a>                             <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; BodyMagneticFluxDensity.COMPONENTS; i++) {
-<a class="jxr_linenumber" name="L2706" href="#L2706">2706</a>                                 <strong class="jxr_keyword">if</strong> (i &lt;= j) {
-<a class="jxr_linenumber" name="L2707" href="#L2707">2707</a>                                     initial[k] = initialM.getElementAt(i, j);
-<a class="jxr_linenumber" name="L2708" href="#L2708">2708</a>                                     k++;
-<a class="jxr_linenumber" name="L2709" href="#L2709">2709</a>                                 }
-<a class="jxr_linenumber" name="L2710" href="#L2710">2710</a>                             }
-<a class="jxr_linenumber" name="L2711" href="#L2711">2711</a>                         }
-<a class="jxr_linenumber" name="L2712" href="#L2712">2712</a> 
-<a class="jxr_linenumber" name="L2713" href="#L2713">2713</a>                         <strong class="jxr_keyword">return</strong> initial;
-<a class="jxr_linenumber" name="L2714" href="#L2714">2714</a>                     }
+<a class="jxr_linenumber" name="L2653" href="#L2653">2653</a>         <em class="jxr_comment">// Hence:</em>
+<a class="jxr_linenumber" name="L2654" href="#L2654">2654</a>         <em class="jxr_comment">// bmeas - M*b = M*btrue</em>
+<a class="jxr_linenumber" name="L2655" href="#L2655">2655</a> 
+<a class="jxr_linenumber" name="L2656" href="#L2656">2656</a>         <em class="jxr_comment">// M^-1 * (bmeas - M*b) = btrue</em>
+<a class="jxr_linenumber" name="L2657" href="#L2657">2657</a> 
+<a class="jxr_linenumber" name="L2658" href="#L2658">2658</a>         <em class="jxr_comment">// ||bEarth||^2 = ||btrue||^2 = (M^-1 * (bmeas - M*b))^T * (M^-1 * (bmeas - M*b))</em>
+<a class="jxr_linenumber" name="L2659" href="#L2659">2659</a>         <em class="jxr_comment">// ||bEarth||^2 = (bmeas - M*b)^T*(M^-1)^T * M^-1 * (bmeas - M*b)</em>
+<a class="jxr_linenumber" name="L2660" href="#L2660">2660</a>         <em class="jxr_comment">// ||bEarth||^2 = (bmeas - M * b)^T * ||M^-1||^2 * (bmeas - M * b)</em>
+<a class="jxr_linenumber" name="L2661" href="#L2661">2661</a>         <em class="jxr_comment">// ||bEarth||^2 = ||bmeas - M * b||^2 * ||M^-1||^2</em>
+<a class="jxr_linenumber" name="L2662" href="#L2662">2662</a> 
+<a class="jxr_linenumber" name="L2663" href="#L2663">2663</a>         <em class="jxr_comment">// Where:</em>
+<a class="jxr_linenumber" name="L2664" href="#L2664">2664</a> 
+<a class="jxr_linenumber" name="L2665" href="#L2665">2665</a>         <em class="jxr_comment">// b = [bx]</em>
+<a class="jxr_linenumber" name="L2666" href="#L2666">2666</a>         <em class="jxr_comment">//     [by]</em>
+<a class="jxr_linenumber" name="L2667" href="#L2667">2667</a>         <em class="jxr_comment">//     [bz]</em>
+<a class="jxr_linenumber" name="L2668" href="#L2668">2668</a> 
+<a class="jxr_linenumber" name="L2669" href="#L2669">2669</a>         <em class="jxr_comment">// M = [m11 	m12 	m13]</em>
+<a class="jxr_linenumber" name="L2670" href="#L2670">2670</a>         <em class="jxr_comment">//     [0 		m22 	m23]</em>
+<a class="jxr_linenumber" name="L2671" href="#L2671">2671</a>         <em class="jxr_comment">//     [0 	 	0 		m33]</em>
+<a class="jxr_linenumber" name="L2672" href="#L2672">2672</a> 
+<a class="jxr_linenumber" name="L2673" href="#L2673">2673</a> 
+<a class="jxr_linenumber" name="L2674" href="#L2674">2674</a>         <strong class="jxr_keyword">final</strong> GradientEstimator gradientEstimator = <strong class="jxr_keyword">new</strong> GradientEstimator(
+<a class="jxr_linenumber" name="L2675" href="#L2675">2675</a>                 <strong class="jxr_keyword">new</strong> MultiDimensionFunctionEvaluatorListener() {
+<a class="jxr_linenumber" name="L2676" href="#L2676">2676</a>                     @Override
+<a class="jxr_linenumber" name="L2677" href="#L2677">2677</a>                     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">double</strong> evaluate(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] point)
+<a class="jxr_linenumber" name="L2678" href="#L2678">2678</a>                             <strong class="jxr_keyword">throws</strong> EvaluationException {
+<a class="jxr_linenumber" name="L2679" href="#L2679">2679</a>                         <strong class="jxr_keyword">return</strong> evaluateCommonAxis(point);
+<a class="jxr_linenumber" name="L2680" href="#L2680">2680</a>                     }
+<a class="jxr_linenumber" name="L2681" href="#L2681">2681</a>                 });
+<a class="jxr_linenumber" name="L2682" href="#L2682">2682</a> 
+<a class="jxr_linenumber" name="L2683" href="#L2683">2683</a>         <strong class="jxr_keyword">final</strong> Matrix initialM = Matrix.identity(
+<a class="jxr_linenumber" name="L2684" href="#L2684">2684</a>                 BodyMagneticFluxDensity.COMPONENTS,
+<a class="jxr_linenumber" name="L2685" href="#L2685">2685</a>                 BodyMagneticFluxDensity.COMPONENTS);
+<a class="jxr_linenumber" name="L2686" href="#L2686">2686</a>         initialM.add(getInitialMm());
+<a class="jxr_linenumber" name="L2687" href="#L2687">2687</a> 
+<a class="jxr_linenumber" name="L2688" href="#L2688">2688</a>         <em class="jxr_comment">// Force initial M to be upper diagonal</em>
+<a class="jxr_linenumber" name="L2689" href="#L2689">2689</a>         initialM.setElementAt(1, 0, 0.0);
+<a class="jxr_linenumber" name="L2690" href="#L2690">2690</a>         initialM.setElementAt(2, 0, 0.0);
+<a class="jxr_linenumber" name="L2691" href="#L2691">2691</a>         initialM.setElementAt(2, 1, 0.0);
+<a class="jxr_linenumber" name="L2692" href="#L2692">2692</a> 
+<a class="jxr_linenumber" name="L2693" href="#L2693">2693</a>         mFitter.setFunctionEvaluator(
+<a class="jxr_linenumber" name="L2694" href="#L2694">2694</a>                 <strong class="jxr_keyword">new</strong> LevenbergMarquardtMultiDimensionFunctionEvaluator() {
+<a class="jxr_linenumber" name="L2695" href="#L2695">2695</a>                     @Override
+<a class="jxr_linenumber" name="L2696" href="#L2696">2696</a>                     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> getNumberOfDimensions() {
+<a class="jxr_linenumber" name="L2697" href="#L2697">2697</a>                         <em class="jxr_comment">// Input points are measured magnetic flux density coordinates</em>
+<a class="jxr_linenumber" name="L2698" href="#L2698">2698</a>                         <strong class="jxr_keyword">return</strong> BodyKinematics.COMPONENTS;
+<a class="jxr_linenumber" name="L2699" href="#L2699">2699</a>                     }
+<a class="jxr_linenumber" name="L2700" href="#L2700">2700</a> 
+<a class="jxr_linenumber" name="L2701" href="#L2701">2701</a>                     @Override
+<a class="jxr_linenumber" name="L2702" href="#L2702">2702</a>                     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">double</strong>[] createInitialParametersArray() {
+<a class="jxr_linenumber" name="L2703" href="#L2703">2703</a>                         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] initial = <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">double</strong>[COMMON_Z_AXIS_UNKNOWNS];
+<a class="jxr_linenumber" name="L2704" href="#L2704">2704</a> 
+<a class="jxr_linenumber" name="L2705" href="#L2705">2705</a>                         <em class="jxr_comment">// upper diagonal cross coupling errors M</em>
+<a class="jxr_linenumber" name="L2706" href="#L2706">2706</a>                         <strong class="jxr_keyword">int</strong> k = 0;
+<a class="jxr_linenumber" name="L2707" href="#L2707">2707</a>                         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> j = 0; j &lt; BodyMagneticFluxDensity.COMPONENTS; j++) {
+<a class="jxr_linenumber" name="L2708" href="#L2708">2708</a>                             <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; BodyMagneticFluxDensity.COMPONENTS; i++) {
+<a class="jxr_linenumber" name="L2709" href="#L2709">2709</a>                                 <strong class="jxr_keyword">if</strong> (i &lt;= j) {
+<a class="jxr_linenumber" name="L2710" href="#L2710">2710</a>                                     initial[k] = initialM.getElementAt(i, j);
+<a class="jxr_linenumber" name="L2711" href="#L2711">2711</a>                                     k++;
+<a class="jxr_linenumber" name="L2712" href="#L2712">2712</a>                                 }
+<a class="jxr_linenumber" name="L2713" href="#L2713">2713</a>                             }
+<a class="jxr_linenumber" name="L2714" href="#L2714">2714</a>                         }
 <a class="jxr_linenumber" name="L2715" href="#L2715">2715</a> 
-<a class="jxr_linenumber" name="L2716" href="#L2716">2716</a>                     @Override
-<a class="jxr_linenumber" name="L2717" href="#L2717">2717</a>                     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">double</strong> evaluate(
-<a class="jxr_linenumber" name="L2718" href="#L2718">2718</a>                             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> i, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] point,
-<a class="jxr_linenumber" name="L2719" href="#L2719">2719</a>                             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] params, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] derivatives)
-<a class="jxr_linenumber" name="L2720" href="#L2720">2720</a>                             <strong class="jxr_keyword">throws</strong> EvaluationException {
-<a class="jxr_linenumber" name="L2721" href="#L2721">2721</a> 
-<a class="jxr_linenumber" name="L2722" href="#L2722">2722</a>                         mBmeasX = point[0];
-<a class="jxr_linenumber" name="L2723" href="#L2723">2723</a>                         mBmeasY = point[1];
-<a class="jxr_linenumber" name="L2724" href="#L2724">2724</a>                         mBmeasZ = point[2];
-<a class="jxr_linenumber" name="L2725" href="#L2725">2725</a> 
-<a class="jxr_linenumber" name="L2726" href="#L2726">2726</a>                         gradientEstimator.gradient(params, derivatives);
-<a class="jxr_linenumber" name="L2727" href="#L2727">2727</a> 
-<a class="jxr_linenumber" name="L2728" href="#L2728">2728</a>                         <strong class="jxr_keyword">return</strong> evaluateCommonAxis(params);
-<a class="jxr_linenumber" name="L2729" href="#L2729">2729</a>                     }
-<a class="jxr_linenumber" name="L2730" href="#L2730">2730</a>                 });
-<a class="jxr_linenumber" name="L2731" href="#L2731">2731</a> 
-<a class="jxr_linenumber" name="L2732" href="#L2732">2732</a>         setInputData();
-<a class="jxr_linenumber" name="L2733" href="#L2733">2733</a> 
-<a class="jxr_linenumber" name="L2734" href="#L2734">2734</a>         mFitter.fit();
-<a class="jxr_linenumber" name="L2735" href="#L2735">2735</a> 
-<a class="jxr_linenumber" name="L2736" href="#L2736">2736</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] result = mFitter.getA();
-<a class="jxr_linenumber" name="L2737" href="#L2737">2737</a> 
-<a class="jxr_linenumber" name="L2738" href="#L2738">2738</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m11 = result[0];
-<a class="jxr_linenumber" name="L2739" href="#L2739">2739</a> 
-<a class="jxr_linenumber" name="L2740" href="#L2740">2740</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m12 = result[1];
-<a class="jxr_linenumber" name="L2741" href="#L2741">2741</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m22 = result[2];
+<a class="jxr_linenumber" name="L2716" href="#L2716">2716</a>                         <strong class="jxr_keyword">return</strong> initial;
+<a class="jxr_linenumber" name="L2717" href="#L2717">2717</a>                     }
+<a class="jxr_linenumber" name="L2718" href="#L2718">2718</a> 
+<a class="jxr_linenumber" name="L2719" href="#L2719">2719</a>                     @Override
+<a class="jxr_linenumber" name="L2720" href="#L2720">2720</a>                     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">double</strong> evaluate(
+<a class="jxr_linenumber" name="L2721" href="#L2721">2721</a>                             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> i, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] point,
+<a class="jxr_linenumber" name="L2722" href="#L2722">2722</a>                             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] params, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] derivatives)
+<a class="jxr_linenumber" name="L2723" href="#L2723">2723</a>                             <strong class="jxr_keyword">throws</strong> EvaluationException {
+<a class="jxr_linenumber" name="L2724" href="#L2724">2724</a> 
+<a class="jxr_linenumber" name="L2725" href="#L2725">2725</a>                         mBmeasX = point[0];
+<a class="jxr_linenumber" name="L2726" href="#L2726">2726</a>                         mBmeasY = point[1];
+<a class="jxr_linenumber" name="L2727" href="#L2727">2727</a>                         mBmeasZ = point[2];
+<a class="jxr_linenumber" name="L2728" href="#L2728">2728</a> 
+<a class="jxr_linenumber" name="L2729" href="#L2729">2729</a>                         gradientEstimator.gradient(params, derivatives);
+<a class="jxr_linenumber" name="L2730" href="#L2730">2730</a> 
+<a class="jxr_linenumber" name="L2731" href="#L2731">2731</a>                         <strong class="jxr_keyword">return</strong> evaluateCommonAxis(params);
+<a class="jxr_linenumber" name="L2732" href="#L2732">2732</a>                     }
+<a class="jxr_linenumber" name="L2733" href="#L2733">2733</a>                 });
+<a class="jxr_linenumber" name="L2734" href="#L2734">2734</a> 
+<a class="jxr_linenumber" name="L2735" href="#L2735">2735</a>         setInputData();
+<a class="jxr_linenumber" name="L2736" href="#L2736">2736</a> 
+<a class="jxr_linenumber" name="L2737" href="#L2737">2737</a>         mFitter.fit();
+<a class="jxr_linenumber" name="L2738" href="#L2738">2738</a> 
+<a class="jxr_linenumber" name="L2739" href="#L2739">2739</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] result = mFitter.getA();
+<a class="jxr_linenumber" name="L2740" href="#L2740">2740</a> 
+<a class="jxr_linenumber" name="L2741" href="#L2741">2741</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m11 = result[0];
 <a class="jxr_linenumber" name="L2742" href="#L2742">2742</a> 
-<a class="jxr_linenumber" name="L2743" href="#L2743">2743</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m13 = result[3];
-<a class="jxr_linenumber" name="L2744" href="#L2744">2744</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m23 = result[4];
-<a class="jxr_linenumber" name="L2745" href="#L2745">2745</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m33 = result[5];
-<a class="jxr_linenumber" name="L2746" href="#L2746">2746</a> 
-<a class="jxr_linenumber" name="L2747" href="#L2747">2747</a>         <strong class="jxr_keyword">final</strong> Matrix m = <strong class="jxr_keyword">new</strong> Matrix(BodyMagneticFluxDensity.COMPONENTS,
-<a class="jxr_linenumber" name="L2748" href="#L2748">2748</a>                 BodyMagneticFluxDensity.COMPONENTS);
-<a class="jxr_linenumber" name="L2749" href="#L2749">2749</a>         m.setElementAtIndex(0, m11);
-<a class="jxr_linenumber" name="L2750" href="#L2750">2750</a>         m.setElementAtIndex(1, 0.0);
-<a class="jxr_linenumber" name="L2751" href="#L2751">2751</a>         m.setElementAtIndex(2, 0.0);
-<a class="jxr_linenumber" name="L2752" href="#L2752">2752</a> 
-<a class="jxr_linenumber" name="L2753" href="#L2753">2753</a>         m.setElementAtIndex(3, m12);
-<a class="jxr_linenumber" name="L2754" href="#L2754">2754</a>         m.setElementAtIndex(4, m22);
-<a class="jxr_linenumber" name="L2755" href="#L2755">2755</a>         m.setElementAtIndex(5, 0.0);
-<a class="jxr_linenumber" name="L2756" href="#L2756">2756</a> 
-<a class="jxr_linenumber" name="L2757" href="#L2757">2757</a>         m.setElementAtIndex(6, m13);
-<a class="jxr_linenumber" name="L2758" href="#L2758">2758</a>         m.setElementAtIndex(7, m23);
-<a class="jxr_linenumber" name="L2759" href="#L2759">2759</a>         m.setElementAtIndex(8, m33);
-<a class="jxr_linenumber" name="L2760" href="#L2760">2760</a> 
-<a class="jxr_linenumber" name="L2761" href="#L2761">2761</a>         setResult(m);
-<a class="jxr_linenumber" name="L2762" href="#L2762">2762</a>     }
+<a class="jxr_linenumber" name="L2743" href="#L2743">2743</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m12 = result[1];
+<a class="jxr_linenumber" name="L2744" href="#L2744">2744</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m22 = result[2];
+<a class="jxr_linenumber" name="L2745" href="#L2745">2745</a> 
+<a class="jxr_linenumber" name="L2746" href="#L2746">2746</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m13 = result[3];
+<a class="jxr_linenumber" name="L2747" href="#L2747">2747</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m23 = result[4];
+<a class="jxr_linenumber" name="L2748" href="#L2748">2748</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m33 = result[5];
+<a class="jxr_linenumber" name="L2749" href="#L2749">2749</a> 
+<a class="jxr_linenumber" name="L2750" href="#L2750">2750</a>         <strong class="jxr_keyword">final</strong> Matrix m = <strong class="jxr_keyword">new</strong> Matrix(BodyMagneticFluxDensity.COMPONENTS,
+<a class="jxr_linenumber" name="L2751" href="#L2751">2751</a>                 BodyMagneticFluxDensity.COMPONENTS);
+<a class="jxr_linenumber" name="L2752" href="#L2752">2752</a>         m.setElementAtIndex(0, m11);
+<a class="jxr_linenumber" name="L2753" href="#L2753">2753</a>         m.setElementAtIndex(1, 0.0);
+<a class="jxr_linenumber" name="L2754" href="#L2754">2754</a>         m.setElementAtIndex(2, 0.0);
+<a class="jxr_linenumber" name="L2755" href="#L2755">2755</a> 
+<a class="jxr_linenumber" name="L2756" href="#L2756">2756</a>         m.setElementAtIndex(3, m12);
+<a class="jxr_linenumber" name="L2757" href="#L2757">2757</a>         m.setElementAtIndex(4, m22);
+<a class="jxr_linenumber" name="L2758" href="#L2758">2758</a>         m.setElementAtIndex(5, 0.0);
+<a class="jxr_linenumber" name="L2759" href="#L2759">2759</a> 
+<a class="jxr_linenumber" name="L2760" href="#L2760">2760</a>         m.setElementAtIndex(6, m13);
+<a class="jxr_linenumber" name="L2761" href="#L2761">2761</a>         m.setElementAtIndex(7, m23);
+<a class="jxr_linenumber" name="L2762" href="#L2762">2762</a>         m.setElementAtIndex(8, m33);
 <a class="jxr_linenumber" name="L2763" href="#L2763">2763</a> 
-<a class="jxr_linenumber" name="L2764" href="#L2764">2764</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2765" href="#L2765">2765</a> <em class="jxr_javadoccomment">     * Makes proper conversion of internal cross-coupling and bias matrices.</em>
-<a class="jxr_linenumber" name="L2766" href="#L2766">2766</a> <em class="jxr_javadoccomment">     *</em>
-<a class="jxr_linenumber" name="L2767" href="#L2767">2767</a> <em class="jxr_javadoccomment">     * @param m internal cross-coupling matrix.</em>
-<a class="jxr_linenumber" name="L2768" href="#L2768">2768</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L2769" href="#L2769">2769</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> setResult(<strong class="jxr_keyword">final</strong> Matrix m) {
-<a class="jxr_linenumber" name="L2770" href="#L2770">2770</a>         <em class="jxr_comment">// Because:</em>
-<a class="jxr_linenumber" name="L2771" href="#L2771">2771</a>         <em class="jxr_comment">// M = I + Mm</em>
-<a class="jxr_linenumber" name="L2772" href="#L2772">2772</a> 
-<a class="jxr_linenumber" name="L2773" href="#L2773">2773</a>         <em class="jxr_comment">// Then:</em>
-<a class="jxr_linenumber" name="L2774" href="#L2774">2774</a>         <em class="jxr_comment">// Mm = M - I</em>
-<a class="jxr_linenumber" name="L2775" href="#L2775">2775</a> 
-<a class="jxr_linenumber" name="L2776" href="#L2776">2776</a>         <strong class="jxr_keyword">if</strong> (mEstimatedMm == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L2777" href="#L2777">2777</a>             mEstimatedMm = m;
-<a class="jxr_linenumber" name="L2778" href="#L2778">2778</a>         } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L2779" href="#L2779">2779</a>             mEstimatedMm.copyFrom(m);
-<a class="jxr_linenumber" name="L2780" href="#L2780">2780</a>         }
-<a class="jxr_linenumber" name="L2781" href="#L2781">2781</a> 
-<a class="jxr_linenumber" name="L2782" href="#L2782">2782</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; BodyMagneticFluxDensity.COMPONENTS; i++) {
-<a class="jxr_linenumber" name="L2783" href="#L2783">2783</a>             mEstimatedMm.setElementAt(i, i,
-<a class="jxr_linenumber" name="L2784" href="#L2784">2784</a>                     mEstimatedMm.getElementAt(i, i) - 1.0);
-<a class="jxr_linenumber" name="L2785" href="#L2785">2785</a>         }
-<a class="jxr_linenumber" name="L2786" href="#L2786">2786</a> 
-<a class="jxr_linenumber" name="L2787" href="#L2787">2787</a>         mEstimatedCovariance = mFitter.getCovar();
-<a class="jxr_linenumber" name="L2788" href="#L2788">2788</a>         mEstimatedChiSq = mFitter.getChisq();
-<a class="jxr_linenumber" name="L2789" href="#L2789">2789</a>     }
-<a class="jxr_linenumber" name="L2790" href="#L2790">2790</a> 
-<a class="jxr_linenumber" name="L2791" href="#L2791">2791</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2792" href="#L2792">2792</a> <em class="jxr_javadoccomment">     * Computes estimated true magnetic flux density squared norm using current measured</em>
-<a class="jxr_linenumber" name="L2793" href="#L2793">2793</a> <em class="jxr_javadoccomment">     * body magnetic flux density and provided parameters for the general case.</em>
-<a class="jxr_linenumber" name="L2794" href="#L2794">2794</a> <em class="jxr_javadoccomment">     * This method is internally executed during gradient estimation and</em>
-<a class="jxr_linenumber" name="L2795" href="#L2795">2795</a> <em class="jxr_javadoccomment">     * Levenberg-Marquardt fitting needed for calibration computation.</em>
-<a class="jxr_linenumber" name="L2796" href="#L2796">2796</a> <em class="jxr_javadoccomment">     *</em>
-<a class="jxr_linenumber" name="L2797" href="#L2797">2797</a> <em class="jxr_javadoccomment">     * @param params array containing current parameters for the general purpose case.</em>
-<a class="jxr_linenumber" name="L2798" href="#L2798">2798</a> <em class="jxr_javadoccomment">     *               Must have length 9.</em>
-<a class="jxr_linenumber" name="L2799" href="#L2799">2799</a> <em class="jxr_javadoccomment">     * @return estimated true specific force squared norm.</em>
-<a class="jxr_linenumber" name="L2800" href="#L2800">2800</a> <em class="jxr_javadoccomment">     * @throws EvaluationException if there are numerical instabilities.</em>
-<a class="jxr_linenumber" name="L2801" href="#L2801">2801</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L2802" href="#L2802">2802</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">double</strong> evaluateGeneral(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] params) <strong class="jxr_keyword">throws</strong> EvaluationException {
-<a class="jxr_linenumber" name="L2803" href="#L2803">2803</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m11 = params[0];
-<a class="jxr_linenumber" name="L2804" href="#L2804">2804</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m21 = params[1];
-<a class="jxr_linenumber" name="L2805" href="#L2805">2805</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m31 = params[2];
-<a class="jxr_linenumber" name="L2806" href="#L2806">2806</a> 
-<a class="jxr_linenumber" name="L2807" href="#L2807">2807</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m12 = params[3];
-<a class="jxr_linenumber" name="L2808" href="#L2808">2808</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m22 = params[4];
-<a class="jxr_linenumber" name="L2809" href="#L2809">2809</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m32 = params[5];
-<a class="jxr_linenumber" name="L2810" href="#L2810">2810</a> 
-<a class="jxr_linenumber" name="L2811" href="#L2811">2811</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m13 = params[6];
-<a class="jxr_linenumber" name="L2812" href="#L2812">2812</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m23 = params[7];
-<a class="jxr_linenumber" name="L2813" href="#L2813">2813</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m33 = params[8];
+<a class="jxr_linenumber" name="L2764" href="#L2764">2764</a>         setResult(m);
+<a class="jxr_linenumber" name="L2765" href="#L2765">2765</a> 
+<a class="jxr_linenumber" name="L2766" href="#L2766">2766</a>         <em class="jxr_comment">// taking into account that:</em>
+<a class="jxr_linenumber" name="L2767" href="#L2767">2767</a>         <em class="jxr_comment">// Mm = [sx  mxy  mxz] = [m11  m12  m13]</em>
+<a class="jxr_linenumber" name="L2768" href="#L2768">2768</a>         <em class="jxr_comment">//      [myx sy   myz]   [m21  m22  m23]</em>
+<a class="jxr_linenumber" name="L2769" href="#L2769">2769</a>         <em class="jxr_comment">//      [mzx mzy  sz ]   [m31  m32  m33]</em>
+<a class="jxr_linenumber" name="L2770" href="#L2770">2770</a> 
+<a class="jxr_linenumber" name="L2771" href="#L2771">2771</a>         <em class="jxr_comment">// propagate covariance so that all parameters are taken into account</em>
+<a class="jxr_linenumber" name="L2772" href="#L2772">2772</a>         <em class="jxr_comment">// in the order: sx, sy, sz, mxy, mxz, myx, myz, mzx, mzy</em>
+<a class="jxr_linenumber" name="L2773" href="#L2773">2773</a> 
+<a class="jxr_linenumber" name="L2774" href="#L2774">2774</a>         <em class="jxr_comment">// Since estimated values are:</em>
+<a class="jxr_linenumber" name="L2775" href="#L2775">2775</a>         <em class="jxr_comment">// (m11, m12, m22, m13, m23, m33) = (sx, mxy, sy, mxz, myz, sz)</em>
+<a class="jxr_linenumber" name="L2776" href="#L2776">2776</a> 
+<a class="jxr_linenumber" name="L2777" href="#L2777">2777</a>         <em class="jxr_comment">// We define a lineal function mapping original parameters for the</em>
+<a class="jxr_linenumber" name="L2778" href="#L2778">2778</a>         <em class="jxr_comment">// common axis case to the general case</em>
+<a class="jxr_linenumber" name="L2779" href="#L2779">2779</a>         <em class="jxr_comment">//[sx'] = [1  0  0  0  0  0][sx ]</em>
+<a class="jxr_linenumber" name="L2780" href="#L2780">2780</a>         <em class="jxr_comment">//[sy']   [0  0  1  0  0  0][mxy]</em>
+<a class="jxr_linenumber" name="L2781" href="#L2781">2781</a>         <em class="jxr_comment">//[sz']   [0  0  0  0  0  1][sy ]</em>
+<a class="jxr_linenumber" name="L2782" href="#L2782">2782</a>         <em class="jxr_comment">//[mxy']  [0  1  0  0  0  0][mxz]</em>
+<a class="jxr_linenumber" name="L2783" href="#L2783">2783</a>         <em class="jxr_comment">//[mxz']  [0  0  0  1  0  0][myz]</em>
+<a class="jxr_linenumber" name="L2784" href="#L2784">2784</a>         <em class="jxr_comment">//[myx']  [0  0  0  0  0  0][sz ]</em>
+<a class="jxr_linenumber" name="L2785" href="#L2785">2785</a>         <em class="jxr_comment">//[myz']  [0  0  0  0  1  0]</em>
+<a class="jxr_linenumber" name="L2786" href="#L2786">2786</a>         <em class="jxr_comment">//[mzx']  [0  0  0  0  0  0]</em>
+<a class="jxr_linenumber" name="L2787" href="#L2787">2787</a>         <em class="jxr_comment">//[mzy']  [0  0  0  0  0  0]</em>
+<a class="jxr_linenumber" name="L2788" href="#L2788">2788</a> 
+<a class="jxr_linenumber" name="L2789" href="#L2789">2789</a>         <em class="jxr_comment">// As defined in com.irurueta.statistics.MultivariateNormalDist,</em>
+<a class="jxr_linenumber" name="L2790" href="#L2790">2790</a>         <em class="jxr_comment">// if we consider the jacobian of the lineal application the matrix shown</em>
+<a class="jxr_linenumber" name="L2791" href="#L2791">2791</a>         <em class="jxr_comment">// above, then covariance can be propagated as follows</em>
+<a class="jxr_linenumber" name="L2792" href="#L2792">2792</a>         <strong class="jxr_keyword">final</strong> Matrix jacobian = <strong class="jxr_keyword">new</strong> Matrix(GENERAL_UNKNOWNS, COMMON_Z_AXIS_UNKNOWNS);
+<a class="jxr_linenumber" name="L2793" href="#L2793">2793</a>         jacobian.setElementAt(0, 0, 1.0);
+<a class="jxr_linenumber" name="L2794" href="#L2794">2794</a>         jacobian.setElementAt(1, 2, 1.0);
+<a class="jxr_linenumber" name="L2795" href="#L2795">2795</a>         jacobian.setElementAt(2, 5, 1.0);
+<a class="jxr_linenumber" name="L2796" href="#L2796">2796</a>         jacobian.setElementAt(3, 1, 1.0);
+<a class="jxr_linenumber" name="L2797" href="#L2797">2797</a>         jacobian.setElementAt(4, 3, 1.0);
+<a class="jxr_linenumber" name="L2798" href="#L2798">2798</a>         jacobian.setElementAt(6, 4, 1.0);
+<a class="jxr_linenumber" name="L2799" href="#L2799">2799</a>         <em class="jxr_comment">// propagated covariance is J * Cov * J'</em>
+<a class="jxr_linenumber" name="L2800" href="#L2800">2800</a>         <strong class="jxr_keyword">final</strong> Matrix jacobianTrans = jacobian.transposeAndReturnNew();
+<a class="jxr_linenumber" name="L2801" href="#L2801">2801</a>         jacobian.multiply(mEstimatedCovariance);
+<a class="jxr_linenumber" name="L2802" href="#L2802">2802</a>         jacobian.multiply(jacobianTrans);
+<a class="jxr_linenumber" name="L2803" href="#L2803">2803</a>         mEstimatedCovariance = jacobian;
+<a class="jxr_linenumber" name="L2804" href="#L2804">2804</a>     }
+<a class="jxr_linenumber" name="L2805" href="#L2805">2805</a> 
+<a class="jxr_linenumber" name="L2806" href="#L2806">2806</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L2807" href="#L2807">2807</a> <em class="jxr_javadoccomment">     * Makes proper conversion of internal cross-coupling and bias matrices.</em>
+<a class="jxr_linenumber" name="L2808" href="#L2808">2808</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L2809" href="#L2809">2809</a> <em class="jxr_javadoccomment">     * @param m internal cross-coupling matrix.</em>
+<a class="jxr_linenumber" name="L2810" href="#L2810">2810</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L2811" href="#L2811">2811</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> setResult(<strong class="jxr_keyword">final</strong> Matrix m) {
+<a class="jxr_linenumber" name="L2812" href="#L2812">2812</a>         <em class="jxr_comment">// Because:</em>
+<a class="jxr_linenumber" name="L2813" href="#L2813">2813</a>         <em class="jxr_comment">// M = I + Mm</em>
 <a class="jxr_linenumber" name="L2814" href="#L2814">2814</a> 
-<a class="jxr_linenumber" name="L2815" href="#L2815">2815</a>         <strong class="jxr_keyword">return</strong> evaluate(m11, m21, m31, m12, m22, m32,
-<a class="jxr_linenumber" name="L2816" href="#L2816">2816</a>                 m13, m23, m33);
-<a class="jxr_linenumber" name="L2817" href="#L2817">2817</a>     }
-<a class="jxr_linenumber" name="L2818" href="#L2818">2818</a> 
-<a class="jxr_linenumber" name="L2819" href="#L2819">2819</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2820" href="#L2820">2820</a> <em class="jxr_javadoccomment">     * Computes estimated true magnetic flux density squared norm using current measured</em>
-<a class="jxr_linenumber" name="L2821" href="#L2821">2821</a> <em class="jxr_javadoccomment">     * body magnetic flux density and provided parameters when common z-axis is assumed.</em>
-<a class="jxr_linenumber" name="L2822" href="#L2822">2822</a> <em class="jxr_javadoccomment">     * This method is internally executed during gradient estimation and</em>
-<a class="jxr_linenumber" name="L2823" href="#L2823">2823</a> <em class="jxr_javadoccomment">     * Levenberg-Marquardt fitting needed for calibration computation.</em>
-<a class="jxr_linenumber" name="L2824" href="#L2824">2824</a> <em class="jxr_javadoccomment">     *</em>
-<a class="jxr_linenumber" name="L2825" href="#L2825">2825</a> <em class="jxr_javadoccomment">     * @param params array containing current parameters for the common z-axis case.</em>
-<a class="jxr_linenumber" name="L2826" href="#L2826">2826</a> <em class="jxr_javadoccomment">     *               Must have length 6.</em>
-<a class="jxr_linenumber" name="L2827" href="#L2827">2827</a> <em class="jxr_javadoccomment">     * @return estimated true specific force squared norm.</em>
-<a class="jxr_linenumber" name="L2828" href="#L2828">2828</a> <em class="jxr_javadoccomment">     * @throws EvaluationException if there are numerical instabilities.</em>
-<a class="jxr_linenumber" name="L2829" href="#L2829">2829</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L2830" href="#L2830">2830</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">double</strong> evaluateCommonAxis(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] params) <strong class="jxr_keyword">throws</strong> EvaluationException {
-<a class="jxr_linenumber" name="L2831" href="#L2831">2831</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m11 = params[0];
-<a class="jxr_linenumber" name="L2832" href="#L2832">2832</a> 
-<a class="jxr_linenumber" name="L2833" href="#L2833">2833</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m12 = params[1];
-<a class="jxr_linenumber" name="L2834" href="#L2834">2834</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m22 = params[2];
-<a class="jxr_linenumber" name="L2835" href="#L2835">2835</a> 
-<a class="jxr_linenumber" name="L2836" href="#L2836">2836</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m13 = params[3];
-<a class="jxr_linenumber" name="L2837" href="#L2837">2837</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m23 = params[4];
-<a class="jxr_linenumber" name="L2838" href="#L2838">2838</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m33 = params[5];
-<a class="jxr_linenumber" name="L2839" href="#L2839">2839</a> 
-<a class="jxr_linenumber" name="L2840" href="#L2840">2840</a>         <strong class="jxr_keyword">return</strong> evaluate(m11, 0.0, 0.0, m12, m22, 0.0,
-<a class="jxr_linenumber" name="L2841" href="#L2841">2841</a>                 m13, m23, m33);
-<a class="jxr_linenumber" name="L2842" href="#L2842">2842</a>     }
-<a class="jxr_linenumber" name="L2843" href="#L2843">2843</a> 
-<a class="jxr_linenumber" name="L2844" href="#L2844">2844</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2845" href="#L2845">2845</a> <em class="jxr_javadoccomment">     * Computes estimated true magnetic flux density squared norm using current measured</em>
-<a class="jxr_linenumber" name="L2846" href="#L2846">2846</a> <em class="jxr_javadoccomment">     * body magnetic flux density and provided parameters.</em>
-<a class="jxr_linenumber" name="L2847" href="#L2847">2847</a> <em class="jxr_javadoccomment">     * This method is internally executed during gradient estimation and</em>
-<a class="jxr_linenumber" name="L2848" href="#L2848">2848</a> <em class="jxr_javadoccomment">     * Levenberg-Marquardt fitting needed for calibration computation.</em>
-<a class="jxr_linenumber" name="L2849" href="#L2849">2849</a> <em class="jxr_javadoccomment">     *</em>
-<a class="jxr_linenumber" name="L2850" href="#L2850">2850</a> <em class="jxr_javadoccomment">     * @param m11 element 1,1 of cross-coupling error matrix.</em>
-<a class="jxr_linenumber" name="L2851" href="#L2851">2851</a> <em class="jxr_javadoccomment">     * @param m21 element 2,1 of cross-coupling error matrix.</em>
-<a class="jxr_linenumber" name="L2852" href="#L2852">2852</a> <em class="jxr_javadoccomment">     * @param m31 element 3,1 of cross-coupling error matrix.</em>
-<a class="jxr_linenumber" name="L2853" href="#L2853">2853</a> <em class="jxr_javadoccomment">     * @param m12 element 1,2 of cross-coupling error matrix.</em>
-<a class="jxr_linenumber" name="L2854" href="#L2854">2854</a> <em class="jxr_javadoccomment">     * @param m22 element 2,2 of cross-coupling error matrix.</em>
-<a class="jxr_linenumber" name="L2855" href="#L2855">2855</a> <em class="jxr_javadoccomment">     * @param m32 element 3,2 of cross-coupling error matrix.</em>
-<a class="jxr_linenumber" name="L2856" href="#L2856">2856</a> <em class="jxr_javadoccomment">     * @param m13 element 1,3 of cross-coupling error matrix.</em>
-<a class="jxr_linenumber" name="L2857" href="#L2857">2857</a> <em class="jxr_javadoccomment">     * @param m23 element 2,3 of cross-coupling error matrix.</em>
-<a class="jxr_linenumber" name="L2858" href="#L2858">2858</a> <em class="jxr_javadoccomment">     * @param m33 element 3,3 of cross-coupling error matrix.</em>
-<a class="jxr_linenumber" name="L2859" href="#L2859">2859</a> <em class="jxr_javadoccomment">     * @return estimated true specific force squared norm.</em>
-<a class="jxr_linenumber" name="L2860" href="#L2860">2860</a> <em class="jxr_javadoccomment">     * @throws EvaluationException if there are numerical instabilities.</em>
-<a class="jxr_linenumber" name="L2861" href="#L2861">2861</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L2862" href="#L2862">2862</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">double</strong> evaluate(
-<a class="jxr_linenumber" name="L2863" href="#L2863">2863</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m11, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m21, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m31,
-<a class="jxr_linenumber" name="L2864" href="#L2864">2864</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m12, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m22, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m32,
-<a class="jxr_linenumber" name="L2865" href="#L2865">2865</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m13, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m23, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m33)
-<a class="jxr_linenumber" name="L2866" href="#L2866">2866</a>             <strong class="jxr_keyword">throws</strong> EvaluationException {
-<a class="jxr_linenumber" name="L2867" href="#L2867">2867</a> 
-<a class="jxr_linenumber" name="L2868" href="#L2868">2868</a>         <em class="jxr_comment">// bmeas = M*(btrue + b)</em>
-<a class="jxr_linenumber" name="L2869" href="#L2869">2869</a> 
-<a class="jxr_linenumber" name="L2870" href="#L2870">2870</a>         <em class="jxr_comment">// btrue = M^-1*bmeas - b</em>
-<a class="jxr_linenumber" name="L2871" href="#L2871">2871</a> 
-<a class="jxr_linenumber" name="L2872" href="#L2872">2872</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L2873" href="#L2873">2873</a>             <strong class="jxr_keyword">if</strong> (mBmeas == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L2874" href="#L2874">2874</a>                 mBmeas = <strong class="jxr_keyword">new</strong> Matrix(BodyMagneticFluxDensity.COMPONENTS,
-<a class="jxr_linenumber" name="L2875" href="#L2875">2875</a>                         1);
-<a class="jxr_linenumber" name="L2876" href="#L2876">2876</a>             }
-<a class="jxr_linenumber" name="L2877" href="#L2877">2877</a>             <strong class="jxr_keyword">if</strong> (mM == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L2878" href="#L2878">2878</a>                 mM = <strong class="jxr_keyword">new</strong> Matrix(BodyMagneticFluxDensity.COMPONENTS,
-<a class="jxr_linenumber" name="L2879" href="#L2879">2879</a>                         BodyMagneticFluxDensity.COMPONENTS);
-<a class="jxr_linenumber" name="L2880" href="#L2880">2880</a>             }
-<a class="jxr_linenumber" name="L2881" href="#L2881">2881</a>             <strong class="jxr_keyword">if</strong> (mInvM == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L2882" href="#L2882">2882</a>                 mInvM = <strong class="jxr_keyword">new</strong> Matrix(BodyMagneticFluxDensity.COMPONENTS,
-<a class="jxr_linenumber" name="L2883" href="#L2883">2883</a>                         BodyMagneticFluxDensity.COMPONENTS);
-<a class="jxr_linenumber" name="L2884" href="#L2884">2884</a>             }
-<a class="jxr_linenumber" name="L2885" href="#L2885">2885</a>             <strong class="jxr_keyword">if</strong> (mB == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L2886" href="#L2886">2886</a>                 mB = <strong class="jxr_keyword">new</strong> Matrix(BodyMagneticFluxDensity.COMPONENTS,
-<a class="jxr_linenumber" name="L2887" href="#L2887">2887</a>                         1);
-<a class="jxr_linenumber" name="L2888" href="#L2888">2888</a>             }
-<a class="jxr_linenumber" name="L2889" href="#L2889">2889</a>             <strong class="jxr_keyword">if</strong> (mBtrue == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L2890" href="#L2890">2890</a>                 mBtrue = <strong class="jxr_keyword">new</strong> Matrix(BodyMagneticFluxDensity.COMPONENTS,
-<a class="jxr_linenumber" name="L2891" href="#L2891">2891</a>                         1);
-<a class="jxr_linenumber" name="L2892" href="#L2892">2892</a>             }
-<a class="jxr_linenumber" name="L2893" href="#L2893">2893</a>             <strong class="jxr_keyword">if</strong> (mBm == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L2894" href="#L2894">2894</a>                 mBm = <strong class="jxr_keyword">new</strong> Matrix(BodyMagneticFluxDensity.COMPONENTS,
-<a class="jxr_linenumber" name="L2895" href="#L2895">2895</a>                         1);
-<a class="jxr_linenumber" name="L2896" href="#L2896">2896</a>             }
-<a class="jxr_linenumber" name="L2897" href="#L2897">2897</a> 
-<a class="jxr_linenumber" name="L2898" href="#L2898">2898</a>             getHardIronAsMatrix(mBm);
-<a class="jxr_linenumber" name="L2899" href="#L2899">2899</a> 
-<a class="jxr_linenumber" name="L2900" href="#L2900">2900</a>             mBmeas.setElementAtIndex(0, mBmeasX);
-<a class="jxr_linenumber" name="L2901" href="#L2901">2901</a>             mBmeas.setElementAtIndex(1, mBmeasY);
-<a class="jxr_linenumber" name="L2902" href="#L2902">2902</a>             mBmeas.setElementAtIndex(2, mBmeasZ);
-<a class="jxr_linenumber" name="L2903" href="#L2903">2903</a> 
-<a class="jxr_linenumber" name="L2904" href="#L2904">2904</a>             mM.setElementAt(0, 0, m11);
-<a class="jxr_linenumber" name="L2905" href="#L2905">2905</a>             mM.setElementAt(1, 0, m21);
-<a class="jxr_linenumber" name="L2906" href="#L2906">2906</a>             mM.setElementAt(2, 0, m31);
-<a class="jxr_linenumber" name="L2907" href="#L2907">2907</a> 
-<a class="jxr_linenumber" name="L2908" href="#L2908">2908</a>             mM.setElementAt(0, 1, m12);
-<a class="jxr_linenumber" name="L2909" href="#L2909">2909</a>             mM.setElementAt(1, 1, m22);
-<a class="jxr_linenumber" name="L2910" href="#L2910">2910</a>             mM.setElementAt(2, 1, m32);
-<a class="jxr_linenumber" name="L2911" href="#L2911">2911</a> 
-<a class="jxr_linenumber" name="L2912" href="#L2912">2912</a>             mM.setElementAt(0, 2, m13);
-<a class="jxr_linenumber" name="L2913" href="#L2913">2913</a>             mM.setElementAt(1, 2, m23);
-<a class="jxr_linenumber" name="L2914" href="#L2914">2914</a>             mM.setElementAt(2, 2, m33);
-<a class="jxr_linenumber" name="L2915" href="#L2915">2915</a> 
-<a class="jxr_linenumber" name="L2916" href="#L2916">2916</a>             Utils.inverse(mM, mInvM);
-<a class="jxr_linenumber" name="L2917" href="#L2917">2917</a> 
-<a class="jxr_linenumber" name="L2918" href="#L2918">2918</a>             <em class="jxr_comment">// b = m^-1 * bm</em>
-<a class="jxr_linenumber" name="L2919" href="#L2919">2919</a>             mInvM.multiply(mBm, mB);
-<a class="jxr_linenumber" name="L2920" href="#L2920">2920</a> 
-<a class="jxr_linenumber" name="L2921" href="#L2921">2921</a>             mInvM.multiply(mBmeas, mBtrue);
-<a class="jxr_linenumber" name="L2922" href="#L2922">2922</a>             mBtrue.subtract(mB);
-<a class="jxr_linenumber" name="L2923" href="#L2923">2923</a> 
-<a class="jxr_linenumber" name="L2924" href="#L2924">2924</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> norm = Utils.normF(mBtrue);
-<a class="jxr_linenumber" name="L2925" href="#L2925">2925</a>             <strong class="jxr_keyword">return</strong> norm * norm;
-<a class="jxr_linenumber" name="L2926" href="#L2926">2926</a> 
-<a class="jxr_linenumber" name="L2927" href="#L2927">2927</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> AlgebraException e) {
-<a class="jxr_linenumber" name="L2928" href="#L2928">2928</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> EvaluationException(e);
-<a class="jxr_linenumber" name="L2929" href="#L2929">2929</a>         }
-<a class="jxr_linenumber" name="L2930" href="#L2930">2930</a>     }
-<a class="jxr_linenumber" name="L2931" href="#L2931">2931</a> 
-<a class="jxr_linenumber" name="L2932" href="#L2932">2932</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2933" href="#L2933">2933</a> <em class="jxr_javadoccomment">     * Converts a time instance expressed in milliseconds since epoch time</em>
-<a class="jxr_linenumber" name="L2934" href="#L2934">2934</a> <em class="jxr_javadoccomment">     * (January 1st, 1970 at midnight) to a decimal year.</em>
-<a class="jxr_linenumber" name="L2935" href="#L2935">2935</a> <em class="jxr_javadoccomment">     *</em>
-<a class="jxr_linenumber" name="L2936" href="#L2936">2936</a> <em class="jxr_javadoccomment">     * @param timestampMillis milliseconds value to be converted.</em>
-<a class="jxr_linenumber" name="L2937" href="#L2937">2937</a> <em class="jxr_javadoccomment">     * @return converted value expressed in decimal years.</em>
-<a class="jxr_linenumber" name="L2938" href="#L2938">2938</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L2939" href="#L2939">2939</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> Double convertTime(<strong class="jxr_keyword">final</strong> Long timestampMillis) {
-<a class="jxr_linenumber" name="L2940" href="#L2940">2940</a>         <strong class="jxr_keyword">if</strong> (timestampMillis == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L2941" href="#L2941">2941</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L2942" href="#L2942">2942</a>         }
-<a class="jxr_linenumber" name="L2943" href="#L2943">2943</a> 
-<a class="jxr_linenumber" name="L2944" href="#L2944">2944</a>         <strong class="jxr_keyword">final</strong> GregorianCalendar calendar = <strong class="jxr_keyword">new</strong> GregorianCalendar();
-<a class="jxr_linenumber" name="L2945" href="#L2945">2945</a>         calendar.setTimeInMillis(timestampMillis);
-<a class="jxr_linenumber" name="L2946" href="#L2946">2946</a>         <strong class="jxr_keyword">return</strong> convertTime(calendar);
-<a class="jxr_linenumber" name="L2947" href="#L2947">2947</a>     }
-<a class="jxr_linenumber" name="L2948" href="#L2948">2948</a> 
-<a class="jxr_linenumber" name="L2949" href="#L2949">2949</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2950" href="#L2950">2950</a> <em class="jxr_javadoccomment">     * Converts a time instant contained ina date object to a</em>
-<a class="jxr_linenumber" name="L2951" href="#L2951">2951</a> <em class="jxr_javadoccomment">     * decimal year.</em>
-<a class="jxr_linenumber" name="L2952" href="#L2952">2952</a> <em class="jxr_javadoccomment">     *</em>
-<a class="jxr_linenumber" name="L2953" href="#L2953">2953</a> <em class="jxr_javadoccomment">     * @param date a time instance to be converted.</em>
-<a class="jxr_linenumber" name="L2954" href="#L2954">2954</a> <em class="jxr_javadoccomment">     * @return converted value expressed in decimal years.</em>
-<a class="jxr_linenumber" name="L2955" href="#L2955">2955</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L2956" href="#L2956">2956</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> Double convertTime(<strong class="jxr_keyword">final</strong> Date date) {
-<a class="jxr_linenumber" name="L2957" href="#L2957">2957</a>         <strong class="jxr_keyword">if</strong> (date == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L2958" href="#L2958">2958</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L2959" href="#L2959">2959</a>         }
+<a class="jxr_linenumber" name="L2815" href="#L2815">2815</a>         <em class="jxr_comment">// Then:</em>
+<a class="jxr_linenumber" name="L2816" href="#L2816">2816</a>         <em class="jxr_comment">// Mm = M - I</em>
+<a class="jxr_linenumber" name="L2817" href="#L2817">2817</a> 
+<a class="jxr_linenumber" name="L2818" href="#L2818">2818</a>         <strong class="jxr_keyword">if</strong> (mEstimatedMm == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L2819" href="#L2819">2819</a>             mEstimatedMm = m;
+<a class="jxr_linenumber" name="L2820" href="#L2820">2820</a>         } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L2821" href="#L2821">2821</a>             mEstimatedMm.copyFrom(m);
+<a class="jxr_linenumber" name="L2822" href="#L2822">2822</a>         }
+<a class="jxr_linenumber" name="L2823" href="#L2823">2823</a> 
+<a class="jxr_linenumber" name="L2824" href="#L2824">2824</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; BodyMagneticFluxDensity.COMPONENTS; i++) {
+<a class="jxr_linenumber" name="L2825" href="#L2825">2825</a>             mEstimatedMm.setElementAt(i, i,
+<a class="jxr_linenumber" name="L2826" href="#L2826">2826</a>                     mEstimatedMm.getElementAt(i, i) - 1.0);
+<a class="jxr_linenumber" name="L2827" href="#L2827">2827</a>         }
+<a class="jxr_linenumber" name="L2828" href="#L2828">2828</a> 
+<a class="jxr_linenumber" name="L2829" href="#L2829">2829</a>         <em class="jxr_comment">// since only a constant term is subtracted, covariance is preserved</em>
+<a class="jxr_linenumber" name="L2830" href="#L2830">2830</a>         mEstimatedCovariance = mFitter.getCovar();
+<a class="jxr_linenumber" name="L2831" href="#L2831">2831</a>         mEstimatedChiSq = mFitter.getChisq();
+<a class="jxr_linenumber" name="L2832" href="#L2832">2832</a>     }
+<a class="jxr_linenumber" name="L2833" href="#L2833">2833</a> 
+<a class="jxr_linenumber" name="L2834" href="#L2834">2834</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L2835" href="#L2835">2835</a> <em class="jxr_javadoccomment">     * Computes estimated true magnetic flux density squared norm using current measured</em>
+<a class="jxr_linenumber" name="L2836" href="#L2836">2836</a> <em class="jxr_javadoccomment">     * body magnetic flux density and provided parameters for the general case.</em>
+<a class="jxr_linenumber" name="L2837" href="#L2837">2837</a> <em class="jxr_javadoccomment">     * This method is internally executed during gradient estimation and</em>
+<a class="jxr_linenumber" name="L2838" href="#L2838">2838</a> <em class="jxr_javadoccomment">     * Levenberg-Marquardt fitting needed for calibration computation.</em>
+<a class="jxr_linenumber" name="L2839" href="#L2839">2839</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L2840" href="#L2840">2840</a> <em class="jxr_javadoccomment">     * @param params array containing current parameters for the general purpose case.</em>
+<a class="jxr_linenumber" name="L2841" href="#L2841">2841</a> <em class="jxr_javadoccomment">     *               Must have length 9.</em>
+<a class="jxr_linenumber" name="L2842" href="#L2842">2842</a> <em class="jxr_javadoccomment">     * @return estimated true specific force squared norm.</em>
+<a class="jxr_linenumber" name="L2843" href="#L2843">2843</a> <em class="jxr_javadoccomment">     * @throws EvaluationException if there are numerical instabilities.</em>
+<a class="jxr_linenumber" name="L2844" href="#L2844">2844</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L2845" href="#L2845">2845</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">double</strong> evaluateGeneral(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] params) <strong class="jxr_keyword">throws</strong> EvaluationException {
+<a class="jxr_linenumber" name="L2846" href="#L2846">2846</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m11 = params[0];
+<a class="jxr_linenumber" name="L2847" href="#L2847">2847</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m21 = params[1];
+<a class="jxr_linenumber" name="L2848" href="#L2848">2848</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m31 = params[2];
+<a class="jxr_linenumber" name="L2849" href="#L2849">2849</a> 
+<a class="jxr_linenumber" name="L2850" href="#L2850">2850</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m12 = params[3];
+<a class="jxr_linenumber" name="L2851" href="#L2851">2851</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m22 = params[4];
+<a class="jxr_linenumber" name="L2852" href="#L2852">2852</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m32 = params[5];
+<a class="jxr_linenumber" name="L2853" href="#L2853">2853</a> 
+<a class="jxr_linenumber" name="L2854" href="#L2854">2854</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m13 = params[6];
+<a class="jxr_linenumber" name="L2855" href="#L2855">2855</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m23 = params[7];
+<a class="jxr_linenumber" name="L2856" href="#L2856">2856</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m33 = params[8];
+<a class="jxr_linenumber" name="L2857" href="#L2857">2857</a> 
+<a class="jxr_linenumber" name="L2858" href="#L2858">2858</a>         <strong class="jxr_keyword">return</strong> evaluate(m11, m21, m31, m12, m22, m32,
+<a class="jxr_linenumber" name="L2859" href="#L2859">2859</a>                 m13, m23, m33);
+<a class="jxr_linenumber" name="L2860" href="#L2860">2860</a>     }
+<a class="jxr_linenumber" name="L2861" href="#L2861">2861</a> 
+<a class="jxr_linenumber" name="L2862" href="#L2862">2862</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L2863" href="#L2863">2863</a> <em class="jxr_javadoccomment">     * Computes estimated true magnetic flux density squared norm using current measured</em>
+<a class="jxr_linenumber" name="L2864" href="#L2864">2864</a> <em class="jxr_javadoccomment">     * body magnetic flux density and provided parameters when common z-axis is assumed.</em>
+<a class="jxr_linenumber" name="L2865" href="#L2865">2865</a> <em class="jxr_javadoccomment">     * This method is internally executed during gradient estimation and</em>
+<a class="jxr_linenumber" name="L2866" href="#L2866">2866</a> <em class="jxr_javadoccomment">     * Levenberg-Marquardt fitting needed for calibration computation.</em>
+<a class="jxr_linenumber" name="L2867" href="#L2867">2867</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L2868" href="#L2868">2868</a> <em class="jxr_javadoccomment">     * @param params array containing current parameters for the common z-axis case.</em>
+<a class="jxr_linenumber" name="L2869" href="#L2869">2869</a> <em class="jxr_javadoccomment">     *               Must have length 6.</em>
+<a class="jxr_linenumber" name="L2870" href="#L2870">2870</a> <em class="jxr_javadoccomment">     * @return estimated true specific force squared norm.</em>
+<a class="jxr_linenumber" name="L2871" href="#L2871">2871</a> <em class="jxr_javadoccomment">     * @throws EvaluationException if there are numerical instabilities.</em>
+<a class="jxr_linenumber" name="L2872" href="#L2872">2872</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L2873" href="#L2873">2873</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">double</strong> evaluateCommonAxis(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] params) <strong class="jxr_keyword">throws</strong> EvaluationException {
+<a class="jxr_linenumber" name="L2874" href="#L2874">2874</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m11 = params[0];
+<a class="jxr_linenumber" name="L2875" href="#L2875">2875</a> 
+<a class="jxr_linenumber" name="L2876" href="#L2876">2876</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m12 = params[1];
+<a class="jxr_linenumber" name="L2877" href="#L2877">2877</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m22 = params[2];
+<a class="jxr_linenumber" name="L2878" href="#L2878">2878</a> 
+<a class="jxr_linenumber" name="L2879" href="#L2879">2879</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m13 = params[3];
+<a class="jxr_linenumber" name="L2880" href="#L2880">2880</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m23 = params[4];
+<a class="jxr_linenumber" name="L2881" href="#L2881">2881</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m33 = params[5];
+<a class="jxr_linenumber" name="L2882" href="#L2882">2882</a> 
+<a class="jxr_linenumber" name="L2883" href="#L2883">2883</a>         <strong class="jxr_keyword">return</strong> evaluate(m11, 0.0, 0.0, m12, m22, 0.0,
+<a class="jxr_linenumber" name="L2884" href="#L2884">2884</a>                 m13, m23, m33);
+<a class="jxr_linenumber" name="L2885" href="#L2885">2885</a>     }
+<a class="jxr_linenumber" name="L2886" href="#L2886">2886</a> 
+<a class="jxr_linenumber" name="L2887" href="#L2887">2887</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L2888" href="#L2888">2888</a> <em class="jxr_javadoccomment">     * Computes estimated true magnetic flux density squared norm using current measured</em>
+<a class="jxr_linenumber" name="L2889" href="#L2889">2889</a> <em class="jxr_javadoccomment">     * body magnetic flux density and provided parameters.</em>
+<a class="jxr_linenumber" name="L2890" href="#L2890">2890</a> <em class="jxr_javadoccomment">     * This method is internally executed during gradient estimation and</em>
+<a class="jxr_linenumber" name="L2891" href="#L2891">2891</a> <em class="jxr_javadoccomment">     * Levenberg-Marquardt fitting needed for calibration computation.</em>
+<a class="jxr_linenumber" name="L2892" href="#L2892">2892</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L2893" href="#L2893">2893</a> <em class="jxr_javadoccomment">     * @param m11 element 1,1 of cross-coupling error matrix.</em>
+<a class="jxr_linenumber" name="L2894" href="#L2894">2894</a> <em class="jxr_javadoccomment">     * @param m21 element 2,1 of cross-coupling error matrix.</em>
+<a class="jxr_linenumber" name="L2895" href="#L2895">2895</a> <em class="jxr_javadoccomment">     * @param m31 element 3,1 of cross-coupling error matrix.</em>
+<a class="jxr_linenumber" name="L2896" href="#L2896">2896</a> <em class="jxr_javadoccomment">     * @param m12 element 1,2 of cross-coupling error matrix.</em>
+<a class="jxr_linenumber" name="L2897" href="#L2897">2897</a> <em class="jxr_javadoccomment">     * @param m22 element 2,2 of cross-coupling error matrix.</em>
+<a class="jxr_linenumber" name="L2898" href="#L2898">2898</a> <em class="jxr_javadoccomment">     * @param m32 element 3,2 of cross-coupling error matrix.</em>
+<a class="jxr_linenumber" name="L2899" href="#L2899">2899</a> <em class="jxr_javadoccomment">     * @param m13 element 1,3 of cross-coupling error matrix.</em>
+<a class="jxr_linenumber" name="L2900" href="#L2900">2900</a> <em class="jxr_javadoccomment">     * @param m23 element 2,3 of cross-coupling error matrix.</em>
+<a class="jxr_linenumber" name="L2901" href="#L2901">2901</a> <em class="jxr_javadoccomment">     * @param m33 element 3,3 of cross-coupling error matrix.</em>
+<a class="jxr_linenumber" name="L2902" href="#L2902">2902</a> <em class="jxr_javadoccomment">     * @return estimated true specific force squared norm.</em>
+<a class="jxr_linenumber" name="L2903" href="#L2903">2903</a> <em class="jxr_javadoccomment">     * @throws EvaluationException if there are numerical instabilities.</em>
+<a class="jxr_linenumber" name="L2904" href="#L2904">2904</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L2905" href="#L2905">2905</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">double</strong> evaluate(
+<a class="jxr_linenumber" name="L2906" href="#L2906">2906</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m11, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m21, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m31,
+<a class="jxr_linenumber" name="L2907" href="#L2907">2907</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m12, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m22, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m32,
+<a class="jxr_linenumber" name="L2908" href="#L2908">2908</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m13, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m23, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m33)
+<a class="jxr_linenumber" name="L2909" href="#L2909">2909</a>             <strong class="jxr_keyword">throws</strong> EvaluationException {
+<a class="jxr_linenumber" name="L2910" href="#L2910">2910</a> 
+<a class="jxr_linenumber" name="L2911" href="#L2911">2911</a>         <em class="jxr_comment">// bmeas = M*(btrue + b)</em>
+<a class="jxr_linenumber" name="L2912" href="#L2912">2912</a> 
+<a class="jxr_linenumber" name="L2913" href="#L2913">2913</a>         <em class="jxr_comment">// btrue = M^-1*bmeas - b</em>
+<a class="jxr_linenumber" name="L2914" href="#L2914">2914</a> 
+<a class="jxr_linenumber" name="L2915" href="#L2915">2915</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L2916" href="#L2916">2916</a>             <strong class="jxr_keyword">if</strong> (mBmeas == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L2917" href="#L2917">2917</a>                 mBmeas = <strong class="jxr_keyword">new</strong> Matrix(BodyMagneticFluxDensity.COMPONENTS,
+<a class="jxr_linenumber" name="L2918" href="#L2918">2918</a>                         1);
+<a class="jxr_linenumber" name="L2919" href="#L2919">2919</a>             }
+<a class="jxr_linenumber" name="L2920" href="#L2920">2920</a>             <strong class="jxr_keyword">if</strong> (mM == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L2921" href="#L2921">2921</a>                 mM = <strong class="jxr_keyword">new</strong> Matrix(BodyMagneticFluxDensity.COMPONENTS,
+<a class="jxr_linenumber" name="L2922" href="#L2922">2922</a>                         BodyMagneticFluxDensity.COMPONENTS);
+<a class="jxr_linenumber" name="L2923" href="#L2923">2923</a>             }
+<a class="jxr_linenumber" name="L2924" href="#L2924">2924</a>             <strong class="jxr_keyword">if</strong> (mInvM == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L2925" href="#L2925">2925</a>                 mInvM = <strong class="jxr_keyword">new</strong> Matrix(BodyMagneticFluxDensity.COMPONENTS,
+<a class="jxr_linenumber" name="L2926" href="#L2926">2926</a>                         BodyMagneticFluxDensity.COMPONENTS);
+<a class="jxr_linenumber" name="L2927" href="#L2927">2927</a>             }
+<a class="jxr_linenumber" name="L2928" href="#L2928">2928</a>             <strong class="jxr_keyword">if</strong> (mB == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L2929" href="#L2929">2929</a>                 mB = <strong class="jxr_keyword">new</strong> Matrix(BodyMagneticFluxDensity.COMPONENTS,
+<a class="jxr_linenumber" name="L2930" href="#L2930">2930</a>                         1);
+<a class="jxr_linenumber" name="L2931" href="#L2931">2931</a>             }
+<a class="jxr_linenumber" name="L2932" href="#L2932">2932</a>             <strong class="jxr_keyword">if</strong> (mBtrue == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L2933" href="#L2933">2933</a>                 mBtrue = <strong class="jxr_keyword">new</strong> Matrix(BodyMagneticFluxDensity.COMPONENTS,
+<a class="jxr_linenumber" name="L2934" href="#L2934">2934</a>                         1);
+<a class="jxr_linenumber" name="L2935" href="#L2935">2935</a>             }
+<a class="jxr_linenumber" name="L2936" href="#L2936">2936</a>             <strong class="jxr_keyword">if</strong> (mBm == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L2937" href="#L2937">2937</a>                 mBm = <strong class="jxr_keyword">new</strong> Matrix(BodyMagneticFluxDensity.COMPONENTS,
+<a class="jxr_linenumber" name="L2938" href="#L2938">2938</a>                         1);
+<a class="jxr_linenumber" name="L2939" href="#L2939">2939</a>             }
+<a class="jxr_linenumber" name="L2940" href="#L2940">2940</a> 
+<a class="jxr_linenumber" name="L2941" href="#L2941">2941</a>             getHardIronAsMatrix(mBm);
+<a class="jxr_linenumber" name="L2942" href="#L2942">2942</a> 
+<a class="jxr_linenumber" name="L2943" href="#L2943">2943</a>             mBmeas.setElementAtIndex(0, mBmeasX);
+<a class="jxr_linenumber" name="L2944" href="#L2944">2944</a>             mBmeas.setElementAtIndex(1, mBmeasY);
+<a class="jxr_linenumber" name="L2945" href="#L2945">2945</a>             mBmeas.setElementAtIndex(2, mBmeasZ);
+<a class="jxr_linenumber" name="L2946" href="#L2946">2946</a> 
+<a class="jxr_linenumber" name="L2947" href="#L2947">2947</a>             mM.setElementAt(0, 0, m11);
+<a class="jxr_linenumber" name="L2948" href="#L2948">2948</a>             mM.setElementAt(1, 0, m21);
+<a class="jxr_linenumber" name="L2949" href="#L2949">2949</a>             mM.setElementAt(2, 0, m31);
+<a class="jxr_linenumber" name="L2950" href="#L2950">2950</a> 
+<a class="jxr_linenumber" name="L2951" href="#L2951">2951</a>             mM.setElementAt(0, 1, m12);
+<a class="jxr_linenumber" name="L2952" href="#L2952">2952</a>             mM.setElementAt(1, 1, m22);
+<a class="jxr_linenumber" name="L2953" href="#L2953">2953</a>             mM.setElementAt(2, 1, m32);
+<a class="jxr_linenumber" name="L2954" href="#L2954">2954</a> 
+<a class="jxr_linenumber" name="L2955" href="#L2955">2955</a>             mM.setElementAt(0, 2, m13);
+<a class="jxr_linenumber" name="L2956" href="#L2956">2956</a>             mM.setElementAt(1, 2, m23);
+<a class="jxr_linenumber" name="L2957" href="#L2957">2957</a>             mM.setElementAt(2, 2, m33);
+<a class="jxr_linenumber" name="L2958" href="#L2958">2958</a> 
+<a class="jxr_linenumber" name="L2959" href="#L2959">2959</a>             Utils.inverse(mM, mInvM);
 <a class="jxr_linenumber" name="L2960" href="#L2960">2960</a> 
-<a class="jxr_linenumber" name="L2961" href="#L2961">2961</a>         <strong class="jxr_keyword">final</strong> GregorianCalendar calendar = <strong class="jxr_keyword">new</strong> GregorianCalendar();
-<a class="jxr_linenumber" name="L2962" href="#L2962">2962</a>         calendar.setTime(date);
-<a class="jxr_linenumber" name="L2963" href="#L2963">2963</a>         <strong class="jxr_keyword">return</strong> convertTime(calendar);
-<a class="jxr_linenumber" name="L2964" href="#L2964">2964</a>     }
-<a class="jxr_linenumber" name="L2965" href="#L2965">2965</a> 
-<a class="jxr_linenumber" name="L2966" href="#L2966">2966</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2967" href="#L2967">2967</a> <em class="jxr_javadoccomment">     * Converts a time instant contained in a gregorian calendar to a</em>
-<a class="jxr_linenumber" name="L2968" href="#L2968">2968</a> <em class="jxr_javadoccomment">     * decimal year.</em>
-<a class="jxr_linenumber" name="L2969" href="#L2969">2969</a> <em class="jxr_javadoccomment">     *</em>
-<a class="jxr_linenumber" name="L2970" href="#L2970">2970</a> <em class="jxr_javadoccomment">     * @param calendar calendar containing a specific instant to be</em>
-<a class="jxr_linenumber" name="L2971" href="#L2971">2971</a> <em class="jxr_javadoccomment">     *                 converted.</em>
-<a class="jxr_linenumber" name="L2972" href="#L2972">2972</a> <em class="jxr_javadoccomment">     * @return converted value expressed in decimal years.</em>
-<a class="jxr_linenumber" name="L2973" href="#L2973">2973</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L2974" href="#L2974">2974</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> Double convertTime(<strong class="jxr_keyword">final</strong> GregorianCalendar calendar) {
-<a class="jxr_linenumber" name="L2975" href="#L2975">2975</a>         <strong class="jxr_keyword">if</strong> (calendar == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L2976" href="#L2976">2976</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L2977" href="#L2977">2977</a>         }
-<a class="jxr_linenumber" name="L2978" href="#L2978">2978</a> 
-<a class="jxr_linenumber" name="L2979" href="#L2979">2979</a>         <strong class="jxr_keyword">return</strong> WMMEarthMagneticFluxDensityEstimator.convertTime(calendar);
-<a class="jxr_linenumber" name="L2980" href="#L2980">2980</a>     }
-<a class="jxr_linenumber" name="L2981" href="#L2981">2981</a> 
-<a class="jxr_linenumber" name="L2982" href="#L2982">2982</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2983" href="#L2983">2983</a> <em class="jxr_javadoccomment">     * Converts provided ECEF position to position expressed in NED</em>
-<a class="jxr_linenumber" name="L2984" href="#L2984">2984</a> <em class="jxr_javadoccomment">     * coordinates.</em>
-<a class="jxr_linenumber" name="L2985" href="#L2985">2985</a> <em class="jxr_javadoccomment">     *</em>
-<a class="jxr_linenumber" name="L2986" href="#L2986">2986</a> <em class="jxr_javadoccomment">     * @param position ECEF position to be converted.</em>
-<a class="jxr_linenumber" name="L2987" href="#L2987">2987</a> <em class="jxr_javadoccomment">     * @return converted position expressed in NED coordinates.</em>
-<a class="jxr_linenumber" name="L2988" href="#L2988">2988</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L2989" href="#L2989">2989</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <a href="../../../../../../com/irurueta/navigation/inertial/NEDPosition.html">NEDPosition</a> convertPosition(<strong class="jxr_keyword">final</strong> <a href="../../../../../../com/irurueta/navigation/inertial/ECEFPosition.html">ECEFPosition</a> position) {
-<a class="jxr_linenumber" name="L2990" href="#L2990">2990</a>         <strong class="jxr_keyword">final</strong> <a href="../../../../../../com/irurueta/navigation/inertial/NEDVelocity.html">NEDVelocity</a> velocity = <strong class="jxr_keyword">new</strong> <a href="../../../../../../com/irurueta/navigation/inertial/NEDVelocity.html">NEDVelocity</a>();
-<a class="jxr_linenumber" name="L2991" href="#L2991">2991</a>         <strong class="jxr_keyword">final</strong> <a href="../../../../../../com/irurueta/navigation/inertial/NEDPosition.html">NEDPosition</a> result = <strong class="jxr_keyword">new</strong> <a href="../../../../../../com/irurueta/navigation/inertial/NEDPosition.html">NEDPosition</a>();
-<a class="jxr_linenumber" name="L2992" href="#L2992">2992</a>         ECEFtoNEDPositionVelocityConverter.convertECEFtoNED(
-<a class="jxr_linenumber" name="L2993" href="#L2993">2993</a>                 position.getX(), position.getY(), position.getZ(),
-<a class="jxr_linenumber" name="L2994" href="#L2994">2994</a>                 0.0, 0.0, 0.0, result, velocity);
-<a class="jxr_linenumber" name="L2995" href="#L2995">2995</a>         <strong class="jxr_keyword">return</strong> result;
-<a class="jxr_linenumber" name="L2996" href="#L2996">2996</a>     }
-<a class="jxr_linenumber" name="L2997" href="#L2997">2997</a> 
-<a class="jxr_linenumber" name="L2998" href="#L2998">2998</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2999" href="#L2999">2999</a> <em class="jxr_javadoccomment">     * Converts magnetic flux density value and unit to Teslas.</em>
-<a class="jxr_linenumber" name="L3000" href="#L3000">3000</a> <em class="jxr_javadoccomment">     *</em>
-<a class="jxr_linenumber" name="L3001" href="#L3001">3001</a> <em class="jxr_javadoccomment">     * @param value magnetic flux density value.</em>
-<a class="jxr_linenumber" name="L3002" href="#L3002">3002</a> <em class="jxr_javadoccomment">     * @param unit unit of magnetic flux density value.</em>
-<a class="jxr_linenumber" name="L3003" href="#L3003">3003</a> <em class="jxr_javadoccomment">     * @return converted value.</em>
-<a class="jxr_linenumber" name="L3004" href="#L3004">3004</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L3005" href="#L3005">3005</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">double</strong> convertMagneticFluxDensity(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> value, <strong class="jxr_keyword">final</strong> MagneticFluxDensityUnit unit) {
-<a class="jxr_linenumber" name="L3006" href="#L3006">3006</a>         <strong class="jxr_keyword">return</strong> MagneticFluxDensityConverter.convert(value, unit,
-<a class="jxr_linenumber" name="L3007" href="#L3007">3007</a>                 MagneticFluxDensityUnit.TESLA);
-<a class="jxr_linenumber" name="L3008" href="#L3008">3008</a>     }
-<a class="jxr_linenumber" name="L3009" href="#L3009">3009</a> 
-<a class="jxr_linenumber" name="L3010" href="#L3010">3010</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L3011" href="#L3011">3011</a> <em class="jxr_javadoccomment">     * Converts magnetic flux density instance to Teslas.</em>
+<a class="jxr_linenumber" name="L2961" href="#L2961">2961</a>             <em class="jxr_comment">// b = m^-1 * bm</em>
+<a class="jxr_linenumber" name="L2962" href="#L2962">2962</a>             mInvM.multiply(mBm, mB);
+<a class="jxr_linenumber" name="L2963" href="#L2963">2963</a> 
+<a class="jxr_linenumber" name="L2964" href="#L2964">2964</a>             mInvM.multiply(mBmeas, mBtrue);
+<a class="jxr_linenumber" name="L2965" href="#L2965">2965</a>             mBtrue.subtract(mB);
+<a class="jxr_linenumber" name="L2966" href="#L2966">2966</a> 
+<a class="jxr_linenumber" name="L2967" href="#L2967">2967</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> norm = Utils.normF(mBtrue);
+<a class="jxr_linenumber" name="L2968" href="#L2968">2968</a>             <strong class="jxr_keyword">return</strong> norm * norm;
+<a class="jxr_linenumber" name="L2969" href="#L2969">2969</a> 
+<a class="jxr_linenumber" name="L2970" href="#L2970">2970</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> AlgebraException e) {
+<a class="jxr_linenumber" name="L2971" href="#L2971">2971</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> EvaluationException(e);
+<a class="jxr_linenumber" name="L2972" href="#L2972">2972</a>         }
+<a class="jxr_linenumber" name="L2973" href="#L2973">2973</a>     }
+<a class="jxr_linenumber" name="L2974" href="#L2974">2974</a> 
+<a class="jxr_linenumber" name="L2975" href="#L2975">2975</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L2976" href="#L2976">2976</a> <em class="jxr_javadoccomment">     * Converts a time instance expressed in milliseconds since epoch time</em>
+<a class="jxr_linenumber" name="L2977" href="#L2977">2977</a> <em class="jxr_javadoccomment">     * (January 1st, 1970 at midnight) to a decimal year.</em>
+<a class="jxr_linenumber" name="L2978" href="#L2978">2978</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L2979" href="#L2979">2979</a> <em class="jxr_javadoccomment">     * @param timestampMillis milliseconds value to be converted.</em>
+<a class="jxr_linenumber" name="L2980" href="#L2980">2980</a> <em class="jxr_javadoccomment">     * @return converted value expressed in decimal years.</em>
+<a class="jxr_linenumber" name="L2981" href="#L2981">2981</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L2982" href="#L2982">2982</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> Double convertTime(<strong class="jxr_keyword">final</strong> Long timestampMillis) {
+<a class="jxr_linenumber" name="L2983" href="#L2983">2983</a>         <strong class="jxr_keyword">if</strong> (timestampMillis == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L2984" href="#L2984">2984</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L2985" href="#L2985">2985</a>         }
+<a class="jxr_linenumber" name="L2986" href="#L2986">2986</a> 
+<a class="jxr_linenumber" name="L2987" href="#L2987">2987</a>         <strong class="jxr_keyword">final</strong> GregorianCalendar calendar = <strong class="jxr_keyword">new</strong> GregorianCalendar();
+<a class="jxr_linenumber" name="L2988" href="#L2988">2988</a>         calendar.setTimeInMillis(timestampMillis);
+<a class="jxr_linenumber" name="L2989" href="#L2989">2989</a>         <strong class="jxr_keyword">return</strong> convertTime(calendar);
+<a class="jxr_linenumber" name="L2990" href="#L2990">2990</a>     }
+<a class="jxr_linenumber" name="L2991" href="#L2991">2991</a> 
+<a class="jxr_linenumber" name="L2992" href="#L2992">2992</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L2993" href="#L2993">2993</a> <em class="jxr_javadoccomment">     * Converts a time instant contained ina date object to a</em>
+<a class="jxr_linenumber" name="L2994" href="#L2994">2994</a> <em class="jxr_javadoccomment">     * decimal year.</em>
+<a class="jxr_linenumber" name="L2995" href="#L2995">2995</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L2996" href="#L2996">2996</a> <em class="jxr_javadoccomment">     * @param date a time instance to be converted.</em>
+<a class="jxr_linenumber" name="L2997" href="#L2997">2997</a> <em class="jxr_javadoccomment">     * @return converted value expressed in decimal years.</em>
+<a class="jxr_linenumber" name="L2998" href="#L2998">2998</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L2999" href="#L2999">2999</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> Double convertTime(<strong class="jxr_keyword">final</strong> Date date) {
+<a class="jxr_linenumber" name="L3000" href="#L3000">3000</a>         <strong class="jxr_keyword">if</strong> (date == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L3001" href="#L3001">3001</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L3002" href="#L3002">3002</a>         }
+<a class="jxr_linenumber" name="L3003" href="#L3003">3003</a> 
+<a class="jxr_linenumber" name="L3004" href="#L3004">3004</a>         <strong class="jxr_keyword">final</strong> GregorianCalendar calendar = <strong class="jxr_keyword">new</strong> GregorianCalendar();
+<a class="jxr_linenumber" name="L3005" href="#L3005">3005</a>         calendar.setTime(date);
+<a class="jxr_linenumber" name="L3006" href="#L3006">3006</a>         <strong class="jxr_keyword">return</strong> convertTime(calendar);
+<a class="jxr_linenumber" name="L3007" href="#L3007">3007</a>     }
+<a class="jxr_linenumber" name="L3008" href="#L3008">3008</a> 
+<a class="jxr_linenumber" name="L3009" href="#L3009">3009</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L3010" href="#L3010">3010</a> <em class="jxr_javadoccomment">     * Converts a time instant contained in a gregorian calendar to a</em>
+<a class="jxr_linenumber" name="L3011" href="#L3011">3011</a> <em class="jxr_javadoccomment">     * decimal year.</em>
 <a class="jxr_linenumber" name="L3012" href="#L3012">3012</a> <em class="jxr_javadoccomment">     *</em>
-<a class="jxr_linenumber" name="L3013" href="#L3013">3013</a> <em class="jxr_javadoccomment">     * @param magneticFluxDensity magnetic flux density instance to be converted.</em>
-<a class="jxr_linenumber" name="L3014" href="#L3014">3014</a> <em class="jxr_javadoccomment">     * @return converted value.</em>
-<a class="jxr_linenumber" name="L3015" href="#L3015">3015</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L3016" href="#L3016">3016</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">double</strong> convertMagneticFluxDensity(<strong class="jxr_keyword">final</strong> MagneticFluxDensity magneticFluxDensity) {
-<a class="jxr_linenumber" name="L3017" href="#L3017">3017</a>         <strong class="jxr_keyword">return</strong> convertMagneticFluxDensity(magneticFluxDensity.getValue().doubleValue(),
-<a class="jxr_linenumber" name="L3018" href="#L3018">3018</a>                 magneticFluxDensity.getUnit());
-<a class="jxr_linenumber" name="L3019" href="#L3019">3019</a>     }
-<a class="jxr_linenumber" name="L3020" href="#L3020">3020</a> }
+<a class="jxr_linenumber" name="L3013" href="#L3013">3013</a> <em class="jxr_javadoccomment">     * @param calendar calendar containing a specific instant to be</em>
+<a class="jxr_linenumber" name="L3014" href="#L3014">3014</a> <em class="jxr_javadoccomment">     *                 converted.</em>
+<a class="jxr_linenumber" name="L3015" href="#L3015">3015</a> <em class="jxr_javadoccomment">     * @return converted value expressed in decimal years.</em>
+<a class="jxr_linenumber" name="L3016" href="#L3016">3016</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L3017" href="#L3017">3017</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> Double convertTime(<strong class="jxr_keyword">final</strong> GregorianCalendar calendar) {
+<a class="jxr_linenumber" name="L3018" href="#L3018">3018</a>         <strong class="jxr_keyword">if</strong> (calendar == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L3019" href="#L3019">3019</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L3020" href="#L3020">3020</a>         }
+<a class="jxr_linenumber" name="L3021" href="#L3021">3021</a> 
+<a class="jxr_linenumber" name="L3022" href="#L3022">3022</a>         <strong class="jxr_keyword">return</strong> WMMEarthMagneticFluxDensityEstimator.convertTime(calendar);
+<a class="jxr_linenumber" name="L3023" href="#L3023">3023</a>     }
+<a class="jxr_linenumber" name="L3024" href="#L3024">3024</a> 
+<a class="jxr_linenumber" name="L3025" href="#L3025">3025</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L3026" href="#L3026">3026</a> <em class="jxr_javadoccomment">     * Converts provided ECEF position to position expressed in NED</em>
+<a class="jxr_linenumber" name="L3027" href="#L3027">3027</a> <em class="jxr_javadoccomment">     * coordinates.</em>
+<a class="jxr_linenumber" name="L3028" href="#L3028">3028</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L3029" href="#L3029">3029</a> <em class="jxr_javadoccomment">     * @param position ECEF position to be converted.</em>
+<a class="jxr_linenumber" name="L3030" href="#L3030">3030</a> <em class="jxr_javadoccomment">     * @return converted position expressed in NED coordinates.</em>
+<a class="jxr_linenumber" name="L3031" href="#L3031">3031</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L3032" href="#L3032">3032</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <a href="../../../../../../com/irurueta/navigation/inertial/NEDPosition.html">NEDPosition</a> convertPosition(<strong class="jxr_keyword">final</strong> <a href="../../../../../../com/irurueta/navigation/inertial/ECEFPosition.html">ECEFPosition</a> position) {
+<a class="jxr_linenumber" name="L3033" href="#L3033">3033</a>         <strong class="jxr_keyword">final</strong> <a href="../../../../../../com/irurueta/navigation/inertial/NEDVelocity.html">NEDVelocity</a> velocity = <strong class="jxr_keyword">new</strong> <a href="../../../../../../com/irurueta/navigation/inertial/NEDVelocity.html">NEDVelocity</a>();
+<a class="jxr_linenumber" name="L3034" href="#L3034">3034</a>         <strong class="jxr_keyword">final</strong> <a href="../../../../../../com/irurueta/navigation/inertial/NEDPosition.html">NEDPosition</a> result = <strong class="jxr_keyword">new</strong> <a href="../../../../../../com/irurueta/navigation/inertial/NEDPosition.html">NEDPosition</a>();
+<a class="jxr_linenumber" name="L3035" href="#L3035">3035</a>         ECEFtoNEDPositionVelocityConverter.convertECEFtoNED(
+<a class="jxr_linenumber" name="L3036" href="#L3036">3036</a>                 position.getX(), position.getY(), position.getZ(),
+<a class="jxr_linenumber" name="L3037" href="#L3037">3037</a>                 0.0, 0.0, 0.0, result, velocity);
+<a class="jxr_linenumber" name="L3038" href="#L3038">3038</a>         <strong class="jxr_keyword">return</strong> result;
+<a class="jxr_linenumber" name="L3039" href="#L3039">3039</a>     }
+<a class="jxr_linenumber" name="L3040" href="#L3040">3040</a> 
+<a class="jxr_linenumber" name="L3041" href="#L3041">3041</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L3042" href="#L3042">3042</a> <em class="jxr_javadoccomment">     * Converts magnetic flux density value and unit to Teslas.</em>
+<a class="jxr_linenumber" name="L3043" href="#L3043">3043</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L3044" href="#L3044">3044</a> <em class="jxr_javadoccomment">     * @param value magnetic flux density value.</em>
+<a class="jxr_linenumber" name="L3045" href="#L3045">3045</a> <em class="jxr_javadoccomment">     * @param unit unit of magnetic flux density value.</em>
+<a class="jxr_linenumber" name="L3046" href="#L3046">3046</a> <em class="jxr_javadoccomment">     * @return converted value.</em>
+<a class="jxr_linenumber" name="L3047" href="#L3047">3047</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L3048" href="#L3048">3048</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">double</strong> convertMagneticFluxDensity(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> value, <strong class="jxr_keyword">final</strong> MagneticFluxDensityUnit unit) {
+<a class="jxr_linenumber" name="L3049" href="#L3049">3049</a>         <strong class="jxr_keyword">return</strong> MagneticFluxDensityConverter.convert(value, unit,
+<a class="jxr_linenumber" name="L3050" href="#L3050">3050</a>                 MagneticFluxDensityUnit.TESLA);
+<a class="jxr_linenumber" name="L3051" href="#L3051">3051</a>     }
+<a class="jxr_linenumber" name="L3052" href="#L3052">3052</a> 
+<a class="jxr_linenumber" name="L3053" href="#L3053">3053</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L3054" href="#L3054">3054</a> <em class="jxr_javadoccomment">     * Converts magnetic flux density instance to Teslas.</em>
+<a class="jxr_linenumber" name="L3055" href="#L3055">3055</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L3056" href="#L3056">3056</a> <em class="jxr_javadoccomment">     * @param magneticFluxDensity magnetic flux density instance to be converted.</em>
+<a class="jxr_linenumber" name="L3057" href="#L3057">3057</a> <em class="jxr_javadoccomment">     * @return converted value.</em>
+<a class="jxr_linenumber" name="L3058" href="#L3058">3058</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L3059" href="#L3059">3059</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">double</strong> convertMagneticFluxDensity(<strong class="jxr_keyword">final</strong> MagneticFluxDensity magneticFluxDensity) {
+<a class="jxr_linenumber" name="L3060" href="#L3060">3060</a>         <strong class="jxr_keyword">return</strong> convertMagneticFluxDensity(magneticFluxDensity.getValue().doubleValue(),
+<a class="jxr_linenumber" name="L3061" href="#L3061">3061</a>                 magneticFluxDensity.getUnit());
+<a class="jxr_linenumber" name="L3062" href="#L3062">3062</a>     }
+<a class="jxr_linenumber" name="L3063" href="#L3063">3063</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2018&#x2013;2020. All rights reserved.</div>

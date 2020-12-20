@@ -1166,7 +1166,7 @@
 <a class="jxr_linenumber" name="L1158" href="#L1158">1158</a>         assertEquals(calibrator.getEstimatedBiasZ(), bTriad1.getValueZ(), 0.0);
 <a class="jxr_linenumber" name="L1159" href="#L1159">1159</a>         assertEquals(AngularSpeedUnit.RADIANS_PER_SECOND, bTriad1.getUnit());
 <a class="jxr_linenumber" name="L1160" href="#L1160">1160</a>         <strong class="jxr_keyword">final</strong> AngularSpeedTriad bTriad2 = <strong class="jxr_keyword">new</strong> AngularSpeedTriad();
-<a class="jxr_linenumber" name="L1161" href="#L1161">1161</a>         calibrator.getEstimatedBiasAsTriad(bTriad2);
+<a class="jxr_linenumber" name="L1161" href="#L1161">1161</a>         assertTrue(calibrator.getEstimatedBiasAsTriad(bTriad2));
 <a class="jxr_linenumber" name="L1162" href="#L1162">1162</a>         assertEquals(bTriad1, bTriad2);
 <a class="jxr_linenumber" name="L1163" href="#L1163">1163</a> 
 <a class="jxr_linenumber" name="L1164" href="#L1164">1164</a>         assertEquals(mg.getElementAt(0, 0), calibrator.getEstimatedSx(),

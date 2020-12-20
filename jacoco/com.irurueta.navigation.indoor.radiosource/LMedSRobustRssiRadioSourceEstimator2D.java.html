@@ -541,7 +541,7 @@ public class LMedSRobustRssiRadioSourceEstimator2D&lt;S extends RadioSource&gt; 
                             public void onEstimateProgressChange(
                                     final RobustEstimator&lt;Solution&lt;Point2D&gt;&gt; estimator,
                                     final float progress) {
-<span class="fc bfc" id="L544" title="All 2 branches covered.">                                if (mListener != null) {</span>
+<span class="pc bpc" id="L544" title="1 of 2 branches missed.">                                if (mListener != null) {</span>
 <span class="fc" id="L545">                                    mListener.onEstimateProgressChange(</span>
                                             LMedSRobustRssiRadioSourceEstimator2D.this,
                                             progress);

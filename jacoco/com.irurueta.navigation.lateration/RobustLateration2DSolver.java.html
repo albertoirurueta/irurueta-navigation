@@ -1352,10 +1352,10 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver&lt
                 }
 
 <span class="fc" id="L1354">                mEstimatedPosition = mNonLinearSolver.getEstimatedPosition();</span>
-<span class="nc" id="L1355">            } catch (Exception e) {</span>
+<span class="fc" id="L1355">            } catch (Exception e) {</span>
                 //refinement failed, so we return input value
-<span class="nc" id="L1357">                mCovariance = null;</span>
-<span class="nc" id="L1358">                mEstimatedPosition = position;</span>
+<span class="fc" id="L1357">                mCovariance = null;</span>
+<span class="fc" id="L1358">                mEstimatedPosition = position;</span>
 <span class="fc" id="L1359">            }</span>
 <span class="fc" id="L1360">        } else {</span>
 <span class="fc" id="L1361">            mCovariance = null;</span>
