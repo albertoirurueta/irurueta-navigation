@@ -6767,6 +6767,7 @@ public class EasyGyroscopeCalibratorTest implements
             assertEstimatedResult(estimatedBg, estimatedMg, estimatedGg, calibrator);
 
             assertNotNull(calibrator.getEstimatedCovariance());
+            checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
 
             numValid++;
             break;
@@ -7009,6 +7010,7 @@ public class EasyGyroscopeCalibratorTest implements
             assertEstimatedResult(estimatedBg, estimatedMg, estimatedGg, calibrator);
 
             assertNotNull(calibrator.getEstimatedCovariance());
+            checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
 
             numValid++;
             break;
@@ -7247,6 +7249,7 @@ public class EasyGyroscopeCalibratorTest implements
             assertEstimatedResult(estimatedBg, estimatedMg, estimatedGg, calibrator);
 
             assertNotNull(calibrator.getEstimatedCovariance());
+            checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
 
             numValid++;
             break;
@@ -7479,6 +7482,7 @@ public class EasyGyroscopeCalibratorTest implements
             assertEstimatedResult(estimatedBg, estimatedMg, estimatedGg, calibrator);
 
             assertNotNull(calibrator.getEstimatedCovariance());
+            checkGeneralCovariance(calibrator.getEstimatedCovariance());
 
             numValid++;
             break;
@@ -7721,6 +7725,7 @@ public class EasyGyroscopeCalibratorTest implements
             assertEstimatedResult(estimatedBg, estimatedMg, estimatedGg, calibrator);
 
             assertNotNull(calibrator.getEstimatedCovariance());
+            checkGeneralCovariance(calibrator.getEstimatedCovariance());
 
             numValid++;
             break;
@@ -7953,6 +7958,7 @@ public class EasyGyroscopeCalibratorTest implements
             assertEstimatedResult(estimatedBg, estimatedMg, estimatedGg, calibrator);
 
             assertNotNull(calibrator.getEstimatedCovariance());
+            checkCommonAxisAndGDependantCrossBiasesCovariance(calibrator.getEstimatedCovariance());
 
             numValid++;
             break;
@@ -8198,6 +8204,7 @@ public class EasyGyroscopeCalibratorTest implements
             assertEstimatedResult(estimatedBg, estimatedMg, estimatedGg, calibrator);
 
             assertNotNull(calibrator.getEstimatedCovariance());
+            checkCommonAxisAndGDependantCrossBiasesCovariance(calibrator.getEstimatedCovariance());
 
             numValid++;
             break;
@@ -8430,6 +8437,7 @@ public class EasyGyroscopeCalibratorTest implements
             assertEstimatedResult(estimatedBg, estimatedMg, estimatedGg, calibrator);
 
             assertNotNull(calibrator.getEstimatedCovariance());
+            checkGeneralAndGDependantCrossBiasesCovariance(calibrator.getEstimatedCovariance());
 
             numValid++;
             break;
@@ -8675,6 +8683,7 @@ public class EasyGyroscopeCalibratorTest implements
             assertEstimatedResult(estimatedBg, estimatedMg, estimatedGg, calibrator);
 
             assertNotNull(calibrator.getEstimatedCovariance());
+            checkGeneralAndGDependantCrossBiasesCovariance(calibrator.getEstimatedCovariance());
 
             numValid++;
             break;
@@ -9123,6 +9132,62 @@ public class EasyGyroscopeCalibratorTest implements
         final AngularSpeed norm2 = new AngularSpeed(1.0, AngularSpeedUnit.RADIANS_PER_SECOND);
         calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(norm2);
         assertEquals(norm1, norm2);
+    }
+
+    private void checkCommonAxisAndGDependantCrossBiasesCovariance(
+            final Matrix covariance) {
+        assertEquals(covariance.getRows(), 21);
+        assertEquals(covariance.getColumns(), 21);
+
+        for (int j = 0; j < 21; j++) {
+            final boolean colIsZero = j == 8 || j == 10 || j == 11;
+            for (int i = 0; i < 21; i++) {
+                final boolean rowIsZero = i == 8 || i == 10 || i == 11;
+                if (colIsZero || rowIsZero) {
+                    assertEquals(covariance.getElementAt(i, j), 0.0, 0.0);
+                }
+            }
+        }
+    }
+
+    private void checkGeneralAndGDependantCrossBiasesCovariance(
+            final Matrix covariance) {
+        assertEquals(covariance.getRows(), 21);
+        assertEquals(covariance.getColumns(), 21);
+
+        for (int i = 0; i < 21; i++) {
+            assertNotEquals(covariance.getElementAt(i, i), 0.0);
+        }
+    }
+
+    private void checkCommonAxisCovariance(final Matrix covariance) {
+        assertEquals(covariance.getRows(), 21);
+        assertEquals(covariance.getColumns(), 21);
+
+        for (int j = 0; j < 21; j++) {
+            final boolean colIsZero = j == 8 || j > 9;
+            for (int i = 0; i < 21; i++) {
+                final boolean rowIsZero = i == 8 || i > 9;
+                if (colIsZero || rowIsZero) {
+                    assertEquals(covariance.getElementAt(i, j), 0.0, 0.0);
+                }
+            }
+        }
+    }
+
+    private void checkGeneralCovariance(final Matrix covariance) {
+        assertEquals(covariance.getRows(), 21);
+        assertEquals(covariance.getColumns(), 21);
+
+        for (int j = 0; j < 21; j++) {
+            final boolean colIsZero = j > 11;
+            for (int i = 0; i < 21; i++) {
+                final boolean rowIsZero = i > 11;
+                if (colIsZero || rowIsZero) {
+                    assertEquals(covariance.getElementAt(i, j), 0.0, 0.0);
+                }
+            }
+        }
     }
 
     private Matrix generateBa() {

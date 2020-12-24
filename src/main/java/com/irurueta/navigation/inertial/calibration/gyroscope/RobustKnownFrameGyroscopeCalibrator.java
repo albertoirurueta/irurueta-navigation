@@ -1973,6 +1973,10 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
 
     /**
      * Gets estimated covariance matrix for estimated calibration solution.
+     * Diagonal elements of the matrix contains variance for the following
+     * parameters (following indicated order): bgx, bgy, bgz, sx, sy, sz,
+     * mxy, mxz, myx, myz, mzx, mzy, gg11, gg21, gg31, gg12, gg22, gg32,
+     * gg13, gg23, gg33.
      * This is only available when result has been refined and covariance
      * is kept.
      *

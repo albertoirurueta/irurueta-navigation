@@ -3677,6 +3677,10 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
 
     /**
      * Gets estimated covariance matrix for estimated parameters.
+     * Diagonal elements of the matrix contains variance for the following
+     * parameters (following indicated order): bgx, bgy, bgz, sx, sy, sz,
+     * mxy, mxz, myx, myz, mzx, mzy, gg11, gg21, gg31, gg12, gg22, gg32,
+     * gg13, gg23, gg33.
      *
      * @return estimated covariance matrix for estimated parameters.
      */
@@ -4302,6 +4306,53 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
         mEstimatedGg.setElementAtIndex(8, g33);
 
         mEstimatedCovariance = mFitter.getCovar();
+
+        // propagate covariance matrix so that all parameters are taken into
+        // account in the order: bx, by, bz, sx, sy, sz, mxy, mxz, myx,
+        // myz, mzx, mzy,g11, g21, g31, g12, g22, g32, g13, g23, g33
+
+        // We define a lineal function mapping original parameters for the common
+        // axis case to the general case
+        //[bx'] =   [1  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0][bx]
+        //[by']     [0  1  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0][by]
+        //[bz']     [0  0  1  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0][bz]
+        //[sx']     [0  0  0  1  0  0  0  0  0  0  0  0  0  0  0  0  0  0][sx]
+        //[sy']     [0  0  0  0  1  0  0  0  0  0  0  0  0  0  0  0  0  0][sy]
+        //[sz']     [0  0  0  0  0  1  0  0  0  0  0  0  0  0  0  0  0  0][sz]
+        //[mxy']    [0  0  0  0  0  0  1  0  0  0  0  0  0  0  0  0  0  0][mxy]
+        //[mxz']    [0  0  0  0  0  0  0  1  0  0  0  0  0  0  0  0  0  0][mxz]
+        //[myx']    [0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0][myz]
+        //[myz']    [0  0  0  0  0  0  0  0  1  0  0  0  0  0  0  0  0  0][g11]
+        //[mzx']    [0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0][g21]
+        //[mzy']    [0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0][g31]
+        //[g11']    [0  0  0  0  0  0  0  0  0  1  0  0  0  0  0  0  0  0][g12]
+        //[g21']    [0  0  0  0  0  0  0  0  0  0  1  0  0  0  0  0  0  0][g22]
+        //[g31']    [0  0  0  0  0  0  0  0  0  0  0  1  0  0  0  0  0  0][g32]
+        //[g12']    [0  0  0  0  0  0  0  0  0  0  0  0  1  0  0  0  0  0][g13]
+        //[g22']    [0  0  0  0  0  0  0  0  0  0  0  0  0  1  0  0  0  0][g23]
+        //[g32']    [0  0  0  0  0  0  0  0  0  0  0  0  0  0  1  0  0  0][g33]
+        //[g13']    [0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1  0  0]
+        //[g23']    [0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1  0]
+        //[g33']    [0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1]
+
+        // As defined in com.irurueta.statistics.MultivariateNormalDist,
+        // if we consider the jacobian of the lineal application the matrix shown
+        // above, then covariance can be propagated as follows
+        final Matrix jacobian = new Matrix(GENERAL_UNKNOWNS, COMMON_Z_AXIS_UNKNOWNS);
+        for (int i = 0; i < 8; i++) {
+            jacobian.setElementAt(i, i, 1.0);
+        }
+        jacobian.setElementAt(9, 8, 1.0);
+
+        for (int j = 9, i = 12; j < 18; j++, i++) {
+            jacobian.setElementAt(i, j, 1.0);
+        }
+
+        // propagated covariance is J * Cov * J'
+        final Matrix jacobianTrans = jacobian.transposeAndReturnNew();
+        jacobian.multiply(mEstimatedCovariance);
+        jacobian.multiply(jacobianTrans);
+        mEstimatedCovariance = jacobian;
         mEstimatedChiSq = mFitter.getChisq();
     }
 

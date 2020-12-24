@@ -4699,6 +4699,10 @@ public class TurntableGyroscopeCalibrator {
 
     /**
      * Gets estimated covariance matrix for estimated parameters.
+     * Diagonal elements of the matrix contains variance for the following
+     * parameters (following indicated order): bgx, bgy, bgz, sx, sy, sz,
+     * mxy, mxz, myx, myz, mzx, mzy, gg11, gg21, gg31, gg12, gg22, gg32,
+     * gg13, gg23, gg33.
      *
      * @return estimated covariance matrix for estimated parameters.
      */
@@ -5199,6 +5203,162 @@ public class TurntableGyroscopeCalibrator {
         g.setElementAtIndex(8, g33);
 
         setResult(m, b, g);
+
+        // at this point covariance is expressed in terms of b, M and G, and must
+        // be expressed in terms of bg, Mg and Gg.
+        // We know that:
+        // bg = M * b
+        // Mg = M - I
+        // Gg = M * G
+
+        //b = [bx]
+        //    [by]
+        //    [bz]
+
+        //M = [m11  m12  m13]
+        //    [0    m22  m23]
+        //    [0    0    m33]
+
+        //G = [g11  g12  g13]
+        //    [g21  g22  g23]
+        //    [g31  g32  g33]
+
+        //bg = [m11  m12  m13][bx] = [m11 * bx + m12 * by + m13 * bz] = [bgx]
+        //     [0    m22  m23][by]   [           m22 * by + m23 * bz]   [bgy]
+        //     [0    0    m33][bz]   [                      m33 * bz]   [bgz]
+
+        //Mg = [sx  mxy  mxz] = [m11 - 1    m12         m13     ]
+        //     [myx	sy	 myz]   [0          m22 - 1     m23     ]
+        //     [mzx	mzy  sz ]   [0          0           m33 - 1 ]
+
+        //Gg = [gg11  gg12  gg13] = [m11  m12  m13][g11  g12  g13]
+        //     [gg21  gg22  gg23]   [0    m22  m23][g21  g22  g23]
+        //     [gg31  gg32  gg33]   [0    0    m33][g31  g32  g33]
+
+        // Defining the linear application:
+        // F(b, M, G) = F(bx, by, bz, m11, m12, m22, m13, m23, m33, g11, g21, g31, g12, g22, g32, g13, g23, g33)
+        // as:
+        // [bgx] =  [m11 * bx + m12 * by + m13 * bz]
+        // [bgy]    [           m22 * by + m23 * bz]
+        // [bgz]    [                      m33 * bz]
+        // [sx]     [m11 - 1]
+        // [sy]     [m22 - 1]
+        // [sz]     [m33 - 1]
+        // [mxy]    [m12]
+        // [mxz]    [m13]
+        // [myx]    [0]
+        // [myz]    [m23]
+        // [mzx]    [0]
+        // [mzy]    [0]
+        // [gg11]   [m11 * g11 + m12 * g21 + m13 * g31]
+        // [gg21]   [            m22 * g21 + m23 * g31]
+        // [gg31]   [                        m33 * g31]
+        // [gg12]   [m11 * g12 + m12 * g22 + m13 * g32]
+        // [gg22]   [            m22 * g22 + m23 * g32]
+        // [gg32]   [                        m33 * g32]
+        // [gg13]   [m11 * g13 + m12 * g23 + m13 * g33]
+        // [gg23]   [            m22 * g23 + m23 * g33]
+        // [gg33]   [                        m33 * g33]
+
+        // Then the Jacobian of F(b, M, G) is:
+        //J = [m11  m12  m13  bx   by   0    bz   0    0    0    0    0    0    0    0    0    0    0  ]
+        //    [0    m22  m23  0    0    by   0    bz   0    0    0    0    0    0    0    0    0    0  ]
+        //    [0    0    m33  0    0    0    0    0    bz   0    0    0    0    0    0    0    0    0  ]
+        //    [0    0    0    1    0    0    0    0    0    0    0    0    0    0    0    0    0    0  ]
+        //    [0    0    0    0    0    1    0    0    0    0    0    0    0    0    0    0    0    0  ]
+        //    [0    0    0    0    0    0    0    0    1    0    0    0    0    0    0    0    0    0  ]
+        //    [0    0    0    0    1    0    0    0    0    0    0    0    0    0    0    0    0    0  ]
+        //    [0    0    0    0    0    0    1    0    0    0    0    0    0    0    0    0    0    0  ]
+        //    [0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0  ]
+        //    [0    0    0    0    0    0    0    1    0    0    0    0    0    0    0    0    0    0  ]
+        //    [0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0  ]
+        //    [0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0  ]
+        //    [0    0    0    g11  g21  0    g31  0    0    m11  m12  m13  0    0    0    0    0    0  ]
+        //    [0    0    0    0    0    g21  0    g31  0    0    m22  m23  0    0    0    0    0    0  ]
+        //    [0    0    0    0    0    0    0    0    g31  0    0    m33  0    0    0    0    0    0  ]
+        //    [0    0    0    g12  g22  0    g32  0    0    0    0    0    m11  m12  m13  0    0    0  ]
+        //    [0    0    0    0    0    g22  0    g32  0    0    0    0    0    m22  m23  0    0    0  ]
+        //    [0    0    0    0    0    0    0    0    g32  0    0    0    0    0    m33  0    0    0  ]
+        //    [0    0    0    g13  g23  0    g33  0    0    0    0    0    0    0    0    m11  m12  m13]
+        //    [0    0    0    0    0    g23  0    g33  0    0    0    0    0    0    0    0    m22  m23]
+        //    [0    0    0    0    0    0    0    0    g33  0    0    0    0    0    0    0    0    m33]
+
+        // We know that the propagated covariance is J * Cov * J', hence:
+        final Matrix jacobian = new Matrix(GENERAL_UNKNOWNS_AND_CROSS_BIASES, COMMON_Z_AXIS_UNKNOWNS_AND_CROSS_BIASES);
+
+        jacobian.setElementAt(0, 0, m11);
+        jacobian.setElementAt(0, 1, m12);
+        jacobian.setElementAt(0, 2, m13);
+        jacobian.setElementAt(0, 3, bx);
+        jacobian.setElementAt(0, 4, by);
+        jacobian.setElementAt(0, 6, bz);
+
+        jacobian.setElementAt(1, 1, m22);
+        jacobian.setElementAt(1, 2, m23);
+        jacobian.setElementAt(1, 5, by);
+        jacobian.setElementAt(1, 7, bz);
+
+        jacobian.setElementAt(2, 2, m33);
+        jacobian.setElementAt(2, 8, bz);
+
+        jacobian.setElementAt(3, 3, 1.0);
+        jacobian.setElementAt(4, 5, 1.0);
+        jacobian.setElementAt(5, 8, 1.0);
+
+        jacobian.setElementAt(6, 4, 1.0);
+        jacobian.setElementAt(7, 6, 1.0);
+
+        jacobian.setElementAt(9, 7, 1.0);
+
+        jacobian.setElementAt(12, 3, g11);
+        jacobian.setElementAt(12, 4, g21);
+        jacobian.setElementAt(12, 6, g31);
+        jacobian.setElementAt(12, 9, m11);
+        jacobian.setElementAt(12, 10, m12);
+        jacobian.setElementAt(12, 11, m13);
+
+        jacobian.setElementAt(13, 5, g21);
+        jacobian.setElementAt(13, 7, g31);
+        jacobian.setElementAt(13, 10, m22);
+        jacobian.setElementAt(13, 11, m23);
+
+        jacobian.setElementAt(14, 8, g31);
+        jacobian.setElementAt(14, 11, m33);
+
+        jacobian.setElementAt(15, 3, g12);
+        jacobian.setElementAt(15, 4, g22);
+        jacobian.setElementAt(15, 6, g32);
+        jacobian.setElementAt(15, 12, m11);
+        jacobian.setElementAt(15, 13, m12);
+        jacobian.setElementAt(15, 14, m13);
+
+        jacobian.setElementAt(16, 5, g22);
+        jacobian.setElementAt(16, 7, g32);
+        jacobian.setElementAt(16, 13, m22);
+        jacobian.setElementAt(16, 14, m23);
+
+        jacobian.setElementAt(17, 8, g32);
+        jacobian.setElementAt(17, 14, m33);
+
+        jacobian.setElementAt(18, 3, g13);
+        jacobian.setElementAt(18, 4, g23);
+        jacobian.setElementAt(18, 6, g33);
+        jacobian.setElementAt(18, 15, m11);
+        jacobian.setElementAt(18, 16, m12);
+        jacobian.setElementAt(18, 17, m13);
+
+        jacobian.setElementAt(19, 5, g23);
+        jacobian.setElementAt(19, 7, g33);
+        jacobian.setElementAt(19, 16, m22);
+        jacobian.setElementAt(19, 17, m23);
+
+        jacobian.setElementAt(20, 8, g33);
+        jacobian.setElementAt(20, 17, m33);
+
+        final Matrix jacobianTrans = jacobian.transposeAndReturnNew();
+        jacobian.multiply(mEstimatedCovariance);
+        jacobian.multiply(jacobianTrans);
+        mEstimatedCovariance = jacobian;
     }
 
     /**
@@ -5403,6 +5563,189 @@ public class TurntableGyroscopeCalibrator {
         g.setElementAtIndex(8, g33);
 
         setResult(m, b, g);
+
+        // at this point covariance is expressed in terms of b, M and G, and must
+        // be expressed in terms of bg, Mg and Gg.
+        // We know that:
+        // bg = M * b
+        // Mg = M - I
+        // Gg = M * G
+
+        //b = [bx]
+        //    [by]
+        //    [bz]
+
+        //M = [m11  m12  m13]
+        //    [m21  m22  m23]
+        //    [m31  m32  m33]
+
+        //G = [g11  g12  g13]
+        //    [g21  g22  g23]
+        //    [g31  g32  g33]
+
+        //bg = [m11  m12  m13][bx] = [m11 * bx + m12 * by + m13 * bz] = [bgx]
+        //     [m21  m22  m23][by]   [m21 * bx + m22 * by + m23 * bz]   [bgy]
+        //     [m31  m32  m33][bz]   [m31 * bx + m32 * by + m33 * bz]   [bgz]
+
+        //Mg = [sx  mxy  mxz] = [m11 - 1    m12         m13     ]
+        //     [myx	sy	 myz]   [m21        m22 - 1     m23     ]
+        //     [mzx	mzy  sz ]   [m31        m32         m33 - 1 ]
+
+        //Gg = [gg11  gg12  gg13] = [m11  m12  m13][g11  g12  g13]
+        //     [gg21  gg22  gg23]   [m21  m22  m23][g21  g22  g23]
+        //     [gg31  gg32  gg33]   [m31  m32  m33][g31  g32  g33]
+
+        // Defining the linear application:
+        // F(b, M, G) = F(bx, by, bz, m11, m21, m31, m12, m22, m32, m13, m23, m33, g11, g21, g31, g12, g22, g32, g13, g23, g33)
+        // as:
+        // [bgx] =  [m11 * bx + m12 * by + m13 * bz]
+        // [bgy]    [m21 * bx + m22 * by + m23 * bz]
+        // [bgz]    [m31 * bx + m32 * by + m33 * bz]
+        // [sx]     [m11 - 1]
+        // [sy]     [m22 - 1]
+        // [sz]     [m33 - 1]
+        // [mxy]    [m12]
+        // [mxz]    [m13]
+        // [myx]    [m21]
+        // [myz]    [m23]
+        // [mzx]    [m31]
+        // [mzy]    [m32]
+        // [gg11]   [m11 * g11 + m12 * g21 + m13 * g31]
+        // [gg21]   [m21 * g11 + m22 * g21 + m23 * g31]
+        // [gg31]   [m31 * g11 + m32 * g21 + m33 * g31]
+        // [gg12]   [m11 * g12 + m12 * g22 + m13 * g32]
+        // [gg22]   [m21 * g12 + m22 * g22 + m23 * g32]
+        // [gg32]   [m31 * g12 + m32 * g22 + m33 * g32]
+        // [gg13]   [m11 * g13 + m12 * g23 + m13 * g33]
+        // [gg23]   [m21 * g13 + m22 * g23 + m23 * g33]
+        // [gg33]   [m31 * g13 + m32 * g23 + m33 * g33]
+
+        // Then the Jacobian of F(b, M, G) is:
+        //J = [m11  m12  m13  bx   0    0    by   0    0    bz   0    0    0    0    0    0    0    0    0    0    0  ]
+        //    [m21  m22  m23  0    bx   0    0    by   0    0    bz   0    0    0    0    0    0    0    0    0    0  ]
+        //    [m31  m32  m33  0    0    bx   0    0    by   0    0    bz   0    0    0    0    0    0    0    0    0  ]
+        //    [0    0    0    1    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0  ]
+        //    [0    0    0    0    0    0    0    1    0    0    0    0    0    0    0    0    0    0    0    0    0  ]
+        //    [0    0    0    0    0    0    0    0    0    0    0    1    0    0    0    0    0    0    0    0    0  ]
+        //    [0    0    0    0    0    0    1    0    0    0    0    0    0    0    0    0    0    0    0    0    0  ]
+        //    [0    0    0    0    0    0    0    0    0    1    0    0    0    0    0    0    0    0    0    0    0  ]
+        //    [0    0    0    0    1    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0  ]
+        //    [0    0    0    0    0    0    0    0    0    0    1    0    0    0    0    0    0    0    0    0    0  ]
+        //    [0    0    0    0    0    1    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0  ]
+        //    [0    0    0    0    0    0    0    0    1    0    0    0    0    0    0    0    0    0    0    0    0  ]
+        //    [0    0    0    g11  0    0    g21  0    0    g31  0    0    m11  m12  m13  0    0    0    0    0    0  ]
+        //    [0    0    0    0    g11  0    0    g21  0    0    g31  0    m21  m22  m23  0    0    0    0    0    0  ]
+        //    [0    0    0    0    0    g11  0    0    g21  0    0    g31  m31  m32  m33  0    0    0    0    0    0  ]
+        //    [0    0    0    g12  0    0    g22  0    0    g32  0    0    0    0    0    m11  m12  m13  0    0    0  ]
+        //    [0    0    0    0    g12  0    0    g22  0    0    g32  0    0    0    0    m21  m22  m23  0    0    0  ]
+        //    [0    0    0    0    0    g12  0    0    g22  0    0    g32  0    0    0    m31  m32  m33  0    0    0  ]
+        //    [0    0    0    g13  0    0    g23  0    0    g33  0    0    0    0    0    0    0    0    m11  m12  m13]
+        //    [0    0    0    0    g13  0    0    g23  0    0    g33  0    0    0    0    0    0    0    m21  m22  m23]
+        //    [0    0    0    0    0    g13  0    0    g23  0    0    g33  0    0    0    0    0    0    m31  m32  m33]
+
+        // We know that the propagated covariance is J * Cov * J', hence:
+        final Matrix jacobian = new Matrix(GENERAL_UNKNOWNS_AND_CROSS_BIASES, GENERAL_UNKNOWNS_AND_CROSS_BIASES);
+
+        jacobian.setElementAt(0, 0, m11);
+        jacobian.setElementAt(0, 1, m12);
+        jacobian.setElementAt(0, 2, m13);
+        jacobian.setElementAt(0, 3, bx);
+        jacobian.setElementAt(0, 6, by);
+        jacobian.setElementAt(0, 9, bz);
+
+        jacobian.setElementAt(1, 0, m21);
+        jacobian.setElementAt(1, 1, m22);
+        jacobian.setElementAt(1, 2, m23);
+        jacobian.setElementAt(1, 4, bx);
+        jacobian.setElementAt(1, 7, by);
+        jacobian.setElementAt(1, 10, bz);
+
+        jacobian.setElementAt(2, 0, m31);
+        jacobian.setElementAt(2, 1, m32);
+        jacobian.setElementAt(2, 2, m33);
+        jacobian.setElementAt(2, 5, bx);
+        jacobian.setElementAt(2, 8, by);
+        jacobian.setElementAt(2, 11, bz);
+
+        jacobian.setElementAt(3, 3, 1.0);
+        jacobian.setElementAt(4, 7, 1.0);
+        jacobian.setElementAt(5, 11, 1.0);
+
+        jacobian.setElementAt(6, 6, 1.0);
+        jacobian.setElementAt(7, 9, 1.0);
+        jacobian.setElementAt(8, 4, 1.0);
+
+        jacobian.setElementAt(9, 10, 1.0);
+        jacobian.setElementAt(10, 5, 1.0);
+        jacobian.setElementAt(11, 8, 1.9);
+
+        jacobian.setElementAt(12, 3, g11);
+        jacobian.setElementAt(12, 6, g21);
+        jacobian.setElementAt(12, 9, g31);
+        jacobian.setElementAt(12, 12, m11);
+        jacobian.setElementAt(12, 13, m12);
+        jacobian.setElementAt(12, 14, m13);
+
+        jacobian.setElementAt(13, 4, g11);
+        jacobian.setElementAt(13, 7, g21);
+        jacobian.setElementAt(13, 10, g31);
+        jacobian.setElementAt(13, 12, m21);
+        jacobian.setElementAt(13, 13, m22);
+        jacobian.setElementAt(13, 14, m23);
+
+        jacobian.setElementAt(14, 5, g11);
+        jacobian.setElementAt(14, 8, g21);
+        jacobian.setElementAt(14, 11, g31);
+        jacobian.setElementAt(14, 12, m31);
+        jacobian.setElementAt(14, 13, m32);
+        jacobian.setElementAt(14, 14, m33);
+
+        jacobian.setElementAt(15, 3, g12);
+        jacobian.setElementAt(15, 6, g22);
+        jacobian.setElementAt(15, 9, g32);
+        jacobian.setElementAt(15, 15, m11);
+        jacobian.setElementAt(15, 16, m12);
+        jacobian.setElementAt(15, 17, m13);
+
+        jacobian.setElementAt(16, 4, g12);
+        jacobian.setElementAt(16, 7, g22);
+        jacobian.setElementAt(16, 10, g32);
+        jacobian.setElementAt(16, 15, m21);
+        jacobian.setElementAt(16, 16, m22);
+        jacobian.setElementAt(16, 17, m23);
+
+        jacobian.setElementAt(17, 5, g12);
+        jacobian.setElementAt(17, 8, g22);
+        jacobian.setElementAt(17, 11, g32);
+        jacobian.setElementAt(17, 15, m31);
+        jacobian.setElementAt(17, 16, m32);
+        jacobian.setElementAt(17, 17, m33);
+
+        jacobian.setElementAt(18, 3, g13);
+        jacobian.setElementAt(18, 6, g23);
+        jacobian.setElementAt(18, 9, g33);
+        jacobian.setElementAt(18, 18, m11);
+        jacobian.setElementAt(18, 19, m12);
+        jacobian.setElementAt(18, 20, m13);
+
+        jacobian.setElementAt(19, 4, g13);
+        jacobian.setElementAt(19, 7, g23);
+        jacobian.setElementAt(19, 10, g33);
+        jacobian.setElementAt(19, 18, m21);
+        jacobian.setElementAt(19, 19, m22);
+        jacobian.setElementAt(19, 20, m23);
+
+        jacobian.setElementAt(20, 5, g13);
+        jacobian.setElementAt(20, 8, g23);
+        jacobian.setElementAt(20, 11, g33);
+        jacobian.setElementAt(20, 18, m31);
+        jacobian.setElementAt(20, 19, m32);
+        jacobian.setElementAt(20, 20, m33);
+
+        final Matrix jacobianTrans = jacobian.transposeAndReturnNew();
+        jacobian.multiply(mEstimatedCovariance);
+        jacobian.multiply(jacobianTrans);
+        mEstimatedCovariance = jacobian;
     }
 
     /**
@@ -5572,6 +5915,117 @@ public class TurntableGyroscopeCalibrator {
         m.setElementAtIndex(8, m33);
 
         setResult(m, b);
+
+        // at this point covariance is expressed in terms of b, M and G, and must
+        // be expressed in terms of bg, Mg and Gg.
+        // We know that:
+        // bg = M * b
+        // Mg = M - I
+        // Gg = M * G = 0
+
+        //b = [bx]
+        //    [by]
+        //    [bz]
+
+        //M = [m11  m12  m13]
+        //    [0    m22  m23]
+        //    [0    0    m33]
+
+        //G = [g11  g12  g13] = 0
+        //    [g21  g22  g23]
+        //    [g31  g32  g33]
+
+        //bg = [m11  m12  m13][bx] = [m11 * bx + m12 * by + m13 * bz] = [bgx]
+        //     [0    m22  m23][by]   [           m22 * by + m23 * bz]   [bgy]
+        //     [0    0    m33][bz]   [                      m33 * bz]   [bgz]
+
+        //Mg = [sx  mxy  mxz] = [m11 - 1    m12         m13     ]
+        //     [myx	sy	 myz]   [0          m22 - 1     m23     ]
+        //     [mzx	mzy  sz ]   [0          0           m33 - 1 ]
+
+        //Gg = [gg11  gg12  gg13] = 0
+        //     [gg21  gg22  gg23]
+        //     [gg31  gg32  gg33]
+
+        // Defining the linear application:
+        // F(b, M) = F(bx, by, bz, m11, m12, m22, m13, m23, m33)
+        // as:
+        // [bgx] =  [m11 * bx + m12 * by + m13 * bz]
+        // [bgy]    [           m22 * by + m23 * bz]
+        // [bgz]    [                      m33 * bz]
+        // [sx]     [m11 - 1]
+        // [sy]     [m22 - 1]
+        // [sz]     [m33 - 1]
+        // [mxy]    [m12]
+        // [mxz]    [m13]
+        // [myx]    [0]
+        // [myz]    [m23]
+        // [mzx]    [0]
+        // [mzy]    [0]
+        // [gg11]   [0]
+        // [gg21]   [0]
+        // [gg31]   [0]
+        // [gg12]   [0]
+        // [gg22]   [0]
+        // [gg32]   [0]
+        // [gg13]   [0]
+        // [gg23]   [0]
+        // [gg33]   [0]
+
+        // Then the Jacobian of F(b, M) is:
+        //J = [m11  m12  m13  bx   by   0    bz   0    0  ]
+        //    [0    m22  m23  0    0    by   0    bz   0  ]
+        //    [0    0    m33  0    0    0    0    0    bz ]
+        //    [0    0    0    1    0    0    0    0    0  ]
+        //    [0    0    0    0    0    1    0    0    0  ]
+        //    [0    0    0    0    0    0    0    0    1  ]
+        //    [0    0    0    0    1    0    0    0    0  ]
+        //    [0    0    0    0    0    0    1    0    0  ]
+        //    [0    0    0    0    0    0    0    0    0  ]
+        //    [0    0    0    0    0    0    0    1    0  ]
+        //    [0    0    0    0    0    0    0    0    0  ]
+        //    [0    0    0    0    0    0    0    0    0  ]
+        //    [0    0    0    0    0    0    0    0    0  ]
+        //    [0    0    0    0    0    0    0    0    0  ]
+        //    [0    0    0    0    0    0    0    0    0  ]
+        //    [0    0    0    0    0    0    0    0    0  ]
+        //    [0    0    0    0    0    0    0    0    0  ]
+        //    [0    0    0    0    0    0    0    0    0  ]
+        //    [0    0    0    0    0    0    0    0    0  ]
+        //    [0    0    0    0    0    0    0    0    0  ]
+        //    [0    0    0    0    0    0    0    0    0  ]
+
+        // We know that the propagated covariance is J * Cov * J', hence:
+        final Matrix jacobian = new Matrix(GENERAL_UNKNOWNS_AND_CROSS_BIASES, COMMON_Z_AXIS_UNKNOWNS);
+
+        jacobian.setElementAt(0, 0, m11);
+        jacobian.setElementAt(0, 1, m12);
+        jacobian.setElementAt(0, 2, m13);
+        jacobian.setElementAt(0, 3, bx);
+        jacobian.setElementAt(0, 4, by);
+        jacobian.setElementAt(0, 6, bz);
+
+        jacobian.setElementAt(1, 1, m22);
+        jacobian.setElementAt(1, 2, m23);
+        jacobian.setElementAt(1, 5, by);
+        jacobian.setElementAt(1, 7, bz);
+
+        jacobian.setElementAt(2, 2, m33);
+        jacobian.setElementAt(2, 8, bz);
+
+        jacobian.setElementAt(3, 3, 1.0);
+        jacobian.setElementAt(4, 5, 1.0);
+        jacobian.setElementAt(5, 8, 1.0);
+
+        jacobian.setElementAt(6, 4, 1.0);
+        jacobian.setElementAt(7, 6, 1.0);
+
+        jacobian.setElementAt(9, 7, 1.0);
+
+        final Matrix jacobianTrans = jacobian.transposeAndReturnNew();
+        jacobian.multiply(mEstimatedCovariance);
+        jacobian.multiply(jacobianTrans);
+        mEstimatedCovariance = jacobian;
     }
 
     /**
@@ -5734,6 +6188,126 @@ public class TurntableGyroscopeCalibrator {
         m.setElementAtIndex(8, m33);
 
         setResult(m, b);
+
+        // at this point covariance is expressed in terms of b, M and G, and must
+        // be expressed in terms of bg, Mg and Gg.
+        // We know that:
+        // bg = M * b
+        // Mg = M - I
+        // Gg = M * G = 0
+
+        //b = [bx]
+        //    [by]
+        //    [bz]
+
+        //M = [m11  m12  m13]
+        //    [m21  m22  m23]
+        //    [m31  m32  m33]
+
+        //G = [g11  g12  g13] = 0
+        //    [g21  g22  g23]
+        //    [g31  g32  g33]
+
+        //bg = [m11  m12  m13][bx] = [m11 * bx + m12 * by + m13 * bz] = [bgx]
+        //     [m21  m22  m23][by]   [m21 * bx + m22 * by + m23 * bz]   [bgy]
+        //     [m31  m32  m33][bz]   [m31 * bx + m32 * by + m33 * bz]   [bgz]
+
+        //Mg = [sx  mxy  mxz] = [m11 - 1    m12         m13     ]
+        //     [myx	sy	 myz]   [m21        m22 - 1     m23     ]
+        //     [mzx	mzy  sz ]   [m31        m32         m33 - 1 ]
+
+        //Gg = [gg11  gg12  gg13] = 0
+        //     [gg21  gg22  gg23]
+        //     [gg31  gg32  gg33]
+
+        // Defining the linear application:
+        // F(b, M) = F(bx, by, bz, m11, m21, m31, m12, m22, m32, m13, m23, m33)
+        // as:
+        // [bgx] =  [m11 * bx + m12 * by + m13 * bz]
+        // [bgy]    [m21 * bx + m22 * by + m23 * bz]
+        // [bgz]    [m31 * bx + m32 * by + m33 * bz]
+        // [sx]     [m11 - 1]
+        // [sy]     [m22 - 1]
+        // [sz]     [m33 - 1]
+        // [mxy]    [m12]
+        // [mxz]    [m13]
+        // [myx]    [m21]
+        // [myz]    [m23]
+        // [mzx]    [m31]
+        // [mzy]    [m32]
+        // [gg11]   [0]
+        // [gg21]   [0]
+        // [gg31]   [0]
+        // [gg12]   [0]
+        // [gg22]   [0]
+        // [gg32]   [0]
+        // [gg13]   [0]
+        // [gg23]   [0]
+        // [gg33]   [0]
+
+        // Then the Jacobian of F(b, M) is:
+        //J = [m11  m12  m13  bx   0    0    by   0    0    bz   0    0 ]
+        //    [m21  m22  m23  0    bx   0    0    by   0    0    bz   0 ]
+        //    [m31  m32  m33  0    0    bx   0    0    by   0    0    bz]
+        //    [0    0    0    1    0    0    0    0    0    0    0    0 ]
+        //    [0    0    0    0    0    0    0    1    0    0    0    0 ]
+        //    [0    0    0    0    0    0    0    0    0    0    0    1 ]
+        //    [0    0    0    0    0    0    1    0    0    0    0    0 ]
+        //    [0    0    0    0    0    0    0    0    0    1    0    0 ]
+        //    [0    0    0    0    1    0    0    0    0    0    0    0 ]
+        //    [0    0    0    0    0    0    0    0    0    0    1    0 ]
+        //    [0    0    0    0    0    1    0    0    0    0    0    0 ]
+        //    [0    0    0    0    0    0    0    0    1    0    0    0 ]
+        //    [0    0    0    0    0    0    0    0    0    0    0    0 ]
+        //    [0    0    0    0    0    0    0    0    0    0    0    0 ]
+        //    [0    0    0    0    0    0    0    0    0    0    0    0 ]
+        //    [0    0    0    0    0    0    0    0    0    0    0    0 ]
+        //    [0    0    0    0    0    0    0    0    0    0    0    0 ]
+        //    [0    0    0    0    0    0    0    0    0    0    0    0 ]
+        //    [0    0    0    0    0    0    0    0    0    0    0    0 ]
+        //    [0    0    0    0    0    0    0    0    0    0    0    0 ]
+        //    [0    0    0    0    0    0    0    0    0    0    0    0 ]
+
+        // We know that the propagated covariance is J * Cov * J', hence:
+        final Matrix jacobian = new Matrix(GENERAL_UNKNOWNS_AND_CROSS_BIASES, GENERAL_UNKNOWNS);
+
+        jacobian.setElementAt(0, 0, m11);
+        jacobian.setElementAt(0, 1, m12);
+        jacobian.setElementAt(0, 2, m13);
+        jacobian.setElementAt(0, 3, bx);
+        jacobian.setElementAt(0, 6, by);
+        jacobian.setElementAt(0, 9, bz);
+
+        jacobian.setElementAt(1, 0, m21);
+        jacobian.setElementAt(1, 1, m22);
+        jacobian.setElementAt(1, 2, m23);
+        jacobian.setElementAt(1, 4, bx);
+        jacobian.setElementAt(1, 7, by);
+        jacobian.setElementAt(1, 10, bz);
+
+        jacobian.setElementAt(2, 0, m31);
+        jacobian.setElementAt(2, 1, m32);
+        jacobian.setElementAt(2, 2, m33);
+        jacobian.setElementAt(2, 5, bx);
+        jacobian.setElementAt(2, 8, by);
+        jacobian.setElementAt(2, 11, bz);
+
+        jacobian.setElementAt(3, 3, 1.0);
+        jacobian.setElementAt(4, 7, 1.0);
+        jacobian.setElementAt(5, 11, 1.0);
+
+        jacobian.setElementAt(6, 6, 1.0);
+        jacobian.setElementAt(7, 9, 1.0);
+        jacobian.setElementAt(8, 4, 1.0);
+
+        jacobian.setElementAt(9, 10, 1.0);
+        jacobian.setElementAt(10, 5, 1.0);
+        jacobian.setElementAt(11, 8, 1.9);
+
+        final Matrix jacobianTrans = jacobian.transposeAndReturnNew();
+        jacobian.multiply(mEstimatedCovariance);
+        jacobian.multiply(jacobianTrans);
+        mEstimatedCovariance = jacobian;
     }
 
     /**

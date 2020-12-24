@@ -5411,9 +5411,6 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
         // propagate covariance so that all parameters are taken into account
         // in the order: sx, sy, sz, mxy, mxz, myx, myz, mzx, mzy
 
-        // Since estimated values are:
-        // (m11, m12, m22, m13, m23, m33) = (sx, mxy, sy, mxz, myz, sz)
-
         // We define a lineal function mapping original parameters for the
         // common axis case to the general case
         //[sx'] = [1  0  0  0  0  0][sx ]

@@ -10975,6 +10975,7 @@ public class KnownBiasTurntableGyroscopeCalibratorTest implements
             assertEstimatedResult(estimatedMg, estimatedGg, calibrator);
 
             assertNotNull(calibrator.getEstimatedCovariance());
+            checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
 
             numValid++;
             break;
@@ -11117,6 +11118,7 @@ public class KnownBiasTurntableGyroscopeCalibratorTest implements
             assertEstimatedResult(estimatedMg, estimatedGg, calibrator);
 
             assertNotNull(calibrator.getEstimatedCovariance());
+            checkGeneralCovariance(calibrator.getEstimatedCovariance());
 
             numValid++;
             break;
@@ -11259,6 +11261,7 @@ public class KnownBiasTurntableGyroscopeCalibratorTest implements
             assertEstimatedResult(estimatedMg, estimatedGg, calibrator);
 
             assertNotNull(calibrator.getEstimatedCovariance());
+            checkCommonAxisAndGDependantCrossBiasesCovariance(calibrator.getEstimatedCovariance());
 
             numValid++;
             break;
@@ -11407,6 +11410,7 @@ public class KnownBiasTurntableGyroscopeCalibratorTest implements
             assertEstimatedResult(estimatedMg, estimatedGg, calibrator);
 
             assertNotNull(calibrator.getEstimatedCovariance());
+            checkGeneralAndGDependantCrossBiasesCovariance(calibrator.getEstimatedCovariance());
 
             numValid++;
             break;
@@ -11548,6 +11552,7 @@ public class KnownBiasTurntableGyroscopeCalibratorTest implements
             assertEstimatedResult(estimatedMg, estimatedGg, calibrator);
 
             assertNotNull(calibrator.getEstimatedCovariance());
+            checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
 
             numValid++;
             break;
@@ -11689,6 +11694,7 @@ public class KnownBiasTurntableGyroscopeCalibratorTest implements
             assertEstimatedResult(estimatedMg, estimatedGg, calibrator);
 
             assertNotNull(calibrator.getEstimatedCovariance());
+            checkGeneralCovariance(calibrator.getEstimatedCovariance());
 
             numValid++;
             break;
@@ -11831,6 +11837,7 @@ public class KnownBiasTurntableGyroscopeCalibratorTest implements
             assertEstimatedResult(estimatedMg, estimatedGg, calibrator);
 
             assertNotNull(calibrator.getEstimatedCovariance());
+            checkCommonAxisAndGDependantCrossBiasesCovariance(calibrator.getEstimatedCovariance());
 
             numValid++;
             break;
@@ -11979,6 +11986,7 @@ public class KnownBiasTurntableGyroscopeCalibratorTest implements
             assertEstimatedResult(estimatedMg, estimatedGg, calibrator);
 
             assertNotNull(calibrator.getEstimatedCovariance());
+            checkGeneralAndGDependantCrossBiasesCovariance(calibrator.getEstimatedCovariance());
 
             numValid++;
             break;
@@ -12344,6 +12352,62 @@ public class KnownBiasTurntableGyroscopeCalibratorTest implements
                 0.0);
 
         assertEquals(gg, calibrator.getEstimatedGg());
+    }
+
+    private void checkCommonAxisAndGDependantCrossBiasesCovariance(
+            final Matrix covariance) {
+        assertEquals(covariance.getRows(), 18);
+        assertEquals(covariance.getColumns(), 18);
+
+        for (int j = 0; j < 18; j++) {
+            final boolean colIsZero = j == 5 || j == 7 || j == 8;
+            for (int i = 0; i < 18; i++) {
+                final boolean rowIsZero = i == 5 || i == 7 || i == 8;
+                if (colIsZero || rowIsZero) {
+                    assertEquals(covariance.getElementAt(i, j), 0.0, 0.0);
+                }
+            }
+        }
+    }
+
+    private void checkGeneralAndGDependantCrossBiasesCovariance(
+            final Matrix covariance) {
+        assertEquals(covariance.getRows(), 18);
+        assertEquals(covariance.getColumns(), 18);
+
+        for (int i = 0; i < 18; i++) {
+            assertNotEquals(covariance.getElementAt(i, i), 0.0);
+        }
+    }
+
+    private void checkCommonAxisCovariance(final Matrix covariance) {
+        assertEquals(covariance.getRows(), 18);
+        assertEquals(covariance.getColumns(), 18);
+
+        for (int j = 0; j < 18; j++) {
+            final boolean colIsZero = j == 5 || j > 6;
+            for (int i = 0; i < 18; i++) {
+                final boolean rowIsZero = i == 5 || i > 6;
+                if (colIsZero || rowIsZero) {
+                    assertEquals(covariance.getElementAt(i, j), 0.0, 0.0);
+                }
+            }
+        }
+    }
+
+    private void checkGeneralCovariance(final Matrix covariance) {
+        assertEquals(covariance.getRows(), 18);
+        assertEquals(covariance.getColumns(), 18);
+
+        for (int j = 0; j < 18; j++) {
+            final boolean colIsZero = j > 8;
+            for (int i = 0; i < 18; i++) {
+                final boolean rowIsZero = i > 8;
+                if (colIsZero || rowIsZero) {
+                    assertEquals(covariance.getElementAt(i, j), 0.0, 0.0);
+                }
+            }
+        }
     }
 
     private Matrix generateBa() {

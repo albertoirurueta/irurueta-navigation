@@ -6114,7 +6114,7 @@ public abstract class BaseGravityNormAccelerometerCalibrator<C extends BaseGravi
         //[baz]		[m31 * bx + m32 * by + m33 * bz]
         //[sx]		[m11 - 1]
         //[sy]		[m22 - 1]
-        //[sz]		[m33 -1]
+        //[sz]		[m33 - 1]
         //[mxy]	    [m12]
         //[mxz]	    [m13]
         //[myx]	    [m21]

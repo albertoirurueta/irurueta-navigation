@@ -3386,6 +3386,10 @@ public abstract class RobustEasyGyroscopeCalibrator {
 
     /**
      * Gets estimated covariance matrix for estimated parameters.
+     * Diagonal elements of the matrix contains variance for the following
+     * parameters (following indicated order): bgx, bgy, bgz, sx, sy, sz,
+     * mxy, mxz, myx, myz, mzx, mzy, gg11, gg21, gg31, gg12, gg22, gg32,
+     * gg13, gg23, gg33.
      *
      * @return estimated covariance matrix for estimated parameters.
      */
