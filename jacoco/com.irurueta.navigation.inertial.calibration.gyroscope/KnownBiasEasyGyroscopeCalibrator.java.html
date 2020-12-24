@@ -2998,11 +2998,14 @@ public class KnownBiasEasyGyroscopeCalibrator {
 
     /**
      * Gets estimated covariance matrix for estimated parameters.
+     * Diagonal elements of the matrix contains variance for the following
+     * parameters (following indicated order): sx, sy, sz, mxy, mxz, myx,
+     * myz, mzx, mzy, gg11, gg21, gg31, gg12, gg22, gg32, gg13, gg23, gg33.
      *
      * @return estimated covariance matrix for estimated parameters.
      */
     public Matrix getEstimatedCovariance() {
-<span class="fc" id="L3005">        return mEstimatedCovariance;</span>
+<span class="fc" id="L3008">        return mEstimatedCovariance;</span>
     }
 
     /**
@@ -3011,7 +3014,7 @@ public class KnownBiasEasyGyroscopeCalibrator {
      * @return estimated chi square value.
      */
     public double getEstimatedChiSq() {
-<span class="fc" id="L3014">        return mEstimatedChiSq;</span>
+<span class="fc" id="L3017">        return mEstimatedChiSq;</span>
     }
 
     /**
@@ -3053,62 +3056,62 @@ public class KnownBiasEasyGyroscopeCalibrator {
         // Notice that M is upper diagonal because Mg is upper diagonal
         // when common axis is assumed
 
-<span class="fc" id="L3056">        final GradientEstimator gradientEstimator = new GradientEstimator(</span>
-<span class="fc" id="L3057">                new MultiDimensionFunctionEvaluatorListener() {</span>
+<span class="fc" id="L3059">        final GradientEstimator gradientEstimator = new GradientEstimator(</span>
+<span class="fc" id="L3060">                new MultiDimensionFunctionEvaluatorListener() {</span>
                     @Override
                     public double evaluate(final double[] params)
                             throws EvaluationException {
-<span class="fc" id="L3061">                        return evaluateCommonAxisWithGDependentCrossBiases(mI, params);</span>
+<span class="fc" id="L3064">                        return evaluateCommonAxisWithGDependentCrossBiases(mI, params);</span>
                     }
                 });
 
-<span class="fc" id="L3065">        final Matrix initialM = Matrix.identity(</span>
+<span class="fc" id="L3068">        final Matrix initialM = Matrix.identity(</span>
                 BodyKinematics.COMPONENTS, BodyKinematics.COMPONENTS);
-<span class="fc" id="L3067">        initialM.add(getInitialMg());</span>
+<span class="fc" id="L3070">        initialM.add(getInitialMg());</span>
 
         // Force initial M to be upper diagonal
-<span class="fc" id="L3070">        initialM.setElementAt(1, 0, 0.0);</span>
-<span class="fc" id="L3071">        initialM.setElementAt(2, 0, 0.0);</span>
-<span class="fc" id="L3072">        initialM.setElementAt(2, 1, 0.0);</span>
+<span class="fc" id="L3073">        initialM.setElementAt(1, 0, 0.0);</span>
+<span class="fc" id="L3074">        initialM.setElementAt(2, 0, 0.0);</span>
+<span class="fc" id="L3075">        initialM.setElementAt(2, 1, 0.0);</span>
 
-<span class="fc" id="L3074">        final Matrix invInitialM = Utils.inverse(initialM);</span>
-<span class="fc" id="L3075">        final Matrix initialGg = getInitialGg();</span>
-<span class="fc" id="L3076">        final Matrix initialG = invInitialM.multiplyAndReturnNew(initialGg);</span>
+<span class="fc" id="L3077">        final Matrix invInitialM = Utils.inverse(initialM);</span>
+<span class="fc" id="L3078">        final Matrix initialGg = getInitialGg();</span>
+<span class="fc" id="L3079">        final Matrix initialG = invInitialM.multiplyAndReturnNew(initialGg);</span>
 
-<span class="fc" id="L3078">        final Matrix bg = getBiasAsMatrix();</span>
-<span class="fc" id="L3079">        mB = invInitialM.multiplyAndReturnNew(bg);</span>
+<span class="fc" id="L3081">        final Matrix bg = getBiasAsMatrix();</span>
+<span class="fc" id="L3082">        mB = invInitialM.multiplyAndReturnNew(bg);</span>
 
-<span class="fc" id="L3081">        mFitter.setFunctionEvaluator(</span>
-<span class="fc" id="L3082">                new LevenbergMarquardtMultiDimensionFunctionEvaluator() {</span>
+<span class="fc" id="L3084">        mFitter.setFunctionEvaluator(</span>
+<span class="fc" id="L3085">                new LevenbergMarquardtMultiDimensionFunctionEvaluator() {</span>
                     @Override
                     public int getNumberOfDimensions() {
                         // Before and after normalized gravity versors
-<span class="fc" id="L3086">                        return 2 * BodyKinematics.COMPONENTS;</span>
+<span class="fc" id="L3089">                        return 2 * BodyKinematics.COMPONENTS;</span>
                     }
 
                     @Override
                     public double[] createInitialParametersArray() {
-<span class="fc" id="L3091">                        final double[] initial =</span>
+<span class="fc" id="L3094">                        final double[] initial =</span>
                                 new double[COMMON_Z_AXIS_UNKNOWNS_AND_CROSS_BIASES];
 
                         // upper diagonal cross coupling errors M
-<span class="fc" id="L3095">                        int k = 0;</span>
-<span class="fc bfc" id="L3096" title="All 2 branches covered.">                        for (int j = 0; j &lt; BodyKinematics.COMPONENTS; j++) {</span>
-<span class="fc bfc" id="L3097" title="All 2 branches covered.">                            for (int i = 0; i &lt; BodyKinematics.COMPONENTS; i++) {</span>
-<span class="fc bfc" id="L3098" title="All 2 branches covered.">                                if (i &lt;= j) {</span>
-<span class="fc" id="L3099">                                    initial[k] = initialM.getElementAt(i, j);</span>
-<span class="fc" id="L3100">                                    k++;</span>
+<span class="fc" id="L3098">                        int k = 0;</span>
+<span class="fc bfc" id="L3099" title="All 2 branches covered.">                        for (int j = 0; j &lt; BodyKinematics.COMPONENTS; j++) {</span>
+<span class="fc bfc" id="L3100" title="All 2 branches covered.">                            for (int i = 0; i &lt; BodyKinematics.COMPONENTS; i++) {</span>
+<span class="fc bfc" id="L3101" title="All 2 branches covered.">                                if (i &lt;= j) {</span>
+<span class="fc" id="L3102">                                    initial[k] = initialM.getElementAt(i, j);</span>
+<span class="fc" id="L3103">                                    k++;</span>
                                 }
                             }
                         }
 
                         // g-dependent cross biases G
-<span class="fc" id="L3106">                        final int num = BodyKinematics.COMPONENTS * BodyKinematics.COMPONENTS;</span>
-<span class="fc bfc" id="L3107" title="All 2 branches covered.">                        for (int i = 0, j = k; i &lt; num; i++, j++) {</span>
-<span class="fc" id="L3108">                            initial[j] = initialG.getElementAtIndex(i);</span>
+<span class="fc" id="L3109">                        final int num = BodyKinematics.COMPONENTS * BodyKinematics.COMPONENTS;</span>
+<span class="fc bfc" id="L3110" title="All 2 branches covered.">                        for (int i = 0, j = k; i &lt; num; i++, j++) {</span>
+<span class="fc" id="L3111">                            initial[j] = initialG.getElementAtIndex(i);</span>
                         }
 
-<span class="fc" id="L3111">                        return initial;</span>
+<span class="fc" id="L3114">                        return initial;</span>
                     }
 
                     @Override
@@ -3116,75 +3119,201 @@ public class KnownBiasEasyGyroscopeCalibrator {
                             final int i, final double[] point,
                             final double[] params, final double[] derivatives)
                             throws EvaluationException {
-<span class="fc" id="L3119">                        mI = i;</span>
+<span class="fc" id="L3122">                        mI = i;</span>
 
                         // point contains fixed gravity versor values for current
                         // sequence
-<span class="fc" id="L3123">                        mPoint = point;</span>
+<span class="fc" id="L3126">                        mPoint = point;</span>
 
-<span class="fc" id="L3125">                        gradientEstimator.gradient(params, derivatives);</span>
+<span class="fc" id="L3128">                        gradientEstimator.gradient(params, derivatives);</span>
 
-<span class="fc" id="L3127">                        return evaluateCommonAxisWithGDependentCrossBiases(i, params);</span>
+<span class="fc" id="L3130">                        return evaluateCommonAxisWithGDependentCrossBiases(i, params);</span>
                     }
                 });
 
-<span class="fc" id="L3131">        setInputData();</span>
+<span class="fc" id="L3134">        setInputData();</span>
 
-<span class="fc" id="L3133">        mFitter.fit();</span>
+<span class="fc" id="L3136">        mFitter.fit();</span>
 
-<span class="fc" id="L3135">        final double[] result = mFitter.getA();</span>
+<span class="fc" id="L3138">        final double[] result = mFitter.getA();</span>
 
-<span class="fc" id="L3137">        final double m11 = result[0];</span>
+<span class="fc" id="L3140">        final double m11 = result[0];</span>
 
-<span class="fc" id="L3139">        final double m12 = result[1];</span>
-<span class="fc" id="L3140">        final double m22 = result[2];</span>
+<span class="fc" id="L3142">        final double m12 = result[1];</span>
+<span class="fc" id="L3143">        final double m22 = result[2];</span>
 
-<span class="fc" id="L3142">        final double m13 = result[3];</span>
-<span class="fc" id="L3143">        final double m23 = result[4];</span>
-<span class="fc" id="L3144">        final double m33 = result[5];</span>
+<span class="fc" id="L3145">        final double m13 = result[3];</span>
+<span class="fc" id="L3146">        final double m23 = result[4];</span>
+<span class="fc" id="L3147">        final double m33 = result[5];</span>
 
-<span class="fc" id="L3146">        final double g11 = result[6];</span>
-<span class="fc" id="L3147">        final double g21 = result[7];</span>
-<span class="fc" id="L3148">        final double g31 = result[8];</span>
+<span class="fc" id="L3149">        final double g11 = result[6];</span>
+<span class="fc" id="L3150">        final double g21 = result[7];</span>
+<span class="fc" id="L3151">        final double g31 = result[8];</span>
 
-<span class="fc" id="L3150">        final double g12 = result[9];</span>
-<span class="fc" id="L3151">        final double g22 = result[10];</span>
-<span class="fc" id="L3152">        final double g32 = result[11];</span>
+<span class="fc" id="L3153">        final double g12 = result[9];</span>
+<span class="fc" id="L3154">        final double g22 = result[10];</span>
+<span class="fc" id="L3155">        final double g32 = result[11];</span>
 
-<span class="fc" id="L3154">        final double g13 = result[12];</span>
-<span class="fc" id="L3155">        final double g23 = result[13];</span>
-<span class="fc" id="L3156">        final double g33 = result[14];</span>
+<span class="fc" id="L3157">        final double g13 = result[12];</span>
+<span class="fc" id="L3158">        final double g23 = result[13];</span>
+<span class="fc" id="L3159">        final double g33 = result[14];</span>
 
-<span class="fc" id="L3158">        final Matrix m = new Matrix(BodyKinematics.COMPONENTS,</span>
+<span class="fc" id="L3161">        final Matrix m = new Matrix(BodyKinematics.COMPONENTS,</span>
                 BodyKinematics.COMPONENTS);
-<span class="fc" id="L3160">        m.setElementAtIndex(0, m11);</span>
-<span class="fc" id="L3161">        m.setElementAtIndex(1, 0.0);</span>
-<span class="fc" id="L3162">        m.setElementAtIndex(2, 0.0);</span>
+<span class="fc" id="L3163">        m.setElementAtIndex(0, m11);</span>
+<span class="fc" id="L3164">        m.setElementAtIndex(1, 0.0);</span>
+<span class="fc" id="L3165">        m.setElementAtIndex(2, 0.0);</span>
 
-<span class="fc" id="L3164">        m.setElementAtIndex(3, m12);</span>
-<span class="fc" id="L3165">        m.setElementAtIndex(4, m22);</span>
-<span class="fc" id="L3166">        m.setElementAtIndex(5, 0.0);</span>
+<span class="fc" id="L3167">        m.setElementAtIndex(3, m12);</span>
+<span class="fc" id="L3168">        m.setElementAtIndex(4, m22);</span>
+<span class="fc" id="L3169">        m.setElementAtIndex(5, 0.0);</span>
 
-<span class="fc" id="L3168">        m.setElementAtIndex(6, m13);</span>
-<span class="fc" id="L3169">        m.setElementAtIndex(7, m23);</span>
-<span class="fc" id="L3170">        m.setElementAtIndex(8, m33);</span>
+<span class="fc" id="L3171">        m.setElementAtIndex(6, m13);</span>
+<span class="fc" id="L3172">        m.setElementAtIndex(7, m23);</span>
+<span class="fc" id="L3173">        m.setElementAtIndex(8, m33);</span>
 
-<span class="fc" id="L3172">        final Matrix g = new Matrix(BodyKinematics.COMPONENTS,</span>
+<span class="fc" id="L3175">        final Matrix g = new Matrix(BodyKinematics.COMPONENTS,</span>
                 BodyKinematics.COMPONENTS);
-<span class="fc" id="L3174">        g.setElementAtIndex(0, g11);</span>
-<span class="fc" id="L3175">        g.setElementAtIndex(1, g21);</span>
-<span class="fc" id="L3176">        g.setElementAtIndex(2, g31);</span>
+<span class="fc" id="L3177">        g.setElementAtIndex(0, g11);</span>
+<span class="fc" id="L3178">        g.setElementAtIndex(1, g21);</span>
+<span class="fc" id="L3179">        g.setElementAtIndex(2, g31);</span>
 
-<span class="fc" id="L3178">        g.setElementAtIndex(3, g12);</span>
-<span class="fc" id="L3179">        g.setElementAtIndex(4, g22);</span>
-<span class="fc" id="L3180">        g.setElementAtIndex(5, g32);</span>
+<span class="fc" id="L3181">        g.setElementAtIndex(3, g12);</span>
+<span class="fc" id="L3182">        g.setElementAtIndex(4, g22);</span>
+<span class="fc" id="L3183">        g.setElementAtIndex(5, g32);</span>
 
-<span class="fc" id="L3182">        g.setElementAtIndex(6, g13);</span>
-<span class="fc" id="L3183">        g.setElementAtIndex(7, g23);</span>
-<span class="fc" id="L3184">        g.setElementAtIndex(8, g33);</span>
+<span class="fc" id="L3185">        g.setElementAtIndex(6, g13);</span>
+<span class="fc" id="L3186">        g.setElementAtIndex(7, g23);</span>
+<span class="fc" id="L3187">        g.setElementAtIndex(8, g33);</span>
 
-<span class="fc" id="L3186">        setResult(m, g);</span>
-<span class="fc" id="L3187">    }</span>
+<span class="fc" id="L3189">        setResult(m, g);</span>
+
+        // at this point covariance is expressed in terms of M and G, and must
+        // be expressed in terms of Mg and Gg.
+        // We know that:
+        //Mg = M - I
+        //Gg = M * G
+
+        //M = [m11  m12  m13]
+        //    [0    m22  m23]
+        //    [0    0    m33]
+
+        //G = [g11  g12  g13]
+        //    [g21  g22  g23]
+        //    [g31  g32  g33]
+
+        //Mg = [sx  mxy  mxz] = [m11 - 1    m12         m13     ]
+        //     [myx	sy	 myz]   [0          m22 - 1     m23     ]
+        //     [mzx	mzy  sz ]   [0          0           m33 - 1 ]
+
+        //Gg = [gg11  gg12  gg13] = [m11  m12  m13][g11  g12  g13]
+        //     [gg21  gg22  gg23]   [0    m22  m23][g21  g22  g23]
+        //     [gg31  gg32  gg33]   [0    0    m33][g31  g32  g33]
+
+        // Defining the linear application:
+        // F(M, G) = F(m11, m12, m22, m32=0, m13, m23, m33, g11, g21, g31, g12, g22, g32, g13, g23, g33)
+        // as:
+        // [sx] =   [m11 - 1]
+        // [sy]     [m22 - 1]
+        // [sz]     [m33 - 1]
+        // [mxy]    [m12]
+        // [mxz]    [m13]
+        // [myx]    [0]
+        // [myz]    [m23]
+        // [mzx]    [0]
+        // [mzy]    [0]
+        // [gg11]   [m11 * g11 + m12 * g21 + m13 * g31]
+        // [gg21]   [            m22 * g21 + m23 * g31]
+        // [gg31]   [                        m33 * g31]
+        // [gg12]   [m11 * g12 + m12 * g22 + m13 * g32]
+        // [gg22]   [            m22 * g22 + n23 * g32]
+        // [gg32]   [                        m33 * g32]
+        // [gg13]   [m11 * g13 + m12 * g23 + m13 * g33]
+        // [gg23]   [            m22 * g23 + m23 * g33]
+        // [gg33]   [                        m33 * g33]
+
+        // Then the Jacobian of F(M, G) is:
+        //J = [1    0    0    0    0    0    0    0    0    0    0    0    0    0    0  ]
+        //    [0    0    1    0    0    0    0    0    0    0    0    0    0    0    0  ]
+        //    [0    0    0    0    0    1    0    0    0    0    0    0    0    0    0  ]
+        //    [0    1    0    0    0    0    0    0    0    0    0    0    0    0    0  ]
+        //    [0    0    0    1    0    0    0    0    0    0    0    0    0    0    0  ]
+        //    [0    0    0    0    0    0    0    0    0    0    0    0    0    0    0  ]
+        //    [0    0    0    0    1    0    0    0    0    0    0    0    0    0    0  ]
+        //    [0    0    0    0    0    0    0    0    0    0    0    0    0    0    0  ]
+        //    [0    0    0    0    0    0    0    0    0    0    0    0    0    0    0  ]
+        //    [g11  g21  0    g31  0    0    m11  m12  m13  0    0    0    0    0    0  ]
+        //    [0    0    g21  0    g31  0    0    m22  m23  0    0    0    0    0    0  ]
+        //    [0    0    0    0    0    g31  0    0    m33  0    0    0    0    0    0  ]
+        //    [g12  g22  0    g32  0    0    0    0    0    m11  m12  m13  0    0    0  ]
+        //    [0    0    g22  0    g32  0    0    0    0    0    m22  m23  0    0    0  ]
+        //    [0    0    0    0    0    g32  0    0    0    0    0    m33  0    0    0  ]
+        //    [g13  g23  0    g33  0    0    0    0    0    0    0    0    m11  m12  m13]
+        //    [0    0    g23  0    g33  0    0    0    0    0    0    0    0    m22  m23]
+        //    [0    0    0    0    0    g33  0    0    0    0    0    0    0    0    m33]
+
+        // We know that the propagated covariance is J * Cov * J', hence:
+<span class="fc" id="L3256">        final Matrix jacobian = new Matrix(GENERAL_UNKNOWNS_AND_CROSS_BIASES, COMMON_Z_AXIS_UNKNOWNS_AND_CROSS_BIASES);</span>
+
+<span class="fc" id="L3258">        jacobian.setElementAt(0, 0, 1.0);</span>
+<span class="fc" id="L3259">        jacobian.setElementAt(1, 2, 1.0);</span>
+<span class="fc" id="L3260">        jacobian.setElementAt(2, 5, 1.0);</span>
+
+<span class="fc" id="L3262">        jacobian.setElementAt(3, 1, 1.0);</span>
+<span class="fc" id="L3263">        jacobian.setElementAt(4, 3, 1.0);</span>
+
+<span class="fc" id="L3265">        jacobian.setElementAt(6, 4, 1.0);</span>
+
+<span class="fc" id="L3267">        jacobian.setElementAt(9, 0, g11);</span>
+<span class="fc" id="L3268">        jacobian.setElementAt(9, 1, g21);</span>
+<span class="fc" id="L3269">        jacobian.setElementAt(9, 3, g31);</span>
+<span class="fc" id="L3270">        jacobian.setElementAt(9, 6, m11);</span>
+<span class="fc" id="L3271">        jacobian.setElementAt(9, 7, m12);</span>
+<span class="fc" id="L3272">        jacobian.setElementAt(9, 8, m13);</span>
+
+<span class="fc" id="L3274">        jacobian.setElementAt(10, 2, g21);</span>
+<span class="fc" id="L3275">        jacobian.setElementAt(10, 4, g31);</span>
+<span class="fc" id="L3276">        jacobian.setElementAt(10, 7, m22);</span>
+<span class="fc" id="L3277">        jacobian.setElementAt(10, 8, m23);</span>
+
+<span class="fc" id="L3279">        jacobian.setElementAt(11, 5, g31);</span>
+<span class="fc" id="L3280">        jacobian.setElementAt(11, 8, m33);</span>
+
+<span class="fc" id="L3282">        jacobian.setElementAt(12, 0, g12);</span>
+<span class="fc" id="L3283">        jacobian.setElementAt(12, 1, g22);</span>
+<span class="fc" id="L3284">        jacobian.setElementAt(12, 3, g32);</span>
+<span class="fc" id="L3285">        jacobian.setElementAt(12, 9, m11);</span>
+<span class="fc" id="L3286">        jacobian.setElementAt(12, 10, m12);</span>
+<span class="fc" id="L3287">        jacobian.setElementAt(12, 11, m13);</span>
+
+<span class="fc" id="L3289">        jacobian.setElementAt(13, 2, g22);</span>
+<span class="fc" id="L3290">        jacobian.setElementAt(13, 4, g32);</span>
+<span class="fc" id="L3291">        jacobian.setElementAt(13, 10, m22);</span>
+<span class="fc" id="L3292">        jacobian.setElementAt(13, 11, m23);</span>
+
+<span class="fc" id="L3294">        jacobian.setElementAt(14, 5, g32);</span>
+<span class="fc" id="L3295">        jacobian.setElementAt(14, 11, m33);</span>
+
+<span class="fc" id="L3297">        jacobian.setElementAt(15, 0, g13);</span>
+<span class="fc" id="L3298">        jacobian.setElementAt(15, 1, g23);</span>
+<span class="fc" id="L3299">        jacobian.setElementAt(15, 3, g33);</span>
+<span class="fc" id="L3300">        jacobian.setElementAt(15, 12, m11);</span>
+<span class="fc" id="L3301">        jacobian.setElementAt(15, 13, m12);</span>
+<span class="fc" id="L3302">        jacobian.setElementAt(15, 14, m13);</span>
+
+<span class="fc" id="L3304">        jacobian.setElementAt(16, 2, g23);</span>
+<span class="fc" id="L3305">        jacobian.setElementAt(16, 4, g33);</span>
+<span class="fc" id="L3306">        jacobian.setElementAt(16, 13, m22);</span>
+<span class="fc" id="L3307">        jacobian.setElementAt(16, 14, m23);</span>
+
+<span class="fc" id="L3309">        jacobian.setElementAt(17, 5, g33);</span>
+<span class="fc" id="L3310">        jacobian.setElementAt(17, 14, m33);</span>
+
+<span class="fc" id="L3312">        final Matrix jacobianTrans = jacobian.transposeAndReturnNew();</span>
+<span class="fc" id="L3313">        jacobian.multiply(mEstimatedCovariance);</span>
+<span class="fc" id="L3314">        jacobian.multiply(jacobianTrans);</span>
+<span class="fc" id="L3315">        mEstimatedCovariance = jacobian;</span>
+<span class="fc" id="L3316">    }</span>
 
     /**
      * Internal method to perform general calibration when G-dependent cross
@@ -3219,51 +3348,51 @@ public class KnownBiasEasyGyroscopeCalibrator {
         // Ωmeas - M*b - M*G*ftrue = M*Ωtrue
         // M^-1 * (Ωmeas - M*b - M*G*ftrue) = Ωtrue
 
-<span class="fc" id="L3222">        final GradientEstimator gradientEstimator = new GradientEstimator(</span>
-<span class="fc" id="L3223">                new MultiDimensionFunctionEvaluatorListener() {</span>
+<span class="fc" id="L3351">        final GradientEstimator gradientEstimator = new GradientEstimator(</span>
+<span class="fc" id="L3352">                new MultiDimensionFunctionEvaluatorListener() {</span>
                     @Override
                     public double evaluate(double[] params)
                             throws EvaluationException {
-<span class="fc" id="L3227">                        return evaluateGeneralWithGDependentCrossBiases(mI, params);</span>
+<span class="fc" id="L3356">                        return evaluateGeneralWithGDependentCrossBiases(mI, params);</span>
                     }
                 });
 
-<span class="fc" id="L3231">        final Matrix initialM = Matrix.identity(</span>
+<span class="fc" id="L3360">        final Matrix initialM = Matrix.identity(</span>
                 BodyKinematics.COMPONENTS, BodyKinematics.COMPONENTS);
-<span class="fc" id="L3233">        initialM.add(getInitialMg());</span>
+<span class="fc" id="L3362">        initialM.add(getInitialMg());</span>
 
-<span class="fc" id="L3235">        final Matrix invInitialM = Utils.inverse(initialM);</span>
-<span class="fc" id="L3236">        final Matrix initialGg = getInitialGg();</span>
-<span class="fc" id="L3237">        final Matrix initialG = invInitialM.multiplyAndReturnNew(initialGg);</span>
+<span class="fc" id="L3364">        final Matrix invInitialM = Utils.inverse(initialM);</span>
+<span class="fc" id="L3365">        final Matrix initialGg = getInitialGg();</span>
+<span class="fc" id="L3366">        final Matrix initialG = invInitialM.multiplyAndReturnNew(initialGg);</span>
 
-<span class="fc" id="L3239">        final Matrix bg = getBiasAsMatrix();</span>
-<span class="fc" id="L3240">        mB = invInitialM.multiplyAndReturnNew(bg);</span>
+<span class="fc" id="L3368">        final Matrix bg = getBiasAsMatrix();</span>
+<span class="fc" id="L3369">        mB = invInitialM.multiplyAndReturnNew(bg);</span>
 
-<span class="fc" id="L3242">        mFitter.setFunctionEvaluator(</span>
-<span class="fc" id="L3243">                new LevenbergMarquardtMultiDimensionFunctionEvaluator() {</span>
+<span class="fc" id="L3371">        mFitter.setFunctionEvaluator(</span>
+<span class="fc" id="L3372">                new LevenbergMarquardtMultiDimensionFunctionEvaluator() {</span>
                     @Override
                     public int getNumberOfDimensions() {
                         // Before and after normalized gravity versors
-<span class="fc" id="L3247">                        return 2 * BodyKinematics.COMPONENTS;</span>
+<span class="fc" id="L3376">                        return 2 * BodyKinematics.COMPONENTS;</span>
                     }
 
                     @Override
                     public double[] createInitialParametersArray() {
-<span class="fc" id="L3252">                        final double[] initial =</span>
+<span class="fc" id="L3381">                        final double[] initial =</span>
                                 new double[GENERAL_UNKNOWNS_AND_CROSS_BIASES];
 
                         // cross coupling errors M
-<span class="fc" id="L3256">                        final int num = BodyKinematics.COMPONENTS * BodyKinematics.COMPONENTS;</span>
-<span class="fc bfc" id="L3257" title="All 2 branches covered.">                        for (int i = 0; i &lt; num; i++) {</span>
-<span class="fc" id="L3258">                            initial[i] = initialM.getElementAtIndex(i);</span>
+<span class="fc" id="L3385">                        final int num = BodyKinematics.COMPONENTS * BodyKinematics.COMPONENTS;</span>
+<span class="fc bfc" id="L3386" title="All 2 branches covered.">                        for (int i = 0; i &lt; num; i++) {</span>
+<span class="fc" id="L3387">                            initial[i] = initialM.getElementAtIndex(i);</span>
                         }
 
                         // g-dependent cross biases G
-<span class="fc bfc" id="L3262" title="All 2 branches covered.">                        for (int i = 0, j = num; i &lt; num; i++, j++) {</span>
-<span class="fc" id="L3263">                            initial[j] = initialG.getElementAtIndex(i);</span>
+<span class="fc bfc" id="L3391" title="All 2 branches covered.">                        for (int i = 0, j = num; i &lt; num; i++, j++) {</span>
+<span class="fc" id="L3392">                            initial[j] = initialG.getElementAtIndex(i);</span>
                         }
 
-<span class="fc" id="L3266">                        return initial;</span>
+<span class="fc" id="L3395">                        return initial;</span>
                     }
 
                     @Override
@@ -3271,78 +3400,225 @@ public class KnownBiasEasyGyroscopeCalibrator {
                             final int i, final double[] point,
                             final double[] params, final double[] derivatives)
                             throws EvaluationException {
-<span class="fc" id="L3274">                        mI = i;</span>
+<span class="fc" id="L3403">                        mI = i;</span>
 
                         // point contains fixed gravity versor values for current
                         // sequence
-<span class="fc" id="L3278">                        mPoint = point;</span>
+<span class="fc" id="L3407">                        mPoint = point;</span>
 
-<span class="fc" id="L3280">                        gradientEstimator.gradient(params, derivatives);</span>
+<span class="fc" id="L3409">                        gradientEstimator.gradient(params, derivatives);</span>
 
-<span class="fc" id="L3282">                        return evaluateGeneralWithGDependentCrossBiases(i, params);</span>
+<span class="fc" id="L3411">                        return evaluateGeneralWithGDependentCrossBiases(i, params);</span>
                     }
                 });
 
-<span class="fc" id="L3286">        setInputData();</span>
+<span class="fc" id="L3415">        setInputData();</span>
 
-<span class="fc" id="L3288">        mFitter.fit();</span>
+<span class="fc" id="L3417">        mFitter.fit();</span>
 
-<span class="fc" id="L3290">        final double[] result = mFitter.getA();</span>
+<span class="fc" id="L3419">        final double[] result = mFitter.getA();</span>
 
-<span class="fc" id="L3292">        final double m11 = result[0];</span>
-<span class="fc" id="L3293">        final double m21 = result[1];</span>
-<span class="fc" id="L3294">        final double m31 = result[2];</span>
+<span class="fc" id="L3421">        final double m11 = result[0];</span>
+<span class="fc" id="L3422">        final double m21 = result[1];</span>
+<span class="fc" id="L3423">        final double m31 = result[2];</span>
 
-<span class="fc" id="L3296">        final double m12 = result[3];</span>
-<span class="fc" id="L3297">        final double m22 = result[4];</span>
-<span class="fc" id="L3298">        final double m32 = result[5];</span>
+<span class="fc" id="L3425">        final double m12 = result[3];</span>
+<span class="fc" id="L3426">        final double m22 = result[4];</span>
+<span class="fc" id="L3427">        final double m32 = result[5];</span>
 
-<span class="fc" id="L3300">        final double m13 = result[6];</span>
-<span class="fc" id="L3301">        final double m23 = result[7];</span>
-<span class="fc" id="L3302">        final double m33 = result[8];</span>
+<span class="fc" id="L3429">        final double m13 = result[6];</span>
+<span class="fc" id="L3430">        final double m23 = result[7];</span>
+<span class="fc" id="L3431">        final double m33 = result[8];</span>
 
-<span class="fc" id="L3304">        final double g11 = result[9];</span>
-<span class="fc" id="L3305">        final double g21 = result[10];</span>
-<span class="fc" id="L3306">        final double g31 = result[11];</span>
+<span class="fc" id="L3433">        final double g11 = result[9];</span>
+<span class="fc" id="L3434">        final double g21 = result[10];</span>
+<span class="fc" id="L3435">        final double g31 = result[11];</span>
 
-<span class="fc" id="L3308">        final double g12 = result[12];</span>
-<span class="fc" id="L3309">        final double g22 = result[13];</span>
-<span class="fc" id="L3310">        final double g32 = result[14];</span>
+<span class="fc" id="L3437">        final double g12 = result[12];</span>
+<span class="fc" id="L3438">        final double g22 = result[13];</span>
+<span class="fc" id="L3439">        final double g32 = result[14];</span>
 
-<span class="fc" id="L3312">        final double g13 = result[15];</span>
-<span class="fc" id="L3313">        final double g23 = result[16];</span>
-<span class="fc" id="L3314">        final double g33 = result[17];</span>
+<span class="fc" id="L3441">        final double g13 = result[15];</span>
+<span class="fc" id="L3442">        final double g23 = result[16];</span>
+<span class="fc" id="L3443">        final double g33 = result[17];</span>
 
-<span class="fc" id="L3316">        final Matrix m = new Matrix(BodyKinematics.COMPONENTS,</span>
+<span class="fc" id="L3445">        final Matrix m = new Matrix(BodyKinematics.COMPONENTS,</span>
                 BodyKinematics.COMPONENTS);
-<span class="fc" id="L3318">        m.setElementAtIndex(0, m11);</span>
-<span class="fc" id="L3319">        m.setElementAtIndex(1, m21);</span>
-<span class="fc" id="L3320">        m.setElementAtIndex(2, m31);</span>
+<span class="fc" id="L3447">        m.setElementAtIndex(0, m11);</span>
+<span class="fc" id="L3448">        m.setElementAtIndex(1, m21);</span>
+<span class="fc" id="L3449">        m.setElementAtIndex(2, m31);</span>
 
-<span class="fc" id="L3322">        m.setElementAtIndex(3, m12);</span>
-<span class="fc" id="L3323">        m.setElementAtIndex(4, m22);</span>
-<span class="fc" id="L3324">        m.setElementAtIndex(5, m32);</span>
+<span class="fc" id="L3451">        m.setElementAtIndex(3, m12);</span>
+<span class="fc" id="L3452">        m.setElementAtIndex(4, m22);</span>
+<span class="fc" id="L3453">        m.setElementAtIndex(5, m32);</span>
 
-<span class="fc" id="L3326">        m.setElementAtIndex(6, m13);</span>
-<span class="fc" id="L3327">        m.setElementAtIndex(7, m23);</span>
-<span class="fc" id="L3328">        m.setElementAtIndex(8, m33);</span>
+<span class="fc" id="L3455">        m.setElementAtIndex(6, m13);</span>
+<span class="fc" id="L3456">        m.setElementAtIndex(7, m23);</span>
+<span class="fc" id="L3457">        m.setElementAtIndex(8, m33);</span>
 
-<span class="fc" id="L3330">        final Matrix g = new Matrix(BodyKinematics.COMPONENTS,</span>
+<span class="fc" id="L3459">        final Matrix g = new Matrix(BodyKinematics.COMPONENTS,</span>
                 BodyKinematics.COMPONENTS);
-<span class="fc" id="L3332">        g.setElementAtIndex(0, g11);</span>
-<span class="fc" id="L3333">        g.setElementAtIndex(1, g21);</span>
-<span class="fc" id="L3334">        g.setElementAtIndex(2, g31);</span>
+<span class="fc" id="L3461">        g.setElementAtIndex(0, g11);</span>
+<span class="fc" id="L3462">        g.setElementAtIndex(1, g21);</span>
+<span class="fc" id="L3463">        g.setElementAtIndex(2, g31);</span>
 
-<span class="fc" id="L3336">        g.setElementAtIndex(3, g12);</span>
-<span class="fc" id="L3337">        g.setElementAtIndex(4, g22);</span>
-<span class="fc" id="L3338">        g.setElementAtIndex(5, g32);</span>
+<span class="fc" id="L3465">        g.setElementAtIndex(3, g12);</span>
+<span class="fc" id="L3466">        g.setElementAtIndex(4, g22);</span>
+<span class="fc" id="L3467">        g.setElementAtIndex(5, g32);</span>
 
-<span class="fc" id="L3340">        g.setElementAtIndex(6, g13);</span>
-<span class="fc" id="L3341">        g.setElementAtIndex(7, g23);</span>
-<span class="fc" id="L3342">        g.setElementAtIndex(8, g33);</span>
+<span class="fc" id="L3469">        g.setElementAtIndex(6, g13);</span>
+<span class="fc" id="L3470">        g.setElementAtIndex(7, g23);</span>
+<span class="fc" id="L3471">        g.setElementAtIndex(8, g33);</span>
 
-<span class="fc" id="L3344">        setResult(m, g);</span>
-<span class="fc" id="L3345">    }</span>
+<span class="fc" id="L3473">        setResult(m, g);</span>
+
+        // at this point covariance is expressed in terms of M and G, and must
+        // be expressed in terms of Mg and Gg.
+        // We know that:
+        //Mg = M - I
+        //Gg = M * G
+
+        //M = [m11  m12  m13]
+        //    [m21  m22  m23]
+        //    [m31  m32  m33]
+
+        //G = [g11  g12  g13]
+        //    [g21  g22  g23]
+        //    [g31  g32  g33]
+
+        //Mg = [sx  mxy  mxz] = [m11 - 1    m12         m13     ]
+        //     [myx	sy	 myz]   [m21        m22 - 1     m23     ]
+        //     [mzx	mzy  sz ]   [m31        m32         m33 - 1 ]
+
+        //Gg = [gg11  gg12  gg13] = [m11  m12  m13][g11  g12  g13]
+        //     [gg21  gg22  gg23]   [m21  m22  m23][g21  g22  g23]
+        //     [gg31  gg32  gg33]   [m31  m32  m33][g31  g32  g33]
+
+        // Defining the linear application:
+        // F(M, G) = F(m11, m21, m31, m12, m22, m32, m13, m23, m33, g11, g21, g31, g12, g22, g32, g13, g23, g33)
+        // as:
+        // [sx] =   [m11 - 1]
+        // [sy]     [m22 - 1]
+        // [sz]     [m33 - 1]
+        // [mxy]    [m12]
+        // [mxz]    [m13]
+        // [myx]    [m21]
+        // [myz]    [m23]
+        // [mzx]    [m31]
+        // [mzy]    [m32]
+        // [gg11]   [m11 * g11 + m12 * g21 + m13 * g31]
+        // [gg21]   [m21 * g11 + m22 * g21 + m23 * g31]
+        // [gg31]   [m31 * g11 + m32 * g21 + m33 * g31]
+        // [gg12]   [m11 * g12 + m12 * g22 + m13 * g32]
+        // [gg22]   [m21 * g12 + m22 * g22 + n23 * g32]
+        // [gg32]   [m31 * g12 + m32 * g22 + m33 * g32]
+        // [gg13]   [m11 * g13 + m12 * g23 + m13 * g33]
+        // [gg23]   [m21 * g13 + m22 * g23 + m23 * g33]
+        // [gg33]   [m31 * g13 + m32 * g23 + m33 * g33]
+
+        // Then the Jacobian of F(M, G) is:
+        //J = [1    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0  ]
+        //    [0    0    0    0    1    0    0    0    0    0    0    0    0    0    0    0    0    0  ]
+        //    [0    0    0    0    0    0    0    0    1    0    0    0    0    0    0    0    0    0  ]
+        //    [0    0    0    1    0    0    0    0    0    0    0    0    0    0    0    0    0    0  ]
+        //    [0    0    0    0    0    0    1    0    0    0    0    0    0    0    0    0    0    0  ]
+        //    [0    1    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0  ]
+        //    [0    0    0    0    0    0    0    1    0    0    0    0    0    0    0    0    0    0  ]
+        //    [0    0    1    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0  ]
+        //    [0    0    0    0    0    1    0    0    0    0    0    0    0    0    0    0    0    0  ]
+        //    [g11  0    0    g21  0    0    g31  0    0    m11  m12  m13  0    0    0    0    0    0  ]
+        //    [0    g11  0    0    g21  0    0    g31  0    m21  m22  m23  0    0    0    0    0    0  ]
+        //    [0    0    g11  0    0    g21  0    0    g31  m31  m32  m33  0    0    0    0    0    0  ]
+        //    [g12  0    0    g22  0    0    g32  0    0    0    0    0    m11  m12  m13  0    0    0  ]
+        //    [0    g12  0    0    g22  0    0    g32  0    0    0    0    m21  m22  m23  0    0    0  ]
+        //    [0    0    g12  0    0    g22  0    0    g32  0    0    0    m31  m32  m33  0    0    0  ]
+        //    [g13  0    0    g23  0    0    g33  0    0    0    0    0    0    0    0    m11  m12  m13]
+        //    [0    g13  0    0    g23  0    0    g33  0    0    0    0    0    0    0    m21  m22  m23]
+        //    [0    0    g13  0    0    g23  0    0    g33  0    0    0    0    0    0    m31  m32  m33]
+
+        // We know that the propagated covariance is J * Cov * J', hence:
+<span class="fc" id="L3540">        final Matrix jacobian = new Matrix(GENERAL_UNKNOWNS_AND_CROSS_BIASES, GENERAL_UNKNOWNS_AND_CROSS_BIASES);</span>
+
+<span class="fc" id="L3542">        jacobian.setElementAt(0, 0, 1.0);</span>
+<span class="fc" id="L3543">        jacobian.setElementAt(1, 4, 1.0);</span>
+<span class="fc" id="L3544">        jacobian.setElementAt(2, 8, 1.0);</span>
+
+<span class="fc" id="L3546">        jacobian.setElementAt(3, 3, 1.0);</span>
+<span class="fc" id="L3547">        jacobian.setElementAt(4, 6, 1.0);</span>
+<span class="fc" id="L3548">        jacobian.setElementAt(5, 1, 1.0);</span>
+
+<span class="fc" id="L3550">        jacobian.setElementAt(6, 7, 1.0);</span>
+<span class="fc" id="L3551">        jacobian.setElementAt(7, 2, 1.0);</span>
+<span class="fc" id="L3552">        jacobian.setElementAt(8, 5, 1.9);</span>
+
+<span class="fc" id="L3554">        jacobian.setElementAt(9, 0, g11);</span>
+<span class="fc" id="L3555">        jacobian.setElementAt(9, 3, g21);</span>
+<span class="fc" id="L3556">        jacobian.setElementAt(9, 6, g31);</span>
+<span class="fc" id="L3557">        jacobian.setElementAt(9, 9, m11);</span>
+<span class="fc" id="L3558">        jacobian.setElementAt(9, 10, m12);</span>
+<span class="fc" id="L3559">        jacobian.setElementAt(9, 11, m13);</span>
+
+<span class="fc" id="L3561">        jacobian.setElementAt(10, 1, g11);</span>
+<span class="fc" id="L3562">        jacobian.setElementAt(10, 4, g21);</span>
+<span class="fc" id="L3563">        jacobian.setElementAt(10, 7, g31);</span>
+<span class="fc" id="L3564">        jacobian.setElementAt(10, 9, m21);</span>
+<span class="fc" id="L3565">        jacobian.setElementAt(10, 10, m22);</span>
+<span class="fc" id="L3566">        jacobian.setElementAt(10, 11, m23);</span>
+
+<span class="fc" id="L3568">        jacobian.setElementAt(11, 2, g11);</span>
+<span class="fc" id="L3569">        jacobian.setElementAt(11, 5, g21);</span>
+<span class="fc" id="L3570">        jacobian.setElementAt(11, 8, g31);</span>
+<span class="fc" id="L3571">        jacobian.setElementAt(11, 9, m31);</span>
+<span class="fc" id="L3572">        jacobian.setElementAt(11, 10, m32);</span>
+<span class="fc" id="L3573">        jacobian.setElementAt(11, 11, m33);</span>
+
+<span class="fc" id="L3575">        jacobian.setElementAt(12, 0, g12);</span>
+<span class="fc" id="L3576">        jacobian.setElementAt(12, 3, g22);</span>
+<span class="fc" id="L3577">        jacobian.setElementAt(12, 6, g32);</span>
+<span class="fc" id="L3578">        jacobian.setElementAt(12, 12, m11);</span>
+<span class="fc" id="L3579">        jacobian.setElementAt(12, 13, m12);</span>
+<span class="fc" id="L3580">        jacobian.setElementAt(12, 14, m13);</span>
+
+<span class="fc" id="L3582">        jacobian.setElementAt(13, 1, g12);</span>
+<span class="fc" id="L3583">        jacobian.setElementAt(13, 4, g22);</span>
+<span class="fc" id="L3584">        jacobian.setElementAt(13, 7, g32);</span>
+<span class="fc" id="L3585">        jacobian.setElementAt(13, 12, m21);</span>
+<span class="fc" id="L3586">        jacobian.setElementAt(13, 13, m22);</span>
+<span class="fc" id="L3587">        jacobian.setElementAt(13, 14, m23);</span>
+
+<span class="fc" id="L3589">        jacobian.setElementAt(14, 2, g12);</span>
+<span class="fc" id="L3590">        jacobian.setElementAt(14, 5, g22);</span>
+<span class="fc" id="L3591">        jacobian.setElementAt(14, 8, g32);</span>
+<span class="fc" id="L3592">        jacobian.setElementAt(14, 12, m31);</span>
+<span class="fc" id="L3593">        jacobian.setElementAt(14, 13, m32);</span>
+<span class="fc" id="L3594">        jacobian.setElementAt(14, 14, m33);</span>
+
+<span class="fc" id="L3596">        jacobian.setElementAt(15, 0, g13);</span>
+<span class="fc" id="L3597">        jacobian.setElementAt(15, 3, g23);</span>
+<span class="fc" id="L3598">        jacobian.setElementAt(15, 6, g33);</span>
+<span class="fc" id="L3599">        jacobian.setElementAt(15, 15, m11);</span>
+<span class="fc" id="L3600">        jacobian.setElementAt(15, 16, m12);</span>
+<span class="fc" id="L3601">        jacobian.setElementAt(15, 17, m13);</span>
+
+<span class="fc" id="L3603">        jacobian.setElementAt(16, 1, g13);</span>
+<span class="fc" id="L3604">        jacobian.setElementAt(16, 4, g23);</span>
+<span class="fc" id="L3605">        jacobian.setElementAt(16, 7, g33);</span>
+<span class="fc" id="L3606">        jacobian.setElementAt(16, 15, m21);</span>
+<span class="fc" id="L3607">        jacobian.setElementAt(16, 16, m22);</span>
+<span class="fc" id="L3608">        jacobian.setElementAt(16, 17, m23);</span>
+
+<span class="fc" id="L3610">        jacobian.setElementAt(17, 2, g13);</span>
+<span class="fc" id="L3611">        jacobian.setElementAt(17, 5, g23);</span>
+<span class="fc" id="L3612">        jacobian.setElementAt(17, 8, g33);</span>
+<span class="fc" id="L3613">        jacobian.setElementAt(17, 15, m31);</span>
+<span class="fc" id="L3614">        jacobian.setElementAt(17, 16, m32);</span>
+<span class="fc" id="L3615">        jacobian.setElementAt(17, 17, m33);</span>
+
+<span class="fc" id="L3617">        final Matrix jacobianTrans = jacobian.transposeAndReturnNew();</span>
+<span class="fc" id="L3618">        jacobian.multiply(mEstimatedCovariance);</span>
+<span class="fc" id="L3619">        jacobian.multiply(jacobianTrans);</span>
+<span class="fc" id="L3620">        mEstimatedCovariance = jacobian;</span>
+<span class="fc" id="L3621">    }</span>
 
     /**
      * Internal method to perform calibration when common z-axis is assumed
@@ -3388,53 +3664,53 @@ public class KnownBiasEasyGyroscopeCalibrator {
         // Notice that M is upper diagonal because Mg is upper diagonal
         // when common axis is assumed
 
-<span class="fc" id="L3391">        final GradientEstimator gradientEstimator = new GradientEstimator(</span>
-<span class="fc" id="L3392">                new MultiDimensionFunctionEvaluatorListener() {</span>
+<span class="fc" id="L3667">        final GradientEstimator gradientEstimator = new GradientEstimator(</span>
+<span class="fc" id="L3668">                new MultiDimensionFunctionEvaluatorListener() {</span>
                     @Override
                     public double evaluate(final double[] params)
                             throws EvaluationException {
-<span class="fc" id="L3396">                        return evaluateCommonAxis(mI, params);</span>
+<span class="fc" id="L3672">                        return evaluateCommonAxis(mI, params);</span>
                     }
                 });
 
-<span class="fc" id="L3400">        final Matrix initialM = Matrix.identity(</span>
+<span class="fc" id="L3676">        final Matrix initialM = Matrix.identity(</span>
                 BodyKinematics.COMPONENTS, BodyKinematics.COMPONENTS);
-<span class="fc" id="L3402">        initialM.add(getInitialMg());</span>
+<span class="fc" id="L3678">        initialM.add(getInitialMg());</span>
 
         // Force initial M to be upper diagonal
-<span class="fc" id="L3405">        initialM.setElementAt(1, 0, 0.0);</span>
-<span class="fc" id="L3406">        initialM.setElementAt(2, 0, 0.0);</span>
-<span class="fc" id="L3407">        initialM.setElementAt(2, 1, 0.0);</span>
+<span class="fc" id="L3681">        initialM.setElementAt(1, 0, 0.0);</span>
+<span class="fc" id="L3682">        initialM.setElementAt(2, 0, 0.0);</span>
+<span class="fc" id="L3683">        initialM.setElementAt(2, 1, 0.0);</span>
 
-<span class="fc" id="L3409">        final Matrix invInitialM = Utils.inverse(initialM);</span>
+<span class="fc" id="L3685">        final Matrix invInitialM = Utils.inverse(initialM);</span>
 
-<span class="fc" id="L3411">        final Matrix bg = getBiasAsMatrix();</span>
-<span class="fc" id="L3412">        mB = invInitialM.multiplyAndReturnNew(bg);</span>
+<span class="fc" id="L3687">        final Matrix bg = getBiasAsMatrix();</span>
+<span class="fc" id="L3688">        mB = invInitialM.multiplyAndReturnNew(bg);</span>
 
-<span class="fc" id="L3414">        mFitter.setFunctionEvaluator(</span>
-<span class="fc" id="L3415">                new LevenbergMarquardtMultiDimensionFunctionEvaluator() {</span>
+<span class="fc" id="L3690">        mFitter.setFunctionEvaluator(</span>
+<span class="fc" id="L3691">                new LevenbergMarquardtMultiDimensionFunctionEvaluator() {</span>
                     @Override
                     public int getNumberOfDimensions() {
                         // Before and after normalized gravity versors
-<span class="fc" id="L3419">                        return 2 * BodyKinematics.COMPONENTS;</span>
+<span class="fc" id="L3695">                        return 2 * BodyKinematics.COMPONENTS;</span>
                     }
 
                     @Override
                     public double[] createInitialParametersArray() {
-<span class="fc" id="L3424">                        final double[] initial = new double[COMMON_Z_AXIS_UNKNOWNS];</span>
+<span class="fc" id="L3700">                        final double[] initial = new double[COMMON_Z_AXIS_UNKNOWNS];</span>
 
                         // upper diagonal cross coupling errors M
-<span class="fc" id="L3427">                        int k = 0;</span>
-<span class="fc bfc" id="L3428" title="All 2 branches covered.">                        for (int j = 0; j &lt; BodyKinematics.COMPONENTS; j++) {</span>
-<span class="fc bfc" id="L3429" title="All 2 branches covered.">                            for (int i = 0; i &lt; BodyKinematics.COMPONENTS; i++) {</span>
-<span class="fc bfc" id="L3430" title="All 2 branches covered.">                                if (i &lt;= j) {</span>
-<span class="fc" id="L3431">                                    initial[k] = initialM.getElementAt(i, j);</span>
-<span class="fc" id="L3432">                                    k++;</span>
+<span class="fc" id="L3703">                        int k = 0;</span>
+<span class="fc bfc" id="L3704" title="All 2 branches covered.">                        for (int j = 0; j &lt; BodyKinematics.COMPONENTS; j++) {</span>
+<span class="fc bfc" id="L3705" title="All 2 branches covered.">                            for (int i = 0; i &lt; BodyKinematics.COMPONENTS; i++) {</span>
+<span class="fc bfc" id="L3706" title="All 2 branches covered.">                                if (i &lt;= j) {</span>
+<span class="fc" id="L3707">                                    initial[k] = initialM.getElementAt(i, j);</span>
+<span class="fc" id="L3708">                                    k++;</span>
                                 }
                             }
                         }
 
-<span class="fc" id="L3437">                        return initial;</span>
+<span class="fc" id="L3713">                        return initial;</span>
                     }
 
                     @Override
@@ -3442,49 +3718,130 @@ public class KnownBiasEasyGyroscopeCalibrator {
                             final int i, final double[] point,
                             final double[] params, final double[] derivatives)
                             throws EvaluationException {
-<span class="fc" id="L3445">                        mI = i;</span>
+<span class="fc" id="L3721">                        mI = i;</span>
 
                         // point contains fixed gravity versor values for current
                         // sequence
-<span class="fc" id="L3449">                        mPoint = point;</span>
+<span class="fc" id="L3725">                        mPoint = point;</span>
 
-<span class="fc" id="L3451">                        gradientEstimator.gradient(params, derivatives);</span>
+<span class="fc" id="L3727">                        gradientEstimator.gradient(params, derivatives);</span>
 
-<span class="fc" id="L3453">                        return evaluateCommonAxis(i, params);</span>
+<span class="fc" id="L3729">                        return evaluateCommonAxis(i, params);</span>
                     }
                 });
 
-<span class="fc" id="L3457">        setInputData();</span>
+<span class="fc" id="L3733">        setInputData();</span>
 
-<span class="fc" id="L3459">        mFitter.fit();</span>
+<span class="fc" id="L3735">        mFitter.fit();</span>
 
-<span class="fc" id="L3461">        final double[] result = mFitter.getA();</span>
+<span class="fc" id="L3737">        final double[] result = mFitter.getA();</span>
 
-<span class="fc" id="L3463">        final double m11 = result[0];</span>
+<span class="fc" id="L3739">        final double m11 = result[0];</span>
 
-<span class="fc" id="L3465">        final double m12 = result[1];</span>
-<span class="fc" id="L3466">        final double m22 = result[2];</span>
+<span class="fc" id="L3741">        final double m12 = result[1];</span>
+<span class="fc" id="L3742">        final double m22 = result[2];</span>
 
-<span class="fc" id="L3468">        final double m13 = result[3];</span>
-<span class="fc" id="L3469">        final double m23 = result[4];</span>
-<span class="fc" id="L3470">        final double m33 = result[5];</span>
+<span class="fc" id="L3744">        final double m13 = result[3];</span>
+<span class="fc" id="L3745">        final double m23 = result[4];</span>
+<span class="fc" id="L3746">        final double m33 = result[5];</span>
 
-<span class="fc" id="L3472">        final Matrix m = new Matrix(BodyKinematics.COMPONENTS,</span>
+<span class="fc" id="L3748">        final Matrix m = new Matrix(BodyKinematics.COMPONENTS,</span>
                 BodyKinematics.COMPONENTS);
-<span class="fc" id="L3474">        m.setElementAtIndex(0, m11);</span>
-<span class="fc" id="L3475">        m.setElementAtIndex(1, 0.0);</span>
-<span class="fc" id="L3476">        m.setElementAtIndex(2, 0.0);</span>
+<span class="fc" id="L3750">        m.setElementAtIndex(0, m11);</span>
+<span class="fc" id="L3751">        m.setElementAtIndex(1, 0.0);</span>
+<span class="fc" id="L3752">        m.setElementAtIndex(2, 0.0);</span>
 
-<span class="fc" id="L3478">        m.setElementAtIndex(3, m12);</span>
-<span class="fc" id="L3479">        m.setElementAtIndex(4, m22);</span>
-<span class="fc" id="L3480">        m.setElementAtIndex(5, 0.0);</span>
+<span class="fc" id="L3754">        m.setElementAtIndex(3, m12);</span>
+<span class="fc" id="L3755">        m.setElementAtIndex(4, m22);</span>
+<span class="fc" id="L3756">        m.setElementAtIndex(5, 0.0);</span>
 
-<span class="fc" id="L3482">        m.setElementAtIndex(6, m13);</span>
-<span class="fc" id="L3483">        m.setElementAtIndex(7, m23);</span>
-<span class="fc" id="L3484">        m.setElementAtIndex(8, m33);</span>
+<span class="fc" id="L3758">        m.setElementAtIndex(6, m13);</span>
+<span class="fc" id="L3759">        m.setElementAtIndex(7, m23);</span>
+<span class="fc" id="L3760">        m.setElementAtIndex(8, m33);</span>
 
-<span class="fc" id="L3486">        setResult(m);</span>
-<span class="fc" id="L3487">    }</span>
+<span class="fc" id="L3762">        setResult(m);</span>
+
+        // at this point covariance is expressed in terms of M, and must
+        // be expressed in terms of Mg.
+        // We know that:
+        //Mg = M - I
+        //Gg = M * G
+
+        //M = [m11  m12  m13]
+        //    [0    m22  m23]
+        //    [0    0    m33]
+
+        //G = [g11  g12  g13] = 0
+        //    [g21  g22  g23]
+        //    [g31  g32  g33]
+
+        //Mg = [sx  mxy  mxz] = [m11 - 1    m12         m13     ]
+        //     [myx	sy	 myz]   [0          m22 - 1     m23     ]
+        //     [mzx	mzy  sz ]   [0          0           m33 - 1 ]
+
+        //Gg = [gg11  gg12  gg13] = [m11  m12  m13][g11  g12  g13]
+        //     [gg21  gg22  gg23]   [0    m22  m23][g21  g22  g23]
+        //     [gg31  gg32  gg33]   [0    0    m33][g31  g32  g33]
+
+        // Defining the linear application:
+        // F(M) = F(m11, m12, m22, m32=0, m13, m23, m33)
+        // as:
+        // [sx] =   [m11 - 1]
+        // [sy]     [m22 - 1]
+        // [sz]     [m33 - 1]
+        // [mxy]    [m12]
+        // [mxz]    [m13]
+        // [myx]    [0]
+        // [myz]    [m23]
+        // [mzx]    [0]
+        // [mzy]    [0]
+        // [gg11]   [0]
+        // [gg21]   [0]
+        // [gg31]   [0]
+        // [gg12]   [0]
+        // [gg22]   [0]
+        // [gg32]   [0]
+        // [gg13]   [0]
+        // [gg23]   [0]
+        // [gg33]   [0]
+
+        // Then the Jacobian of F(M) is:
+        //J = [1    0    0    0    0    0]
+        //    [0    0    1    0    0    0]
+        //    [0    0    0    0    0    1]
+        //    [0    1    0    0    0    0]
+        //    [0    0    0    1    0    0]
+        //    [0    0    0    0    0    0]
+        //    [0    0    0    0    1    0]
+        //    [0    0    0    0    0    0]
+        //    [0    0    0    0    0    0]
+        //    [0    0    0    0    0    0]
+        //    [0    0    0    0    0    0]
+        //    [0    0    0    0    0    0]
+        //    [0    0    0    0    0    0]
+        //    [0    0    0    0    0    0]
+        //    [0    0    0    0    0    0]
+        //    [0    0    0    0    0    0]
+        //    [0    0    0    0    0    0]
+        //    [0    0    0    0    0    0]
+
+        // We know that the propagated covariance is J * Cov * J', hence:
+<span class="fc" id="L3829">        final Matrix jacobian = new Matrix(GENERAL_UNKNOWNS_AND_CROSS_BIASES, COMMON_Z_AXIS_UNKNOWNS);</span>
+
+<span class="fc" id="L3831">        jacobian.setElementAt(0, 0, 1.0);</span>
+<span class="fc" id="L3832">        jacobian.setElementAt(1, 2, 1.0);</span>
+<span class="fc" id="L3833">        jacobian.setElementAt(2, 5, 1.0);</span>
+
+<span class="fc" id="L3835">        jacobian.setElementAt(3, 1, 1.0);</span>
+<span class="fc" id="L3836">        jacobian.setElementAt(4, 3, 1.0);</span>
+
+<span class="fc" id="L3838">        jacobian.setElementAt(6, 4, 1.0);</span>
+
+<span class="fc" id="L3840">        final Matrix jacobianTrans = jacobian.transposeAndReturnNew();</span>
+<span class="fc" id="L3841">        jacobian.multiply(mEstimatedCovariance);</span>
+<span class="fc" id="L3842">        jacobian.multiply(jacobianTrans);</span>
+<span class="fc" id="L3843">        mEstimatedCovariance = jacobian;</span>
+<span class="fc" id="L3844">    }</span>
 
     /**
      * Internal method to perform general calibration when G-dependant cross
@@ -3524,35 +3881,35 @@ public class KnownBiasEasyGyroscopeCalibrator {
 
         // M^-1 * (Ωmeas - M*b) = Ωtrue
 
-<span class="fc" id="L3527">        final GradientEstimator gradientEstimator = new GradientEstimator(</span>
-<span class="fc" id="L3528">                new MultiDimensionFunctionEvaluatorListener() {</span>
+<span class="fc" id="L3884">        final GradientEstimator gradientEstimator = new GradientEstimator(</span>
+<span class="fc" id="L3885">                new MultiDimensionFunctionEvaluatorListener() {</span>
                     @Override
                     public double evaluate(final double[] params)
                             throws EvaluationException {
-<span class="fc" id="L3532">                        return evaluateGeneral(mI, params);</span>
+<span class="fc" id="L3889">                        return evaluateGeneral(mI, params);</span>
                     }
                 });
 
-<span class="fc" id="L3536">        final Matrix initialM = Matrix.identity(</span>
+<span class="fc" id="L3893">        final Matrix initialM = Matrix.identity(</span>
                 BodyKinematics.COMPONENTS, BodyKinematics.COMPONENTS);
-<span class="fc" id="L3538">        initialM.add(getInitialMg());</span>
+<span class="fc" id="L3895">        initialM.add(getInitialMg());</span>
 
-<span class="fc" id="L3540">        final Matrix invInitialM = Utils.inverse(initialM);</span>
+<span class="fc" id="L3897">        final Matrix invInitialM = Utils.inverse(initialM);</span>
 
-<span class="fc" id="L3542">        final Matrix bg = getBiasAsMatrix();</span>
-<span class="fc" id="L3543">        mB = invInitialM.multiplyAndReturnNew(bg);</span>
+<span class="fc" id="L3899">        final Matrix bg = getBiasAsMatrix();</span>
+<span class="fc" id="L3900">        mB = invInitialM.multiplyAndReturnNew(bg);</span>
 
-<span class="fc" id="L3545">        mFitter.setFunctionEvaluator(</span>
-<span class="fc" id="L3546">                new LevenbergMarquardtMultiDimensionFunctionEvaluator() {</span>
+<span class="fc" id="L3902">        mFitter.setFunctionEvaluator(</span>
+<span class="fc" id="L3903">                new LevenbergMarquardtMultiDimensionFunctionEvaluator() {</span>
                     @Override
                     public int getNumberOfDimensions() {
                         // Before and after normalized gravity versors
-<span class="fc" id="L3550">                        return 2 * BodyKinematics.COMPONENTS;</span>
+<span class="fc" id="L3907">                        return 2 * BodyKinematics.COMPONENTS;</span>
                     }
 
                     @Override
                     public double[] createInitialParametersArray() {
-<span class="fc" id="L3555">                        return initialM.toArray();</span>
+<span class="fc" id="L3912">                        return initialM.toArray();</span>
                     }
 
                     @Override
@@ -3560,52 +3917,136 @@ public class KnownBiasEasyGyroscopeCalibrator {
                             final int i, final double[] point,
                             final double[] params, final double[] derivatives)
                             throws EvaluationException {
-<span class="fc" id="L3563">                        mI = i;</span>
+<span class="fc" id="L3920">                        mI = i;</span>
 
                         // point contains fixed gravity versor values for current
                         // sequence
-<span class="fc" id="L3567">                        mPoint = point;</span>
+<span class="fc" id="L3924">                        mPoint = point;</span>
 
-<span class="fc" id="L3569">                        gradientEstimator.gradient(params, derivatives);</span>
+<span class="fc" id="L3926">                        gradientEstimator.gradient(params, derivatives);</span>
 
-<span class="fc" id="L3571">                        return evaluateGeneral(i, params);</span>
+<span class="fc" id="L3928">                        return evaluateGeneral(i, params);</span>
                     }
                 });
 
-<span class="fc" id="L3575">        setInputData();</span>
+<span class="fc" id="L3932">        setInputData();</span>
 
-<span class="fc" id="L3577">        mFitter.fit();</span>
+<span class="fc" id="L3934">        mFitter.fit();</span>
 
-<span class="fc" id="L3579">        final double[] result = mFitter.getA();</span>
+<span class="fc" id="L3936">        final double[] result = mFitter.getA();</span>
 
-<span class="fc" id="L3581">        final double m11 = result[0];</span>
-<span class="fc" id="L3582">        final double m21 = result[1];</span>
-<span class="fc" id="L3583">        final double m31 = result[2];</span>
+<span class="fc" id="L3938">        final double m11 = result[0];</span>
+<span class="fc" id="L3939">        final double m21 = result[1];</span>
+<span class="fc" id="L3940">        final double m31 = result[2];</span>
 
-<span class="fc" id="L3585">        final double m12 = result[3];</span>
-<span class="fc" id="L3586">        final double m22 = result[4];</span>
-<span class="fc" id="L3587">        final double m32 = result[5];</span>
+<span class="fc" id="L3942">        final double m12 = result[3];</span>
+<span class="fc" id="L3943">        final double m22 = result[4];</span>
+<span class="fc" id="L3944">        final double m32 = result[5];</span>
 
-<span class="fc" id="L3589">        final double m13 = result[6];</span>
-<span class="fc" id="L3590">        final double m23 = result[7];</span>
-<span class="fc" id="L3591">        final double m33 = result[8];</span>
+<span class="fc" id="L3946">        final double m13 = result[6];</span>
+<span class="fc" id="L3947">        final double m23 = result[7];</span>
+<span class="fc" id="L3948">        final double m33 = result[8];</span>
 
-<span class="fc" id="L3593">        final Matrix m = new Matrix(BodyKinematics.COMPONENTS,</span>
+<span class="fc" id="L3950">        final Matrix m = new Matrix(BodyKinematics.COMPONENTS,</span>
                 BodyKinematics.COMPONENTS);
-<span class="fc" id="L3595">        m.setElementAtIndex(0, m11);</span>
-<span class="fc" id="L3596">        m.setElementAtIndex(1, m21);</span>
-<span class="fc" id="L3597">        m.setElementAtIndex(2, m31);</span>
+<span class="fc" id="L3952">        m.setElementAtIndex(0, m11);</span>
+<span class="fc" id="L3953">        m.setElementAtIndex(1, m21);</span>
+<span class="fc" id="L3954">        m.setElementAtIndex(2, m31);</span>
 
-<span class="fc" id="L3599">        m.setElementAtIndex(3, m12);</span>
-<span class="fc" id="L3600">        m.setElementAtIndex(4, m22);</span>
-<span class="fc" id="L3601">        m.setElementAtIndex(5, m32);</span>
+<span class="fc" id="L3956">        m.setElementAtIndex(3, m12);</span>
+<span class="fc" id="L3957">        m.setElementAtIndex(4, m22);</span>
+<span class="fc" id="L3958">        m.setElementAtIndex(5, m32);</span>
 
-<span class="fc" id="L3603">        m.setElementAtIndex(6, m13);</span>
-<span class="fc" id="L3604">        m.setElementAtIndex(7, m23);</span>
-<span class="fc" id="L3605">        m.setElementAtIndex(8, m33);</span>
+<span class="fc" id="L3960">        m.setElementAtIndex(6, m13);</span>
+<span class="fc" id="L3961">        m.setElementAtIndex(7, m23);</span>
+<span class="fc" id="L3962">        m.setElementAtIndex(8, m33);</span>
 
-<span class="fc" id="L3607">        setResult(m);</span>
-<span class="fc" id="L3608">    }</span>
+<span class="fc" id="L3964">        setResult(m);</span>
+
+        // at this point covariance is expressed in terms of M, and must
+        // be expressed in terms of Mg.
+        // We know that:
+        //Mg = M - I
+        //Gg = M * G
+
+        //M = [m11  m12  m13]
+        //    [m21  m22  m23]
+        //    [m31  m32  m33]
+
+        //G = [g11  g12  g13] = 0
+        //    [g21  g22  g23]
+        //    [g31  g32  g33]
+
+        //Mg = [sx  mxy  mxz] = [m11 - 1    m12         m13     ]
+        //     [myx	sy	 myz]   [m21        m22 - 1     m23     ]
+        //     [mzx	mzy  sz ]   [m31        m32         m33 - 1 ]
+
+        //Gg = [gg11  gg12  gg13] = [m11  m12  m13][g11  g12  g13]
+        //     [gg21  gg22  gg23]   [m21  m22  m23][g21  g22  g23]
+        //     [gg31  gg32  gg33]   [m31  m32  m33][g31  g32  g33]
+
+        // Defining the linear application:
+        // F(M) = F(m11, m21, m31, m12, m22, m32, m13, m23, m33)
+        // as:
+        // [sx] =   [m11 - 1]
+        // [sy]     [m22 - 1]
+        // [sz]     [m33 - 1]
+        // [mxy]    [m12]
+        // [mxz]    [m13]
+        // [myx]    [m21]
+        // [myz]    [m23]
+        // [mzx]    [m31]
+        // [mzy]    [m32]
+        // [gg11]   [0]
+        // [gg21]   [0]
+        // [gg31]   [0]
+        // [gg12]   [0]
+        // [gg22]   [0]
+        // [gg32]   [0]
+        // [gg13]   [0]
+        // [gg23]   [0]
+        // [gg33]   [0]
+
+        // Then the Jacobian of F(M) is:
+        //J = [1    0    0    0    0    0    0    0    0]
+        //    [0    0    0    0    1    0    0    0    0]
+        //    [0    0    0    0    0    0    0    0    1]
+        //    [0    0    0    1    0    0    0    0    0]
+        //    [0    0    0    0    0    0    1    0    0]
+        //    [0    1    0    0    0    0    0    0    0]
+        //    [0    0    0    0    0    0    0    1    0]
+        //    [0    0    1    0    0    0    0    0    0]
+        //    [0    0    0    0    0    1    0    0    0]
+        //    [0    0    0    0    0    0    0    0    0]
+        //    [0    0    0    0    0    0    0    0    0]
+        //    [0    0    0    0    0    0    0    0    0]
+        //    [0    0    0    0    0    0    0    0    0]
+        //    [0    0    0    0    0    0    0    0    0]
+        //    [0    0    0    0    0    0    0    0    0]
+        //    [0    0    0    0    0    0    0    0    0]
+        //    [0    0    0    0    0    0    0    0    0]
+        //    [0    0    0    0    0    0    0    0    0]
+
+        // We know that the propagated covariance is J * Cov * J', hence:
+<span class="fc" id="L4031">        final Matrix jacobian = new Matrix(GENERAL_UNKNOWNS_AND_CROSS_BIASES, GENERAL_UNKNOWNS);</span>
+
+<span class="fc" id="L4033">        jacobian.setElementAt(0, 0, 1.0);</span>
+<span class="fc" id="L4034">        jacobian.setElementAt(1, 4, 1.0);</span>
+<span class="fc" id="L4035">        jacobian.setElementAt(2, 8, 1.0);</span>
+
+<span class="fc" id="L4037">        jacobian.setElementAt(3, 3, 1.0);</span>
+<span class="fc" id="L4038">        jacobian.setElementAt(4, 6, 1.0);</span>
+<span class="fc" id="L4039">        jacobian.setElementAt(5, 1, 1.0);</span>
+
+<span class="fc" id="L4041">        jacobian.setElementAt(6, 7, 1.0);</span>
+<span class="fc" id="L4042">        jacobian.setElementAt(7, 2, 1.0);</span>
+<span class="fc" id="L4043">        jacobian.setElementAt(8, 5, 1.9);</span>
+
+<span class="fc" id="L4045">        final Matrix jacobianTrans = jacobian.transposeAndReturnNew();</span>
+<span class="fc" id="L4046">        jacobian.multiply(mEstimatedCovariance);</span>
+<span class="fc" id="L4047">        jacobian.multiply(jacobianTrans);</span>
+<span class="fc" id="L4048">        mEstimatedCovariance = jacobian;</span>
+<span class="fc" id="L4049">    }</span>
 
 
     /**
@@ -3614,67 +4055,67 @@ public class KnownBiasEasyGyroscopeCalibrator {
      * @throws AlgebraException if there are numerical instabilities.
      */
     private void setInputData() throws AlgebraException {
-<span class="fc" id="L3617">        final Matrix ba = getAccelerometerBiasAsMatrix();</span>
-<span class="fc" id="L3618">        final Matrix ma = getAccelerometerMa();</span>
+<span class="fc" id="L4058">        final Matrix ba = getAccelerometerBiasAsMatrix();</span>
+<span class="fc" id="L4059">        final Matrix ma = getAccelerometerMa();</span>
 
-<span class="fc" id="L3620">        final double[] measuredBeforeF = new double[BodyKinematics.COMPONENTS];</span>
-<span class="fc" id="L3621">        final double[] fixedBeforeF = new double[BodyKinematics.COMPONENTS];</span>
+<span class="fc" id="L4061">        final double[] measuredBeforeF = new double[BodyKinematics.COMPONENTS];</span>
+<span class="fc" id="L4062">        final double[] fixedBeforeF = new double[BodyKinematics.COMPONENTS];</span>
 
-<span class="fc" id="L3623">        final double[] measuredAfterF = new double[BodyKinematics.COMPONENTS];</span>
-<span class="fc" id="L3624">        final double[] fixedAfterF = new double[BodyKinematics.COMPONENTS];</span>
+<span class="fc" id="L4064">        final double[] measuredAfterF = new double[BodyKinematics.COMPONENTS];</span>
+<span class="fc" id="L4065">        final double[] fixedAfterF = new double[BodyKinematics.COMPONENTS];</span>
 
-<span class="fc" id="L3626">        final int numSequences = mSequences.size();</span>
-<span class="fc" id="L3627">        final Matrix x = new Matrix(numSequences,</span>
+<span class="fc" id="L4067">        final int numSequences = mSequences.size();</span>
+<span class="fc" id="L4068">        final Matrix x = new Matrix(numSequences,</span>
                 2 * BodyKinematics.COMPONENTS);
-<span class="fc" id="L3629">        final double[] y = new double[numSequences];</span>
-<span class="fc" id="L3630">        final double[] standardDeviations = new double[numSequences];</span>
+<span class="fc" id="L4070">        final double[] y = new double[numSequences];</span>
+<span class="fc" id="L4071">        final double[] standardDeviations = new double[numSequences];</span>
 
         // make a copy of input sequences that will be used to update
         // kinematics measurements with fixed values for memory efficiency
 
-<span class="fc" id="L3635">        mFixedSequences = new ArrayList&lt;&gt;();</span>
-<span class="fc bfc" id="L3636" title="All 2 branches covered.">        for (BodyKinematicsSequence&lt;StandardDeviationTimedBodyKinematics&gt; sequence : mSequences) {</span>
-<span class="fc" id="L3637">            mFixedSequences.add(new BodyKinematicsSequence&lt;&gt;(sequence));</span>
-<span class="fc" id="L3638">        }</span>
+<span class="fc" id="L4076">        mFixedSequences = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L4077" title="All 2 branches covered.">        for (BodyKinematicsSequence&lt;StandardDeviationTimedBodyKinematics&gt; sequence : mSequences) {</span>
+<span class="fc" id="L4078">            mFixedSequences.add(new BodyKinematicsSequence&lt;&gt;(sequence));</span>
+<span class="fc" id="L4079">        }</span>
 
-<span class="fc" id="L3640">        mAccelerationFixer.setBias(ba);</span>
-<span class="fc" id="L3641">        mAccelerationFixer.setCrossCouplingErrors(ma);</span>
+<span class="fc" id="L4081">        mAccelerationFixer.setBias(ba);</span>
+<span class="fc" id="L4082">        mAccelerationFixer.setCrossCouplingErrors(ma);</span>
 
-<span class="fc" id="L3643">        int i = 0;</span>
-<span class="fc bfc" id="L3644" title="All 2 branches covered.">        for (final BodyKinematicsSequence&lt;StandardDeviationTimedBodyKinematics&gt; sequence : mSequences) {</span>
+<span class="fc" id="L4084">        int i = 0;</span>
+<span class="fc bfc" id="L4085" title="All 2 branches covered.">        for (final BodyKinematicsSequence&lt;StandardDeviationTimedBodyKinematics&gt; sequence : mSequences) {</span>
             // sequence mean accelerometer samples of previous static
             // period will need to be fixed using accelerometer calibration
             // parameters
-<span class="fc" id="L3648">            measuredBeforeF[0] = sequence.getBeforeMeanFx();</span>
-<span class="fc" id="L3649">            measuredBeforeF[1] = sequence.getBeforeMeanFy();</span>
-<span class="fc" id="L3650">            measuredBeforeF[2] = sequence.getBeforeMeanFz();</span>
-<span class="fc" id="L3651">            mAccelerationFixer.fix(measuredBeforeF, fixedBeforeF);</span>
+<span class="fc" id="L4089">            measuredBeforeF[0] = sequence.getBeforeMeanFx();</span>
+<span class="fc" id="L4090">            measuredBeforeF[1] = sequence.getBeforeMeanFy();</span>
+<span class="fc" id="L4091">            measuredBeforeF[2] = sequence.getBeforeMeanFz();</span>
+<span class="fc" id="L4092">            mAccelerationFixer.fix(measuredBeforeF, fixedBeforeF);</span>
 
-<span class="fc" id="L3653">            measuredAfterF[0] = sequence.getAfterMeanFx();</span>
-<span class="fc" id="L3654">            measuredAfterF[1] = sequence.getAfterMeanFy();</span>
-<span class="fc" id="L3655">            measuredAfterF[2] = sequence.getAfterMeanFz();</span>
-<span class="fc" id="L3656">            mAccelerationFixer.fix(measuredAfterF, fixedAfterF);</span>
+<span class="fc" id="L4094">            measuredAfterF[0] = sequence.getAfterMeanFx();</span>
+<span class="fc" id="L4095">            measuredAfterF[1] = sequence.getAfterMeanFy();</span>
+<span class="fc" id="L4096">            measuredAfterF[2] = sequence.getAfterMeanFz();</span>
+<span class="fc" id="L4097">            mAccelerationFixer.fix(measuredAfterF, fixedAfterF);</span>
 
             // because we are only interested in gravity direction, we
             // normalize these vectors, so that gravity becomes independent
             // of current Earth position.
-<span class="fc" id="L3661">            ArrayUtils.normalize(fixedBeforeF);</span>
-<span class="fc" id="L3662">            ArrayUtils.normalize(fixedAfterF);</span>
+<span class="fc" id="L4102">            ArrayUtils.normalize(fixedBeforeF);</span>
+<span class="fc" id="L4103">            ArrayUtils.normalize(fixedAfterF);</span>
 
-<span class="fc" id="L3664">            x.setSubmatrix(i, 0, i, 2,</span>
+<span class="fc" id="L4105">            x.setSubmatrix(i, 0, i, 2,</span>
                     fixedBeforeF);
-<span class="fc" id="L3666">            x.setSubmatrix(i, 3, i, 5,</span>
+<span class="fc" id="L4107">            x.setSubmatrix(i, 3, i, 5,</span>
                     fixedAfterF);
 
-<span class="fc" id="L3669">            y[i] = 0.0;</span>
+<span class="fc" id="L4110">            y[i] = 0.0;</span>
 
-<span class="fc" id="L3671">            standardDeviations[i] = computeAverageAngularRateStandardDeviation(</span>
+<span class="fc" id="L4112">            standardDeviations[i] = computeAverageAngularRateStandardDeviation(</span>
                     sequence);
-<span class="fc" id="L3673">            i++;</span>
-<span class="fc" id="L3674">        }</span>
+<span class="fc" id="L4114">            i++;</span>
+<span class="fc" id="L4115">        }</span>
 
-<span class="fc" id="L3676">        mFitter.setInputData(x, y, standardDeviations);</span>
-<span class="fc" id="L3677">    }</span>
+<span class="fc" id="L4117">        mFitter.setInputData(x, y, standardDeviations);</span>
+<span class="fc" id="L4118">    }</span>
 
     /**
      * Computes average angular rate standard deviation for measurements
@@ -3686,15 +4127,15 @@ public class KnownBiasEasyGyroscopeCalibrator {
      */
     private static double computeAverageAngularRateStandardDeviation(
             final BodyKinematicsSequence&lt;StandardDeviationTimedBodyKinematics&gt; sequence) {
-<span class="fc" id="L3689">        final List&lt;StandardDeviationTimedBodyKinematics&gt; items = sequence.getSortedItems();</span>
-<span class="fc" id="L3690">        final double size = items.size();</span>
+<span class="fc" id="L4130">        final List&lt;StandardDeviationTimedBodyKinematics&gt; items = sequence.getSortedItems();</span>
+<span class="fc" id="L4131">        final double size = items.size();</span>
 
-<span class="fc" id="L3692">        double result = 0.0;</span>
-<span class="fc bfc" id="L3693" title="All 2 branches covered.">        for (final StandardDeviationTimedBodyKinematics item : items) {</span>
-<span class="fc" id="L3694">            result += item.getAngularRateStandardDeviation() / size;</span>
-<span class="fc" id="L3695">        }</span>
+<span class="fc" id="L4133">        double result = 0.0;</span>
+<span class="fc bfc" id="L4134" title="All 2 branches covered.">        for (final StandardDeviationTimedBodyKinematics item : items) {</span>
+<span class="fc" id="L4135">            result += item.getAngularRateStandardDeviation() / size;</span>
+<span class="fc" id="L4136">        }</span>
 
-<span class="fc" id="L3697">        return result;</span>
+<span class="fc" id="L4138">        return result;</span>
     }
 
     /**
@@ -3704,8 +4145,8 @@ public class KnownBiasEasyGyroscopeCalibrator {
      * @return converted value.
      */
     private static double convertAcceleration(final Acceleration acceleration) {
-<span class="fc" id="L3707">        return AccelerationConverter.convert(acceleration.getValue().doubleValue(),</span>
-<span class="fc" id="L3708">                acceleration.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);</span>
+<span class="fc" id="L4148">        return AccelerationConverter.convert(acceleration.getValue().doubleValue(),</span>
+<span class="fc" id="L4149">                acceleration.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);</span>
     }
 
     /**
@@ -3716,7 +4157,7 @@ public class KnownBiasEasyGyroscopeCalibrator {
      * @return converted value.
      */
     private static double convertAngularSpeed(final double value, final AngularSpeedUnit unit) {
-<span class="fc" id="L3719">        return AngularSpeedConverter.convert(value, unit,</span>
+<span class="fc" id="L4160">        return AngularSpeedConverter.convert(value, unit,</span>
                 AngularSpeedUnit.RADIANS_PER_SECOND);
     }
 
@@ -3727,8 +4168,8 @@ public class KnownBiasEasyGyroscopeCalibrator {
      * @return converted value.
      */
     private static double convertAngularSpeed(final AngularSpeed angularSpeed) {
-<span class="fc" id="L3730">        return convertAngularSpeed(angularSpeed.getValue().doubleValue(),</span>
-<span class="fc" id="L3731">                angularSpeed.getUnit());</span>
+<span class="fc" id="L4171">        return convertAngularSpeed(angularSpeed.getValue().doubleValue(),</span>
+<span class="fc" id="L4172">                angularSpeed.getUnit());</span>
     }
 
     /**
@@ -3741,11 +4182,11 @@ public class KnownBiasEasyGyroscopeCalibrator {
      */
     private void setResult(final Matrix m, final Matrix g)
             throws AlgebraException {
-<span class="fc" id="L3744">        setResult(m);</span>
+<span class="fc" id="L4185">        setResult(m);</span>
 
         // Gg = M*G
-<span class="fc" id="L3747">        m.multiply(g, mEstimatedGg);</span>
-<span class="fc" id="L3748">    }</span>
+<span class="fc" id="L4188">        m.multiply(g, mEstimatedGg);</span>
+<span class="fc" id="L4189">    }</span>
 
     /**
      * Makes proper conversion of internal cross-coupling and bias matrices.
@@ -3762,27 +4203,27 @@ public class KnownBiasEasyGyroscopeCalibrator {
         // Mg = M - I
         // bg = M*b
 
-<span class="fc bfc" id="L3765" title="All 2 branches covered.">        if (mEstimatedMg == null) {</span>
-<span class="fc" id="L3766">            mEstimatedMg = m;</span>
+<span class="fc bfc" id="L4206" title="All 2 branches covered.">        if (mEstimatedMg == null) {</span>
+<span class="fc" id="L4207">            mEstimatedMg = m;</span>
         } else {
-<span class="fc" id="L3768">            mEstimatedMg.copyFrom(m);</span>
+<span class="fc" id="L4209">            mEstimatedMg.copyFrom(m);</span>
         }
 
-<span class="fc bfc" id="L3771" title="All 2 branches covered.">        for (int i = 0; i &lt; BodyKinematics.COMPONENTS; i++) {</span>
-<span class="fc" id="L3772">            mEstimatedMg.setElementAt(i, i,</span>
-<span class="fc" id="L3773">                    mEstimatedMg.getElementAt(i, i) - 1.0);</span>
+<span class="fc bfc" id="L4212" title="All 2 branches covered.">        for (int i = 0; i &lt; BodyKinematics.COMPONENTS; i++) {</span>
+<span class="fc" id="L4213">            mEstimatedMg.setElementAt(i, i,</span>
+<span class="fc" id="L4214">                    mEstimatedMg.getElementAt(i, i) - 1.0);</span>
         }
 
-<span class="fc bfc" id="L3776" title="All 2 branches covered.">        if (mEstimatedGg == null) {</span>
-<span class="fc" id="L3777">            mEstimatedGg = new Matrix(</span>
+<span class="fc bfc" id="L4217" title="All 2 branches covered.">        if (mEstimatedGg == null) {</span>
+<span class="fc" id="L4218">            mEstimatedGg = new Matrix(</span>
                     BodyKinematics.COMPONENTS, BodyKinematics.COMPONENTS);
         } else {
-<span class="fc" id="L3780">            mEstimatedGg.initialize(0.0);</span>
+<span class="fc" id="L4221">            mEstimatedGg.initialize(0.0);</span>
         }
 
-<span class="fc" id="L3783">        mEstimatedCovariance = mFitter.getCovar();</span>
-<span class="fc" id="L3784">        mEstimatedChiSq = mFitter.getChisq();</span>
-<span class="fc" id="L3785">    }</span>
+<span class="fc" id="L4224">        mEstimatedCovariance = mFitter.getCovar();</span>
+<span class="fc" id="L4225">        mEstimatedChiSq = mFitter.getChisq();</span>
+<span class="fc" id="L4226">    }</span>
 
     /**
      * Computes gravity versor error at the end of a sequence using provided
@@ -3801,31 +4242,31 @@ public class KnownBiasEasyGyroscopeCalibrator {
             final int i, final double[] params)
             throws EvaluationException {
 
-<span class="fc" id="L3804">        final double m11 = params[0];</span>
-<span class="fc" id="L3805">        final double m21 = params[1];</span>
-<span class="fc" id="L3806">        final double m31 = params[2];</span>
+<span class="fc" id="L4245">        final double m11 = params[0];</span>
+<span class="fc" id="L4246">        final double m21 = params[1];</span>
+<span class="fc" id="L4247">        final double m31 = params[2];</span>
 
-<span class="fc" id="L3808">        final double m12 = params[3];</span>
-<span class="fc" id="L3809">        final double m22 = params[4];</span>
-<span class="fc" id="L3810">        final double m32 = params[5];</span>
+<span class="fc" id="L4249">        final double m12 = params[3];</span>
+<span class="fc" id="L4250">        final double m22 = params[4];</span>
+<span class="fc" id="L4251">        final double m32 = params[5];</span>
 
-<span class="fc" id="L3812">        final double m13 = params[6];</span>
-<span class="fc" id="L3813">        final double m23 = params[7];</span>
-<span class="fc" id="L3814">        final double m33 = params[8];</span>
+<span class="fc" id="L4253">        final double m13 = params[6];</span>
+<span class="fc" id="L4254">        final double m23 = params[7];</span>
+<span class="fc" id="L4255">        final double m33 = params[8];</span>
 
-<span class="fc" id="L3816">        final double g11 = params[9];</span>
-<span class="fc" id="L3817">        final double g21 = params[10];</span>
-<span class="fc" id="L3818">        final double g31 = params[11];</span>
+<span class="fc" id="L4257">        final double g11 = params[9];</span>
+<span class="fc" id="L4258">        final double g21 = params[10];</span>
+<span class="fc" id="L4259">        final double g31 = params[11];</span>
 
-<span class="fc" id="L3820">        final double g12 = params[12];</span>
-<span class="fc" id="L3821">        final double g22 = params[13];</span>
-<span class="fc" id="L3822">        final double g32 = params[14];</span>
+<span class="fc" id="L4261">        final double g12 = params[12];</span>
+<span class="fc" id="L4262">        final double g22 = params[13];</span>
+<span class="fc" id="L4263">        final double g32 = params[14];</span>
 
-<span class="fc" id="L3824">        final double g13 = params[15];</span>
-<span class="fc" id="L3825">        final double g23 = params[16];</span>
-<span class="fc" id="L3826">        final double g33 = params[17];</span>
+<span class="fc" id="L4265">        final double g13 = params[15];</span>
+<span class="fc" id="L4266">        final double g23 = params[16];</span>
+<span class="fc" id="L4267">        final double g33 = params[17];</span>
 
-<span class="fc" id="L3828">        return evaluate(i, m11, m21, m31, m12, m22, m32,</span>
+<span class="fc" id="L4269">        return evaluate(i, m11, m21, m31, m12, m22, m32,</span>
                 m13, m23, m33, g11, g21, g31, g12, g22, g32,
                 g13, g23, g33);
     }
@@ -3847,28 +4288,28 @@ public class KnownBiasEasyGyroscopeCalibrator {
             final int i, final double[] params)
             throws EvaluationException {
 
-<span class="fc" id="L3850">        final double m11 = params[0];</span>
+<span class="fc" id="L4291">        final double m11 = params[0];</span>
 
-<span class="fc" id="L3852">        final double m12 = params[1];</span>
-<span class="fc" id="L3853">        final double m22 = params[2];</span>
+<span class="fc" id="L4293">        final double m12 = params[1];</span>
+<span class="fc" id="L4294">        final double m22 = params[2];</span>
 
-<span class="fc" id="L3855">        final double m13 = params[3];</span>
-<span class="fc" id="L3856">        final double m23 = params[4];</span>
-<span class="fc" id="L3857">        final double m33 = params[5];</span>
+<span class="fc" id="L4296">        final double m13 = params[3];</span>
+<span class="fc" id="L4297">        final double m23 = params[4];</span>
+<span class="fc" id="L4298">        final double m33 = params[5];</span>
 
-<span class="fc" id="L3859">        final double g11 = params[6];</span>
-<span class="fc" id="L3860">        final double g21 = params[7];</span>
-<span class="fc" id="L3861">        final double g31 = params[8];</span>
+<span class="fc" id="L4300">        final double g11 = params[6];</span>
+<span class="fc" id="L4301">        final double g21 = params[7];</span>
+<span class="fc" id="L4302">        final double g31 = params[8];</span>
 
-<span class="fc" id="L3863">        final double g12 = params[9];</span>
-<span class="fc" id="L3864">        final double g22 = params[10];</span>
-<span class="fc" id="L3865">        final double g32 = params[11];</span>
+<span class="fc" id="L4304">        final double g12 = params[9];</span>
+<span class="fc" id="L4305">        final double g22 = params[10];</span>
+<span class="fc" id="L4306">        final double g32 = params[11];</span>
 
-<span class="fc" id="L3867">        final double g13 = params[12];</span>
-<span class="fc" id="L3868">        final double g23 = params[13];</span>
-<span class="fc" id="L3869">        final double g33 = params[14];</span>
+<span class="fc" id="L4308">        final double g13 = params[12];</span>
+<span class="fc" id="L4309">        final double g23 = params[13];</span>
+<span class="fc" id="L4310">        final double g33 = params[14];</span>
 
-<span class="fc" id="L3871">        return evaluate(i, m11, 0.0, 0.0, m12, m22, 0.0,</span>
+<span class="fc" id="L4312">        return evaluate(i, m11, 0.0, 0.0, m12, m22, 0.0,</span>
                 m13, m23, m33, g11, g21, g31, g12, g22, g32,
                 g13, g23, g33);
     }
@@ -3889,19 +4330,19 @@ public class KnownBiasEasyGyroscopeCalibrator {
             final int i, final double[] params)
             throws EvaluationException {
 
-<span class="fc" id="L3892">        final double m11 = params[0];</span>
-<span class="fc" id="L3893">        final double m21 = params[1];</span>
-<span class="fc" id="L3894">        final double m31 = params[2];</span>
+<span class="fc" id="L4333">        final double m11 = params[0];</span>
+<span class="fc" id="L4334">        final double m21 = params[1];</span>
+<span class="fc" id="L4335">        final double m31 = params[2];</span>
 
-<span class="fc" id="L3896">        final double m12 = params[3];</span>
-<span class="fc" id="L3897">        final double m22 = params[4];</span>
-<span class="fc" id="L3898">        final double m32 = params[5];</span>
+<span class="fc" id="L4337">        final double m12 = params[3];</span>
+<span class="fc" id="L4338">        final double m22 = params[4];</span>
+<span class="fc" id="L4339">        final double m32 = params[5];</span>
 
-<span class="fc" id="L3900">        final double m13 = params[6];</span>
-<span class="fc" id="L3901">        final double m23 = params[7];</span>
-<span class="fc" id="L3902">        final double m33 = params[8];</span>
+<span class="fc" id="L4341">        final double m13 = params[6];</span>
+<span class="fc" id="L4342">        final double m23 = params[7];</span>
+<span class="fc" id="L4343">        final double m33 = params[8];</span>
 
-<span class="fc" id="L3904">        return evaluate(i, m11, m21, m31, m12, m22, m32,</span>
+<span class="fc" id="L4345">        return evaluate(i, m11, m21, m31, m12, m22, m32,</span>
                 m13, m23, m33, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
                 0.0, 0.0, 0.0);
     }
@@ -3921,16 +4362,16 @@ public class KnownBiasEasyGyroscopeCalibrator {
     private double evaluateCommonAxis(
             final int i, final double[] params)
             throws EvaluationException {
-<span class="fc" id="L3924">        final double m11 = params[0];</span>
+<span class="fc" id="L4365">        final double m11 = params[0];</span>
 
-<span class="fc" id="L3926">        final double m12 = params[1];</span>
-<span class="fc" id="L3927">        final double m22 = params[2];</span>
+<span class="fc" id="L4367">        final double m12 = params[1];</span>
+<span class="fc" id="L4368">        final double m22 = params[2];</span>
 
-<span class="fc" id="L3929">        final double m13 = params[3];</span>
-<span class="fc" id="L3930">        final double m23 = params[4];</span>
-<span class="fc" id="L3931">        final double m33 = params[5];</span>
+<span class="fc" id="L4370">        final double m13 = params[3];</span>
+<span class="fc" id="L4371">        final double m23 = params[4];</span>
+<span class="fc" id="L4372">        final double m33 = params[5];</span>
 
-<span class="fc" id="L3933">        return evaluate(i, m11, 0.0, 0.0, m12, m22, 0.0,</span>
+<span class="fc" id="L4374">        return evaluate(i, m11, 0.0, 0.0, m12, m22, 0.0,</span>
                 m13, m23, m33, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
                 0.0, 0.0, 0.0);
     }
@@ -3973,100 +4414,100 @@ public class KnownBiasEasyGyroscopeCalibrator {
             final double g13, final double g23, final double g33)
             throws EvaluationException {
         try {
-<span class="fc" id="L3976">            final BodyKinematicsSequence&lt;StandardDeviationTimedBodyKinematics&gt; measuredSequence =</span>
-<span class="fc" id="L3977">                    mSequences.get(i);</span>
-<span class="fc" id="L3978">            final BodyKinematicsSequence&lt;StandardDeviationTimedBodyKinematics&gt; fixedSequence =</span>
-<span class="fc" id="L3979">                    mFixedSequences.get(i);</span>
+<span class="fc" id="L4417">            final BodyKinematicsSequence&lt;StandardDeviationTimedBodyKinematics&gt; measuredSequence =</span>
+<span class="fc" id="L4418">                    mSequences.get(i);</span>
+<span class="fc" id="L4419">            final BodyKinematicsSequence&lt;StandardDeviationTimedBodyKinematics&gt; fixedSequence =</span>
+<span class="fc" id="L4420">                    mFixedSequences.get(i);</span>
 
             // generate new sequence using current parameters to fix angular rate measurements
-<span class="fc bfc" id="L3982" title="All 2 branches covered.">            if (mMeasuredSpecificForce == null) {</span>
-<span class="fc" id="L3983">                mMeasuredSpecificForce = new Matrix(</span>
+<span class="fc bfc" id="L4423" title="All 2 branches covered.">            if (mMeasuredSpecificForce == null) {</span>
+<span class="fc" id="L4424">                mMeasuredSpecificForce = new Matrix(</span>
                         BodyKinematics.COMPONENTS, 1);
             }
-<span class="fc bfc" id="L3986" title="All 2 branches covered.">            if (mTrueSpecificForce == null) {</span>
-<span class="fc" id="L3987">                mTrueSpecificForce = new Matrix(</span>
-                        BodyKinematics.COMPONENTS, 1);
-            }
-
-<span class="fc bfc" id="L3991" title="All 2 branches covered.">            if (mMeasuredAngularRate == null) {</span>
-<span class="fc" id="L3992">                mMeasuredAngularRate = new Matrix(</span>
-                        BodyKinematics.COMPONENTS, 1);
-            }
-<span class="fc bfc" id="L3995" title="All 2 branches covered.">            if (mTrueAngularRate == null) {</span>
-<span class="fc" id="L3996">                mTrueAngularRate = new Matrix(</span>
+<span class="fc bfc" id="L4427" title="All 2 branches covered.">            if (mTrueSpecificForce == null) {</span>
+<span class="fc" id="L4428">                mTrueSpecificForce = new Matrix(</span>
                         BodyKinematics.COMPONENTS, 1);
             }
 
-<span class="fc bfc" id="L4000" title="All 2 branches covered.">            if (mM == null) {</span>
-<span class="fc" id="L4001">                mM = new Matrix(BodyKinematics.COMPONENTS,</span>
+<span class="fc bfc" id="L4432" title="All 2 branches covered.">            if (mMeasuredAngularRate == null) {</span>
+<span class="fc" id="L4433">                mMeasuredAngularRate = new Matrix(</span>
+                        BodyKinematics.COMPONENTS, 1);
+            }
+<span class="fc bfc" id="L4436" title="All 2 branches covered.">            if (mTrueAngularRate == null) {</span>
+<span class="fc" id="L4437">                mTrueAngularRate = new Matrix(</span>
+                        BodyKinematics.COMPONENTS, 1);
+            }
+
+<span class="fc bfc" id="L4441" title="All 2 branches covered.">            if (mM == null) {</span>
+<span class="fc" id="L4442">                mM = new Matrix(BodyKinematics.COMPONENTS,</span>
                         BodyKinematics.COMPONENTS);
             }
-<span class="fc bfc" id="L4004" title="All 2 branches covered.">            if (mInvM == null) {</span>
-<span class="fc" id="L4005">                mInvM = new Matrix(BodyKinematics.COMPONENTS,</span>
+<span class="fc bfc" id="L4445" title="All 2 branches covered.">            if (mInvM == null) {</span>
+<span class="fc" id="L4446">                mInvM = new Matrix(BodyKinematics.COMPONENTS,</span>
                         BodyKinematics.COMPONENTS);
             }
 
-<span class="fc bfc" id="L4009" title="All 2 branches covered.">            if (mG == null) {</span>
-<span class="fc" id="L4010">                mG = new Matrix(BodyKinematics.COMPONENTS,</span>
+<span class="fc bfc" id="L4450" title="All 2 branches covered.">            if (mG == null) {</span>
+<span class="fc" id="L4451">                mG = new Matrix(BodyKinematics.COMPONENTS,</span>
                         BodyKinematics.COMPONENTS);
             }
-<span class="fc bfc" id="L4013" title="All 2 branches covered.">            if (mTmp == null) {</span>
-<span class="fc" id="L4014">                mTmp = new Matrix(BodyKinematics.COMPONENTS, 1);</span>
+<span class="fc bfc" id="L4454" title="All 2 branches covered.">            if (mTmp == null) {</span>
+<span class="fc" id="L4455">                mTmp = new Matrix(BodyKinematics.COMPONENTS, 1);</span>
             }
 
-<span class="fc" id="L4017">            mM.setElementAt(0, 0, m11);</span>
-<span class="fc" id="L4018">            mM.setElementAt(1, 0, m21);</span>
-<span class="fc" id="L4019">            mM.setElementAt(2, 0, m31);</span>
+<span class="fc" id="L4458">            mM.setElementAt(0, 0, m11);</span>
+<span class="fc" id="L4459">            mM.setElementAt(1, 0, m21);</span>
+<span class="fc" id="L4460">            mM.setElementAt(2, 0, m31);</span>
 
-<span class="fc" id="L4021">            mM.setElementAt(0, 1, m12);</span>
-<span class="fc" id="L4022">            mM.setElementAt(1, 1, m22);</span>
-<span class="fc" id="L4023">            mM.setElementAt(2, 1, m32);</span>
+<span class="fc" id="L4462">            mM.setElementAt(0, 1, m12);</span>
+<span class="fc" id="L4463">            mM.setElementAt(1, 1, m22);</span>
+<span class="fc" id="L4464">            mM.setElementAt(2, 1, m32);</span>
 
-<span class="fc" id="L4025">            mM.setElementAt(0, 2, m13);</span>
-<span class="fc" id="L4026">            mM.setElementAt(1, 2, m23);</span>
-<span class="fc" id="L4027">            mM.setElementAt(2, 2, m33);</span>
+<span class="fc" id="L4466">            mM.setElementAt(0, 2, m13);</span>
+<span class="fc" id="L4467">            mM.setElementAt(1, 2, m23);</span>
+<span class="fc" id="L4468">            mM.setElementAt(2, 2, m33);</span>
 
-<span class="fc" id="L4029">            Utils.inverse(mM, mInvM);</span>
+<span class="fc" id="L4470">            Utils.inverse(mM, mInvM);</span>
 
-<span class="fc" id="L4031">            mG.setElementAt(0, 0, g11);</span>
-<span class="fc" id="L4032">            mG.setElementAt(1, 0, g21);</span>
-<span class="fc" id="L4033">            mG.setElementAt(2, 0, g31);</span>
+<span class="fc" id="L4472">            mG.setElementAt(0, 0, g11);</span>
+<span class="fc" id="L4473">            mG.setElementAt(1, 0, g21);</span>
+<span class="fc" id="L4474">            mG.setElementAt(2, 0, g31);</span>
 
-<span class="fc" id="L4035">            mG.setElementAt(0, 1, g12);</span>
-<span class="fc" id="L4036">            mG.setElementAt(1, 1, g22);</span>
-<span class="fc" id="L4037">            mG.setElementAt(2, 1, g32);</span>
+<span class="fc" id="L4476">            mG.setElementAt(0, 1, g12);</span>
+<span class="fc" id="L4477">            mG.setElementAt(1, 1, g22);</span>
+<span class="fc" id="L4478">            mG.setElementAt(2, 1, g32);</span>
 
-<span class="fc" id="L4039">            mG.setElementAt(0, 2, g13);</span>
-<span class="fc" id="L4040">            mG.setElementAt(1, 2, g23);</span>
-<span class="fc" id="L4041">            mG.setElementAt(2, 2, g33);</span>
+<span class="fc" id="L4480">            mG.setElementAt(0, 2, g13);</span>
+<span class="fc" id="L4481">            mG.setElementAt(1, 2, g23);</span>
+<span class="fc" id="L4482">            mG.setElementAt(2, 2, g33);</span>
 
             // fix kinematics
-<span class="fc" id="L4044">            final int numItems = measuredSequence.getItemsCount();</span>
-<span class="fc" id="L4045">            final List&lt;StandardDeviationTimedBodyKinematics&gt; measuredItems = measuredSequence.getSortedItems();</span>
-<span class="fc" id="L4046">            final List&lt;StandardDeviationTimedBodyKinematics&gt; fixedItems = fixedSequence.getSortedItems();</span>
-<span class="fc bfc" id="L4047" title="All 2 branches covered.">            for (int j = 0; j &lt; numItems; j++) {</span>
-<span class="fc" id="L4048">                final StandardDeviationTimedBodyKinematics measuredItem = measuredItems.get(j);</span>
-<span class="fc" id="L4049">                final StandardDeviationTimedBodyKinematics fixedItem = fixedItems.get(j);</span>
+<span class="fc" id="L4485">            final int numItems = measuredSequence.getItemsCount();</span>
+<span class="fc" id="L4486">            final List&lt;StandardDeviationTimedBodyKinematics&gt; measuredItems = measuredSequence.getSortedItems();</span>
+<span class="fc" id="L4487">            final List&lt;StandardDeviationTimedBodyKinematics&gt; fixedItems = fixedSequence.getSortedItems();</span>
+<span class="fc bfc" id="L4488" title="All 2 branches covered.">            for (int j = 0; j &lt; numItems; j++) {</span>
+<span class="fc" id="L4489">                final StandardDeviationTimedBodyKinematics measuredItem = measuredItems.get(j);</span>
+<span class="fc" id="L4490">                final StandardDeviationTimedBodyKinematics fixedItem = fixedItems.get(j);</span>
 
-<span class="fc" id="L4051">                fixKinematics(measuredItem.getKinematics(), fixedItem.getKinematics());</span>
+<span class="fc" id="L4492">                fixKinematics(measuredItem.getKinematics(), fixedItem.getKinematics());</span>
             }
 
 
             // integrate fixed sequence to obtain attitude change
-<span class="fc" id="L4056">            QuaternionIntegrator.integrateGyroSequence(fixedSequence, mQ);</span>
+<span class="fc" id="L4497">            QuaternionIntegrator.integrateGyroSequence(fixedSequence, mQ);</span>
 
-<span class="fc" id="L4058">            mStartPoint.setInhomogeneousCoordinates(</span>
+<span class="fc" id="L4499">            mStartPoint.setInhomogeneousCoordinates(</span>
                     mPoint[0], mPoint[1], mPoint[2]);
-<span class="fc" id="L4060">            mQ.inverse();</span>
-<span class="fc" id="L4061">            mQ.rotate(mStartPoint, mEndPoint);</span>
+<span class="fc" id="L4501">            mQ.inverse();</span>
+<span class="fc" id="L4502">            mQ.rotate(mStartPoint, mEndPoint);</span>
 
-<span class="fc" id="L4063">            mExpectedEndPoint.setInhomogeneousCoordinates(</span>
+<span class="fc" id="L4504">            mExpectedEndPoint.setInhomogeneousCoordinates(</span>
                     mPoint[3], mPoint[4], mPoint[5]);
 
-<span class="fc" id="L4066">            return mExpectedEndPoint.distanceTo(mEndPoint);</span>
+<span class="fc" id="L4507">            return mExpectedEndPoint.distanceTo(mEndPoint);</span>
 
-<span class="nc" id="L4068">        } catch (final AlgebraException e) {</span>
-<span class="nc" id="L4069">            throw new EvaluationException(e);</span>
+<span class="nc" id="L4509">        } catch (final AlgebraException e) {</span>
+<span class="nc" id="L4510">            throw new EvaluationException(e);</span>
         }
     }
 
@@ -4091,31 +4532,31 @@ public class KnownBiasEasyGyroscopeCalibrator {
         // Ωtrue = M^-1 * Ωmeas - b - G*ftrue
 
         // fix specific force
-<span class="fc" id="L4094">        mMeasuredSpecificForce.setElementAtIndex(0, kinematics.getFx());</span>
-<span class="fc" id="L4095">        mMeasuredSpecificForce.setElementAtIndex(1, kinematics.getFy());</span>
-<span class="fc" id="L4096">        mMeasuredSpecificForce.setElementAtIndex(2, kinematics.getFz());</span>
+<span class="fc" id="L4535">        mMeasuredSpecificForce.setElementAtIndex(0, kinematics.getFx());</span>
+<span class="fc" id="L4536">        mMeasuredSpecificForce.setElementAtIndex(1, kinematics.getFy());</span>
+<span class="fc" id="L4537">        mMeasuredSpecificForce.setElementAtIndex(2, kinematics.getFz());</span>
 
-<span class="fc" id="L4098">        mAccelerationFixer.fix(mMeasuredSpecificForce, mTrueSpecificForce);</span>
+<span class="fc" id="L4539">        mAccelerationFixer.fix(mMeasuredSpecificForce, mTrueSpecificForce);</span>
 
         // fix angular rate
-<span class="fc" id="L4101">        mMeasuredAngularRate.setElementAtIndex(0, kinematics.getAngularRateX());</span>
-<span class="fc" id="L4102">        mMeasuredAngularRate.setElementAtIndex(1, kinematics.getAngularRateY());</span>
-<span class="fc" id="L4103">        mMeasuredAngularRate.setElementAtIndex(2, kinematics.getAngularRateZ());</span>
+<span class="fc" id="L4542">        mMeasuredAngularRate.setElementAtIndex(0, kinematics.getAngularRateX());</span>
+<span class="fc" id="L4543">        mMeasuredAngularRate.setElementAtIndex(1, kinematics.getAngularRateY());</span>
+<span class="fc" id="L4544">        mMeasuredAngularRate.setElementAtIndex(2, kinematics.getAngularRateZ());</span>
 
-<span class="fc" id="L4105">        mG.multiply(mTrueSpecificForce, mTmp);</span>
-<span class="fc" id="L4106">        mInvM.multiply(mMeasuredAngularRate, mTrueAngularRate);</span>
-<span class="fc" id="L4107">        mTrueAngularRate.subtract(mB);</span>
-<span class="fc" id="L4108">        mTrueAngularRate.subtract(mTmp);</span>
+<span class="fc" id="L4546">        mG.multiply(mTrueSpecificForce, mTmp);</span>
+<span class="fc" id="L4547">        mInvM.multiply(mMeasuredAngularRate, mTrueAngularRate);</span>
+<span class="fc" id="L4548">        mTrueAngularRate.subtract(mB);</span>
+<span class="fc" id="L4549">        mTrueAngularRate.subtract(mTmp);</span>
 
-<span class="fc" id="L4110">        result.setSpecificForceCoordinates(</span>
-<span class="fc" id="L4111">                mTrueSpecificForce.getElementAtIndex(0),</span>
-<span class="fc" id="L4112">                mTrueSpecificForce.getElementAtIndex(1),</span>
-<span class="fc" id="L4113">                mTrueSpecificForce.getElementAtIndex(2));</span>
+<span class="fc" id="L4551">        result.setSpecificForceCoordinates(</span>
+<span class="fc" id="L4552">                mTrueSpecificForce.getElementAtIndex(0),</span>
+<span class="fc" id="L4553">                mTrueSpecificForce.getElementAtIndex(1),</span>
+<span class="fc" id="L4554">                mTrueSpecificForce.getElementAtIndex(2));</span>
 
-<span class="fc" id="L4115">        result.setAngularRateCoordinates(</span>
-<span class="fc" id="L4116">                mTrueAngularRate.getElementAtIndex(0),</span>
-<span class="fc" id="L4117">                mTrueAngularRate.getElementAtIndex(1),</span>
-<span class="fc" id="L4118">                mTrueAngularRate.getElementAtIndex(2));</span>
-<span class="fc" id="L4119">    }</span>
+<span class="fc" id="L4556">        result.setAngularRateCoordinates(</span>
+<span class="fc" id="L4557">                mTrueAngularRate.getElementAtIndex(0),</span>
+<span class="fc" id="L4558">                mTrueAngularRate.getElementAtIndex(1),</span>
+<span class="fc" id="L4559">                mTrueAngularRate.getElementAtIndex(2));</span>
+<span class="fc" id="L4560">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

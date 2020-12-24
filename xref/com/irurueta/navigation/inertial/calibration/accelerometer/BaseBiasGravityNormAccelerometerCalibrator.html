@@ -5419,201 +5419,198 @@
 <a class="jxr_linenumber" name="L5411" href="#L5411">5411</a>         <em class="jxr_comment">// propagate covariance so that all parameters are taken into account</em>
 <a class="jxr_linenumber" name="L5412" href="#L5412">5412</a>         <em class="jxr_comment">// in the order: sx, sy, sz, mxy, mxz, myx, myz, mzx, mzy</em>
 <a class="jxr_linenumber" name="L5413" href="#L5413">5413</a> 
-<a class="jxr_linenumber" name="L5414" href="#L5414">5414</a>         <em class="jxr_comment">// Since estimated values are:</em>
-<a class="jxr_linenumber" name="L5415" href="#L5415">5415</a>         <em class="jxr_comment">// (m11, m12, m22, m13, m23, m33) = (sx, mxy, sy, mxz, myz, sz)</em>
-<a class="jxr_linenumber" name="L5416" href="#L5416">5416</a> 
-<a class="jxr_linenumber" name="L5417" href="#L5417">5417</a>         <em class="jxr_comment">// We define a lineal function mapping original parameters for the</em>
-<a class="jxr_linenumber" name="L5418" href="#L5418">5418</a>         <em class="jxr_comment">// common axis case to the general case</em>
-<a class="jxr_linenumber" name="L5419" href="#L5419">5419</a>         <em class="jxr_comment">//[sx'] = [1  0  0  0  0  0][sx ]</em>
-<a class="jxr_linenumber" name="L5420" href="#L5420">5420</a>         <em class="jxr_comment">//[sy']   [0  0  1  0  0  0][mxy]</em>
-<a class="jxr_linenumber" name="L5421" href="#L5421">5421</a>         <em class="jxr_comment">//[sz']   [0  0  0  0  0  1][sy ]</em>
-<a class="jxr_linenumber" name="L5422" href="#L5422">5422</a>         <em class="jxr_comment">//[mxy']  [0  1  0  0  0  0][mxz]</em>
-<a class="jxr_linenumber" name="L5423" href="#L5423">5423</a>         <em class="jxr_comment">//[mxz']  [0  0  0  1  0  0][myz]</em>
-<a class="jxr_linenumber" name="L5424" href="#L5424">5424</a>         <em class="jxr_comment">//[myx']  [0  0  0  0  0  0][sz ]</em>
-<a class="jxr_linenumber" name="L5425" href="#L5425">5425</a>         <em class="jxr_comment">//[myz']  [0  0  0  0  1  0]</em>
-<a class="jxr_linenumber" name="L5426" href="#L5426">5426</a>         <em class="jxr_comment">//[mzx']  [0  0  0  0  0  0]</em>
-<a class="jxr_linenumber" name="L5427" href="#L5427">5427</a>         <em class="jxr_comment">//[mzy']  [0  0  0  0  0  0]</em>
-<a class="jxr_linenumber" name="L5428" href="#L5428">5428</a> 
-<a class="jxr_linenumber" name="L5429" href="#L5429">5429</a>         <em class="jxr_comment">// As defined in com.irurueta.statistics.MultivariateNormalDist,</em>
-<a class="jxr_linenumber" name="L5430" href="#L5430">5430</a>         <em class="jxr_comment">// if we consider the jacobian of the lineal application the matrix shown</em>
-<a class="jxr_linenumber" name="L5431" href="#L5431">5431</a>         <em class="jxr_comment">// above, then covariance can be propagated as follows</em>
-<a class="jxr_linenumber" name="L5432" href="#L5432">5432</a>         <strong class="jxr_keyword">final</strong> Matrix jacobian = <strong class="jxr_keyword">new</strong> Matrix(GENERAL_UNKNOWNS, COMMON_Z_AXIS_UNKNOWNS);
-<a class="jxr_linenumber" name="L5433" href="#L5433">5433</a>         jacobian.setElementAt(0, 0, 1.0);
-<a class="jxr_linenumber" name="L5434" href="#L5434">5434</a>         jacobian.setElementAt(1, 2, 1.0);
-<a class="jxr_linenumber" name="L5435" href="#L5435">5435</a>         jacobian.setElementAt(2, 5, 1.0);
-<a class="jxr_linenumber" name="L5436" href="#L5436">5436</a>         jacobian.setElementAt(3, 1, 1.0);
-<a class="jxr_linenumber" name="L5437" href="#L5437">5437</a>         jacobian.setElementAt(4, 3, 1.0);
-<a class="jxr_linenumber" name="L5438" href="#L5438">5438</a>         jacobian.setElementAt(6, 4, 1.0);
-<a class="jxr_linenumber" name="L5439" href="#L5439">5439</a>         <em class="jxr_comment">// propagated covariance is J * Cov * J'</em>
-<a class="jxr_linenumber" name="L5440" href="#L5440">5440</a>         <strong class="jxr_keyword">final</strong> Matrix jacobianTrans = jacobian.transposeAndReturnNew();
-<a class="jxr_linenumber" name="L5441" href="#L5441">5441</a>         jacobian.multiply(mEstimatedCovariance);
-<a class="jxr_linenumber" name="L5442" href="#L5442">5442</a>         jacobian.multiply(jacobianTrans);
-<a class="jxr_linenumber" name="L5443" href="#L5443">5443</a>         mEstimatedCovariance = jacobian;
-<a class="jxr_linenumber" name="L5444" href="#L5444">5444</a>     }
-<a class="jxr_linenumber" name="L5445" href="#L5445">5445</a> 
-<a class="jxr_linenumber" name="L5446" href="#L5446">5446</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L5447" href="#L5447">5447</a> <em class="jxr_javadoccomment">     * Makes proper conversion of internal cross-coupling and bias matrices.</em>
-<a class="jxr_linenumber" name="L5448" href="#L5448">5448</a> <em class="jxr_javadoccomment">     *</em>
-<a class="jxr_linenumber" name="L5449" href="#L5449">5449</a> <em class="jxr_javadoccomment">     * @param m internal cross-coupling matrix.</em>
-<a class="jxr_linenumber" name="L5450" href="#L5450">5450</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L5451" href="#L5451">5451</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> setResult(<strong class="jxr_keyword">final</strong> Matrix m) {
-<a class="jxr_linenumber" name="L5452" href="#L5452">5452</a>         <em class="jxr_comment">// Because:</em>
-<a class="jxr_linenumber" name="L5453" href="#L5453">5453</a>         <em class="jxr_comment">// M = I + Ma</em>
+<a class="jxr_linenumber" name="L5414" href="#L5414">5414</a>         <em class="jxr_comment">// We define a lineal function mapping original parameters for the</em>
+<a class="jxr_linenumber" name="L5415" href="#L5415">5415</a>         <em class="jxr_comment">// common axis case to the general case</em>
+<a class="jxr_linenumber" name="L5416" href="#L5416">5416</a>         <em class="jxr_comment">//[sx'] = [1  0  0  0  0  0][sx ]</em>
+<a class="jxr_linenumber" name="L5417" href="#L5417">5417</a>         <em class="jxr_comment">//[sy']   [0  0  1  0  0  0][mxy]</em>
+<a class="jxr_linenumber" name="L5418" href="#L5418">5418</a>         <em class="jxr_comment">//[sz']   [0  0  0  0  0  1][sy ]</em>
+<a class="jxr_linenumber" name="L5419" href="#L5419">5419</a>         <em class="jxr_comment">//[mxy']  [0  1  0  0  0  0][mxz]</em>
+<a class="jxr_linenumber" name="L5420" href="#L5420">5420</a>         <em class="jxr_comment">//[mxz']  [0  0  0  1  0  0][myz]</em>
+<a class="jxr_linenumber" name="L5421" href="#L5421">5421</a>         <em class="jxr_comment">//[myx']  [0  0  0  0  0  0][sz ]</em>
+<a class="jxr_linenumber" name="L5422" href="#L5422">5422</a>         <em class="jxr_comment">//[myz']  [0  0  0  0  1  0]</em>
+<a class="jxr_linenumber" name="L5423" href="#L5423">5423</a>         <em class="jxr_comment">//[mzx']  [0  0  0  0  0  0]</em>
+<a class="jxr_linenumber" name="L5424" href="#L5424">5424</a>         <em class="jxr_comment">//[mzy']  [0  0  0  0  0  0]</em>
+<a class="jxr_linenumber" name="L5425" href="#L5425">5425</a> 
+<a class="jxr_linenumber" name="L5426" href="#L5426">5426</a>         <em class="jxr_comment">// As defined in com.irurueta.statistics.MultivariateNormalDist,</em>
+<a class="jxr_linenumber" name="L5427" href="#L5427">5427</a>         <em class="jxr_comment">// if we consider the jacobian of the lineal application the matrix shown</em>
+<a class="jxr_linenumber" name="L5428" href="#L5428">5428</a>         <em class="jxr_comment">// above, then covariance can be propagated as follows</em>
+<a class="jxr_linenumber" name="L5429" href="#L5429">5429</a>         <strong class="jxr_keyword">final</strong> Matrix jacobian = <strong class="jxr_keyword">new</strong> Matrix(GENERAL_UNKNOWNS, COMMON_Z_AXIS_UNKNOWNS);
+<a class="jxr_linenumber" name="L5430" href="#L5430">5430</a>         jacobian.setElementAt(0, 0, 1.0);
+<a class="jxr_linenumber" name="L5431" href="#L5431">5431</a>         jacobian.setElementAt(1, 2, 1.0);
+<a class="jxr_linenumber" name="L5432" href="#L5432">5432</a>         jacobian.setElementAt(2, 5, 1.0);
+<a class="jxr_linenumber" name="L5433" href="#L5433">5433</a>         jacobian.setElementAt(3, 1, 1.0);
+<a class="jxr_linenumber" name="L5434" href="#L5434">5434</a>         jacobian.setElementAt(4, 3, 1.0);
+<a class="jxr_linenumber" name="L5435" href="#L5435">5435</a>         jacobian.setElementAt(6, 4, 1.0);
+<a class="jxr_linenumber" name="L5436" href="#L5436">5436</a>         <em class="jxr_comment">// propagated covariance is J * Cov * J'</em>
+<a class="jxr_linenumber" name="L5437" href="#L5437">5437</a>         <strong class="jxr_keyword">final</strong> Matrix jacobianTrans = jacobian.transposeAndReturnNew();
+<a class="jxr_linenumber" name="L5438" href="#L5438">5438</a>         jacobian.multiply(mEstimatedCovariance);
+<a class="jxr_linenumber" name="L5439" href="#L5439">5439</a>         jacobian.multiply(jacobianTrans);
+<a class="jxr_linenumber" name="L5440" href="#L5440">5440</a>         mEstimatedCovariance = jacobian;
+<a class="jxr_linenumber" name="L5441" href="#L5441">5441</a>     }
+<a class="jxr_linenumber" name="L5442" href="#L5442">5442</a> 
+<a class="jxr_linenumber" name="L5443" href="#L5443">5443</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L5444" href="#L5444">5444</a> <em class="jxr_javadoccomment">     * Makes proper conversion of internal cross-coupling and bias matrices.</em>
+<a class="jxr_linenumber" name="L5445" href="#L5445">5445</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L5446" href="#L5446">5446</a> <em class="jxr_javadoccomment">     * @param m internal cross-coupling matrix.</em>
+<a class="jxr_linenumber" name="L5447" href="#L5447">5447</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L5448" href="#L5448">5448</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> setResult(<strong class="jxr_keyword">final</strong> Matrix m) {
+<a class="jxr_linenumber" name="L5449" href="#L5449">5449</a>         <em class="jxr_comment">// Because:</em>
+<a class="jxr_linenumber" name="L5450" href="#L5450">5450</a>         <em class="jxr_comment">// M = I + Ma</em>
+<a class="jxr_linenumber" name="L5451" href="#L5451">5451</a> 
+<a class="jxr_linenumber" name="L5452" href="#L5452">5452</a>         <em class="jxr_comment">// Then:</em>
+<a class="jxr_linenumber" name="L5453" href="#L5453">5453</a>         <em class="jxr_comment">// Ma = M - I</em>
 <a class="jxr_linenumber" name="L5454" href="#L5454">5454</a> 
-<a class="jxr_linenumber" name="L5455" href="#L5455">5455</a>         <em class="jxr_comment">// Then:</em>
-<a class="jxr_linenumber" name="L5456" href="#L5456">5456</a>         <em class="jxr_comment">// Ma = M - I</em>
-<a class="jxr_linenumber" name="L5457" href="#L5457">5457</a> 
-<a class="jxr_linenumber" name="L5458" href="#L5458">5458</a>         <strong class="jxr_keyword">if</strong> (mEstimatedMa == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L5459" href="#L5459">5459</a>             mEstimatedMa = m;
-<a class="jxr_linenumber" name="L5460" href="#L5460">5460</a>         } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L5461" href="#L5461">5461</a>             mEstimatedMa.copyFrom(m);
-<a class="jxr_linenumber" name="L5462" href="#L5462">5462</a>         }
-<a class="jxr_linenumber" name="L5463" href="#L5463">5463</a> 
-<a class="jxr_linenumber" name="L5464" href="#L5464">5464</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; BodyKinematics.COMPONENTS; i++) {
-<a class="jxr_linenumber" name="L5465" href="#L5465">5465</a>             mEstimatedMa.setElementAt(i, i,
-<a class="jxr_linenumber" name="L5466" href="#L5466">5466</a>                     mEstimatedMa.getElementAt(i, i) - 1.0);
-<a class="jxr_linenumber" name="L5467" href="#L5467">5467</a>         }
-<a class="jxr_linenumber" name="L5468" href="#L5468">5468</a> 
-<a class="jxr_linenumber" name="L5469" href="#L5469">5469</a>         <em class="jxr_comment">// since only a constant term is subtracted, covariance is preserved</em>
-<a class="jxr_linenumber" name="L5470" href="#L5470">5470</a>         mEstimatedCovariance = mFitter.getCovar();
-<a class="jxr_linenumber" name="L5471" href="#L5471">5471</a>         mEstimatedChiSq = mFitter.getChisq();
-<a class="jxr_linenumber" name="L5472" href="#L5472">5472</a>     }
-<a class="jxr_linenumber" name="L5473" href="#L5473">5473</a> 
-<a class="jxr_linenumber" name="L5474" href="#L5474">5474</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L5475" href="#L5475">5475</a> <em class="jxr_javadoccomment">     * Computes estimated true specific force squared norm using current measured</em>
-<a class="jxr_linenumber" name="L5476" href="#L5476">5476</a> <em class="jxr_javadoccomment">     * specific force and provided parameters for the general case.</em>
-<a class="jxr_linenumber" name="L5477" href="#L5477">5477</a> <em class="jxr_javadoccomment">     * This method is internally executed during gradient estimation and</em>
-<a class="jxr_linenumber" name="L5478" href="#L5478">5478</a> <em class="jxr_javadoccomment">     * Levenberg-Marquardt fitting needed for calibration computation.</em>
-<a class="jxr_linenumber" name="L5479" href="#L5479">5479</a> <em class="jxr_javadoccomment">     *</em>
-<a class="jxr_linenumber" name="L5480" href="#L5480">5480</a> <em class="jxr_javadoccomment">     * @param params array containing current parameters for the general purpose case.</em>
-<a class="jxr_linenumber" name="L5481" href="#L5481">5481</a> <em class="jxr_javadoccomment">     *               Must have length 9.</em>
-<a class="jxr_linenumber" name="L5482" href="#L5482">5482</a> <em class="jxr_javadoccomment">     * @return estimated true specific force squared norm.</em>
-<a class="jxr_linenumber" name="L5483" href="#L5483">5483</a> <em class="jxr_javadoccomment">     * @throws EvaluationException if there are numerical instabilities.</em>
-<a class="jxr_linenumber" name="L5484" href="#L5484">5484</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L5485" href="#L5485">5485</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">double</strong> evaluateGeneral(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] params) <strong class="jxr_keyword">throws</strong> EvaluationException {
-<a class="jxr_linenumber" name="L5486" href="#L5486">5486</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m11 = params[0];
-<a class="jxr_linenumber" name="L5487" href="#L5487">5487</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m21 = params[1];
-<a class="jxr_linenumber" name="L5488" href="#L5488">5488</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m31 = params[2];
-<a class="jxr_linenumber" name="L5489" href="#L5489">5489</a> 
-<a class="jxr_linenumber" name="L5490" href="#L5490">5490</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m12 = params[3];
-<a class="jxr_linenumber" name="L5491" href="#L5491">5491</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m22 = params[4];
-<a class="jxr_linenumber" name="L5492" href="#L5492">5492</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m32 = params[5];
-<a class="jxr_linenumber" name="L5493" href="#L5493">5493</a> 
-<a class="jxr_linenumber" name="L5494" href="#L5494">5494</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m13 = params[6];
-<a class="jxr_linenumber" name="L5495" href="#L5495">5495</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m23 = params[7];
-<a class="jxr_linenumber" name="L5496" href="#L5496">5496</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m33 = params[8];
-<a class="jxr_linenumber" name="L5497" href="#L5497">5497</a> 
-<a class="jxr_linenumber" name="L5498" href="#L5498">5498</a>         <strong class="jxr_keyword">return</strong> evaluate(m11, m21, m31, m12, m22, m32,
-<a class="jxr_linenumber" name="L5499" href="#L5499">5499</a>                 m13, m23, m33);
-<a class="jxr_linenumber" name="L5500" href="#L5500">5500</a>     }
-<a class="jxr_linenumber" name="L5501" href="#L5501">5501</a> 
-<a class="jxr_linenumber" name="L5502" href="#L5502">5502</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L5503" href="#L5503">5503</a> <em class="jxr_javadoccomment">     * Computes estimated true specific force squared norm using current measured</em>
-<a class="jxr_linenumber" name="L5504" href="#L5504">5504</a> <em class="jxr_javadoccomment">     * specific force and provided parameters when common z-axis is assumed.</em>
-<a class="jxr_linenumber" name="L5505" href="#L5505">5505</a> <em class="jxr_javadoccomment">     * This method is internally executed during gradient estimation and</em>
-<a class="jxr_linenumber" name="L5506" href="#L5506">5506</a> <em class="jxr_javadoccomment">     * Levenberg-Marquardt fitting needed for calibration computation.</em>
-<a class="jxr_linenumber" name="L5507" href="#L5507">5507</a> <em class="jxr_javadoccomment">     *</em>
-<a class="jxr_linenumber" name="L5508" href="#L5508">5508</a> <em class="jxr_javadoccomment">     * @param params array containing current parameters for the common z-axis case.</em>
-<a class="jxr_linenumber" name="L5509" href="#L5509">5509</a> <em class="jxr_javadoccomment">     *               Must have length 6.</em>
-<a class="jxr_linenumber" name="L5510" href="#L5510">5510</a> <em class="jxr_javadoccomment">     * @return estimated true specific force squared norm.</em>
-<a class="jxr_linenumber" name="L5511" href="#L5511">5511</a> <em class="jxr_javadoccomment">     * @throws EvaluationException if there are numerical instabilities.</em>
-<a class="jxr_linenumber" name="L5512" href="#L5512">5512</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L5513" href="#L5513">5513</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">double</strong> evaluateCommonAxis(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] params) <strong class="jxr_keyword">throws</strong> EvaluationException {
-<a class="jxr_linenumber" name="L5514" href="#L5514">5514</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m11 = params[0];
+<a class="jxr_linenumber" name="L5455" href="#L5455">5455</a>         <strong class="jxr_keyword">if</strong> (mEstimatedMa == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L5456" href="#L5456">5456</a>             mEstimatedMa = m;
+<a class="jxr_linenumber" name="L5457" href="#L5457">5457</a>         } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L5458" href="#L5458">5458</a>             mEstimatedMa.copyFrom(m);
+<a class="jxr_linenumber" name="L5459" href="#L5459">5459</a>         }
+<a class="jxr_linenumber" name="L5460" href="#L5460">5460</a> 
+<a class="jxr_linenumber" name="L5461" href="#L5461">5461</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; BodyKinematics.COMPONENTS; i++) {
+<a class="jxr_linenumber" name="L5462" href="#L5462">5462</a>             mEstimatedMa.setElementAt(i, i,
+<a class="jxr_linenumber" name="L5463" href="#L5463">5463</a>                     mEstimatedMa.getElementAt(i, i) - 1.0);
+<a class="jxr_linenumber" name="L5464" href="#L5464">5464</a>         }
+<a class="jxr_linenumber" name="L5465" href="#L5465">5465</a> 
+<a class="jxr_linenumber" name="L5466" href="#L5466">5466</a>         <em class="jxr_comment">// since only a constant term is subtracted, covariance is preserved</em>
+<a class="jxr_linenumber" name="L5467" href="#L5467">5467</a>         mEstimatedCovariance = mFitter.getCovar();
+<a class="jxr_linenumber" name="L5468" href="#L5468">5468</a>         mEstimatedChiSq = mFitter.getChisq();
+<a class="jxr_linenumber" name="L5469" href="#L5469">5469</a>     }
+<a class="jxr_linenumber" name="L5470" href="#L5470">5470</a> 
+<a class="jxr_linenumber" name="L5471" href="#L5471">5471</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L5472" href="#L5472">5472</a> <em class="jxr_javadoccomment">     * Computes estimated true specific force squared norm using current measured</em>
+<a class="jxr_linenumber" name="L5473" href="#L5473">5473</a> <em class="jxr_javadoccomment">     * specific force and provided parameters for the general case.</em>
+<a class="jxr_linenumber" name="L5474" href="#L5474">5474</a> <em class="jxr_javadoccomment">     * This method is internally executed during gradient estimation and</em>
+<a class="jxr_linenumber" name="L5475" href="#L5475">5475</a> <em class="jxr_javadoccomment">     * Levenberg-Marquardt fitting needed for calibration computation.</em>
+<a class="jxr_linenumber" name="L5476" href="#L5476">5476</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L5477" href="#L5477">5477</a> <em class="jxr_javadoccomment">     * @param params array containing current parameters for the general purpose case.</em>
+<a class="jxr_linenumber" name="L5478" href="#L5478">5478</a> <em class="jxr_javadoccomment">     *               Must have length 9.</em>
+<a class="jxr_linenumber" name="L5479" href="#L5479">5479</a> <em class="jxr_javadoccomment">     * @return estimated true specific force squared norm.</em>
+<a class="jxr_linenumber" name="L5480" href="#L5480">5480</a> <em class="jxr_javadoccomment">     * @throws EvaluationException if there are numerical instabilities.</em>
+<a class="jxr_linenumber" name="L5481" href="#L5481">5481</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L5482" href="#L5482">5482</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">double</strong> evaluateGeneral(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] params) <strong class="jxr_keyword">throws</strong> EvaluationException {
+<a class="jxr_linenumber" name="L5483" href="#L5483">5483</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m11 = params[0];
+<a class="jxr_linenumber" name="L5484" href="#L5484">5484</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m21 = params[1];
+<a class="jxr_linenumber" name="L5485" href="#L5485">5485</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m31 = params[2];
+<a class="jxr_linenumber" name="L5486" href="#L5486">5486</a> 
+<a class="jxr_linenumber" name="L5487" href="#L5487">5487</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m12 = params[3];
+<a class="jxr_linenumber" name="L5488" href="#L5488">5488</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m22 = params[4];
+<a class="jxr_linenumber" name="L5489" href="#L5489">5489</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m32 = params[5];
+<a class="jxr_linenumber" name="L5490" href="#L5490">5490</a> 
+<a class="jxr_linenumber" name="L5491" href="#L5491">5491</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m13 = params[6];
+<a class="jxr_linenumber" name="L5492" href="#L5492">5492</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m23 = params[7];
+<a class="jxr_linenumber" name="L5493" href="#L5493">5493</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m33 = params[8];
+<a class="jxr_linenumber" name="L5494" href="#L5494">5494</a> 
+<a class="jxr_linenumber" name="L5495" href="#L5495">5495</a>         <strong class="jxr_keyword">return</strong> evaluate(m11, m21, m31, m12, m22, m32,
+<a class="jxr_linenumber" name="L5496" href="#L5496">5496</a>                 m13, m23, m33);
+<a class="jxr_linenumber" name="L5497" href="#L5497">5497</a>     }
+<a class="jxr_linenumber" name="L5498" href="#L5498">5498</a> 
+<a class="jxr_linenumber" name="L5499" href="#L5499">5499</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L5500" href="#L5500">5500</a> <em class="jxr_javadoccomment">     * Computes estimated true specific force squared norm using current measured</em>
+<a class="jxr_linenumber" name="L5501" href="#L5501">5501</a> <em class="jxr_javadoccomment">     * specific force and provided parameters when common z-axis is assumed.</em>
+<a class="jxr_linenumber" name="L5502" href="#L5502">5502</a> <em class="jxr_javadoccomment">     * This method is internally executed during gradient estimation and</em>
+<a class="jxr_linenumber" name="L5503" href="#L5503">5503</a> <em class="jxr_javadoccomment">     * Levenberg-Marquardt fitting needed for calibration computation.</em>
+<a class="jxr_linenumber" name="L5504" href="#L5504">5504</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L5505" href="#L5505">5505</a> <em class="jxr_javadoccomment">     * @param params array containing current parameters for the common z-axis case.</em>
+<a class="jxr_linenumber" name="L5506" href="#L5506">5506</a> <em class="jxr_javadoccomment">     *               Must have length 6.</em>
+<a class="jxr_linenumber" name="L5507" href="#L5507">5507</a> <em class="jxr_javadoccomment">     * @return estimated true specific force squared norm.</em>
+<a class="jxr_linenumber" name="L5508" href="#L5508">5508</a> <em class="jxr_javadoccomment">     * @throws EvaluationException if there are numerical instabilities.</em>
+<a class="jxr_linenumber" name="L5509" href="#L5509">5509</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L5510" href="#L5510">5510</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">double</strong> evaluateCommonAxis(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] params) <strong class="jxr_keyword">throws</strong> EvaluationException {
+<a class="jxr_linenumber" name="L5511" href="#L5511">5511</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m11 = params[0];
+<a class="jxr_linenumber" name="L5512" href="#L5512">5512</a> 
+<a class="jxr_linenumber" name="L5513" href="#L5513">5513</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m12 = params[1];
+<a class="jxr_linenumber" name="L5514" href="#L5514">5514</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m22 = params[2];
 <a class="jxr_linenumber" name="L5515" href="#L5515">5515</a> 
-<a class="jxr_linenumber" name="L5516" href="#L5516">5516</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m12 = params[1];
-<a class="jxr_linenumber" name="L5517" href="#L5517">5517</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m22 = params[2];
-<a class="jxr_linenumber" name="L5518" href="#L5518">5518</a> 
-<a class="jxr_linenumber" name="L5519" href="#L5519">5519</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m13 = params[3];
-<a class="jxr_linenumber" name="L5520" href="#L5520">5520</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m23 = params[4];
-<a class="jxr_linenumber" name="L5521" href="#L5521">5521</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m33 = params[5];
-<a class="jxr_linenumber" name="L5522" href="#L5522">5522</a> 
-<a class="jxr_linenumber" name="L5523" href="#L5523">5523</a>         <strong class="jxr_keyword">return</strong> evaluate(m11, 0.0, 0.0, m12, m22, 0.0,
-<a class="jxr_linenumber" name="L5524" href="#L5524">5524</a>                 m13, m23, m33);
-<a class="jxr_linenumber" name="L5525" href="#L5525">5525</a>     }
-<a class="jxr_linenumber" name="L5526" href="#L5526">5526</a> 
-<a class="jxr_linenumber" name="L5527" href="#L5527">5527</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L5528" href="#L5528">5528</a> <em class="jxr_javadoccomment">     * Computes estimated true specific force squared norm using current measured</em>
-<a class="jxr_linenumber" name="L5529" href="#L5529">5529</a> <em class="jxr_javadoccomment">     * specific force and provided parameters.</em>
-<a class="jxr_linenumber" name="L5530" href="#L5530">5530</a> <em class="jxr_javadoccomment">     * This method is internally executed during gradient estimation and</em>
-<a class="jxr_linenumber" name="L5531" href="#L5531">5531</a> <em class="jxr_javadoccomment">     * Levenberg-Marquardt fitting needed for calibration computation.</em>
-<a class="jxr_linenumber" name="L5532" href="#L5532">5532</a> <em class="jxr_javadoccomment">     *</em>
-<a class="jxr_linenumber" name="L5533" href="#L5533">5533</a> <em class="jxr_javadoccomment">     * @param m11 element 1,1 of cross-coupling error matrix.</em>
-<a class="jxr_linenumber" name="L5534" href="#L5534">5534</a> <em class="jxr_javadoccomment">     * @param m21 element 2,1 of cross-coupling error matrix.</em>
-<a class="jxr_linenumber" name="L5535" href="#L5535">5535</a> <em class="jxr_javadoccomment">     * @param m31 element 3,1 of cross-coupling error matrix.</em>
-<a class="jxr_linenumber" name="L5536" href="#L5536">5536</a> <em class="jxr_javadoccomment">     * @param m12 element 1,2 of cross-coupling error matrix.</em>
-<a class="jxr_linenumber" name="L5537" href="#L5537">5537</a> <em class="jxr_javadoccomment">     * @param m22 element 2,2 of cross-coupling error matrix.</em>
-<a class="jxr_linenumber" name="L5538" href="#L5538">5538</a> <em class="jxr_javadoccomment">     * @param m32 element 3,2 of cross-coupling error matrix.</em>
-<a class="jxr_linenumber" name="L5539" href="#L5539">5539</a> <em class="jxr_javadoccomment">     * @param m13 element 1,3 of cross-coupling error matrix.</em>
-<a class="jxr_linenumber" name="L5540" href="#L5540">5540</a> <em class="jxr_javadoccomment">     * @param m23 element 2,3 of cross-coupling error matrix.</em>
-<a class="jxr_linenumber" name="L5541" href="#L5541">5541</a> <em class="jxr_javadoccomment">     * @param m33 element 3,3 of cross-coupling error matrix.</em>
-<a class="jxr_linenumber" name="L5542" href="#L5542">5542</a> <em class="jxr_javadoccomment">     * @return estimated true specific force squared norm.</em>
-<a class="jxr_linenumber" name="L5543" href="#L5543">5543</a> <em class="jxr_javadoccomment">     * @throws EvaluationException if there are numerical instabilities.</em>
-<a class="jxr_linenumber" name="L5544" href="#L5544">5544</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L5545" href="#L5545">5545</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">double</strong> evaluate(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m11, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m21, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m31,
-<a class="jxr_linenumber" name="L5546" href="#L5546">5546</a>                             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m12, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m22, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m32,
-<a class="jxr_linenumber" name="L5547" href="#L5547">5547</a>                             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m13, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m23, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m33)
-<a class="jxr_linenumber" name="L5548" href="#L5548">5548</a>             <strong class="jxr_keyword">throws</strong> EvaluationException {
-<a class="jxr_linenumber" name="L5549" href="#L5549">5549</a> 
-<a class="jxr_linenumber" name="L5550" href="#L5550">5550</a>         <em class="jxr_comment">// fmeas = M*(ftrue + b)</em>
-<a class="jxr_linenumber" name="L5551" href="#L5551">5551</a> 
-<a class="jxr_linenumber" name="L5552" href="#L5552">5552</a>         <em class="jxr_comment">// ftrue = M^-1*fmeas - b</em>
-<a class="jxr_linenumber" name="L5553" href="#L5553">5553</a> 
-<a class="jxr_linenumber" name="L5554" href="#L5554">5554</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L5555" href="#L5555">5555</a>             <strong class="jxr_keyword">if</strong> (mFmeas == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L5556" href="#L5556">5556</a>                 mFmeas = <strong class="jxr_keyword">new</strong> Matrix(BodyKinematics.COMPONENTS, 1);
+<a class="jxr_linenumber" name="L5516" href="#L5516">5516</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m13 = params[3];
+<a class="jxr_linenumber" name="L5517" href="#L5517">5517</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m23 = params[4];
+<a class="jxr_linenumber" name="L5518" href="#L5518">5518</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m33 = params[5];
+<a class="jxr_linenumber" name="L5519" href="#L5519">5519</a> 
+<a class="jxr_linenumber" name="L5520" href="#L5520">5520</a>         <strong class="jxr_keyword">return</strong> evaluate(m11, 0.0, 0.0, m12, m22, 0.0,
+<a class="jxr_linenumber" name="L5521" href="#L5521">5521</a>                 m13, m23, m33);
+<a class="jxr_linenumber" name="L5522" href="#L5522">5522</a>     }
+<a class="jxr_linenumber" name="L5523" href="#L5523">5523</a> 
+<a class="jxr_linenumber" name="L5524" href="#L5524">5524</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L5525" href="#L5525">5525</a> <em class="jxr_javadoccomment">     * Computes estimated true specific force squared norm using current measured</em>
+<a class="jxr_linenumber" name="L5526" href="#L5526">5526</a> <em class="jxr_javadoccomment">     * specific force and provided parameters.</em>
+<a class="jxr_linenumber" name="L5527" href="#L5527">5527</a> <em class="jxr_javadoccomment">     * This method is internally executed during gradient estimation and</em>
+<a class="jxr_linenumber" name="L5528" href="#L5528">5528</a> <em class="jxr_javadoccomment">     * Levenberg-Marquardt fitting needed for calibration computation.</em>
+<a class="jxr_linenumber" name="L5529" href="#L5529">5529</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L5530" href="#L5530">5530</a> <em class="jxr_javadoccomment">     * @param m11 element 1,1 of cross-coupling error matrix.</em>
+<a class="jxr_linenumber" name="L5531" href="#L5531">5531</a> <em class="jxr_javadoccomment">     * @param m21 element 2,1 of cross-coupling error matrix.</em>
+<a class="jxr_linenumber" name="L5532" href="#L5532">5532</a> <em class="jxr_javadoccomment">     * @param m31 element 3,1 of cross-coupling error matrix.</em>
+<a class="jxr_linenumber" name="L5533" href="#L5533">5533</a> <em class="jxr_javadoccomment">     * @param m12 element 1,2 of cross-coupling error matrix.</em>
+<a class="jxr_linenumber" name="L5534" href="#L5534">5534</a> <em class="jxr_javadoccomment">     * @param m22 element 2,2 of cross-coupling error matrix.</em>
+<a class="jxr_linenumber" name="L5535" href="#L5535">5535</a> <em class="jxr_javadoccomment">     * @param m32 element 3,2 of cross-coupling error matrix.</em>
+<a class="jxr_linenumber" name="L5536" href="#L5536">5536</a> <em class="jxr_javadoccomment">     * @param m13 element 1,3 of cross-coupling error matrix.</em>
+<a class="jxr_linenumber" name="L5537" href="#L5537">5537</a> <em class="jxr_javadoccomment">     * @param m23 element 2,3 of cross-coupling error matrix.</em>
+<a class="jxr_linenumber" name="L5538" href="#L5538">5538</a> <em class="jxr_javadoccomment">     * @param m33 element 3,3 of cross-coupling error matrix.</em>
+<a class="jxr_linenumber" name="L5539" href="#L5539">5539</a> <em class="jxr_javadoccomment">     * @return estimated true specific force squared norm.</em>
+<a class="jxr_linenumber" name="L5540" href="#L5540">5540</a> <em class="jxr_javadoccomment">     * @throws EvaluationException if there are numerical instabilities.</em>
+<a class="jxr_linenumber" name="L5541" href="#L5541">5541</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L5542" href="#L5542">5542</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">double</strong> evaluate(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m11, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m21, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m31,
+<a class="jxr_linenumber" name="L5543" href="#L5543">5543</a>                             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m12, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m22, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m32,
+<a class="jxr_linenumber" name="L5544" href="#L5544">5544</a>                             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m13, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m23, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> m33)
+<a class="jxr_linenumber" name="L5545" href="#L5545">5545</a>             <strong class="jxr_keyword">throws</strong> EvaluationException {
+<a class="jxr_linenumber" name="L5546" href="#L5546">5546</a> 
+<a class="jxr_linenumber" name="L5547" href="#L5547">5547</a>         <em class="jxr_comment">// fmeas = M*(ftrue + b)</em>
+<a class="jxr_linenumber" name="L5548" href="#L5548">5548</a> 
+<a class="jxr_linenumber" name="L5549" href="#L5549">5549</a>         <em class="jxr_comment">// ftrue = M^-1*fmeas - b</em>
+<a class="jxr_linenumber" name="L5550" href="#L5550">5550</a> 
+<a class="jxr_linenumber" name="L5551" href="#L5551">5551</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L5552" href="#L5552">5552</a>             <strong class="jxr_keyword">if</strong> (mFmeas == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L5553" href="#L5553">5553</a>                 mFmeas = <strong class="jxr_keyword">new</strong> Matrix(BodyKinematics.COMPONENTS, 1);
+<a class="jxr_linenumber" name="L5554" href="#L5554">5554</a>             }
+<a class="jxr_linenumber" name="L5555" href="#L5555">5555</a>             <strong class="jxr_keyword">if</strong> (mM == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L5556" href="#L5556">5556</a>                 mM = <strong class="jxr_keyword">new</strong> Matrix(BodyKinematics.COMPONENTS, BodyKinematics.COMPONENTS);
 <a class="jxr_linenumber" name="L5557" href="#L5557">5557</a>             }
-<a class="jxr_linenumber" name="L5558" href="#L5558">5558</a>             <strong class="jxr_keyword">if</strong> (mM == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L5559" href="#L5559">5559</a>                 mM = <strong class="jxr_keyword">new</strong> Matrix(BodyKinematics.COMPONENTS, BodyKinematics.COMPONENTS);
-<a class="jxr_linenumber" name="L5560" href="#L5560">5560</a>             }
-<a class="jxr_linenumber" name="L5561" href="#L5561">5561</a>             <strong class="jxr_keyword">if</strong> (mInvM == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L5562" href="#L5562">5562</a>                 mInvM = <strong class="jxr_keyword">new</strong> Matrix(BodyKinematics.COMPONENTS,
-<a class="jxr_linenumber" name="L5563" href="#L5563">5563</a>                         BodyKinematics.COMPONENTS);
+<a class="jxr_linenumber" name="L5558" href="#L5558">5558</a>             <strong class="jxr_keyword">if</strong> (mInvM == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L5559" href="#L5559">5559</a>                 mInvM = <strong class="jxr_keyword">new</strong> Matrix(BodyKinematics.COMPONENTS,
+<a class="jxr_linenumber" name="L5560" href="#L5560">5560</a>                         BodyKinematics.COMPONENTS);
+<a class="jxr_linenumber" name="L5561" href="#L5561">5561</a>             }
+<a class="jxr_linenumber" name="L5562" href="#L5562">5562</a>             <strong class="jxr_keyword">if</strong> (mB == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L5563" href="#L5563">5563</a>                 mB = <strong class="jxr_keyword">new</strong> Matrix(BodyKinematics.COMPONENTS, 1);
 <a class="jxr_linenumber" name="L5564" href="#L5564">5564</a>             }
-<a class="jxr_linenumber" name="L5565" href="#L5565">5565</a>             <strong class="jxr_keyword">if</strong> (mB == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L5566" href="#L5566">5566</a>                 mB = <strong class="jxr_keyword">new</strong> Matrix(BodyKinematics.COMPONENTS, 1);
+<a class="jxr_linenumber" name="L5565" href="#L5565">5565</a>             <strong class="jxr_keyword">if</strong> (mFtrue == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L5566" href="#L5566">5566</a>                 mFtrue = <strong class="jxr_keyword">new</strong> Matrix(BodyKinematics.COMPONENTS, 1);
 <a class="jxr_linenumber" name="L5567" href="#L5567">5567</a>             }
-<a class="jxr_linenumber" name="L5568" href="#L5568">5568</a>             <strong class="jxr_keyword">if</strong> (mFtrue == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L5569" href="#L5569">5569</a>                 mFtrue = <strong class="jxr_keyword">new</strong> Matrix(BodyKinematics.COMPONENTS, 1);
+<a class="jxr_linenumber" name="L5568" href="#L5568">5568</a>             <strong class="jxr_keyword">if</strong> (mBa == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L5569" href="#L5569">5569</a>                 mBa = <strong class="jxr_keyword">new</strong> Matrix(BodyKinematics.COMPONENTS, 1);
 <a class="jxr_linenumber" name="L5570" href="#L5570">5570</a>             }
-<a class="jxr_linenumber" name="L5571" href="#L5571">5571</a>             <strong class="jxr_keyword">if</strong> (mBa == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L5572" href="#L5572">5572</a>                 mBa = <strong class="jxr_keyword">new</strong> Matrix(BodyKinematics.COMPONENTS, 1);
-<a class="jxr_linenumber" name="L5573" href="#L5573">5573</a>             }
-<a class="jxr_linenumber" name="L5574" href="#L5574">5574</a> 
-<a class="jxr_linenumber" name="L5575" href="#L5575">5575</a>             getBiasAsMatrix(mBa);
-<a class="jxr_linenumber" name="L5576" href="#L5576">5576</a> 
-<a class="jxr_linenumber" name="L5577" href="#L5577">5577</a>             mFmeas.setElementAtIndex(0, mFmeasX);
-<a class="jxr_linenumber" name="L5578" href="#L5578">5578</a>             mFmeas.setElementAtIndex(1, mFmeasY);
-<a class="jxr_linenumber" name="L5579" href="#L5579">5579</a>             mFmeas.setElementAtIndex(2, mFmeasZ);
-<a class="jxr_linenumber" name="L5580" href="#L5580">5580</a> 
-<a class="jxr_linenumber" name="L5581" href="#L5581">5581</a>             mM.setElementAt(0, 0, m11);
-<a class="jxr_linenumber" name="L5582" href="#L5582">5582</a>             mM.setElementAt(1, 0, m21);
-<a class="jxr_linenumber" name="L5583" href="#L5583">5583</a>             mM.setElementAt(2, 0, m31);
-<a class="jxr_linenumber" name="L5584" href="#L5584">5584</a> 
-<a class="jxr_linenumber" name="L5585" href="#L5585">5585</a>             mM.setElementAt(0, 1, m12);
-<a class="jxr_linenumber" name="L5586" href="#L5586">5586</a>             mM.setElementAt(1, 1, m22);
-<a class="jxr_linenumber" name="L5587" href="#L5587">5587</a>             mM.setElementAt(2, 1, m32);
-<a class="jxr_linenumber" name="L5588" href="#L5588">5588</a> 
-<a class="jxr_linenumber" name="L5589" href="#L5589">5589</a>             mM.setElementAt(0, 2, m13);
-<a class="jxr_linenumber" name="L5590" href="#L5590">5590</a>             mM.setElementAt(1, 2, m23);
-<a class="jxr_linenumber" name="L5591" href="#L5591">5591</a>             mM.setElementAt(2, 2, m33);
-<a class="jxr_linenumber" name="L5592" href="#L5592">5592</a> 
-<a class="jxr_linenumber" name="L5593" href="#L5593">5593</a>             Utils.inverse(mM, mInvM);
+<a class="jxr_linenumber" name="L5571" href="#L5571">5571</a> 
+<a class="jxr_linenumber" name="L5572" href="#L5572">5572</a>             getBiasAsMatrix(mBa);
+<a class="jxr_linenumber" name="L5573" href="#L5573">5573</a> 
+<a class="jxr_linenumber" name="L5574" href="#L5574">5574</a>             mFmeas.setElementAtIndex(0, mFmeasX);
+<a class="jxr_linenumber" name="L5575" href="#L5575">5575</a>             mFmeas.setElementAtIndex(1, mFmeasY);
+<a class="jxr_linenumber" name="L5576" href="#L5576">5576</a>             mFmeas.setElementAtIndex(2, mFmeasZ);
+<a class="jxr_linenumber" name="L5577" href="#L5577">5577</a> 
+<a class="jxr_linenumber" name="L5578" href="#L5578">5578</a>             mM.setElementAt(0, 0, m11);
+<a class="jxr_linenumber" name="L5579" href="#L5579">5579</a>             mM.setElementAt(1, 0, m21);
+<a class="jxr_linenumber" name="L5580" href="#L5580">5580</a>             mM.setElementAt(2, 0, m31);
+<a class="jxr_linenumber" name="L5581" href="#L5581">5581</a> 
+<a class="jxr_linenumber" name="L5582" href="#L5582">5582</a>             mM.setElementAt(0, 1, m12);
+<a class="jxr_linenumber" name="L5583" href="#L5583">5583</a>             mM.setElementAt(1, 1, m22);
+<a class="jxr_linenumber" name="L5584" href="#L5584">5584</a>             mM.setElementAt(2, 1, m32);
+<a class="jxr_linenumber" name="L5585" href="#L5585">5585</a> 
+<a class="jxr_linenumber" name="L5586" href="#L5586">5586</a>             mM.setElementAt(0, 2, m13);
+<a class="jxr_linenumber" name="L5587" href="#L5587">5587</a>             mM.setElementAt(1, 2, m23);
+<a class="jxr_linenumber" name="L5588" href="#L5588">5588</a>             mM.setElementAt(2, 2, m33);
+<a class="jxr_linenumber" name="L5589" href="#L5589">5589</a> 
+<a class="jxr_linenumber" name="L5590" href="#L5590">5590</a>             Utils.inverse(mM, mInvM);
+<a class="jxr_linenumber" name="L5591" href="#L5591">5591</a> 
+<a class="jxr_linenumber" name="L5592" href="#L5592">5592</a>             <em class="jxr_comment">// b = M^-1*ba</em>
+<a class="jxr_linenumber" name="L5593" href="#L5593">5593</a>             mInvM.multiply(mBa, mB);
 <a class="jxr_linenumber" name="L5594" href="#L5594">5594</a> 
-<a class="jxr_linenumber" name="L5595" href="#L5595">5595</a>             <em class="jxr_comment">// b = M^-1*ba</em>
-<a class="jxr_linenumber" name="L5596" href="#L5596">5596</a>             mInvM.multiply(mBa, mB);
+<a class="jxr_linenumber" name="L5595" href="#L5595">5595</a>             mInvM.multiply(mFmeas, mFtrue);
+<a class="jxr_linenumber" name="L5596" href="#L5596">5596</a>             mFtrue.subtract(mB);
 <a class="jxr_linenumber" name="L5597" href="#L5597">5597</a> 
-<a class="jxr_linenumber" name="L5598" href="#L5598">5598</a>             mInvM.multiply(mFmeas, mFtrue);
-<a class="jxr_linenumber" name="L5599" href="#L5599">5599</a>             mFtrue.subtract(mB);
+<a class="jxr_linenumber" name="L5598" href="#L5598">5598</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> norm = Utils.normF(mFtrue);
+<a class="jxr_linenumber" name="L5599" href="#L5599">5599</a>             <strong class="jxr_keyword">return</strong> norm * norm;
 <a class="jxr_linenumber" name="L5600" href="#L5600">5600</a> 
-<a class="jxr_linenumber" name="L5601" href="#L5601">5601</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> norm = Utils.normF(mFtrue);
-<a class="jxr_linenumber" name="L5602" href="#L5602">5602</a>             <strong class="jxr_keyword">return</strong> norm * norm;
-<a class="jxr_linenumber" name="L5603" href="#L5603">5603</a> 
-<a class="jxr_linenumber" name="L5604" href="#L5604">5604</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> AlgebraException e) {
-<a class="jxr_linenumber" name="L5605" href="#L5605">5605</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> EvaluationException(e);
-<a class="jxr_linenumber" name="L5606" href="#L5606">5606</a>         }
-<a class="jxr_linenumber" name="L5607" href="#L5607">5607</a>     }
-<a class="jxr_linenumber" name="L5608" href="#L5608">5608</a> }
+<a class="jxr_linenumber" name="L5601" href="#L5601">5601</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> AlgebraException e) {
+<a class="jxr_linenumber" name="L5602" href="#L5602">5602</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> EvaluationException(e);
+<a class="jxr_linenumber" name="L5603" href="#L5603">5603</a>         }
+<a class="jxr_linenumber" name="L5604" href="#L5604">5604</a>     }
+<a class="jxr_linenumber" name="L5605" href="#L5605">5605</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2018&#x2013;2020. All rights reserved.</div>
