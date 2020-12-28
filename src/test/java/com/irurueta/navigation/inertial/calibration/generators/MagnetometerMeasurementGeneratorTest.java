@@ -164,13 +164,13 @@ public class MagnetometerMeasurementGeneratorTest implements MagnetometerMeasure
         assertEquals(errorThreshold1, errorThreshold2);
         assertEquals(generator.getStatus(),
                 TriadStaticIntervalDetector.Status.IDLE);
-        assertEquals(generator.getBaseNoiseLevel(), 0.0, 0.0);
-        final Acceleration baseNoiseLevel1 = generator.getBaseNoiseLevelAsMeasurement();
+        assertEquals(generator.getAccelerometerBaseNoiseLevel(), 0.0, 0.0);
+        final Acceleration baseNoiseLevel1 = generator.getAccelerometerBaseNoiseLevelAsMeasurement();
         assertEquals(baseNoiseLevel1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(baseNoiseLevel1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         final Acceleration baseNoiseLevel2 = new Acceleration(
                 1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        generator.getBaseNoiseLevelAsMeasurement(baseNoiseLevel2);
+        generator.getAccelerometerBaseNoiseLevelAsMeasurement(baseNoiseLevel2);
         assertEquals(baseNoiseLevel1, baseNoiseLevel2);
         assertEquals(generator.getThreshold(), 0.0, 0.0);
         final Acceleration threshold1 = generator.getThresholdAsMeasurement();
@@ -221,13 +221,13 @@ public class MagnetometerMeasurementGeneratorTest implements MagnetometerMeasure
         assertEquals(errorThreshold1, errorThreshold2);
         assertEquals(generator.getStatus(),
                 TriadStaticIntervalDetector.Status.IDLE);
-        assertEquals(generator.getBaseNoiseLevel(), 0.0, 0.0);
-        final Acceleration baseNoiseLevel1 = generator.getBaseNoiseLevelAsMeasurement();
+        assertEquals(generator.getAccelerometerBaseNoiseLevel(), 0.0, 0.0);
+        final Acceleration baseNoiseLevel1 = generator.getAccelerometerBaseNoiseLevelAsMeasurement();
         assertEquals(baseNoiseLevel1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(baseNoiseLevel1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         final Acceleration baseNoiseLevel2 = new Acceleration(
                 1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        generator.getBaseNoiseLevelAsMeasurement(baseNoiseLevel2);
+        generator.getAccelerometerBaseNoiseLevelAsMeasurement(baseNoiseLevel2);
         assertEquals(baseNoiseLevel1, baseNoiseLevel2);
         assertEquals(generator.getThreshold(), 0.0, 0.0);
         final Acceleration threshold1 = generator.getThresholdAsMeasurement();
@@ -1425,13 +1425,13 @@ public class MagnetometerMeasurementGeneratorTest implements MagnetometerMeasure
         checkLocked(generator);
 
         assertTrue(baseNoiseLevel > 0.0);
-        assertEquals(baseNoiseLevel, generator.getBaseNoiseLevel(), 0.0);
-        final Acceleration baseNoiseLevel1 = generator.getBaseNoiseLevelAsMeasurement();
+        assertEquals(baseNoiseLevel, generator.getAccelerometerBaseNoiseLevel(), 0.0);
+        final Acceleration baseNoiseLevel1 = generator.getAccelerometerBaseNoiseLevelAsMeasurement();
         assertEquals(baseNoiseLevel1.getValue().doubleValue(), baseNoiseLevel, 0.0);
         assertEquals(baseNoiseLevel1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         final Acceleration baseNoiseLevel2 = new Acceleration(
                 1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        generator.getBaseNoiseLevelAsMeasurement(baseNoiseLevel2);
+        generator.getAccelerometerBaseNoiseLevelAsMeasurement(baseNoiseLevel2);
         assertEquals(baseNoiseLevel1, baseNoiseLevel2);
 
         assertTrue(generator.getThreshold() > 0.0);

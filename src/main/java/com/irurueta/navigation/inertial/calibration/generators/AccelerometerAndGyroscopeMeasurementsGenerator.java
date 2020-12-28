@@ -9,6 +9,9 @@ import com.irurueta.navigation.inertial.calibration.TimedBodyKinematics;
 import com.irurueta.navigation.inertial.calibration.intervals.TriadStaticIntervalDetector;
 import com.irurueta.units.Acceleration;
 import com.irurueta.units.AngularSpeed;
+import com.irurueta.units.Time;
+import com.irurueta.units.TimeConverter;
+import com.irurueta.units.TimeUnit;
 
 /**
  * Generates measurements for the calibration of accelerometers and gyroscopes by alternating
@@ -221,6 +224,66 @@ public class AccelerometerAndGyroscopeMeasurementsGenerator {
             final AccelerometerAndGyroscopeMeasurementsGeneratorListener listener) {
         this();
         mListener = listener;
+    }
+
+    /**
+     * Gets time interval between input samples expressed in seconds (s).
+     *
+     * @return time interval between input samples.
+     */
+    public double getTimeInterval() {
+        return mAccelerometerMeasurementsGenerator.getTimeInterval();
+    }
+
+    /**
+     * Sets time interval between input samples expressed in seconds (s).
+     *
+     * @param timeInterval time interval between input samples.
+     * @throws IllegalArgumentException if provided value is negative.
+     * @throws LockedException          if generator is currently running.
+     */
+    public void setTimeInterval(final double timeInterval) throws LockedException {
+        if (mRunning) {
+            throw new LockedException();
+        }
+
+        if (timeInterval < 0.0) {
+            throw new IllegalArgumentException();
+        }
+
+        mAccelerometerMeasurementsGenerator.setTimeInterval(timeInterval);
+        mGyroscopeMeasurementsGenerator.setTimeInterval(timeInterval);
+    }
+
+    /**
+     * Gets time interval between input samples.
+     *
+     * @return time interval between input samples.
+     */
+    public Time getTimeIntervalAsTime() {
+        return new Time(getTimeInterval(), TimeUnit.SECOND);
+    }
+
+    /**
+     * Gets time interval between input samples.
+     *
+     * @param result instance where time interval will be stored.
+     */
+    public void getTimeIntervalAsTime(final Time result) {
+        result.setValue(getTimeInterval());
+        result.setUnit(TimeUnit.SECOND);
+    }
+
+    /**
+     * Sets time interval between input samples.
+     *
+     * @param timeInterval time interval between input samples.
+     * @throws IllegalArgumentException if provided value is negative.
+     * @throws LockedException          if estimator is currently running.
+     */
+    public void setTimeInterval(final Time timeInterval) throws LockedException {
+        setTimeInterval(TimeConverter.convert(timeInterval.getValue().doubleValue(),
+                timeInterval.getUnit(), TimeUnit.SECOND));
     }
 
     /**
@@ -532,7 +595,7 @@ public class AccelerometerAndGyroscopeMeasurementsGenerator {
      * @return accelerometer base noise level.
      */
     public double getAccelerometerBaseNoiseLevel() {
-        return mAccelerometerMeasurementsGenerator.getBaseNoiseLevel();
+        return mAccelerometerMeasurementsGenerator.getAccelerometerBaseNoiseLevel();
     }
 
     /**
@@ -544,7 +607,7 @@ public class AccelerometerAndGyroscopeMeasurementsGenerator {
      * @return measurement base noise level.
      */
     public Acceleration getAccelerometerBaseNoiseLevelAsMeasurement() {
-        return mAccelerometerMeasurementsGenerator.getBaseNoiseLevelAsMeasurement();
+        return mAccelerometerMeasurementsGenerator.getAccelerometerBaseNoiseLevelAsMeasurement();
     }
 
     /**
@@ -553,8 +616,30 @@ public class AccelerometerAndGyroscopeMeasurementsGenerator {
      *
      * @param result instance where result will be stored.
      */
-    public void getAccelerometerBaseNoiseLevelAsMeasurement(final Acceleration result) {
-        mAccelerometerMeasurementsGenerator.getBaseNoiseLevelAsMeasurement(result);
+    public void getAccelerometerBaseNoiseLevelAsMeasurement(
+            final Acceleration result) {
+        mAccelerometerMeasurementsGenerator.getAccelerometerBaseNoiseLevelAsMeasurement(
+                result);
+    }
+
+    /**
+     * Gets accelerometer base noise level PSD (Power Spectral Density)
+     * expressed in (m^2 * s^-3).
+     *
+     * @return accelerometer base noise level PSD.
+     */
+    public double getAccelerometerBaseNoiseLevelPsd() {
+        return mAccelerometerMeasurementsGenerator.getAccelerometerBaseNoiseLevelPsd();
+    }
+
+    /**
+     * Gets accelerometer base noise level root PSD (Power Spectral Density)
+     * expressed in (m * s^-1.5).
+     *
+     * @return accelerometer base noise level root PSD.
+     */
+    public double getAccelerometerBaseNoiseLevelRootPsd() {
+        return mAccelerometerMeasurementsGenerator.getAccelerometerBaseNoiseLevelRootPsd();
     }
 
     /**
@@ -708,32 +793,60 @@ public class AccelerometerAndGyroscopeMeasurementsGenerator {
     }
 
     /**
-     * Gets norm of estimated standard deviation of angular rate during initialization phase
-     * expressed in radians per second (rad/s).
+     * Gets gyroscope base noise level that has been detected during
+     * initialization expressed in radians per second (rad/s).
+     * This is equal to the standard deviation of the gyroscope measurements
+     * during initialization phase.
      *
-     * @return norm of estimated standard deviation of angular rate during initialization phase.
+     * @return gyroscope base noise level.
      */
-    public double getInitialAngularSpeedTriadStandardDeviationNorm() {
-        return mGyroscopeMeasurementsGenerator.getInitialAngularSpeedTriadStandardDeviationNorm();
+    public double getGyroscopeBaseNoiseLevel() {
+        return mGyroscopeMeasurementsGenerator.getGyroscopeBaseNoiseLevel();
     }
 
     /**
-     * Gets norm of estimated standard deviation of angular rate during initialization phase.
+     * Gets gyroscope base noise level that has been detected during
+     * initialization.
+     * This is equal to the standard deviation of the gyroscope measurements
+     * during initialization phase.
      *
-     * @return norm of estimated standard deviation of angular rate during initialization phase.
+     * @return gyroscope base noise level.
      */
-    public AngularSpeed getInitialAngularSpeedTriadStandardDeviationNormAsMeasurement() {
-        return mGyroscopeMeasurementsGenerator.getInitialAngularSpeedTriadStandardDeviationNormAsMeasurement();
+    public AngularSpeed getGyroscopeBaseNoiseLevelAsMeasurement() {
+        return mGyroscopeMeasurementsGenerator.getGyroscopeBaseNoiseLevelAsMeasurement();
     }
 
     /**
-     * Gets norm of estimated standard deviation of angular rate during initialization phase.
+     * Gets gyroscope base noise level that has been detected during
+     * initialization.
+     * This is equal to the standard deviation of the gyroscope measurements
+     * during initialization phase.
      *
      * @param result instance where result will be stored.
      */
-    public void getInitialAngularSpeedTriadStandardDeviationNormAsMeasurement(
+    public void getGyroscopeBaseNoiseLevelAsMeasurement(
             final AngularSpeed result) {
-        mGyroscopeMeasurementsGenerator.getInitialAngularSpeedTriadStandardDeviationNormAsMeasurement(
+        mGyroscopeMeasurementsGenerator.getGyroscopeBaseNoiseLevelAsMeasurement(
                 result);
+    }
+
+    /**
+     * Gets gyroscope base noise level PSD (Power Spectral Density)
+     * expressed in (rad^2/s).
+     *
+     * @return gyroscope base noise level PSD.
+     */
+    public double getGyroscopeBaseNoiseLevelPsd() {
+        return mGyroscopeMeasurementsGenerator.getGyroscopeBaseNoiseLevelPsd();
+    }
+
+    /**
+     * Gets gyroscope base noise level root PSD (Power Spectral Density)
+     * expressed in (rad * s^-0.5)
+     *
+     * @return gyroscope base noise level root PSD.
+     */
+    public double getGyroscopeBaseNoiseLevelRootPsd() {
+        return mGyroscopeMeasurementsGenerator.getGyroscopeBaseNoiseLevelRootPsd();
     }
 }

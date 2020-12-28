@@ -23,6 +23,9 @@ import com.irurueta.navigation.inertial.calibration.intervals.AccelerationTriadS
 import com.irurueta.navigation.inertial.calibration.intervals.TriadStaticIntervalDetector;
 import com.irurueta.navigation.inertial.calibration.noise.WindowedTriadNoiseEstimator;
 import com.irurueta.units.Acceleration;
+import com.irurueta.units.Time;
+import com.irurueta.units.TimeConverter;
+import com.irurueta.units.TimeUnit;
 
 /**
  * Base class to generate measurements for the calibration of accelerometers, gyroscopes or
@@ -120,6 +123,65 @@ public abstract class MeasurementsGenerator<T, G extends MeasurementsGenerator<T
     public MeasurementsGenerator(final L listener) {
         this();
         mListener = listener;
+    }
+
+    /**
+     * Gets time interval between input samples expressed in seconds (s).
+     *
+     * @return time interval between input samples.
+     */
+    public double getTimeInterval() {
+        return mStaticIntervalDetector.getTimeInterval();
+    }
+
+    /**
+     * Sets time interval between input samples expressed in seconds (s).
+     *
+     * @param timeInterval time interval between input samples.
+     * @throws IllegalArgumentException if provided value is negative.
+     * @throws LockedException          if generator is currently running.
+     */
+    public void setTimeInterval(final double timeInterval) throws LockedException {
+        if (mRunning) {
+            throw new LockedException();
+        }
+
+        if (timeInterval < 0.0) {
+            throw new IllegalArgumentException();
+        }
+
+        mStaticIntervalDetector.setTimeInterval(timeInterval);
+    }
+
+    /**
+     * Gets time interval between input samples.
+     *
+     * @return time interval between input samples.
+     */
+    public Time getTimeIntervalAsTime() {
+        return new Time(getTimeInterval(), TimeUnit.SECOND);
+    }
+
+    /**
+     * Gets time interval between input samples.
+     *
+     * @param result instance where time interval will be stored.
+     */
+    public void getTimeIntervalAsTime(final Time result) {
+        result.setValue(getTimeInterval());
+        result.setUnit(TimeUnit.SECOND);
+    }
+
+    /**
+     * Sets time interval between input samples.
+     *
+     * @param timeInterval time interval between input samples.
+     * @throws IllegalArgumentException if provided value is negative.
+     * @throws LockedException          if estimator is currently running.
+     */
+    public void setTimeInterval(final Time timeInterval) throws LockedException {
+        setTimeInterval(TimeConverter.convert(timeInterval.getValue().doubleValue(),
+                timeInterval.getUnit(), TimeUnit.SECOND));
     }
 
     /**
@@ -426,7 +488,7 @@ public abstract class MeasurementsGenerator<T, G extends MeasurementsGenerator<T
      *
      * @return accelerometer base noise level.
      */
-    public double getBaseNoiseLevel() {
+    public double getAccelerometerBaseNoiseLevel() {
         return mStaticIntervalDetector.getBaseNoiseLevel();
     }
 
@@ -438,7 +500,7 @@ public abstract class MeasurementsGenerator<T, G extends MeasurementsGenerator<T
      *
      * @return measurement base noise level.
      */
-    public Acceleration getBaseNoiseLevelAsMeasurement() {
+    public Acceleration getAccelerometerBaseNoiseLevelAsMeasurement() {
         return mStaticIntervalDetector.getBaseNoiseLevelAsMeasurement();
     }
 
@@ -448,8 +510,29 @@ public abstract class MeasurementsGenerator<T, G extends MeasurementsGenerator<T
      *
      * @param result instance where result will be stored.
      */
-    public void getBaseNoiseLevelAsMeasurement(final Acceleration result) {
+    public void getAccelerometerBaseNoiseLevelAsMeasurement(
+            final Acceleration result) {
         mStaticIntervalDetector.getBaseNoiseLevelAsMeasurement(result);
+    }
+
+    /**
+     * Gets accelerometer base noise level PSD (Power Spectral Density)
+     * expressed in (m^2 * s^-3).
+     *
+     * @return accelerometer base noise level PSD.
+     */
+    public double getAccelerometerBaseNoiseLevelPsd() {
+        return mStaticIntervalDetector.getBaseNoiseLevelPsd();
+    }
+
+    /**
+     * Gets accelerometer base noise level root PSD (Power Spectral Density)
+     * expressed in (m * s^-1.5).
+     *
+     * @return accelerometer base noise level root PSD.
+     */
+    public double getAccelerometerBaseNoiseLevelRootPsd() {
+        return mStaticIntervalDetector.getBaseNoiseLevelRootPsd();
     }
 
     /**

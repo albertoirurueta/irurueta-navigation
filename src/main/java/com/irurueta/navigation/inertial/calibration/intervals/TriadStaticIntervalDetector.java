@@ -20,6 +20,9 @@ import com.irurueta.navigation.inertial.calibration.Triad;
 import com.irurueta.navigation.inertial.calibration.noise.AccumulatedTriadNoiseEstimator;
 import com.irurueta.navigation.inertial.calibration.noise.WindowedTriadNoiseEstimator;
 import com.irurueta.units.Measurement;
+import com.irurueta.units.Time;
+import com.irurueta.units.TimeConverter;
+import com.irurueta.units.TimeUnit;
 
 /**
  * Abstract base class for detectors in charge of determining when a static period of
@@ -552,6 +555,67 @@ public abstract class TriadStaticIntervalDetector<U extends Enum<?>, M extends M
     }
 
     /**
+     * Gets time interval between triad samples expressed in seconds (s).
+     *
+     * @return time interval between triad samples.
+     */
+    public double getTimeInterval() {
+        return mWindowedNoiseEstimator.getTimeInterval();
+    }
+
+    /**
+     * Sets time interval between triad samples expressed in
+     * seconds (s).
+     *
+     * @param timeInterval time interval between triad samples.
+     * @throws IllegalArgumentException if provided value is negative.
+     * @throws LockedException          if estimator is currently running.
+     */
+    public void setTimeInterval(final double timeInterval) throws LockedException {
+        if (mRunning) {
+            throw new LockedException();
+        }
+
+        if (timeInterval < 0.0) {
+            throw new IllegalArgumentException();
+        }
+
+        mWindowedNoiseEstimator.setTimeInterval(timeInterval);
+        mAccumulatedNoiseEstimator.setTimeInterval(timeInterval);
+    }
+
+    /**
+     * Gets time interval between triad samples.
+     *
+     * @return time interval between triad samples.
+     */
+    public Time getTimeIntervalAsTime() {
+        return new Time(getTimeInterval(), TimeUnit.SECOND);
+    }
+
+    /**
+     * Gets time interval between triad samples.
+     *
+     * @param result instance where time interval will be stored.
+     */
+    public void getTimeIntervalAsTime(final Time result) {
+        result.setValue(getTimeInterval());
+        result.setUnit(TimeUnit.SECOND);
+    }
+
+    /**
+     * Sets time interval between triad samples.
+     *
+     * @param timeInterval time interval between triad samples.
+     * @throws IllegalArgumentException if provided value is negative.
+     * @throws LockedException          if estimator is currently running.
+     */
+    public void setTimeInterval(final Time timeInterval) throws LockedException {
+        setTimeInterval(TimeConverter.convert(timeInterval.getValue().doubleValue(),
+                timeInterval.getUnit(), TimeUnit.SECOND));
+    }
+
+    /**
      * Gets current status of this detector.
      *
      * @return current status of this detector.
@@ -591,6 +655,28 @@ public abstract class TriadStaticIntervalDetector<U extends Enum<?>, M extends M
     public void getBaseNoiseLevelAsMeasurement(final M result) {
         result.setValue(mBaseNoiseLevel);
         result.setUnit(getDefaultUnit());
+    }
+
+    /**
+     * Gets measurement base noise level PSD (Power Spectral Density) expressed in
+     * (m^2 * s^-3) for accelerometer, (rad^2/s) for gyroscope or (T^2 * s) for
+     * magnetometer.
+     *
+     * @return measurement base noise level PSD.
+     */
+    public double getBaseNoiseLevelPsd() {
+        return mBaseNoiseLevel * mBaseNoiseLevel * getTimeInterval();
+    }
+
+    /**
+     * Gets measurement base noise level root PSD (Power SpectralDensity) expressed
+     * in (m * s^-1.5) for accelerometer, (rad * s^-0.5) for gyroscope or (T * s^0.5)
+     * for magnetometer.
+     *
+     * @return measurement base noise level root PSD.
+     */
+    public double getBaseNoiseLevelRootPsd() {
+        return mBaseNoiseLevel * Math.sqrt(getTimeInterval());
     }
 
     /**
@@ -1461,7 +1547,7 @@ public abstract class TriadStaticIntervalDetector<U extends Enum<?>, M extends M
 
         mWindowedNoiseEstimator.reset();
         mAccumulatedNoiseEstimator.reset();
-        
+
         if (mListener != null) {
             //noinspection unchecked
             mListener.onReset((D) this);

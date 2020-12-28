@@ -84,6 +84,12 @@ public class GyroscopeMeasurementsGenerator extends
     private double mAngularSpeedStandardDeviation;
 
     /**
+     * Estimated norm of gyroscope noise root PSD (Power Spectral Density)
+     * expressed as (rad * s^-0.5).
+     */
+    private double mAngularSpeedNoiseRootPsd;
+
+    /**
      * Previous average x-coordinate of measurements expressed in meters
      * per squared second (m/s^2).
      */
@@ -139,6 +145,19 @@ public class GyroscopeMeasurementsGenerator extends
     public GyroscopeMeasurementsGenerator(
             final GyroscopeMeasurementGeneratorListener listener) {
         super(listener);
+    }
+
+    /**
+     * Sets time interval between input samples expressed in seconds (s).
+     *
+     * @param timeInterval time interval between input samples.
+     * @throws IllegalArgumentException if provided value is negative.
+     * @throws LockedException          if generator is currently running.
+     */
+    @Override
+    public void setTimeInterval(final double timeInterval) throws LockedException {
+        super.setTimeInterval(timeInterval);
+        mAccumulatedEstimator.setTimeInterval(timeInterval);
     }
 
     /**
@@ -205,34 +224,62 @@ public class GyroscopeMeasurementsGenerator extends
     }
 
     /**
-     * Gets norm of estimated standard deviation of angular rate during initialization phase
-     * expressed in radians per second (rad/s).
+     * Gets gyroscope base noise level that has been detected during
+     * initialization expressed in radians per second (rad/s).
+     * This is equal to the standard deviation of the gyroscope measurements
+     * during initialization phase.
      *
-     * @return norm of estimated standard deviation of angular rate during initialization phase.
+     * @return gyroscope base noise level.
      */
-    public double getInitialAngularSpeedTriadStandardDeviationNorm() {
+    public double getGyroscopeBaseNoiseLevel() {
         return mAngularSpeedStandardDeviation;
     }
 
     /**
-     * Gets norm of estimated standard deviation of angular rate during initialization phase.
+     * Gets gyroscope base noise level that has been detected during
+     * initialization.
+     * This is equal to the standard deviation of the gyroscope measurements
+     * during initialization phase.
      *
-     * @return norm of estimated standard deviation of angular rate during initialization phase.
+     * @return gyroscope base noise level.
      */
-    public AngularSpeed getInitialAngularSpeedTriadStandardDeviationNormAsMeasurement() {
+    public AngularSpeed getGyroscopeBaseNoiseLevelAsMeasurement() {
         return new AngularSpeed(mAngularSpeedStandardDeviation,
                 AngularSpeedUnit.RADIANS_PER_SECOND);
     }
 
     /**
-     * Gets norm of estimated standard deviation of angular rate during initialization phase.
+     * Gets gyroscope base noise level that has been detected during
+     * initialization.
+     * This is equal to the standard deviation of the gyroscope measurements
+     * during initialization phase.
      *
      * @param result instance where result will be stored.
      */
-    public void getInitialAngularSpeedTriadStandardDeviationNormAsMeasurement(
+    public void getGyroscopeBaseNoiseLevelAsMeasurement(
             final AngularSpeed result) {
         result.setValue(mAngularSpeedStandardDeviation);
         result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);
+    }
+
+    /**
+     * Gets gyroscope base noise level PSD (Power Spectral Density)
+     * expressed in (rad^2/s).
+     *
+     * @return gyroscope base noise level PSD.
+     */
+    public double getGyroscopeBaseNoiseLevelPsd() {
+        return mAngularSpeedNoiseRootPsd * mAngularSpeedNoiseRootPsd;
+    }
+
+    /**
+     * Gets gyroscope base noise level root PSD (Power Spectral Density)
+     * expressed in (rad * s^-0.5)
+     *
+     * @return gyroscope base noise level root PSD.
+     */
+    public double getGyroscopeBaseNoiseLevelRootPsd() {
+        return mAngularSpeedNoiseRootPsd;
     }
 
     /**
@@ -270,7 +317,7 @@ public class GyroscopeMeasurementsGenerator extends
             }
         } else if (status == TriadStaticIntervalDetector.Status.STATIC_INTERVAL) {
             if (mPreviousStatus == TriadStaticIntervalDetector.Status.DYNAMIC_INTERVAL
-                && mCurrentSequenceItems != null && !mCurrentSequenceItems.isEmpty()) {
+                    && mCurrentSequenceItems != null && !mCurrentSequenceItems.isEmpty()) {
 
                 mCurrentAvgX = mStaticIntervalDetector.getInstantaneousAvgX();
                 mCurrentAvgY = mStaticIntervalDetector.getInstantaneousAvgY();
@@ -309,24 +356,24 @@ public class GyroscopeMeasurementsGenerator extends
     /**
      * Handles a static-to-dynamic interval change.
      *
-     * @param accumulatedAvgX   average x-coordinate of measurements during last
-     *                          static period expressed in meters per squared
-     *                          second (m/s^2).
-     * @param accumulatedAvgY   average y-coordinate of specific force during last
-     *                          static period expressed in meters per squared
-     *                          second (m/s^2).
-     * @param accumulatedAvgZ   average z-coordinate of specific force during last
-     *                          static period expressed in meters per squared
-     *                          second (m/s^2).
-     * @param accumulatedStdX   standard deviation of x-coordinate of measurements
-     *                          during last static period expressed in meters per
-     *                          squared second (m/s^2).
-     * @param accumulatedStdY   standard deviation of y-coordinate of measurements
-     *                          during last static period expressed in meters per
-     *                          squared second (m/s^2).
-     * @param accumulatedStdZ   standard deviation of z-coordinate of measurements
-     *                          during last static period expressed in meters per
-     *                          squared second (m/s^2).
+     * @param accumulatedAvgX average x-coordinate of measurements during last
+     *                        static period expressed in meters per squared
+     *                        second (m/s^2).
+     * @param accumulatedAvgY average y-coordinate of specific force during last
+     *                        static period expressed in meters per squared
+     *                        second (m/s^2).
+     * @param accumulatedAvgZ average z-coordinate of specific force during last
+     *                        static period expressed in meters per squared
+     *                        second (m/s^2).
+     * @param accumulatedStdX standard deviation of x-coordinate of measurements
+     *                        during last static period expressed in meters per
+     *                        squared second (m/s^2).
+     * @param accumulatedStdY standard deviation of y-coordinate of measurements
+     *                        during last static period expressed in meters per
+     *                        squared second (m/s^2).
+     * @param accumulatedStdZ standard deviation of z-coordinate of measurements
+     *                        during last static period expressed in meters per
+     *                        squared second (m/s^2).
      */
     @Override
     protected void handleStaticToDynamicChange(
@@ -354,6 +401,7 @@ public class GyroscopeMeasurementsGenerator extends
     protected void handleInitializationCompleted() {
         mAccelerationStandardDeviation = mStaticIntervalDetector.getBaseNoiseLevel();
         mAngularSpeedStandardDeviation = mAccumulatedEstimator.getStandardDeviationNorm();
+        mAngularSpeedNoiseRootPsd = mAccumulatedEstimator.getNoiseRootPsdNorm();
 
         mPreviousStatus = mStaticIntervalDetector.getStatus();
     }

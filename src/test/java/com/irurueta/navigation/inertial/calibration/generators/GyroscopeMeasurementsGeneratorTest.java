@@ -51,6 +51,8 @@ import com.irurueta.units.Acceleration;
 import com.irurueta.units.AccelerationUnit;
 import com.irurueta.units.AngularSpeed;
 import com.irurueta.units.AngularSpeedUnit;
+import com.irurueta.units.Time;
+import com.irurueta.units.TimeUnit;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -176,6 +178,15 @@ public class GyroscopeMeasurementsGeneratorTest implements
                 new GyroscopeMeasurementsGenerator();
 
         // check default values
+        assertEquals(generator.getTimeInterval(), TIME_INTERVAL_SECONDS,
+                0.0);
+        final Time timeInterval1 = generator.getTimeIntervalAsTime();
+        assertEquals(timeInterval1.getValue().doubleValue(),
+                TIME_INTERVAL_SECONDS, 0.0);
+        assertEquals(timeInterval1.getUnit(), TimeUnit.SECOND);
+        final Time timeInterval2 = new Time(1.0, TimeUnit.DAY);
+        generator.getTimeIntervalAsTime(timeInterval2);
+        assertEquals(timeInterval1, timeInterval2);
         assertEquals(generator.getMinStaticSamples(),
                 MeasurementsGenerator.DEFAULT_MIN_STATIC_SAMPLES);
         assertEquals(generator.getMaxDynamicSamples(),
@@ -209,14 +220,18 @@ public class GyroscopeMeasurementsGeneratorTest implements
         assertEquals(errorThreshold1, errorThreshold2);
         assertEquals(generator.getStatus(),
                 TriadStaticIntervalDetector.Status.IDLE);
-        assertEquals(generator.getBaseNoiseLevel(), 0.0, 0.0);
-        final Acceleration baseNoiseLevel1 = generator.getBaseNoiseLevelAsMeasurement();
+        assertEquals(generator.getAccelerometerBaseNoiseLevel(), 0.0, 0.0);
+        final Acceleration baseNoiseLevel1 = generator.getAccelerometerBaseNoiseLevelAsMeasurement();
         assertEquals(baseNoiseLevel1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(baseNoiseLevel1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         final Acceleration baseNoiseLevel2 = new Acceleration(
                 1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        generator.getBaseNoiseLevelAsMeasurement(baseNoiseLevel2);
+        generator.getAccelerometerBaseNoiseLevelAsMeasurement(baseNoiseLevel2);
         assertEquals(baseNoiseLevel1, baseNoiseLevel2);
+        assertEquals(generator.getAccelerometerBaseNoiseLevelPsd(),
+                0.0, 0.0);
+        assertEquals(generator.getAccelerometerBaseNoiseLevelRootPsd(),
+                0.0, 0.0);
         assertEquals(generator.getThreshold(), 0.0, 0.0);
         final Acceleration threshold1 = generator.getThresholdAsMeasurement();
         assertEquals(threshold1.getValue().doubleValue(), 0.0, 0.0);
@@ -240,14 +255,16 @@ public class GyroscopeMeasurementsGeneratorTest implements
         assertEquals(stdAngularSpeed1, stdAngularSpeed2);
         assertEquals(stdAngularSpeed1, stdAngularSpeed3);
 
-        assertEquals(0.0, generator.getInitialAngularSpeedTriadStandardDeviationNorm(), 0.0);
-        final AngularSpeed stdNorm1 = generator.getInitialAngularSpeedTriadStandardDeviationNormAsMeasurement();
-        assertEquals(0.0, stdNorm1.getValue().doubleValue(), 0.0);
-        assertEquals(stdNorm1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
-        final AngularSpeed stdNorm2 = new AngularSpeed(
-                1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        generator.getInitialAngularSpeedTriadStandardDeviationNormAsMeasurement(stdNorm2);
-        assertEquals(stdNorm1, stdNorm2);
+        assertEquals(0.0, generator.getGyroscopeBaseNoiseLevel(), 0.0);
+        final AngularSpeed gyroNoiseLevel1 = generator.getGyroscopeBaseNoiseLevelAsMeasurement();
+        assertEquals(gyroNoiseLevel1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(gyroNoiseLevel1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed gyroNoiseLevel2 = new AngularSpeed(1.0,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+        generator.getGyroscopeBaseNoiseLevelAsMeasurement(gyroNoiseLevel2);
+        assertEquals(gyroNoiseLevel1, gyroNoiseLevel2);
+        assertEquals(generator.getGyroscopeBaseNoiseLevelPsd(), 0.0, 0.0);
+        assertEquals(generator.getGyroscopeBaseNoiseLevelRootPsd(), 0.0, 0.0);
     }
 
     @Test
@@ -256,6 +273,15 @@ public class GyroscopeMeasurementsGeneratorTest implements
                 new GyroscopeMeasurementsGenerator(this);
 
         // check default values
+        assertEquals(generator.getTimeInterval(), TIME_INTERVAL_SECONDS,
+                0.0);
+        final Time timeInterval1 = generator.getTimeIntervalAsTime();
+        assertEquals(timeInterval1.getValue().doubleValue(),
+                TIME_INTERVAL_SECONDS, 0.0);
+        assertEquals(timeInterval1.getUnit(), TimeUnit.SECOND);
+        final Time timeInterval2 = new Time(1.0, TimeUnit.DAY);
+        generator.getTimeIntervalAsTime(timeInterval2);
+        assertEquals(timeInterval1, timeInterval2);
         assertEquals(generator.getMinStaticSamples(),
                 MeasurementsGenerator.DEFAULT_MIN_STATIC_SAMPLES);
         assertEquals(generator.getMaxDynamicSamples(),
@@ -289,14 +315,18 @@ public class GyroscopeMeasurementsGeneratorTest implements
         assertEquals(errorThreshold1, errorThreshold2);
         assertEquals(generator.getStatus(),
                 TriadStaticIntervalDetector.Status.IDLE);
-        assertEquals(generator.getBaseNoiseLevel(), 0.0, 0.0);
-        final Acceleration baseNoiseLevel1 = generator.getBaseNoiseLevelAsMeasurement();
+        assertEquals(generator.getAccelerometerBaseNoiseLevel(), 0.0, 0.0);
+        final Acceleration baseNoiseLevel1 = generator.getAccelerometerBaseNoiseLevelAsMeasurement();
         assertEquals(baseNoiseLevel1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(baseNoiseLevel1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         final Acceleration baseNoiseLevel2 = new Acceleration(
                 1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        generator.getBaseNoiseLevelAsMeasurement(baseNoiseLevel2);
+        generator.getAccelerometerBaseNoiseLevelAsMeasurement(baseNoiseLevel2);
         assertEquals(baseNoiseLevel1, baseNoiseLevel2);
+        assertEquals(generator.getAccelerometerBaseNoiseLevelPsd(),
+                0.0, 0.0);
+        assertEquals(generator.getAccelerometerBaseNoiseLevelRootPsd(),
+                0.0, 0.0);
         assertEquals(generator.getThreshold(), 0.0, 0.0);
         final Acceleration threshold1 = generator.getThresholdAsMeasurement();
         assertEquals(threshold1.getValue().doubleValue(), 0.0, 0.0);
@@ -320,14 +350,73 @@ public class GyroscopeMeasurementsGeneratorTest implements
         assertEquals(stdAngularSpeed1, stdAngularSpeed2);
         assertEquals(stdAngularSpeed1, stdAngularSpeed3);
 
-        assertEquals(0.0, generator.getInitialAngularSpeedTriadStandardDeviationNorm(), 0.0);
-        final AngularSpeed stdNorm1 = generator.getInitialAngularSpeedTriadStandardDeviationNormAsMeasurement();
-        assertEquals(0.0, stdNorm1.getValue().doubleValue(), 0.0);
-        assertEquals(stdNorm1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
-        final AngularSpeed stdNorm2 = new AngularSpeed(
-                1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        generator.getInitialAngularSpeedTriadStandardDeviationNormAsMeasurement(stdNorm2);
-        assertEquals(stdNorm1, stdNorm2);
+        assertEquals(0.0, generator.getGyroscopeBaseNoiseLevel(), 0.0);
+        final AngularSpeed gyroNoiseLevel1 = generator.getGyroscopeBaseNoiseLevelAsMeasurement();
+        assertEquals(gyroNoiseLevel1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(gyroNoiseLevel1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed gyroNoiseLevel2 = new AngularSpeed(1.0,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+        generator.getGyroscopeBaseNoiseLevelAsMeasurement(gyroNoiseLevel2);
+        assertEquals(gyroNoiseLevel1, gyroNoiseLevel2);
+        assertEquals(generator.getGyroscopeBaseNoiseLevelPsd(), 0.0, 0.0);
+        assertEquals(generator.getGyroscopeBaseNoiseLevelRootPsd(), 0.0, 0.0);
+    }
+
+    @Test
+    public void testGetSetTimeInterval1() throws LockedException {
+        final GyroscopeMeasurementsGenerator generator =
+                new GyroscopeMeasurementsGenerator();
+
+        // check default value
+        assertEquals(generator.getTimeInterval(),
+                TIME_INTERVAL_SECONDS, 0.0);
+
+        // set new value
+        final double timeInterval = 2 * TIME_INTERVAL_SECONDS;
+        generator.setTimeInterval(timeInterval);
+
+        // check
+        assertEquals(timeInterval, generator.getTimeInterval(), 0.0);
+
+        // Force IllegalArgumentException
+        try {
+            generator.setTimeInterval(-1.0);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+    }
+
+    @Test
+    public void testGetSetTimeInterval2() throws LockedException {
+        final GyroscopeMeasurementsGenerator generator =
+                new GyroscopeMeasurementsGenerator();
+
+        // check default value
+        final Time timeInterval1 = generator.getTimeIntervalAsTime();
+        assertEquals(timeInterval1.getValue().doubleValue(),
+                TIME_INTERVAL_SECONDS, 0.0);
+        assertEquals(timeInterval1.getUnit(), TimeUnit.SECOND);
+
+        // set new value
+        final Time timeInterval2 = new Time(2 * TIME_INTERVAL_SECONDS,
+                TimeUnit.SECOND);
+        generator.setTimeInterval(timeInterval2);
+
+        // check
+        final Time timeInterval3 = generator.getTimeIntervalAsTime();
+        final Time timeInterval4 = new Time(1.0, TimeUnit.DAY);
+        generator.getTimeIntervalAsTime(timeInterval4);
+
+        assertEquals(timeInterval2, timeInterval3);
+        assertEquals(timeInterval2, timeInterval4);
+
+        // Force IllegalArgumentException
+        final Time timeInterval5 = new Time(-1.0, TimeUnit.SECOND);
+        try {
+            generator.setTimeInterval(timeInterval5);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
 
     @Test
@@ -2120,14 +2209,22 @@ public class GyroscopeMeasurementsGeneratorTest implements
         checkLocked(generator);
 
         assertTrue(baseNoiseLevel > 0.0);
-        assertEquals(baseNoiseLevel, generator.getBaseNoiseLevel(), 0.0);
-        final Acceleration baseNoiseLevel1 = generator.getBaseNoiseLevelAsMeasurement();
+        assertEquals(baseNoiseLevel, generator.getAccelerometerBaseNoiseLevel(), 0.0);
+        final Acceleration baseNoiseLevel1 = generator.getAccelerometerBaseNoiseLevelAsMeasurement();
         assertEquals(baseNoiseLevel1.getValue().doubleValue(), baseNoiseLevel, 0.0);
         assertEquals(baseNoiseLevel1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         final Acceleration baseNoiseLevel2 = new Acceleration(
                 1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        generator.getBaseNoiseLevelAsMeasurement(baseNoiseLevel2);
+        generator.getAccelerometerBaseNoiseLevelAsMeasurement(baseNoiseLevel2);
         assertEquals(baseNoiseLevel1, baseNoiseLevel2);
+        final double sqrtTimeInterval = Math.sqrt(generator.getTimeInterval());
+        assertEquals(baseNoiseLevel * sqrtTimeInterval,
+                generator.getAccelerometerBaseNoiseLevelRootPsd(),
+                SMALL_ABSOLUTE_ERROR);
+        assertEquals(generator.getAccelerometerBaseNoiseLevelPsd(),
+                Math.pow(generator.getAccelerometerBaseNoiseLevelRootPsd(), 2.0),
+                SMALL_ABSOLUTE_ERROR);
+
 
         assertTrue(generator.getThreshold() > 0.0);
         final Acceleration threshold1 = generator.getThresholdAsMeasurement();
@@ -2149,17 +2246,24 @@ public class GyroscopeMeasurementsGeneratorTest implements
         generator.getInitialAngularSpeedTriadStandardDeviation(stdAngularSpeed2);
         assertEquals(stdAngularSpeed1, stdAngularSpeed2);
 
-        final double stdNorm = generator.getInitialAngularSpeedTriadStandardDeviationNorm();
-        assertTrue(stdNorm > 0.0);
-        final AngularSpeed stdNorm1 = generator.getInitialAngularSpeedTriadStandardDeviationNormAsMeasurement();
-        assertEquals(stdNorm1.getValue().doubleValue(), stdNorm, 0.0);
-        assertEquals(stdNorm1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
-        final AngularSpeed stdNorm2 = new AngularSpeed(
+        final double gyroNoiseLevel = generator.getGyroscopeBaseNoiseLevel();
+        assertTrue(gyroNoiseLevel > 0.0);
+        final AngularSpeed gyroNoiseLevel1 = generator.getGyroscopeBaseNoiseLevelAsMeasurement();
+        assertEquals(gyroNoiseLevel1.getValue().doubleValue(), gyroNoiseLevel, 0.0);
+        assertEquals(gyroNoiseLevel1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed gyroNoiseLevel2 = new AngularSpeed(
                 1.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        generator.getInitialAngularSpeedTriadStandardDeviationNormAsMeasurement(
-                stdNorm2);
+        generator.getGyroscopeBaseNoiseLevelAsMeasurement(gyroNoiseLevel2);
+        assertEquals(gyroNoiseLevel1, gyroNoiseLevel2);
 
-        assertEquals(stdAngularSpeed1.getNorm(), stdNorm, 0.0);
+        assertEquals(stdAngularSpeed1.getNorm(), gyroNoiseLevel, 0.0);
+
+        assertEquals(gyroNoiseLevel * sqrtTimeInterval,
+                generator.getGyroscopeBaseNoiseLevelRootPsd(),
+                SMALL_ABSOLUTE_ERROR);
+        assertEquals(generator.getGyroscopeBaseNoiseLevelPsd(),
+                Math.pow(generator.getGyroscopeBaseNoiseLevelRootPsd(), 2.0),
+                SMALL_ABSOLUTE_ERROR);
     }
 
     @Override
@@ -2247,6 +2351,17 @@ public class GyroscopeMeasurementsGeneratorTest implements
 
     private void checkLocked(final GyroscopeMeasurementsGenerator generator) {
         assertTrue(generator.isRunning());
+        try {
+            generator.setTimeInterval(0.0);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
+        final Time timeInterval = new Time(1.0, TimeUnit.SECOND);
+        try {
+            generator.setTimeInterval(timeInterval);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
         try {
             generator.setMinStaticSamples(0);
             fail("LockedException expected but not thrown");

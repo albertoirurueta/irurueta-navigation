@@ -19,6 +19,8 @@ import com.irurueta.navigation.inertial.estimators.ECEFKinematicsEstimator;
 import com.irurueta.statistics.UniformRandomizer;
 import com.irurueta.units.AngularSpeed;
 import com.irurueta.units.AngularSpeedUnit;
+import com.irurueta.units.Time;
+import com.irurueta.units.TimeUnit;
 import org.junit.Test;
 
 import java.util.Random;
@@ -49,6 +51,8 @@ public class AngularSpeedTriadStaticIntervalDetectorTest implements
     private static final double MAX_DELTA_ANGLE_DEGREES = 2.0;
 
     private static final double ABSOLUTE_ERROR = 1e-5;
+
+    private static final double VERY_SMALL_ABSOLUTE_ERROR = 1e-8;
 
     private int mInitializationStarted;
 
@@ -85,6 +89,14 @@ public class AngularSpeedTriadStaticIntervalDetectorTest implements
                 AngularSpeedTriadStaticIntervalDetector.DEFAULT_BASE_NOISE_LEVEL_ABSOLUTE_THRESHOLD,
                 0.0);
         assertNull(detector.getListener());
+        assertEquals(detector.getTimeInterval(), TIME_INTERVAL_SECONDS, 0.0);
+        final Time timeInterval1 = detector.getTimeIntervalAsTime();
+        assertEquals(timeInterval1.getValue().doubleValue(),
+                TIME_INTERVAL_SECONDS, 0.0);
+        assertEquals(timeInterval1.getUnit(), TimeUnit.SECOND);
+        final Time timeInterval2 = new Time(1.0, TimeUnit.DAY);
+        detector.getTimeIntervalAsTime(timeInterval2);
+        assertEquals(timeInterval1, timeInterval2);
         assertEquals(detector.getStatus(), AngularSpeedTriadStaticIntervalDetector.Status.IDLE);
         assertEquals(detector.getBaseNoiseLevel(), 0.0, 0.0);
         final AngularSpeed w1 = detector.getBaseNoiseLevelAsMeasurement();
@@ -268,6 +280,14 @@ public class AngularSpeedTriadStaticIntervalDetectorTest implements
                 AngularSpeedTriadStaticIntervalDetector.DEFAULT_BASE_NOISE_LEVEL_ABSOLUTE_THRESHOLD,
                 0.0);
         assertSame(detector.getListener(), this);
+        assertEquals(detector.getTimeInterval(), TIME_INTERVAL_SECONDS, 0.0);
+        final Time timeInterval1 = detector.getTimeIntervalAsTime();
+        assertEquals(timeInterval1.getValue().doubleValue(),
+                TIME_INTERVAL_SECONDS, 0.0);
+        assertEquals(timeInterval1.getUnit(), TimeUnit.SECOND);
+        final Time timeInterval2 = new Time(1.0, TimeUnit.DAY);
+        detector.getTimeIntervalAsTime(timeInterval2);
+        assertEquals(timeInterval1, timeInterval2);
         assertEquals(detector.getStatus(), AngularSpeedTriadStaticIntervalDetector.Status.IDLE);
         assertEquals(detector.getBaseNoiseLevel(), 0.0, 0.0);
         final AngularSpeed w1 = detector.getBaseNoiseLevelAsMeasurement();
@@ -599,6 +619,46 @@ public class AngularSpeedTriadStaticIntervalDetectorTest implements
     }
 
     @Test
+    public void testGetSetTimeInterval1() throws LockedException {
+        final AngularSpeedTriadStaticIntervalDetector detector = new AngularSpeedTriadStaticIntervalDetector();
+
+        // check default value
+        assertEquals(detector.getTimeInterval(), TIME_INTERVAL_SECONDS, 0.0);
+
+        // set new value
+        final double timeInterval = 2 * TIME_INTERVAL_SECONDS;
+        detector.setTimeInterval(timeInterval);
+
+        // check
+        assertEquals(detector.getTimeInterval(), timeInterval, 0.0);
+
+        // Force IllegalArgumentException
+        try {
+            detector.setTimeInterval(-1.0);
+        } catch (final IllegalArgumentException ignore) {
+        }
+    }
+
+    @Test
+    public void testGetSetTimeInterval2() throws LockedException {
+        final AngularSpeedTriadStaticIntervalDetector detector = new AngularSpeedTriadStaticIntervalDetector();
+
+        final Time timeInterval1 = detector.getTimeIntervalAsTime();
+        assertEquals(timeInterval1.getValue().doubleValue(), TIME_INTERVAL_SECONDS, 0.0);
+        assertEquals(timeInterval1.getUnit(), TimeUnit.SECOND);
+
+        final Time timeInterval2 = new Time(2 * TIME_INTERVAL_SECONDS, TimeUnit.SECOND);
+        detector.setTimeInterval(timeInterval2);
+
+        final Time timeInterval3 = detector.getTimeIntervalAsTime();
+        final Time timeInterval4 = new Time(1.0, TimeUnit.DAY);
+        detector.getTimeIntervalAsTime(timeInterval4);
+
+        assertEquals(timeInterval2, timeInterval3);
+        assertEquals(timeInterval2, timeInterval4);
+    }
+
+    @Test
     public void testProcessWithSuccessfulInitializationStaticAndDynamicPeriodAndReset1()
             throws WrongSizeException, InvalidSourceAndDestinationFrameTypeException,
             LockedException {
@@ -666,6 +726,8 @@ public class AngularSpeedTriadStaticIntervalDetectorTest implements
                 1.0, AngularSpeedUnit.RADIANS_PER_SECOND);
         detector.getBaseNoiseLevelAsMeasurement(w2);
         assertEquals(w1, w2);
+        assertEquals(detector.getBaseNoiseLevelPsd(), 0.0, 0.0);
+        assertEquals(detector.getBaseNoiseLevelRootPsd(), 0.0, 0.0);
         assertEquals(detector.getThreshold(), 0.0, 0.0);
         w1 = detector.getThresholdAsMeasurement();
         assertEquals(w1.getValue().doubleValue(), 0.0, 0.0);
@@ -699,6 +761,14 @@ public class AngularSpeedTriadStaticIntervalDetectorTest implements
         assertEquals(w1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         detector.getBaseNoiseLevelAsMeasurement(w2);
         assertEquals(w1, w2);
+        assertTrue(detector.getBaseNoiseLevelPsd() > 0.0);
+        assertTrue(detector.getBaseNoiseLevelRootPsd() > 0.0);
+        assertEquals(detector.getBaseNoiseLevelRootPsd(),
+                detector.getBaseNoiseLevel() * Math.sqrt(detector.getTimeInterval()),
+                VERY_SMALL_ABSOLUTE_ERROR);
+        assertEquals(detector.getBaseNoiseLevelPsd(),
+                Math.pow(detector.getBaseNoiseLevelRootPsd(), 2.0),
+                VERY_SMALL_ABSOLUTE_ERROR);
         assertTrue(detector.getThreshold() > 0.0);
         assertEquals(detector.getThreshold(),
                 detector.getBaseNoiseLevel() * detector.getThresholdFactor(),
@@ -834,7 +904,7 @@ public class AngularSpeedTriadStaticIntervalDetectorTest implements
         assertEquals(detector.getStatus(),
                 AngularSpeedTriadStaticIntervalDetector.Status.DYNAMIC_INTERVAL);
         assertEquals(detector.getProcessedSamples(),
-                initialStaticSamples + 2 * periodLength);
+                initialStaticSamples + 2L * periodLength);
 
         // keep adding static samples for twice the window size to last
         // true kinematics
@@ -851,7 +921,7 @@ public class AngularSpeedTriadStaticIntervalDetectorTest implements
         assertEquals(detector.getStatus(),
                 AngularSpeedTriadStaticIntervalDetector.Status.STATIC_INTERVAL);
         assertEquals(detector.getProcessedSamples(),
-                initialStaticSamples + 3 * periodLength);
+                initialStaticSamples + 3L * periodLength);
 
         // reset
         detector.reset();
@@ -941,6 +1011,8 @@ public class AngularSpeedTriadStaticIntervalDetectorTest implements
                 1.0, AngularSpeedUnit.RADIANS_PER_SECOND);
         detector.getBaseNoiseLevelAsMeasurement(w2);
         assertEquals(w1, w2);
+        assertEquals(detector.getBaseNoiseLevelPsd(), 0.0, 0.0);
+        assertEquals(detector.getBaseNoiseLevelRootPsd(), 0.0, 0.0);
         assertEquals(detector.getThreshold(), 0.0, 0.0);
         w1 = detector.getThresholdAsMeasurement();
         assertEquals(w1.getValue().doubleValue(), 0.0, 0.0);
@@ -984,6 +1056,14 @@ public class AngularSpeedTriadStaticIntervalDetectorTest implements
         assertEquals(w1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         detector.getBaseNoiseLevelAsMeasurement(w2);
         assertEquals(w1, w2);
+        assertTrue(detector.getBaseNoiseLevelPsd() > 0.0);
+        assertTrue(detector.getBaseNoiseLevelRootPsd() > 0.0);
+        assertEquals(detector.getBaseNoiseLevelRootPsd(),
+                detector.getBaseNoiseLevel() * Math.sqrt(detector.getTimeInterval()),
+                VERY_SMALL_ABSOLUTE_ERROR);
+        assertEquals(detector.getBaseNoiseLevelPsd(),
+                Math.pow(detector.getBaseNoiseLevelRootPsd(), 2.0),
+                VERY_SMALL_ABSOLUTE_ERROR);
         assertTrue(detector.getThreshold() > 0.0);
         assertEquals(detector.getThreshold(),
                 detector.getBaseNoiseLevel() * detector.getThresholdFactor(),
@@ -1125,7 +1205,7 @@ public class AngularSpeedTriadStaticIntervalDetectorTest implements
         assertEquals(detector.getStatus(),
                 AngularSpeedTriadStaticIntervalDetector.Status.DYNAMIC_INTERVAL);
         assertEquals(detector.getProcessedSamples(),
-                initialStaticSamples + 2 * periodLength);
+                initialStaticSamples + 2L * periodLength);
 
         // keep adding static samples for twice the window size to last
         // true kinematics
@@ -1145,7 +1225,7 @@ public class AngularSpeedTriadStaticIntervalDetectorTest implements
         assertEquals(detector.getStatus(),
                 AngularSpeedTriadStaticIntervalDetector.Status.STATIC_INTERVAL);
         assertEquals(detector.getProcessedSamples(),
-                initialStaticSamples + 3 * periodLength);
+                initialStaticSamples + 3L * periodLength);
 
         // reset
         detector.reset();
@@ -1158,6 +1238,8 @@ public class AngularSpeedTriadStaticIntervalDetectorTest implements
         assertEquals(w1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         detector.getBaseNoiseLevelAsMeasurement(w2);
         assertEquals(w1, w2);
+        assertEquals(detector.getBaseNoiseLevelPsd(), 0.0, 0.0);
+        assertEquals(detector.getBaseNoiseLevelRootPsd(), 0.0, 0.0);
         assertEquals(detector.getThreshold(), 0.0, 0.0);
         w1 = detector.getThresholdAsMeasurement();
         assertEquals(w1.getValue().doubleValue(), 0.0, 0.0);
@@ -1235,6 +1317,8 @@ public class AngularSpeedTriadStaticIntervalDetectorTest implements
                 1.0, AngularSpeedUnit.RADIANS_PER_SECOND);
         detector.getBaseNoiseLevelAsMeasurement(w2);
         assertEquals(w1, w2);
+        assertEquals(detector.getBaseNoiseLevelPsd(), 0.0, 0.0);
+        assertEquals(detector.getBaseNoiseLevelRootPsd(), 0.0, 0.0);
         assertEquals(detector.getThreshold(), 0.0, 0.0);
         w1 = detector.getThresholdAsMeasurement();
         assertEquals(w1.getValue().doubleValue(), 0.0, 0.0);
@@ -1269,6 +1353,14 @@ public class AngularSpeedTriadStaticIntervalDetectorTest implements
         assertEquals(w1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         detector.getBaseNoiseLevelAsMeasurement(w2);
         assertEquals(w1, w2);
+        assertTrue(detector.getBaseNoiseLevelPsd() > 0.0);
+        assertTrue(detector.getBaseNoiseLevelRootPsd() > 0.0);
+        assertEquals(detector.getBaseNoiseLevelRootPsd(),
+                detector.getBaseNoiseLevel() * Math.sqrt(detector.getTimeInterval()),
+                VERY_SMALL_ABSOLUTE_ERROR);
+        assertEquals(detector.getBaseNoiseLevelPsd(),
+                Math.pow(detector.getBaseNoiseLevelRootPsd(), 2.0),
+                VERY_SMALL_ABSOLUTE_ERROR);
         assertTrue(detector.getThreshold() > 0.0);
         assertEquals(detector.getThreshold(),
                 detector.getBaseNoiseLevel() * detector.getThresholdFactor(),
@@ -1406,7 +1498,7 @@ public class AngularSpeedTriadStaticIntervalDetectorTest implements
         assertEquals(detector.getStatus(),
                 AngularSpeedTriadStaticIntervalDetector.Status.DYNAMIC_INTERVAL);
         assertEquals(detector.getProcessedSamples(),
-                initialStaticSamples + 2 * periodLength);
+                initialStaticSamples + 2L * periodLength);
 
         // keep adding static samples for twice the window size to last
         // true kinematics
@@ -1424,7 +1516,7 @@ public class AngularSpeedTriadStaticIntervalDetectorTest implements
         assertEquals(detector.getStatus(),
                 AngularSpeedTriadStaticIntervalDetector.Status.STATIC_INTERVAL);
         assertEquals(detector.getProcessedSamples(),
-                initialStaticSamples + 3 * periodLength);
+                initialStaticSamples + 3L * periodLength);
 
         // reset
         detector.reset();
@@ -1437,6 +1529,8 @@ public class AngularSpeedTriadStaticIntervalDetectorTest implements
         assertEquals(w1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         detector.getBaseNoiseLevelAsMeasurement(w2);
         assertEquals(w1, w2);
+        assertEquals(detector.getBaseNoiseLevelPsd(), 0.0, 0.0);
+        assertEquals(detector.getBaseNoiseLevelRootPsd(), 0.0, 0.0);
         assertEquals(detector.getThreshold(), 0.0, 0.0);
         w1 = detector.getThresholdAsMeasurement();
         assertEquals(w1.getValue().doubleValue(), 0.0, 0.0);
@@ -2005,6 +2099,15 @@ public class AngularSpeedTriadStaticIntervalDetectorTest implements
         try {
             detector.setListener(this);
             fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
+        try {
+            detector.setTimeInterval(0.0);
+        } catch (final LockedException ignore) {
+        }
+        final Time timeInterval = new Time(1.0, TimeUnit.DAY);
+        try {
+            detector.setTimeInterval(timeInterval);
         } catch (final LockedException ignore) {
         }
         final AngularSpeedTriad triad = new AngularSpeedTriad();
