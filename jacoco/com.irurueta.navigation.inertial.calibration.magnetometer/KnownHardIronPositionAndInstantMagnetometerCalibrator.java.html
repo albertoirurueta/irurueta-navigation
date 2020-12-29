@@ -2270,10 +2270,10 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
 <span class="fc" id="L2270">                mListener.onCalibrateEnd(this);</span>
             }
 
-<span class="fc" id="L2273">        } catch (final AlgebraException | FittingException</span>
+<span class="nc" id="L2273">        } catch (final AlgebraException | FittingException</span>
                 | com.irurueta.numerical.NotReadyException
                 | IOException e) {
-<span class="fc" id="L2276">            throw new CalibrationException(e);</span>
+<span class="nc" id="L2276">            throw new CalibrationException(e);</span>
         } finally {
 <span class="fc" id="L2278">            mRunning = false;</span>
         }

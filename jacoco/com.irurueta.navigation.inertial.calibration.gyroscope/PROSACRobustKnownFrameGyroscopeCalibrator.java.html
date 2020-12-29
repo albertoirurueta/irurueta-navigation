@@ -563,12 +563,12 @@ public class PROSACRobustKnownFrameGyroscopeCalibrator extends
                             public void onEstimateProgressChange(
                                     final RobustEstimator&lt;PreliminaryResult&gt; estimator,
                                     final float progress) {
-<span class="pc bpc" id="L566" title="1 of 2 branches missed.">                                if (mListener != null) {</span>
-<span class="fc" id="L567">                                    mListener.onCalibrateProgressChange(</span>
+<span class="nc bnc" id="L566" title="All 2 branches missed.">                                if (mListener != null) {</span>
+<span class="nc" id="L567">                                    mListener.onCalibrateProgressChange(</span>
                                             PROSACRobustKnownFrameGyroscopeCalibrator.this,
                                             progress);
                                 }
-<span class="fc" id="L571">                            }</span>
+<span class="nc" id="L571">                            }</span>
                         });
 
         try {

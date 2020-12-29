@@ -205,7 +205,7 @@ public abstract class WindowedTriadNoiseEstimator&lt;U extends Enum&lt;?&gt;,
      * Gets time interval between triad samples expressed in
      * seconds (s).
      *
-     * @return time interval between accelerometer triad samples.
+     * @return time interval between triad samples.
      */
     public double getTimeInterval() {
 <span class="fc" id="L211">        return mTimeInterval;</span>
@@ -215,7 +215,7 @@ public abstract class WindowedTriadNoiseEstimator&lt;U extends Enum&lt;?&gt;,
      * Sets time interval between triad samples expressed in
      * seconds (s).
      *
-     * @param timeInterval time interval between accelerometer triad samples.
+     * @param timeInterval time interval between triad samples.
      * @throws IllegalArgumentException if provided value is negative.
      * @throws LockedException          if estimator is currently running.
      */
@@ -234,7 +234,7 @@ public abstract class WindowedTriadNoiseEstimator&lt;U extends Enum&lt;?&gt;,
     /**
      * Gets time interval between triad samples.
      *
-     * @return time interval between accelerometer triad samples.
+     * @return time interval between triad samples.
      */
     public Time getTimeIntervalAsTime() {
 <span class="fc" id="L240">        return new Time(mTimeInterval, TimeUnit.SECOND);</span>
@@ -253,7 +253,7 @@ public abstract class WindowedTriadNoiseEstimator&lt;U extends Enum&lt;?&gt;,
     /**
      * Sets time interval between triad samples.
      *
-     * @param timeInterval time interval between accelerometer triad samples.
+     * @param timeInterval time interval between triad samples.
      * @throws LockedException if estimator is currently running.
      */
     public void setTimeInterval(final Time timeInterval) throws LockedException {

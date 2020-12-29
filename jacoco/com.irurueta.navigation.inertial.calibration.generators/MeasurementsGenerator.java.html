@@ -23,6 +23,9 @@ import com.irurueta.navigation.inertial.calibration.intervals.AccelerationTriadS
 import com.irurueta.navigation.inertial.calibration.intervals.TriadStaticIntervalDetector;
 import com.irurueta.navigation.inertial.calibration.noise.WindowedTriadNoiseEstimator;
 import com.irurueta.units.Acceleration;
+import com.irurueta.units.Time;
+import com.irurueta.units.TimeConverter;
+import com.irurueta.units.TimeUnit;
 
 /**
  * Base class to generate measurements for the calibration of accelerometers, gyroscopes or
@@ -57,7 +60,7 @@ public abstract class MeasurementsGenerator&lt;T, G extends MeasurementsGenerato
      * An acceleration triad.
      * This is reused for memory efficiency.
      */
-<span class="fc" id="L60">    protected final AccelerationTriad mTriad = new AccelerationTriad();</span>
+<span class="fc" id="L63">    protected final AccelerationTriad mTriad = new AccelerationTriad();</span>
 
     /**
      * Static/dynamic interval detector using accelerometer samples.
@@ -73,13 +76,13 @@ public abstract class MeasurementsGenerator&lt;T, G extends MeasurementsGenerato
      * Minimum number of samples required in a static interval to be taken into account.
      * Smaller static intervals will be discarded.
      */
-<span class="fc" id="L76">    private int mMinStaticSamples = DEFAULT_MIN_STATIC_SAMPLES;</span>
+<span class="fc" id="L79">    private int mMinStaticSamples = DEFAULT_MIN_STATIC_SAMPLES;</span>
 
     /**
      * Maximum number of samples allowed in dynamic intervals.
      * Larger dynamic intervals will be discarded.
      */
-<span class="fc" id="L82">    private int mMaxDynamicSamples = DEFAULT_MAX_DYNAMIC_SAMPLES;</span>
+<span class="fc" id="L85">    private int mMaxDynamicSamples = DEFAULT_MAX_DYNAMIC_SAMPLES;</span>
 
     /**
      * Number of samples that have been processed in a static period so far.
@@ -104,13 +107,13 @@ public abstract class MeasurementsGenerator&lt;T, G extends MeasurementsGenerato
     /**
      * Constructor.
      */
-<span class="fc" id="L107">    public MeasurementsGenerator() {</span>
-<span class="fc" id="L108">        mStaticIntervalDetector = new AccelerationTriadStaticIntervalDetector();</span>
+<span class="fc" id="L110">    public MeasurementsGenerator() {</span>
+<span class="fc" id="L111">        mStaticIntervalDetector = new AccelerationTriadStaticIntervalDetector();</span>
         try {
-<span class="fc" id="L110">            setupListener();</span>
-<span class="nc" id="L111">        } catch (final LockedException ignore) {</span>
-<span class="fc" id="L112">        }</span>
-<span class="fc" id="L113">    }</span>
+<span class="fc" id="L113">            setupListener();</span>
+<span class="nc" id="L114">        } catch (final LockedException ignore) {</span>
+<span class="fc" id="L115">        }</span>
+<span class="fc" id="L116">    }</span>
 
     /**
      * Constructor.
@@ -118,9 +121,68 @@ public abstract class MeasurementsGenerator&lt;T, G extends MeasurementsGenerato
      * @param listener listener to handle events raised by this generator.
      */
     public MeasurementsGenerator(final L listener) {
-<span class="fc" id="L121">        this();</span>
-<span class="fc" id="L122">        mListener = listener;</span>
-<span class="fc" id="L123">    }</span>
+<span class="fc" id="L124">        this();</span>
+<span class="fc" id="L125">        mListener = listener;</span>
+<span class="fc" id="L126">    }</span>
+
+    /**
+     * Gets time interval between input samples expressed in seconds (s).
+     *
+     * @return time interval between input samples.
+     */
+    public double getTimeInterval() {
+<span class="fc" id="L134">        return mStaticIntervalDetector.getTimeInterval();</span>
+    }
+
+    /**
+     * Sets time interval between input samples expressed in seconds (s).
+     *
+     * @param timeInterval time interval between input samples.
+     * @throws IllegalArgumentException if provided value is negative.
+     * @throws LockedException          if generator is currently running.
+     */
+    public void setTimeInterval(final double timeInterval) throws LockedException {
+<span class="fc bfc" id="L145" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L146">            throw new LockedException();</span>
+        }
+
+<span class="fc bfc" id="L149" title="All 2 branches covered.">        if (timeInterval &lt; 0.0) {</span>
+<span class="fc" id="L150">            throw new IllegalArgumentException();</span>
+        }
+
+<span class="fc" id="L153">        mStaticIntervalDetector.setTimeInterval(timeInterval);</span>
+<span class="fc" id="L154">    }</span>
+
+    /**
+     * Gets time interval between input samples.
+     *
+     * @return time interval between input samples.
+     */
+    public Time getTimeIntervalAsTime() {
+<span class="fc" id="L162">        return new Time(getTimeInterval(), TimeUnit.SECOND);</span>
+    }
+
+    /**
+     * Gets time interval between input samples.
+     *
+     * @param result instance where time interval will be stored.
+     */
+    public void getTimeIntervalAsTime(final Time result) {
+<span class="fc" id="L171">        result.setValue(getTimeInterval());</span>
+<span class="fc" id="L172">        result.setUnit(TimeUnit.SECOND);</span>
+<span class="fc" id="L173">    }</span>
+
+    /**
+     * Sets time interval between input samples.
+     *
+     * @param timeInterval time interval between input samples.
+     * @throws IllegalArgumentException if provided value is negative.
+     * @throws LockedException          if estimator is currently running.
+     */
+    public void setTimeInterval(final Time timeInterval) throws LockedException {
+<span class="fc" id="L183">        setTimeInterval(TimeConverter.convert(timeInterval.getValue().doubleValue(),</span>
+<span class="fc" id="L184">                timeInterval.getUnit(), TimeUnit.SECOND));</span>
+<span class="fc" id="L185">    }</span>
 
     /**
      * Gets minimum number of samples required in a static interval to be taken into account.
@@ -129,7 +191,7 @@ public abstract class MeasurementsGenerator&lt;T, G extends MeasurementsGenerato
      * @return minimum number of samples required in a static interval to be taken into account.
      */
     public int getMinStaticSamples() {
-<span class="fc" id="L132">        return mMinStaticSamples;</span>
+<span class="fc" id="L194">        return mMinStaticSamples;</span>
     }
 
     /**
@@ -142,16 +204,16 @@ public abstract class MeasurementsGenerator&lt;T, G extends MeasurementsGenerato
      * @throws IllegalArgumentException if provided value is less than 2.
      */
     public void setMinStaticSamples(final int minStaticSamples) throws LockedException {
-<span class="fc bfc" id="L145" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L146">            throw new LockedException();</span>
+<span class="fc bfc" id="L207" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L208">            throw new LockedException();</span>
         }
 
-<span class="fc bfc" id="L149" title="All 2 branches covered.">        if (minStaticSamples &lt; WindowedTriadNoiseEstimator.MIN_WINDOW_SIZE) {</span>
-<span class="fc" id="L150">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L211" title="All 2 branches covered.">        if (minStaticSamples &lt; WindowedTriadNoiseEstimator.MIN_WINDOW_SIZE) {</span>
+<span class="fc" id="L212">            throw new IllegalArgumentException();</span>
         }
 
-<span class="fc" id="L153">        mMinStaticSamples = minStaticSamples;</span>
-<span class="fc" id="L154">    }</span>
+<span class="fc" id="L215">        mMinStaticSamples = minStaticSamples;</span>
+<span class="fc" id="L216">    }</span>
 
     /**
      * Gets maximum number of samples allowed in dynamic intervals.
@@ -159,7 +221,7 @@ public abstract class MeasurementsGenerator&lt;T, G extends MeasurementsGenerato
      * @return maximum number of samples allowed in dynamic intervals.
      */
     public int getMaxDynamicSamples() {
-<span class="fc" id="L162">        return mMaxDynamicSamples;</span>
+<span class="fc" id="L224">        return mMaxDynamicSamples;</span>
     }
 
     /**
@@ -170,16 +232,16 @@ public abstract class MeasurementsGenerator&lt;T, G extends MeasurementsGenerato
      * @throws IllegalArgumentException if provided value is less than 2.
      */
     public void setMaxDynamicSamples(final int maxDynamicSamples) throws LockedException {
-<span class="fc bfc" id="L173" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L174">            throw new LockedException();</span>
+<span class="fc bfc" id="L235" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L236">            throw new LockedException();</span>
         }
 
-<span class="fc bfc" id="L177" title="All 2 branches covered.">        if (maxDynamicSamples &lt; WindowedTriadNoiseEstimator.MIN_WINDOW_SIZE) {</span>
-<span class="fc" id="L178">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L239" title="All 2 branches covered.">        if (maxDynamicSamples &lt; WindowedTriadNoiseEstimator.MIN_WINDOW_SIZE) {</span>
+<span class="fc" id="L240">            throw new IllegalArgumentException();</span>
         }
 
-<span class="fc" id="L181">        mMaxDynamicSamples = maxDynamicSamples;</span>
-<span class="fc" id="L182">    }</span>
+<span class="fc" id="L243">        mMaxDynamicSamples = maxDynamicSamples;</span>
+<span class="fc" id="L244">    }</span>
 
     /**
      * Gets listener to handle generated events.
@@ -187,7 +249,7 @@ public abstract class MeasurementsGenerator&lt;T, G extends MeasurementsGenerato
      * @return listener to handle generated events.
      */
     public L getListener() {
-<span class="fc" id="L190">        return mListener;</span>
+<span class="fc" id="L252">        return mListener;</span>
     }
 
     /**
@@ -197,12 +259,12 @@ public abstract class MeasurementsGenerator&lt;T, G extends MeasurementsGenerato
      * @throws LockedException if generator is busy.
      */
     public void setListener(final L listener) throws LockedException {
-<span class="fc bfc" id="L200" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L201">            throw new LockedException();</span>
+<span class="fc bfc" id="L262" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L263">            throw new LockedException();</span>
         }
 
-<span class="fc" id="L204">        mListener = listener;</span>
-<span class="fc" id="L205">    }</span>
+<span class="fc" id="L266">        mListener = listener;</span>
+<span class="fc" id="L267">    }</span>
 
     /**
      * Gets length of number of samples to keep within the window being processed
@@ -211,7 +273,7 @@ public abstract class MeasurementsGenerator&lt;T, G extends MeasurementsGenerato
      * @return length of number of samples to keep within the window.
      */
     public int getWindowSize() {
-<span class="fc" id="L214">        return mStaticIntervalDetector.getWindowSize();</span>
+<span class="fc" id="L276">        return mStaticIntervalDetector.getWindowSize();</span>
     }
 
     /**
@@ -225,12 +287,12 @@ public abstract class MeasurementsGenerator&lt;T, G extends MeasurementsGenerato
      * @throws IllegalArgumentException if provided value is not valid.
      */
     public void setWindowSize(final int windowSize) throws LockedException {
-<span class="fc bfc" id="L228" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L229">            throw new LockedException();</span>
+<span class="fc bfc" id="L290" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L291">            throw new LockedException();</span>
         }
 
-<span class="fc" id="L232">        mStaticIntervalDetector.setWindowSize(windowSize);</span>
-<span class="fc" id="L233">    }</span>
+<span class="fc" id="L294">        mStaticIntervalDetector.setWindowSize(windowSize);</span>
+<span class="fc" id="L295">    }</span>
 
     /**
      * Gets number of samples to be processed initially while keeping the sensor static in order
@@ -239,7 +301,7 @@ public abstract class MeasurementsGenerator&lt;T, G extends MeasurementsGenerato
      * @return number of samples to be processed initially.
      */
     public int getInitialStaticSamples() {
-<span class="fc" id="L242">        return mStaticIntervalDetector.getInitialStaticSamples();</span>
+<span class="fc" id="L304">        return mStaticIntervalDetector.getInitialStaticSamples();</span>
     }
 
     /**
@@ -253,12 +315,12 @@ public abstract class MeasurementsGenerator&lt;T, G extends MeasurementsGenerato
      */
     public void setInitialStaticSamples(final int initialStaticSamples)
             throws LockedException {
-<span class="fc bfc" id="L256" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L257">            throw new LockedException();</span>
+<span class="fc bfc" id="L318" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L319">            throw new LockedException();</span>
         }
 
-<span class="fc" id="L260">        mStaticIntervalDetector.setInitialStaticSamples(initialStaticSamples);</span>
-<span class="fc" id="L261">    }</span>
+<span class="fc" id="L322">        mStaticIntervalDetector.setInitialStaticSamples(initialStaticSamples);</span>
+<span class="fc" id="L323">    }</span>
 
     /**
      * Gets factor to be applied to detected base noise level in order to
@@ -268,7 +330,7 @@ public abstract class MeasurementsGenerator&lt;T, G extends MeasurementsGenerato
      * @return factor to be applied to detected base noise level.
      */
     public double getThresholdFactor() {
-<span class="fc" id="L271">        return mStaticIntervalDetector.getThresholdFactor();</span>
+<span class="fc" id="L333">        return mStaticIntervalDetector.getThresholdFactor();</span>
     }
 
     /**
@@ -282,12 +344,12 @@ public abstract class MeasurementsGenerator&lt;T, G extends MeasurementsGenerato
      */
     public void setThresholdFactor(final double thresholdFactor)
             throws LockedException {
-<span class="fc bfc" id="L285" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L286">            throw new LockedException();</span>
+<span class="fc bfc" id="L347" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L348">            throw new LockedException();</span>
         }
 
-<span class="fc" id="L289">        mStaticIntervalDetector.setThresholdFactor(thresholdFactor);</span>
-<span class="fc" id="L290">    }</span>
+<span class="fc" id="L351">        mStaticIntervalDetector.setThresholdFactor(thresholdFactor);</span>
+<span class="fc" id="L352">    }</span>
 
     /**
      * Gets factor to determine that a sudden movement has occurred during
@@ -298,7 +360,7 @@ public abstract class MeasurementsGenerator&lt;T, G extends MeasurementsGenerato
      * @return factor to determine that a sudden movement has occurred.
      */
     public double getInstantaneousNoiseLevelFactor() {
-<span class="fc" id="L301">        return mStaticIntervalDetector.getInstantaneousNoiseLevelFactor();</span>
+<span class="fc" id="L363">        return mStaticIntervalDetector.getInstantaneousNoiseLevelFactor();</span>
     }
 
     /**
@@ -315,13 +377,13 @@ public abstract class MeasurementsGenerator&lt;T, G extends MeasurementsGenerato
      */
     public void setInstantaneousNoiseLevelFactor(
             final double instantaneousNoiseLevelFactor) throws LockedException {
-<span class="fc bfc" id="L318" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L319">            throw new LockedException();</span>
+<span class="fc bfc" id="L380" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L381">            throw new LockedException();</span>
         }
 
-<span class="fc" id="L322">        mStaticIntervalDetector.setInstantaneousNoiseLevelFactor(</span>
+<span class="fc" id="L384">        mStaticIntervalDetector.setInstantaneousNoiseLevelFactor(</span>
                 instantaneousNoiseLevelFactor);
-<span class="fc" id="L324">    }</span>
+<span class="fc" id="L386">    }</span>
 
     /**
      * Gets overall absolute threshold to determine whether there has been
@@ -334,7 +396,7 @@ public abstract class MeasurementsGenerator&lt;T, G extends MeasurementsGenerato
      * been excessive motion.
      */
     public double getBaseNoiseLevelAbsoluteThreshold() {
-<span class="fc" id="L337">        return mStaticIntervalDetector.getBaseNoiseLevelAbsoluteThreshold();</span>
+<span class="fc" id="L399">        return mStaticIntervalDetector.getBaseNoiseLevelAbsoluteThreshold();</span>
     }
 
     /**
@@ -352,13 +414,13 @@ public abstract class MeasurementsGenerator&lt;T, G extends MeasurementsGenerato
      */
     public void setBaseNoiseLevelAbsoluteThreshold(
             final double baseNoiseLevelAbsoluteThreshold) throws LockedException {
-<span class="fc bfc" id="L355" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L356">            throw new LockedException();</span>
+<span class="fc bfc" id="L417" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L418">            throw new LockedException();</span>
         }
 
-<span class="fc" id="L359">        mStaticIntervalDetector.setBaseNoiseLevelAbsoluteThreshold(</span>
+<span class="fc" id="L421">        mStaticIntervalDetector.setBaseNoiseLevelAbsoluteThreshold(</span>
                 baseNoiseLevelAbsoluteThreshold);
-<span class="fc" id="L361">    }</span>
+<span class="fc" id="L423">    }</span>
 
     /**
      * Gets overall absolute threshold to determine whether there has been
@@ -370,7 +432,7 @@ public abstract class MeasurementsGenerator&lt;T, G extends MeasurementsGenerato
      * excessive motion.
      */
     public Acceleration getBaseNoiseLevelAbsoluteThresholdAsMeasurement() {
-<span class="fc" id="L373">        return mStaticIntervalDetector.getBaseNoiseLevelAbsoluteThresholdAsMeasurement();</span>
+<span class="fc" id="L435">        return mStaticIntervalDetector.getBaseNoiseLevelAbsoluteThresholdAsMeasurement();</span>
     }
 
     /**
@@ -383,9 +445,9 @@ public abstract class MeasurementsGenerator&lt;T, G extends MeasurementsGenerato
      */
     public void getBaseNoiseLevelAbsoluteThresholdAsMeasurement(
             final Acceleration result) {
-<span class="fc" id="L386">        mStaticIntervalDetector.getBaseNoiseLevelAbsoluteThresholdAsMeasurement(</span>
+<span class="fc" id="L448">        mStaticIntervalDetector.getBaseNoiseLevelAbsoluteThresholdAsMeasurement(</span>
                 result);
-<span class="fc" id="L388">    }</span>
+<span class="fc" id="L450">    }</span>
 
     /**
      * Sets overall absolute threshold to determine whether there has been
@@ -401,13 +463,13 @@ public abstract class MeasurementsGenerator&lt;T, G extends MeasurementsGenerato
      */
     public void setBaseNoiseLevelAbsoluteThreshold(
             final Acceleration baseNoiseLevelAbsoluteThreshold) throws LockedException {
-<span class="fc bfc" id="L404" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L405">            throw new LockedException();</span>
+<span class="fc bfc" id="L466" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L467">            throw new LockedException();</span>
         }
 
-<span class="fc" id="L408">        mStaticIntervalDetector.setBaseNoiseLevelAbsoluteThreshold(</span>
+<span class="fc" id="L470">        mStaticIntervalDetector.setBaseNoiseLevelAbsoluteThreshold(</span>
                 baseNoiseLevelAbsoluteThreshold);
-<span class="fc" id="L410">    }</span>
+<span class="fc" id="L472">    }</span>
 
     /**
      * Gets internal status of this generator.
@@ -415,7 +477,7 @@ public abstract class MeasurementsGenerator&lt;T, G extends MeasurementsGenerato
      * @return internal status of this generator.
      */
     public TriadStaticIntervalDetector.Status getStatus() {
-<span class="fc" id="L418">        return mStaticIntervalDetector.getStatus();</span>
+<span class="fc" id="L480">        return mStaticIntervalDetector.getStatus();</span>
     }
 
     /**
@@ -426,8 +488,8 @@ public abstract class MeasurementsGenerator&lt;T, G extends MeasurementsGenerato
      *
      * @return accelerometer base noise level.
      */
-    public double getBaseNoiseLevel() {
-<span class="fc" id="L430">        return mStaticIntervalDetector.getBaseNoiseLevel();</span>
+    public double getAccelerometerBaseNoiseLevel() {
+<span class="fc" id="L492">        return mStaticIntervalDetector.getBaseNoiseLevel();</span>
     }
 
     /**
@@ -438,8 +500,8 @@ public abstract class MeasurementsGenerator&lt;T, G extends MeasurementsGenerato
      *
      * @return measurement base noise level.
      */
-    public Acceleration getBaseNoiseLevelAsMeasurement() {
-<span class="fc" id="L442">        return mStaticIntervalDetector.getBaseNoiseLevelAsMeasurement();</span>
+    public Acceleration getAccelerometerBaseNoiseLevelAsMeasurement() {
+<span class="fc" id="L504">        return mStaticIntervalDetector.getBaseNoiseLevelAsMeasurement();</span>
     }
 
     /**
@@ -448,9 +510,30 @@ public abstract class MeasurementsGenerator&lt;T, G extends MeasurementsGenerato
      *
      * @param result instance where result will be stored.
      */
-    public void getBaseNoiseLevelAsMeasurement(final Acceleration result) {
-<span class="fc" id="L452">        mStaticIntervalDetector.getBaseNoiseLevelAsMeasurement(result);</span>
-<span class="fc" id="L453">    }</span>
+    public void getAccelerometerBaseNoiseLevelAsMeasurement(
+            final Acceleration result) {
+<span class="fc" id="L515">        mStaticIntervalDetector.getBaseNoiseLevelAsMeasurement(result);</span>
+<span class="fc" id="L516">    }</span>
+
+    /**
+     * Gets accelerometer base noise level PSD (Power Spectral Density)
+     * expressed in (m^2 * s^-3).
+     *
+     * @return accelerometer base noise level PSD.
+     */
+    public double getAccelerometerBaseNoiseLevelPsd() {
+<span class="fc" id="L525">        return mStaticIntervalDetector.getBaseNoiseLevelPsd();</span>
+    }
+
+    /**
+     * Gets accelerometer base noise level root PSD (Power Spectral Density)
+     * expressed in (m * s^-1.5).
+     *
+     * @return accelerometer base noise level root PSD.
+     */
+    public double getAccelerometerBaseNoiseLevelRootPsd() {
+<span class="fc" id="L535">        return mStaticIntervalDetector.getBaseNoiseLevelRootPsd();</span>
+    }
 
     /**
      * Gets threshold to determine static/dynamic period changes expressed in
@@ -459,7 +542,7 @@ public abstract class MeasurementsGenerator&lt;T, G extends MeasurementsGenerato
      * @return threshold to determine static/dynamic period changes.
      */
     public double getThreshold() {
-<span class="fc" id="L462">        return mStaticIntervalDetector.getThreshold();</span>
+<span class="fc" id="L545">        return mStaticIntervalDetector.getThreshold();</span>
     }
 
     /**
@@ -468,7 +551,7 @@ public abstract class MeasurementsGenerator&lt;T, G extends MeasurementsGenerato
      * @return threshold to determine static/dynamic period changes.
      */
     public Acceleration getThresholdAsMeasurement() {
-<span class="fc" id="L471">        return mStaticIntervalDetector.getThresholdAsMeasurement();</span>
+<span class="fc" id="L554">        return mStaticIntervalDetector.getThresholdAsMeasurement();</span>
     }
 
     /**
@@ -477,8 +560,8 @@ public abstract class MeasurementsGenerator&lt;T, G extends MeasurementsGenerato
      * @param result instance where result will be stored.
      */
     public void getThresholdAsMeasurement(final Acceleration result) {
-<span class="fc" id="L480">        mStaticIntervalDetector.getThresholdAsMeasurement(result);</span>
-<span class="fc" id="L481">    }</span>
+<span class="fc" id="L563">        mStaticIntervalDetector.getThresholdAsMeasurement(result);</span>
+<span class="fc" id="L564">    }</span>
 
     /**
      * Gets number of samples that have been processed in a static period so far.
@@ -486,7 +569,7 @@ public abstract class MeasurementsGenerator&lt;T, G extends MeasurementsGenerato
      * @return number of samples that have been processed in a static period so far.
      */
     public int getProcessedStaticSamples() {
-<span class="fc" id="L489">        return mProcessedStaticSamples;</span>
+<span class="fc" id="L572">        return mProcessedStaticSamples;</span>
     }
 
     /**
@@ -495,7 +578,7 @@ public abstract class MeasurementsGenerator&lt;T, G extends MeasurementsGenerato
      * @return number of samples that have been processed in a dynamic period so far.
      */
     public int getProcessedDynamicSamples() {
-<span class="fc" id="L498">        return mProcessedDynamicSamples;</span>
+<span class="fc" id="L581">        return mProcessedDynamicSamples;</span>
     }
 
     /**
@@ -504,7 +587,7 @@ public abstract class MeasurementsGenerator&lt;T, G extends MeasurementsGenerato
      * @return true if last static interval must be skipped.
      */
     public boolean isStaticIntervalSkipped() {
-<span class="fc" id="L507">        return mSkipStaticInterval;</span>
+<span class="fc" id="L590">        return mSkipStaticInterval;</span>
     }
 
     /**
@@ -513,7 +596,7 @@ public abstract class MeasurementsGenerator&lt;T, G extends MeasurementsGenerato
      * @return true if last dynamic interval must be skipped.
      */
     public boolean isDynamicIntervalSkipped() {
-<span class="fc" id="L516">        return mSkipDynamicInterval;</span>
+<span class="fc" id="L599">        return mSkipDynamicInterval;</span>
     }
 
     /**
@@ -522,7 +605,7 @@ public abstract class MeasurementsGenerator&lt;T, G extends MeasurementsGenerato
      * @return true if generator is running, false otherwise.
      */
     public boolean isRunning() {
-<span class="fc" id="L525">        return mRunning;</span>
+<span class="fc" id="L608">        return mRunning;</span>
     }
 
     /**
@@ -535,23 +618,23 @@ public abstract class MeasurementsGenerator&lt;T, G extends MeasurementsGenerato
      * @throws LockedException if generator is busy processing a previous sample.
      */
     public boolean process(final I sample) throws LockedException {
-<span class="fc bfc" id="L538" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L539">            throw new LockedException();</span>
+<span class="fc bfc" id="L621" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L622">            throw new LockedException();</span>
         }
 
-<span class="fc" id="L542">        mRunning = true;</span>
-<span class="fc" id="L543">        checkProcessedSamples();</span>
+<span class="fc" id="L625">        mRunning = true;</span>
+<span class="fc" id="L626">        checkProcessedSamples();</span>
 
-<span class="fc" id="L545">        getAccelerationTriadFromInputSample(sample);</span>
-<span class="fc" id="L546">        final boolean result = mStaticIntervalDetector.process(mTriad);</span>
+<span class="fc" id="L628">        getAccelerationTriadFromInputSample(sample);</span>
+<span class="fc" id="L629">        final boolean result = mStaticIntervalDetector.process(mTriad);</span>
 
-<span class="fc bfc" id="L548" title="All 2 branches covered.">        if (result) {</span>
-<span class="fc" id="L549">            updateCounters();</span>
-<span class="fc" id="L550">            postProcess(sample);</span>
+<span class="fc bfc" id="L631" title="All 2 branches covered.">        if (result) {</span>
+<span class="fc" id="L632">            updateCounters();</span>
+<span class="fc" id="L633">            postProcess(sample);</span>
         }
-<span class="fc" id="L552">        mRunning = false;</span>
+<span class="fc" id="L635">        mRunning = false;</span>
 
-<span class="fc" id="L554">        return result;</span>
+<span class="fc" id="L637">        return result;</span>
     }
 
     /**
@@ -560,23 +643,23 @@ public abstract class MeasurementsGenerator&lt;T, G extends MeasurementsGenerato
      * @throws LockedException if generator is busy.
      */
     public void reset() throws LockedException {
-<span class="fc bfc" id="L563" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L564">            throw new LockedException();</span>
+<span class="fc bfc" id="L646" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L647">            throw new LockedException();</span>
         }
 
-<span class="fc" id="L567">        mStaticIntervalDetector.reset();</span>
+<span class="fc" id="L650">        mStaticIntervalDetector.reset();</span>
 
-<span class="fc" id="L569">        mProcessedDynamicSamples = 0;</span>
-<span class="fc" id="L570">        mProcessedStaticSamples = 0;</span>
+<span class="fc" id="L652">        mProcessedDynamicSamples = 0;</span>
+<span class="fc" id="L653">        mProcessedStaticSamples = 0;</span>
 
-<span class="fc" id="L572">        mSkipDynamicInterval = false;</span>
-<span class="fc" id="L573">        mSkipStaticInterval = false;</span>
+<span class="fc" id="L655">        mSkipDynamicInterval = false;</span>
+<span class="fc" id="L656">        mSkipStaticInterval = false;</span>
 
-<span class="pc bpc" id="L575" title="1 of 2 branches missed.">        if (mListener != null) {</span>
+<span class="pc bpc" id="L658" title="1 of 2 branches missed.">        if (mListener != null) {</span>
             //noinspection unchecked
-<span class="fc" id="L577">            mListener.onReset((G) this);</span>
+<span class="fc" id="L660">            mListener.onReset((G) this);</span>
         }
-<span class="fc" id="L579">    }</span>
+<span class="fc" id="L662">    }</span>
 
     /**
      * Post process provided input sample.
@@ -644,32 +727,32 @@ public abstract class MeasurementsGenerator&lt;T, G extends MeasurementsGenerato
      * Check processed samples so far before processing a new one.
      */
     protected void checkProcessedSamples() {
-<span class="fc bfc" id="L647" title="All 2 branches covered.">        if (mProcessedDynamicSamples &gt; mMaxDynamicSamples) {</span>
-<span class="fc" id="L648">            final boolean wasSkipped = mSkipDynamicInterval;</span>
-<span class="fc" id="L649">            mSkipDynamicInterval = true;</span>
+<span class="fc bfc" id="L730" title="All 2 branches covered.">        if (mProcessedDynamicSamples &gt; mMaxDynamicSamples) {</span>
+<span class="fc" id="L731">            final boolean wasSkipped = mSkipDynamicInterval;</span>
+<span class="fc" id="L732">            mSkipDynamicInterval = true;</span>
 
-<span class="pc bpc" id="L651" title="1 of 4 branches missed.">            if (mListener != null &amp;&amp; !wasSkipped) {</span>
+<span class="pc bpc" id="L734" title="1 of 4 branches missed.">            if (mListener != null &amp;&amp; !wasSkipped) {</span>
                 //noinspection unchecked
-<span class="fc" id="L653">                mListener.onDynamicIntervalSkipped((G) this);</span>
+<span class="fc" id="L736">                mListener.onDynamicIntervalSkipped((G) this);</span>
             }
         }
-<span class="fc" id="L656">    }</span>
+<span class="fc" id="L739">    }</span>
 
     /**
      * Updates counters of processed samples.
      */
     protected void updateCounters() {
-<span class="fc bfc" id="L662" title="All 3 branches covered.">        switch (mStaticIntervalDetector.getStatus()) {</span>
+<span class="fc bfc" id="L745" title="All 3 branches covered.">        switch (mStaticIntervalDetector.getStatus()) {</span>
             case STATIC_INTERVAL:
-<span class="fc" id="L664">                mProcessedStaticSamples++;</span>
-<span class="fc" id="L665">                mProcessedDynamicSamples = 0;</span>
-<span class="fc" id="L666">                break;</span>
+<span class="fc" id="L747">                mProcessedStaticSamples++;</span>
+<span class="fc" id="L748">                mProcessedDynamicSamples = 0;</span>
+<span class="fc" id="L749">                break;</span>
             case DYNAMIC_INTERVAL:
-<span class="fc" id="L668">                mProcessedDynamicSamples++;</span>
-<span class="fc" id="L669">                mProcessedStaticSamples = 0;</span>
+<span class="fc" id="L751">                mProcessedDynamicSamples++;</span>
+<span class="fc" id="L752">                mProcessedStaticSamples = 0;</span>
                 break;
         }
-<span class="fc" id="L672">    }</span>
+<span class="fc" id="L755">    }</span>
 
     /**
      * Setups listener for static interval detector.
@@ -677,32 +760,32 @@ public abstract class MeasurementsGenerator&lt;T, G extends MeasurementsGenerato
      * @throws LockedException if static interval detector is busy.
      */
     private void setupListener() throws LockedException {
-<span class="fc" id="L680">        final AccelerationTriadStaticIntervalDetectorListener listener =</span>
-<span class="fc" id="L681">                new AccelerationTriadStaticIntervalDetectorListener() {</span>
+<span class="fc" id="L763">        final AccelerationTriadStaticIntervalDetectorListener listener =</span>
+<span class="fc" id="L764">                new AccelerationTriadStaticIntervalDetectorListener() {</span>
                     @Override
                     public void onInitializationStarted(
                             final AccelerationTriadStaticIntervalDetector detector) {
 
-<span class="pc bpc" id="L686" title="1 of 2 branches missed.">                        if (mListener != null) {</span>
+<span class="pc bpc" id="L769" title="1 of 2 branches missed.">                        if (mListener != null) {</span>
                             //noinspection unchecked
-<span class="fc" id="L688">                            mListener.onInitializationStarted((G) MeasurementsGenerator.this);</span>
+<span class="fc" id="L771">                            mListener.onInitializationStarted((G) MeasurementsGenerator.this);</span>
                         }
-<span class="fc" id="L690">                    }</span>
+<span class="fc" id="L773">                    }</span>
 
                     @Override
                     public void onInitializationCompleted(
                             final AccelerationTriadStaticIntervalDetector detector,
                             final double baseNoiseLevel) {
 
-<span class="fc" id="L697">                        handleInitializationCompleted();</span>
+<span class="fc" id="L780">                        handleInitializationCompleted();</span>
 
-<span class="pc bpc" id="L699" title="1 of 2 branches missed.">                        if (mListener != null) {</span>
+<span class="pc bpc" id="L782" title="1 of 2 branches missed.">                        if (mListener != null) {</span>
                             //noinspection unchecked
-<span class="fc" id="L701">                            mListener.onInitializationCompleted(</span>
+<span class="fc" id="L784">                            mListener.onInitializationCompleted(</span>
                                     (G) MeasurementsGenerator.this,
                                     baseNoiseLevel);
                         }
-<span class="fc" id="L705">                    }</span>
+<span class="fc" id="L788">                    }</span>
 
                     @Override
                     public void onError(
@@ -711,13 +794,13 @@ public abstract class MeasurementsGenerator&lt;T, G extends MeasurementsGenerato
                             final double instantaneousNoiseLevel,
                             final TriadStaticIntervalDetector.ErrorReason reason) {
 
-<span class="fc" id="L714">                        handleInitializationFailed();</span>
+<span class="fc" id="L797">                        handleInitializationFailed();</span>
 
-<span class="pc bpc" id="L716" title="1 of 2 branches missed.">                        if (mListener != null) {</span>
+<span class="pc bpc" id="L799" title="1 of 2 branches missed.">                        if (mListener != null) {</span>
                             //noinspection unchecked
-<span class="fc" id="L718">                            mListener.onError((G) MeasurementsGenerator.this, reason);</span>
+<span class="fc" id="L801">                            mListener.onError((G) MeasurementsGenerator.this, reason);</span>
                         }
-<span class="fc" id="L720">                    }</span>
+<span class="fc" id="L803">                    }</span>
 
                     @Override
                     public void onStaticIntervalDetected(
@@ -729,14 +812,14 @@ public abstract class MeasurementsGenerator&lt;T, G extends MeasurementsGenerato
                             final double instantaneousStdY,
                             final double instantaneousStdZ) {
 
-<span class="fc" id="L732">                        handleDynamicToStaticChange();</span>
-<span class="fc" id="L733">                        mSkipDynamicInterval = false;</span>
+<span class="fc" id="L815">                        handleDynamicToStaticChange();</span>
+<span class="fc" id="L816">                        mSkipDynamicInterval = false;</span>
 
-<span class="pc bpc" id="L735" title="1 of 2 branches missed.">                        if (mListener != null) {</span>
+<span class="pc bpc" id="L818" title="1 of 2 branches missed.">                        if (mListener != null) {</span>
                             //noinspection unchecked
-<span class="fc" id="L737">                            mListener.onStaticIntervalDetected((G) MeasurementsGenerator.this);</span>
+<span class="fc" id="L820">                            mListener.onStaticIntervalDetected((G) MeasurementsGenerator.this);</span>
                         }
-<span class="fc" id="L739">                    }</span>
+<span class="fc" id="L822">                    }</span>
 
                     @Override
                     public void onDynamicIntervalDetected(
@@ -754,33 +837,33 @@ public abstract class MeasurementsGenerator&lt;T, G extends MeasurementsGenerato
                             final double accumulatedStdY,
                             final double accumulatedStdZ) {
 
-<span class="fc bfc" id="L757" title="All 2 branches covered.">                        if (mProcessedStaticSamples &lt; mMinStaticSamples) {</span>
-<span class="fc" id="L758">                            final boolean wasSkipped = mSkipStaticInterval;</span>
-<span class="fc" id="L759">                            mSkipStaticInterval = true;</span>
+<span class="fc bfc" id="L840" title="All 2 branches covered.">                        if (mProcessedStaticSamples &lt; mMinStaticSamples) {</span>
+<span class="fc" id="L841">                            final boolean wasSkipped = mSkipStaticInterval;</span>
+<span class="fc" id="L842">                            mSkipStaticInterval = true;</span>
 
-<span class="pc bpc" id="L761" title="2 of 4 branches missed.">                            if (mListener != null &amp;&amp; !wasSkipped) {</span>
+<span class="pc bpc" id="L844" title="2 of 4 branches missed.">                            if (mListener != null &amp;&amp; !wasSkipped) {</span>
                                 //noinspection unchecked
-<span class="fc" id="L763">                                mListener.onStaticIntervalSkipped((G) MeasurementsGenerator.this);</span>
+<span class="fc" id="L846">                                mListener.onStaticIntervalSkipped((G) MeasurementsGenerator.this);</span>
                             }
                         }
 
-<span class="fc" id="L767">                        handleStaticToDynamicChange(</span>
+<span class="fc" id="L850">                        handleStaticToDynamicChange(</span>
                                 accumulatedAvgX, accumulatedAvgY, accumulatedAvgZ,
                                 accumulatedStdX, accumulatedStdY, accumulatedStdZ);
-<span class="fc" id="L770">                        mSkipStaticInterval = false;</span>
+<span class="fc" id="L853">                        mSkipStaticInterval = false;</span>
 
-<span class="pc bpc" id="L772" title="1 of 2 branches missed.">                        if (mListener != null) {</span>
+<span class="pc bpc" id="L855" title="1 of 2 branches missed.">                        if (mListener != null) {</span>
                             //noinspection unchecked
-<span class="fc" id="L774">                            mListener.onDynamicIntervalDetected((G) MeasurementsGenerator.this);</span>
+<span class="fc" id="L857">                            mListener.onDynamicIntervalDetected((G) MeasurementsGenerator.this);</span>
                         }
-<span class="fc" id="L776">                    }</span>
+<span class="fc" id="L859">                    }</span>
 
                     @Override
                     public void onReset(
                             final AccelerationTriadStaticIntervalDetector detector) {
-<span class="fc" id="L781">                    }</span>
+<span class="fc" id="L864">                    }</span>
                 };
-<span class="fc" id="L783">        mStaticIntervalDetector.setListener(listener);</span>
-<span class="fc" id="L784">    }</span>
+<span class="fc" id="L866">        mStaticIntervalDetector.setListener(listener);</span>
+<span class="fc" id="L867">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

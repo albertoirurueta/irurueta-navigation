@@ -172,13 +172,13 @@
 <a class="jxr_linenumber" name="L164" href="#L164">164</a>         assertEquals(errorThreshold1, errorThreshold2);
 <a class="jxr_linenumber" name="L165" href="#L165">165</a>         assertEquals(generator.getStatus(),
 <a class="jxr_linenumber" name="L166" href="#L166">166</a>                 TriadStaticIntervalDetector.Status.IDLE);
-<a class="jxr_linenumber" name="L167" href="#L167">167</a>         assertEquals(generator.getBaseNoiseLevel(), 0.0, 0.0);
-<a class="jxr_linenumber" name="L168" href="#L168">168</a>         <strong class="jxr_keyword">final</strong> Acceleration baseNoiseLevel1 = generator.getBaseNoiseLevelAsMeasurement();
+<a class="jxr_linenumber" name="L167" href="#L167">167</a>         assertEquals(generator.getAccelerometerBaseNoiseLevel(), 0.0, 0.0);
+<a class="jxr_linenumber" name="L168" href="#L168">168</a>         <strong class="jxr_keyword">final</strong> Acceleration baseNoiseLevel1 = generator.getAccelerometerBaseNoiseLevelAsMeasurement();
 <a class="jxr_linenumber" name="L169" href="#L169">169</a>         assertEquals(baseNoiseLevel1.getValue().doubleValue(), 0.0, 0.0);
 <a class="jxr_linenumber" name="L170" href="#L170">170</a>         assertEquals(baseNoiseLevel1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
 <a class="jxr_linenumber" name="L171" href="#L171">171</a>         <strong class="jxr_keyword">final</strong> Acceleration baseNoiseLevel2 = <strong class="jxr_keyword">new</strong> Acceleration(
 <a class="jxr_linenumber" name="L172" href="#L172">172</a>                 1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
-<a class="jxr_linenumber" name="L173" href="#L173">173</a>         generator.getBaseNoiseLevelAsMeasurement(baseNoiseLevel2);
+<a class="jxr_linenumber" name="L173" href="#L173">173</a>         generator.getAccelerometerBaseNoiseLevelAsMeasurement(baseNoiseLevel2);
 <a class="jxr_linenumber" name="L174" href="#L174">174</a>         assertEquals(baseNoiseLevel1, baseNoiseLevel2);
 <a class="jxr_linenumber" name="L175" href="#L175">175</a>         assertEquals(generator.getThreshold(), 0.0, 0.0);
 <a class="jxr_linenumber" name="L176" href="#L176">176</a>         <strong class="jxr_keyword">final</strong> Acceleration threshold1 = generator.getThresholdAsMeasurement();
@@ -229,13 +229,13 @@
 <a class="jxr_linenumber" name="L221" href="#L221">221</a>         assertEquals(errorThreshold1, errorThreshold2);
 <a class="jxr_linenumber" name="L222" href="#L222">222</a>         assertEquals(generator.getStatus(),
 <a class="jxr_linenumber" name="L223" href="#L223">223</a>                 TriadStaticIntervalDetector.Status.IDLE);
-<a class="jxr_linenumber" name="L224" href="#L224">224</a>         assertEquals(generator.getBaseNoiseLevel(), 0.0, 0.0);
-<a class="jxr_linenumber" name="L225" href="#L225">225</a>         <strong class="jxr_keyword">final</strong> Acceleration baseNoiseLevel1 = generator.getBaseNoiseLevelAsMeasurement();
+<a class="jxr_linenumber" name="L224" href="#L224">224</a>         assertEquals(generator.getAccelerometerBaseNoiseLevel(), 0.0, 0.0);
+<a class="jxr_linenumber" name="L225" href="#L225">225</a>         <strong class="jxr_keyword">final</strong> Acceleration baseNoiseLevel1 = generator.getAccelerometerBaseNoiseLevelAsMeasurement();
 <a class="jxr_linenumber" name="L226" href="#L226">226</a>         assertEquals(baseNoiseLevel1.getValue().doubleValue(), 0.0, 0.0);
 <a class="jxr_linenumber" name="L227" href="#L227">227</a>         assertEquals(baseNoiseLevel1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
 <a class="jxr_linenumber" name="L228" href="#L228">228</a>         <strong class="jxr_keyword">final</strong> Acceleration baseNoiseLevel2 = <strong class="jxr_keyword">new</strong> Acceleration(
 <a class="jxr_linenumber" name="L229" href="#L229">229</a>                 1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
-<a class="jxr_linenumber" name="L230" href="#L230">230</a>         generator.getBaseNoiseLevelAsMeasurement(baseNoiseLevel2);
+<a class="jxr_linenumber" name="L230" href="#L230">230</a>         generator.getAccelerometerBaseNoiseLevelAsMeasurement(baseNoiseLevel2);
 <a class="jxr_linenumber" name="L231" href="#L231">231</a>         assertEquals(baseNoiseLevel1, baseNoiseLevel2);
 <a class="jxr_linenumber" name="L232" href="#L232">232</a>         assertEquals(generator.getThreshold(), 0.0, 0.0);
 <a class="jxr_linenumber" name="L233" href="#L233">233</a>         <strong class="jxr_keyword">final</strong> Acceleration threshold1 = generator.getThresholdAsMeasurement();
@@ -1433,13 +1433,13 @@
 <a class="jxr_linenumber" name="L1425" href="#L1425">1425</a>         checkLocked(generator);
 <a class="jxr_linenumber" name="L1426" href="#L1426">1426</a> 
 <a class="jxr_linenumber" name="L1427" href="#L1427">1427</a>         assertTrue(baseNoiseLevel &gt; 0.0);
-<a class="jxr_linenumber" name="L1428" href="#L1428">1428</a>         assertEquals(baseNoiseLevel, generator.getBaseNoiseLevel(), 0.0);
-<a class="jxr_linenumber" name="L1429" href="#L1429">1429</a>         <strong class="jxr_keyword">final</strong> Acceleration baseNoiseLevel1 = generator.getBaseNoiseLevelAsMeasurement();
+<a class="jxr_linenumber" name="L1428" href="#L1428">1428</a>         assertEquals(baseNoiseLevel, generator.getAccelerometerBaseNoiseLevel(), 0.0);
+<a class="jxr_linenumber" name="L1429" href="#L1429">1429</a>         <strong class="jxr_keyword">final</strong> Acceleration baseNoiseLevel1 = generator.getAccelerometerBaseNoiseLevelAsMeasurement();
 <a class="jxr_linenumber" name="L1430" href="#L1430">1430</a>         assertEquals(baseNoiseLevel1.getValue().doubleValue(), baseNoiseLevel, 0.0);
 <a class="jxr_linenumber" name="L1431" href="#L1431">1431</a>         assertEquals(baseNoiseLevel1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
 <a class="jxr_linenumber" name="L1432" href="#L1432">1432</a>         <strong class="jxr_keyword">final</strong> Acceleration baseNoiseLevel2 = <strong class="jxr_keyword">new</strong> Acceleration(
 <a class="jxr_linenumber" name="L1433" href="#L1433">1433</a>                 1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
-<a class="jxr_linenumber" name="L1434" href="#L1434">1434</a>         generator.getBaseNoiseLevelAsMeasurement(baseNoiseLevel2);
+<a class="jxr_linenumber" name="L1434" href="#L1434">1434</a>         generator.getAccelerometerBaseNoiseLevelAsMeasurement(baseNoiseLevel2);
 <a class="jxr_linenumber" name="L1435" href="#L1435">1435</a>         assertEquals(baseNoiseLevel1, baseNoiseLevel2);
 <a class="jxr_linenumber" name="L1436" href="#L1436">1436</a> 
 <a class="jxr_linenumber" name="L1437" href="#L1437">1437</a>         assertTrue(generator.getThreshold() &gt; 0.0);

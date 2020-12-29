@@ -84,6 +84,12 @@ public class GyroscopeMeasurementsGenerator extends
     private double mAngularSpeedStandardDeviation;
 
     /**
+     * Estimated norm of gyroscope noise root PSD (Power Spectral Density)
+     * expressed as (rad * s^-0.5).
+     */
+    private double mAngularSpeedNoiseRootPsd;
+
+    /**
      * Previous average x-coordinate of measurements expressed in meters
      * per squared second (m/s^2).
      */
@@ -128,8 +134,8 @@ public class GyroscopeMeasurementsGenerator extends
      * Constructor.
      */
     public GyroscopeMeasurementsGenerator() {
-<span class="fc" id="L131">        super();</span>
-<span class="fc" id="L132">    }</span>
+<span class="fc" id="L137">        super();</span>
+<span class="fc" id="L138">    }</span>
 
     /**
      * Constructor.
@@ -138,8 +144,21 @@ public class GyroscopeMeasurementsGenerator extends
      */
     public GyroscopeMeasurementsGenerator(
             final GyroscopeMeasurementGeneratorListener listener) {
-<span class="fc" id="L141">        super(listener);</span>
-<span class="fc" id="L142">    }</span>
+<span class="fc" id="L147">        super(listener);</span>
+<span class="fc" id="L148">    }</span>
+
+    /**
+     * Sets time interval between input samples expressed in seconds (s).
+     *
+     * @param timeInterval time interval between input samples.
+     * @throws IllegalArgumentException if provided value is negative.
+     * @throws LockedException          if generator is currently running.
+     */
+    @Override
+    public void setTimeInterval(final double timeInterval) throws LockedException {
+<span class="fc" id="L159">        super.setTimeInterval(timeInterval);</span>
+<span class="fc" id="L160">        mAccumulatedEstimator.setTimeInterval(timeInterval);</span>
+<span class="fc" id="L161">    }</span>
 
     /**
      * Resets this generator.
@@ -148,25 +167,25 @@ public class GyroscopeMeasurementsGenerator extends
      */
     @Override
     public void reset() throws LockedException {
-<span class="fc" id="L151">        super.reset();</span>
+<span class="fc" id="L170">        super.reset();</span>
 
-<span class="fc" id="L153">        mCurrentSequenceItems = null;</span>
+<span class="fc" id="L172">        mCurrentSequenceItems = null;</span>
 
-<span class="fc" id="L155">        mAccelerationStandardDeviation = 0.0;</span>
-<span class="fc" id="L156">        mAngularSpeedStandardDeviation = 0.0;</span>
+<span class="fc" id="L174">        mAccelerationStandardDeviation = 0.0;</span>
+<span class="fc" id="L175">        mAngularSpeedStandardDeviation = 0.0;</span>
 
-<span class="fc" id="L158">        mPreviousAvgX = null;</span>
-<span class="fc" id="L159">        mPreviousAvgY = null;</span>
-<span class="fc" id="L160">        mPreviousAvgZ = null;</span>
+<span class="fc" id="L177">        mPreviousAvgX = null;</span>
+<span class="fc" id="L178">        mPreviousAvgY = null;</span>
+<span class="fc" id="L179">        mPreviousAvgZ = null;</span>
 
-<span class="fc" id="L162">        mCurrentAvgX = null;</span>
-<span class="fc" id="L163">        mCurrentAvgY = null;</span>
-<span class="fc" id="L164">        mCurrentAvgZ = null;</span>
+<span class="fc" id="L181">        mCurrentAvgX = null;</span>
+<span class="fc" id="L182">        mCurrentAvgY = null;</span>
+<span class="fc" id="L183">        mCurrentAvgZ = null;</span>
 
-<span class="fc" id="L166">        mAccumulatedEstimator.reset();</span>
+<span class="fc" id="L185">        mAccumulatedEstimator.reset();</span>
 
-<span class="fc" id="L168">        mPreviousStatus = null;</span>
-<span class="fc" id="L169">    }</span>
+<span class="fc" id="L187">        mPreviousStatus = null;</span>
+<span class="fc" id="L188">    }</span>
 
     /**
      * Gets estimated average angular rate during initialization phase.
@@ -174,7 +193,7 @@ public class GyroscopeMeasurementsGenerator extends
      * @return estimated average angular rate during initialization phase.
      */
     public AngularSpeedTriad getInitialAvgAngularSpeedTriad() {
-<span class="fc" id="L177">        return mAccumulatedEstimator.getAvgTriad();</span>
+<span class="fc" id="L196">        return mAccumulatedEstimator.getAvgTriad();</span>
     }
 
     /**
@@ -183,8 +202,8 @@ public class GyroscopeMeasurementsGenerator extends
      * @param result instance where result will be stored.
      */
     public void getInitialAvgAngularSpeedTriad(final AngularSpeedTriad result) {
-<span class="fc" id="L186">        mAccumulatedEstimator.getAvgTriad(result);</span>
-<span class="fc" id="L187">    }</span>
+<span class="fc" id="L205">        mAccumulatedEstimator.getAvgTriad(result);</span>
+<span class="fc" id="L206">    }</span>
 
     /**
      * Gets estimated standard deviation of angular rate during initialization phase.
@@ -192,7 +211,7 @@ public class GyroscopeMeasurementsGenerator extends
      * @return estimated standard deviation of angular rate during initialization phase.
      */
     public AngularSpeedTriad getInitialAngularSpeedTriadStandardDeviation() {
-<span class="fc" id="L195">        return mAccumulatedEstimator.getStandardDeviationTriad();</span>
+<span class="fc" id="L214">        return mAccumulatedEstimator.getStandardDeviationTriad();</span>
     }
 
     /**
@@ -201,39 +220,67 @@ public class GyroscopeMeasurementsGenerator extends
      * @param result instance where result will be stored.
      */
     public void getInitialAngularSpeedTriadStandardDeviation(final AngularSpeedTriad result) {
-<span class="fc" id="L204">        mAccumulatedEstimator.getStandardDeviationTriad(result);</span>
-<span class="fc" id="L205">    }</span>
+<span class="fc" id="L223">        mAccumulatedEstimator.getStandardDeviationTriad(result);</span>
+<span class="fc" id="L224">    }</span>
 
     /**
-     * Gets norm of estimated standard deviation of angular rate during initialization phase
-     * expressed in radians per second (rad/s).
+     * Gets gyroscope base noise level that has been detected during
+     * initialization expressed in radians per second (rad/s).
+     * This is equal to the standard deviation of the gyroscope measurements
+     * during initialization phase.
      *
-     * @return norm of estimated standard deviation of angular rate during initialization phase.
+     * @return gyroscope base noise level.
      */
-    public double getInitialAngularSpeedTriadStandardDeviationNorm() {
-<span class="fc" id="L214">        return mAngularSpeedStandardDeviation;</span>
+    public double getGyroscopeBaseNoiseLevel() {
+<span class="fc" id="L235">        return mAngularSpeedStandardDeviation;</span>
     }
 
     /**
-     * Gets norm of estimated standard deviation of angular rate during initialization phase.
+     * Gets gyroscope base noise level that has been detected during
+     * initialization.
+     * This is equal to the standard deviation of the gyroscope measurements
+     * during initialization phase.
      *
-     * @return norm of estimated standard deviation of angular rate during initialization phase.
+     * @return gyroscope base noise level.
      */
-    public AngularSpeed getInitialAngularSpeedTriadStandardDeviationNormAsMeasurement() {
-<span class="fc" id="L223">        return new AngularSpeed(mAngularSpeedStandardDeviation,</span>
+    public AngularSpeed getGyroscopeBaseNoiseLevelAsMeasurement() {
+<span class="fc" id="L247">        return new AngularSpeed(mAngularSpeedStandardDeviation,</span>
                 AngularSpeedUnit.RADIANS_PER_SECOND);
     }
 
     /**
-     * Gets norm of estimated standard deviation of angular rate during initialization phase.
+     * Gets gyroscope base noise level that has been detected during
+     * initialization.
+     * This is equal to the standard deviation of the gyroscope measurements
+     * during initialization phase.
      *
      * @param result instance where result will be stored.
      */
-    public void getInitialAngularSpeedTriadStandardDeviationNormAsMeasurement(
+    public void getGyroscopeBaseNoiseLevelAsMeasurement(
             final AngularSpeed result) {
-<span class="fc" id="L234">        result.setValue(mAngularSpeedStandardDeviation);</span>
-<span class="fc" id="L235">        result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);</span>
-<span class="fc" id="L236">    }</span>
+<span class="fc" id="L261">        result.setValue(mAngularSpeedStandardDeviation);</span>
+<span class="fc" id="L262">        result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);</span>
+<span class="fc" id="L263">    }</span>
+
+    /**
+     * Gets gyroscope base noise level PSD (Power Spectral Density)
+     * expressed in (rad^2/s).
+     *
+     * @return gyroscope base noise level PSD.
+     */
+    public double getGyroscopeBaseNoiseLevelPsd() {
+<span class="fc" id="L272">        return mAngularSpeedNoiseRootPsd * mAngularSpeedNoiseRootPsd;</span>
+    }
+
+    /**
+     * Gets gyroscope base noise level root PSD (Power Spectral Density)
+     * expressed in (rad * s^-0.5)
+     *
+     * @return gyroscope base noise level root PSD.
+     */
+    public double getGyroscopeBaseNoiseLevelRootPsd() {
+<span class="fc" id="L282">        return mAngularSpeedNoiseRootPsd;</span>
+    }
 
     /**
      * Post process provided input sample.
@@ -244,55 +291,55 @@ public class GyroscopeMeasurementsGenerator extends
     @Override
     protected void postProcess(final TimedBodyKinematics sample)
             throws LockedException {
-<span class="fc" id="L247">        final TriadStaticIntervalDetector.Status status =</span>
-<span class="fc" id="L248">                mStaticIntervalDetector.getStatus();</span>
+<span class="fc" id="L294">        final TriadStaticIntervalDetector.Status status =</span>
+<span class="fc" id="L295">                mStaticIntervalDetector.getStatus();</span>
 
-<span class="fc bfc" id="L250" title="All 2 branches covered.">        if (status == TriadStaticIntervalDetector.Status.INITIALIZING) {</span>
-<span class="fc" id="L251">            sample.getKinematics().getAngularRateTriad(mAngularSpeedTriad);</span>
-<span class="fc" id="L252">            mAccumulatedEstimator.addTriad(mAngularSpeedTriad);</span>
+<span class="fc bfc" id="L297" title="All 2 branches covered.">        if (status == TriadStaticIntervalDetector.Status.INITIALIZING) {</span>
+<span class="fc" id="L298">            sample.getKinematics().getAngularRateTriad(mAngularSpeedTriad);</span>
+<span class="fc" id="L299">            mAccumulatedEstimator.addTriad(mAngularSpeedTriad);</span>
         }
 
         // while we are in a dynamic interval, we must record all timed kinematics
         // along with accelerometer and gyroscope standard deviations
-<span class="fc bfc" id="L257" title="All 2 branches covered.">        if (status == TriadStaticIntervalDetector.Status.DYNAMIC_INTERVAL) {</span>
-<span class="fc bfc" id="L258" title="All 2 branches covered.">            if (isDynamicIntervalSkipped()) {</span>
+<span class="fc bfc" id="L304" title="All 2 branches covered.">        if (status == TriadStaticIntervalDetector.Status.DYNAMIC_INTERVAL) {</span>
+<span class="fc bfc" id="L305" title="All 2 branches covered.">            if (isDynamicIntervalSkipped()) {</span>
                 // dynamic interval has been skipped because there were too many
                 // items in the sequence.
-<span class="fc" id="L261">                mCurrentSequenceItems = null;</span>
+<span class="fc" id="L308">                mCurrentSequenceItems = null;</span>
             } else {
-<span class="pc bpc" id="L263" title="1 of 2 branches missed.">                if (mPreviousStatus == TriadStaticIntervalDetector.Status.STATIC_INTERVAL) {</span>
-<span class="fc" id="L264">                    mPreviousAvgX = mStaticIntervalDetector.getAccumulatedAvgX();</span>
-<span class="fc" id="L265">                    mPreviousAvgY = mStaticIntervalDetector.getAccumulatedAvgY();</span>
-<span class="fc" id="L266">                    mPreviousAvgZ = mStaticIntervalDetector.getAccumulatedAvgZ();</span>
+<span class="pc bpc" id="L310" title="1 of 2 branches missed.">                if (mPreviousStatus == TriadStaticIntervalDetector.Status.STATIC_INTERVAL) {</span>
+<span class="fc" id="L311">                    mPreviousAvgX = mStaticIntervalDetector.getAccumulatedAvgX();</span>
+<span class="fc" id="L312">                    mPreviousAvgY = mStaticIntervalDetector.getAccumulatedAvgY();</span>
+<span class="fc" id="L313">                    mPreviousAvgZ = mStaticIntervalDetector.getAccumulatedAvgZ();</span>
                 }
 
-<span class="fc" id="L269">                addSequenceItem(sample);</span>
+<span class="fc" id="L316">                addSequenceItem(sample);</span>
             }
-<span class="fc bfc" id="L271" title="All 2 branches covered.">        } else if (status == TriadStaticIntervalDetector.Status.STATIC_INTERVAL) {</span>
-<span class="pc bpc" id="L272" title="1 of 4 branches missed.">            if (mPreviousStatus == TriadStaticIntervalDetector.Status.DYNAMIC_INTERVAL</span>
-<span class="pc bpc" id="L273" title="1 of 2 branches missed.">                &amp;&amp; mCurrentSequenceItems != null &amp;&amp; !mCurrentSequenceItems.isEmpty()) {</span>
+<span class="fc bfc" id="L318" title="All 2 branches covered.">        } else if (status == TriadStaticIntervalDetector.Status.STATIC_INTERVAL) {</span>
+<span class="pc bpc" id="L319" title="1 of 4 branches missed.">            if (mPreviousStatus == TriadStaticIntervalDetector.Status.DYNAMIC_INTERVAL</span>
+<span class="pc bpc" id="L320" title="1 of 2 branches missed.">                    &amp;&amp; mCurrentSequenceItems != null &amp;&amp; !mCurrentSequenceItems.isEmpty()) {</span>
 
-<span class="fc" id="L275">                mCurrentAvgX = mStaticIntervalDetector.getInstantaneousAvgX();</span>
-<span class="fc" id="L276">                mCurrentAvgY = mStaticIntervalDetector.getInstantaneousAvgY();</span>
-<span class="fc" id="L277">                mCurrentAvgZ = mStaticIntervalDetector.getInstantaneousAvgZ();</span>
+<span class="fc" id="L322">                mCurrentAvgX = mStaticIntervalDetector.getInstantaneousAvgX();</span>
+<span class="fc" id="L323">                mCurrentAvgY = mStaticIntervalDetector.getInstantaneousAvgY();</span>
+<span class="fc" id="L324">                mCurrentAvgZ = mStaticIntervalDetector.getInstantaneousAvgZ();</span>
 
                 // we have all required data to generate a sequence
-<span class="fc" id="L280">                final BodyKinematicsSequence&lt;StandardDeviationTimedBodyKinematics&gt; sequence =</span>
+<span class="fc" id="L327">                final BodyKinematicsSequence&lt;StandardDeviationTimedBodyKinematics&gt; sequence =</span>
                         new BodyKinematicsSequence&lt;&gt;();
-<span class="fc" id="L282">                sequence.setBeforeMeanSpecificForceCoordinates(</span>
-<span class="fc" id="L283">                        mPreviousAvgX, mPreviousAvgY, mPreviousAvgZ);</span>
-<span class="fc" id="L284">                sequence.setItems(mCurrentSequenceItems);</span>
-<span class="fc" id="L285">                sequence.setAfterMeanSpecificForceCoordinates(</span>
-<span class="fc" id="L286">                        mCurrentAvgX, mCurrentAvgY, mCurrentAvgZ);</span>
+<span class="fc" id="L329">                sequence.setBeforeMeanSpecificForceCoordinates(</span>
+<span class="fc" id="L330">                        mPreviousAvgX, mPreviousAvgY, mPreviousAvgZ);</span>
+<span class="fc" id="L331">                sequence.setItems(mCurrentSequenceItems);</span>
+<span class="fc" id="L332">                sequence.setAfterMeanSpecificForceCoordinates(</span>
+<span class="fc" id="L333">                        mCurrentAvgX, mCurrentAvgY, mCurrentAvgZ);</span>
 
-<span class="fc" id="L288">                mCurrentSequenceItems = null;</span>
+<span class="fc" id="L335">                mCurrentSequenceItems = null;</span>
 
-<span class="pc bpc" id="L290" title="1 of 2 branches missed.">                if (mListener != null) {</span>
-<span class="fc" id="L291">                    mListener.onGeneratedMeasurement(this, sequence);</span>
+<span class="pc bpc" id="L337" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L338">                    mListener.onGeneratedMeasurement(this, sequence);</span>
                 }
             }
         }
-<span class="fc" id="L295">    }</span>
+<span class="fc" id="L342">    }</span>
 
     /**
      * Gets corresponding acceleration triad from provided input sample.
@@ -303,30 +350,30 @@ public class GyroscopeMeasurementsGenerator extends
     @Override
     protected void getAccelerationTriadFromInputSample(
             final TimedBodyKinematics sample) {
-<span class="fc" id="L306">        sample.getKinematics().getSpecificForceTriad(mTriad);</span>
-<span class="fc" id="L307">    }</span>
+<span class="fc" id="L353">        sample.getKinematics().getSpecificForceTriad(mTriad);</span>
+<span class="fc" id="L354">    }</span>
 
     /**
      * Handles a static-to-dynamic interval change.
      *
-     * @param accumulatedAvgX   average x-coordinate of measurements during last
-     *                          static period expressed in meters per squared
-     *                          second (m/s^2).
-     * @param accumulatedAvgY   average y-coordinate of specific force during last
-     *                          static period expressed in meters per squared
-     *                          second (m/s^2).
-     * @param accumulatedAvgZ   average z-coordinate of specific force during last
-     *                          static period expressed in meters per squared
-     *                          second (m/s^2).
-     * @param accumulatedStdX   standard deviation of x-coordinate of measurements
-     *                          during last static period expressed in meters per
-     *                          squared second (m/s^2).
-     * @param accumulatedStdY   standard deviation of y-coordinate of measurements
-     *                          during last static period expressed in meters per
-     *                          squared second (m/s^2).
-     * @param accumulatedStdZ   standard deviation of z-coordinate of measurements
-     *                          during last static period expressed in meters per
-     *                          squared second (m/s^2).
+     * @param accumulatedAvgX average x-coordinate of measurements during last
+     *                        static period expressed in meters per squared
+     *                        second (m/s^2).
+     * @param accumulatedAvgY average y-coordinate of specific force during last
+     *                        static period expressed in meters per squared
+     *                        second (m/s^2).
+     * @param accumulatedAvgZ average z-coordinate of specific force during last
+     *                        static period expressed in meters per squared
+     *                        second (m/s^2).
+     * @param accumulatedStdX standard deviation of x-coordinate of measurements
+     *                        during last static period expressed in meters per
+     *                        squared second (m/s^2).
+     * @param accumulatedStdY standard deviation of y-coordinate of measurements
+     *                        during last static period expressed in meters per
+     *                        squared second (m/s^2).
+     * @param accumulatedStdZ standard deviation of z-coordinate of measurements
+     *                        during last static period expressed in meters per
+     *                        squared second (m/s^2).
      */
     @Override
     protected void handleStaticToDynamicChange(
@@ -336,40 +383,41 @@ public class GyroscopeMeasurementsGenerator extends
             final double accumulatedStdX,
             final double accumulatedStdY,
             final double accumulatedStdZ) {
-<span class="fc" id="L339">        mPreviousStatus = TriadStaticIntervalDetector.Status.STATIC_INTERVAL;</span>
-<span class="fc" id="L340">    }</span>
+<span class="fc" id="L386">        mPreviousStatus = TriadStaticIntervalDetector.Status.STATIC_INTERVAL;</span>
+<span class="fc" id="L387">    }</span>
 
     /**
      * Handles a dynamic-to-static interval change.
      */
     @Override
     protected void handleDynamicToStaticChange() {
-<span class="fc" id="L347">        mPreviousStatus = TriadStaticIntervalDetector.Status.DYNAMIC_INTERVAL;</span>
-<span class="fc" id="L348">    }</span>
+<span class="fc" id="L394">        mPreviousStatus = TriadStaticIntervalDetector.Status.DYNAMIC_INTERVAL;</span>
+<span class="fc" id="L395">    }</span>
 
     /**
      * Handles an initialization completion.
      */
     @Override
     protected void handleInitializationCompleted() {
-<span class="fc" id="L355">        mAccelerationStandardDeviation = mStaticIntervalDetector.getBaseNoiseLevel();</span>
-<span class="fc" id="L356">        mAngularSpeedStandardDeviation = mAccumulatedEstimator.getStandardDeviationNorm();</span>
+<span class="fc" id="L402">        mAccelerationStandardDeviation = mStaticIntervalDetector.getBaseNoiseLevel();</span>
+<span class="fc" id="L403">        mAngularSpeedStandardDeviation = mAccumulatedEstimator.getStandardDeviationNorm();</span>
+<span class="fc" id="L404">        mAngularSpeedNoiseRootPsd = mAccumulatedEstimator.getNoiseRootPsdNorm();</span>
 
-<span class="fc" id="L358">        mPreviousStatus = mStaticIntervalDetector.getStatus();</span>
-<span class="fc" id="L359">    }</span>
+<span class="fc" id="L406">        mPreviousStatus = mStaticIntervalDetector.getStatus();</span>
+<span class="fc" id="L407">    }</span>
 
     /**
      * Handles an error during initialization.
      */
     @Override
     protected void handleInitializationFailed() {
-<span class="fc" id="L366">        mPreviousStatus = null;</span>
+<span class="fc" id="L414">        mPreviousStatus = null;</span>
 
         try {
-<span class="fc" id="L369">            mAccumulatedEstimator.reset();</span>
-<span class="nc" id="L370">        } catch (final LockedException ignore) {</span>
-<span class="fc" id="L371">        }</span>
-<span class="fc" id="L372">    }</span>
+<span class="fc" id="L417">            mAccumulatedEstimator.reset();</span>
+<span class="nc" id="L418">        } catch (final LockedException ignore) {</span>
+<span class="fc" id="L419">        }</span>
+<span class="fc" id="L420">    }</span>
 
     /**
      * Adds an item to current sequence items.
@@ -377,18 +425,18 @@ public class GyroscopeMeasurementsGenerator extends
      * @param sample sample to generate a sequence item from.
      */
     private void addSequenceItem(final TimedBodyKinematics sample) {
-<span class="fc bfc" id="L380" title="All 2 branches covered.">        if (mCurrentSequenceItems == null) {</span>
-<span class="fc" id="L381">            mCurrentSequenceItems = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L428" title="All 2 branches covered.">        if (mCurrentSequenceItems == null) {</span>
+<span class="fc" id="L429">            mCurrentSequenceItems = new ArrayList&lt;&gt;();</span>
         }
 
-<span class="fc" id="L384">        final BodyKinematics kinematics = new BodyKinematics(</span>
-<span class="fc" id="L385">                sample.getKinematics());</span>
-<span class="fc" id="L386">        final double timestampSeconds = sample.getTimestampSeconds();</span>
-<span class="fc" id="L387">        final StandardDeviationTimedBodyKinematics stdTimedKinematics =</span>
+<span class="fc" id="L432">        final BodyKinematics kinematics = new BodyKinematics(</span>
+<span class="fc" id="L433">                sample.getKinematics());</span>
+<span class="fc" id="L434">        final double timestampSeconds = sample.getTimestampSeconds();</span>
+<span class="fc" id="L435">        final StandardDeviationTimedBodyKinematics stdTimedKinematics =</span>
                 new StandardDeviationTimedBodyKinematics(kinematics,
                         timestampSeconds, mAccelerationStandardDeviation,
                         mAngularSpeedStandardDeviation);
-<span class="fc" id="L391">        mCurrentSequenceItems.add(stdTimedKinematics);</span>
-<span class="fc" id="L392">    }</span>
+<span class="fc" id="L439">        mCurrentSequenceItems.add(stdTimedKinematics);</span>
+<span class="fc" id="L440">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
