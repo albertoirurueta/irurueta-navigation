@@ -16,6 +16,7 @@
 package com.irurueta.navigation.inertial.calibration.noise;
 
 import com.irurueta.navigation.inertial.calibration.AngularSpeedTriad;
+import com.irurueta.navigation.inertial.calibration.GyroscopeNoiseRootPsdSource;
 import com.irurueta.navigation.inertial.calibration.TimeIntervalEstimator;
 import com.irurueta.units.AngularSpeed;
 import com.irurueta.units.AngularSpeedConverter;
@@ -45,14 +46,15 @@ import com.irurueta.units.AngularSpeedUnit;
 public class AccumulatedAngularSpeedTriadNoiseEstimator extends
         AccumulatedTriadNoiseEstimator&lt;AngularSpeedUnit, AngularSpeed, AngularSpeedTriad,
                 AccumulatedAngularSpeedTriadNoiseEstimator,
-                AccumulatedAngularSpeedTriadNoiseEstimatorListener&gt; {
+                AccumulatedAngularSpeedTriadNoiseEstimatorListener&gt;
+        implements GyroscopeNoiseRootPsdSource {
 
     /**
      * Constructor.
      */
     public AccumulatedAngularSpeedTriadNoiseEstimator() {
-<span class="fc" id="L54">        super();</span>
-<span class="fc" id="L55">    }</span>
+<span class="fc" id="L56">        super();</span>
+<span class="fc" id="L57">    }</span>
 
     /**
      * Constructor.
@@ -61,8 +63,8 @@ public class AccumulatedAngularSpeedTriadNoiseEstimator extends
      */
     public AccumulatedAngularSpeedTriadNoiseEstimator(
             final AccumulatedAngularSpeedTriadNoiseEstimatorListener listener) {
-<span class="fc" id="L64">        super(listener);</span>
-<span class="fc" id="L65">    }</span>
+<span class="fc" id="L66">        super(listener);</span>
+<span class="fc" id="L67">    }</span>
 
     /**
      * Creates a triad with provided values and unit.
@@ -77,7 +79,7 @@ public class AccumulatedAngularSpeedTriadNoiseEstimator extends
     protected AngularSpeedTriad createTriad(
             final double valueX, final double valueY, final double valueZ,
             final AngularSpeedUnit unit) {
-<span class="fc" id="L80">        return new AngularSpeedTriad(unit, valueX, valueY, valueZ);</span>
+<span class="fc" id="L82">        return new AngularSpeedTriad(unit, valueX, valueY, valueZ);</span>
     }
 
     /**
@@ -91,7 +93,7 @@ public class AccumulatedAngularSpeedTriadNoiseEstimator extends
     @Override
     protected AngularSpeedTriad createTriad(
             final AngularSpeed valueX, final AngularSpeed valueY, final AngularSpeed valueZ) {
-<span class="nc" id="L94">        return new AngularSpeedTriad(valueX, valueY, valueZ);</span>
+<span class="nc" id="L96">        return new AngularSpeedTriad(valueX, valueY, valueZ);</span>
     }
 
     /**
@@ -101,7 +103,7 @@ public class AccumulatedAngularSpeedTriadNoiseEstimator extends
      */
     @Override
     protected AngularSpeedUnit getDefaultUnit() {
-<span class="fc" id="L104">        return AngularSpeedUnit.RADIANS_PER_SECOND;</span>
+<span class="fc" id="L106">        return AngularSpeedUnit.RADIANS_PER_SECOND;</span>
     }
 
     /**
@@ -113,7 +115,7 @@ public class AccumulatedAngularSpeedTriadNoiseEstimator extends
      */
     @Override
     protected AngularSpeed createMeasurement(double value, AngularSpeedUnit unit) {
-<span class="fc" id="L116">        return new AngularSpeed(value, unit);</span>
+<span class="fc" id="L118">        return new AngularSpeed(value, unit);</span>
     }
 
     /**
@@ -125,7 +127,18 @@ public class AccumulatedAngularSpeedTriadNoiseEstimator extends
      */
     @Override
     protected double convertToDefaultUnit(double value, AngularSpeedUnit unit) {
-<span class="fc" id="L128">        return AngularSpeedConverter.convert(value, unit, getDefaultUnit());</span>
+<span class="fc" id="L130">        return AngularSpeedConverter.convert(value, unit, getDefaultUnit());</span>
+    }
+
+    /**
+     * Gets gyroscope base noise level root PSD (Power Spectral Density)
+     * expressed in (rad * s^-0.5)
+     *
+     * @return gyroscope base noise level root PSD.
+     */
+    @Override
+    public double getGyroscopeBaseNoiseLevelRootPsd() {
+<span class="fc" id="L141">        return getNoiseRootPsdNorm();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

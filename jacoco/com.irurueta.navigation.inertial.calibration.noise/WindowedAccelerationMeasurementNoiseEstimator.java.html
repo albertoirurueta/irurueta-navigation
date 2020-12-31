@@ -15,6 +15,7 @@
  */
 package com.irurueta.navigation.inertial.calibration.noise;
 
+import com.irurueta.navigation.inertial.calibration.AccelerometerNoiseRootPsdSource;
 import com.irurueta.navigation.inertial.calibration.TimeIntervalEstimator;
 import com.irurueta.units.Acceleration;
 import com.irurueta.units.AccelerationConverter;
@@ -43,14 +44,15 @@ import com.irurueta.units.AccelerationUnit;
 public class WindowedAccelerationMeasurementNoiseEstimator extends
         WindowedMeasurementNoiseEstimator&lt;AccelerationUnit, Acceleration,
                 WindowedAccelerationMeasurementNoiseEstimator,
-                WindowedAccelerationMeasurementNoiseEstimatorListener&gt; {
+                WindowedAccelerationMeasurementNoiseEstimatorListener&gt;
+        implements AccelerometerNoiseRootPsdSource {
 
     /**
      * Constructor.
      */
     public WindowedAccelerationMeasurementNoiseEstimator() {
-<span class="fc" id="L52">        super();</span>
-<span class="fc" id="L53">    }</span>
+<span class="fc" id="L54">        super();</span>
+<span class="fc" id="L55">    }</span>
 
     /**
      * Constructor.
@@ -59,8 +61,8 @@ public class WindowedAccelerationMeasurementNoiseEstimator extends
      */
     public WindowedAccelerationMeasurementNoiseEstimator(
             final WindowedAccelerationMeasurementNoiseEstimatorListener listener) {
-<span class="fc" id="L62">        super(listener);</span>
-<span class="fc" id="L63">    }</span>
+<span class="fc" id="L64">        super(listener);</span>
+<span class="fc" id="L65">    }</span>
 
     /**
      * Gets default unit for a measurement.
@@ -69,7 +71,7 @@ public class WindowedAccelerationMeasurementNoiseEstimator extends
      */
     @Override
     protected AccelerationUnit getDefaultUnit() {
-<span class="fc" id="L72">        return AccelerationUnit.METERS_PER_SQUARED_SECOND;</span>
+<span class="fc" id="L74">        return AccelerationUnit.METERS_PER_SQUARED_SECOND;</span>
     }
 
     /**
@@ -81,7 +83,7 @@ public class WindowedAccelerationMeasurementNoiseEstimator extends
      */
     @Override
     protected Acceleration createMeasurement(double value, AccelerationUnit unit) {
-<span class="fc" id="L84">        return new Acceleration(value, unit);</span>
+<span class="fc" id="L86">        return new Acceleration(value, unit);</span>
     }
 
     /**
@@ -92,8 +94,19 @@ public class WindowedAccelerationMeasurementNoiseEstimator extends
      */
     @Override
     protected double convertToDefaultUnit(Acceleration value) {
-<span class="fc" id="L95">        return AccelerationConverter.convert(value.getValue().doubleValue(),</span>
-<span class="fc" id="L96">                value.getUnit(), getDefaultUnit());</span>
+<span class="fc" id="L97">        return AccelerationConverter.convert(value.getValue().doubleValue(),</span>
+<span class="fc" id="L98">                value.getUnit(), getDefaultUnit());</span>
+    }
+
+    /**
+     * Gets accelerometer base noise level root PSD (Power Spectral Density)
+     * expressed in (m * s^-1.5).
+     *
+     * @return accelerometer base noise level root PSD.
+     */
+    @Override
+    public double getAccelerometerBaseNoiseLevelRootPsd() {
+<span class="fc" id="L109">        return getRootPsd();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

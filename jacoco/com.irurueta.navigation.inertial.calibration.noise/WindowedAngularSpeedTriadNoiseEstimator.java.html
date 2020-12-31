@@ -16,6 +16,7 @@
 package com.irurueta.navigation.inertial.calibration.noise;
 
 import com.irurueta.navigation.inertial.calibration.AngularSpeedTriad;
+import com.irurueta.navigation.inertial.calibration.GyroscopeNoiseRootPsdSource;
 import com.irurueta.navigation.inertial.calibration.TimeIntervalEstimator;
 import com.irurueta.units.AngularSpeed;
 import com.irurueta.units.AngularSpeedUnit;
@@ -46,14 +47,15 @@ import com.irurueta.units.AngularSpeedUnit;
  */
 public class WindowedAngularSpeedTriadNoiseEstimator extends
         WindowedTriadNoiseEstimator&lt;AngularSpeedUnit, AngularSpeed, AngularSpeedTriad,
-                WindowedAngularSpeedTriadNoiseEstimator, WindowedAngularSpeedTriadNoiseEstimatorListener&gt; {
+                WindowedAngularSpeedTriadNoiseEstimator, WindowedAngularSpeedTriadNoiseEstimatorListener&gt;
+        implements GyroscopeNoiseRootPsdSource {
 
     /**
      * Constructor.
      */
     public WindowedAngularSpeedTriadNoiseEstimator() {
-<span class="fc" id="L55">        super();</span>
-<span class="fc" id="L56">    }</span>
+<span class="fc" id="L57">        super();</span>
+<span class="fc" id="L58">    }</span>
 
     /**
      * Constructor.
@@ -62,8 +64,8 @@ public class WindowedAngularSpeedTriadNoiseEstimator extends
      */
     public WindowedAngularSpeedTriadNoiseEstimator(
             final WindowedAngularSpeedTriadNoiseEstimatorListener listener) {
-<span class="fc" id="L65">        super(listener);</span>
-<span class="fc" id="L66">    }</span>
+<span class="fc" id="L67">        super(listener);</span>
+<span class="fc" id="L68">    }</span>
 
     /**
      * Creates a copy of a triad.
@@ -73,7 +75,7 @@ public class WindowedAngularSpeedTriadNoiseEstimator extends
      */
     @Override
     protected AngularSpeedTriad copyTriad(final AngularSpeedTriad input) {
-<span class="fc" id="L76">        return new AngularSpeedTriad(input);</span>
+<span class="fc" id="L78">        return new AngularSpeedTriad(input);</span>
     }
 
     /**
@@ -89,7 +91,7 @@ public class WindowedAngularSpeedTriadNoiseEstimator extends
     protected AngularSpeedTriad createTriad(
             final double valueX, final double valueY, final double valueZ,
             final AngularSpeedUnit unit) {
-<span class="fc" id="L92">        return new AngularSpeedTriad(unit, valueX, valueY, valueZ);</span>
+<span class="fc" id="L94">        return new AngularSpeedTriad(unit, valueX, valueY, valueZ);</span>
     }
 
     /**
@@ -103,7 +105,7 @@ public class WindowedAngularSpeedTriadNoiseEstimator extends
     @Override
     protected AngularSpeedTriad createTriad(
             final AngularSpeed valueX, final AngularSpeed valueY, final AngularSpeed valueZ) {
-<span class="fc" id="L106">        return new AngularSpeedTriad(valueX, valueY, valueZ);</span>
+<span class="fc" id="L108">        return new AngularSpeedTriad(valueX, valueY, valueZ);</span>
     }
 
     /**
@@ -113,7 +115,7 @@ public class WindowedAngularSpeedTriadNoiseEstimator extends
      */
     @Override
     protected AngularSpeedUnit getDefaultUnit() {
-<span class="fc" id="L116">        return AngularSpeedUnit.RADIANS_PER_SECOND;</span>
+<span class="fc" id="L118">        return AngularSpeedUnit.RADIANS_PER_SECOND;</span>
     }
 
     /**
@@ -125,7 +127,18 @@ public class WindowedAngularSpeedTriadNoiseEstimator extends
      */
     @Override
     protected AngularSpeed createMeasurement(double value, AngularSpeedUnit unit) {
-<span class="fc" id="L128">        return new AngularSpeed(value, unit);</span>
+<span class="fc" id="L130">        return new AngularSpeed(value, unit);</span>
+    }
+
+    /**
+     * Gets gyroscope base noise level root PSD (Power Spectral Density)
+     * expressed in (rad * s^-0.5)
+     *
+     * @return gyroscope base noise level root PSD.
+     */
+    @Override
+    public double getGyroscopeBaseNoiseLevelRootPsd() {
+<span class="fc" id="L141">        return getNoiseRootPsdNorm();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

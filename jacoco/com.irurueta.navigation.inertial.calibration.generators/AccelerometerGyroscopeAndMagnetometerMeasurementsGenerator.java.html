@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-navigation</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.navigation.inertial.calibration.generators</a> &gt; <span class="el_source">AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator.java</span></div><h1>AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator.java</h1><pre class="source lang-java linenums">package com.irurueta.navigation.inertial.calibration.generators;
 
 import com.irurueta.navigation.LockedException;
+import com.irurueta.navigation.inertial.calibration.AccelerometerNoiseRootPsdSource;
 import com.irurueta.navigation.inertial.calibration.AngularSpeedTriad;
 import com.irurueta.navigation.inertial.calibration.BodyKinematicsSequence;
+import com.irurueta.navigation.inertial.calibration.GyroscopeNoiseRootPsdSource;
 import com.irurueta.navigation.inertial.calibration.StandardDeviationBodyKinematics;
 import com.irurueta.navigation.inertial.calibration.StandardDeviationBodyMagneticFluxDensity;
 import com.irurueta.navigation.inertial.calibration.StandardDeviationTimedBodyKinematics;
@@ -32,7 +34,8 @@ import com.irurueta.units.TimeUnit;
  * @see GyroscopeMeasurementsGenerator
  * @see MagnetometerMeasurementsGenerator
  */
-public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
+public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator implements
+        AccelerometerNoiseRootPsdSource, GyroscopeNoiseRootPsdSource {
 
     /**
      * Listener to handle generated events.
@@ -42,243 +45,243 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
     /**
      * Listener for internal accelerometer measurements generator.
      */
-<span class="fc" id="L45">    private final AccelerometerMeasurementsGeneratorListener mAccelerometerListener =</span>
-<span class="fc" id="L46">            new AccelerometerMeasurementsGeneratorListener() {</span>
+<span class="fc" id="L48">    private final AccelerometerMeasurementsGeneratorListener mAccelerometerListener =</span>
+<span class="fc" id="L49">            new AccelerometerMeasurementsGeneratorListener() {</span>
                 @Override
                 public void onInitializationStarted(
                         final AccelerometerMeasurementsGenerator generator) {
                     // no action required
-<span class="fc" id="L51">                }</span>
+<span class="fc" id="L54">                }</span>
 
                 @Override
                 public void onInitializationCompleted(
                         final AccelerometerMeasurementsGenerator generator,
                         final double baseNoiseLevel) {
                     // no action required
-<span class="fc" id="L58">                }</span>
+<span class="fc" id="L61">                }</span>
 
                 @Override
                 public void onError(
                         final AccelerometerMeasurementsGenerator generator,
                         final TriadStaticIntervalDetector.ErrorReason reason) {
-<span class="pc bpc" id="L64" title="1 of 2 branches missed.">                    if (mListener != null) {</span>
-<span class="fc" id="L65">                        mListener.onError(</span>
+<span class="pc bpc" id="L67" title="1 of 2 branches missed.">                    if (mListener != null) {</span>
+<span class="fc" id="L68">                        mListener.onError(</span>
                                 AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator.this,
                                 reason);
                     }
-<span class="fc" id="L69">                }</span>
+<span class="fc" id="L72">                }</span>
 
                 @Override
                 public void onStaticIntervalDetected(
                         final AccelerometerMeasurementsGenerator generator) {
                     // no action required
-<span class="fc" id="L75">                }</span>
+<span class="fc" id="L78">                }</span>
 
                 @Override
                 public void onDynamicIntervalDetected(
                         final AccelerometerMeasurementsGenerator generator) {
                     // no action required
-<span class="fc" id="L81">                }</span>
+<span class="fc" id="L84">                }</span>
 
                 @Override
                 public void onStaticIntervalSkipped(
                         final AccelerometerMeasurementsGenerator generator) {
                     // no action required
-<span class="fc" id="L87">                }</span>
+<span class="fc" id="L90">                }</span>
 
                 @Override
                 public void onDynamicIntervalSkipped(
                         final AccelerometerMeasurementsGenerator generator) {
                     // no action required
-<span class="fc" id="L93">                }</span>
+<span class="fc" id="L96">                }</span>
 
                 @Override
                 public void onGeneratedMeasurement(
                         final AccelerometerMeasurementsGenerator generator,
                         final StandardDeviationBodyKinematics measurement) {
-<span class="pc bpc" id="L99" title="1 of 2 branches missed.">                    if (mListener != null) {</span>
-<span class="fc" id="L100">                        mListener.onGeneratedAccelerometerMeasurement(</span>
+<span class="pc bpc" id="L102" title="1 of 2 branches missed.">                    if (mListener != null) {</span>
+<span class="fc" id="L103">                        mListener.onGeneratedAccelerometerMeasurement(</span>
                                 AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator.this,
                                 measurement);
                     }
-<span class="fc" id="L104">                }</span>
+<span class="fc" id="L107">                }</span>
 
                 @Override
                 public void onReset(
                         final AccelerometerMeasurementsGenerator generator) {
                     // no action required
-<span class="fc" id="L110">                }</span>
+<span class="fc" id="L113">                }</span>
             };
 
     /**
      * Listener for internal gyroscope measurements generator.
      */
-<span class="fc" id="L116">    private final GyroscopeMeasurementGeneratorListener mGyroscopeListener =</span>
-<span class="fc" id="L117">            new GyroscopeMeasurementGeneratorListener() {</span>
+<span class="fc" id="L119">    private final GyroscopeMeasurementGeneratorListener mGyroscopeListener =</span>
+<span class="fc" id="L120">            new GyroscopeMeasurementGeneratorListener() {</span>
                 @Override
                 public void onInitializationStarted(
                         final GyroscopeMeasurementsGenerator generator) {
                     // no action required
-<span class="fc" id="L122">                }</span>
+<span class="fc" id="L125">                }</span>
 
                 @Override
                 public void onInitializationCompleted(
                         final GyroscopeMeasurementsGenerator generator,
                         final double baseNoiseLevel) {
                     // no action required
-<span class="fc" id="L129">                }</span>
+<span class="fc" id="L132">                }</span>
 
                 @Override
                 public void onError(
                         final GyroscopeMeasurementsGenerator generator,
                         final TriadStaticIntervalDetector.ErrorReason reason) {
                     // no action required
-<span class="fc" id="L136">                }</span>
+<span class="fc" id="L139">                }</span>
 
                 @Override
                 public void onStaticIntervalDetected(
                         final GyroscopeMeasurementsGenerator generator) {
                     // no action required
-<span class="fc" id="L142">                }</span>
+<span class="fc" id="L145">                }</span>
 
                 @Override
                 public void onDynamicIntervalDetected(
                         final GyroscopeMeasurementsGenerator generator) {
                     // no action required
-<span class="fc" id="L148">                }</span>
+<span class="fc" id="L151">                }</span>
 
                 @Override
                 public void onStaticIntervalSkipped(
                         final GyroscopeMeasurementsGenerator generator) {
                     // no action required
-<span class="fc" id="L154">                }</span>
+<span class="fc" id="L157">                }</span>
 
                 @Override
                 public void onDynamicIntervalSkipped(
                         final GyroscopeMeasurementsGenerator generator) {
                     // no action required
-<span class="fc" id="L160">                }</span>
+<span class="fc" id="L163">                }</span>
 
                 @Override
                 public void onGeneratedMeasurement(
                         final GyroscopeMeasurementsGenerator generator,
                         final BodyKinematicsSequence&lt;StandardDeviationTimedBodyKinematics&gt; measurement) {
-<span class="pc bpc" id="L166" title="1 of 2 branches missed.">                    if (mListener != null) {</span>
-<span class="fc" id="L167">                        mListener.onGeneratedGyroscopeMeasurement(</span>
+<span class="pc bpc" id="L169" title="1 of 2 branches missed.">                    if (mListener != null) {</span>
+<span class="fc" id="L170">                        mListener.onGeneratedGyroscopeMeasurement(</span>
                                 AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator.this,
                                 measurement);
                     }
-<span class="fc" id="L171">                }</span>
+<span class="fc" id="L174">                }</span>
 
                 @Override
                 public void onReset(
                         final GyroscopeMeasurementsGenerator generator) {
                     // no action required
-<span class="fc" id="L177">                }</span>
+<span class="fc" id="L180">                }</span>
             };
 
     /**
      * Listener for internal magnetometer measurements generator.
      */
-<span class="fc" id="L183">    private final MagnetometerMeasurementsGeneratorListener mMagnetometerListener =</span>
-<span class="fc" id="L184">            new MagnetometerMeasurementsGeneratorListener() {</span>
+<span class="fc" id="L186">    private final MagnetometerMeasurementsGeneratorListener mMagnetometerListener =</span>
+<span class="fc" id="L187">            new MagnetometerMeasurementsGeneratorListener() {</span>
         @Override
         public void onInitializationStarted(
                 final MagnetometerMeasurementsGenerator generator) {
-<span class="pc bpc" id="L188" title="1 of 2 branches missed.">            if (mListener != null) {</span>
-<span class="fc" id="L189">                mListener.onInitializationStarted(</span>
+<span class="pc bpc" id="L191" title="1 of 2 branches missed.">            if (mListener != null) {</span>
+<span class="fc" id="L192">                mListener.onInitializationStarted(</span>
                         AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator.this);
             }
-<span class="fc" id="L192">        }</span>
+<span class="fc" id="L195">        }</span>
 
         @Override
         public void onInitializationCompleted(
                 final MagnetometerMeasurementsGenerator generator,
                 final double baseNoiseLevel) {
-<span class="pc bpc" id="L198" title="1 of 2 branches missed.">            if (mListener != null) {</span>
-<span class="fc" id="L199">                mListener.onInitializationCompleted(</span>
+<span class="pc bpc" id="L201" title="1 of 2 branches missed.">            if (mListener != null) {</span>
+<span class="fc" id="L202">                mListener.onInitializationCompleted(</span>
                         AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator.this,
                         baseNoiseLevel);
             }
-<span class="fc" id="L203">        }</span>
+<span class="fc" id="L206">        }</span>
 
         @Override
         public void onError(
                 final MagnetometerMeasurementsGenerator generator,
                 final TriadStaticIntervalDetector.ErrorReason reason) {
             // no action required
-<span class="fc" id="L210">        }</span>
+<span class="fc" id="L213">        }</span>
 
         @Override
         public void onStaticIntervalDetected(
                 final MagnetometerMeasurementsGenerator generator) {
-<span class="pc bpc" id="L215" title="1 of 2 branches missed.">            if (mListener != null) {</span>
-<span class="fc" id="L216">                mListener.onStaticIntervalDetected(</span>
+<span class="pc bpc" id="L218" title="1 of 2 branches missed.">            if (mListener != null) {</span>
+<span class="fc" id="L219">                mListener.onStaticIntervalDetected(</span>
                         AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator.this);
             }
-<span class="fc" id="L219">        }</span>
+<span class="fc" id="L222">        }</span>
 
         @Override
         public void onDynamicIntervalDetected(
                 final MagnetometerMeasurementsGenerator generator) {
-<span class="pc bpc" id="L224" title="1 of 2 branches missed.">            if (mListener != null) {</span>
-<span class="fc" id="L225">                mListener.onDynamicIntervalDetected(</span>
+<span class="pc bpc" id="L227" title="1 of 2 branches missed.">            if (mListener != null) {</span>
+<span class="fc" id="L228">                mListener.onDynamicIntervalDetected(</span>
                         AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator.this);
             }
-<span class="fc" id="L228">        }</span>
+<span class="fc" id="L231">        }</span>
 
         @Override
         public void onStaticIntervalSkipped(
                 final MagnetometerMeasurementsGenerator generator) {
-<span class="pc bpc" id="L233" title="1 of 2 branches missed.">            if (mListener != null) {</span>
-<span class="fc" id="L234">                mListener.onStaticIntervalSkipped(</span>
+<span class="pc bpc" id="L236" title="1 of 2 branches missed.">            if (mListener != null) {</span>
+<span class="fc" id="L237">                mListener.onStaticIntervalSkipped(</span>
                         AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator.this);
             }
-<span class="fc" id="L237">        }</span>
+<span class="fc" id="L240">        }</span>
 
         @Override
         public void onDynamicIntervalSkipped(
                 final MagnetometerMeasurementsGenerator generator) {
-<span class="pc bpc" id="L242" title="1 of 2 branches missed.">            if (mListener != null) {</span>
-<span class="fc" id="L243">                mListener.onDynamicIntervalSkipped(</span>
+<span class="pc bpc" id="L245" title="1 of 2 branches missed.">            if (mListener != null) {</span>
+<span class="fc" id="L246">                mListener.onDynamicIntervalSkipped(</span>
                         AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator.this);
             }
-<span class="fc" id="L246">        }</span>
+<span class="fc" id="L249">        }</span>
 
         @Override
         public void onGeneratedMeasurement(
                 final MagnetometerMeasurementsGenerator generator,
                 final StandardDeviationBodyMagneticFluxDensity measurement) {
-<span class="pc bpc" id="L252" title="1 of 2 branches missed.">            if (mListener != null) {</span>
-<span class="fc" id="L253">                mListener.onGeneratedMagnetometerMeasurement(</span>
+<span class="pc bpc" id="L255" title="1 of 2 branches missed.">            if (mListener != null) {</span>
+<span class="fc" id="L256">                mListener.onGeneratedMagnetometerMeasurement(</span>
                         AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator.this,
                         measurement);
             }
-<span class="fc" id="L257">        }</span>
+<span class="fc" id="L260">        }</span>
 
         @Override
         public void onReset(
                 final MagnetometerMeasurementsGenerator generator) {
             // no action required
-<span class="fc" id="L263">        }</span>
+<span class="fc" id="L266">        }</span>
     };
 
     /**
      * Internal accelerometer measurements generator.
      */
-<span class="fc" id="L269">    private final AccelerometerMeasurementsGenerator mAccelerometerMeasurementsGenerator =</span>
+<span class="fc" id="L272">    private final AccelerometerMeasurementsGenerator mAccelerometerMeasurementsGenerator =</span>
             new AccelerometerMeasurementsGenerator(mAccelerometerListener);
 
     /**
      * Internal gyroscope measurements generator.
      */
-<span class="fc" id="L275">    private final GyroscopeMeasurementsGenerator mGyroscopeMeasurementsGenerator =</span>
+<span class="fc" id="L278">    private final GyroscopeMeasurementsGenerator mGyroscopeMeasurementsGenerator =</span>
             new GyroscopeMeasurementsGenerator(mGyroscopeListener);
 
     /**
      * Internal magnetometer measurements generator.
      */
-<span class="fc" id="L281">    private final MagnetometerMeasurementsGenerator mMagnetometerMeasurementsGenerator =</span>
+<span class="fc" id="L284">    private final MagnetometerMeasurementsGenerator mMagnetometerMeasurementsGenerator =</span>
             new MagnetometerMeasurementsGenerator(mMagnetometerListener);
 
     /**
@@ -289,13 +292,13 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
     /**
      * Timed body kinematics instance to be reused.
      */
-<span class="fc" id="L292">    private final TimedBodyKinematics mTimedKinematics = new TimedBodyKinematics();</span>
+<span class="fc" id="L295">    private final TimedBodyKinematics mTimedKinematics = new TimedBodyKinematics();</span>
 
     /**
      * Constructor.
      */
-<span class="fc" id="L297">    public AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator() {</span>
-<span class="fc" id="L298">    }</span>
+<span class="fc" id="L300">    public AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator() {</span>
+<span class="fc" id="L301">    }</span>
 
     /**
      * Constructor.
@@ -304,9 +307,9 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
      */
     public AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator(
             final AccelerometerGyroscopeAndMagnetometerMeasurementsGeneratorListener listener) {
-<span class="fc" id="L307">        this();</span>
-<span class="fc" id="L308">        mListener = listener;</span>
-<span class="fc" id="L309">    }</span>
+<span class="fc" id="L310">        this();</span>
+<span class="fc" id="L311">        mListener = listener;</span>
+<span class="fc" id="L312">    }</span>
 
     /**
      * Gets time interval between input samples expressed in seconds (s).
@@ -314,7 +317,7 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
      * @return time interval between input samples.
      */
     public double getTimeInterval() {
-<span class="fc" id="L317">        return mAccelerometerMeasurementsGenerator.getTimeInterval();</span>
+<span class="fc" id="L320">        return mAccelerometerMeasurementsGenerator.getTimeInterval();</span>
     }
 
     /**
@@ -325,18 +328,18 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
      * @throws LockedException          if generator is currently running.
      */
     public void setTimeInterval(final double timeInterval) throws LockedException {
-<span class="fc bfc" id="L328" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L329">            throw new LockedException();</span>
+<span class="fc bfc" id="L331" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L332">            throw new LockedException();</span>
         }
 
-<span class="fc bfc" id="L332" title="All 2 branches covered.">        if (timeInterval &lt; 0.0) {</span>
-<span class="fc" id="L333">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L335" title="All 2 branches covered.">        if (timeInterval &lt; 0.0) {</span>
+<span class="fc" id="L336">            throw new IllegalArgumentException();</span>
         }
 
-<span class="fc" id="L336">        mAccelerometerMeasurementsGenerator.setTimeInterval(timeInterval);</span>
-<span class="fc" id="L337">        mGyroscopeMeasurementsGenerator.setTimeInterval(timeInterval);</span>
-<span class="fc" id="L338">        mMagnetometerMeasurementsGenerator.setTimeInterval(timeInterval);</span>
-<span class="fc" id="L339">    }</span>
+<span class="fc" id="L339">        mAccelerometerMeasurementsGenerator.setTimeInterval(timeInterval);</span>
+<span class="fc" id="L340">        mGyroscopeMeasurementsGenerator.setTimeInterval(timeInterval);</span>
+<span class="fc" id="L341">        mMagnetometerMeasurementsGenerator.setTimeInterval(timeInterval);</span>
+<span class="fc" id="L342">    }</span>
 
     /**
      * Gets time interval between input samples.
@@ -344,7 +347,7 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
      * @return time interval between input samples.
      */
     public Time getTimeIntervalAsTime() {
-<span class="fc" id="L347">        return new Time(getTimeInterval(), TimeUnit.SECOND);</span>
+<span class="fc" id="L350">        return new Time(getTimeInterval(), TimeUnit.SECOND);</span>
     }
 
     /**
@@ -353,9 +356,9 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
      * @param result instance where time interval will be stored.
      */
     public void getTimeIntervalAsTime(final Time result) {
-<span class="fc" id="L356">        result.setValue(getTimeInterval());</span>
-<span class="fc" id="L357">        result.setUnit(TimeUnit.SECOND);</span>
-<span class="fc" id="L358">    }</span>
+<span class="fc" id="L359">        result.setValue(getTimeInterval());</span>
+<span class="fc" id="L360">        result.setUnit(TimeUnit.SECOND);</span>
+<span class="fc" id="L361">    }</span>
 
     /**
      * Sets time interval between input samples.
@@ -365,9 +368,9 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
      * @throws LockedException          if estimator is currently running.
      */
     public void setTimeInterval(final Time timeInterval) throws LockedException {
-<span class="fc" id="L368">        setTimeInterval(TimeConverter.convert(timeInterval.getValue().doubleValue(),</span>
-<span class="fc" id="L369">                timeInterval.getUnit(), TimeUnit.SECOND));</span>
-<span class="fc" id="L370">    }</span>
+<span class="fc" id="L371">        setTimeInterval(TimeConverter.convert(timeInterval.getValue().doubleValue(),</span>
+<span class="fc" id="L372">                timeInterval.getUnit(), TimeUnit.SECOND));</span>
+<span class="fc" id="L373">    }</span>
 
     /**
      * Gets minimum number of samples required in a static interval to be taken into account.
@@ -376,7 +379,7 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
      * @return minimum number of samples required in a static interval to be taken into account.
      */
     public int getMinStaticSamples() {
-<span class="fc" id="L379">        return mAccelerometerMeasurementsGenerator.getMinStaticSamples();</span>
+<span class="fc" id="L382">        return mAccelerometerMeasurementsGenerator.getMinStaticSamples();</span>
     }
 
     /**
@@ -389,14 +392,14 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
      * @throws IllegalArgumentException if provided value is less than 2.
      */
     public void setMinStaticSamples(final int minStaticSamples) throws LockedException {
-<span class="fc bfc" id="L392" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L393">            throw new LockedException();</span>
+<span class="fc bfc" id="L395" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L396">            throw new LockedException();</span>
         }
 
-<span class="fc" id="L396">        mAccelerometerMeasurementsGenerator.setMinStaticSamples(minStaticSamples);</span>
-<span class="fc" id="L397">        mGyroscopeMeasurementsGenerator.setMinStaticSamples(minStaticSamples);</span>
-<span class="fc" id="L398">        mMagnetometerMeasurementsGenerator.setMinStaticSamples(minStaticSamples);</span>
-<span class="fc" id="L399">    }</span>
+<span class="fc" id="L399">        mAccelerometerMeasurementsGenerator.setMinStaticSamples(minStaticSamples);</span>
+<span class="fc" id="L400">        mGyroscopeMeasurementsGenerator.setMinStaticSamples(minStaticSamples);</span>
+<span class="fc" id="L401">        mMagnetometerMeasurementsGenerator.setMinStaticSamples(minStaticSamples);</span>
+<span class="fc" id="L402">    }</span>
 
     /**
      * Gets maximum number of samples allowed in dynamic intervals.
@@ -404,7 +407,7 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
      * @return maximum number of samples allowed in dynamic intervals.
      */
     public int getMaxDynamicSamples() {
-<span class="fc" id="L407">        return mAccelerometerMeasurementsGenerator.getMaxDynamicSamples();</span>
+<span class="fc" id="L410">        return mAccelerometerMeasurementsGenerator.getMaxDynamicSamples();</span>
     }
 
     /**
@@ -415,14 +418,14 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
      * @throws IllegalArgumentException if provided value is less than 2.
      */
     public void setMaxDynamicSamples(final int maxDynamicSamples) throws LockedException {
-<span class="fc bfc" id="L418" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L419">            throw new LockedException();</span>
+<span class="fc bfc" id="L421" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L422">            throw new LockedException();</span>
         }
 
-<span class="fc" id="L422">        mAccelerometerMeasurementsGenerator.setMaxDynamicSamples(maxDynamicSamples);</span>
-<span class="fc" id="L423">        mGyroscopeMeasurementsGenerator.setMaxDynamicSamples(maxDynamicSamples);</span>
-<span class="fc" id="L424">        mMagnetometerMeasurementsGenerator.setMaxDynamicSamples(maxDynamicSamples);</span>
-<span class="fc" id="L425">    }</span>
+<span class="fc" id="L425">        mAccelerometerMeasurementsGenerator.setMaxDynamicSamples(maxDynamicSamples);</span>
+<span class="fc" id="L426">        mGyroscopeMeasurementsGenerator.setMaxDynamicSamples(maxDynamicSamples);</span>
+<span class="fc" id="L427">        mMagnetometerMeasurementsGenerator.setMaxDynamicSamples(maxDynamicSamples);</span>
+<span class="fc" id="L428">    }</span>
 
     /**
      * Gets listener to handle generated events.
@@ -430,7 +433,7 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
      * @return listener to handle generated events.
      */
     public AccelerometerGyroscopeAndMagnetometerMeasurementsGeneratorListener getListener() {
-<span class="fc" id="L433">        return mListener;</span>
+<span class="fc" id="L436">        return mListener;</span>
     }
 
     /**
@@ -441,12 +444,12 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
      */
     public void setListener(final AccelerometerGyroscopeAndMagnetometerMeasurementsGeneratorListener listener)
             throws LockedException {
-<span class="fc bfc" id="L444" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L445">            throw new LockedException();</span>
+<span class="fc bfc" id="L447" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L448">            throw new LockedException();</span>
         }
 
-<span class="fc" id="L448">        mListener = listener;</span>
-<span class="fc" id="L449">    }</span>
+<span class="fc" id="L451">        mListener = listener;</span>
+<span class="fc" id="L452">    }</span>
 
     /**
      * Gets length of number of samples to keep within the window being processed
@@ -455,7 +458,7 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
      * @return length of number of samples to keep within the window.
      */
     public int getWindowSize() {
-<span class="fc" id="L458">        return mAccelerometerMeasurementsGenerator.getWindowSize();</span>
+<span class="fc" id="L461">        return mAccelerometerMeasurementsGenerator.getWindowSize();</span>
     }
 
     /**
@@ -469,14 +472,14 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
      * @throws IllegalArgumentException if provided value is not valid.
      */
     public void setWindowSize(final int windowSize) throws LockedException {
-<span class="fc bfc" id="L472" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L473">            throw new LockedException();</span>
+<span class="fc bfc" id="L475" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L476">            throw new LockedException();</span>
         }
 
-<span class="fc" id="L476">        mAccelerometerMeasurementsGenerator.setWindowSize(windowSize);</span>
-<span class="fc" id="L477">        mGyroscopeMeasurementsGenerator.setWindowSize(windowSize);</span>
-<span class="fc" id="L478">        mMagnetometerMeasurementsGenerator.setWindowSize(windowSize);</span>
-<span class="fc" id="L479">    }</span>
+<span class="fc" id="L479">        mAccelerometerMeasurementsGenerator.setWindowSize(windowSize);</span>
+<span class="fc" id="L480">        mGyroscopeMeasurementsGenerator.setWindowSize(windowSize);</span>
+<span class="fc" id="L481">        mMagnetometerMeasurementsGenerator.setWindowSize(windowSize);</span>
+<span class="fc" id="L482">    }</span>
 
     /**
      * Gets number of samples to be processed initially while keeping the sensor static in order
@@ -485,7 +488,7 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
      * @return number of samples to be processed initially.
      */
     public int getInitialStaticSamples() {
-<span class="fc" id="L488">        return mAccelerometerMeasurementsGenerator.getInitialStaticSamples();</span>
+<span class="fc" id="L491">        return mAccelerometerMeasurementsGenerator.getInitialStaticSamples();</span>
     }
 
     /**
@@ -499,14 +502,14 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
      */
     public void setInitialStaticSamples(final int initialStaticSamples)
             throws LockedException {
-<span class="fc bfc" id="L502" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L503">            throw new LockedException();</span>
+<span class="fc bfc" id="L505" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L506">            throw new LockedException();</span>
         }
 
-<span class="fc" id="L506">        mAccelerometerMeasurementsGenerator.setInitialStaticSamples(initialStaticSamples);</span>
-<span class="fc" id="L507">        mGyroscopeMeasurementsGenerator.setInitialStaticSamples(initialStaticSamples);</span>
-<span class="fc" id="L508">        mMagnetometerMeasurementsGenerator.setInitialStaticSamples(initialStaticSamples);</span>
-<span class="fc" id="L509">    }</span>
+<span class="fc" id="L509">        mAccelerometerMeasurementsGenerator.setInitialStaticSamples(initialStaticSamples);</span>
+<span class="fc" id="L510">        mGyroscopeMeasurementsGenerator.setInitialStaticSamples(initialStaticSamples);</span>
+<span class="fc" id="L511">        mMagnetometerMeasurementsGenerator.setInitialStaticSamples(initialStaticSamples);</span>
+<span class="fc" id="L512">    }</span>
 
     /**
      * Gets factor to be applied to detected base noise level in order to
@@ -516,7 +519,7 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
      * @return factor to be applied to detected base noise level.
      */
     public double getThresholdFactor() {
-<span class="fc" id="L519">        return mAccelerometerMeasurementsGenerator.getThresholdFactor();</span>
+<span class="fc" id="L522">        return mAccelerometerMeasurementsGenerator.getThresholdFactor();</span>
     }
 
     /**
@@ -530,14 +533,14 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
      */
     public void setThresholdFactor(final double thresholdFactor)
             throws LockedException {
-<span class="fc bfc" id="L533" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L534">            throw new LockedException();</span>
+<span class="fc bfc" id="L536" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L537">            throw new LockedException();</span>
         }
 
-<span class="fc" id="L537">        mAccelerometerMeasurementsGenerator.setThresholdFactor(thresholdFactor);</span>
-<span class="fc" id="L538">        mGyroscopeMeasurementsGenerator.setThresholdFactor(thresholdFactor);</span>
-<span class="fc" id="L539">        mMagnetometerMeasurementsGenerator.setThresholdFactor(thresholdFactor);</span>
-<span class="fc" id="L540">    }</span>
+<span class="fc" id="L540">        mAccelerometerMeasurementsGenerator.setThresholdFactor(thresholdFactor);</span>
+<span class="fc" id="L541">        mGyroscopeMeasurementsGenerator.setThresholdFactor(thresholdFactor);</span>
+<span class="fc" id="L542">        mMagnetometerMeasurementsGenerator.setThresholdFactor(thresholdFactor);</span>
+<span class="fc" id="L543">    }</span>
 
     /**
      * Gets factor to determine that a sudden movement has occurred during
@@ -548,7 +551,7 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
      * @return factor to determine that a sudden movement has occurred.
      */
     public double getInstantaneousNoiseLevelFactor() {
-<span class="fc" id="L551">        return mAccelerometerMeasurementsGenerator.getInstantaneousNoiseLevelFactor();</span>
+<span class="fc" id="L554">        return mAccelerometerMeasurementsGenerator.getInstantaneousNoiseLevelFactor();</span>
     }
 
     /**
@@ -565,17 +568,17 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
      */
     public void setInstantaneousNoiseLevelFactor(
             final double instantaneousNoiseLevelFactor) throws LockedException {
-<span class="fc bfc" id="L568" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L569">            throw new LockedException();</span>
+<span class="fc bfc" id="L571" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L572">            throw new LockedException();</span>
         }
 
-<span class="fc" id="L572">        mAccelerometerMeasurementsGenerator.setInstantaneousNoiseLevelFactor(</span>
+<span class="fc" id="L575">        mAccelerometerMeasurementsGenerator.setInstantaneousNoiseLevelFactor(</span>
                 instantaneousNoiseLevelFactor);
-<span class="fc" id="L574">        mGyroscopeMeasurementsGenerator.setInstantaneousNoiseLevelFactor(</span>
+<span class="fc" id="L577">        mGyroscopeMeasurementsGenerator.setInstantaneousNoiseLevelFactor(</span>
                 instantaneousNoiseLevelFactor);
-<span class="fc" id="L576">        mMagnetometerMeasurementsGenerator.setInstantaneousNoiseLevelFactor(</span>
+<span class="fc" id="L579">        mMagnetometerMeasurementsGenerator.setInstantaneousNoiseLevelFactor(</span>
                 instantaneousNoiseLevelFactor);
-<span class="fc" id="L578">    }</span>
+<span class="fc" id="L581">    }</span>
 
     /**
      * Gets overall absolute threshold to determine whether there has been
@@ -588,7 +591,7 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
      * been excessive motion.
      */
     public double getBaseNoiseLevelAbsoluteThreshold() {
-<span class="fc" id="L591">        return mAccelerometerMeasurementsGenerator.getBaseNoiseLevelAbsoluteThreshold();</span>
+<span class="fc" id="L594">        return mAccelerometerMeasurementsGenerator.getBaseNoiseLevelAbsoluteThreshold();</span>
     }
 
     /**
@@ -606,17 +609,17 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
      */
     public void setBaseNoiseLevelAbsoluteThreshold(
             final double baseNoiseLevelAbsoluteThreshold) throws LockedException {
-<span class="fc bfc" id="L609" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L610">            throw new LockedException();</span>
+<span class="fc bfc" id="L612" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L613">            throw new LockedException();</span>
         }
 
-<span class="fc" id="L613">        mAccelerometerMeasurementsGenerator.setBaseNoiseLevelAbsoluteThreshold(</span>
+<span class="fc" id="L616">        mAccelerometerMeasurementsGenerator.setBaseNoiseLevelAbsoluteThreshold(</span>
                 baseNoiseLevelAbsoluteThreshold);
-<span class="fc" id="L615">        mGyroscopeMeasurementsGenerator.setBaseNoiseLevelAbsoluteThreshold(</span>
+<span class="fc" id="L618">        mGyroscopeMeasurementsGenerator.setBaseNoiseLevelAbsoluteThreshold(</span>
                 baseNoiseLevelAbsoluteThreshold);
-<span class="fc" id="L617">        mMagnetometerMeasurementsGenerator.setBaseNoiseLevelAbsoluteThreshold(</span>
+<span class="fc" id="L620">        mMagnetometerMeasurementsGenerator.setBaseNoiseLevelAbsoluteThreshold(</span>
                 baseNoiseLevelAbsoluteThreshold);
-<span class="fc" id="L619">    }</span>
+<span class="fc" id="L622">    }</span>
 
     /**
      * Gets overall absolute threshold to determine whether there has been
@@ -628,7 +631,7 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
      * excessive motion.
      */
     public Acceleration getBaseNoiseLevelAbsoluteThresholdAsMeasurement() {
-<span class="fc" id="L631">        return mAccelerometerMeasurementsGenerator.getBaseNoiseLevelAbsoluteThresholdAsMeasurement();</span>
+<span class="fc" id="L634">        return mAccelerometerMeasurementsGenerator.getBaseNoiseLevelAbsoluteThresholdAsMeasurement();</span>
     }
 
     /**
@@ -641,9 +644,9 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
      */
     public void getBaseNoiseLevelAbsoluteThresholdAsMeasurement(
             final Acceleration result) {
-<span class="fc" id="L644">        mAccelerometerMeasurementsGenerator.getBaseNoiseLevelAbsoluteThresholdAsMeasurement(</span>
+<span class="fc" id="L647">        mAccelerometerMeasurementsGenerator.getBaseNoiseLevelAbsoluteThresholdAsMeasurement(</span>
                 result);
-<span class="fc" id="L646">    }</span>
+<span class="fc" id="L649">    }</span>
 
     /**
      * Sets overall absolute threshold to determine whether there has been
@@ -659,17 +662,17 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
      */
     public void setBaseNoiseLevelAbsoluteThreshold(
             final Acceleration baseNoiseLevelAbsoluteThreshold) throws LockedException {
-<span class="fc bfc" id="L662" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L663">            throw new LockedException();</span>
+<span class="fc bfc" id="L665" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L666">            throw new LockedException();</span>
         }
 
-<span class="fc" id="L666">        mAccelerometerMeasurementsGenerator.setBaseNoiseLevelAbsoluteThreshold(</span>
+<span class="fc" id="L669">        mAccelerometerMeasurementsGenerator.setBaseNoiseLevelAbsoluteThreshold(</span>
                 baseNoiseLevelAbsoluteThreshold);
-<span class="fc" id="L668">        mGyroscopeMeasurementsGenerator.setBaseNoiseLevelAbsoluteThreshold(</span>
+<span class="fc" id="L671">        mGyroscopeMeasurementsGenerator.setBaseNoiseLevelAbsoluteThreshold(</span>
                 baseNoiseLevelAbsoluteThreshold);
-<span class="fc" id="L670">        mMagnetometerMeasurementsGenerator.setBaseNoiseLevelAbsoluteThreshold(</span>
+<span class="fc" id="L673">        mMagnetometerMeasurementsGenerator.setBaseNoiseLevelAbsoluteThreshold(</span>
                 baseNoiseLevelAbsoluteThreshold);
-<span class="fc" id="L672">    }</span>
+<span class="fc" id="L675">    }</span>
 
     /**
      * Gets internal status of this generator.
@@ -677,7 +680,7 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
      * @return internal status of this generator.
      */
     public TriadStaticIntervalDetector.Status getStatus() {
-<span class="fc" id="L680">        return mAccelerometerMeasurementsGenerator.getStatus();</span>
+<span class="fc" id="L683">        return mAccelerometerMeasurementsGenerator.getStatus();</span>
     }
 
     /**
@@ -689,7 +692,7 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
      * @return accelerometer base noise level.
      */
     public double getAccelerometerBaseNoiseLevel() {
-<span class="fc" id="L692">        return mAccelerometerMeasurementsGenerator.getAccelerometerBaseNoiseLevel();</span>
+<span class="fc" id="L695">        return mAccelerometerMeasurementsGenerator.getAccelerometerBaseNoiseLevel();</span>
     }
 
     /**
@@ -701,7 +704,7 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
      * @return measurement base noise level.
      */
     public Acceleration getAccelerometerBaseNoiseLevelAsMeasurement() {
-<span class="fc" id="L704">        return mAccelerometerMeasurementsGenerator.getAccelerometerBaseNoiseLevelAsMeasurement();</span>
+<span class="fc" id="L707">        return mAccelerometerMeasurementsGenerator.getAccelerometerBaseNoiseLevelAsMeasurement();</span>
     }
 
     /**
@@ -711,8 +714,8 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
      * @param result instance where result will be stored.
      */
     public void getAccelerometerBaseNoiseLevelAsMeasurement(final Acceleration result) {
-<span class="fc" id="L714">        mAccelerometerMeasurementsGenerator.getAccelerometerBaseNoiseLevelAsMeasurement(result);</span>
-<span class="fc" id="L715">    }</span>
+<span class="fc" id="L717">        mAccelerometerMeasurementsGenerator.getAccelerometerBaseNoiseLevelAsMeasurement(result);</span>
+<span class="fc" id="L718">    }</span>
 
     /**
      * Gets accelerometer base noise level PSD (Power Spectral Density)
@@ -721,7 +724,7 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
      * @return accelerometer base noise level PSD.
      */
     public double getAccelerometerBaseNoiseLevelPsd() {
-<span class="fc" id="L724">        return mAccelerometerMeasurementsGenerator.getAccelerometerBaseNoiseLevelPsd();</span>
+<span class="fc" id="L727">        return mAccelerometerMeasurementsGenerator.getAccelerometerBaseNoiseLevelPsd();</span>
     }
 
     /**
@@ -730,8 +733,9 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
      *
      * @return accelerometer base noise level root PSD.
      */
+    @Override
     public double getAccelerometerBaseNoiseLevelRootPsd() {
-<span class="fc" id="L734">        return mAccelerometerMeasurementsGenerator.getAccelerometerBaseNoiseLevelRootPsd();</span>
+<span class="fc" id="L738">        return mAccelerometerMeasurementsGenerator.getAccelerometerBaseNoiseLevelRootPsd();</span>
     }
 
     /**
@@ -741,7 +745,7 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
      * @return threshold to determine static/dynamic period changes.
      */
     public double getThreshold() {
-<span class="fc" id="L744">        return mAccelerometerMeasurementsGenerator.getThreshold();</span>
+<span class="fc" id="L748">        return mAccelerometerMeasurementsGenerator.getThreshold();</span>
     }
 
     /**
@@ -750,7 +754,7 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
      * @return threshold to determine static/dynamic period changes.
      */
     public Acceleration getThresholdAsMeasurement() {
-<span class="fc" id="L753">        return mAccelerometerMeasurementsGenerator.getThresholdAsMeasurement();</span>
+<span class="fc" id="L757">        return mAccelerometerMeasurementsGenerator.getThresholdAsMeasurement();</span>
     }
 
     /**
@@ -759,8 +763,8 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
      * @param result instance where result will be stored.
      */
     public void getThresholdAsMeasurement(final Acceleration result) {
-<span class="fc" id="L762">        mAccelerometerMeasurementsGenerator.getThresholdAsMeasurement(result);</span>
-<span class="fc" id="L763">    }</span>
+<span class="fc" id="L766">        mAccelerometerMeasurementsGenerator.getThresholdAsMeasurement(result);</span>
+<span class="fc" id="L767">    }</span>
 
     /**
      * Gets number of samples that have been processed in a static period so far.
@@ -768,7 +772,7 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
      * @return number of samples that have been processed in a static period so far.
      */
     public int getProcessedStaticSamples() {
-<span class="fc" id="L771">        return mAccelerometerMeasurementsGenerator.getProcessedStaticSamples();</span>
+<span class="fc" id="L775">        return mAccelerometerMeasurementsGenerator.getProcessedStaticSamples();</span>
     }
 
     /**
@@ -777,7 +781,7 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
      * @return number of samples that have been processed in a dynamic period so far.
      */
     public int getProcessedDynamicSamples() {
-<span class="fc" id="L780">        return mAccelerometerMeasurementsGenerator.getProcessedDynamicSamples();</span>
+<span class="fc" id="L784">        return mAccelerometerMeasurementsGenerator.getProcessedDynamicSamples();</span>
     }
 
     /**
@@ -786,7 +790,7 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
      * @return true if last static interval must be skipped.
      */
     public boolean isStaticIntervalSkipped() {
-<span class="fc" id="L789">        return mAccelerometerMeasurementsGenerator.isStaticIntervalSkipped();</span>
+<span class="fc" id="L793">        return mAccelerometerMeasurementsGenerator.isStaticIntervalSkipped();</span>
     }
 
     /**
@@ -795,7 +799,7 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
      * @return true if last dynamic interval must be skipped.
      */
     public boolean isDynamicIntervalSkipped() {
-<span class="fc" id="L798">        return mAccelerometerMeasurementsGenerator.isDynamicIntervalSkipped();</span>
+<span class="fc" id="L802">        return mAccelerometerMeasurementsGenerator.isDynamicIntervalSkipped();</span>
     }
 
     /**
@@ -804,7 +808,7 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
      * @return true if generator is running, false otherwise.
      */
     public boolean isRunning() {
-<span class="fc" id="L807">        return mRunning;</span>
+<span class="fc" id="L811">        return mRunning;</span>
     }
 
     /**
@@ -817,20 +821,20 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
      * @throws LockedException if generator is busy processing a previous sample.
      */
     public boolean process(final TimedBodyKinematicsAndMagneticFluxDensity sample) throws LockedException {
-<span class="fc bfc" id="L820" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L821">            throw new LockedException();</span>
+<span class="fc bfc" id="L824" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L825">            throw new LockedException();</span>
         }
 
         try {
-<span class="fc" id="L825">            mRunning = true;</span>
+<span class="fc" id="L829">            mRunning = true;</span>
 
-<span class="fc" id="L827">            sample.getTimedKinematics(mTimedKinematics);</span>
+<span class="fc" id="L831">            sample.getTimedKinematics(mTimedKinematics);</span>
 
-<span class="fc bfc" id="L829" title="All 2 branches covered.">            return mAccelerometerMeasurementsGenerator.process(sample.getKinematics())</span>
-<span class="pc bpc" id="L830" title="1 of 2 branches missed.">                    &amp;&amp; mGyroscopeMeasurementsGenerator.process(mTimedKinematics)</span>
-<span class="pc bpc" id="L831" title="1 of 2 branches missed.">                    &amp;&amp; mMagnetometerMeasurementsGenerator.process(sample);</span>
+<span class="fc bfc" id="L833" title="All 2 branches covered.">            return mAccelerometerMeasurementsGenerator.process(sample.getKinematics())</span>
+<span class="pc bpc" id="L834" title="1 of 2 branches missed.">                    &amp;&amp; mGyroscopeMeasurementsGenerator.process(mTimedKinematics)</span>
+<span class="pc bpc" id="L835" title="1 of 2 branches missed.">                    &amp;&amp; mMagnetometerMeasurementsGenerator.process(sample);</span>
         } finally {
-<span class="fc" id="L833">            mRunning = false;</span>
+<span class="fc" id="L837">            mRunning = false;</span>
         }
     }
 
@@ -840,18 +844,18 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
      * @throws LockedException if generator is busy.
      */
     public void reset() throws LockedException {
-<span class="fc bfc" id="L843" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L844">            throw new LockedException();</span>
+<span class="fc bfc" id="L847" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L848">            throw new LockedException();</span>
         }
 
-<span class="fc" id="L847">        mAccelerometerMeasurementsGenerator.reset();</span>
-<span class="fc" id="L848">        mGyroscopeMeasurementsGenerator.reset();</span>
-<span class="fc" id="L849">        mMagnetometerMeasurementsGenerator.reset();</span>
+<span class="fc" id="L851">        mAccelerometerMeasurementsGenerator.reset();</span>
+<span class="fc" id="L852">        mGyroscopeMeasurementsGenerator.reset();</span>
+<span class="fc" id="L853">        mMagnetometerMeasurementsGenerator.reset();</span>
 
-<span class="pc bpc" id="L851" title="1 of 2 branches missed.">        if (mListener != null) {</span>
-<span class="fc" id="L852">            mListener.onReset(this);</span>
+<span class="pc bpc" id="L855" title="1 of 2 branches missed.">        if (mListener != null) {</span>
+<span class="fc" id="L856">            mListener.onReset(this);</span>
         }
-<span class="fc" id="L854">    }</span>
+<span class="fc" id="L858">    }</span>
 
     /**
      * Gets estimated average angular rate during initialization phase.
@@ -859,7 +863,7 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
      * @return estimated average angular rate during initialization phase.
      */
     public AngularSpeedTriad getInitialAvgAngularSpeedTriad() {
-<span class="fc" id="L862">        return mGyroscopeMeasurementsGenerator.getInitialAvgAngularSpeedTriad();</span>
+<span class="fc" id="L866">        return mGyroscopeMeasurementsGenerator.getInitialAvgAngularSpeedTriad();</span>
     }
 
     /**
@@ -868,8 +872,8 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
      * @param result instance where result will be stored.
      */
     public void getInitialAvgAngularSpeedTriad(final AngularSpeedTriad result) {
-<span class="fc" id="L871">        mGyroscopeMeasurementsGenerator.getInitialAvgAngularSpeedTriad(result);</span>
-<span class="fc" id="L872">    }</span>
+<span class="fc" id="L875">        mGyroscopeMeasurementsGenerator.getInitialAvgAngularSpeedTriad(result);</span>
+<span class="fc" id="L876">    }</span>
 
     /**
      * Gets estimated standard deviation of angular rate during initialization phase.
@@ -877,7 +881,7 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
      * @return estimated standard deviation of angular rate during initialization phase.
      */
     public AngularSpeedTriad getInitialAngularSpeedTriadStandardDeviation() {
-<span class="fc" id="L880">        return mGyroscopeMeasurementsGenerator.getInitialAngularSpeedTriadStandardDeviation();</span>
+<span class="fc" id="L884">        return mGyroscopeMeasurementsGenerator.getInitialAngularSpeedTriadStandardDeviation();</span>
     }
 
     /**
@@ -886,8 +890,8 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
      * @param result instance where result will be stored.
      */
     public void getInitialAngularSpeedTriadStandardDeviation(final AngularSpeedTriad result) {
-<span class="fc" id="L889">        mGyroscopeMeasurementsGenerator.getInitialAngularSpeedTriadStandardDeviation(result);</span>
-<span class="fc" id="L890">    }</span>
+<span class="fc" id="L893">        mGyroscopeMeasurementsGenerator.getInitialAngularSpeedTriadStandardDeviation(result);</span>
+<span class="fc" id="L894">    }</span>
 
     /**
      * Gets gyroscope base noise level that has been detected during
@@ -898,7 +902,7 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
      * @return gyroscope base noise level.
      */
     public double getGyroscopeBaseNoiseLevel() {
-<span class="fc" id="L901">        return mGyroscopeMeasurementsGenerator.getGyroscopeBaseNoiseLevel();</span>
+<span class="fc" id="L905">        return mGyroscopeMeasurementsGenerator.getGyroscopeBaseNoiseLevel();</span>
     }
 
     /**
@@ -910,7 +914,7 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
      * @return gyroscope base noise level.
      */
     public AngularSpeed getGyroscopeBaseNoiseLevelAsMeasurement() {
-<span class="fc" id="L913">        return mGyroscopeMeasurementsGenerator.getGyroscopeBaseNoiseLevelAsMeasurement();</span>
+<span class="fc" id="L917">        return mGyroscopeMeasurementsGenerator.getGyroscopeBaseNoiseLevelAsMeasurement();</span>
     }
 
     /**
@@ -923,9 +927,9 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
      */
     public void getGyroscopeBaseNoiseLevelAsMeasurement(
             final AngularSpeed result) {
-<span class="fc" id="L926">        mGyroscopeMeasurementsGenerator.getGyroscopeBaseNoiseLevelAsMeasurement(</span>
+<span class="fc" id="L930">        mGyroscopeMeasurementsGenerator.getGyroscopeBaseNoiseLevelAsMeasurement(</span>
                 result);
-<span class="fc" id="L928">    }</span>
+<span class="fc" id="L932">    }</span>
 
     /**
      * Gets gyroscope base noise level PSD (Power Spectral Density)
@@ -934,7 +938,7 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
      * @return gyroscope base noise level PSD.
      */
     public double getGyroscopeBaseNoiseLevelPsd() {
-<span class="fc" id="L937">        return mGyroscopeMeasurementsGenerator.getGyroscopeBaseNoiseLevelPsd();</span>
+<span class="fc" id="L941">        return mGyroscopeMeasurementsGenerator.getGyroscopeBaseNoiseLevelPsd();</span>
     }
 
     /**
@@ -943,8 +947,9 @@ public class AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator {
      *
      * @return gyroscope base noise level root PSD.
      */
+    @Override
     public double getGyroscopeBaseNoiseLevelRootPsd() {
-<span class="fc" id="L947">        return mGyroscopeMeasurementsGenerator.getGyroscopeBaseNoiseLevelRootPsd();</span>
+<span class="fc" id="L952">        return mGyroscopeMeasurementsGenerator.getGyroscopeBaseNoiseLevelRootPsd();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

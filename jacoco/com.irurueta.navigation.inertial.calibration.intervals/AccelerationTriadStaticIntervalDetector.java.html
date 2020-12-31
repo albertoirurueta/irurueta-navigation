@@ -16,6 +16,7 @@
 package com.irurueta.navigation.inertial.calibration.intervals;
 
 import com.irurueta.navigation.inertial.calibration.AccelerationTriad;
+import com.irurueta.navigation.inertial.calibration.AccelerometerNoiseRootPsdSource;
 import com.irurueta.navigation.inertial.calibration.noise.AccumulatedAccelerationTriadNoiseEstimator;
 import com.irurueta.navigation.inertial.calibration.noise.WindowedAccelerationTriadNoiseEstimator;
 import com.irurueta.units.Acceleration;
@@ -31,15 +32,16 @@ import com.irurueta.units.AccelerationUnit;
 public class AccelerationTriadStaticIntervalDetector extends
         TriadStaticIntervalDetector&lt;AccelerationUnit, Acceleration,
                 AccelerationTriad, AccelerationTriadStaticIntervalDetector,
-                AccelerationTriadStaticIntervalDetectorListener&gt; {
+                AccelerationTriadStaticIntervalDetectorListener&gt;
+        implements AccelerometerNoiseRootPsdSource {
 
     /**
      * Constructor.
      */
     public AccelerationTriadStaticIntervalDetector() {
-<span class="fc" id="L40">        super(new WindowedAccelerationTriadNoiseEstimator(),</span>
+<span class="fc" id="L42">        super(new WindowedAccelerationTriadNoiseEstimator(),</span>
                 new AccumulatedAccelerationTriadNoiseEstimator());
-<span class="fc" id="L42">    }</span>
+<span class="fc" id="L44">    }</span>
 
     /**
      * Constructor.
@@ -48,9 +50,9 @@ public class AccelerationTriadStaticIntervalDetector extends
      */
     public AccelerationTriadStaticIntervalDetector(
             final AccelerationTriadStaticIntervalDetectorListener listener) {
-<span class="fc" id="L51">        super(new WindowedAccelerationTriadNoiseEstimator(),</span>
+<span class="fc" id="L53">        super(new WindowedAccelerationTriadNoiseEstimator(),</span>
                 new AccumulatedAccelerationTriadNoiseEstimator(), listener);
-<span class="fc" id="L53">    }</span>
+<span class="fc" id="L55">    }</span>
 
     /**
      * Converts provided acceleration value expressed in provided unit to
@@ -63,7 +65,7 @@ public class AccelerationTriadStaticIntervalDetector extends
     @Override
     protected double convertMeasurement(
             final double value, final AccelerationUnit unit) {
-<span class="fc" id="L66">        return AccelerationConverter.convert(value, unit,</span>
+<span class="fc" id="L68">        return AccelerationConverter.convert(value, unit,</span>
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
     }
 
@@ -77,7 +79,7 @@ public class AccelerationTriadStaticIntervalDetector extends
     @Override
     protected Acceleration createMeasurement(
             final double value, final AccelerationUnit unit) {
-<span class="fc" id="L80">        return new Acceleration(value, unit);</span>
+<span class="fc" id="L82">        return new Acceleration(value, unit);</span>
     }
 
     /**
@@ -88,7 +90,7 @@ public class AccelerationTriadStaticIntervalDetector extends
      */
     @Override
     protected AccelerationUnit getDefaultUnit() {
-<span class="fc" id="L91">        return AccelerationUnit.METERS_PER_SQUARED_SECOND;</span>
+<span class="fc" id="L93">        return AccelerationUnit.METERS_PER_SQUARED_SECOND;</span>
     }
 
     /**
@@ -104,7 +106,18 @@ public class AccelerationTriadStaticIntervalDetector extends
     protected AccelerationTriad createTriad(
             final double valueX, final double valueY, final double valueZ,
             final AccelerationUnit unit) {
-<span class="fc" id="L107">        return new AccelerationTriad(unit, valueX, valueY, valueZ);</span>
+<span class="fc" id="L109">        return new AccelerationTriad(unit, valueX, valueY, valueZ);</span>
+    }
+
+    /**
+     * Gets accelerometer base noise level root PSD (Power Spectral Density)
+     * expressed in (m * s^-1.5).
+     *
+     * @return accelerometer base noise level root PSD.
+     */
+    @Override
+    public double getAccelerometerBaseNoiseLevelRootPsd() {
+<span class="fc" id="L120">        return getBaseNoiseLevelRootPsd();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

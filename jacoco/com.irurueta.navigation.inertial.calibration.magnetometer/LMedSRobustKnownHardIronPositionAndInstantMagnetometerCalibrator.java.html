@@ -1086,12 +1086,12 @@ public class LMedSRobustKnownHardIronPositionAndInstantMagnetometerCalibrator ex
                     public void onEstimateProgressChange(
                             final RobustEstimator&lt;Matrix&gt; estimator,
                             final float progress) {
-<span class="nc bnc" id="L1089" title="All 2 branches missed.">                        if (mListener != null) {</span>
-<span class="nc" id="L1090">                            mListener.onCalibrateProgressChange(</span>
+<span class="pc bpc" id="L1089" title="1 of 2 branches missed.">                        if (mListener != null) {</span>
+<span class="fc" id="L1090">                            mListener.onCalibrateProgressChange(</span>
                                     LMedSRobustKnownHardIronPositionAndInstantMagnetometerCalibrator.this,
                                     progress);
                         }
-<span class="nc" id="L1094">                    }</span>
+<span class="fc" id="L1094">                    }</span>
                 });
 
         try {

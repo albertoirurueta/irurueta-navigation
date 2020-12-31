@@ -18,7 +18,9 @@ package com.irurueta.navigation.inertial.calibration.noise;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.inertial.BodyKinematics;
 import com.irurueta.navigation.inertial.calibration.AccelerationTriad;
+import com.irurueta.navigation.inertial.calibration.AccelerometerNoiseRootPsdSource;
 import com.irurueta.navigation.inertial.calibration.AngularSpeedTriad;
+import com.irurueta.navigation.inertial.calibration.GyroscopeNoiseRootPsdSource;
 import com.irurueta.navigation.inertial.calibration.TimeIntervalEstimator;
 import com.irurueta.units.Acceleration;
 import com.irurueta.units.AccelerationConverter;
@@ -44,7 +46,8 @@ import com.irurueta.units.Time;
  * cannot be used to determine biases. Only norm of noise estimations
  * (variance or standard deviation) can be safely used.
  */
-public class AccumulatedBodyKinematicsNoiseEstimator {
+public class AccumulatedBodyKinematicsNoiseEstimator
+        implements AccelerometerNoiseRootPsdSource, GyroscopeNoiseRootPsdSource {
 
     /**
      * Default time interval between accelerometer samples expressed in seconds
@@ -66,13 +69,13 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
     /**
      * Accumulated acceleration estimator.
      */
-<span class="fc" id="L69">    private final AccumulatedAccelerationTriadNoiseEstimator mAccelerationEstimator =</span>
+<span class="fc" id="L72">    private final AccumulatedAccelerationTriadNoiseEstimator mAccelerationEstimator =</span>
             new AccumulatedAccelerationTriadNoiseEstimator();
 
     /**
      * Accumulated angular speed estimator.
      */
-<span class="fc" id="L75">    private final AccumulatedAngularSpeedTriadNoiseEstimator mAngularSpeedEstimator =</span>
+<span class="fc" id="L78">    private final AccumulatedAngularSpeedTriadNoiseEstimator mAngularSpeedEstimator =</span>
             new AccumulatedAngularSpeedTriadNoiseEstimator();
 
     /**
@@ -83,8 +86,8 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
     /**
      * Constructor.
      */
-<span class="fc" id="L86">    public AccumulatedBodyKinematicsNoiseEstimator() {</span>
-<span class="fc" id="L87">    }</span>
+<span class="fc" id="L89">    public AccumulatedBodyKinematicsNoiseEstimator() {</span>
+<span class="fc" id="L90">    }</span>
 
     /**
      * Constructor.
@@ -92,9 +95,9 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @param listener listener to handle events raised by this estimator.
      */
     public AccumulatedBodyKinematicsNoiseEstimator(
-<span class="fc" id="L95">            final AccumulatedBodyKinematicsNoiseEstimatorListener listener) {</span>
-<span class="fc" id="L96">        mListener = listener;</span>
-<span class="fc" id="L97">    }</span>
+<span class="fc" id="L98">            final AccumulatedBodyKinematicsNoiseEstimatorListener listener) {</span>
+<span class="fc" id="L99">        mListener = listener;</span>
+<span class="fc" id="L100">    }</span>
 
     /**
      * Gets time interval between body kinematics samples expressed in
@@ -103,7 +106,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return time interval between body kinematics samples.
      */
     public double getTimeInterval() {
-<span class="fc" id="L106">        return mAccelerationEstimator.getTimeInterval();</span>
+<span class="fc" id="L109">        return mAccelerationEstimator.getTimeInterval();</span>
     }
 
     /**
@@ -115,13 +118,13 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @throws LockedException          if estimator is currently running.
      */
     public void setTimeInterval(final double timeInterval) throws LockedException {
-<span class="fc bfc" id="L118" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L119">            throw new LockedException();</span>
+<span class="fc bfc" id="L121" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L122">            throw new LockedException();</span>
         }
 
-<span class="fc" id="L122">        mAccelerationEstimator.setTimeInterval(timeInterval);</span>
-<span class="fc" id="L123">        mAngularSpeedEstimator.setTimeInterval(timeInterval);</span>
-<span class="fc" id="L124">    }</span>
+<span class="fc" id="L125">        mAccelerationEstimator.setTimeInterval(timeInterval);</span>
+<span class="fc" id="L126">        mAngularSpeedEstimator.setTimeInterval(timeInterval);</span>
+<span class="fc" id="L127">    }</span>
 
     /**
      * Gets time interval between body kinematics samples.
@@ -129,7 +132,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return time interval between body kinematics samples.
      */
     public Time getTimeIntervalAsTime() {
-<span class="fc" id="L132">        return mAccelerationEstimator.getTimeIntervalAsTime();</span>
+<span class="fc" id="L135">        return mAccelerationEstimator.getTimeIntervalAsTime();</span>
     }
 
     /**
@@ -138,8 +141,8 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @param result instance where body kinematics will be stored.
      */
     public void getTimeIntervalAsTime(final Time result) {
-<span class="fc" id="L141">        mAccelerationEstimator.getTimeIntervalAsTime(result);</span>
-<span class="fc" id="L142">    }</span>
+<span class="fc" id="L144">        mAccelerationEstimator.getTimeIntervalAsTime(result);</span>
+<span class="fc" id="L145">    }</span>
 
     /**
      * Sets time interval between body kinematics samples.
@@ -148,13 +151,13 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @throws LockedException if estimator is currently running.
      */
     public void setTimeInterval(final Time timeInterval) throws LockedException {
-<span class="fc bfc" id="L151" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L152">            throw new LockedException();</span>
+<span class="fc bfc" id="L154" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L155">            throw new LockedException();</span>
         }
 
-<span class="fc" id="L155">        mAccelerationEstimator.setTimeInterval(timeInterval);</span>
-<span class="fc" id="L156">        mAngularSpeedEstimator.setTimeInterval(timeInterval);</span>
-<span class="fc" id="L157">    }</span>
+<span class="fc" id="L158">        mAccelerationEstimator.setTimeInterval(timeInterval);</span>
+<span class="fc" id="L159">        mAngularSpeedEstimator.setTimeInterval(timeInterval);</span>
+<span class="fc" id="L160">    }</span>
 
     /**
      * Gets listener to handle events raised by this estimator.
@@ -162,7 +165,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return listener to handle events raised by this estimator.
      */
     public AccumulatedBodyKinematicsNoiseEstimatorListener getListener() {
-<span class="fc" id="L165">        return mListener;</span>
+<span class="fc" id="L168">        return mListener;</span>
     }
 
     /**
@@ -173,12 +176,12 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      */
     public void setListener(final AccumulatedBodyKinematicsNoiseEstimatorListener listener)
             throws LockedException {
-<span class="fc bfc" id="L176" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L177">            throw new LockedException();</span>
+<span class="fc bfc" id="L179" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L180">            throw new LockedException();</span>
         }
 
-<span class="fc" id="L180">        mListener = listener;</span>
-<span class="fc" id="L181">    }</span>
+<span class="fc" id="L183">        mListener = listener;</span>
+<span class="fc" id="L184">    }</span>
 
     /**
      * Gets last provided body kinematics or null if not available.
@@ -186,7 +189,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return last provided body kinematics or null.
      */
     public BodyKinematics getLastBodyKinematics() {
-<span class="fc" id="L189">        return mLastBodyKinematics;</span>
+<span class="fc" id="L192">        return mLastBodyKinematics;</span>
     }
 
     /**
@@ -196,11 +199,11 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return true if result instance was updated, false otherwise.
      */
     public boolean getLastBodyKinematics(final BodyKinematics result) {
-<span class="fc bfc" id="L199" title="All 2 branches covered.">        if (mLastBodyKinematics != null) {</span>
-<span class="fc" id="L200">            mLastBodyKinematics.copyTo(result);</span>
-<span class="fc" id="L201">            return true;</span>
+<span class="fc bfc" id="L202" title="All 2 branches covered.">        if (mLastBodyKinematics != null) {</span>
+<span class="fc" id="L203">            mLastBodyKinematics.copyTo(result);</span>
+<span class="fc" id="L204">            return true;</span>
         } else {
-<span class="fc" id="L203">            return false;</span>
+<span class="fc" id="L206">            return false;</span>
         }
     }
 
@@ -213,7 +216,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return average of x coordinate of sensed specific force.
      */
     public double getAvgSpecificForceX() {
-<span class="fc" id="L216">        return mAccelerationEstimator.getAvgX();</span>
+<span class="fc" id="L219">        return mAccelerationEstimator.getAvgX();</span>
     }
 
     /**
@@ -224,7 +227,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return average of x coordinate of sensed specific force.
      */
     public Acceleration getAvgSpecificForceXAsMeasurement() {
-<span class="fc" id="L227">        return mAccelerationEstimator.getAvgXAsMeasurement();</span>
+<span class="fc" id="L230">        return mAccelerationEstimator.getAvgXAsMeasurement();</span>
     }
 
     /**
@@ -236,8 +239,8 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      *               will be stored.
      */
     public void getAvgSpecificForceXAsMeasurement(final Acceleration result) {
-<span class="fc" id="L239">        mAccelerationEstimator.getAvgXAsMeasurement(result);</span>
-<span class="fc" id="L240">    }</span>
+<span class="fc" id="L242">        mAccelerationEstimator.getAvgXAsMeasurement(result);</span>
+<span class="fc" id="L243">    }</span>
 
     /**
      * Gets estimated average of y coordinate of accelerometer sensed specific force
@@ -248,7 +251,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return average of y coordinate of sensed specific force.
      */
     public double getAvgSpecificForceY() {
-<span class="fc" id="L251">        return mAccelerationEstimator.getAvgY();</span>
+<span class="fc" id="L254">        return mAccelerationEstimator.getAvgY();</span>
     }
 
     /**
@@ -259,7 +262,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return average of y coordinate of sensed specific force.
      */
     public Acceleration getAvgSpecificForceYAsMeasurement() {
-<span class="fc" id="L262">        return mAccelerationEstimator.getAvgYAsMeasurement();</span>
+<span class="fc" id="L265">        return mAccelerationEstimator.getAvgYAsMeasurement();</span>
     }
 
     /**
@@ -271,8 +274,8 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      *               will be stored.
      */
     public void getAvgSpecificForceYAsMeasurement(final Acceleration result) {
-<span class="fc" id="L274">        mAccelerationEstimator.getAvgYAsMeasurement(result);</span>
-<span class="fc" id="L275">    }</span>
+<span class="fc" id="L277">        mAccelerationEstimator.getAvgYAsMeasurement(result);</span>
+<span class="fc" id="L278">    }</span>
 
     /**
      * Gets estimated average of z coordinate of accelerometer sensed specific force
@@ -283,7 +286,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return average of z coordinate of sensed specific force.
      */
     public double getAvgSpecificForceZ() {
-<span class="fc" id="L286">        return mAccelerationEstimator.getAvgZ();</span>
+<span class="fc" id="L289">        return mAccelerationEstimator.getAvgZ();</span>
     }
 
     /**
@@ -294,7 +297,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return average of z coordinate of sensed specific force.
      */
     public Acceleration getAvgSpecificForceZAsMeasurement() {
-<span class="fc" id="L297">        return mAccelerationEstimator.getAvgZAsMeasurement();</span>
+<span class="fc" id="L300">        return mAccelerationEstimator.getAvgZAsMeasurement();</span>
     }
 
     /**
@@ -306,8 +309,8 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      *               will be stored.
      */
     public void getAvgSpecificForceZAsMeasurement(final Acceleration result) {
-<span class="fc" id="L309">        mAccelerationEstimator.getAvgZAsMeasurement(result);</span>
-<span class="fc" id="L310">    }</span>
+<span class="fc" id="L312">        mAccelerationEstimator.getAvgZAsMeasurement(result);</span>
+<span class="fc" id="L313">    }</span>
 
     /**
      * Gets estimated average of accelerometer sensed specific force as a measurement
@@ -316,7 +319,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return average accelerometer triad.
      */
     public AccelerationTriad getAvgSpecificForceAsTriad() {
-<span class="fc" id="L319">        return mAccelerationEstimator.getAvgTriad();</span>
+<span class="fc" id="L322">        return mAccelerationEstimator.getAvgTriad();</span>
     }
 
     /**
@@ -326,8 +329,8 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @param result instance where average accelerometer triad will be stored.
      */
     public void getAvgSpecificForceAsTriad(final AccelerationTriad result) {
-<span class="fc" id="L329">        mAccelerationEstimator.getAvgTriad(result);</span>
-<span class="fc" id="L330">    }</span>
+<span class="fc" id="L332">        mAccelerationEstimator.getAvgTriad(result);</span>
+<span class="fc" id="L333">    }</span>
 
     /**
      * Gets norm of estimated average acceleration expressed in meters per squared
@@ -336,7 +339,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return norm of estimated average acceleration.
      */
     public double getAvgSpecificForceNorm() {
-<span class="fc" id="L339">        return mAccelerationEstimator.getAvgNorm();</span>
+<span class="fc" id="L342">        return mAccelerationEstimator.getAvgNorm();</span>
     }
 
     /**
@@ -345,7 +348,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return norm of estimated average acceleration.
      */
     public Acceleration getAvgSpecificForceNormAsMeasurement() {
-<span class="fc" id="L348">        return mAccelerationEstimator.getAvgNormAsMeasurement();</span>
+<span class="fc" id="L351">        return mAccelerationEstimator.getAvgNormAsMeasurement();</span>
     }
 
     /**
@@ -354,8 +357,8 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @param result instance where norm of estimated average acceleration will be stored.
      */
     public void getAvgSpecificForceNormAsMeasurement(final Acceleration result) {
-<span class="fc" id="L357">        mAccelerationEstimator.getAvgNormAsMeasurement(result);</span>
-<span class="fc" id="L358">    }</span>
+<span class="fc" id="L360">        mAccelerationEstimator.getAvgNormAsMeasurement(result);</span>
+<span class="fc" id="L361">    }</span>
 
     /**
      * Gets estimated average of x coordinate of gyroscope sensed angular rate
@@ -366,7 +369,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return average of x coordinate of sensed angular rate.
      */
     public double getAvgAngularRateX() {
-<span class="fc" id="L369">        return mAngularSpeedEstimator.getAvgX();</span>
+<span class="fc" id="L372">        return mAngularSpeedEstimator.getAvgX();</span>
     }
 
     /**
@@ -377,7 +380,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return average of x coordinate of sensed angular rate.
      */
     public AngularSpeed getAvgAngularRateXAsMeasurement() {
-<span class="fc" id="L380">        return mAngularSpeedEstimator.getAvgXAsMeasurement();</span>
+<span class="fc" id="L383">        return mAngularSpeedEstimator.getAvgXAsMeasurement();</span>
     }
 
     /**
@@ -389,8 +392,8 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      *               will be stored.
      */
     public void getAvgAngularRateXAsMeasurement(final AngularSpeed result) {
-<span class="fc" id="L392">        mAngularSpeedEstimator.getAvgXAsMeasurement(result);</span>
-<span class="fc" id="L393">    }</span>
+<span class="fc" id="L395">        mAngularSpeedEstimator.getAvgXAsMeasurement(result);</span>
+<span class="fc" id="L396">    }</span>
 
     /**
      * Gets estimated average of y coordinate of gyroscope sensed angular rate
@@ -401,7 +404,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return average of y coordinate of sensed angular rate.
      */
     public double getAvgAngularRateY() {
-<span class="fc" id="L404">        return mAngularSpeedEstimator.getAvgY();</span>
+<span class="fc" id="L407">        return mAngularSpeedEstimator.getAvgY();</span>
     }
 
     /**
@@ -412,7 +415,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return average of y coordinate of sensed angular rate.
      */
     public AngularSpeed getAvgAngularRateYAsMeasurement() {
-<span class="fc" id="L415">        return mAngularSpeedEstimator.getAvgYAsMeasurement();</span>
+<span class="fc" id="L418">        return mAngularSpeedEstimator.getAvgYAsMeasurement();</span>
     }
 
     /**
@@ -424,8 +427,8 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      *               will be stored.
      */
     public void getAvgAngularRateYAsMeasurement(final AngularSpeed result) {
-<span class="fc" id="L427">        mAngularSpeedEstimator.getAvgYAsMeasurement(result);</span>
-<span class="fc" id="L428">    }</span>
+<span class="fc" id="L430">        mAngularSpeedEstimator.getAvgYAsMeasurement(result);</span>
+<span class="fc" id="L431">    }</span>
 
     /**
      * Gets estimated average of z coordinate of gyroscope sensed angular rate
@@ -436,7 +439,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return average of z coordinate of sensed angular rate.
      */
     public double getAvgAngularRateZ() {
-<span class="fc" id="L439">        return mAngularSpeedEstimator.getAvgZ();</span>
+<span class="fc" id="L442">        return mAngularSpeedEstimator.getAvgZ();</span>
     }
 
     /**
@@ -447,7 +450,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return average of z coordinate of sensed angular rate.
      */
     public AngularSpeed getAvgAngularRateZAsMeasurement() {
-<span class="fc" id="L450">        return mAngularSpeedEstimator.getAvgZAsMeasurement();</span>
+<span class="fc" id="L453">        return mAngularSpeedEstimator.getAvgZAsMeasurement();</span>
     }
 
     /**
@@ -459,8 +462,8 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      *               will be stored.
      */
     public void getAvgAngularRateZAsMeasurement(final AngularSpeed result) {
-<span class="fc" id="L462">        mAngularSpeedEstimator.getAvgZAsMeasurement(result);</span>
-<span class="fc" id="L463">    }</span>
+<span class="fc" id="L465">        mAngularSpeedEstimator.getAvgZAsMeasurement(result);</span>
+<span class="fc" id="L466">    }</span>
 
     /**
      * Gets estimated average of gyroscope sensed angular speed as a measurement
@@ -469,7 +472,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return average angular speed triad.
      */
     public AngularSpeedTriad getAvgAngularRateTriad() {
-<span class="fc" id="L472">        return mAngularSpeedEstimator.getAvgTriad();</span>
+<span class="fc" id="L475">        return mAngularSpeedEstimator.getAvgTriad();</span>
     }
 
     /**
@@ -479,8 +482,8 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @param result instance where average angular speed triad will be stored.
      */
     public void getAvgAngularRateTriad(final AngularSpeedTriad result) {
-<span class="fc" id="L482">        mAngularSpeedEstimator.getAvgTriad(result);</span>
-<span class="fc" id="L483">    }</span>
+<span class="fc" id="L485">        mAngularSpeedEstimator.getAvgTriad(result);</span>
+<span class="fc" id="L486">    }</span>
 
     /**
      * Gets norm of estimated average angular speed expressed in radians per
@@ -489,7 +492,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return norm of estimated average angular speed.
      */
     public double getAvgAngularRateNorm() {
-<span class="fc" id="L492">        return mAngularSpeedEstimator.getAvgNorm();</span>
+<span class="fc" id="L495">        return mAngularSpeedEstimator.getAvgNorm();</span>
     }
 
     /**
@@ -499,7 +502,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return norm of estimated average angular speed.
      */
     public AngularSpeed getAvgAngularRateNormAsMeasurement() {
-<span class="fc" id="L502">        return mAngularSpeedEstimator.getAvgNormAsMeasurement();</span>
+<span class="fc" id="L505">        return mAngularSpeedEstimator.getAvgNormAsMeasurement();</span>
     }
 
     /**
@@ -509,8 +512,8 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @param result instance where norm of estimated average angular speed will be stored.
      */
     public void getAvgAngularRateNormAsMeasurement(final AngularSpeed result) {
-<span class="fc" id="L512">        mAngularSpeedEstimator.getAvgNormAsMeasurement(result);</span>
-<span class="fc" id="L513">    }</span>
+<span class="fc" id="L515">        mAngularSpeedEstimator.getAvgNormAsMeasurement(result);</span>
+<span class="fc" id="L516">    }</span>
 
     /**
      * Gets estimated average of body kinematics.
@@ -518,9 +521,9 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return estimated average of body kinematics.
      */
     public BodyKinematics getAvgBodyKinematics() {
-<span class="fc" id="L521">        final BodyKinematics result = new BodyKinematics();</span>
-<span class="fc" id="L522">        getAvgBodyKinematics(result);</span>
-<span class="fc" id="L523">        return result;</span>
+<span class="fc" id="L524">        final BodyKinematics result = new BodyKinematics();</span>
+<span class="fc" id="L525">        getAvgBodyKinematics(result);</span>
+<span class="fc" id="L526">        return result;</span>
     }
 
     /**
@@ -529,17 +532,17 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @param result instance where estimated average of body kinematics will be stored.
      */
     public void getAvgBodyKinematics(final BodyKinematics result) {
-<span class="fc" id="L532">        final double avgFx = mAccelerationEstimator.getAvgX();</span>
-<span class="fc" id="L533">        final double avgFy = mAccelerationEstimator.getAvgY();</span>
-<span class="fc" id="L534">        final double avgFz = mAccelerationEstimator.getAvgZ();</span>
+<span class="fc" id="L535">        final double avgFx = mAccelerationEstimator.getAvgX();</span>
+<span class="fc" id="L536">        final double avgFy = mAccelerationEstimator.getAvgY();</span>
+<span class="fc" id="L537">        final double avgFz = mAccelerationEstimator.getAvgZ();</span>
 
-<span class="fc" id="L536">        final double avgWx = mAngularSpeedEstimator.getAvgX();</span>
-<span class="fc" id="L537">        final double avgWy = mAngularSpeedEstimator.getAvgY();</span>
-<span class="fc" id="L538">        final double avgWz = mAngularSpeedEstimator.getAvgZ();</span>
+<span class="fc" id="L539">        final double avgWx = mAngularSpeedEstimator.getAvgX();</span>
+<span class="fc" id="L540">        final double avgWy = mAngularSpeedEstimator.getAvgY();</span>
+<span class="fc" id="L541">        final double avgWz = mAngularSpeedEstimator.getAvgZ();</span>
 
-<span class="fc" id="L540">        result.setSpecificForceCoordinates(avgFx, avgFy, avgFz);</span>
-<span class="fc" id="L541">        result.setAngularRateCoordinates(avgWx, avgWy, avgWz);</span>
-<span class="fc" id="L542">    }</span>
+<span class="fc" id="L543">        result.setSpecificForceCoordinates(avgFx, avgFy, avgFz);</span>
+<span class="fc" id="L544">        result.setAngularRateCoordinates(avgWx, avgWy, avgWz);</span>
+<span class="fc" id="L545">    }</span>
 
     /**
      * Gets estimated variance of x coordinate of accelerometer sensed specific force
@@ -548,7 +551,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return estimated variance of x coordinate of sensed specific force.
      */
     public double getVarianceSpecificForceX() {
-<span class="fc" id="L551">        return mAccelerationEstimator.getVarianceX();</span>
+<span class="fc" id="L554">        return mAccelerationEstimator.getVarianceX();</span>
     }
 
     /**
@@ -558,7 +561,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return estimated variance of y coordinate of sensed specific force.
      */
     public double getVarianceSpecificForceY() {
-<span class="fc" id="L561">        return mAccelerationEstimator.getVarianceY();</span>
+<span class="fc" id="L564">        return mAccelerationEstimator.getVarianceY();</span>
     }
 
     /**
@@ -568,7 +571,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return estimated variance of z coordinate of sensed specific force.
      */
     public double getVarianceSpecificForceZ() {
-<span class="fc" id="L571">        return mAccelerationEstimator.getVarianceZ();</span>
+<span class="fc" id="L574">        return mAccelerationEstimator.getVarianceZ();</span>
     }
 
     /**
@@ -578,7 +581,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return estimated variance of x coordinate of sensed angular rate.
      */
     public double getVarianceAngularRateX() {
-<span class="fc" id="L581">        return mAngularSpeedEstimator.getVarianceX();</span>
+<span class="fc" id="L584">        return mAngularSpeedEstimator.getVarianceX();</span>
     }
 
     /**
@@ -588,7 +591,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return estimated variance of y coordinate of sensed angular rate.
      */
     public double getVarianceAngularRateY() {
-<span class="fc" id="L591">        return mAngularSpeedEstimator.getVarianceY();</span>
+<span class="fc" id="L594">        return mAngularSpeedEstimator.getVarianceY();</span>
     }
 
     /**
@@ -598,7 +601,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return estimated variance of z coordinate of sensed angular rate.
      */
     public double getVarianceAngularRateZ() {
-<span class="fc" id="L601">        return mAngularSpeedEstimator.getVarianceZ();</span>
+<span class="fc" id="L604">        return mAngularSpeedEstimator.getVarianceZ();</span>
     }
 
     /**
@@ -609,7 +612,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * force.
      */
     public double getStandardDeviationSpecificForceX() {
-<span class="fc" id="L612">        return mAccelerationEstimator.getStandardDeviationX();</span>
+<span class="fc" id="L615">        return mAccelerationEstimator.getStandardDeviationX();</span>
     }
 
     /**
@@ -620,7 +623,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * force.
      */
     public Acceleration getStandardDeviationSpecificForceXAsMeasurement() {
-<span class="fc" id="L623">        return mAccelerationEstimator.getStandardDeviationXAsMeasurement();</span>
+<span class="fc" id="L626">        return mAccelerationEstimator.getStandardDeviationXAsMeasurement();</span>
     }
 
     /**
@@ -632,8 +635,8 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      */
     public void getStandardDeviationSpecificForceXAsMeasurement(
             final Acceleration result) {
-<span class="fc" id="L635">        mAccelerationEstimator.getStandardDeviationXAsMeasurement(result);</span>
-<span class="fc" id="L636">    }</span>
+<span class="fc" id="L638">        mAccelerationEstimator.getStandardDeviationXAsMeasurement(result);</span>
+<span class="fc" id="L639">    }</span>
 
     /**
      * Gets estimated standard deviation of y coordinate of accelerometer
@@ -643,7 +646,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * force.
      */
     public double getStandardDeviationSpecificForceY() {
-<span class="fc" id="L646">        return mAccelerationEstimator.getStandardDeviationY();</span>
+<span class="fc" id="L649">        return mAccelerationEstimator.getStandardDeviationY();</span>
     }
 
     /**
@@ -654,7 +657,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * force.
      */
     public Acceleration getStandardDeviationSpecificForceYAsMeasurement() {
-<span class="fc" id="L657">        return mAccelerationEstimator.getStandardDeviationYAsMeasurement();</span>
+<span class="fc" id="L660">        return mAccelerationEstimator.getStandardDeviationYAsMeasurement();</span>
     }
 
     /**
@@ -666,8 +669,8 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      */
     public void getStandardDeviationSpecificForceYAsMeasurement(
             final Acceleration result) {
-<span class="fc" id="L669">        mAccelerationEstimator.getStandardDeviationYAsMeasurement(result);</span>
-<span class="fc" id="L670">    }</span>
+<span class="fc" id="L672">        mAccelerationEstimator.getStandardDeviationYAsMeasurement(result);</span>
+<span class="fc" id="L673">    }</span>
 
     /**
      * Gets estimated standard deviation of z coordinate of accelerometer
@@ -677,7 +680,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * force.
      */
     public double getStandardDeviationSpecificForceZ() {
-<span class="fc" id="L680">        return mAccelerationEstimator.getStandardDeviationZ();</span>
+<span class="fc" id="L683">        return mAccelerationEstimator.getStandardDeviationZ();</span>
     }
 
     /**
@@ -688,7 +691,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * force.
      */
     public Acceleration getStandardDeviationSpecificForceZAsMeasurement() {
-<span class="fc" id="L691">        return mAccelerationEstimator.getStandardDeviationZAsMeasurement();</span>
+<span class="fc" id="L694">        return mAccelerationEstimator.getStandardDeviationZAsMeasurement();</span>
     }
 
     /**
@@ -700,8 +703,8 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      */
     public void getStandardDeviationSpecificForceZAsMeasurement(
             final Acceleration result) {
-<span class="fc" id="L703">        mAccelerationEstimator.getStandardDeviationZAsMeasurement(result);</span>
-<span class="fc" id="L704">    }</span>
+<span class="fc" id="L706">        mAccelerationEstimator.getStandardDeviationZAsMeasurement(result);</span>
+<span class="fc" id="L707">    }</span>
 
     /**
      * Gets estimated standard deviation triad of accelerometer measurements.
@@ -709,7 +712,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return estimated standard deviation triad of accelerometer measurements.
      */
     public AccelerationTriad getStandardDeviationSpecificForceTriad() {
-<span class="fc" id="L712">        return mAccelerationEstimator.getStandardDeviationTriad();</span>
+<span class="fc" id="L715">        return mAccelerationEstimator.getStandardDeviationTriad();</span>
     }
 
     /**
@@ -720,8 +723,8 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      */
     public void getStandardDeviationSpecificForceTriad(
             final AccelerationTriad result) {
-<span class="fc" id="L723">        mAccelerationEstimator.getStandardDeviationTriad(result);</span>
-<span class="fc" id="L724">    }</span>
+<span class="fc" id="L726">        mAccelerationEstimator.getStandardDeviationTriad(result);</span>
+<span class="fc" id="L727">    }</span>
 
     /**
      * Gets norm of estimated standard deviation of accelerometer measurements
@@ -731,7 +734,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * measurements.
      */
     public double getStandardDeviationSpecificForceNorm() {
-<span class="fc" id="L734">        return mAccelerationEstimator.getStandardDeviationNorm();</span>
+<span class="fc" id="L737">        return mAccelerationEstimator.getStandardDeviationNorm();</span>
     }
 
     /**
@@ -740,7 +743,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return norm of estimated standard deviation of measurements.
      */
     public Acceleration getStandardDeviationSpecificForceNormAsMeasurement() {
-<span class="fc" id="L743">        return mAccelerationEstimator.getStandardDeviationNormAsMeasurement();</span>
+<span class="fc" id="L746">        return mAccelerationEstimator.getStandardDeviationNormAsMeasurement();</span>
     }
 
     /**
@@ -751,9 +754,9 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      */
     public void getStandardDeviationSpecificForceNormAsMeasurement(
             final Acceleration result) {
-<span class="fc" id="L754">        mAccelerationEstimator.getStandardDeviationNormAsMeasurement(</span>
+<span class="fc" id="L757">        mAccelerationEstimator.getStandardDeviationNormAsMeasurement(</span>
                 result);
-<span class="fc" id="L756">    }</span>
+<span class="fc" id="L759">    }</span>
 
     /**
      * Gets average of estimated standard deviation coordinates of accelerometer
@@ -762,7 +765,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return average of estimated standard deviation coordinates.
      */
     public double getAverageStandardDeviationSpecificForce() {
-<span class="fc" id="L765">        return mAccelerationEstimator.getAverageStandardDeviation();</span>
+<span class="fc" id="L768">        return mAccelerationEstimator.getAverageStandardDeviation();</span>
     }
 
     /**
@@ -772,7 +775,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return average of estimated standard deviation coordinates.
      */
     public Acceleration getAverageStandardDeviationSpecificForceAsMeasurement() {
-<span class="fc" id="L775">        return mAccelerationEstimator.getAverageStandardDeviationAsMeasurement();</span>
+<span class="fc" id="L778">        return mAccelerationEstimator.getAverageStandardDeviationAsMeasurement();</span>
     }
 
     /**
@@ -784,8 +787,8 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      */
     public void getAverageStandardDeviationSpecificForceAsMeasurement(
             final Acceleration result) {
-<span class="fc" id="L787">        mAccelerationEstimator.getAverageStandardDeviationAsMeasurement(result);</span>
-<span class="fc" id="L788">    }</span>
+<span class="fc" id="L790">        mAccelerationEstimator.getAverageStandardDeviationAsMeasurement(result);</span>
+<span class="fc" id="L791">    }</span>
 
     /**
      * Gets estimated standard deviation of x coordinate of gyroscope
@@ -794,7 +797,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return estimated standard deviation of x coordinate of gyroscope.
      */
     public double getStandardDeviationAngularRateX() {
-<span class="fc" id="L797">        return mAngularSpeedEstimator.getStandardDeviationX();</span>
+<span class="fc" id="L800">        return mAngularSpeedEstimator.getStandardDeviationX();</span>
     }
 
     /**
@@ -803,7 +806,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return estimated standard deviation of x coordinate of gyroscope.
      */
     public AngularSpeed getStandardDeviationAngularRateXAsMeasurement() {
-<span class="fc" id="L806">        return mAngularSpeedEstimator.getStandardDeviationXAsMeasurement();</span>
+<span class="fc" id="L809">        return mAngularSpeedEstimator.getStandardDeviationXAsMeasurement();</span>
     }
 
     /**
@@ -813,8 +816,8 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      */
     public void getStandardDeviationAngularRateXAsMeasurement(
             final AngularSpeed result) {
-<span class="fc" id="L816">        mAngularSpeedEstimator.getStandardDeviationXAsMeasurement(result);</span>
-<span class="fc" id="L817">    }</span>
+<span class="fc" id="L819">        mAngularSpeedEstimator.getStandardDeviationXAsMeasurement(result);</span>
+<span class="fc" id="L820">    }</span>
 
     /**
      * Gets estimated standard deviation of y coordinate of gyroscope
@@ -823,7 +826,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return estimated standard deviation of y coordinate of gyroscope.
      */
     public double getStandardDeviationAngularRateY() {
-<span class="fc" id="L826">        return mAngularSpeedEstimator.getStandardDeviationY();</span>
+<span class="fc" id="L829">        return mAngularSpeedEstimator.getStandardDeviationY();</span>
     }
 
     /**
@@ -832,7 +835,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return estimated standard deviation of y coordinate of gyroscope.
      */
     public AngularSpeed getStandardDeviationAngularRateYAsMeasurement() {
-<span class="fc" id="L835">        return mAngularSpeedEstimator.getStandardDeviationYAsMeasurement();</span>
+<span class="fc" id="L838">        return mAngularSpeedEstimator.getStandardDeviationYAsMeasurement();</span>
     }
 
     /**
@@ -842,8 +845,8 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      */
     public void getStandardDeviationAngularRateYAsMeasurement(
             final AngularSpeed result) {
-<span class="fc" id="L845">        mAngularSpeedEstimator.getStandardDeviationYAsMeasurement(result);</span>
-<span class="fc" id="L846">    }</span>
+<span class="fc" id="L848">        mAngularSpeedEstimator.getStandardDeviationYAsMeasurement(result);</span>
+<span class="fc" id="L849">    }</span>
 
     /**
      * Gets estimated standard deviation of z coordinate of gyroscope
@@ -852,7 +855,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return estimated standard deviation of z coordinate of gyroscope.
      */
     public double getStandardDeviationAngularRateZ() {
-<span class="fc" id="L855">        return mAngularSpeedEstimator.getStandardDeviationZ();</span>
+<span class="fc" id="L858">        return mAngularSpeedEstimator.getStandardDeviationZ();</span>
     }
 
     /**
@@ -861,7 +864,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return estimated standard deviation of z coordinate of gyroscope.
      */
     public AngularSpeed getStandardDeviationAngularRateZAsMeasurement() {
-<span class="fc" id="L864">        return mAngularSpeedEstimator.getStandardDeviationZAsMeasurement();</span>
+<span class="fc" id="L867">        return mAngularSpeedEstimator.getStandardDeviationZAsMeasurement();</span>
     }
 
     /**
@@ -871,8 +874,8 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      */
     public void getStandardDeviationAngularRateZAsMeasurement(
             final AngularSpeed result) {
-<span class="fc" id="L874">        mAngularSpeedEstimator.getStandardDeviationZAsMeasurement(result);</span>
-<span class="fc" id="L875">    }</span>
+<span class="fc" id="L877">        mAngularSpeedEstimator.getStandardDeviationZAsMeasurement(result);</span>
+<span class="fc" id="L878">    }</span>
 
     /**
      * Gets estimated standard deviation triad of angular speed measurements.
@@ -880,7 +883,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return estimated standard deviation triad of angular speed measurements.
      */
     public AngularSpeedTriad getStandardDeviationAngularSpeedTriad() {
-<span class="fc" id="L883">        return mAngularSpeedEstimator.getStandardDeviationTriad();</span>
+<span class="fc" id="L886">        return mAngularSpeedEstimator.getStandardDeviationTriad();</span>
     }
 
     /**
@@ -891,8 +894,8 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      */
     public void getStandardDeviationAngularSpeedTriad(
             final AngularSpeedTriad result) {
-<span class="fc" id="L894">        mAngularSpeedEstimator.getStandardDeviationTriad(result);</span>
-<span class="fc" id="L895">    }</span>
+<span class="fc" id="L897">        mAngularSpeedEstimator.getStandardDeviationTriad(result);</span>
+<span class="fc" id="L898">    }</span>
 
     /**
      * Gets norm of estimated standard deviation of gyroscope measurements
@@ -902,7 +905,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * measurements.
      */
     public double getStandardDeviationAngularSpeedNorm() {
-<span class="fc" id="L905">        return mAngularSpeedEstimator.getStandardDeviationNorm();</span>
+<span class="fc" id="L908">        return mAngularSpeedEstimator.getStandardDeviationNorm();</span>
     }
 
     /**
@@ -911,7 +914,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return norm of estimated standard deviation of measurements.
      */
     public AngularSpeed getStandardDeviationAngularSpeedNormAsMeasurement() {
-<span class="fc" id="L914">        return mAngularSpeedEstimator.getStandardDeviationNormAsMeasurement();</span>
+<span class="fc" id="L917">        return mAngularSpeedEstimator.getStandardDeviationNormAsMeasurement();</span>
     }
 
     /**
@@ -922,8 +925,8 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      */
     public void getStandardDeviationAngularSpeedNormAsMeasurement(
             final AngularSpeed result) {
-<span class="fc" id="L925">        mAngularSpeedEstimator.getStandardDeviationNormAsMeasurement(result);</span>
-<span class="fc" id="L926">    }</span>
+<span class="fc" id="L928">        mAngularSpeedEstimator.getStandardDeviationNormAsMeasurement(result);</span>
+<span class="fc" id="L929">    }</span>
 
     /**
      * Gets average of estimated standard deviation coordinates of gyroscope
@@ -932,7 +935,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return average of estimated standard deviation coordinates.
      */
     public double getAverageStandardDeviationAngularSpeed() {
-<span class="fc" id="L935">        return mAngularSpeedEstimator.getAverageStandardDeviation();</span>
+<span class="fc" id="L938">        return mAngularSpeedEstimator.getAverageStandardDeviation();</span>
     }
 
     /**
@@ -942,7 +945,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return average of estimated standard deviation coordinates.
      */
     public AngularSpeed getAverageStandardDeviationAngularSpeedAsMeasurement() {
-<span class="fc" id="L945">        return mAngularSpeedEstimator.getAverageStandardDeviationAsMeasurement();</span>
+<span class="fc" id="L948">        return mAngularSpeedEstimator.getAverageStandardDeviationAsMeasurement();</span>
     }
 
     /**
@@ -954,9 +957,9 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      */
     public void getAverageStandardDeviationAngularSpeedAsMeasurement(
             final AngularSpeed result) {
-<span class="fc" id="L957">        mAngularSpeedEstimator.getAverageStandardDeviationAsMeasurement(</span>
+<span class="fc" id="L960">        mAngularSpeedEstimator.getAverageStandardDeviationAsMeasurement(</span>
                 result);
-<span class="fc" id="L959">    }</span>
+<span class="fc" id="L962">    }</span>
 
     /**
      * Gets estimated standard deviations of accelerometer and gyroscope components
@@ -965,12 +968,12 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return a body kinematics instance containing standard deviation values.
      */
     public BodyKinematics getStandardDeviationAsBodyKinematics() {
-<span class="fc" id="L968">        return new BodyKinematics(getStandardDeviationSpecificForceX(),</span>
-<span class="fc" id="L969">                getStandardDeviationSpecificForceY(),</span>
-<span class="fc" id="L970">                getStandardDeviationSpecificForceZ(),</span>
-<span class="fc" id="L971">                getStandardDeviationAngularRateX(),</span>
-<span class="fc" id="L972">                getStandardDeviationAngularRateY(),</span>
-<span class="fc" id="L973">                getStandardDeviationAngularRateZ());</span>
+<span class="fc" id="L971">        return new BodyKinematics(getStandardDeviationSpecificForceX(),</span>
+<span class="fc" id="L972">                getStandardDeviationSpecificForceY(),</span>
+<span class="fc" id="L973">                getStandardDeviationSpecificForceZ(),</span>
+<span class="fc" id="L974">                getStandardDeviationAngularRateX(),</span>
+<span class="fc" id="L975">                getStandardDeviationAngularRateY(),</span>
+<span class="fc" id="L976">                getStandardDeviationAngularRateZ());</span>
     }
 
     /**
@@ -980,13 +983,13 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @param result instance where data will be stored.
      */
     public void getStandardDeviationAsBodyKinematics(final BodyKinematics result) {
-<span class="fc" id="L983">        result.setSpecificForceCoordinates(getStandardDeviationSpecificForceX(),</span>
-<span class="fc" id="L984">                getStandardDeviationSpecificForceY(),</span>
-<span class="fc" id="L985">                getStandardDeviationSpecificForceZ());</span>
-<span class="fc" id="L986">        result.setAngularRateCoordinates(getStandardDeviationAngularRateX(),</span>
-<span class="fc" id="L987">                getStandardDeviationAngularRateY(),</span>
-<span class="fc" id="L988">                getStandardDeviationAngularRateZ());</span>
-<span class="fc" id="L989">    }</span>
+<span class="fc" id="L986">        result.setSpecificForceCoordinates(getStandardDeviationSpecificForceX(),</span>
+<span class="fc" id="L987">                getStandardDeviationSpecificForceY(),</span>
+<span class="fc" id="L988">                getStandardDeviationSpecificForceZ());</span>
+<span class="fc" id="L989">        result.setAngularRateCoordinates(getStandardDeviationAngularRateX(),</span>
+<span class="fc" id="L990">                getStandardDeviationAngularRateY(),</span>
+<span class="fc" id="L991">                getStandardDeviationAngularRateZ());</span>
+<span class="fc" id="L992">    }</span>
 
     /**
      * Gets accelerometer noise PSD (Power Spectral Density) on x axis expressed
@@ -995,7 +998,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return accelerometer noise PSD on x axis.
      */
     public double getSpecificForcePsdX() {
-<span class="fc" id="L998">        return mAccelerationEstimator.getPsdX();</span>
+<span class="fc" id="L1001">        return mAccelerationEstimator.getPsdX();</span>
     }
 
     /**
@@ -1005,7 +1008,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return accelerometer noise PSD on y axis.
      */
     public double getSpecificForcePsdY() {
-<span class="fc" id="L1008">        return mAccelerationEstimator.getPsdY();</span>
+<span class="fc" id="L1011">        return mAccelerationEstimator.getPsdY();</span>
     }
 
     /**
@@ -1015,7 +1018,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return accelerometer noise PSD on z axis.
      */
     public double getSpecificForcePsdZ() {
-<span class="fc" id="L1018">        return mAccelerationEstimator.getPsdZ();</span>
+<span class="fc" id="L1021">        return mAccelerationEstimator.getPsdZ();</span>
     }
 
     /**
@@ -1025,7 +1028,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return gyroscope noise PSD on x axis.
      */
     public double getAngularRatePsdX() {
-<span class="fc" id="L1028">        return mAngularSpeedEstimator.getPsdX();</span>
+<span class="fc" id="L1031">        return mAngularSpeedEstimator.getPsdX();</span>
     }
 
     /**
@@ -1035,7 +1038,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return gyroscope noise PSD on y axis.
      */
     public double getAngularRatePsdY() {
-<span class="fc" id="L1038">        return mAngularSpeedEstimator.getPsdY();</span>
+<span class="fc" id="L1041">        return mAngularSpeedEstimator.getPsdY();</span>
     }
 
     /**
@@ -1045,7 +1048,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return gyroscope noise PSD on z axis.
      */
     public double getAngularRatePsdZ() {
-<span class="fc" id="L1048">        return mAngularSpeedEstimator.getPsdZ();</span>
+<span class="fc" id="L1051">        return mAngularSpeedEstimator.getPsdZ();</span>
     }
 
     /**
@@ -1055,7 +1058,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return accelerometer noise root PSD on x axis.
      */
     public double getSpecificForceRootPsdX() {
-<span class="fc" id="L1058">        return mAccelerationEstimator.getRootPsdX();</span>
+<span class="fc" id="L1061">        return mAccelerationEstimator.getRootPsdX();</span>
     }
 
     /**
@@ -1065,7 +1068,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return accelerometer noise root PSD on y axis.
      */
     public double getSpecificForceRootPsdY() {
-<span class="fc" id="L1068">        return mAccelerationEstimator.getRootPsdY();</span>
+<span class="fc" id="L1071">        return mAccelerationEstimator.getRootPsdY();</span>
     }
 
     /**
@@ -1075,7 +1078,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return accelerometer noise root PSD on z axis.
      */
     public double getSpecificForceRootPsdZ() {
-<span class="fc" id="L1078">        return mAccelerationEstimator.getRootPsdZ();</span>
+<span class="fc" id="L1081">        return mAccelerationEstimator.getRootPsdZ();</span>
     }
 
     /**
@@ -1085,7 +1088,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return gyroscope noise root PSD on x axis.
      */
     public double getAngularRateRootPsdX() {
-<span class="fc" id="L1088">        return mAngularSpeedEstimator.getRootPsdX();</span>
+<span class="fc" id="L1091">        return mAngularSpeedEstimator.getRootPsdX();</span>
     }
 
     /**
@@ -1095,7 +1098,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return gyroscope noise root PSD on y axis.
      */
     public double getAngularRateRootPsdY() {
-<span class="fc" id="L1098">        return mAngularSpeedEstimator.getRootPsdY();</span>
+<span class="fc" id="L1101">        return mAngularSpeedEstimator.getRootPsdY();</span>
     }
 
     /**
@@ -1105,7 +1108,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return gyroscope noise root PSD on z axis.
      */
     public double getAngularRateRootPsdZ() {
-<span class="fc" id="L1108">        return mAngularSpeedEstimator.getRootPsdZ();</span>
+<span class="fc" id="L1111">        return mAngularSpeedEstimator.getRootPsdZ();</span>
     }
 
     /**
@@ -1115,7 +1118,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return average accelerometer noise PSD.
      */
     public double getAvgSpecificForceNoisePsd() {
-<span class="fc" id="L1118">        return mAccelerationEstimator.getAvgNoisePsd();</span>
+<span class="fc" id="L1121">        return mAccelerationEstimator.getAvgNoisePsd();</span>
     }
 
     /**
@@ -1125,7 +1128,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return norm of noise root PSD.
      */
     public double getSpecificForceNoiseRootPsdNorm() {
-<span class="fc" id="L1128">        return mAccelerationEstimator.getNoiseRootPsdNorm();</span>
+<span class="fc" id="L1131">        return mAccelerationEstimator.getNoiseRootPsdNorm();</span>
     }
 
     /**
@@ -1135,7 +1138,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return average gyroscope noise PSD.
      */
     public double getAvgAngularRateNoisePsd() {
-<span class="fc" id="L1138">        return mAngularSpeedEstimator.getAvgNoisePsd();</span>
+<span class="fc" id="L1141">        return mAngularSpeedEstimator.getAvgNoisePsd();</span>
     }
 
     /**
@@ -1145,7 +1148,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return norm of noise root PSD.
      */
     public double getAngularRateNoiseRootPsdNorm() {
-<span class="fc" id="L1148">        return mAngularSpeedEstimator.getNoiseRootPsdNorm();</span>
+<span class="fc" id="L1151">        return mAngularSpeedEstimator.getNoiseRootPsdNorm();</span>
     }
 
     /**
@@ -1154,7 +1157,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return number of samples that have been processed so far.
      */
     public int getNumberOfProcessedSamples() {
-<span class="fc" id="L1157">        return mAccelerationEstimator.getNumberOfProcessedSamples();</span>
+<span class="fc" id="L1160">        return mAccelerationEstimator.getNumberOfProcessedSamples();</span>
     }
 
     /**
@@ -1163,7 +1166,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return true if estimator is running, false otherwise.
      */
     public boolean isRunning() {
-<span class="fc" id="L1166">        return mRunning;</span>
+<span class="fc" id="L1169">        return mRunning;</span>
     }
 
     /**
@@ -1182,31 +1185,31 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
             final double angularRateX, final double angularRateY, final double angularRateZ)
             throws LockedException {
 
-<span class="fc bfc" id="L1185" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L1186">            throw new LockedException();</span>
+<span class="fc bfc" id="L1188" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L1189">            throw new LockedException();</span>
         }
 
-<span class="fc" id="L1189">        mRunning = true;</span>
+<span class="fc" id="L1192">        mRunning = true;</span>
 
-<span class="pc bpc" id="L1191" title="1 of 4 branches missed.">        if (mLastBodyKinematics == null &amp;&amp; mListener != null) {</span>
-<span class="fc" id="L1192">            mListener.onStart(this);</span>
+<span class="pc bpc" id="L1194" title="1 of 4 branches missed.">        if (mLastBodyKinematics == null &amp;&amp; mListener != null) {</span>
+<span class="fc" id="L1195">            mListener.onStart(this);</span>
         }
 
-<span class="fc bfc" id="L1195" title="All 2 branches covered.">        if (mLastBodyKinematics == null) {</span>
-<span class="fc" id="L1196">            mLastBodyKinematics = new BodyKinematics();</span>
+<span class="fc bfc" id="L1198" title="All 2 branches covered.">        if (mLastBodyKinematics == null) {</span>
+<span class="fc" id="L1199">            mLastBodyKinematics = new BodyKinematics();</span>
         }
-<span class="fc" id="L1198">        mLastBodyKinematics.setSpecificForceCoordinates(specificForceX, specificForceY, specificForceZ);</span>
-<span class="fc" id="L1199">        mLastBodyKinematics.setAngularRateCoordinates(angularRateX, angularRateY, angularRateZ);</span>
+<span class="fc" id="L1201">        mLastBodyKinematics.setSpecificForceCoordinates(specificForceX, specificForceY, specificForceZ);</span>
+<span class="fc" id="L1202">        mLastBodyKinematics.setAngularRateCoordinates(angularRateX, angularRateY, angularRateZ);</span>
 
-<span class="fc" id="L1201">        mAccelerationEstimator.addTriad(specificForceX, specificForceY, specificForceZ);</span>
-<span class="fc" id="L1202">        mAngularSpeedEstimator.addTriad(angularRateX, angularRateY, angularRateZ);</span>
+<span class="fc" id="L1204">        mAccelerationEstimator.addTriad(specificForceX, specificForceY, specificForceZ);</span>
+<span class="fc" id="L1205">        mAngularSpeedEstimator.addTriad(angularRateX, angularRateY, angularRateZ);</span>
 
-<span class="pc bpc" id="L1204" title="1 of 2 branches missed.">        if (mListener != null) {</span>
-<span class="fc" id="L1205">            mListener.onBodyKinematicsAdded(this);</span>
+<span class="pc bpc" id="L1207" title="1 of 2 branches missed.">        if (mListener != null) {</span>
+<span class="fc" id="L1208">            mListener.onBodyKinematicsAdded(this);</span>
         }
 
-<span class="fc" id="L1208">        mRunning = false;</span>
-<span class="fc" id="L1209">    }</span>
+<span class="fc" id="L1211">        mRunning = false;</span>
+<span class="fc" id="L1212">    }</span>
 
     /**
      * Adds body kinematics measurement samples.
@@ -1227,13 +1230,13 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
             final AngularSpeed angularRateY,
             final AngularSpeed angularRateZ)
             throws LockedException {
-<span class="fc" id="L1230">        addBodyKinematics(convertAcceleration(specificForceX),</span>
-<span class="fc" id="L1231">                convertAcceleration(specificForceY),</span>
-<span class="fc" id="L1232">                convertAcceleration(specificForceZ),</span>
-<span class="fc" id="L1233">                convertAngularSpeed(angularRateX),</span>
-<span class="fc" id="L1234">                convertAngularSpeed(angularRateY),</span>
-<span class="fc" id="L1235">                convertAngularSpeed(angularRateZ));</span>
-<span class="fc" id="L1236">    }</span>
+<span class="fc" id="L1233">        addBodyKinematics(convertAcceleration(specificForceX),</span>
+<span class="fc" id="L1234">                convertAcceleration(specificForceY),</span>
+<span class="fc" id="L1235">                convertAcceleration(specificForceZ),</span>
+<span class="fc" id="L1236">                convertAngularSpeed(angularRateX),</span>
+<span class="fc" id="L1237">                convertAngularSpeed(angularRateY),</span>
+<span class="fc" id="L1238">                convertAngularSpeed(angularRateZ));</span>
+<span class="fc" id="L1239">    }</span>
 
     /**
      * Adds body kinematics measurement samples.
@@ -1245,13 +1248,13 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
     public void addBodyKinematics(
             final AccelerationTriad specificForce,
             final AngularSpeedTriad angularSpeed) throws LockedException {
-<span class="fc" id="L1248">        addBodyKinematics(convertAcceleration(specificForce.getValueX(), specificForce.getUnit()),</span>
-<span class="fc" id="L1249">                convertAcceleration(specificForce.getValueY(), specificForce.getUnit()),</span>
-<span class="fc" id="L1250">                convertAcceleration(specificForce.getValueZ(), specificForce.getUnit()),</span>
-<span class="fc" id="L1251">                convertAngularSpeed(angularSpeed.getValueX(), angularSpeed.getUnit()),</span>
-<span class="fc" id="L1252">                convertAngularSpeed(angularSpeed.getValueY(), angularSpeed.getUnit()),</span>
-<span class="fc" id="L1253">                convertAngularSpeed(angularSpeed.getValueZ(), angularSpeed.getUnit()));</span>
-<span class="fc" id="L1254">    }</span>
+<span class="fc" id="L1251">        addBodyKinematics(convertAcceleration(specificForce.getValueX(), specificForce.getUnit()),</span>
+<span class="fc" id="L1252">                convertAcceleration(specificForce.getValueY(), specificForce.getUnit()),</span>
+<span class="fc" id="L1253">                convertAcceleration(specificForce.getValueZ(), specificForce.getUnit()),</span>
+<span class="fc" id="L1254">                convertAngularSpeed(angularSpeed.getValueX(), angularSpeed.getUnit()),</span>
+<span class="fc" id="L1255">                convertAngularSpeed(angularSpeed.getValueY(), angularSpeed.getUnit()),</span>
+<span class="fc" id="L1256">                convertAngularSpeed(angularSpeed.getValueZ(), angularSpeed.getUnit()));</span>
+<span class="fc" id="L1257">    }</span>
 
     /**
      * Adds body kinematics measurement.
@@ -1260,13 +1263,13 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @throws LockedException if estimator is currently running.
      */
     public void addBodyKinematics(final BodyKinematics bodyKinematics) throws LockedException {
-<span class="fc" id="L1263">        addBodyKinematics(bodyKinematics.getFx(),</span>
-<span class="fc" id="L1264">                bodyKinematics.getFy(),</span>
-<span class="fc" id="L1265">                bodyKinematics.getFz(),</span>
-<span class="fc" id="L1266">                bodyKinematics.getAngularRateX(),</span>
-<span class="fc" id="L1267">                bodyKinematics.getAngularRateY(),</span>
-<span class="fc" id="L1268">                bodyKinematics.getAngularRateZ());</span>
-<span class="fc" id="L1269">    }</span>
+<span class="fc" id="L1266">        addBodyKinematics(bodyKinematics.getFx(),</span>
+<span class="fc" id="L1267">                bodyKinematics.getFy(),</span>
+<span class="fc" id="L1268">                bodyKinematics.getFz(),</span>
+<span class="fc" id="L1269">                bodyKinematics.getAngularRateX(),</span>
+<span class="fc" id="L1270">                bodyKinematics.getAngularRateY(),</span>
+<span class="fc" id="L1271">                bodyKinematics.getAngularRateZ());</span>
+<span class="fc" id="L1272">    }</span>
 
     /**
      * Resets current estimator.
@@ -1275,22 +1278,22 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @throws LockedException if estimator is currently running.
      */
     public boolean reset() throws LockedException {
-<span class="fc bfc" id="L1278" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L1279">            throw new LockedException();</span>
+<span class="fc bfc" id="L1281" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L1282">            throw new LockedException();</span>
         }
 
-<span class="fc" id="L1282">        mRunning = true;</span>
+<span class="fc" id="L1285">        mRunning = true;</span>
 
-<span class="fc" id="L1284">        mLastBodyKinematics = null;</span>
-<span class="pc bpc" id="L1285" title="2 of 4 branches missed.">        final boolean result = mAccelerationEstimator.reset() &amp;&amp; mAngularSpeedEstimator.reset();</span>
+<span class="fc" id="L1287">        mLastBodyKinematics = null;</span>
+<span class="pc bpc" id="L1288" title="2 of 4 branches missed.">        final boolean result = mAccelerationEstimator.reset() &amp;&amp; mAngularSpeedEstimator.reset();</span>
 
-<span class="pc bpc" id="L1287" title="1 of 2 branches missed.">        if (mListener != null) {</span>
-<span class="fc" id="L1288">            mListener.onReset(this);</span>
+<span class="pc bpc" id="L1290" title="1 of 2 branches missed.">        if (mListener != null) {</span>
+<span class="fc" id="L1291">            mListener.onReset(this);</span>
         }
 
-<span class="fc" id="L1291">        mRunning = false;</span>
+<span class="fc" id="L1294">        mRunning = false;</span>
 
-<span class="fc" id="L1293">        return result;</span>
+<span class="fc" id="L1296">        return result;</span>
     }
 
     /**
@@ -1300,9 +1303,9 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return converted value.
      */
     private double convertAcceleration(final Acceleration value) {
-<span class="fc" id="L1303">        return AccelerationConverter.convert(</span>
-<span class="fc" id="L1304">                value.getValue().doubleValue(),</span>
-<span class="fc" id="L1305">                value.getUnit(),</span>
+<span class="fc" id="L1306">        return AccelerationConverter.convert(</span>
+<span class="fc" id="L1307">                value.getValue().doubleValue(),</span>
+<span class="fc" id="L1308">                value.getUnit(),</span>
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
     }
 
@@ -1315,7 +1318,7 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      */
     private double convertAcceleration(
             final double value, final AccelerationUnit unit) {
-<span class="fc" id="L1318">        return AccelerationConverter.convert(value, unit,</span>
+<span class="fc" id="L1321">        return AccelerationConverter.convert(value, unit,</span>
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
     }
 
@@ -1326,9 +1329,9 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      * @return converted value.
      */
     private double convertAngularSpeed(final AngularSpeed value) {
-<span class="fc" id="L1329">        return AngularSpeedConverter.convert(</span>
-<span class="fc" id="L1330">                value.getValue().doubleValue(),</span>
-<span class="fc" id="L1331">                value.getUnit(),</span>
+<span class="fc" id="L1332">        return AngularSpeedConverter.convert(</span>
+<span class="fc" id="L1333">                value.getValue().doubleValue(),</span>
+<span class="fc" id="L1334">                value.getUnit(),</span>
                 AngularSpeedUnit.RADIANS_PER_SECOND);
     }
 
@@ -1341,8 +1344,30 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
      */
     private double convertAngularSpeed(
             final double value, final AngularSpeedUnit unit) {
-<span class="fc" id="L1344">        return AngularSpeedConverter.convert(value, unit,</span>
+<span class="fc" id="L1347">        return AngularSpeedConverter.convert(value, unit,</span>
                 AngularSpeedUnit.RADIANS_PER_SECOND);
+    }
+
+    /**
+     * Gets accelerometer base noise level root PSD (Power Spectral Density)
+     * expressed in (m * s^-1.5).
+     *
+     * @return accelerometer base noise level root PSD.
+     */
+    @Override
+    public double getAccelerometerBaseNoiseLevelRootPsd() {
+<span class="fc" id="L1359">        return getSpecificForceNoiseRootPsdNorm();</span>
+    }
+
+    /**
+     * Gets gyroscope base noise level root PSD (Power Spectral Density)
+     * expressed in (rad * s^-0.5)
+     *
+     * @return gyroscope base noise level root PSD.
+     */
+    @Override
+    public double getGyroscopeBaseNoiseLevelRootPsd() {
+<span class="fc" id="L1370">        return getAngularRateNoiseRootPsdNorm();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

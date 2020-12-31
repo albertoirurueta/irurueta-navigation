@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>IMUErrorsCreator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-navigation</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.navigation.inertial.calibration</a> &gt; <span class="el_source">IMUErrorsCreator.java</span></div><h1>IMUErrorsCreator.java</h1><pre class="source lang-java linenums">package com.irurueta.navigation.inertial.calibration;
+
+import com.irurueta.algebra.Matrix;
+import com.irurueta.navigation.NotReadyException;
+
+/**
+ * Utility class to create {@link IMUErrors} by combining different sources of estimated data.
+ * Sources of data can be any accelerometer calibrator implementing {@link AccelerometerCalibrationSource},
+ * any gyroscope calibrator implementing {@link GyroscopeCalibrationSource}, any measurement generator
+ * implementing {@link AccelerometerNoiseRootPsdSource} or {@link GyroscopeNoiseRootPsdSource}.
+ */
+public class IMUErrorsCreator {
+
+    /**
+     * A source of estimated accelerometer calibration parameters.
+     */
+    private AccelerometerCalibrationSource mAccelerometerCalibrationSource;
+
+    /**
+     * A source of estimated gyroscope calibration parameters.
+     */
+    private GyroscopeCalibrationSource mGyroscopeCalibrationSource;
+
+    /**
+     * A source of estimated accelerometer noise root PSD.
+     */
+    private AccelerometerNoiseRootPsdSource mAccelerometerNoiseRootPsdSource;
+
+    /**
+     * A source of estimated gyroscope noise root PSD.
+     */
+    private GyroscopeNoiseRootPsdSource mGyroscopeNoiseRootPsdSource;
+
+    /**
+     * Accelerometer quantization level expressed in meters per squared second (m/s^2).
+     * By default it is zero when no quantization is assumed.
+     */
+    private double mAccelerometerQuantizationLevel;
+
+    /**
+     * Gyro quantization level expressed in radians per second (rad/s).
+     * By default it is zero when no quantization is assumed.
+     */
+    private double mGyroQuantizationLevel;
+
+    /**
+     * Constructor.
+     */
+<span class="fc" id="L49">    public IMUErrorsCreator() {</span>
+<span class="fc" id="L50">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param accelerometerCalibrationSource  A source of estimated accelerometer calibration parameters.
+     * @param gyroscopeCalibrationSource      A source of estimated gyroscope calibration parameters.
+     * @param accelerometerNoiseRootPsdSource A source of estimated accelerometer noise root PSD.
+     * @param gyroscopeNoiseRootPsdSource     A source of estimated gyroscope noise root PSD.
+     */
+    public IMUErrorsCreator(
+            final AccelerometerCalibrationSource accelerometerCalibrationSource,
+            final GyroscopeCalibrationSource gyroscopeCalibrationSource,
+            final AccelerometerNoiseRootPsdSource accelerometerNoiseRootPsdSource,
+<span class="fc" id="L64">            final GyroscopeNoiseRootPsdSource gyroscopeNoiseRootPsdSource) {</span>
+<span class="fc" id="L65">        mAccelerometerCalibrationSource = accelerometerCalibrationSource;</span>
+<span class="fc" id="L66">        mGyroscopeCalibrationSource = gyroscopeCalibrationSource;</span>
+<span class="fc" id="L67">        mAccelerometerNoiseRootPsdSource = accelerometerNoiseRootPsdSource;</span>
+<span class="fc" id="L68">        mGyroscopeNoiseRootPsdSource = gyroscopeNoiseRootPsdSource;</span>
+<span class="fc" id="L69">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param accelerometerCalibrationSource  A source of estimated accelerometer calibration parameters.
+     * @param gyroscopeCalibrationSource      A source of estimated gyroscope calibration parameters.
+     * @param accelerometerNoiseRootPsdSource A source of estimated accelerometer noise root PSD.
+     * @param gyroscopeNoiseRootPsdSource     A source of estimated gyroscope noise root PSD.
+     * @param accelerometerQuantizationLevel  Accelerometer quantization level expressed in meters per squared
+     *                                        second (m/s^2).
+     * @param gyroQuantizationLevel           Gyro quantization level expressed in radians per second (rad/s).
+     */
+    public IMUErrorsCreator(
+            final AccelerometerCalibrationSource accelerometerCalibrationSource,
+            final GyroscopeCalibrationSource gyroscopeCalibrationSource,
+            final AccelerometerNoiseRootPsdSource accelerometerNoiseRootPsdSource,
+            final GyroscopeNoiseRootPsdSource gyroscopeNoiseRootPsdSource,
+            final double accelerometerQuantizationLevel,
+            final double gyroQuantizationLevel) {
+<span class="fc" id="L89">        this(accelerometerCalibrationSource, gyroscopeCalibrationSource,</span>
+                accelerometerNoiseRootPsdSource, gyroscopeNoiseRootPsdSource);
+<span class="fc" id="L91">        mAccelerometerQuantizationLevel = accelerometerQuantizationLevel;</span>
+<span class="fc" id="L92">        mGyroQuantizationLevel = gyroQuantizationLevel;</span>
+<span class="fc" id="L93">    }</span>
+
+    /**
+     * Gets source of estimated accelerometer calibration parameters.
+     *
+     * @return source of estimated accelerometer calibration parameters.
+     */
+    public AccelerometerCalibrationSource getAccelerometerCalibrationSource() {
+<span class="fc" id="L101">        return mAccelerometerCalibrationSource;</span>
+    }
+
+    /**
+     * Sets source of estimated accelerometer calibration parameters.
+     *
+     * @param accelerometerCalibrationSource source of estimated accelerometer
+     *                                       parameters.
+     */
+    public void setAccelerometerCalibrationSource(
+            final AccelerometerCalibrationSource accelerometerCalibrationSource) {
+<span class="fc" id="L112">        mAccelerometerCalibrationSource = accelerometerCalibrationSource;</span>
+<span class="fc" id="L113">    }</span>
+
+    /**
+     * Gets source of estimated gyroscope calibration parameters.
+     *
+     * @return source of estimated gyroscope calibration parameters.
+     */
+    public GyroscopeCalibrationSource getGyroscopeCalibrationSource() {
+<span class="fc" id="L121">        return mGyroscopeCalibrationSource;</span>
+    }
+
+    /**
+     * Sets source of estimated gyroscope calibration parameters.
+     *
+     * @param gyroscopeCalibrationSource source of estimated gyroscope calibration
+     *                                   parameters.
+     */
+    public void setGyroscopeCalibrationSource(
+            final GyroscopeCalibrationSource gyroscopeCalibrationSource) {
+<span class="fc" id="L132">        mGyroscopeCalibrationSource = gyroscopeCalibrationSource;</span>
+<span class="fc" id="L133">    }</span>
+
+    /**
+     * Gets source of estimated accelerometer noise root PSD.
+     *
+     * @return source of estimated accelerometer noise root PSD.
+     */
+    public AccelerometerNoiseRootPsdSource getAccelerometerNoiseRootPsdSource() {
+<span class="fc" id="L141">        return mAccelerometerNoiseRootPsdSource;</span>
+    }
+
+    /**
+     * Sets source of estimated accelerometer noise root PSD.
+     *
+     * @param accelerometerNoiseRootPsdSource source of estimated accelerometer
+     *                                        noise root PSD.
+     */
+    public void setAccelerometerNoiseRootPsdSource(
+            final AccelerometerNoiseRootPsdSource accelerometerNoiseRootPsdSource) {
+<span class="fc" id="L152">        mAccelerometerNoiseRootPsdSource = accelerometerNoiseRootPsdSource;</span>
+<span class="fc" id="L153">    }</span>
+
+    /**
+     * Gets source of estimated gyroscope noise root PSD.
+     *
+     * @return source of estimated gyroscope noise root PSD.
+     */
+    public GyroscopeNoiseRootPsdSource getGyroscopeNoiseRootPsdSource() {
+<span class="fc" id="L161">        return mGyroscopeNoiseRootPsdSource;</span>
+    }
+
+    /**
+     * Sets source of estimated gyroscope noise root PSD.
+     *
+     * @param gyroscopeNoiseRootPsdSource source of estimated gyroscope noise
+     *                                    root PSD.
+     */
+    public void sstGyroscopeNoiseRootPsdSource(
+            final GyroscopeNoiseRootPsdSource gyroscopeNoiseRootPsdSource) {
+<span class="fc" id="L172">        mGyroscopeNoiseRootPsdSource = gyroscopeNoiseRootPsdSource;</span>
+<span class="fc" id="L173">    }</span>
+
+    /**
+     * Gets accelerometer quantization level expressed in meters per squared second
+     * (m/s^2).
+     * By default it is zero when no quantization is assumed.
+     *
+     * @return accelerometer quantization level.
+     */
+    public double getAccelerometerQuantizationLevel() {
+<span class="fc" id="L183">        return mAccelerometerQuantizationLevel;</span>
+    }
+
+    /**
+     * Sets accelerometer quantization level expressed in meters per squared second
+     * (m/s^2).
+     *
+     * @param accelerometerQuantizationLevel accelerometer quantizaiton level.
+     */
+    public void setAccelerometerQuantizationLevel(final double accelerometerQuantizationLevel) {
+<span class="fc" id="L193">        mAccelerometerQuantizationLevel = accelerometerQuantizationLevel;</span>
+<span class="fc" id="L194">    }</span>
+
+    /**
+     * Gets gyroscope quantization level expressed in radians per second (rad/s).
+     * By default it is zero when no quantization is assumed.
+     *
+     * @return gyroscope quantization level.
+     */
+    public double getGyroQuantizationLevel() {
+<span class="fc" id="L203">        return mGyroQuantizationLevel;</span>
+    }
+
+    /**
+     * Sets gyroscope quantization level expressed in radians per second (rad/s).
+     *
+     * @param gyroQuantizationLevel gyroscope quantization level.
+     */
+    public void setGyroQuantizationLevel(final double gyroQuantizationLevel) {
+<span class="fc" id="L212">        mGyroQuantizationLevel = gyroQuantizationLevel;</span>
+<span class="fc" id="L213">    }</span>
+
+    /**
+     * Indicates whether all sources have been provided in order to be able
+     * to create an {@link IMUErrors} instance.
+     *
+     * @return true if creator is ready, false otherwise.
+     */
+    public boolean isReady() {
+<span class="pc bpc" id="L222" title="2 of 6 branches missed.">        return mAccelerometerNoiseRootPsdSource != null &amp;&amp; mGyroscopeNoiseRootPsdSource != null</span>
+                &amp;&amp; mAccelerometerCalibrationSource != null
+<span class="fc bfc" id="L224" title="All 2 branches covered.">                &amp;&amp; mAccelerometerCalibrationSource.getEstimatedBiases() != null</span>
+<span class="pc bpc" id="L225" title="2 of 4 branches missed.">                &amp;&amp; mAccelerometerCalibrationSource.getEstimatedMa() != null</span>
+                &amp;&amp; mGyroscopeCalibrationSource != null
+<span class="pc bpc" id="L227" title="1 of 2 branches missed.">                &amp;&amp; mGyroscopeCalibrationSource.getEstimatedBiases() != null</span>
+<span class="pc bpc" id="L228" title="1 of 2 branches missed.">                &amp;&amp; mGyroscopeCalibrationSource.getEstimatedMg() != null</span>
+<span class="pc bpc" id="L229" title="1 of 2 branches missed.">                &amp;&amp; mGyroscopeCalibrationSource.getEstimatedGg() != null;</span>
+    }
+
+    /**
+     * Creates an {@link IMUErrors} instance containing estimated IMU
+     * (accelerometer + gyroscope) parameters.
+     *
+     * @return instance containing estimated IMU parameters.
+     * @throws NotReadyException if creator is not ready.
+     */
+    public IMUErrors create() throws NotReadyException {
+<span class="fc bfc" id="L240" title="All 2 branches covered.">        if (!isReady()) {</span>
+<span class="fc" id="L241">            throw new NotReadyException();</span>
+        }
+
+<span class="fc" id="L244">        final double[] ba = mAccelerometerCalibrationSource.getEstimatedBiases();</span>
+<span class="fc" id="L245">        final Matrix ma = mAccelerometerCalibrationSource.getEstimatedMa();</span>
+
+<span class="fc" id="L247">        final double[] bg = mGyroscopeCalibrationSource.getEstimatedBiases();</span>
+<span class="fc" id="L248">        final Matrix mg = mGyroscopeCalibrationSource.getEstimatedMg();</span>
+<span class="fc" id="L249">        final Matrix gg = mGyroscopeCalibrationSource.getEstimatedGg();</span>
+
+<span class="fc" id="L251">        final double accelerometerNoiseRootPsd = mAccelerometerNoiseRootPsdSource</span>
+<span class="fc" id="L252">                .getAccelerometerBaseNoiseLevelRootPsd();</span>
+<span class="fc" id="L253">        final double gyroscopeNoiseRootPsd = mGyroscopeNoiseRootPsdSource</span>
+<span class="fc" id="L254">                .getGyroscopeBaseNoiseLevelRootPsd();</span>
+
+<span class="fc" id="L256">        return new IMUErrors(ba, bg, ma, mg, gg, accelerometerNoiseRootPsd, gyroscopeNoiseRootPsd,</span>
+                mAccelerometerQuantizationLevel, mGyroQuantizationLevel);
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -16,6 +16,7 @@
 package com.irurueta.navigation.inertial.calibration.noise;
 
 import com.irurueta.navigation.inertial.calibration.AccelerationTriad;
+import com.irurueta.navigation.inertial.calibration.AccelerometerNoiseRootPsdSource;
 import com.irurueta.navigation.inertial.calibration.TimeIntervalEstimator;
 import com.irurueta.units.Acceleration;
 import com.irurueta.units.AccelerationConverter;
@@ -46,14 +47,15 @@ import com.irurueta.units.AccelerationUnit;
 public class AccumulatedAccelerationTriadNoiseEstimator extends
         AccumulatedTriadNoiseEstimator&lt;AccelerationUnit, Acceleration, AccelerationTriad,
                 AccumulatedAccelerationTriadNoiseEstimator,
-                AccumulatedAccelerationTriadNoiseEstimatorListener&gt; {
+                AccumulatedAccelerationTriadNoiseEstimatorListener&gt;
+        implements AccelerometerNoiseRootPsdSource {
 
     /**
      * Constructor.
      */
     public AccumulatedAccelerationTriadNoiseEstimator() {
-<span class="fc" id="L55">        super();</span>
-<span class="fc" id="L56">    }</span>
+<span class="fc" id="L57">        super();</span>
+<span class="fc" id="L58">    }</span>
 
     /**
      * Constructor.
@@ -62,8 +64,8 @@ public class AccumulatedAccelerationTriadNoiseEstimator extends
      */
     public AccumulatedAccelerationTriadNoiseEstimator(
             final AccumulatedAccelerationTriadNoiseEstimatorListener listener) {
-<span class="fc" id="L65">        super(listener);</span>
-<span class="fc" id="L66">    }</span>
+<span class="fc" id="L67">        super(listener);</span>
+<span class="fc" id="L68">    }</span>
 
     /**
      * Creates a triad with provided values and unit.
@@ -78,7 +80,7 @@ public class AccumulatedAccelerationTriadNoiseEstimator extends
     protected AccelerationTriad createTriad(
             final double valueX, final double valueY, final double valueZ,
             final AccelerationUnit unit) {
-<span class="fc" id="L81">        return new AccelerationTriad(unit, valueX, valueY, valueZ);</span>
+<span class="fc" id="L83">        return new AccelerationTriad(unit, valueX, valueY, valueZ);</span>
     }
 
     /**
@@ -92,7 +94,7 @@ public class AccumulatedAccelerationTriadNoiseEstimator extends
     @Override
     protected AccelerationTriad createTriad(
             final Acceleration valueX, final Acceleration valueY, final Acceleration valueZ) {
-<span class="nc" id="L95">        return new AccelerationTriad(valueX, valueY, valueZ);</span>
+<span class="nc" id="L97">        return new AccelerationTriad(valueX, valueY, valueZ);</span>
     }
 
     /**
@@ -102,7 +104,7 @@ public class AccumulatedAccelerationTriadNoiseEstimator extends
      */
     @Override
     protected AccelerationUnit getDefaultUnit() {
-<span class="fc" id="L105">        return AccelerationUnit.METERS_PER_SQUARED_SECOND;</span>
+<span class="fc" id="L107">        return AccelerationUnit.METERS_PER_SQUARED_SECOND;</span>
     }
 
     /**
@@ -115,7 +117,7 @@ public class AccumulatedAccelerationTriadNoiseEstimator extends
     @Override
     protected Acceleration createMeasurement(
             final double value, final AccelerationUnit unit) {
-<span class="fc" id="L118">        return new Acceleration(value, unit);</span>
+<span class="fc" id="L120">        return new Acceleration(value, unit);</span>
     }
 
     /**
@@ -127,7 +129,18 @@ public class AccumulatedAccelerationTriadNoiseEstimator extends
      */
     @Override
     protected double convertToDefaultUnit(final double value, final AccelerationUnit unit) {
-<span class="fc" id="L130">        return AccelerationConverter.convert(value, unit, getDefaultUnit());</span>
+<span class="fc" id="L132">        return AccelerationConverter.convert(value, unit, getDefaultUnit());</span>
+    }
+
+    /**
+     * Gets accelerometer base noise level root PSD (Power Spectral Density)
+     * expressed in (m * s^-1.5).
+     *
+     * @return accelerometer base noise level root PSD.
+     */
+    @Override
+    public double getAccelerometerBaseNoiseLevelRootPsd() {
+<span class="fc" id="L143">        return getNoiseRootPsdNorm();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
