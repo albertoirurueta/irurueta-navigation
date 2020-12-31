@@ -16,6 +16,7 @@
 package com.irurueta.navigation.inertial.calibration.noise;
 
 import com.irurueta.navigation.inertial.calibration.AccelerationTriad;
+import com.irurueta.navigation.inertial.calibration.AccelerometerNoiseRootPsdSource;
 import com.irurueta.navigation.inertial.calibration.TimeIntervalEstimator;
 import com.irurueta.units.Acceleration;
 import com.irurueta.units.AccelerationUnit;
@@ -46,7 +47,8 @@ import com.irurueta.units.AccelerationUnit;
 public class WindowedAccelerationTriadNoiseEstimator extends
         WindowedTriadNoiseEstimator<AccelerationUnit, Acceleration, AccelerationTriad,
                 WindowedAccelerationTriadNoiseEstimator,
-                WindowedAccelerationTriadNoiseEstimatorListener> {
+                WindowedAccelerationTriadNoiseEstimatorListener>
+        implements AccelerometerNoiseRootPsdSource {
 
     /**
      * Constructor.
@@ -126,5 +128,16 @@ public class WindowedAccelerationTriadNoiseEstimator extends
     @Override
     protected Acceleration createMeasurement(final double value, final AccelerationUnit unit) {
         return new Acceleration(value, unit);
+    }
+
+    /**
+     * Gets accelerometer base noise level root PSD (Power Spectral Density)
+     * expressed in (m * s^-1.5).
+     *
+     * @return accelerometer base noise level root PSD.
+     */
+    @Override
+    public double getAccelerometerBaseNoiseLevelRootPsd() {
+        return getNoiseRootPsdNorm();
     }
 }

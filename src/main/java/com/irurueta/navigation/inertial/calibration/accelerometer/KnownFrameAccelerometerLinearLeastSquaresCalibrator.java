@@ -24,6 +24,7 @@ import com.irurueta.navigation.NotReadyException;
 import com.irurueta.navigation.frames.ECEFFrame;
 import com.irurueta.navigation.inertial.BodyKinematics;
 import com.irurueta.navigation.inertial.calibration.AccelerationTriad;
+import com.irurueta.navigation.inertial.calibration.AccelerometerCalibrationSource;
 import com.irurueta.navigation.inertial.calibration.CalibrationException;
 import com.irurueta.navigation.inertial.calibration.FrameBodyKinematics;
 import com.irurueta.navigation.inertial.estimators.ECEFKinematicsEstimator;
@@ -59,7 +60,8 @@ import java.util.Collection;
  */
 public class KnownFrameAccelerometerLinearLeastSquaresCalibrator implements
         KnownFrameAccelerometerCalibrator<FrameBodyKinematics,
-                KnownFrameAccelerometerLinearLeastSquaresCalibratorListener> {
+                KnownFrameAccelerometerLinearLeastSquaresCalibratorListener>,
+        AccelerometerCalibrationSource {
 
     /**
      * Indicates whether by default a common z-axis is assumed for both the accelerometer
@@ -646,7 +648,7 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator implements
     }
 
     /**
-     * Gets estimated accelerometer scale factors and ross coupling errors.
+     * Gets estimated accelerometer scale factors and cross coupling errors.
      * This is the product of matrix Ta containing cross coupling errors and Ka
      * containing scaling factors.
      * So tat:

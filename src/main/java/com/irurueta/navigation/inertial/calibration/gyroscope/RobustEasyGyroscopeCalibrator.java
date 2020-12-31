@@ -30,6 +30,7 @@ import com.irurueta.navigation.inertial.calibration.AccelerationFixer;
 import com.irurueta.navigation.inertial.calibration.AngularSpeedTriad;
 import com.irurueta.navigation.inertial.calibration.BodyKinematicsSequence;
 import com.irurueta.navigation.inertial.calibration.CalibrationException;
+import com.irurueta.navigation.inertial.calibration.GyroscopeCalibrationSource;
 import com.irurueta.navigation.inertial.calibration.StandardDeviationTimedBodyKinematics;
 import com.irurueta.numerical.robust.InliersData;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
@@ -75,7 +76,7 @@ import java.util.List;
  * - ftrue is ground-truth specific force. This is a 3x1 vector.
  * - w is measurement noise. This is a 3x1 vector.
  */
-public abstract class RobustEasyGyroscopeCalibrator {
+public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrationSource {
 
     /**
      * Indicates whether by default a common z-axis is assumed for both the accelerometer
@@ -3037,6 +3038,7 @@ public abstract class RobustEasyGyroscopeCalibrator {
      *
      * @return array containing x,y,z components of estimated gyroscope biases.
      */
+    @Override
     public double[] getEstimatedBiases() {
         return mEstimatedBiases;
     }
@@ -3270,6 +3272,7 @@ public abstract class RobustEasyGyroscopeCalibrator {
      * @return estimated gyroscope scale factors and cross coupling errors, or null
      * if not available.
      */
+    @Override
     public Matrix getEstimatedMg() {
         return mEstimatedMg;
     }
@@ -3380,6 +3383,7 @@ public abstract class RobustEasyGyroscopeCalibrator {
      *
      * @return estimated G-dependent cross biases.
      */
+    @Override
     public Matrix getEstimatedGg() {
         return mEstimatedGg;
     }

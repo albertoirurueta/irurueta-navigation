@@ -31,6 +31,7 @@ import com.irurueta.navigation.inertial.calibration.AccelerationFixer;
 import com.irurueta.navigation.inertial.calibration.AngularSpeedTriad;
 import com.irurueta.navigation.inertial.calibration.BodyKinematicsSequence;
 import com.irurueta.navigation.inertial.calibration.CalibrationException;
+import com.irurueta.navigation.inertial.calibration.GyroscopeCalibrationSource;
 import com.irurueta.navigation.inertial.calibration.StandardDeviationTimedBodyKinematics;
 import com.irurueta.numerical.EvaluationException;
 import com.irurueta.numerical.GradientEstimator;
@@ -92,7 +93,7 @@ import java.util.List;
  * David Tedaldi, Alberto Pretto, Emmanuelle Menegatti. A Robust and Easy to
  * Implement Method for IMU Calibration without External Equipments.
  */
-public class EasyGyroscopeCalibrator {
+public class EasyGyroscopeCalibrator implements GyroscopeCalibrationSource {
 
     /**
      * Indicates whether by default a common z-axis is assumed for both the accelerometer
@@ -2893,6 +2894,7 @@ public class EasyGyroscopeCalibrator {
      *
      * @return array containing x,y,z components of estimated gyroscope biases.
      */
+    @Override
     public double[] getEstimatedBiases() {
         return mEstimatedBiases;
     }
@@ -3126,6 +3128,7 @@ public class EasyGyroscopeCalibrator {
      * @return estimated gyroscope scale factors and cross coupling errors, or null
      * if not available.
      */
+    @Override
     public Matrix getEstimatedMg() {
         return mEstimatedMg;
     }
@@ -3236,6 +3239,7 @@ public class EasyGyroscopeCalibrator {
      *
      * @return estimated G-dependent cross biases.
      */
+    @Override
     public Matrix getEstimatedGg() {
         return mEstimatedGg;
     }

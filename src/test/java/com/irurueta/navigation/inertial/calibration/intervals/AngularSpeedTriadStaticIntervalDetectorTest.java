@@ -728,6 +728,7 @@ public class AngularSpeedTriadStaticIntervalDetectorTest implements
         assertEquals(w1, w2);
         assertEquals(detector.getBaseNoiseLevelPsd(), 0.0, 0.0);
         assertEquals(detector.getBaseNoiseLevelRootPsd(), 0.0, 0.0);
+        assertEquals(detector.getGyroscopeBaseNoiseLevelRootPsd(), 0.0, 0.0);
         assertEquals(detector.getThreshold(), 0.0, 0.0);
         w1 = detector.getThresholdAsMeasurement();
         assertEquals(w1.getValue().doubleValue(), 0.0, 0.0);
@@ -769,6 +770,8 @@ public class AngularSpeedTriadStaticIntervalDetectorTest implements
         assertEquals(detector.getBaseNoiseLevelPsd(),
                 Math.pow(detector.getBaseNoiseLevelRootPsd(), 2.0),
                 VERY_SMALL_ABSOLUTE_ERROR);
+        assertEquals(detector.getBaseNoiseLevelRootPsd(),
+                detector.getGyroscopeBaseNoiseLevelRootPsd(), 0.0);
         assertTrue(detector.getThreshold() > 0.0);
         assertEquals(detector.getThreshold(),
                 detector.getBaseNoiseLevel() * detector.getThresholdFactor(),
@@ -1013,6 +1016,7 @@ public class AngularSpeedTriadStaticIntervalDetectorTest implements
         assertEquals(w1, w2);
         assertEquals(detector.getBaseNoiseLevelPsd(), 0.0, 0.0);
         assertEquals(detector.getBaseNoiseLevelRootPsd(), 0.0, 0.0);
+        assertEquals(detector.getGyroscopeBaseNoiseLevelRootPsd(), 0.0, 0.0);
         assertEquals(detector.getThreshold(), 0.0, 0.0);
         w1 = detector.getThresholdAsMeasurement();
         assertEquals(w1.getValue().doubleValue(), 0.0, 0.0);
@@ -1064,6 +1068,8 @@ public class AngularSpeedTriadStaticIntervalDetectorTest implements
         assertEquals(detector.getBaseNoiseLevelPsd(),
                 Math.pow(detector.getBaseNoiseLevelRootPsd(), 2.0),
                 VERY_SMALL_ABSOLUTE_ERROR);
+        assertEquals(detector.getBaseNoiseLevelRootPsd(),
+                detector.getGyroscopeBaseNoiseLevelRootPsd(), 0.0);
         assertTrue(detector.getThreshold() > 0.0);
         assertEquals(detector.getThreshold(),
                 detector.getBaseNoiseLevel() * detector.getThresholdFactor(),
@@ -1240,6 +1246,7 @@ public class AngularSpeedTriadStaticIntervalDetectorTest implements
         assertEquals(w1, w2);
         assertEquals(detector.getBaseNoiseLevelPsd(), 0.0, 0.0);
         assertEquals(detector.getBaseNoiseLevelRootPsd(), 0.0, 0.0);
+        assertEquals(detector.getGyroscopeBaseNoiseLevelRootPsd(), 0.0, 0.0);
         assertEquals(detector.getThreshold(), 0.0, 0.0);
         w1 = detector.getThresholdAsMeasurement();
         assertEquals(w1.getValue().doubleValue(), 0.0, 0.0);
@@ -1319,6 +1326,7 @@ public class AngularSpeedTriadStaticIntervalDetectorTest implements
         assertEquals(w1, w2);
         assertEquals(detector.getBaseNoiseLevelPsd(), 0.0, 0.0);
         assertEquals(detector.getBaseNoiseLevelRootPsd(), 0.0, 0.0);
+        assertEquals(detector.getGyroscopeBaseNoiseLevelRootPsd(), 0.0, 0.0);
         assertEquals(detector.getThreshold(), 0.0, 0.0);
         w1 = detector.getThresholdAsMeasurement();
         assertEquals(w1.getValue().doubleValue(), 0.0, 0.0);
@@ -1361,6 +1369,8 @@ public class AngularSpeedTriadStaticIntervalDetectorTest implements
         assertEquals(detector.getBaseNoiseLevelPsd(),
                 Math.pow(detector.getBaseNoiseLevelRootPsd(), 2.0),
                 VERY_SMALL_ABSOLUTE_ERROR);
+        assertEquals(detector.getBaseNoiseLevelRootPsd(),
+                detector.getGyroscopeBaseNoiseLevelRootPsd(), 0.0);
         assertTrue(detector.getThreshold() > 0.0);
         assertEquals(detector.getThreshold(),
                 detector.getBaseNoiseLevel() * detector.getThresholdFactor(),
@@ -1531,6 +1541,7 @@ public class AngularSpeedTriadStaticIntervalDetectorTest implements
         assertEquals(w1, w2);
         assertEquals(detector.getBaseNoiseLevelPsd(), 0.0, 0.0);
         assertEquals(detector.getBaseNoiseLevelRootPsd(), 0.0, 0.0);
+        assertEquals(detector.getGyroscopeBaseNoiseLevelRootPsd(), 0.0, 0.0);
         assertEquals(detector.getThreshold(), 0.0, 0.0);
         w1 = detector.getThresholdAsMeasurement();
         assertEquals(w1.getValue().doubleValue(), 0.0, 0.0);

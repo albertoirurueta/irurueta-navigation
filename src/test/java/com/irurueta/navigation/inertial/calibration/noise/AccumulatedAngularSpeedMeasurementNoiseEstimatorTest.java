@@ -87,6 +87,7 @@ public class AccumulatedAngularSpeedMeasurementNoiseEstimatorTest implements
         assertEquals(std1, std2);
         assertEquals(0.0, estimator.getPsd(), 0.0);
         assertEquals(0.0, estimator.getRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getGyroscopeBaseNoiseLevelRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
     }
@@ -128,6 +129,7 @@ public class AccumulatedAngularSpeedMeasurementNoiseEstimatorTest implements
         assertEquals(std1, std2);
         assertEquals(0.0, estimator.getPsd(), 0.0);
         assertEquals(0.0, estimator.getRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getGyroscopeBaseNoiseLevelRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
     }
@@ -311,6 +313,8 @@ public class AccumulatedAngularSpeedMeasurementNoiseEstimatorTest implements
         final double rootPsd = Math.sqrt(psd);
 
         assertEquals(rootPsd, estimator.getRootPsd(), ABSOLUTE_ERROR);
+        assertEquals(estimator.getRootPsd(),
+                estimator.getGyroscopeBaseNoiseLevelRootPsd(), 0.0);
 
         // reset
         assertTrue(estimator.reset());
@@ -324,6 +328,7 @@ public class AccumulatedAngularSpeedMeasurementNoiseEstimatorTest implements
         assertEquals(0.0, estimator.getStandardDeviation(), 0.0);
         assertEquals(0.0, estimator.getPsd(), 0.0);
         assertEquals(0.0, estimator.getRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getGyroscopeBaseNoiseLevelRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
     }
@@ -443,6 +448,8 @@ public class AccumulatedAngularSpeedMeasurementNoiseEstimatorTest implements
         final double rootPsd = Math.sqrt(psd);
 
         assertEquals(rootPsd, estimator.getRootPsd(), ABSOLUTE_ERROR);
+        assertEquals(estimator.getRootPsd(),
+                estimator.getGyroscopeBaseNoiseLevelRootPsd(), 0.0);
 
         // reset
         assertTrue(estimator.reset());
@@ -456,6 +463,7 @@ public class AccumulatedAngularSpeedMeasurementNoiseEstimatorTest implements
         assertEquals(0.0, estimator.getStandardDeviation(), 0.0);
         assertEquals(0.0, estimator.getPsd(), 0.0);
         assertEquals(0.0, estimator.getRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getGyroscopeBaseNoiseLevelRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
     }

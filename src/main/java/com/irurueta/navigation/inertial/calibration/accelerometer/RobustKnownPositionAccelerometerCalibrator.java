@@ -32,6 +32,7 @@ import com.irurueta.navigation.inertial.INSTightlyCoupledKalmanInitializerConfig
 import com.irurueta.navigation.inertial.NEDPosition;
 import com.irurueta.navigation.inertial.NEDVelocity;
 import com.irurueta.navigation.inertial.calibration.AccelerationTriad;
+import com.irurueta.navigation.inertial.calibration.AccelerometerCalibrationSource;
 import com.irurueta.navigation.inertial.calibration.CalibrationException;
 import com.irurueta.navigation.inertial.calibration.StandardDeviationBodyKinematics;
 import com.irurueta.navigation.inertial.estimators.ECEFGravityEstimator;
@@ -67,7 +68,7 @@ import java.util.List;
  * - ftrue is ground-trush specific force.
  * - w is measurement noise.
  */
-public abstract class RobustKnownPositionAccelerometerCalibrator {
+public abstract class RobustKnownPositionAccelerometerCalibrator implements AccelerometerCalibrationSource {
     /**
      * Indicates whether by default a common z-axis is assumed for both the accelerometer
      * and gyroscope.
@@ -2245,6 +2246,7 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *
      * @return array containing x,y,z components of estimated accelerometer biases.
      */
+    @Override
     public double[] getEstimatedBiases() {
         return mEstimatedBiases;
     }
@@ -2478,6 +2480,7 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @return estimated accelerometer scale factors and cross coupling errors, or null
      * if not available.
      */
+    @Override
     public Matrix getEstimatedMa() {
         return mEstimatedMa;
     }

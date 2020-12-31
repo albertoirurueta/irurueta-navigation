@@ -15,6 +15,7 @@
  */
 package com.irurueta.navigation.inertial.calibration.noise;
 
+import com.irurueta.navigation.inertial.calibration.AccelerometerNoiseRootPsdSource;
 import com.irurueta.navigation.inertial.calibration.TimeIntervalEstimator;
 import com.irurueta.units.Acceleration;
 import com.irurueta.units.AccelerationConverter;
@@ -43,7 +44,8 @@ import com.irurueta.units.AccelerationUnit;
 public class WindowedAccelerationMeasurementNoiseEstimator extends
         WindowedMeasurementNoiseEstimator<AccelerationUnit, Acceleration,
                 WindowedAccelerationMeasurementNoiseEstimator,
-                WindowedAccelerationMeasurementNoiseEstimatorListener> {
+                WindowedAccelerationMeasurementNoiseEstimatorListener>
+        implements AccelerometerNoiseRootPsdSource {
 
     /**
      * Constructor.
@@ -94,5 +96,16 @@ public class WindowedAccelerationMeasurementNoiseEstimator extends
     protected double convertToDefaultUnit(Acceleration value) {
         return AccelerationConverter.convert(value.getValue().doubleValue(),
                 value.getUnit(), getDefaultUnit());
+    }
+
+    /**
+     * Gets accelerometer base noise level root PSD (Power Spectral Density)
+     * expressed in (m * s^-1.5).
+     *
+     * @return accelerometer base noise level root PSD.
+     */
+    @Override
+    public double getAccelerometerBaseNoiseLevelRootPsd() {
+        return getRootPsd();
     }
 }

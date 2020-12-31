@@ -16,6 +16,7 @@
 package com.irurueta.navigation.inertial.calibration.intervals;
 
 import com.irurueta.navigation.inertial.calibration.AccelerationTriad;
+import com.irurueta.navigation.inertial.calibration.AccelerometerNoiseRootPsdSource;
 import com.irurueta.navigation.inertial.calibration.noise.AccumulatedAccelerationTriadNoiseEstimator;
 import com.irurueta.navigation.inertial.calibration.noise.WindowedAccelerationTriadNoiseEstimator;
 import com.irurueta.units.Acceleration;
@@ -31,7 +32,8 @@ import com.irurueta.units.AccelerationUnit;
 public class AccelerationTriadStaticIntervalDetector extends
         TriadStaticIntervalDetector<AccelerationUnit, Acceleration,
                 AccelerationTriad, AccelerationTriadStaticIntervalDetector,
-                AccelerationTriadStaticIntervalDetectorListener> {
+                AccelerationTriadStaticIntervalDetectorListener>
+        implements AccelerometerNoiseRootPsdSource {
 
     /**
      * Constructor.
@@ -105,5 +107,16 @@ public class AccelerationTriadStaticIntervalDetector extends
             final double valueX, final double valueY, final double valueZ,
             final AccelerationUnit unit) {
         return new AccelerationTriad(unit, valueX, valueY, valueZ);
+    }
+
+    /**
+     * Gets accelerometer base noise level root PSD (Power Spectral Density)
+     * expressed in (m * s^-1.5).
+     *
+     * @return accelerometer base noise level root PSD.
+     */
+    @Override
+    public double getAccelerometerBaseNoiseLevelRootPsd() {
+        return getBaseNoiseLevelRootPsd();
     }
 }

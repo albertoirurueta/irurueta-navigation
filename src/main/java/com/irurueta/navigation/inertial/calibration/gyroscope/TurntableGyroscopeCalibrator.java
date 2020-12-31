@@ -40,6 +40,7 @@ import com.irurueta.navigation.inertial.NEDVelocity;
 import com.irurueta.navigation.inertial.calibration.AccelerationFixer;
 import com.irurueta.navigation.inertial.calibration.AngularSpeedTriad;
 import com.irurueta.navigation.inertial.calibration.CalibrationException;
+import com.irurueta.navigation.inertial.calibration.GyroscopeCalibrationSource;
 import com.irurueta.navigation.inertial.calibration.StandardDeviationBodyKinematics;
 import com.irurueta.navigation.inertial.estimators.ECEFKinematicsEstimator;
 import com.irurueta.numerical.EvaluationException;
@@ -95,7 +96,7 @@ import java.util.Collection;
  * - ftrue is ground-truth specific force. This is a 3x1 vector.
  * - w is measurement noise. This is a 3x1 vector.
  */
-public class TurntableGyroscopeCalibrator {
+public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource {
     /**
      * Indicates whether by default a common z-axis is assumed for both the accelerometer
      * and gyroscope.
@@ -4350,6 +4351,7 @@ public class TurntableGyroscopeCalibrator {
      *
      * @return array containing x,y,z components of estimated gyroscope biases.
      */
+    @Override
     public double[] getEstimatedBiases() {
         return mEstimatedBiases;
     }
@@ -4583,6 +4585,7 @@ public class TurntableGyroscopeCalibrator {
      * @return estimated gyroscope scale factors and cross coupling errors, or null
      * if not available.
      */
+    @Override
     public Matrix getEstimatedMg() {
         return mEstimatedMg;
     }
@@ -4693,6 +4696,7 @@ public class TurntableGyroscopeCalibrator {
      *
      * @return estimated G-dependent cross biases.
      */
+    @Override
     public Matrix getEstimatedGg() {
         return mEstimatedGg;
     }

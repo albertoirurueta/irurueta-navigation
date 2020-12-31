@@ -1,8 +1,10 @@
 package com.irurueta.navigation.inertial.calibration.generators;
 
 import com.irurueta.navigation.LockedException;
+import com.irurueta.navigation.inertial.calibration.AccelerometerNoiseRootPsdSource;
 import com.irurueta.navigation.inertial.calibration.AngularSpeedTriad;
 import com.irurueta.navigation.inertial.calibration.BodyKinematicsSequence;
+import com.irurueta.navigation.inertial.calibration.GyroscopeNoiseRootPsdSource;
 import com.irurueta.navigation.inertial.calibration.StandardDeviationBodyKinematics;
 import com.irurueta.navigation.inertial.calibration.StandardDeviationTimedBodyKinematics;
 import com.irurueta.navigation.inertial.calibration.TimedBodyKinematics;
@@ -28,7 +30,8 @@ import com.irurueta.units.TimeUnit;
  * @see AccelerometerMeasurementsGenerator
  * @see GyroscopeMeasurementsGenerator
  */
-public class AccelerometerAndGyroscopeMeasurementsGenerator {
+public class AccelerometerAndGyroscopeMeasurementsGenerator
+        implements AccelerometerNoiseRootPsdSource, GyroscopeNoiseRootPsdSource {
 
     /**
      * Listener to handle generated events.
@@ -638,6 +641,7 @@ public class AccelerometerAndGyroscopeMeasurementsGenerator {
      *
      * @return accelerometer base noise level root PSD.
      */
+    @Override
     public double getAccelerometerBaseNoiseLevelRootPsd() {
         return mAccelerometerMeasurementsGenerator.getAccelerometerBaseNoiseLevelRootPsd();
     }
@@ -846,6 +850,7 @@ public class AccelerometerAndGyroscopeMeasurementsGenerator {
      *
      * @return gyroscope base noise level root PSD.
      */
+    @Override
     public double getGyroscopeBaseNoiseLevelRootPsd() {
         return mGyroscopeMeasurementsGenerator.getGyroscopeBaseNoiseLevelRootPsd();
     }

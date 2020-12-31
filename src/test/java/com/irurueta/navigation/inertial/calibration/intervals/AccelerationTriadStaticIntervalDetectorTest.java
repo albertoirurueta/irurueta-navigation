@@ -747,6 +747,7 @@ public class AccelerationTriadStaticIntervalDetectorTest implements
         assertEquals(a1, a2);
         assertEquals(detector.getBaseNoiseLevelPsd(), 0.0, 0.0);
         assertEquals(detector.getBaseNoiseLevelRootPsd(), 0.0, 0.0);
+        assertEquals(detector.getAccelerometerBaseNoiseLevelRootPsd(), 0.0, 0.0);
         assertEquals(detector.getThreshold(), 0.0, 0.0);
         a1 = detector.getThresholdAsMeasurement();
         assertEquals(a1.getValue().doubleValue(), 0.0, 0.0);
@@ -788,6 +789,8 @@ public class AccelerationTriadStaticIntervalDetectorTest implements
         assertEquals(detector.getBaseNoiseLevelPsd(),
                 Math.pow(detector.getBaseNoiseLevelRootPsd(), 2.0),
                 VERY_SMALL_ABSOLUTE_ERROR);
+        assertEquals(detector.getBaseNoiseLevelRootPsd(),
+                detector.getAccelerometerBaseNoiseLevelRootPsd(), 0.0);
         assertTrue(detector.getThreshold() > 0.0);
         assertEquals(detector.getThreshold(),
                 detector.getBaseNoiseLevel() * detector.getThresholdFactor(),
@@ -993,6 +996,7 @@ public class AccelerationTriadStaticIntervalDetectorTest implements
         assertEquals(a1, a2);
         assertEquals(detector.getBaseNoiseLevelPsd(), 0.0, 0.0);
         assertEquals(detector.getBaseNoiseLevelRootPsd(), 0.0, 0.0);
+        assertEquals(detector.getAccelerometerBaseNoiseLevelRootPsd(), 0.0, 0.0);
         assertEquals(detector.getThreshold(), 0.0, 0.0);
         a1 = detector.getThresholdAsMeasurement();
         assertEquals(a1.getValue().doubleValue(), 0.0, 0.0);
@@ -1075,6 +1079,7 @@ public class AccelerationTriadStaticIntervalDetectorTest implements
         assertEquals(a1, a2);
         assertEquals(detector.getBaseNoiseLevelPsd(), 0.0, 0.0);
         assertEquals(detector.getBaseNoiseLevelRootPsd(), 0.0, 0.0);
+        assertEquals(detector.getAccelerometerBaseNoiseLevelRootPsd(), 0.0, 0.0);
         assertEquals(detector.getThreshold(), 0.0, 0.0);
         a1 = detector.getThresholdAsMeasurement();
         assertEquals(a1.getValue().doubleValue(), 0.0, 0.0);
@@ -1126,6 +1131,8 @@ public class AccelerationTriadStaticIntervalDetectorTest implements
         assertEquals(detector.getBaseNoiseLevelPsd(),
                 Math.pow(detector.getBaseNoiseLevelRootPsd(), 2.0),
                 VERY_SMALL_ABSOLUTE_ERROR);
+        assertEquals(detector.getBaseNoiseLevelRootPsd(),
+                detector.getAccelerometerBaseNoiseLevelRootPsd(), 0.0);
         assertTrue(detector.getThreshold() > 0.0);
         assertEquals(detector.getThreshold(),
                 detector.getBaseNoiseLevel() * detector.getThresholdFactor(),
@@ -1340,6 +1347,7 @@ public class AccelerationTriadStaticIntervalDetectorTest implements
         assertEquals(a1, a2);
         assertEquals(detector.getBaseNoiseLevelPsd(), 0.0, 0.0);
         assertEquals(detector.getBaseNoiseLevelRootPsd(), 0.0, 0.0);
+        assertEquals(detector.getAccelerometerBaseNoiseLevelRootPsd(), 0.0, 0.0);
         assertEquals(detector.getThreshold(), 0.0, 0.0);
         a1 = detector.getThresholdAsMeasurement();
         assertEquals(a1.getValue().doubleValue(), 0.0, 0.0);
@@ -1422,6 +1430,7 @@ public class AccelerationTriadStaticIntervalDetectorTest implements
         assertEquals(a1, a2);
         assertEquals(detector.getBaseNoiseLevelPsd(), 0.0, 0.0);
         assertEquals(detector.getBaseNoiseLevelRootPsd(), 0.0, 0.0);
+        assertEquals(detector.getAccelerometerBaseNoiseLevelRootPsd(), 0.0, 0.0);
         assertEquals(detector.getThreshold(), 0.0, 0.0);
         a1 = detector.getThresholdAsMeasurement();
         assertEquals(a1.getValue().doubleValue(), 0.0, 0.0);
@@ -1464,6 +1473,8 @@ public class AccelerationTriadStaticIntervalDetectorTest implements
         assertEquals(detector.getBaseNoiseLevelPsd(),
                 Math.pow(detector.getBaseNoiseLevelRootPsd(), 2.0),
                 VERY_SMALL_ABSOLUTE_ERROR);
+        assertEquals(detector.getBaseNoiseLevelRootPsd(),
+                detector.getAccelerometerBaseNoiseLevelRootPsd(), 0.);
         assertTrue(detector.getThreshold() > 0.0);
         assertEquals(detector.getThreshold(),
                 detector.getBaseNoiseLevel() * detector.getThresholdFactor(),
@@ -1672,6 +1683,7 @@ public class AccelerationTriadStaticIntervalDetectorTest implements
         assertEquals(a1, a2);
         assertEquals(detector.getBaseNoiseLevelPsd(), 0.0, 0.0);
         assertEquals(detector.getBaseNoiseLevelRootPsd(), 0.0, 0.0);
+        assertEquals(detector.getAccelerometerBaseNoiseLevelRootPsd(), 0.0, 0.0);
         assertEquals(detector.getThreshold(), 0.0, 0.0);
         a1 = detector.getThresholdAsMeasurement();
         assertEquals(a1.getValue().doubleValue(), 0.0, 0.0);

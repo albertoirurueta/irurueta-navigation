@@ -26,6 +26,7 @@ import com.irurueta.navigation.inertial.INSLooselyCoupledKalmanInitializerConfig
 import com.irurueta.navigation.inertial.INSTightlyCoupledKalmanInitializerConfig;
 import com.irurueta.navigation.inertial.calibration.AngularSpeedTriad;
 import com.irurueta.navigation.inertial.calibration.CalibrationException;
+import com.irurueta.navigation.inertial.calibration.GyroscopeCalibrationSource;
 import com.irurueta.navigation.inertial.calibration.StandardDeviationFrameBodyKinematics;
 import com.irurueta.navigation.inertial.estimators.ECEFKinematicsEstimator;
 import com.irurueta.numerical.fitting.FittingException;
@@ -71,7 +72,8 @@ import java.util.Collection;
 public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
         KnownFrameGyroscopeCalibrator<StandardDeviationFrameBodyKinematics,
                 KnownFrameGyroscopeNonLinearLeastSquaresCalibratorListener>,
-        GyroscopeNonLinearCalibrator, UnknownBiasNonLinearGyroscopeCalibrator {
+        GyroscopeNonLinearCalibrator, UnknownBiasNonLinearGyroscopeCalibrator,
+        GyroscopeCalibrationSource {
 
     /**
      * Indicates whether by default a common z-axis is assumed for both the accelerometer

@@ -176,6 +176,7 @@ public class IMUErrors implements Serializable, Cloneable {
 
     /**
      * Gyro quantization level expressed in radians per second (rad/s).
+     * By default it is zero when no quantization is assumed.
      */
     private double mGyroQuantizationLevel;
 

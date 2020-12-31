@@ -25,6 +25,7 @@ import com.irurueta.navigation.inertial.BodyKinematics;
 import com.irurueta.navigation.inertial.INSLooselyCoupledKalmanInitializerConfig;
 import com.irurueta.navigation.inertial.INSTightlyCoupledKalmanInitializerConfig;
 import com.irurueta.navigation.inertial.calibration.AccelerationTriad;
+import com.irurueta.navigation.inertial.calibration.AccelerometerCalibrationSource;
 import com.irurueta.navigation.inertial.calibration.CalibrationException;
 import com.irurueta.navigation.inertial.calibration.StandardDeviationBodyKinematics;
 import com.irurueta.numerical.robust.InliersData;
@@ -60,7 +61,7 @@ import java.util.List;
  * - ftrue is ground-trush specific force.
  * - w is measurement noise.
  */
-public abstract class RobustKnownGravityNormAccelerometerCalibrator {
+public abstract class RobustKnownGravityNormAccelerometerCalibrator implements AccelerometerCalibrationSource {
 
     /**
      * Indicates whether by default a common z-axis is assumed for both the accelerometer
@@ -2299,6 +2300,7 @@ public abstract class RobustKnownGravityNormAccelerometerCalibrator {
      *
      * @return array containing x,y,z components of estimated accelerometer biases.
      */
+    @Override
     public double[] getEstimatedBiases() {
         return mEstimatedBiases;
     }
@@ -2532,6 +2534,7 @@ public abstract class RobustKnownGravityNormAccelerometerCalibrator {
      * @return estimated accelerometer scale factors and cross coupling errors, or null
      * if not available.
      */
+    @Override
     public Matrix getEstimatedMa() {
         return mEstimatedMa;
     }

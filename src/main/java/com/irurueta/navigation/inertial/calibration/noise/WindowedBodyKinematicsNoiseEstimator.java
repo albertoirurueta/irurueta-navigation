@@ -18,7 +18,9 @@ package com.irurueta.navigation.inertial.calibration.noise;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.inertial.BodyKinematics;
 import com.irurueta.navigation.inertial.calibration.AccelerationTriad;
+import com.irurueta.navigation.inertial.calibration.AccelerometerNoiseRootPsdSource;
 import com.irurueta.navigation.inertial.calibration.AngularSpeedTriad;
+import com.irurueta.navigation.inertial.calibration.GyroscopeNoiseRootPsdSource;
 import com.irurueta.navigation.inertial.calibration.TimeIntervalEstimator;
 import com.irurueta.units.Acceleration;
 import com.irurueta.units.AccelerationUnit;
@@ -47,7 +49,8 @@ import java.util.LinkedList;
  * cannot be used to determine biases. Only norm of noise estimations
  * (variance or standard deviation) can be safely used.
  */
-public class WindowedBodyKinematicsNoiseEstimator {
+public class WindowedBodyKinematicsNoiseEstimator
+        implements AccelerometerNoiseRootPsdSource, GyroscopeNoiseRootPsdSource {
     /**
      * Number of samples to keep within the window by default.
      * For an accelerometer generating 100 samples/second, this is equivalent to
@@ -1743,5 +1746,27 @@ public class WindowedBodyKinematicsNoiseEstimator {
         mVarianceAngularRateZ = varWz;
 
         return true;
+    }
+
+    /**
+     * Gets accelerometer base noise level root PSD (Power Spectral Density)
+     * expressed in (m * s^-1.5).
+     *
+     * @return accelerometer base noise level root PSD.
+     */
+    @Override
+    public double getAccelerometerBaseNoiseLevelRootPsd() {
+        return getSpecificForceNoiseRootPsdNorm();
+    }
+
+    /**
+     * Gets gyroscope base noise level root PSD (Power Spectral Density)
+     * expressed in (rad * s^-0.5)
+     *
+     * @return gyroscope base noise level root PSD.
+     */
+    @Override
+    public double getGyroscopeBaseNoiseLevelRootPsd() {
+        return getAngularRateNoiseRootPsdNorm();
     }
 }

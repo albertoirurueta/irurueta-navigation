@@ -18,7 +18,9 @@ package com.irurueta.navigation.inertial.calibration.noise;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.inertial.BodyKinematics;
 import com.irurueta.navigation.inertial.calibration.AccelerationTriad;
+import com.irurueta.navigation.inertial.calibration.AccelerometerNoiseRootPsdSource;
 import com.irurueta.navigation.inertial.calibration.AngularSpeedTriad;
+import com.irurueta.navigation.inertial.calibration.GyroscopeNoiseRootPsdSource;
 import com.irurueta.navigation.inertial.calibration.TimeIntervalEstimator;
 import com.irurueta.units.Acceleration;
 import com.irurueta.units.AccelerationConverter;
@@ -44,7 +46,8 @@ import com.irurueta.units.Time;
  * cannot be used to determine biases. Only norm of noise estimations
  * (variance or standard deviation) can be safely used.
  */
-public class AccumulatedBodyKinematicsNoiseEstimator {
+public class AccumulatedBodyKinematicsNoiseEstimator
+        implements AccelerometerNoiseRootPsdSource, GyroscopeNoiseRootPsdSource {
 
     /**
      * Default time interval between accelerometer samples expressed in seconds
@@ -1343,5 +1346,27 @@ public class AccumulatedBodyKinematicsNoiseEstimator {
             final double value, final AngularSpeedUnit unit) {
         return AngularSpeedConverter.convert(value, unit,
                 AngularSpeedUnit.RADIANS_PER_SECOND);
+    }
+
+    /**
+     * Gets accelerometer base noise level root PSD (Power Spectral Density)
+     * expressed in (m * s^-1.5).
+     *
+     * @return accelerometer base noise level root PSD.
+     */
+    @Override
+    public double getAccelerometerBaseNoiseLevelRootPsd() {
+        return getSpecificForceNoiseRootPsdNorm();
+    }
+
+    /**
+     * Gets gyroscope base noise level root PSD (Power Spectral Density)
+     * expressed in (rad * s^-0.5)
+     *
+     * @return gyroscope base noise level root PSD.
+     */
+    @Override
+    public double getGyroscopeBaseNoiseLevelRootPsd() {
+        return getAngularRateNoiseRootPsdNorm();
     }
 }

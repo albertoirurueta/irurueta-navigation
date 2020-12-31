@@ -25,6 +25,7 @@ import com.irurueta.navigation.inertial.INSLooselyCoupledKalmanInitializerConfig
 import com.irurueta.navigation.inertial.INSTightlyCoupledKalmanInitializerConfig;
 import com.irurueta.navigation.inertial.calibration.AngularSpeedTriad;
 import com.irurueta.navigation.inertial.calibration.CalibrationException;
+import com.irurueta.navigation.inertial.calibration.GyroscopeCalibrationSource;
 import com.irurueta.navigation.inertial.calibration.StandardDeviationFrameBodyKinematics;
 import com.irurueta.navigation.inertial.estimators.ECEFKinematicsEstimator;
 import com.irurueta.numerical.robust.InliersData;
@@ -66,7 +67,7 @@ import java.util.List;
  * - ftrue is ground-truth specific force. This is a 3x1 vector.
  * - w is measurement noise. This is a 3x1 vector.
  */
-public abstract class RobustKnownFrameGyroscopeCalibrator {
+public abstract class RobustKnownFrameGyroscopeCalibrator implements GyroscopeCalibrationSource {
 
     /**
      * Indicates whether by default a common z-axis is assumed for both the accelerometer
@@ -1633,6 +1634,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      *
      * @return array containing x,y,z components of estimated gyroscope biases.
      */
+    @Override
     public double[] getEstimatedBiases() {
         return mEstimatedBiases;
     }
@@ -1866,6 +1868,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      * @return estimated gyroscope scale factors and cross coupling errors, or null
      * if not available.
      */
+    @Override
     public Matrix getEstimatedMg() {
         return mEstimatedMg;
     }
@@ -1967,6 +1970,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
      *
      * @return estimated G-dependent cross biases.
      */
+    @Override
     public Matrix getEstimatedGg() {
         return mEstimatedGg;
     }

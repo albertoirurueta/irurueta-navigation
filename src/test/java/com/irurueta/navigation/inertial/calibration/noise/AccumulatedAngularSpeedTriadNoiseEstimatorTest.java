@@ -167,6 +167,7 @@ public class AccumulatedAngularSpeedTriadNoiseEstimatorTest implements
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgNoisePsd(), 0.0);
         assertEquals(0.0, estimator.getNoiseRootPsdNorm(), 0.0);
+        assertEquals(0.0, estimator.getGyroscopeBaseNoiseLevelRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
     }
@@ -288,6 +289,7 @@ public class AccumulatedAngularSpeedTriadNoiseEstimatorTest implements
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgNoisePsd(), 0.0);
         assertEquals(0.0, estimator.getNoiseRootPsdNorm(), 0.0);
+        assertEquals(0.0, estimator.getGyroscopeBaseNoiseLevelRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
     }
@@ -589,6 +591,8 @@ public class AccumulatedAngularSpeedTriadNoiseEstimatorTest implements
                 + rootPsdZ * rootPsdZ);
 
         assertEquals(rootPsdNorm, estimator.getNoiseRootPsdNorm(), ABSOLUTE_ERROR);
+        assertEquals(estimator.getNoiseRootPsdNorm(),
+                estimator.getGyroscopeBaseNoiseLevelRootPsd(), 0.0);
 
         // reset
         assertTrue(estimator.reset());
@@ -615,6 +619,7 @@ public class AccumulatedAngularSpeedTriadNoiseEstimatorTest implements
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgNoisePsd(), 0.0);
         assertEquals(0.0, estimator.getNoiseRootPsdNorm(), 0.0);
+        assertEquals(0.0, estimator.getGyroscopeBaseNoiseLevelRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
     }
@@ -854,6 +859,8 @@ public class AccumulatedAngularSpeedTriadNoiseEstimatorTest implements
                 + rootPsdZ * rootPsdZ);
 
         assertEquals(rootPsdNorm, estimator.getNoiseRootPsdNorm(), ABSOLUTE_ERROR);
+        assertEquals(estimator.getNoiseRootPsdNorm(),
+                estimator.getGyroscopeBaseNoiseLevelRootPsd(), 0.0);
 
         // reset
         assertTrue(estimator.reset());
@@ -880,6 +887,7 @@ public class AccumulatedAngularSpeedTriadNoiseEstimatorTest implements
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgNoisePsd(), 0.0);
         assertEquals(0.0, estimator.getNoiseRootPsdNorm(), 0.0);
+        assertEquals(0.0, estimator.getGyroscopeBaseNoiseLevelRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
     }
@@ -1120,6 +1128,8 @@ public class AccumulatedAngularSpeedTriadNoiseEstimatorTest implements
                 + rootPsdZ * rootPsdZ);
 
         assertEquals(rootPsdNorm, estimator.getNoiseRootPsdNorm(), ABSOLUTE_ERROR);
+        assertEquals(estimator.getNoiseRootPsdNorm(),
+                estimator.getGyroscopeBaseNoiseLevelRootPsd(), 0.0);
 
         // reset
         assertTrue(estimator.reset());
@@ -1146,6 +1156,7 @@ public class AccumulatedAngularSpeedTriadNoiseEstimatorTest implements
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgNoisePsd(), 0.0);
         assertEquals(0.0, estimator.getNoiseRootPsdNorm(), 0.0);
+        assertEquals(0.0, estimator.getGyroscopeBaseNoiseLevelRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
     }

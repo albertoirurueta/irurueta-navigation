@@ -171,6 +171,7 @@ public class WindowedAccelerationTriadNoiseEstimatorTest implements WindowedAcce
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgNoisePsd(), 0.0);
         assertEquals(0.0, estimator.getNoiseRootPsdNorm(), 0.0);
+        assertEquals(0.0, estimator.getAccelerometerBaseNoiseLevelRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertEquals(0, estimator.getNumberOfSamplesInWindow());
         assertFalse(estimator.isRunning());
@@ -298,6 +299,7 @@ public class WindowedAccelerationTriadNoiseEstimatorTest implements WindowedAcce
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgNoisePsd(), 0.0);
         assertEquals(0.0, estimator.getNoiseRootPsdNorm(), 0.0);
+        assertEquals(0.0, estimator.getAccelerometerBaseNoiseLevelRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertEquals(0, estimator.getNumberOfSamplesInWindow());
         assertFalse(estimator.isRunning());
@@ -642,6 +644,8 @@ public class WindowedAccelerationTriadNoiseEstimatorTest implements WindowedAcce
         final double normRootPsd = Math.sqrt(rootPsdX * rootPsdX
                 + rootPsdY * rootPsdY + rootPsdZ * rootPsdZ);
         assertEquals(normRootPsd, estimator.getNoiseRootPsdNorm(), ABSOLUTE_ERROR);
+        assertEquals(estimator.getNoiseRootPsdNorm(),
+                estimator.getAccelerometerBaseNoiseLevelRootPsd(), 0.0);
 
         assertEquals(windowSize, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
@@ -699,6 +703,7 @@ public class WindowedAccelerationTriadNoiseEstimatorTest implements WindowedAcce
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgNoisePsd(), 0.0);
         assertEquals(0.0, estimator.getNoiseRootPsdNorm(), 0.0);
+        assertEquals(0.0, estimator.getAccelerometerBaseNoiseLevelRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertEquals(0, estimator.getNumberOfSamplesInWindow());
         assertFalse(estimator.isRunning());
@@ -953,6 +958,8 @@ public class WindowedAccelerationTriadNoiseEstimatorTest implements WindowedAcce
         final double normRootPsd = Math.sqrt(rootPsdX * rootPsdX
                 + rootPsdY * rootPsdY + rootPsdZ * rootPsdZ);
         assertEquals(normRootPsd, estimator.getNoiseRootPsdNorm(), ABSOLUTE_ERROR);
+        assertEquals(estimator.getNoiseRootPsdNorm(),
+                estimator.getAccelerometerBaseNoiseLevelRootPsd(), 0.0);
 
         assertEquals(windowSize, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
@@ -1011,6 +1018,7 @@ public class WindowedAccelerationTriadNoiseEstimatorTest implements WindowedAcce
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgNoisePsd(), 0.0);
         assertEquals(0.0, estimator.getNoiseRootPsdNorm(), 0.0);
+        assertEquals(0.0, estimator.getAccelerometerBaseNoiseLevelRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertEquals(0, estimator.getNumberOfSamplesInWindow());
         assertFalse(estimator.isRunning());
@@ -1266,6 +1274,8 @@ public class WindowedAccelerationTriadNoiseEstimatorTest implements WindowedAcce
         final double normRootPsd = Math.sqrt(rootPsdX * rootPsdX
                 + rootPsdY * rootPsdY + rootPsdZ * rootPsdZ);
         assertEquals(normRootPsd, estimator.getNoiseRootPsdNorm(), ABSOLUTE_ERROR);
+        assertEquals(estimator.getNoiseRootPsdNorm(),
+                estimator.getAccelerometerBaseNoiseLevelRootPsd(), 0.0);
 
         assertEquals(windowSize, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
@@ -1324,6 +1334,7 @@ public class WindowedAccelerationTriadNoiseEstimatorTest implements WindowedAcce
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgNoisePsd(), 0.0);
         assertEquals(0.0, estimator.getNoiseRootPsdNorm(), 0.0);
+        assertEquals(0.0, estimator.getAccelerometerBaseNoiseLevelRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertEquals(0, estimator.getNumberOfSamplesInWindow());
         assertFalse(estimator.isRunning());
@@ -1435,6 +1446,7 @@ public class WindowedAccelerationTriadNoiseEstimatorTest implements WindowedAcce
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgNoisePsd(), 0.0);
         assertEquals(0.0, estimator.getNoiseRootPsdNorm(), 0.0);
+        assertEquals(0.0, estimator.getAccelerometerBaseNoiseLevelRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertEquals(windowSize, estimator.getNumberOfSamplesInWindow());
         assertFalse(estimator.isRunning());
@@ -1546,6 +1558,7 @@ public class WindowedAccelerationTriadNoiseEstimatorTest implements WindowedAcce
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgNoisePsd(), 0.0);
         assertEquals(0.0, estimator.getNoiseRootPsdNorm(), 0.0);
+        assertEquals(0.0, estimator.getAccelerometerBaseNoiseLevelRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertEquals(windowSize, estimator.getNumberOfSamplesInWindow());
         assertFalse(estimator.isRunning());
@@ -1658,6 +1671,7 @@ public class WindowedAccelerationTriadNoiseEstimatorTest implements WindowedAcce
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgNoisePsd(), 0.0);
         assertEquals(0.0, estimator.getNoiseRootPsdNorm(), 0.0);
+        assertEquals(0.0, estimator.getAccelerometerBaseNoiseLevelRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertEquals(windowSize, estimator.getNumberOfSamplesInWindow());
         assertFalse(estimator.isRunning());

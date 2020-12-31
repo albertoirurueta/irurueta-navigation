@@ -20,6 +20,7 @@ import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.inertial.BodyKinematics;
 import com.irurueta.navigation.inertial.calibration.AngularSpeedTriad;
 import com.irurueta.navigation.inertial.calibration.BodyKinematicsSequence;
+import com.irurueta.navigation.inertial.calibration.GyroscopeNoiseRootPsdSource;
 import com.irurueta.navigation.inertial.calibration.StandardDeviationTimedBodyKinematics;
 import com.irurueta.navigation.inertial.calibration.TimedBodyKinematics;
 import com.irurueta.navigation.inertial.calibration.intervals.TriadStaticIntervalDetector;
@@ -51,7 +52,8 @@ public class GyroscopeMeasurementsGenerator extends
         MeasurementsGenerator<
                 BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>,
                 GyroscopeMeasurementsGenerator,
-                GyroscopeMeasurementGeneratorListener, TimedBodyKinematics> {
+                GyroscopeMeasurementGeneratorListener, TimedBodyKinematics> 
+        implements GyroscopeNoiseRootPsdSource {
 
     /**
      * An angular speed triad.
@@ -278,6 +280,7 @@ public class GyroscopeMeasurementsGenerator extends
      *
      * @return gyroscope base noise level root PSD.
      */
+    @Override
     public double getGyroscopeBaseNoiseLevelRootPsd() {
         return mAngularSpeedNoiseRootPsd;
     }

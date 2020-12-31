@@ -15,6 +15,7 @@
  */
 package com.irurueta.navigation.inertial.calibration.noise;
 
+import com.irurueta.navigation.inertial.calibration.GyroscopeNoiseRootPsdSource;
 import com.irurueta.navigation.inertial.calibration.TimeIntervalEstimator;
 import com.irurueta.units.AngularSpeed;
 import com.irurueta.units.AngularSpeedConverter;
@@ -44,7 +45,8 @@ import com.irurueta.units.AngularSpeedUnit;
 public class WindowedAngularSpeedMeasurementNoiseEstimator extends
         WindowedMeasurementNoiseEstimator<AngularSpeedUnit, AngularSpeed,
                 WindowedAngularSpeedMeasurementNoiseEstimator,
-                WindowedAngularSpeedMeasurementNoiseEstimatorListener>  {
+                WindowedAngularSpeedMeasurementNoiseEstimatorListener>
+        implements GyroscopeNoiseRootPsdSource {
 
     /**
      * Constructor.
@@ -95,5 +97,16 @@ public class WindowedAngularSpeedMeasurementNoiseEstimator extends
     protected double convertToDefaultUnit(AngularSpeed value) {
         return AngularSpeedConverter.convert(value.getValue().doubleValue(),
                 value.getUnit(), getDefaultUnit());
+    }
+
+    /**
+     * Gets gyroscope base noise level root PSD (Power Spectral Density)
+     * expressed in (rad * s^-0.5)
+     *
+     * @return gyroscope base noise level root PSD.
+     */
+    @Override
+    public double getGyroscopeBaseNoiseLevelRootPsd() {
+        return getRootPsd();
     }
 }

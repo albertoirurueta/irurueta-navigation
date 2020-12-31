@@ -18,6 +18,7 @@ package com.irurueta.navigation.inertial.calibration.generators;
 
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.inertial.calibration.AccelerationTriad;
+import com.irurueta.navigation.inertial.calibration.AccelerometerNoiseRootPsdSource;
 import com.irurueta.navigation.inertial.calibration.intervals.AccelerationTriadStaticIntervalDetector;
 import com.irurueta.navigation.inertial.calibration.intervals.AccelerationTriadStaticIntervalDetectorListener;
 import com.irurueta.navigation.inertial.calibration.intervals.TriadStaticIntervalDetector;
@@ -37,7 +38,7 @@ import com.irurueta.units.TimeUnit;
  * @param <I> type of input data to be processed.
  */
 public abstract class MeasurementsGenerator<T, G extends MeasurementsGenerator<T, G, L, I>,
-        L extends MeasurementsGeneratorListener<T, G, L, I>, I> {
+        L extends MeasurementsGeneratorListener<T, G, L, I>, I> implements AccelerometerNoiseRootPsdSource {
 
     /**
      * Default minimum number of samples required in a static interval to be taken into account.
@@ -531,6 +532,7 @@ public abstract class MeasurementsGenerator<T, G extends MeasurementsGenerator<T
      *
      * @return accelerometer base noise level root PSD.
      */
+    @Override
     public double getAccelerometerBaseNoiseLevelRootPsd() {
         return mStaticIntervalDetector.getBaseNoiseLevelRootPsd();
     }

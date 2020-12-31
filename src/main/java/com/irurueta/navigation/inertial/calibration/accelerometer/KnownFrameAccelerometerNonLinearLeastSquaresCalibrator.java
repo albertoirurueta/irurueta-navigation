@@ -25,6 +25,7 @@ import com.irurueta.navigation.inertial.BodyKinematics;
 import com.irurueta.navigation.inertial.INSLooselyCoupledKalmanInitializerConfig;
 import com.irurueta.navigation.inertial.INSTightlyCoupledKalmanInitializerConfig;
 import com.irurueta.navigation.inertial.calibration.AccelerationTriad;
+import com.irurueta.navigation.inertial.calibration.AccelerometerCalibrationSource;
 import com.irurueta.navigation.inertial.calibration.CalibrationException;
 import com.irurueta.navigation.inertial.calibration.StandardDeviationFrameBodyKinematics;
 import com.irurueta.navigation.inertial.estimators.ECEFKinematicsEstimator;
@@ -65,7 +66,8 @@ import java.util.Collection;
 public class KnownFrameAccelerometerNonLinearLeastSquaresCalibrator implements
         KnownFrameAccelerometerCalibrator<StandardDeviationFrameBodyKinematics,
                 KnownFrameAccelerometerNonLinearLeastSquaresCalibratorListener>,
-        AccelerometerNonLinearCalibrator, UnknownBiasNonLinearAccelerometerCalibrator {
+        AccelerometerNonLinearCalibrator, UnknownBiasNonLinearAccelerometerCalibrator,
+        AccelerometerCalibrationSource {
 
     /**
      * Indicates whether by default a common z-axis is assumed for both the accelerometer

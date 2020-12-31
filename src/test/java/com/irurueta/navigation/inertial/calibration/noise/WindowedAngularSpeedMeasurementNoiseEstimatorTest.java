@@ -93,6 +93,7 @@ public class WindowedAngularSpeedMeasurementNoiseEstimatorTest implements
         assertEquals(std1, std2);
         assertEquals(0.0, estimator.getPsd(), 0.0);
         assertEquals(0.0, estimator.getRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getGyroscopeBaseNoiseLevelRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertEquals(0, estimator.getNumberOfAddedSamples());
         assertEquals(0, estimator.getNumberOfSamplesInWindow());
@@ -143,6 +144,7 @@ public class WindowedAngularSpeedMeasurementNoiseEstimatorTest implements
         assertEquals(std1, std2);
         assertEquals(0.0, estimator.getPsd(), 0.0);
         assertEquals(0.0, estimator.getRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getGyroscopeBaseNoiseLevelRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertEquals(0, estimator.getNumberOfAddedSamples());
         assertEquals(0, estimator.getNumberOfSamplesInWindow());
@@ -382,6 +384,8 @@ public class WindowedAngularSpeedMeasurementNoiseEstimatorTest implements
 
         final double rootPsd = Math.sqrt(psd);
         assertEquals(rootPsd, estimator.getRootPsd(), ABSOLUTE_ERROR);
+        assertEquals(estimator.getRootPsd(),
+                estimator.getGyroscopeBaseNoiseLevelRootPsd(), 0.0);
 
         assertEquals(windowSize, estimator.getNumberOfProcessedSamples());
         assertEquals(windowSize, estimator.getNumberOfAddedSamples());
@@ -434,6 +438,7 @@ public class WindowedAngularSpeedMeasurementNoiseEstimatorTest implements
         assertEquals(0.0, estimator.getStandardDeviation(), 0.0);
         assertEquals(0.0, estimator.getPsd(), 0.0);
         assertEquals(0.0, estimator.getRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getGyroscopeBaseNoiseLevelRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertEquals(0, estimator.getNumberOfAddedSamples());
         assertEquals(0, estimator.getNumberOfSamplesInWindow());
@@ -583,6 +588,8 @@ public class WindowedAngularSpeedMeasurementNoiseEstimatorTest implements
 
         final double rootPsd = Math.sqrt(psd);
         assertEquals(rootPsd, estimator.getRootPsd(), ABSOLUTE_ERROR);
+        assertEquals(estimator.getRootPsd(),
+                estimator.getGyroscopeBaseNoiseLevelRootPsd(), 0.0);
 
         assertEquals(windowSize, estimator.getNumberOfProcessedSamples());
         assertEquals(windowSize, estimator.getNumberOfAddedSamples());
@@ -634,6 +641,7 @@ public class WindowedAngularSpeedMeasurementNoiseEstimatorTest implements
         assertEquals(0.0, estimator.getStandardDeviation(), 0.0);
         assertEquals(0.0, estimator.getPsd(), 0.0);
         assertEquals(0.0, estimator.getRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getGyroscopeBaseNoiseLevelRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertEquals(0, estimator.getNumberOfAddedSamples());
         assertEquals(0, estimator.getNumberOfSamplesInWindow());
@@ -756,6 +764,7 @@ public class WindowedAngularSpeedMeasurementNoiseEstimatorTest implements
         assertEquals(0.0, estimator.getStandardDeviation(), 0.0);
         assertEquals(0.0, estimator.getPsd(), 0.0);
         assertEquals(0.0, estimator.getRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getGyroscopeBaseNoiseLevelRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertEquals(windowSize, estimator.getNumberOfAddedSamples());
         assertEquals(windowSize, estimator.getNumberOfSamplesInWindow());
@@ -876,6 +885,7 @@ public class WindowedAngularSpeedMeasurementNoiseEstimatorTest implements
         assertEquals(0.0, estimator.getStandardDeviation(), 0.0);
         assertEquals(0.0, estimator.getPsd(), 0.0);
         assertEquals(0.0, estimator.getRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getGyroscopeBaseNoiseLevelRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertEquals(windowSize, estimator.getNumberOfAddedSamples());
         assertEquals(windowSize, estimator.getNumberOfSamplesInWindow());

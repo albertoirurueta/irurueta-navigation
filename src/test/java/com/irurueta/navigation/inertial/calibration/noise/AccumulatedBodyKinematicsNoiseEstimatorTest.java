@@ -296,8 +296,10 @@ public class AccumulatedBodyKinematicsNoiseEstimatorTest implements
         assertEquals(0.0, estimator.getAngularRateRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgSpecificForceNoisePsd(), 0.0);
         assertEquals(0.0, estimator.getSpecificForceNoiseRootPsdNorm(), 0.0);
+        assertEquals(0.0, estimator.getAccelerometerBaseNoiseLevelRootPsd(), 0.0);
         assertEquals(0.0, estimator.getAvgAngularRateNoisePsd(), 0.0);
         assertEquals(0.0, estimator.getAngularRateNoiseRootPsdNorm(), 0.0);
+        assertEquals(0.0, estimator.getGyroscopeBaseNoiseLevelRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
     }
@@ -538,8 +540,10 @@ public class AccumulatedBodyKinematicsNoiseEstimatorTest implements
         assertEquals(0.0, estimator.getAngularRateRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgSpecificForceNoisePsd(), 0.0);
         assertEquals(0.0, estimator.getSpecificForceNoiseRootPsdNorm(), 0.0);
+        assertEquals(0.0, estimator.getAccelerometerBaseNoiseLevelRootPsd(), 0.0);
         assertEquals(0.0, estimator.getAvgAngularRateNoisePsd(), 0.0);
         assertEquals(0.0, estimator.getAngularRateNoiseRootPsdNorm(), 0.0);
+        assertEquals(0.0, estimator.getGyroscopeBaseNoiseLevelRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
     }
@@ -1065,10 +1069,14 @@ public class AccumulatedBodyKinematicsNoiseEstimatorTest implements
                 SMALL_ABSOLUTE_ERROR);
         assertEquals(normRootPsdF, estimator.getSpecificForceNoiseRootPsdNorm(),
                 SMALL_ABSOLUTE_ERROR);
+        assertEquals(estimator.getSpecificForceNoiseRootPsdNorm(),
+                estimator.getAccelerometerBaseNoiseLevelRootPsd(), 0.0);
         assertEquals(avgPsdW, estimator.getAvgAngularRateNoisePsd(),
                 SMALL_ABSOLUTE_ERROR);
         assertEquals(normRootPsdW, estimator.getAngularRateNoiseRootPsdNorm(),
                 SMALL_ABSOLUTE_ERROR);
+        assertEquals(estimator.getAngularRateNoiseRootPsdNorm(),
+                estimator.getGyroscopeBaseNoiseLevelRootPsd(), 0.0);
 
         assertEquals(rootPsdFx, accelNoiseRootPSD, ABSOLUTE_ERROR);
         assertEquals(rootPsdFy, accelNoiseRootPSD, ABSOLUTE_ERROR);
@@ -1559,10 +1567,14 @@ public class AccumulatedBodyKinematicsNoiseEstimatorTest implements
                 SMALL_ABSOLUTE_ERROR);
         assertEquals(normRootPsdF, estimator.getSpecificForceNoiseRootPsdNorm(),
                 SMALL_ABSOLUTE_ERROR);
+        assertEquals(estimator.getSpecificForceNoiseRootPsdNorm(),
+                estimator.getAccelerometerBaseNoiseLevelRootPsd(), 0.0);
         assertEquals(avgPsdW, estimator.getAvgAngularRateNoisePsd(),
                 SMALL_ABSOLUTE_ERROR);
         assertEquals(normRootPsdW, estimator.getAngularRateNoiseRootPsdNorm(),
                 SMALL_ABSOLUTE_ERROR);
+        assertEquals(estimator.getAngularRateNoiseRootPsdNorm(),
+                estimator.getGyroscopeBaseNoiseLevelRootPsd(), 0.0);
 
         assertEquals(rootPsdFx, accelNoiseRootPSD, ABSOLUTE_ERROR);
         assertEquals(rootPsdFy, accelNoiseRootPSD, ABSOLUTE_ERROR);
@@ -2069,10 +2081,14 @@ public class AccumulatedBodyKinematicsNoiseEstimatorTest implements
                     SMALL_ABSOLUTE_ERROR);
             assertEquals(normRootPsdF, estimator.getSpecificForceNoiseRootPsdNorm(),
                     SMALL_ABSOLUTE_ERROR);
+            assertEquals(estimator.getSpecificForceNoiseRootPsdNorm(),
+                    estimator.getAccelerometerBaseNoiseLevelRootPsd(), 0.0);
             assertEquals(avgPsdW, estimator.getAvgAngularRateNoisePsd(),
                     SMALL_ABSOLUTE_ERROR);
             assertEquals(normRootPsdW, estimator.getAngularRateNoiseRootPsdNorm(),
                     SMALL_ABSOLUTE_ERROR);
+            assertEquals(estimator.getAngularRateNoiseRootPsdNorm(),
+                    estimator.getGyroscopeBaseNoiseLevelRootPsd(), 0.0);
 
             assertEquals(rootPsdFx, accelNoiseRootPSD, ABSOLUTE_ERROR);
             assertEquals(rootPsdFy, accelNoiseRootPSD, ABSOLUTE_ERROR);
@@ -2563,10 +2579,14 @@ public class AccumulatedBodyKinematicsNoiseEstimatorTest implements
                 SMALL_ABSOLUTE_ERROR);
         assertEquals(normRootPsdF, estimator.getSpecificForceNoiseRootPsdNorm(),
                 SMALL_ABSOLUTE_ERROR);
+        assertEquals(estimator.getSpecificForceNoiseRootPsdNorm(),
+                estimator.getAccelerometerBaseNoiseLevelRootPsd(), 0.0);
         assertEquals(avgPsdW, estimator.getAvgAngularRateNoisePsd(),
                 SMALL_ABSOLUTE_ERROR);
         assertEquals(normRootPsdW, estimator.getAngularRateNoiseRootPsdNorm(),
                 SMALL_ABSOLUTE_ERROR);
+        assertEquals(estimator.getAngularRateNoiseRootPsdNorm(),
+                estimator.getGyroscopeBaseNoiseLevelRootPsd(), 0.0);
 
         assertEquals(rootPsdFx, accelNoiseRootPSD, ABSOLUTE_ERROR);
         assertEquals(rootPsdFy, accelNoiseRootPSD, ABSOLUTE_ERROR);

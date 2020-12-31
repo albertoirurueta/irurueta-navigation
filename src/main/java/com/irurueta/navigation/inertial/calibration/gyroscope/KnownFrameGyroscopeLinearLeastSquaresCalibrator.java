@@ -26,6 +26,7 @@ import com.irurueta.navigation.inertial.BodyKinematics;
 import com.irurueta.navigation.inertial.calibration.AngularSpeedTriad;
 import com.irurueta.navigation.inertial.calibration.CalibrationException;
 import com.irurueta.navigation.inertial.calibration.FrameBodyKinematics;
+import com.irurueta.navigation.inertial.calibration.GyroscopeCalibrationSource;
 import com.irurueta.navigation.inertial.estimators.ECEFKinematicsEstimator;
 import com.irurueta.units.AngularSpeed;
 import com.irurueta.units.AngularSpeedUnit;
@@ -65,7 +66,8 @@ import java.util.Collection;
  */
 public class KnownFrameGyroscopeLinearLeastSquaresCalibrator implements
         KnownFrameGyroscopeCalibrator<FrameBodyKinematics,
-                KnownFrameGyroscopeLinearLeastSquaresCalibratorListener> {
+                KnownFrameGyroscopeLinearLeastSquaresCalibratorListener>,
+        GyroscopeCalibrationSource {
 
     /**
      * Indicates whether by default a common z-axis is assumed for both the accelerometer
