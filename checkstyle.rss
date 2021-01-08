@@ -23,10 +23,10 @@ under the License.
     <link>https://github.com/albertoirurueta/irurueta-navigation</link>
     <description>com.irurueta:irurueta-navigation - Checkstyle report</description>
     <language>en-us</language>
-    <copyright>&#169;2018 - 2020</copyright>
+    <copyright>&#169;2018 - 2021</copyright>
     <item>
-      <title>File: 691,
-             Errors: 10029,
+      <title>File: 704,
+             Errors: 10052,
              Warnings: 0,
              Infos: 0
       </title>
@@ -783,7 +783,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  62
+                  63
                 </td>
               </tr>
                           <tr>
@@ -2174,6 +2174,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/albertoirurueta/irurueta-navigation/checkstyle.html#com.irurueta.navigation.inertial.calibration.AttitudeUncertaintySource.java">com/irurueta/navigation/inertial/calibration/AttitudeUncertaintySource.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/albertoirurueta/irurueta-navigation/checkstyle.html#com.irurueta.navigation.indoor.position.NonLinearMixedPositionEstimator2D.java">com/irurueta/navigation/indoor/position/NonLinearMixedPositionEstimator2D.java</a>
                 </td>
                 <td>
@@ -2846,6 +2860,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/albertoirurueta/irurueta-navigation/checkstyle.html#com.irurueta.navigation.inertial.calibration.BodyKinematicsFixer.java">com/irurueta/navigation/inertial/calibration/BodyKinematicsFixer.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  2
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/albertoirurueta/irurueta-navigation/checkstyle.html#com.irurueta.navigation.inertial.calibration.gyroscope.PROMedSRobustKnownFrameGyroscopeCalibrator.java">com/irurueta/navigation/inertial/calibration/gyroscope/PROMedSRobustKnownFrameGyroscopeCalibrator.java</a>
                 </td>
                 <td>
@@ -3168,6 +3196,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/albertoirurueta/irurueta-navigation/checkstyle.html#com.irurueta.navigation.inertial.calibration.PositionUncertaintySource.java">com/irurueta/navigation/inertial/calibration/PositionUncertaintySource.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/albertoirurueta/irurueta-navigation/checkstyle.html#com.irurueta.navigation.inertial.calibration.magnetometer.RobustKnownPositionAndInstantMagnetometerCalibrator.java">com/irurueta/navigation/inertial/calibration/magnetometer/RobustKnownPositionAndInstantMagnetometerCalibrator.java</a>
                 </td>
                 <td>
@@ -3360,6 +3402,20 @@ under the License.
                 </td>
                 <td>
                   0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/albertoirurueta/irurueta-navigation/checkstyle.html#com.irurueta.navigation.inertial.calibration.RandomWalkEstimatorListener.java">com/irurueta/navigation/inertial/calibration/RandomWalkEstimatorListener.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
                 </td>
               </tr>
                           <tr>
@@ -3868,6 +3924,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/albertoirurueta/irurueta-navigation/checkstyle.html#com.irurueta.navigation.inertial.calibration.AccelerometerBiasRandomWalkSource.java">com/irurueta/navigation/inertial/calibration/AccelerometerBiasRandomWalkSource.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/albertoirurueta/irurueta-navigation/checkstyle.html#com.irurueta.navigation.inertial.navigators.NEDInertialNavigator.java">com/irurueta/navigation/inertial/navigators/NEDInertialNavigator.java</a>
                 </td>
                 <td>
@@ -4018,6 +4088,20 @@ under the License.
                 </td>
                 <td>
                   0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/albertoirurueta/irurueta-navigation/checkstyle.html#com.irurueta.navigation.inertial.calibration.AngularRateFixer.java">com/irurueta/navigation/inertial/calibration/AngularRateFixer.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  10
                 </td>
               </tr>
                           <tr>
@@ -4792,20 +4876,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/albertoirurueta/irurueta-navigation/checkstyle.html#com.irurueta.navigation.inertial.calibration.IMURandomWalkEstimator.java">com/irurueta/navigation/inertial/calibration/IMURandomWalkEstimator.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  7
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://github.com/albertoirurueta/irurueta-navigation/checkstyle.html#com.irurueta.navigation.indoor.RssiReadingLocated2D.java">com/irurueta/navigation/indoor/RssiReadingLocated2D.java</a>
                 </td>
                 <td>
@@ -4890,6 +4960,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/albertoirurueta/irurueta-navigation/checkstyle.html#com.irurueta.navigation.inertial.calibration.RandomWalkEstimationException.java">com/irurueta/navigation/inertial/calibration/RandomWalkEstimationException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/albertoirurueta/irurueta-navigation/checkstyle.html#com.irurueta.navigation.inertial.calibration.noise.WindowedAccelerationMeasurementNoiseEstimatorListener.java">com/irurueta/navigation/inertial/calibration/noise/WindowedAccelerationMeasurementNoiseEstimatorListener.java</a>
                 </td>
                 <td>
@@ -4955,7 +5039,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  1
+                  0
                 </td>
               </tr>
                           <tr>
@@ -5227,6 +5311,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/albertoirurueta/irurueta-navigation/checkstyle.html#com.irurueta.navigation.indoor.fingerprint.LinearFingerprintPositionEstimator3D.java">com/irurueta/navigation/indoor/fingerprint/LinearFingerprintPositionEstimator3D.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/albertoirurueta/irurueta-navigation/checkstyle.html#com.irurueta.navigation.inertial.calibration.INSLooselyCoupledKalmanInitializerConfigCreator.java">com/irurueta/navigation/inertial/calibration/INSLooselyCoupledKalmanInitializerConfigCreator.java</a>
                 </td>
                 <td>
                   0
@@ -5549,6 +5647,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/albertoirurueta/irurueta-navigation/checkstyle.html#com.irurueta.navigation.inertial.INSLooselyCoupledKalmanFilteredEstimatorListener.java">com/irurueta/navigation/inertial/INSLooselyCoupledKalmanFilteredEstimatorListener.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/albertoirurueta/irurueta-navigation/checkstyle.html#com.irurueta.navigation.inertial.calibration.GyroscopeBiasUncertaintySource.java">com/irurueta/navigation/inertial/calibration/GyroscopeBiasUncertaintySource.java</a>
                 </td>
                 <td>
                   0
@@ -6332,6 +6444,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/albertoirurueta/irurueta-navigation/checkstyle.html#com.irurueta.navigation.inertial.calibration.VelocityUncertaintySource.java">com/irurueta/navigation/inertial/calibration/VelocityUncertaintySource.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/albertoirurueta/irurueta-navigation/checkstyle.html#com.irurueta.navigation.inertial.calibration.AccelerationTriad.java">com/irurueta/navigation/inertial/calibration/AccelerationTriad.java</a>
                 </td>
                 <td>
@@ -6668,6 +6794,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/albertoirurueta/irurueta-navigation/checkstyle.html#com.irurueta.navigation.inertial.calibration.GyroscopeBiasRandomWalkSource.java">com/irurueta/navigation/inertial/calibration/GyroscopeBiasRandomWalkSource.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/albertoirurueta/irurueta-navigation/checkstyle.html#com.irurueta.navigation.indoor.position.PROSACRobustRangingAndRssiPositionEstimator2D.java">com/irurueta/navigation/indoor/position/PROSACRobustRangingAndRssiPositionEstimator2D.java</a>
                 </td>
                 <td>
@@ -6874,20 +7014,6 @@ under the License.
                 </td>
                 <td>
                   0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/albertoirurueta/irurueta-navigation/checkstyle.html#com.irurueta.navigation.inertial.calibration.gyroscope.AngularRateFixer.java">com/irurueta/navigation/inertial/calibration/gyroscope/AngularRateFixer.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  10
                 </td>
               </tr>
                           <tr>
@@ -7112,6 +7238,20 @@ under the License.
                 </td>
                 <td>
                   4
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/albertoirurueta/irurueta-navigation/checkstyle.html#com.irurueta.navigation.inertial.calibration.RandomWalkEstimator.java">com/irurueta/navigation/inertial/calibration/RandomWalkEstimator.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  18
                 </td>
               </tr>
                           <tr>
@@ -7662,6 +7802,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/albertoirurueta/irurueta-navigation/checkstyle.html#com.irurueta.navigation.inertial.calibration.MagneticFluxDensityFixer.java">com/irurueta/navigation/inertial/calibration/MagneticFluxDensityFixer.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  8
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/albertoirurueta/irurueta-navigation/checkstyle.html#com.irurueta.navigation.inertial.NEDPosition.java">com/irurueta/navigation/inertial/NEDPosition.java</a>
                 </td>
                 <td>
@@ -7951,7 +8105,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  63
+                  64
                 </td>
               </tr>
                           <tr>
@@ -8866,6 +9020,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/albertoirurueta/irurueta-navigation/checkstyle.html#com.irurueta.navigation.inertial.calibration.AccelerometerBiasUncertaintySource.java">com/irurueta/navigation/inertial/calibration/AccelerometerBiasUncertaintySource.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/albertoirurueta/irurueta-navigation/checkstyle.html#com.irurueta.navigation.indoor.position.PROMedSRobustMixedPositionEstimator2D.java">com/irurueta/navigation/indoor/position/PROMedSRobustMixedPositionEstimator2D.java</a>
                 </td>
                 <td>
@@ -9231,6 +9399,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/albertoirurueta/irurueta-navigation/checkstyle.html#com.irurueta.navigation.inertial.calibration.accelerometer.KnownFrameAccelerometerNonLinearLeastSquaresCalibratorListener.java">com/irurueta/navigation/inertial/calibration/accelerometer/KnownFrameAccelerometerNonLinearLeastSquaresCalibratorListener.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/albertoirurueta/irurueta-navigation/checkstyle.html#com.irurueta.navigation.inertial.calibration.INSLooselyCoupledKalmanConfigCreator.java">com/irurueta/navigation/inertial/calibration/INSLooselyCoupledKalmanConfigCreator.java</a>
                 </td>
                 <td>
                   0

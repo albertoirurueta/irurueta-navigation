@@ -3140,9 +3140,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
 <span class="fc" id="L3140">                mListener.onCalibrateEnd(this);</span>
             }
 
-<span class="nc" id="L3143">        } catch (final AlgebraException | FittingException</span>
+<span class="fc" id="L3143">        } catch (final AlgebraException | FittingException</span>
                 | com.irurueta.numerical.NotReadyException e) {
-<span class="nc" id="L3145">            throw new CalibrationException(e);</span>
+<span class="fc" id="L3145">            throw new CalibrationException(e);</span>
         } finally {
 <span class="fc" id="L3147">            mRunning = false;</span>
         }

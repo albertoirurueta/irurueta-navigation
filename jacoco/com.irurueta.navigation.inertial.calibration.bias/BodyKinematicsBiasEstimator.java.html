@@ -2872,13 +2872,13 @@ public class BodyKinematicsBiasEstimator {
     }
 
     /**
-     * Gets average accelerometer noise root PSD (Power Spectral Density) among
-     * x,y,z components expressed as (m * s^-1.5).
+     * Gets accelerometer noise root PSD (Power Spectral Density) which is the
+     * norm of root PSD components expressed as (m * s^-1.5).
      *
      * @return average accelerometer noise root PSD.
      */
     public double getAccelerometerNoiseRootPSD() {
-<span class="fc" id="L2881">        return Math.sqrt(getAccelerometerNoisePSD());</span>
+<span class="fc" id="L2881">        return Math.sqrt(getPSDFx() + getPSDFy() + getPSDFz());</span>
     }
 
     /**
@@ -2893,13 +2893,13 @@ public class BodyKinematicsBiasEstimator {
     }
 
     /**
-     * Gets average gyroscope noise root PSD (Power Spectral Density) among
-     * x,y,z components expressed in (rad * s^-0.5).
+     * Gets gyroscope noise root PSD (Power Spectral Density) which is the
+     * norm of root PSD components expressed in (rad * s^-0.5).
      *
      * @return average gyroscope noise root PSD.
      */
     public double getGyroNoiseRootPSD() {
-<span class="fc" id="L2902">        return Math.sqrt(getGyroNoisePSD());</span>
+<span class="fc" id="L2902">        return Math.sqrt(getPSDAngularRateX() + getPSDAngularRateY() + getPSDAngularRateZ());</span>
     }
 
     /**
@@ -3036,7 +3036,7 @@ public class BodyKinematicsBiasEstimator {
 
 <span class="fc" id="L3037">        mRunning = true;</span>
 
-<span class="pc bpc" id="L3039" title="1 of 4 branches missed.">        if (mLastBodyKinematics == null &amp;&amp; mListener != null) {</span>
+<span class="fc bfc" id="L3039" title="All 4 branches covered.">        if (mLastBodyKinematics == null &amp;&amp; mListener != null) {</span>
 <span class="fc" id="L3040">            mListener.onStart(this);</span>
         }
 
@@ -3112,7 +3112,7 @@ public class BodyKinematicsBiasEstimator {
 <span class="fc" id="L3112">        mNumberOfProcessedSamples++;</span>
 <span class="fc" id="L3113">        mNumberOfProcessedSamplesPlusOne++;</span>
 
-<span class="pc bpc" id="L3115" title="1 of 2 branches missed.">        if (mListener != null) {</span>
+<span class="fc bfc" id="L3115" title="All 2 branches covered.">        if (mListener != null) {</span>
 <span class="fc" id="L3116">            mListener.onBodyKinematicsAdded(this);</span>
         }
 
@@ -3130,8 +3130,8 @@ public class BodyKinematicsBiasEstimator {
 <span class="fc" id="L3130">            throw new LockedException();</span>
         }
 
-<span class="pc bpc" id="L3133" title="1 of 2 branches missed.">        if (mNumberOfProcessedSamples == 0) {</span>
-<span class="nc" id="L3134">            return false;</span>
+<span class="fc bfc" id="L3133" title="All 2 branches covered.">        if (mNumberOfProcessedSamples == 0) {</span>
+<span class="fc" id="L3134">            return false;</span>
         }
 
 <span class="fc" id="L3137">        mRunning = true;</span>
@@ -3151,7 +3151,7 @@ public class BodyKinematicsBiasEstimator {
 <span class="fc" id="L3151">        mNumberOfProcessedSamples = 0;</span>
 <span class="fc" id="L3152">        mNumberOfProcessedSamplesPlusOne = 1;</span>
 
-<span class="pc bpc" id="L3154" title="1 of 2 branches missed.">        if (mListener != null) {</span>
+<span class="fc bfc" id="L3154" title="All 2 branches covered.">        if (mListener != null) {</span>
 <span class="fc" id="L3155">            mListener.onReset(this);</span>
         }
 

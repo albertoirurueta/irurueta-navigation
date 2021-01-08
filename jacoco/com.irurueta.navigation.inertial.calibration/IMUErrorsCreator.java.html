@@ -1,4 +1,19 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>IMUErrorsCreator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-navigation</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.navigation.inertial.calibration</a> &gt; <span class="el_source">IMUErrorsCreator.java</span></div><h1>IMUErrorsCreator.java</h1><pre class="source lang-java linenums">package com.irurueta.navigation.inertial.calibration;
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>IMUErrorsCreator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-navigation</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.navigation.inertial.calibration</a> &gt; <span class="el_source">IMUErrorsCreator.java</span></div><h1>IMUErrorsCreator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2020 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.navigation.inertial.calibration;
 
 import com.irurueta.algebra.Matrix;
 import com.irurueta.navigation.NotReadyException;
@@ -6,8 +21,9 @@ import com.irurueta.navigation.NotReadyException;
 /**
  * Utility class to create {@link IMUErrors} by combining different sources of estimated data.
  * Sources of data can be any accelerometer calibrator implementing {@link AccelerometerCalibrationSource},
- * any gyroscope calibrator implementing {@link GyroscopeCalibrationSource}, any measurement generator
- * implementing {@link AccelerometerNoiseRootPsdSource} or {@link GyroscopeNoiseRootPsdSource}.
+ * any gyroscope calibrator implementing {@link GyroscopeCalibrationSource}, or any measurement
+ * generator, static interval detector or noise estimator implementing {@link AccelerometerNoiseRootPsdSource}
+ * or {@link GyroscopeNoiseRootPsdSource}.
  */
 public class IMUErrorsCreator {
 
@@ -46,8 +62,8 @@ public class IMUErrorsCreator {
     /**
      * Constructor.
      */
-<span class="fc" id="L49">    public IMUErrorsCreator() {</span>
-<span class="fc" id="L50">    }</span>
+<span class="fc" id="L65">    public IMUErrorsCreator() {</span>
+<span class="fc" id="L66">    }</span>
 
     /**
      * Constructor.
@@ -61,12 +77,12 @@ public class IMUErrorsCreator {
             final AccelerometerCalibrationSource accelerometerCalibrationSource,
             final GyroscopeCalibrationSource gyroscopeCalibrationSource,
             final AccelerometerNoiseRootPsdSource accelerometerNoiseRootPsdSource,
-<span class="fc" id="L64">            final GyroscopeNoiseRootPsdSource gyroscopeNoiseRootPsdSource) {</span>
-<span class="fc" id="L65">        mAccelerometerCalibrationSource = accelerometerCalibrationSource;</span>
-<span class="fc" id="L66">        mGyroscopeCalibrationSource = gyroscopeCalibrationSource;</span>
-<span class="fc" id="L67">        mAccelerometerNoiseRootPsdSource = accelerometerNoiseRootPsdSource;</span>
-<span class="fc" id="L68">        mGyroscopeNoiseRootPsdSource = gyroscopeNoiseRootPsdSource;</span>
-<span class="fc" id="L69">    }</span>
+<span class="fc" id="L80">            final GyroscopeNoiseRootPsdSource gyroscopeNoiseRootPsdSource) {</span>
+<span class="fc" id="L81">        mAccelerometerCalibrationSource = accelerometerCalibrationSource;</span>
+<span class="fc" id="L82">        mGyroscopeCalibrationSource = gyroscopeCalibrationSource;</span>
+<span class="fc" id="L83">        mAccelerometerNoiseRootPsdSource = accelerometerNoiseRootPsdSource;</span>
+<span class="fc" id="L84">        mGyroscopeNoiseRootPsdSource = gyroscopeNoiseRootPsdSource;</span>
+<span class="fc" id="L85">    }</span>
 
     /**
      * Constructor.
@@ -86,11 +102,11 @@ public class IMUErrorsCreator {
             final GyroscopeNoiseRootPsdSource gyroscopeNoiseRootPsdSource,
             final double accelerometerQuantizationLevel,
             final double gyroQuantizationLevel) {
-<span class="fc" id="L89">        this(accelerometerCalibrationSource, gyroscopeCalibrationSource,</span>
+<span class="fc" id="L105">        this(accelerometerCalibrationSource, gyroscopeCalibrationSource,</span>
                 accelerometerNoiseRootPsdSource, gyroscopeNoiseRootPsdSource);
-<span class="fc" id="L91">        mAccelerometerQuantizationLevel = accelerometerQuantizationLevel;</span>
-<span class="fc" id="L92">        mGyroQuantizationLevel = gyroQuantizationLevel;</span>
-<span class="fc" id="L93">    }</span>
+<span class="fc" id="L107">        mAccelerometerQuantizationLevel = accelerometerQuantizationLevel;</span>
+<span class="fc" id="L108">        mGyroQuantizationLevel = gyroQuantizationLevel;</span>
+<span class="fc" id="L109">    }</span>
 
     /**
      * Gets source of estimated accelerometer calibration parameters.
@@ -98,7 +114,7 @@ public class IMUErrorsCreator {
      * @return source of estimated accelerometer calibration parameters.
      */
     public AccelerometerCalibrationSource getAccelerometerCalibrationSource() {
-<span class="fc" id="L101">        return mAccelerometerCalibrationSource;</span>
+<span class="fc" id="L117">        return mAccelerometerCalibrationSource;</span>
     }
 
     /**
@@ -109,8 +125,8 @@ public class IMUErrorsCreator {
      */
     public void setAccelerometerCalibrationSource(
             final AccelerometerCalibrationSource accelerometerCalibrationSource) {
-<span class="fc" id="L112">        mAccelerometerCalibrationSource = accelerometerCalibrationSource;</span>
-<span class="fc" id="L113">    }</span>
+<span class="fc" id="L128">        mAccelerometerCalibrationSource = accelerometerCalibrationSource;</span>
+<span class="fc" id="L129">    }</span>
 
     /**
      * Gets source of estimated gyroscope calibration parameters.
@@ -118,7 +134,7 @@ public class IMUErrorsCreator {
      * @return source of estimated gyroscope calibration parameters.
      */
     public GyroscopeCalibrationSource getGyroscopeCalibrationSource() {
-<span class="fc" id="L121">        return mGyroscopeCalibrationSource;</span>
+<span class="fc" id="L137">        return mGyroscopeCalibrationSource;</span>
     }
 
     /**
@@ -129,8 +145,8 @@ public class IMUErrorsCreator {
      */
     public void setGyroscopeCalibrationSource(
             final GyroscopeCalibrationSource gyroscopeCalibrationSource) {
-<span class="fc" id="L132">        mGyroscopeCalibrationSource = gyroscopeCalibrationSource;</span>
-<span class="fc" id="L133">    }</span>
+<span class="fc" id="L148">        mGyroscopeCalibrationSource = gyroscopeCalibrationSource;</span>
+<span class="fc" id="L149">    }</span>
 
     /**
      * Gets source of estimated accelerometer noise root PSD.
@@ -138,7 +154,7 @@ public class IMUErrorsCreator {
      * @return source of estimated accelerometer noise root PSD.
      */
     public AccelerometerNoiseRootPsdSource getAccelerometerNoiseRootPsdSource() {
-<span class="fc" id="L141">        return mAccelerometerNoiseRootPsdSource;</span>
+<span class="fc" id="L157">        return mAccelerometerNoiseRootPsdSource;</span>
     }
 
     /**
@@ -149,8 +165,8 @@ public class IMUErrorsCreator {
      */
     public void setAccelerometerNoiseRootPsdSource(
             final AccelerometerNoiseRootPsdSource accelerometerNoiseRootPsdSource) {
-<span class="fc" id="L152">        mAccelerometerNoiseRootPsdSource = accelerometerNoiseRootPsdSource;</span>
-<span class="fc" id="L153">    }</span>
+<span class="fc" id="L168">        mAccelerometerNoiseRootPsdSource = accelerometerNoiseRootPsdSource;</span>
+<span class="fc" id="L169">    }</span>
 
     /**
      * Gets source of estimated gyroscope noise root PSD.
@@ -158,7 +174,7 @@ public class IMUErrorsCreator {
      * @return source of estimated gyroscope noise root PSD.
      */
     public GyroscopeNoiseRootPsdSource getGyroscopeNoiseRootPsdSource() {
-<span class="fc" id="L161">        return mGyroscopeNoiseRootPsdSource;</span>
+<span class="fc" id="L177">        return mGyroscopeNoiseRootPsdSource;</span>
     }
 
     /**
@@ -169,8 +185,8 @@ public class IMUErrorsCreator {
      */
     public void sstGyroscopeNoiseRootPsdSource(
             final GyroscopeNoiseRootPsdSource gyroscopeNoiseRootPsdSource) {
-<span class="fc" id="L172">        mGyroscopeNoiseRootPsdSource = gyroscopeNoiseRootPsdSource;</span>
-<span class="fc" id="L173">    }</span>
+<span class="fc" id="L188">        mGyroscopeNoiseRootPsdSource = gyroscopeNoiseRootPsdSource;</span>
+<span class="fc" id="L189">    }</span>
 
     /**
      * Gets accelerometer quantization level expressed in meters per squared second
@@ -180,7 +196,7 @@ public class IMUErrorsCreator {
      * @return accelerometer quantization level.
      */
     public double getAccelerometerQuantizationLevel() {
-<span class="fc" id="L183">        return mAccelerometerQuantizationLevel;</span>
+<span class="fc" id="L199">        return mAccelerometerQuantizationLevel;</span>
     }
 
     /**
@@ -190,8 +206,8 @@ public class IMUErrorsCreator {
      * @param accelerometerQuantizationLevel accelerometer quantizaiton level.
      */
     public void setAccelerometerQuantizationLevel(final double accelerometerQuantizationLevel) {
-<span class="fc" id="L193">        mAccelerometerQuantizationLevel = accelerometerQuantizationLevel;</span>
-<span class="fc" id="L194">    }</span>
+<span class="fc" id="L209">        mAccelerometerQuantizationLevel = accelerometerQuantizationLevel;</span>
+<span class="fc" id="L210">    }</span>
 
     /**
      * Gets gyroscope quantization level expressed in radians per second (rad/s).
@@ -200,7 +216,7 @@ public class IMUErrorsCreator {
      * @return gyroscope quantization level.
      */
     public double getGyroQuantizationLevel() {
-<span class="fc" id="L203">        return mGyroQuantizationLevel;</span>
+<span class="fc" id="L219">        return mGyroQuantizationLevel;</span>
     }
 
     /**
@@ -209,8 +225,8 @@ public class IMUErrorsCreator {
      * @param gyroQuantizationLevel gyroscope quantization level.
      */
     public void setGyroQuantizationLevel(final double gyroQuantizationLevel) {
-<span class="fc" id="L212">        mGyroQuantizationLevel = gyroQuantizationLevel;</span>
-<span class="fc" id="L213">    }</span>
+<span class="fc" id="L228">        mGyroQuantizationLevel = gyroQuantizationLevel;</span>
+<span class="fc" id="L229">    }</span>
 
     /**
      * Indicates whether all sources have been provided in order to be able
@@ -219,14 +235,14 @@ public class IMUErrorsCreator {
      * @return true if creator is ready, false otherwise.
      */
     public boolean isReady() {
-<span class="pc bpc" id="L222" title="2 of 6 branches missed.">        return mAccelerometerNoiseRootPsdSource != null &amp;&amp; mGyroscopeNoiseRootPsdSource != null</span>
+<span class="pc bpc" id="L238" title="2 of 6 branches missed.">        return mAccelerometerNoiseRootPsdSource != null &amp;&amp; mGyroscopeNoiseRootPsdSource != null</span>
                 &amp;&amp; mAccelerometerCalibrationSource != null
-<span class="fc bfc" id="L224" title="All 2 branches covered.">                &amp;&amp; mAccelerometerCalibrationSource.getEstimatedBiases() != null</span>
-<span class="pc bpc" id="L225" title="2 of 4 branches missed.">                &amp;&amp; mAccelerometerCalibrationSource.getEstimatedMa() != null</span>
+<span class="fc bfc" id="L240" title="All 2 branches covered.">                &amp;&amp; mAccelerometerCalibrationSource.getEstimatedBiases() != null</span>
+<span class="pc bpc" id="L241" title="2 of 4 branches missed.">                &amp;&amp; mAccelerometerCalibrationSource.getEstimatedMa() != null</span>
                 &amp;&amp; mGyroscopeCalibrationSource != null
-<span class="pc bpc" id="L227" title="1 of 2 branches missed.">                &amp;&amp; mGyroscopeCalibrationSource.getEstimatedBiases() != null</span>
-<span class="pc bpc" id="L228" title="1 of 2 branches missed.">                &amp;&amp; mGyroscopeCalibrationSource.getEstimatedMg() != null</span>
-<span class="pc bpc" id="L229" title="1 of 2 branches missed.">                &amp;&amp; mGyroscopeCalibrationSource.getEstimatedGg() != null;</span>
+<span class="pc bpc" id="L243" title="1 of 2 branches missed.">                &amp;&amp; mGyroscopeCalibrationSource.getEstimatedBiases() != null</span>
+<span class="pc bpc" id="L244" title="1 of 2 branches missed.">                &amp;&amp; mGyroscopeCalibrationSource.getEstimatedMg() != null</span>
+<span class="pc bpc" id="L245" title="1 of 2 branches missed.">                &amp;&amp; mGyroscopeCalibrationSource.getEstimatedGg() != null;</span>
     }
 
     /**
@@ -237,23 +253,23 @@ public class IMUErrorsCreator {
      * @throws NotReadyException if creator is not ready.
      */
     public IMUErrors create() throws NotReadyException {
-<span class="fc bfc" id="L240" title="All 2 branches covered.">        if (!isReady()) {</span>
-<span class="fc" id="L241">            throw new NotReadyException();</span>
+<span class="fc bfc" id="L256" title="All 2 branches covered.">        if (!isReady()) {</span>
+<span class="fc" id="L257">            throw new NotReadyException();</span>
         }
 
-<span class="fc" id="L244">        final double[] ba = mAccelerometerCalibrationSource.getEstimatedBiases();</span>
-<span class="fc" id="L245">        final Matrix ma = mAccelerometerCalibrationSource.getEstimatedMa();</span>
+<span class="fc" id="L260">        final double[] ba = mAccelerometerCalibrationSource.getEstimatedBiases();</span>
+<span class="fc" id="L261">        final Matrix ma = mAccelerometerCalibrationSource.getEstimatedMa();</span>
 
-<span class="fc" id="L247">        final double[] bg = mGyroscopeCalibrationSource.getEstimatedBiases();</span>
-<span class="fc" id="L248">        final Matrix mg = mGyroscopeCalibrationSource.getEstimatedMg();</span>
-<span class="fc" id="L249">        final Matrix gg = mGyroscopeCalibrationSource.getEstimatedGg();</span>
+<span class="fc" id="L263">        final double[] bg = mGyroscopeCalibrationSource.getEstimatedBiases();</span>
+<span class="fc" id="L264">        final Matrix mg = mGyroscopeCalibrationSource.getEstimatedMg();</span>
+<span class="fc" id="L265">        final Matrix gg = mGyroscopeCalibrationSource.getEstimatedGg();</span>
 
-<span class="fc" id="L251">        final double accelerometerNoiseRootPsd = mAccelerometerNoiseRootPsdSource</span>
-<span class="fc" id="L252">                .getAccelerometerBaseNoiseLevelRootPsd();</span>
-<span class="fc" id="L253">        final double gyroscopeNoiseRootPsd = mGyroscopeNoiseRootPsdSource</span>
-<span class="fc" id="L254">                .getGyroscopeBaseNoiseLevelRootPsd();</span>
+<span class="fc" id="L267">        final double accelerometerNoiseRootPsd = mAccelerometerNoiseRootPsdSource</span>
+<span class="fc" id="L268">                .getAccelerometerBaseNoiseLevelRootPsd();</span>
+<span class="fc" id="L269">        final double gyroscopeNoiseRootPsd = mGyroscopeNoiseRootPsdSource</span>
+<span class="fc" id="L270">                .getGyroscopeBaseNoiseLevelRootPsd();</span>
 
-<span class="fc" id="L256">        return new IMUErrors(ba, bg, ma, mg, gg, accelerometerNoiseRootPsd, gyroscopeNoiseRootPsd,</span>
+<span class="fc" id="L272">        return new IMUErrors(ba, bg, ma, mg, gg, accelerometerNoiseRootPsd, gyroscopeNoiseRootPsd,</span>
                 mAccelerometerQuantizationLevel, mGyroQuantizationLevel);
     }
 }

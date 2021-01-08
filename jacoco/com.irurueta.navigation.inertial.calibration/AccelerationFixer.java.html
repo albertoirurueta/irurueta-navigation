@@ -20,6 +20,9 @@ import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.Utils;
 import com.irurueta.algebra.WrongSizeException;
 import com.irurueta.navigation.inertial.BodyKinematics;
+import com.irurueta.units.Acceleration;
+import com.irurueta.units.AccelerationConverter;
+import com.irurueta.units.AccelerationUnit;
 
 /**
  * Fixes acceleration values taking into account provided bias and cross coupling errors.
@@ -53,8 +56,13 @@ public class AccelerationFixer {
     /**
      * Measured specific force array to be reused.
      */
-<span class="fc" id="L56">    private final double[] mMeasuredF =</span>
+<span class="fc" id="L59">    private final double[] mMeasuredF =</span>
             new double[BodyKinematics.COMPONENTS];
+
+    /**
+     * Array containing result values to be reused.
+     */
+<span class="fc" id="L65">    private final double[] mResult = new double[BodyKinematics.COMPONENTS];</span>
 
     /**
      * Bias matrix to be reused.
@@ -69,24 +77,24 @@ public class AccelerationFixer {
     /**
      * Constructor.
      */
-<span class="fc" id="L72">    public AccelerationFixer() {</span>
+<span class="fc" id="L80">    public AccelerationFixer() {</span>
         try {
-<span class="fc" id="L74">            mIdentity = Matrix.identity(BodyKinematics.COMPONENTS,</span>
+<span class="fc" id="L82">            mIdentity = Matrix.identity(BodyKinematics.COMPONENTS,</span>
                     BodyKinematics.COMPONENTS);
-<span class="fc" id="L76">            mTmp1 = Matrix.identity(BodyKinematics.COMPONENTS,</span>
+<span class="fc" id="L84">            mTmp1 = Matrix.identity(BodyKinematics.COMPONENTS,</span>
                     BodyKinematics.COMPONENTS);
-<span class="fc" id="L78">            mTmp2 = Matrix.identity(BodyKinematics.COMPONENTS,</span>
+<span class="fc" id="L86">            mTmp2 = Matrix.identity(BodyKinematics.COMPONENTS,</span>
                     BodyKinematics.COMPONENTS);
-<span class="fc" id="L80">            mDiff = new Matrix(BodyKinematics.COMPONENTS, 1);</span>
-<span class="fc" id="L81">            mTmp3 = new Matrix(BodyKinematics.COMPONENTS, 1);</span>
+<span class="fc" id="L88">            mDiff = new Matrix(BodyKinematics.COMPONENTS, 1);</span>
+<span class="fc" id="L89">            mTmp3 = new Matrix(BodyKinematics.COMPONENTS, 1);</span>
 
-<span class="fc" id="L83">            mBias = new Matrix(BodyKinematics.COMPONENTS, 1);</span>
-<span class="fc" id="L84">            mCrossCouplingErrors = new Matrix(BodyKinematics.COMPONENTS,</span>
+<span class="fc" id="L91">            mBias = new Matrix(BodyKinematics.COMPONENTS, 1);</span>
+<span class="fc" id="L92">            mCrossCouplingErrors = new Matrix(BodyKinematics.COMPONENTS,</span>
                     BodyKinematics.COMPONENTS);
-<span class="nc" id="L86">        } catch (final WrongSizeException ignore) {</span>
+<span class="nc" id="L94">        } catch (final WrongSizeException ignore) {</span>
             // never happens
-<span class="fc" id="L88">        }</span>
-<span class="fc" id="L89">    }</span>
+<span class="fc" id="L96">        }</span>
+<span class="fc" id="L97">    }</span>
 
     /**
      * Gets bias values expressed in meters per squared second (m/s^2).
@@ -94,7 +102,7 @@ public class AccelerationFixer {
      * @return bias values expressed in meters per squared second.
      */
     public Matrix getBias() {
-<span class="fc" id="L97">        return new Matrix(mBias);</span>
+<span class="fc" id="L105">        return new Matrix(mBias);</span>
     }
 
     /**
@@ -103,21 +111,22 @@ public class AccelerationFixer {
      * @param result instance where result will be stored.
      */
     public void getBias(final Matrix result) {
-<span class="fc" id="L106">        mBias.copyTo(result);</span>
-<span class="fc" id="L107">    }</span>
+<span class="fc" id="L114">        mBias.copyTo(result);</span>
+<span class="fc" id="L115">    }</span>
 
     /**
      * Sets bias values expressed in meters per squared second (m/s^2).
      *
      * @param bias bias values expressed in meters per squared second.
      *             Must be 3x1.
+     * @throws IllegalArgumentException if provided matrix is not 3x1.
      */
     public void setBias(final Matrix bias) {
-<span class="fc bfc" id="L116" title="All 4 branches covered.">        if (bias.getRows() != BodyKinematics.COMPONENTS || bias.getColumns() != 1) {</span>
-<span class="fc" id="L117">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L125" title="All 4 branches covered.">        if (bias.getRows() != BodyKinematics.COMPONENTS || bias.getColumns() != 1) {</span>
+<span class="fc" id="L126">            throw new IllegalArgumentException();</span>
         }
-<span class="fc" id="L119">        mBias = bias;</span>
-<span class="fc" id="L120">    }</span>
+<span class="fc" id="L128">        mBias = bias;</span>
+<span class="fc" id="L129">    }</span>
 
     /**
      * Gets bias values expressed in meters per squared second (m/s^2).
@@ -125,9 +134,9 @@ public class AccelerationFixer {
      * @return bias values expressed in meters per squared second.
      */
     public double[] getBiasArray() {
-<span class="fc" id="L128">        final double[] result = new double[BodyKinematics.COMPONENTS];</span>
-<span class="fc" id="L129">        getBiasArray(result);</span>
-<span class="fc" id="L130">        return result;</span>
+<span class="fc" id="L137">        final double[] result = new double[BodyKinematics.COMPONENTS];</span>
+<span class="fc" id="L138">        getBiasArray(result);</span>
+<span class="fc" id="L139">        return result;</span>
     }
 
     /**
@@ -138,16 +147,16 @@ public class AccelerationFixer {
      *                                  length 3.
      */
     public void getBiasArray(final double[] result) {
-<span class="fc bfc" id="L141" title="All 2 branches covered.">        if (result.length != BodyKinematics.COMPONENTS) {</span>
-<span class="fc" id="L142">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L150" title="All 2 branches covered.">        if (result.length != BodyKinematics.COMPONENTS) {</span>
+<span class="fc" id="L151">            throw new IllegalArgumentException();</span>
         }
 
         try {
-<span class="fc" id="L146">            mBias.toArray(result);</span>
-<span class="nc" id="L147">        } catch (final WrongSizeException ignore) {</span>
+<span class="fc" id="L155">            mBias.toArray(result);</span>
+<span class="nc" id="L156">        } catch (final WrongSizeException ignore) {</span>
             // never happens
-<span class="fc" id="L149">        }</span>
-<span class="fc" id="L150">    }</span>
+<span class="fc" id="L158">        }</span>
+<span class="fc" id="L159">    }</span>
 
     /**
      * Sets bias values expressed in meters per squared second (m/s^2).
@@ -158,16 +167,50 @@ public class AccelerationFixer {
      *                                  length 3.
      */
     public void setBias(final double[] bias) {
-<span class="fc bfc" id="L161" title="All 2 branches covered.">        if (bias.length != BodyKinematics.COMPONENTS) {</span>
-<span class="fc" id="L162">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L170" title="All 2 branches covered.">        if (bias.length != BodyKinematics.COMPONENTS) {</span>
+<span class="fc" id="L171">            throw new IllegalArgumentException();</span>
         }
 
         try {
-<span class="fc" id="L166">            mBias.fromArray(bias);</span>
-<span class="nc" id="L167">        } catch (final WrongSizeException ignore) {</span>
+<span class="fc" id="L175">            mBias.fromArray(bias);</span>
+<span class="nc" id="L176">        } catch (final WrongSizeException ignore) {</span>
             // never happens
-<span class="fc" id="L169">        }</span>
-<span class="fc" id="L170">    }</span>
+<span class="fc" id="L178">        }</span>
+<span class="fc" id="L179">    }</span>
+
+    /**
+     * Gets acceleration bias.
+     *
+     * @return acceleration bias.
+     */
+    public AccelerationTriad getBiasAsTriad() {
+<span class="fc" id="L187">        return new AccelerationTriad(AccelerationUnit.METERS_PER_SQUARED_SECOND,</span>
+<span class="fc" id="L188">                mBias.getElementAtIndex(0), mBias.getElementAtIndex(1), mBias.getElementAtIndex(2));</span>
+    }
+
+    /**
+     * Gets acceleration bias.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getBiasAsTriad(final AccelerationTriad result) {
+<span class="fc" id="L197">        result.setValueCoordinates(mBias);</span>
+<span class="fc" id="L198">        result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);</span>
+<span class="fc" id="L199">    }</span>
+
+    /**
+     * Sets acceleration bias.
+     *
+     * @param bias acceleration bias to be set.
+     */
+    public void setBias(final AccelerationTriad bias) {
+<span class="fc" id="L207">        final double biasX = convertAcceleration(bias.getValueX(), bias.getUnit());</span>
+<span class="fc" id="L208">        final double biasY = convertAcceleration(bias.getValueY(), bias.getUnit());</span>
+<span class="fc" id="L209">        final double biasZ = convertAcceleration(bias.getValueZ(), bias.getUnit());</span>
+<span class="fc" id="L210">        mBias.setElementAtIndex(0, biasX);</span>
+<span class="fc" id="L211">        mBias.setElementAtIndex(1, biasY);</span>
+<span class="fc" id="L212">        mBias.setElementAtIndex(2, biasZ);</span>
+<span class="fc" id="L213">    }</span>
 
     /**
      * Gets x-coordinate of bias expressed in meters per squared second
@@ -177,7 +220,7 @@ public class AccelerationFixer {
      * second (m/s^2).
      */
     public double getBiasX() {
-<span class="fc" id="L180">        return mBias.getElementAtIndex(0);</span>
+<span class="fc" id="L223">        return mBias.getElementAtIndex(0);</span>
     }
 
     /**
@@ -188,8 +231,8 @@ public class AccelerationFixer {
      *              second (m/s^2).
      */
     public void setBiasX(final double biasX) {
-<span class="fc" id="L191">        mBias.setElementAtIndex(0, biasX);</span>
-<span class="fc" id="L192">    }</span>
+<span class="fc" id="L234">        mBias.setElementAtIndex(0, biasX);</span>
+<span class="fc" id="L235">    }</span>
 
     /**
      * Gets y-coordinate of bias expressed in meters per squared second
@@ -199,7 +242,7 @@ public class AccelerationFixer {
      * second (m/s^2).
      */
     public double getBiasY() {
-<span class="fc" id="L202">        return mBias.getElementAtIndex(1);</span>
+<span class="fc" id="L245">        return mBias.getElementAtIndex(1);</span>
     }
 
     /**
@@ -210,8 +253,8 @@ public class AccelerationFixer {
      *              second (m/s^2).
      */
     public void setBiasY(final double biasY) {
-<span class="fc" id="L213">        mBias.setElementAtIndex(1, biasY);</span>
-<span class="fc" id="L214">    }</span>
+<span class="fc" id="L256">        mBias.setElementAtIndex(1, biasY);</span>
+<span class="fc" id="L257">    }</span>
 
     /**
      * Gets z-coordinate of bias expressed in meters per squared second
@@ -221,7 +264,7 @@ public class AccelerationFixer {
      * second (m/s^2).
      */
     public double getBiasZ() {
-<span class="fc" id="L224">        return mBias.getElementAtIndex(2);</span>
+<span class="fc" id="L267">        return mBias.getElementAtIndex(2);</span>
     }
 
     /**
@@ -232,8 +275,8 @@ public class AccelerationFixer {
      *              second (m/s^2).
      */
     public void setBiasZ(final double biasZ) {
-<span class="fc" id="L235">        mBias.setElementAtIndex(2, biasZ);</span>
-<span class="fc" id="L236">    }</span>
+<span class="fc" id="L278">        mBias.setElementAtIndex(2, biasZ);</span>
+<span class="fc" id="L279">    }</span>
 
     /**
      * Sets coordinates of bias expressed in meters per squared second
@@ -245,10 +288,113 @@ public class AccelerationFixer {
      */
     public void setBias(
             final double biasX, final double biasY, final double biasZ) {
-<span class="fc" id="L248">        setBiasX(biasX);</span>
-<span class="fc" id="L249">        setBiasY(biasY);</span>
-<span class="fc" id="L250">        setBiasZ(biasZ);</span>
-<span class="fc" id="L251">    }</span>
+<span class="fc" id="L291">        setBiasX(biasX);</span>
+<span class="fc" id="L292">        setBiasY(biasY);</span>
+<span class="fc" id="L293">        setBiasZ(biasZ);</span>
+<span class="fc" id="L294">    }</span>
+
+    /**
+     * Gets x-coordinate of bias.
+     *
+     * @return x-coordinate of bias.
+     */
+    public Acceleration getBiasXAsAcceleration() {
+<span class="fc" id="L302">        return new Acceleration(getBiasX(),</span>
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+    }
+
+    /**
+     * Gets x-coordinate of bias.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getBiasXAsAcceleration(final Acceleration result) {
+<span class="fc" id="L312">        result.setValue(getBiasX());</span>
+<span class="fc" id="L313">        result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);</span>
+<span class="fc" id="L314">    }</span>
+
+    /**
+     * Sets x-coordinate of bias.
+     *
+     * @param biasX x-coordinate of bias.
+     */
+    public void setBiasX(final Acceleration biasX) {
+<span class="fc" id="L322">        setBiasX(convertAcceleration(biasX));</span>
+<span class="fc" id="L323">    }</span>
+
+    /**
+     * Gets y-coordinate of bias.
+     *
+     * @return y-coordinate of bias.
+     */
+    public Acceleration getBiasYAsAcceleration() {
+<span class="fc" id="L331">        return new Acceleration(getBiasY(),</span>
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+    }
+
+    /**
+     * Gets y-coordinate of bias.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getBiasYAsAcceleration(final Acceleration result) {
+<span class="fc" id="L341">        result.setValue(getBiasY());</span>
+<span class="fc" id="L342">        result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);</span>
+<span class="fc" id="L343">    }</span>
+
+    /**
+     * Sets y-coordinate of bias.
+     *
+     * @param biasY y-coordinate of bias.
+     */
+    public void setBiasY(final Acceleration biasY) {
+<span class="fc" id="L351">        setBiasY(convertAcceleration(biasY));</span>
+<span class="fc" id="L352">    }</span>
+
+    /**
+     * Gets z-coordinate of bias.
+     *
+     * @return z-coordinate of bias.
+     */
+    public Acceleration getBiasZAsAcceleration() {
+<span class="fc" id="L360">        return new Acceleration(getBiasZ(),</span>
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+    }
+
+    /**
+     * Gets z-coordinate of bias.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getBiasZAsAcceleration(final Acceleration result) {
+<span class="fc" id="L370">        result.setValue(getBiasZ());</span>
+<span class="fc" id="L371">        result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);</span>
+<span class="fc" id="L372">    }</span>
+
+    /**
+     * Sets z-coordinate of bias.
+     *
+     * @param biasZ z-coordinate of bias.
+     */
+    public void setBiasZ(final Acceleration biasZ) {
+<span class="fc" id="L380">        setBiasZ(convertAcceleration(biasZ));</span>
+<span class="fc" id="L381">    }</span>
+
+    /**
+     * Sets coordinates of bias.
+     *
+     * @param biasX x-coordinate of bias.
+     * @param biasY y-coordinate of bias.
+     * @param biasZ z-coordinate of bias.
+     */
+    public void setBias(
+            final Acceleration biasX,
+            final Acceleration biasY,
+            final Acceleration biasZ) {
+<span class="fc" id="L394">        setBiasX(biasX);</span>
+<span class="fc" id="L395">        setBiasY(biasY);</span>
+<span class="fc" id="L396">        setBiasZ(biasZ);</span>
+<span class="fc" id="L397">    }</span>
 
     /**
      * Gets cross coupling errors matrix.
@@ -256,7 +402,7 @@ public class AccelerationFixer {
      * @return cross coupling errors matrix.
      */
     public Matrix getCrossCouplingErrors() {
-<span class="fc" id="L259">        return new Matrix(mCrossCouplingErrors);</span>
+<span class="fc" id="L405">        return new Matrix(mCrossCouplingErrors);</span>
     }
 
     /**
@@ -265,8 +411,8 @@ public class AccelerationFixer {
      * @param result instance where result will be stored.
      */
     public void getCrossCouplingErrors(final Matrix result) {
-<span class="fc" id="L268">        mCrossCouplingErrors.copyTo(result);</span>
-<span class="fc" id="L269">    }</span>
+<span class="fc" id="L414">        mCrossCouplingErrors.copyTo(result);</span>
+<span class="fc" id="L415">    }</span>
 
     /**
      * Sets cross coupling errors matrix.
@@ -277,17 +423,17 @@ public class AccelerationFixer {
      */
     public void setCrossCouplingErrors(final Matrix crossCouplingErrors)
             throws AlgebraException {
-<span class="fc bfc" id="L280" title="All 2 branches covered.">        if (crossCouplingErrors.getRows() != BodyKinematics.COMPONENTS</span>
-<span class="fc bfc" id="L281" title="All 2 branches covered.">                || crossCouplingErrors.getColumns() != BodyKinematics.COMPONENTS) {</span>
-<span class="fc" id="L282">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L426" title="All 2 branches covered.">        if (crossCouplingErrors.getRows() != BodyKinematics.COMPONENTS</span>
+<span class="fc bfc" id="L427" title="All 2 branches covered.">                || crossCouplingErrors.getColumns() != BodyKinematics.COMPONENTS) {</span>
+<span class="fc" id="L428">            throw new IllegalArgumentException();</span>
         }
 
-<span class="fc" id="L285">        mCrossCouplingErrors = crossCouplingErrors;</span>
+<span class="fc" id="L431">        mCrossCouplingErrors = crossCouplingErrors;</span>
 
-<span class="fc" id="L287">        mIdentity.add(crossCouplingErrors, mTmp1);</span>
+<span class="fc" id="L433">        mIdentity.add(crossCouplingErrors, mTmp1);</span>
 
-<span class="fc" id="L289">        Utils.inverse(mTmp1, mTmp2);</span>
-<span class="fc" id="L290">    }</span>
+<span class="fc" id="L435">        Utils.inverse(mTmp1, mTmp2);</span>
+<span class="fc" id="L436">    }</span>
 
     /**
      * Gets x scaling factor.
@@ -295,17 +441,23 @@ public class AccelerationFixer {
      * @return x scaling factor.
      */
     public double getSx() {
-<span class="fc" id="L298">        return mCrossCouplingErrors.getElementAt(0, 0);</span>
+<span class="fc" id="L444">        return mCrossCouplingErrors.getElementAt(0, 0);</span>
     }
 
     /**
      * Sets x scaling factor
      *
      * @param sx x scaling factor.
+     * @throws AlgebraException if provided value makes cross coupling matrix
+     *                          non invertible.
      */
-    public void setSx(final double sx) {
-<span class="fc" id="L307">        mCrossCouplingErrors.setElementAt(0, 0, sx);</span>
-<span class="fc" id="L308">    }</span>
+    public void setSx(final double sx) throws AlgebraException {
+<span class="fc" id="L455">        final Matrix m = new Matrix(</span>
+                AccelerationTriad.COMPONENTS, AccelerationTriad.COMPONENTS);
+<span class="fc" id="L457">        m.copyFrom(mCrossCouplingErrors);</span>
+<span class="fc" id="L458">        m.setElementAt(0, 0, sx);</span>
+<span class="fc" id="L459">        setCrossCouplingErrors(m);</span>
+<span class="fc" id="L460">    }</span>
 
     /**
      * Gets y scaling factor.
@@ -313,17 +465,23 @@ public class AccelerationFixer {
      * @return y scaling factor.
      */
     public double getSy() {
-<span class="fc" id="L316">        return mCrossCouplingErrors.getElementAt(1, 1);</span>
+<span class="fc" id="L468">        return mCrossCouplingErrors.getElementAt(1, 1);</span>
     }
 
     /**
      * Sets y scaling factor.
      *
      * @param sy y scaling factor.
+     * @throws AlgebraException if provided value makes cross coupling matrix
+     *                          non invertible.
      */
-    public void setSy(final double sy) {
-<span class="fc" id="L325">        mCrossCouplingErrors.setElementAt(1, 1, sy);</span>
-<span class="fc" id="L326">    }</span>
+    public void setSy(final double sy) throws AlgebraException {
+<span class="fc" id="L479">        final Matrix m = new Matrix(</span>
+                AccelerationTriad.COMPONENTS, AccelerationTriad.COMPONENTS);
+<span class="fc" id="L481">        m.copyFrom(mCrossCouplingErrors);</span>
+<span class="fc" id="L482">        m.setElementAt(1, 1, sy);</span>
+<span class="fc" id="L483">        setCrossCouplingErrors(m);</span>
+<span class="fc" id="L484">    }</span>
 
     /**
      * Gets z scaling factor.
@@ -331,17 +489,23 @@ public class AccelerationFixer {
      * @return z scaling factor.
      */
     public double getSz() {
-<span class="fc" id="L334">        return mCrossCouplingErrors.getElementAt(2, 2);</span>
+<span class="fc" id="L492">        return mCrossCouplingErrors.getElementAt(2, 2);</span>
     }
 
     /**
      * Sets z scaling factor.
      *
      * @param sz z scaling factor.
+     * @throws AlgebraException if provided value makes cross coupling matrix
+     *                          non invertible.
      */
-    public void setSz(final double sz) {
-<span class="fc" id="L343">        mCrossCouplingErrors.setElementAt(2, 2, sz);</span>
-<span class="fc" id="L344">    }</span>
+    public void setSz(final double sz) throws AlgebraException {
+<span class="fc" id="L503">        final Matrix m = new Matrix(</span>
+                AccelerationTriad.COMPONENTS, AccelerationTriad.COMPONENTS);
+<span class="fc" id="L505">        m.copyFrom(mCrossCouplingErrors);</span>
+<span class="fc" id="L506">        m.setElementAt(2, 2, sz);</span>
+<span class="fc" id="L507">        setCrossCouplingErrors(m);</span>
+<span class="fc" id="L508">    }</span>
 
     /**
      * Gets x-y cross coupling error.
@@ -349,17 +513,23 @@ public class AccelerationFixer {
      * @return x-y cross coupling error.
      */
     public double getMxy() {
-<span class="fc" id="L352">        return mCrossCouplingErrors.getElementAt(0, 1);</span>
+<span class="fc" id="L516">        return mCrossCouplingErrors.getElementAt(0, 1);</span>
     }
 
     /**
      * Sets x-y cross coupling error.
      *
      * @param mxy x-y cross coupling error.
+     * @throws AlgebraException if provided value makes cross coupling matrix
+     *                          non invertible.
      */
-    public void setMxy(final double mxy) {
-<span class="fc" id="L361">        mCrossCouplingErrors.setElementAt(0, 1, mxy);</span>
-<span class="fc" id="L362">    }</span>
+    public void setMxy(final double mxy) throws AlgebraException {
+<span class="fc" id="L527">        final Matrix m = new Matrix(</span>
+                AccelerationTriad.COMPONENTS, AccelerationTriad.COMPONENTS);
+<span class="fc" id="L529">        m.copyFrom(mCrossCouplingErrors);</span>
+<span class="fc" id="L530">        m.setElementAt(0, 1, mxy);</span>
+<span class="fc" id="L531">        setCrossCouplingErrors(m);</span>
+<span class="fc" id="L532">    }</span>
 
     /**
      * Gets x-z cross coupling error.
@@ -367,17 +537,23 @@ public class AccelerationFixer {
      * @return x-z cross coupling error.
      */
     public double getMxz() {
-<span class="fc" id="L370">        return mCrossCouplingErrors.getElementAt(0, 2);</span>
+<span class="fc" id="L540">        return mCrossCouplingErrors.getElementAt(0, 2);</span>
     }
 
     /**
      * Sets x-z cross coupling error.
      *
      * @param mxz x-z cross coupling error.
+     * @throws AlgebraException if provided value makes cross coupling matrix
+     *                          non invertible.
      */
-    public void setMxz(final double mxz) {
-<span class="fc" id="L379">        mCrossCouplingErrors.setElementAt(0, 2, mxz);</span>
-<span class="fc" id="L380">    }</span>
+    public void setMxz(final double mxz) throws AlgebraException {
+<span class="fc" id="L551">        final Matrix m = new Matrix(</span>
+                AccelerationTriad.COMPONENTS, AccelerationTriad.COMPONENTS);
+<span class="fc" id="L553">        m.copyFrom(mCrossCouplingErrors);</span>
+<span class="fc" id="L554">        m.setElementAt(0, 2, mxz);</span>
+<span class="fc" id="L555">        setCrossCouplingErrors(m);</span>
+<span class="fc" id="L556">    }</span>
 
     /**
      * Gets y-x cross coupling error.
@@ -385,17 +561,23 @@ public class AccelerationFixer {
      * @return y-x cross coupling error.
      */
     public double getMyx() {
-<span class="fc" id="L388">        return mCrossCouplingErrors.getElementAt(1, 0);</span>
+<span class="fc" id="L564">        return mCrossCouplingErrors.getElementAt(1, 0);</span>
     }
 
     /**
      * Sets y-x cross coupling error.
      *
      * @param myx y-x cross coupling error.
+     * @throws AlgebraException if provided value makes cross coupling matrix
+     *                          non invertible.
      */
-    public void setMyx(final double myx) {
-<span class="fc" id="L397">        mCrossCouplingErrors.setElementAt(1, 0, myx);</span>
-<span class="fc" id="L398">    }</span>
+    public void setMyx(final double myx) throws AlgebraException {
+<span class="fc" id="L575">        final Matrix m = new Matrix(</span>
+                AccelerationTriad.COMPONENTS, AccelerationTriad.COMPONENTS);
+<span class="fc" id="L577">        m.copyFrom(mCrossCouplingErrors);</span>
+<span class="fc" id="L578">        m.setElementAt(1, 0, myx);</span>
+<span class="fc" id="L579">        setCrossCouplingErrors(m);</span>
+<span class="fc" id="L580">    }</span>
 
     /**
      * Gets y-z cross coupling error.
@@ -403,17 +585,23 @@ public class AccelerationFixer {
      * @return y-z cross coupling error.
      */
     public double getMyz() {
-<span class="fc" id="L406">        return mCrossCouplingErrors.getElementAt(1, 2);</span>
+<span class="fc" id="L588">        return mCrossCouplingErrors.getElementAt(1, 2);</span>
     }
 
     /**
      * Sets y-z cross coupling error.
      *
      * @param myz y-z cross coupling error.
+     * @throws AlgebraException if provided value makes cross coupling matrix
+     *                          non invertible.
      */
-    public void setMyz(final double myz) {
-<span class="fc" id="L415">        mCrossCouplingErrors.setElementAt(1, 2, myz);</span>
-<span class="fc" id="L416">    }</span>
+    public void setMyz(final double myz) throws AlgebraException {
+<span class="fc" id="L599">        final Matrix m = new Matrix(</span>
+                AccelerationTriad.COMPONENTS, AccelerationTriad.COMPONENTS);
+<span class="fc" id="L601">        m.copyFrom(mCrossCouplingErrors);</span>
+<span class="fc" id="L602">        m.setElementAt(1, 2, myz);</span>
+<span class="fc" id="L603">        setCrossCouplingErrors(m);</span>
+<span class="fc" id="L604">    }</span>
 
     /**
      * Gets z-x cross coupling error.
@@ -421,17 +609,23 @@ public class AccelerationFixer {
      * @return z-x cross coupling error.
      */
     public double getMzx() {
-<span class="fc" id="L424">        return mCrossCouplingErrors.getElementAt(2, 0);</span>
+<span class="fc" id="L612">        return mCrossCouplingErrors.getElementAt(2, 0);</span>
     }
 
     /**
      * Sets z-x cross coupling error.
      *
      * @param mzx z-x cross coupling error.
+     * @throws AlgebraException if provided value makes cross coupling matrix
+     *                          non invertible.
      */
-    public void setMzx(final double mzx) {
-<span class="fc" id="L433">        mCrossCouplingErrors.setElementAt(2, 0, mzx);</span>
-<span class="fc" id="L434">    }</span>
+    public void setMzx(final double mzx) throws AlgebraException {
+<span class="fc" id="L623">        final Matrix m = new Matrix(</span>
+                AccelerationTriad.COMPONENTS, AccelerationTriad.COMPONENTS);
+<span class="fc" id="L625">        m.copyFrom(mCrossCouplingErrors);</span>
+<span class="fc" id="L626">        m.setElementAt(2, 0, mzx);</span>
+<span class="fc" id="L627">        setCrossCouplingErrors(m);</span>
+<span class="fc" id="L628">    }</span>
 
     /**
      * Gets z-y cross coupling error.
@@ -439,17 +633,23 @@ public class AccelerationFixer {
      * @return z-y cross coupling error.
      */
     public double getMzy() {
-<span class="fc" id="L442">        return mCrossCouplingErrors.getElementAt(2, 1);</span>
+<span class="fc" id="L636">        return mCrossCouplingErrors.getElementAt(2, 1);</span>
     }
 
     /**
      * Sets z-y cross coupling error.
      *
      * @param mzy z-y cross coupling error.
+     * @throws AlgebraException if provided value makes cross coupling matrix
+     *                          non invertible.
      */
-    public void setMzy(final double mzy) {
-<span class="fc" id="L451">        mCrossCouplingErrors.setElementAt(2, 1, mzy);</span>
-<span class="fc" id="L452">    }</span>
+    public void setMzy(final double mzy) throws AlgebraException {
+<span class="fc" id="L647">        final Matrix m = new Matrix(</span>
+                AccelerationTriad.COMPONENTS, AccelerationTriad.COMPONENTS);
+<span class="fc" id="L649">        m.copyFrom(mCrossCouplingErrors);</span>
+<span class="fc" id="L650">        m.setElementAt(2, 1, mzy);</span>
+<span class="fc" id="L651">        setCrossCouplingErrors(m);</span>
+<span class="fc" id="L652">    }</span>
 
     /**
      * Sets scaling factors.
@@ -457,13 +657,20 @@ public class AccelerationFixer {
      * @param sx x scaling factor.
      * @param sy y scaling factor.
      * @param sz z scaling factor.
+     * @throws AlgebraException if provided values make cross coupling matrix
+     *                          non invertible.
      */
     public void setScalingFactors(
-            final double sx, final double sy, final double sz) {
-<span class="fc" id="L463">        setSx(sx);</span>
-<span class="fc" id="L464">        setSy(sy);</span>
-<span class="fc" id="L465">        setSz(sz);</span>
-<span class="fc" id="L466">    }</span>
+            final double sx, final double sy, final double sz)
+            throws AlgebraException {
+<span class="fc" id="L666">        final Matrix m = new Matrix(</span>
+                AccelerationTriad.COMPONENTS, AccelerationTriad.COMPONENTS);
+<span class="fc" id="L668">        m.copyFrom(mCrossCouplingErrors);</span>
+<span class="fc" id="L669">        m.setElementAt(0, 0, sx);</span>
+<span class="fc" id="L670">        m.setElementAt(1, 1, sy);</span>
+<span class="fc" id="L671">        m.setElementAt(2, 2, sz);</span>
+<span class="fc" id="L672">        setCrossCouplingErrors(m);</span>
+<span class="fc" id="L673">    }</span>
 
     /**
      * Sets cross coupling errors.
@@ -474,18 +681,24 @@ public class AccelerationFixer {
      * @param myz y-z cross coupling error.
      * @param mzx z-x cross coupling error.
      * @param mzy z-y cross coupling error.
+     * @throws AlgebraException if provided values make cross coupling matrix
+     *                          non invertible.
      */
     public void setCrossCouplingErrors(
             final double mxy, final double mxz,
             final double myx, final double myz,
-            final double mzx, final double mzy) {
-<span class="fc" id="L482">        setMxy(mxy);</span>
-<span class="fc" id="L483">        setMxz(mxz);</span>
-<span class="fc" id="L484">        setMyx(myx);</span>
-<span class="fc" id="L485">        setMyz(myz);</span>
-<span class="fc" id="L486">        setMzx(mzx);</span>
-<span class="fc" id="L487">        setMzy(mzy);</span>
-<span class="fc" id="L488">    }</span>
+            final double mzx, final double mzy) throws AlgebraException {
+<span class="fc" id="L691">        final Matrix m = new Matrix(</span>
+                AccelerationTriad.COMPONENTS, AccelerationTriad.COMPONENTS);
+<span class="fc" id="L693">        m.copyFrom(mCrossCouplingErrors);</span>
+<span class="fc" id="L694">        m.setElementAt(0, 1, mxy);</span>
+<span class="fc" id="L695">        m.setElementAt(0, 2, mxz);</span>
+<span class="fc" id="L696">        m.setElementAt(1, 0, myx);</span>
+<span class="fc" id="L697">        m.setElementAt(1, 2, myz);</span>
+<span class="fc" id="L698">        m.setElementAt(2, 0, mzx);</span>
+<span class="fc" id="L699">        m.setElementAt(2, 1, mzy);</span>
+<span class="fc" id="L700">        setCrossCouplingErrors(m);</span>
+<span class="fc" id="L701">    }</span>
 
     /**
      * Sets scaling factors and cross coupling errors.
@@ -499,15 +712,120 @@ public class AccelerationFixer {
      * @param myz y-z cross coupling error.
      * @param mzx z-x cross coupling error.
      * @param mzy z-y cross coupling error.
+     * @throws AlgebraException if provided values make cross coupling matrix
+     *                          non invertible.
      */
     public void setScalingFactorsAndCrossCouplingErrors(
             final double sx, final double sy, final double sz,
             final double mxy, final double mxz,
             final double myx, final double myz,
-            final double mzx, final double mzy) {
-<span class="fc" id="L508">        setScalingFactors(sx, sy, sz);</span>
-<span class="fc" id="L509">        setCrossCouplingErrors(mxy, mxz, myx, myz, mzx, mzy);</span>
-<span class="fc" id="L510">    }</span>
+            final double mzx, final double mzy) throws AlgebraException {
+<span class="fc" id="L723">        final Matrix m = new Matrix(</span>
+                AccelerationTriad.COMPONENTS, AccelerationTriad.COMPONENTS);
+<span class="fc" id="L725">        m.copyFrom(mCrossCouplingErrors);</span>
+<span class="fc" id="L726">        m.setElementAt(0, 0, sx);</span>
+<span class="fc" id="L727">        m.setElementAt(1, 1, sy);</span>
+<span class="fc" id="L728">        m.setElementAt(2, 2, sz);</span>
+<span class="fc" id="L729">        m.setElementAt(0, 1, mxy);</span>
+<span class="fc" id="L730">        m.setElementAt(0, 2, mxz);</span>
+<span class="fc" id="L731">        m.setElementAt(1, 0, myx);</span>
+<span class="fc" id="L732">        m.setElementAt(1, 2, myz);</span>
+<span class="fc" id="L733">        m.setElementAt(2, 0, mzx);</span>
+<span class="fc" id="L734">        m.setElementAt(2, 1, mzy);</span>
+<span class="fc" id="L735">        setCrossCouplingErrors(m);</span>
+<span class="fc" id="L736">    }</span>
+
+    /**
+     * Fixes provided measured specific force values by undoing the errors
+     * introduced by the accelerometer model to restore the true specific
+     * force.
+     * This method uses last provided bias and cross coupling errors.
+     *
+     * @param measuredF measured specific force.
+     * @param result    instance where restored true specific force will be stored.
+     *                  Mut have length 3.
+     * @throws AlgebraException         if there are numerical instabilities.
+     * @throws IllegalArgumentException if length of provided result array is
+     *                                  not 3.
+     */
+    public void fix(final AccelerationTriad measuredF,
+                    final double[] result) throws AlgebraException {
+<span class="fc bfc" id="L753" title="All 2 branches covered.">        if (result.length != AccelerationTriad.COMPONENTS) {</span>
+<span class="fc" id="L754">            throw new IllegalArgumentException();</span>
+        }
+
+<span class="fc" id="L757">        final double measuredFx = convertAcceleration(measuredF.getValueX(),</span>
+<span class="fc" id="L758">                measuredF.getUnit());</span>
+<span class="fc" id="L759">        final double measuredFy = convertAcceleration(measuredF.getValueY(),</span>
+<span class="fc" id="L760">                measuredF.getUnit());</span>
+<span class="fc" id="L761">        final double measuredFz = convertAcceleration(measuredF.getValueZ(),</span>
+<span class="fc" id="L762">                measuredF.getUnit());</span>
+<span class="fc" id="L763">        fix(measuredFx, measuredFy, measuredFz, result);</span>
+<span class="fc" id="L764">    }</span>
+
+    /**
+     * Fixes provided measured specific force values by undoing the errors
+     * introduced by the accelerometer model to restore the true specific
+     * force.
+     * This method uses last provided bias and cross coupling errors.
+     *
+     * @param measuredF measured specific force.
+     * @param result    instance where restored true specific force will be stored.
+     *                  Mut be 3x1.
+     * @throws AlgebraException         if there are numerical instabilities.
+     * @throws IllegalArgumentException if result matrix is not 3x1.
+     */
+    public void fix(final AccelerationTriad measuredF,
+                    final Matrix result) throws AlgebraException {
+<span class="fc bfc" id="L780" title="All 2 branches covered.">        if (result.getRows() != AccelerationTriad.COMPONENTS</span>
+<span class="pc bpc" id="L781" title="1 of 2 branches missed.">                || result.getColumns() != 1) {</span>
+<span class="fc" id="L782">            throw new IllegalArgumentException();</span>
+        }
+
+<span class="fc" id="L785">        fix(measuredF, result.getBuffer());</span>
+<span class="fc" id="L786">    }</span>
+
+    /**
+     * Fixes provided measured specific force values by undoing the errors
+     * introduced by the accelerometer model to restore the true specific
+     * force.
+     * This method uses last provided bias and cross coupling errors.
+     *
+     * @param measuredF measured specific force.
+     * @param result    instance where restored true specific force will be stored.
+     * @throws AlgebraException if there are numerical instabilities.
+     */
+    public void fix(final AccelerationTriad measuredF,
+                    final AccelerationTriad result) throws AlgebraException {
+<span class="fc" id="L800">        fix(measuredF, mResult);</span>
+<span class="fc" id="L801">        result.setValueCoordinates(mResult);</span>
+<span class="fc" id="L802">        result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);</span>
+<span class="fc" id="L803">    }</span>
+
+    /**
+     * Fixes provided measured specific force values by undoing the errors
+     * introduced by the accelerometer model to restore the true specific
+     * force.
+     * This method uses last provided bias and cross coupling errors.
+     *
+     * @param measuredFx x-coordinate of measured specific force.
+     * @param measuredFy y-coordinate of measured specific force.
+     * @param measuredFz z-coordinate of measured specific force.
+     * @param result     instance where restored true specific force
+     *                   will be stored.
+     * @throws AlgebraException if there are numerical instabilities.
+     */
+    public void fix(final Acceleration measuredFx,
+                    final Acceleration measuredFy,
+                    final Acceleration measuredFz,
+                    final AccelerationTriad result) throws AlgebraException {
+<span class="fc" id="L822">        final double fx = convertAcceleration(measuredFx);</span>
+<span class="fc" id="L823">        final double fy = convertAcceleration(measuredFy);</span>
+<span class="fc" id="L824">        final double fz = convertAcceleration(measuredFz);</span>
+<span class="fc" id="L825">        fix(fx, fy, fz, mResult);</span>
+<span class="fc" id="L826">        result.setValueCoordinates(mResult);</span>
+<span class="fc" id="L827">        result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);</span>
+<span class="fc" id="L828">    }</span>
 
     /**
      * Fixes provided measured specific force values by undoing the errors
@@ -525,11 +843,11 @@ public class AccelerationFixer {
      */
     public void fix(final double[] measuredF, final double[] result)
             throws AlgebraException {
-<span class="fc bfc" id="L528" title="All 2 branches covered.">        if (measuredF.length != BodyKinematics.COMPONENTS) {</span>
-<span class="fc" id="L529">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L846" title="All 2 branches covered.">        if (measuredF.length != BodyKinematics.COMPONENTS) {</span>
+<span class="fc" id="L847">            throw new IllegalArgumentException();</span>
         }
-<span class="fc bfc" id="L531" title="All 2 branches covered.">        if (result.length != BodyKinematics.COMPONENTS) {</span>
-<span class="fc" id="L532">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L849" title="All 2 branches covered.">        if (result.length != BodyKinematics.COMPONENTS) {</span>
+<span class="fc" id="L850">            throw new IllegalArgumentException();</span>
         }
 
         // The accelerometer model is
@@ -543,15 +861,15 @@ public class AccelerationFixer {
 
         // Hecen:
         // ftrue = (I + Ma)^-1 * (fmeas - ba)
-<span class="fc bfc" id="L546" title="All 2 branches covered.">        for (int i = 0; i &lt; BodyKinematics.COMPONENTS; i++) {</span>
-<span class="fc" id="L547">            mDiff.setElementAtIndex(i,</span>
-<span class="fc" id="L548">                    measuredF[i] - mBias.getElementAtIndex(i));</span>
+<span class="fc bfc" id="L864" title="All 2 branches covered.">        for (int i = 0; i &lt; BodyKinematics.COMPONENTS; i++) {</span>
+<span class="fc" id="L865">            mDiff.setElementAtIndex(i,</span>
+<span class="fc" id="L866">                    measuredF[i] - mBias.getElementAtIndex(i));</span>
         }
 
-<span class="fc" id="L551">        mTmp2.multiply(mDiff, mTmp3);</span>
+<span class="fc" id="L869">        mTmp2.multiply(mDiff, mTmp3);</span>
 
-<span class="fc" id="L553">        mTmp3.toArray(result);</span>
-<span class="fc" id="L554">    }</span>
+<span class="fc" id="L871">        mTmp3.toArray(result);</span>
+<span class="fc" id="L872">    }</span>
 
     /**
      * Fixes provided measured specific force values by undoing the errors
@@ -570,13 +888,13 @@ public class AccelerationFixer {
     public void fix(final Matrix measuredF, final double[] result)
             throws AlgebraException {
 
-<span class="fc bfc" id="L573" title="All 2 branches covered.">        if (measuredF.getRows() != BodyKinematics.COMPONENTS</span>
-<span class="fc bfc" id="L574" title="All 2 branches covered.">                || measuredF.getColumns() != 1) {</span>
-<span class="fc" id="L575">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L891" title="All 2 branches covered.">        if (measuredF.getRows() != BodyKinematics.COMPONENTS</span>
+<span class="fc bfc" id="L892" title="All 2 branches covered.">                || measuredF.getColumns() != 1) {</span>
+<span class="fc" id="L893">            throw new IllegalArgumentException();</span>
         }
 
-<span class="fc" id="L578">        fix(measuredF.getBuffer(), result);</span>
-<span class="fc" id="L579">    }</span>
+<span class="fc" id="L896">        fix(measuredF.getBuffer(), result);</span>
+<span class="fc" id="L897">    }</span>
 
     /**
      * Fixes provided measured specific force values by undoing the errors
@@ -595,13 +913,13 @@ public class AccelerationFixer {
     public void fix(final Matrix measuredF, final Matrix result)
             throws AlgebraException {
 
-<span class="fc bfc" id="L598" title="All 2 branches covered.">        if (result.getRows() != BodyKinematics.COMPONENTS</span>
-<span class="fc bfc" id="L599" title="All 2 branches covered.">                || result.getColumns() != 1) {</span>
-<span class="fc" id="L600">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L916" title="All 2 branches covered.">        if (result.getRows() != BodyKinematics.COMPONENTS</span>
+<span class="fc bfc" id="L917" title="All 2 branches covered.">                || result.getColumns() != 1) {</span>
+<span class="fc" id="L918">            throw new IllegalArgumentException();</span>
         }
 
-<span class="fc" id="L603">        fix(measuredF, result.getBuffer());</span>
-<span class="fc" id="L604">    }</span>
+<span class="fc" id="L921">        fix(measuredF, result.getBuffer());</span>
+<span class="fc" id="L922">    }</span>
 
     /**
      * Fixes provided measured specific force values by undoing the errors
@@ -621,19 +939,19 @@ public class AccelerationFixer {
      * @param result     instance where restored true specific force
      *                   will be stored. Must have length 3.
      * @throws AlgebraException         if there are numerical instabilities.
-     * @throws IllegalArgumentException if any of the provided parameters does
-     *                                  not have proper size.
+     * @throws IllegalArgumentException if provided result array does not have
+     *                                  length 3.
      */
     public void fix(
             final double measuredFx, final double measuredFy, final double measuredFz,
             final double[] result) throws AlgebraException {
 
-<span class="fc" id="L631">        mMeasuredF[0] = measuredFx;</span>
-<span class="fc" id="L632">        mMeasuredF[1] = measuredFy;</span>
-<span class="fc" id="L633">        mMeasuredF[2] = measuredFz;</span>
+<span class="fc" id="L949">        mMeasuredF[0] = measuredFx;</span>
+<span class="fc" id="L950">        mMeasuredF[1] = measuredFy;</span>
+<span class="fc" id="L951">        mMeasuredF[2] = measuredFz;</span>
 
-<span class="fc" id="L635">        fix(mMeasuredF, result);</span>
-<span class="fc" id="L636">    }</span>
+<span class="fc" id="L953">        fix(mMeasuredF, result);</span>
+<span class="fc" id="L954">    }</span>
 
     /**
      * Fixes provided measured specific force values by undoing the errors
@@ -653,20 +971,19 @@ public class AccelerationFixer {
      * @param result     instance where restored true specific force
      *                   will be stored. Must be 3x1.
      * @throws AlgebraException         if there are numerical instabilities.
-     * @throws IllegalArgumentException if any of the provided parameters does
-     *                                  not have proper size.
+     * @throws IllegalArgumentException if provided result matrix is not 3x1.
      */
     public void fix(
             final double measuredFx, final double measuredFy, final double measuredFz,
             final Matrix result) throws AlgebraException {
 
-<span class="fc bfc" id="L663" title="All 2 branches covered.">        if (result.getRows() != BodyKinematics.COMPONENTS</span>
-<span class="fc bfc" id="L664" title="All 2 branches covered.">                || result.getColumns() != 1) {</span>
-<span class="fc" id="L665">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L980" title="All 2 branches covered.">        if (result.getRows() != BodyKinematics.COMPONENTS</span>
+<span class="fc bfc" id="L981" title="All 2 branches covered.">                || result.getColumns() != 1) {</span>
+<span class="fc" id="L982">            throw new IllegalArgumentException();</span>
         }
 
-<span class="fc" id="L668">        fix(measuredFx, measuredFy, measuredFz, result.getBuffer());</span>
-<span class="fc" id="L669">    }</span>
+<span class="fc" id="L985">        fix(measuredFx, measuredFy, measuredFz, result.getBuffer());</span>
+<span class="fc" id="L986">    }</span>
 
     /**
      * Fixes provided measured specific force values by undoing the errors
@@ -689,18 +1006,18 @@ public class AccelerationFixer {
             final double[] measuredF, final Matrix bias,
             final Matrix crossCouplingErrors, final double[] result)
             throws AlgebraException {
-<span class="fc bfc" id="L692" title="All 2 branches covered.">        if (measuredF.length != BodyKinematics.COMPONENTS) {</span>
-<span class="fc" id="L693">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L1009" title="All 2 branches covered.">        if (measuredF.length != BodyKinematics.COMPONENTS) {</span>
+<span class="fc" id="L1010">            throw new IllegalArgumentException();</span>
         }
-<span class="fc bfc" id="L695" title="All 4 branches covered.">        if (bias.getRows() != BodyKinematics.COMPONENTS || bias.getColumns() != 1) {</span>
-<span class="fc" id="L696">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L1012" title="All 4 branches covered.">        if (bias.getRows() != BodyKinematics.COMPONENTS || bias.getColumns() != 1) {</span>
+<span class="fc" id="L1013">            throw new IllegalArgumentException();</span>
         }
-<span class="fc bfc" id="L698" title="All 2 branches covered.">        if (crossCouplingErrors.getRows() != BodyKinematics.COMPONENTS</span>
-<span class="fc bfc" id="L699" title="All 2 branches covered.">                || crossCouplingErrors.getColumns() != BodyKinematics.COMPONENTS) {</span>
-<span class="fc" id="L700">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L1015" title="All 2 branches covered.">        if (crossCouplingErrors.getRows() != BodyKinematics.COMPONENTS</span>
+<span class="fc bfc" id="L1016" title="All 2 branches covered.">                || crossCouplingErrors.getColumns() != BodyKinematics.COMPONENTS) {</span>
+<span class="fc" id="L1017">            throw new IllegalArgumentException();</span>
         }
-<span class="fc bfc" id="L702" title="All 2 branches covered.">        if (result.length != BodyKinematics.COMPONENTS) {</span>
-<span class="fc" id="L703">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L1019" title="All 2 branches covered.">        if (result.length != BodyKinematics.COMPONENTS) {</span>
+<span class="fc" id="L1020">            throw new IllegalArgumentException();</span>
         }
 
         // The accelerometer model is
@@ -714,19 +1031,19 @@ public class AccelerationFixer {
 
         // Hecen:
         // ftrue = (I + Ma)^-1 * (fmeas - ba)
-<span class="fc" id="L717">        mIdentity.add(crossCouplingErrors, mTmp1);</span>
+<span class="fc" id="L1034">        mIdentity.add(crossCouplingErrors, mTmp1);</span>
 
-<span class="fc" id="L719">        Utils.inverse(mTmp1, mTmp2);</span>
+<span class="fc" id="L1036">        Utils.inverse(mTmp1, mTmp2);</span>
 
-<span class="fc bfc" id="L721" title="All 2 branches covered.">        for (int i = 0; i &lt; BodyKinematics.COMPONENTS; i++) {</span>
-<span class="fc" id="L722">            mDiff.setElementAtIndex(i,</span>
-<span class="fc" id="L723">                    measuredF[i] - bias.getElementAtIndex(i));</span>
+<span class="fc bfc" id="L1038" title="All 2 branches covered.">        for (int i = 0; i &lt; BodyKinematics.COMPONENTS; i++) {</span>
+<span class="fc" id="L1039">            mDiff.setElementAtIndex(i,</span>
+<span class="fc" id="L1040">                    measuredF[i] - bias.getElementAtIndex(i));</span>
         }
 
-<span class="fc" id="L726">        mTmp2.multiply(mDiff, mTmp3);</span>
+<span class="fc" id="L1043">        mTmp2.multiply(mDiff, mTmp3);</span>
 
-<span class="fc" id="L728">        mTmp3.toArray(result);</span>
-<span class="fc" id="L729">    }</span>
+<span class="fc" id="L1045">        mTmp3.toArray(result);</span>
+<span class="fc" id="L1046">    }</span>
 
     /**
      * Fixes provided measured specific force values by undoing the errors
@@ -749,14 +1066,13 @@ public class AccelerationFixer {
             final Matrix crossCouplingErrors, final double[] result)
             throws AlgebraException {
 
-<span class="fc bfc" id="L752" title="All 2 branches covered.">        if (measuredF.getRows() != BodyKinematics.COMPONENTS</span>
-<span class="fc bfc" id="L753" title="All 2 branches covered.">                || measuredF.getColumns() != 1) {</span>
-<span class="fc" id="L754">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L1069" title="All 2 branches covered.">        if (measuredF.getRows() != BodyKinematics.COMPONENTS</span>
+<span class="fc bfc" id="L1070" title="All 2 branches covered.">                || measuredF.getColumns() != 1) {</span>
+<span class="fc" id="L1071">            throw new IllegalArgumentException();</span>
         }
 
-<span class="fc" id="L757">        fix(measuredF.getBuffer(), bias, crossCouplingErrors, result);</span>
-<span class="fc" id="L758">    }</span>
-
+<span class="fc" id="L1074">        fix(measuredF.getBuffer(), bias, crossCouplingErrors, result);</span>
+<span class="fc" id="L1075">    }</span>
 
     /**
      * Fixes provided measured specific force values by undoing the errors
@@ -780,14 +1096,13 @@ public class AccelerationFixer {
             final Matrix crossCouplingErrors, final Matrix result)
             throws AlgebraException {
 
-<span class="fc bfc" id="L783" title="All 2 branches covered.">        if (result.getRows() != BodyKinematics.COMPONENTS</span>
-<span class="fc bfc" id="L784" title="All 2 branches covered.">                || result.getColumns() != 1) {</span>
-<span class="fc" id="L785">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L1099" title="All 2 branches covered.">        if (result.getRows() != BodyKinematics.COMPONENTS</span>
+<span class="fc bfc" id="L1100" title="All 2 branches covered.">                || result.getColumns() != 1) {</span>
+<span class="fc" id="L1101">            throw new IllegalArgumentException();</span>
         }
 
-<span class="fc" id="L788">        fix(measuredF, bias, crossCouplingErrors, result.getBuffer());</span>
-<span class="fc" id="L789">    }</span>
-
+<span class="fc" id="L1104">        fix(measuredF, bias, crossCouplingErrors, result.getBuffer());</span>
+<span class="fc" id="L1105">    }</span>
 
     /**
      * Fixes provided measured specific force values by undoing the errors
@@ -822,16 +1137,16 @@ public class AccelerationFixer {
             final Matrix crossCouplingErrors,
             final double[] result) throws AlgebraException {
 
-<span class="fc" id="L825">        mMeasuredF[0] = measuredFx;</span>
-<span class="fc" id="L826">        mMeasuredF[1] = measuredFy;</span>
-<span class="fc" id="L827">        mMeasuredF[2] = measuredFz;</span>
+<span class="fc" id="L1140">        mMeasuredF[0] = measuredFx;</span>
+<span class="fc" id="L1141">        mMeasuredF[1] = measuredFy;</span>
+<span class="fc" id="L1142">        mMeasuredF[2] = measuredFz;</span>
 
-<span class="fc" id="L829">        mBias.setElementAtIndex(0, biasX);</span>
-<span class="fc" id="L830">        mBias.setElementAtIndex(1, biasY);</span>
-<span class="fc" id="L831">        mBias.setElementAtIndex(2, biasZ);</span>
+<span class="fc" id="L1144">        mBias.setElementAtIndex(0, biasX);</span>
+<span class="fc" id="L1145">        mBias.setElementAtIndex(1, biasY);</span>
+<span class="fc" id="L1146">        mBias.setElementAtIndex(2, biasZ);</span>
 
-<span class="fc" id="L833">        fix(mMeasuredF, mBias, crossCouplingErrors, result);</span>
-<span class="fc" id="L834">    }</span>
+<span class="fc" id="L1148">        fix(mMeasuredF, mBias, crossCouplingErrors, result);</span>
+<span class="fc" id="L1149">    }</span>
 
     /**
      * Fixes provided measured specific force values by undoing the errors
@@ -866,15 +1181,14 @@ public class AccelerationFixer {
             final Matrix crossCouplingErrors, final Matrix result)
             throws AlgebraException {
 
-<span class="fc bfc" id="L869" title="All 2 branches covered.">        if (result.getRows() != BodyKinematics.COMPONENTS</span>
-<span class="fc bfc" id="L870" title="All 2 branches covered.">                || result.getColumns() != 1) {</span>
-<span class="fc" id="L871">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L1184" title="All 2 branches covered.">        if (result.getRows() != BodyKinematics.COMPONENTS</span>
+<span class="fc bfc" id="L1185" title="All 2 branches covered.">                || result.getColumns() != 1) {</span>
+<span class="fc" id="L1186">            throw new IllegalArgumentException();</span>
         }
 
-<span class="fc" id="L874">        fix(measuredFx, measuredFy, measuredFz, biasX, biasY, biasZ, crossCouplingErrors,</span>
-<span class="fc" id="L875">                result.getBuffer());</span>
-<span class="fc" id="L876">    }</span>
-
+<span class="fc" id="L1189">        fix(measuredFx, measuredFy, measuredFz, biasX, biasY, biasZ, crossCouplingErrors,</span>
+<span class="fc" id="L1190">                result.getBuffer());</span>
+<span class="fc" id="L1191">    }</span>
 
     /**
      * Fixes provided measured specific force values by undoing the errors
@@ -908,8 +1222,7 @@ public class AccelerationFixer {
      * @param result     instance where restored true specific force
      *                   will be stored. Must have length 3.
      * @throws AlgebraException         if there are numerical instabilities.
-     * @throws IllegalArgumentException if any of the provided parameters does
-     *                                  not have proper size.
+     * @throws IllegalArgumentException if result does not have length 3.
      */
     public void fix(
             final double measuredFx, final double measuredFy, final double measuredFz,
@@ -920,20 +1233,19 @@ public class AccelerationFixer {
             final double mzx, final double mzy,
             final double[] result) throws AlgebraException {
 
-<span class="fc" id="L923">        mCrossCouplingErrors.setElementAt(0, 0, sx);</span>
-<span class="fc" id="L924">        mCrossCouplingErrors.setElementAt(1, 1, sy);</span>
-<span class="fc" id="L925">        mCrossCouplingErrors.setElementAt(2, 2, sz);</span>
-<span class="fc" id="L926">        mCrossCouplingErrors.setElementAt(0, 1, mxy);</span>
-<span class="fc" id="L927">        mCrossCouplingErrors.setElementAt(0, 2, mxz);</span>
-<span class="fc" id="L928">        mCrossCouplingErrors.setElementAt(1, 0, myx);</span>
-<span class="fc" id="L929">        mCrossCouplingErrors.setElementAt(1, 2, myz);</span>
-<span class="fc" id="L930">        mCrossCouplingErrors.setElementAt(2, 0, mzx);</span>
-<span class="fc" id="L931">        mCrossCouplingErrors.setElementAt(2, 1, mzy);</span>
+<span class="fc" id="L1236">        mCrossCouplingErrors.setElementAt(0, 0, sx);</span>
+<span class="fc" id="L1237">        mCrossCouplingErrors.setElementAt(1, 1, sy);</span>
+<span class="fc" id="L1238">        mCrossCouplingErrors.setElementAt(2, 2, sz);</span>
+<span class="fc" id="L1239">        mCrossCouplingErrors.setElementAt(0, 1, mxy);</span>
+<span class="fc" id="L1240">        mCrossCouplingErrors.setElementAt(0, 2, mxz);</span>
+<span class="fc" id="L1241">        mCrossCouplingErrors.setElementAt(1, 0, myx);</span>
+<span class="fc" id="L1242">        mCrossCouplingErrors.setElementAt(1, 2, myz);</span>
+<span class="fc" id="L1243">        mCrossCouplingErrors.setElementAt(2, 0, mzx);</span>
+<span class="fc" id="L1244">        mCrossCouplingErrors.setElementAt(2, 1, mzy);</span>
 
-<span class="fc" id="L933">        fix(measuredFx, measuredFy, measuredFz, biasX, biasY, biasZ,</span>
+<span class="fc" id="L1246">        fix(measuredFx, measuredFy, measuredFz, biasX, biasY, biasZ,</span>
                 mCrossCouplingErrors, result);
-<span class="fc" id="L935">    }</span>
-
+<span class="fc" id="L1248">    }</span>
 
     /**
      * Fixes provided measured specific force values by undoing the errors
@@ -967,8 +1279,7 @@ public class AccelerationFixer {
      * @param result     instance where restored true specific force
      *                   will be stored. Must have be 3x1.
      * @throws AlgebraException         if there are numerical instabilities.
-     * @throws IllegalArgumentException if any of the provided parameters does
-     *                                  not have proper size.
+     * @throws IllegalArgumentException if result is not 3x1.
      */
     public void fix(
             final double measuredFx, final double measuredFy, final double measuredFz,
@@ -979,14 +1290,51 @@ public class AccelerationFixer {
             final double mzx, final double mzy,
             final Matrix result) throws AlgebraException {
 
-<span class="fc bfc" id="L982" title="All 2 branches covered.">        if (result.getRows() != BodyKinematics.COMPONENTS</span>
-<span class="fc bfc" id="L983" title="All 2 branches covered.">                || result.getColumns() != 1) {</span>
-<span class="fc" id="L984">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L1293" title="All 2 branches covered.">        if (result.getRows() != BodyKinematics.COMPONENTS</span>
+<span class="fc bfc" id="L1294" title="All 2 branches covered.">                || result.getColumns() != 1) {</span>
+<span class="fc" id="L1295">            throw new IllegalArgumentException();</span>
         }
 
-<span class="fc" id="L987">        fix(measuredFx, measuredFy, measuredFz, biasX, biasY, biasZ,</span>
-<span class="fc" id="L988">                sx, sy, sz, mxy, mxz, myx, myz, mzx, mzy, result.getBuffer());</span>
-<span class="fc" id="L989">    }</span>
+<span class="fc" id="L1298">        fix(measuredFx, measuredFy, measuredFz, biasX, biasY, biasZ,</span>
+<span class="fc" id="L1299">                sx, sy, sz, mxy, mxz, myx, myz, mzx, mzy, result.getBuffer());</span>
+<span class="fc" id="L1300">    }</span>
+
+    /**
+     * Fixes provided measured specific force values by undoing the errors
+     * introduced by the accelerometer model to restore the true specific force.
+     * This method uses last provided bias and cross coupling errors.
+     *
+     * @param measuredF measured specific force.
+     * @return restored true specific force.
+     * @throws AlgebraException if there are numerical instabilities.
+     */
+    public AccelerationTriad fixAndReturnNew(final AccelerationTriad measuredF)
+            throws AlgebraException {
+<span class="fc" id="L1313">        final AccelerationTriad result = new AccelerationTriad();</span>
+<span class="fc" id="L1314">        fix(measuredF, result);</span>
+<span class="fc" id="L1315">        return result;</span>
+    }
+
+    /**
+     * Fixes provided measured specific force values by undoing the errors
+     * introduced by the accelerometer model to restore the true specific
+     * force.
+     * This method uses last provided bias and cross coupling errors.
+     *
+     * @param measuredFx x-coordinate of measured specific force.
+     * @param measuredFy y-coordinate of measured specific force.
+     * @param measuredFz z-coordinate of measured specific force.
+     * @return restored true specific force.
+     * @throws AlgebraException if there are numerical instabilities.
+     */
+    public AccelerationTriad fixAndReturnNew(
+            final Acceleration measuredFx,
+            final Acceleration measuredFy,
+            final Acceleration measuredFz) throws AlgebraException {
+<span class="fc" id="L1334">        final AccelerationTriad result = new AccelerationTriad();</span>
+<span class="fc" id="L1335">        fix(measuredFx, measuredFy, measuredFz, result);</span>
+<span class="fc" id="L1336">        return result;</span>
+    }
 
     /**
      * Fixes provided measured specific force values by undoing the errors
@@ -998,15 +1346,14 @@ public class AccelerationFixer {
      *                  per squared second (m/s^2). Must have length 3.
      * @return restored true specific force.
      * @throws AlgebraException         if there are numerical instabilities.
-     * @throws IllegalArgumentException if any of the provided parameters does
-     *                                  not have proper size.
+     * @throws IllegalArgumentException if provided array does not have length 3.
      */
     public double[] fixAndReturnNew(
             final double[] measuredF) throws AlgebraException {
 
-<span class="fc" id="L1007">        final double[] result = new double[BodyKinematics.COMPONENTS];</span>
-<span class="fc" id="L1008">        fix(measuredF, result);</span>
-<span class="fc" id="L1009">        return result;</span>
+<span class="fc" id="L1354">        final double[] result = new double[BodyKinematics.COMPONENTS];</span>
+<span class="fc" id="L1355">        fix(measuredF, result);</span>
+<span class="fc" id="L1356">        return result;</span>
     }
 
     /**
@@ -1025,9 +1372,9 @@ public class AccelerationFixer {
     public double[] fixAndReturnNew(final Matrix measuredF)
             throws AlgebraException {
 
-<span class="fc" id="L1028">        final double[] result = new double[BodyKinematics.COMPONENTS];</span>
-<span class="fc" id="L1029">        fix(measuredF, result);</span>
-<span class="fc" id="L1030">        return result;</span>
+<span class="fc" id="L1375">        final double[] result = new double[BodyKinematics.COMPONENTS];</span>
+<span class="fc" id="L1376">        fix(measuredF, result);</span>
+<span class="fc" id="L1377">        return result;</span>
     }
 
     /**
@@ -1046,10 +1393,10 @@ public class AccelerationFixer {
     public Matrix fixAndReturnNewMatrix(final Matrix measuredF)
             throws AlgebraException {
 
-<span class="fc" id="L1049">        final Matrix result = new Matrix(</span>
+<span class="fc" id="L1396">        final Matrix result = new Matrix(</span>
                 BodyKinematics.COMPONENTS, 1);
-<span class="fc" id="L1051">        fix(measuredF, result);</span>
-<span class="fc" id="L1052">        return result;</span>
+<span class="fc" id="L1398">        fix(measuredF, result);</span>
+<span class="fc" id="L1399">        return result;</span>
     }
 
     /**
@@ -1073,9 +1420,9 @@ public class AccelerationFixer {
     public double[] fixAndReturnNew(
             final double measuredFx, final double measuredFy, final double measuredFz)
             throws AlgebraException {
-<span class="fc" id="L1076">        final double[] result = new double[BodyKinematics.COMPONENTS];</span>
-<span class="fc" id="L1077">        fix(measuredFx, measuredFy, measuredFz, result);</span>
-<span class="fc" id="L1078">        return result;</span>
+<span class="fc" id="L1423">        final double[] result = new double[BodyKinematics.COMPONENTS];</span>
+<span class="fc" id="L1424">        fix(measuredFx, measuredFy, measuredFz, result);</span>
+<span class="fc" id="L1425">        return result;</span>
     }
 
     /**
@@ -1099,10 +1446,10 @@ public class AccelerationFixer {
     public Matrix fixAndReturnNewMatrix(
             final double measuredFx, final double measuredFy, final double measuredFz)
             throws AlgebraException {
-<span class="fc" id="L1102">        final Matrix result = new Matrix(</span>
+<span class="fc" id="L1449">        final Matrix result = new Matrix(</span>
                 BodyKinematics.COMPONENTS, 1);
-<span class="fc" id="L1104">        fix(measuredFx, measuredFy, measuredFz, result);</span>
-<span class="fc" id="L1105">        return result;</span>
+<span class="fc" id="L1451">        fix(measuredFx, measuredFy, measuredFz, result);</span>
+<span class="fc" id="L1452">        return result;</span>
     }
 
     /**
@@ -1126,9 +1473,9 @@ public class AccelerationFixer {
             final double[] measuredF, final Matrix bias,
             final Matrix crossCouplingErrors) throws AlgebraException {
 
-<span class="fc" id="L1129">        final double[] result = new double[BodyKinematics.COMPONENTS];</span>
-<span class="fc" id="L1130">        fix(measuredF, bias, crossCouplingErrors, result);</span>
-<span class="fc" id="L1131">        return result;</span>
+<span class="fc" id="L1476">        final double[] result = new double[BodyKinematics.COMPONENTS];</span>
+<span class="fc" id="L1477">        fix(measuredF, bias, crossCouplingErrors, result);</span>
+<span class="fc" id="L1478">        return result;</span>
     }
 
 
@@ -1138,8 +1485,7 @@ public class AccelerationFixer {
      * force.
      *
      * @param measuredF           measured specific force expressed in meters
-     *                            per squared second (m/s^2). Must have
-     *                            length 3.
+     *                            per squared second (m/s^2). Must be 3x1.
      * @param bias                bias values expressed in meters per squared
      *                            second (m/s^2). Must be 3x1.
      * @param crossCouplingErrors cross coupling errors matrix. Must be 3x3.
@@ -1153,9 +1499,9 @@ public class AccelerationFixer {
             final Matrix measuredF, final Matrix bias,
             final Matrix crossCouplingErrors) throws AlgebraException {
 
-<span class="fc" id="L1156">        final double[] result = new double[BodyKinematics.COMPONENTS];</span>
-<span class="fc" id="L1157">        fix(measuredF, bias, crossCouplingErrors, result);</span>
-<span class="fc" id="L1158">        return result;</span>
+<span class="fc" id="L1502">        final double[] result = new double[BodyKinematics.COMPONENTS];</span>
+<span class="fc" id="L1503">        fix(measuredF, bias, crossCouplingErrors, result);</span>
+<span class="fc" id="L1504">        return result;</span>
     }
 
 
@@ -1180,10 +1526,10 @@ public class AccelerationFixer {
             final Matrix measuredF, final Matrix bias,
             final Matrix crossCouplingErrors) throws AlgebraException {
 
-<span class="fc" id="L1183">        final Matrix result = new Matrix(</span>
+<span class="fc" id="L1529">        final Matrix result = new Matrix(</span>
                 BodyKinematics.COMPONENTS, 1);
-<span class="fc" id="L1185">        fix(measuredF, bias, crossCouplingErrors, result);</span>
-<span class="fc" id="L1186">        return result;</span>
+<span class="fc" id="L1531">        fix(measuredF, bias, crossCouplingErrors, result);</span>
+<span class="fc" id="L1532">        return result;</span>
     }
 
     /**
@@ -1218,10 +1564,10 @@ public class AccelerationFixer {
             final double biasX, final double biasY, final double biasZ,
             final Matrix crossCouplingErrors) throws AlgebraException {
 
-<span class="fc" id="L1221">        final double[] result = new double[BodyKinematics.COMPONENTS];</span>
-<span class="fc" id="L1222">        fix(measuredFx, measuredFy, measuredFz,</span>
+<span class="fc" id="L1567">        final double[] result = new double[BodyKinematics.COMPONENTS];</span>
+<span class="fc" id="L1568">        fix(measuredFx, measuredFy, measuredFz,</span>
                 biasX, biasY, biasZ, crossCouplingErrors, result);
-<span class="fc" id="L1224">        return result;</span>
+<span class="fc" id="L1570">        return result;</span>
     }
 
 
@@ -1257,12 +1603,12 @@ public class AccelerationFixer {
             final double biasX, final double biasY, final double biasZ,
             final Matrix crossCouplingErrors) throws AlgebraException {
 
-<span class="fc" id="L1260">        final Matrix result = new Matrix(</span>
+<span class="fc" id="L1606">        final Matrix result = new Matrix(</span>
                 BodyKinematics.COMPONENTS, 1);
-<span class="fc" id="L1262">        fix(measuredFx, measuredFy, measuredFz,</span>
+<span class="fc" id="L1608">        fix(measuredFx, measuredFy, measuredFz,</span>
                 biasX, biasY, biasZ,
                 crossCouplingErrors, result);
-<span class="fc" id="L1265">        return result;</span>
+<span class="fc" id="L1611">        return result;</span>
     }
 
 
@@ -1307,14 +1653,14 @@ public class AccelerationFixer {
             final double myx, final double myz,
             final double mzx, final double mzy) throws AlgebraException {
 
-<span class="fc" id="L1310">        final double[] result = new double[BodyKinematics.COMPONENTS];</span>
-<span class="fc" id="L1311">        fix(measuredFx, measuredFy, measuredFz,</span>
+<span class="fc" id="L1656">        final double[] result = new double[BodyKinematics.COMPONENTS];</span>
+<span class="fc" id="L1657">        fix(measuredFx, measuredFy, measuredFz,</span>
                 biasX, biasY, biasZ,
                 sx, sy, sz,
                 mxy, mxz,
                 myx, myz,
                 mzx, mzy, result);
-<span class="fc" id="L1317">        return result;</span>
+<span class="fc" id="L1663">        return result;</span>
     }
 
     /**
@@ -1358,15 +1704,39 @@ public class AccelerationFixer {
             final double myx, final double myz,
             final double mzx, final double mzy) throws AlgebraException {
 
-<span class="fc" id="L1361">        final Matrix result = new Matrix(</span>
+<span class="fc" id="L1707">        final Matrix result = new Matrix(</span>
                 BodyKinematics.COMPONENTS, 1);
-<span class="fc" id="L1363">        fix(measuredFx, measuredFy, measuredFz,</span>
+<span class="fc" id="L1709">        fix(measuredFx, measuredFy, measuredFz,</span>
                 biasX, biasY, biasZ,
                 sx, sy, sz,
                 mxy, mxz,
                 myx, myz,
                 mzx, mzy, result);
-<span class="fc" id="L1369">        return result;</span>
+<span class="fc" id="L1715">        return result;</span>
+    }
+
+    /**
+     * Converts acceleration value and unit to meters per squared second (m/s^2).
+     *
+     * @param value value to be converted.
+     * @param unit  unit of value to be converted.
+     * @return converted value.
+     */
+    private static double convertAcceleration(
+            final double value, final AccelerationUnit unit) {
+<span class="fc" id="L1727">        return AccelerationConverter.convert(value, unit,</span>
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+    }
+
+    /**
+     * Converts acceleration measurement to meters per squared second (m/s^2).
+     *
+     * @param acceleration acceleration to be converted.
+     * @return converted value.
+     */
+    private static double convertAcceleration(final Acceleration acceleration) {
+<span class="fc" id="L1738">        return convertAcceleration(acceleration.getValue().doubleValue(),</span>
+<span class="fc" id="L1739">                acceleration.getUnit());</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

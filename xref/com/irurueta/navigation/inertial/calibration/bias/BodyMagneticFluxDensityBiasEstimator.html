@@ -3276,13 +3276,13 @@
 <a class="jxr_linenumber" name="L3268" href="#L3268">3268</a>     }
 <a class="jxr_linenumber" name="L3269" href="#L3269">3269</a> 
 <a class="jxr_linenumber" name="L3270" href="#L3270">3270</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L3271" href="#L3271">3271</a> <em class="jxr_javadoccomment">     * Gets average magnetometer noise root PSD (Power Spectral Density) among</em>
-<a class="jxr_linenumber" name="L3272" href="#L3272">3272</a> <em class="jxr_javadoccomment">     * x,y,z components expressed as (T * s^0.5).</em>
+<a class="jxr_linenumber" name="L3271" href="#L3271">3271</a> <em class="jxr_javadoccomment">     * Gets magnetometer root noise root PSD (Power Spectral Density) which is</em>
+<a class="jxr_linenumber" name="L3272" href="#L3272">3272</a> <em class="jxr_javadoccomment">     * the norm of root PSD components expressed as (T * s^0.5).</em>
 <a class="jxr_linenumber" name="L3273" href="#L3273">3273</a> <em class="jxr_javadoccomment">     *</em>
 <a class="jxr_linenumber" name="L3274" href="#L3274">3274</a> <em class="jxr_javadoccomment">     * @return average magnetometer noise root PSD.</em>
 <a class="jxr_linenumber" name="L3275" href="#L3275">3275</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L3276" href="#L3276">3276</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">double</strong> getAvgRootPsd() {
-<a class="jxr_linenumber" name="L3277" href="#L3277">3277</a>         <strong class="jxr_keyword">return</strong> Math.sqrt(getAvgPsd());
+<a class="jxr_linenumber" name="L3276" href="#L3276">3276</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">double</strong> getRootPsd() {
+<a class="jxr_linenumber" name="L3277" href="#L3277">3277</a>         <strong class="jxr_keyword">return</strong> Math.sqrt(getPsdX() + getPsdY() + getPsdZ());
 <a class="jxr_linenumber" name="L3278" href="#L3278">3278</a>     }
 <a class="jxr_linenumber" name="L3279" href="#L3279">3279</a> 
 <a class="jxr_linenumber" name="L3280" href="#L3280">3280</a>     <em class="jxr_javadoccomment">/**</em>
@@ -3521,6 +3521,6 @@
 <a class="jxr_linenumber" name="L3513" href="#L3513">3513</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2018&#x2013;2020. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2018&#x2013;2021. All rights reserved.</div>
 </body>
 </html>

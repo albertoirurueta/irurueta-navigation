@@ -2880,13 +2880,13 @@
 <a class="jxr_linenumber" name="L2872" href="#L2872">2872</a>     }
 <a class="jxr_linenumber" name="L2873" href="#L2873">2873</a> 
 <a class="jxr_linenumber" name="L2874" href="#L2874">2874</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2875" href="#L2875">2875</a> <em class="jxr_javadoccomment">     * Gets average accelerometer noise root PSD (Power Spectral Density) among</em>
-<a class="jxr_linenumber" name="L2876" href="#L2876">2876</a> <em class="jxr_javadoccomment">     * x,y,z components expressed as (m * s^-1.5).</em>
+<a class="jxr_linenumber" name="L2875" href="#L2875">2875</a> <em class="jxr_javadoccomment">     * Gets accelerometer noise root PSD (Power Spectral Density) which is the</em>
+<a class="jxr_linenumber" name="L2876" href="#L2876">2876</a> <em class="jxr_javadoccomment">     * norm of root PSD components expressed as (m * s^-1.5).</em>
 <a class="jxr_linenumber" name="L2877" href="#L2877">2877</a> <em class="jxr_javadoccomment">     *</em>
 <a class="jxr_linenumber" name="L2878" href="#L2878">2878</a> <em class="jxr_javadoccomment">     * @return average accelerometer noise root PSD.</em>
 <a class="jxr_linenumber" name="L2879" href="#L2879">2879</a> <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="L2880" href="#L2880">2880</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">double</strong> getAccelerometerNoiseRootPSD() {
-<a class="jxr_linenumber" name="L2881" href="#L2881">2881</a>         <strong class="jxr_keyword">return</strong> Math.sqrt(getAccelerometerNoisePSD());
+<a class="jxr_linenumber" name="L2881" href="#L2881">2881</a>         <strong class="jxr_keyword">return</strong> Math.sqrt(getPSDFx() + getPSDFy() + getPSDFz());
 <a class="jxr_linenumber" name="L2882" href="#L2882">2882</a>     }
 <a class="jxr_linenumber" name="L2883" href="#L2883">2883</a> 
 <a class="jxr_linenumber" name="L2884" href="#L2884">2884</a>     <em class="jxr_javadoccomment">/**</em>
@@ -2901,13 +2901,13 @@
 <a class="jxr_linenumber" name="L2893" href="#L2893">2893</a>     }
 <a class="jxr_linenumber" name="L2894" href="#L2894">2894</a> 
 <a class="jxr_linenumber" name="L2895" href="#L2895">2895</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L2896" href="#L2896">2896</a> <em class="jxr_javadoccomment">     * Gets average gyroscope noise root PSD (Power Spectral Density) among</em>
-<a class="jxr_linenumber" name="L2897" href="#L2897">2897</a> <em class="jxr_javadoccomment">     * x,y,z components expressed in (rad * s^-0.5).</em>
+<a class="jxr_linenumber" name="L2896" href="#L2896">2896</a> <em class="jxr_javadoccomment">     * Gets gyroscope noise root PSD (Power Spectral Density) which is the</em>
+<a class="jxr_linenumber" name="L2897" href="#L2897">2897</a> <em class="jxr_javadoccomment">     * norm of root PSD components expressed in (rad * s^-0.5).</em>
 <a class="jxr_linenumber" name="L2898" href="#L2898">2898</a> <em class="jxr_javadoccomment">     *</em>
 <a class="jxr_linenumber" name="L2899" href="#L2899">2899</a> <em class="jxr_javadoccomment">     * @return average gyroscope noise root PSD.</em>
 <a class="jxr_linenumber" name="L2900" href="#L2900">2900</a> <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="L2901" href="#L2901">2901</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">double</strong> getGyroNoiseRootPSD() {
-<a class="jxr_linenumber" name="L2902" href="#L2902">2902</a>         <strong class="jxr_keyword">return</strong> Math.sqrt(getGyroNoisePSD());
+<a class="jxr_linenumber" name="L2902" href="#L2902">2902</a>         <strong class="jxr_keyword">return</strong> Math.sqrt(getPSDAngularRateX() + getPSDAngularRateY() + getPSDAngularRateZ());
 <a class="jxr_linenumber" name="L2903" href="#L2903">2903</a>     }
 <a class="jxr_linenumber" name="L2904" href="#L2904">2904</a> 
 <a class="jxr_linenumber" name="L2905" href="#L2905">2905</a>     <em class="jxr_javadoccomment">/**</em>
@@ -3205,6 +3205,6 @@
 <a class="jxr_linenumber" name="L3197" href="#L3197">3197</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2018&#x2013;2020. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2018&#x2013;2021. All rights reserved.</div>
 </body>
 </html>

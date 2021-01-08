@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>INSLooselyCoupledKalmanInitializerConfigCreator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-navigation</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.navigation.inertial.calibration</a> &gt; <span class="el_source">INSLooselyCoupledKalmanInitializerConfigCreator.java</span></div><h1>INSLooselyCoupledKalmanInitializerConfigCreator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2021 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.navigation.inertial.calibration;
+
+import com.irurueta.navigation.NotReadyException;
+import com.irurueta.navigation.inertial.INSLooselyCoupledKalmanInitializerConfig;
+
+/**
+ * Utility class to create {@link INSLooselyCoupledKalmanInitializerConfig} by combining
+ * different sources of estimated data.
+ * Sources of data can be any accelerometer calibrator implementing
+ * {@link AccelerometerBiasUncertaintySource}, or any gyroscope calibrator implementing
+ * {@link GyroscopeBiasUncertaintySource}.
+ */
+public class INSLooselyCoupledKalmanInitializerConfigCreator {
+
+    /**
+     * A source of estimated accelerometer bias uncertainty.
+     */
+    private AccelerometerBiasUncertaintySource mAccelerometerBiasUncertaintySource;
+
+    /**
+     * A source of estimated gyroscope bias uncertainty.
+     */
+    private GyroscopeBiasUncertaintySource mGyroscopeBiasUncertaintySource;
+
+    /**
+     * A source of attitude uncertainty.
+     */
+    private AttitudeUncertaintySource mAttitudeUncertaintySource;
+
+    /**
+     * A source of velocity uncertainty.
+     */
+    private VelocityUncertaintySource mVelocityUncertaintySource;
+
+    /**
+     * A source of position uncertainty.
+     */
+    private PositionUncertaintySource mPositionUncertaintySource;
+
+    /**
+     * Constructor.
+     */
+<span class="fc" id="L58">    public INSLooselyCoupledKalmanInitializerConfigCreator() {</span>
+<span class="fc" id="L59">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param accelerometerBiasUncertaintySource a source of estimated accelerometer bias uncertainty.
+     * @param gyroscopeBiasUncertaintySource     a source of estimated gyroscope bias uncertainty.
+     * @param attitudeUncertaintySource          a source of attitude uncertainty.
+     * @param velocityUncertaintySource          a source of velocity uncertainty.
+     * @param positionUncertaintySource          a source of position uncertainty.
+     */
+    public INSLooselyCoupledKalmanInitializerConfigCreator(
+            final AccelerometerBiasUncertaintySource accelerometerBiasUncertaintySource,
+            final GyroscopeBiasUncertaintySource gyroscopeBiasUncertaintySource,
+            final AttitudeUncertaintySource attitudeUncertaintySource,
+            final VelocityUncertaintySource velocityUncertaintySource,
+<span class="fc" id="L75">            final PositionUncertaintySource positionUncertaintySource) {</span>
+<span class="fc" id="L76">        mAccelerometerBiasUncertaintySource = accelerometerBiasUncertaintySource;</span>
+<span class="fc" id="L77">        mGyroscopeBiasUncertaintySource = gyroscopeBiasUncertaintySource;</span>
+<span class="fc" id="L78">        mAttitudeUncertaintySource = attitudeUncertaintySource;</span>
+<span class="fc" id="L79">        mVelocityUncertaintySource = velocityUncertaintySource;</span>
+<span class="fc" id="L80">        mPositionUncertaintySource = positionUncertaintySource;</span>
+<span class="fc" id="L81">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param accelerometerBiasUncertaintySource a source of estimated accelerometer bias uncertainty.
+     * @param gyroscopeBiasUncertaintySource     a source of estimated gyroscope bias uncertainty.
+     * @param randomWalkEstimator                a random walk estimator.
+     */
+    public INSLooselyCoupledKalmanInitializerConfigCreator(
+            final AccelerometerBiasUncertaintySource accelerometerBiasUncertaintySource,
+            final GyroscopeBiasUncertaintySource gyroscopeBiasUncertaintySource,
+            final RandomWalkEstimator randomWalkEstimator) {
+<span class="fc" id="L94">        this(accelerometerBiasUncertaintySource, gyroscopeBiasUncertaintySource,</span>
+                randomWalkEstimator, randomWalkEstimator, randomWalkEstimator);
+<span class="fc" id="L96">    }</span>
+
+    /**
+     * Gets source of estimated accelerometer bias uncertainty.
+     *
+     * @return source of estimated accelerometer bias uncertainty.
+     */
+    public AccelerometerBiasUncertaintySource getAccelerometerBiasUncertaintySource() {
+<span class="fc" id="L104">        return mAccelerometerBiasUncertaintySource;</span>
+    }
+
+    /**
+     * Sets source of estimated accelerometer bias uncertainty.
+     *
+     * @param accelerometerBiasUncertaintySource source of estimated accelerometer bias uncertainty.
+     */
+    public void setAccelerometerBiasUncertaintySource(
+            final AccelerometerBiasUncertaintySource accelerometerBiasUncertaintySource) {
+<span class="fc" id="L114">        mAccelerometerBiasUncertaintySource = accelerometerBiasUncertaintySource;</span>
+<span class="fc" id="L115">    }</span>
+
+    /**
+     * Gets source of estimated gyroscope bias uncertainty.
+     *
+     * @return source of estimated gyroscope bias uncertainty.
+     */
+    public GyroscopeBiasUncertaintySource getGyroscopeBiasUncertaintySource() {
+<span class="fc" id="L123">        return mGyroscopeBiasUncertaintySource;</span>
+    }
+
+    /**
+     * Sets source of estimated gyroscope bias uncertainty.
+     *
+     * @param gyroscopeBiasUncertaintySource source of estimated gyroscope bias uncertainty.
+     */
+    public void setGyroscopeBiasUncertaintySource(
+            final GyroscopeBiasUncertaintySource gyroscopeBiasUncertaintySource) {
+<span class="fc" id="L133">        mGyroscopeBiasUncertaintySource = gyroscopeBiasUncertaintySource;</span>
+<span class="fc" id="L134">    }</span>
+
+    /**
+     * Gets source of attitude uncertainty.
+     *
+     * @return source of attitude uncertainty.
+     */
+    public AttitudeUncertaintySource getAttitudeUncertaintySource() {
+<span class="fc" id="L142">        return mAttitudeUncertaintySource;</span>
+    }
+
+    /**
+     * Sets source of attitude uncertainty.
+     *
+     * @param attitudeUncertaintySource source of attitude uncertainty.
+     */
+    public void setAttitudeUncertaintySource(
+            final AttitudeUncertaintySource attitudeUncertaintySource) {
+<span class="fc" id="L152">        mAttitudeUncertaintySource = attitudeUncertaintySource;</span>
+<span class="fc" id="L153">    }</span>
+
+    /**
+     * Gets source of velocity uncertainty.
+     *
+     * @return source of velocity uncertainty.
+     */
+    public VelocityUncertaintySource getVelocityUncertaintySource() {
+<span class="fc" id="L161">        return mVelocityUncertaintySource;</span>
+    }
+
+    /**
+     * Sets source of velocity uncertainty.
+     *
+     * @param velocityUncertaintySource source of velocity uncertainty.
+     */
+    public void setVelocityUncertaintySource(
+            final VelocityUncertaintySource velocityUncertaintySource) {
+<span class="fc" id="L171">        mVelocityUncertaintySource = velocityUncertaintySource;</span>
+<span class="fc" id="L172">    }</span>
+
+    /**
+     * Gets source of position uncertainty.
+     *
+     * @return source of position uncertainty.
+     */
+    public PositionUncertaintySource getPositionUncertaintySource() {
+<span class="fc" id="L180">        return mPositionUncertaintySource;</span>
+    }
+
+    /**
+     * Sets source of position uncertainty.
+     *
+     * @param positionUncertaintySource source of position uncertainty.
+     */
+    public void setPositionUncertaintySource(
+            final PositionUncertaintySource positionUncertaintySource) {
+<span class="fc" id="L190">        mPositionUncertaintySource = positionUncertaintySource;</span>
+<span class="fc" id="L191">    }</span>
+
+    /**
+     * Indicates whether all sources have been provided in order to be able to
+     * create a {@link INSLooselyCoupledKalmanInitializerConfig} instance.
+     *
+     * @return true if creator is ready, false otherwise.
+     */
+    public boolean isReady() {
+<span class="fc bfc" id="L200" title="All 2 branches covered.">        return mAccelerometerBiasUncertaintySource != null</span>
+<span class="pc bpc" id="L201" title="1 of 4 branches missed.">                &amp;&amp; mAccelerometerBiasUncertaintySource.getEstimatedBiasStandardDeviationNorm() != null</span>
+                &amp;&amp; mGyroscopeBiasUncertaintySource != null
+<span class="pc bpc" id="L203" title="4 of 8 branches missed.">                &amp;&amp; mGyroscopeBiasUncertaintySource.getEstimatedBiasStandardDeviationNorm() != null</span>
+                &amp;&amp; mAttitudeUncertaintySource != null
+                &amp;&amp; mVelocityUncertaintySource != null
+                &amp;&amp; mPositionUncertaintySource != null;
+    }
+
+    /**
+     * Creates a {@link INSLooselyCoupledKalmanInitializerConfig} instance containing estimated
+     * parameters during calibration.
+     *
+     * @return instance containing initial configuration data.
+     * @throws NotReadyException if creator is not ready.
+     */
+    public INSLooselyCoupledKalmanInitializerConfig create() throws NotReadyException {
+<span class="fc bfc" id="L217" title="All 2 branches covered.">        if (!isReady()) {</span>
+<span class="fc" id="L218">            throw new NotReadyException();</span>
+        }
+
+<span class="fc" id="L221">        final double attitudeUncertainty =</span>
+<span class="fc" id="L222">                mAttitudeUncertaintySource.getAttitudeStandardDeviation();</span>
+<span class="fc" id="L223">        final double velocityUncertainty =</span>
+<span class="fc" id="L224">                mVelocityUncertaintySource.getVelocityStandardDeviation();</span>
+<span class="fc" id="L225">        final double positionUncertainty =</span>
+<span class="fc" id="L226">                mPositionUncertaintySource.getPositionStandardDeviation();</span>
+<span class="fc" id="L227">        final double accelerationBiasUncertainty =</span>
+<span class="fc" id="L228">                mAccelerometerBiasUncertaintySource.getEstimatedBiasStandardDeviationNorm();</span>
+<span class="fc" id="L229">        final double gyroBiasUncertainty =</span>
+<span class="fc" id="L230">                mGyroscopeBiasUncertaintySource.getEstimatedBiasStandardDeviationNorm();</span>
+
+<span class="fc" id="L232">        return new INSLooselyCoupledKalmanInitializerConfig(</span>
+                attitudeUncertainty, velocityUncertainty, positionUncertainty,
+                accelerationBiasUncertainty, gyroBiasUncertainty);
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
