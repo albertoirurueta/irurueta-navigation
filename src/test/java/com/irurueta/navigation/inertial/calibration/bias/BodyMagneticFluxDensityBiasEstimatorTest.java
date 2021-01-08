@@ -239,7 +239,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -391,7 +391,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -547,7 +547,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -704,7 +704,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -861,7 +861,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -1017,7 +1017,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -1178,7 +1178,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -1325,7 +1325,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -1477,7 +1477,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -1633,7 +1633,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -1790,7 +1790,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -1947,7 +1947,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -2104,7 +2104,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -2265,7 +2265,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -2414,7 +2414,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -2566,7 +2566,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -2722,7 +2722,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -2879,7 +2879,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -3036,7 +3036,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -3192,7 +3192,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -3353,7 +3353,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -3502,7 +3502,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -3654,7 +3654,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -3810,7 +3810,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -3967,7 +3967,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -4124,7 +4124,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -4281,7 +4281,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -4442,7 +4442,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -4592,7 +4592,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -4745,7 +4745,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -4902,7 +4902,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -5060,7 +5060,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -5218,7 +5218,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -5375,7 +5375,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -5537,7 +5537,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -5687,7 +5687,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -5840,7 +5840,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -5997,7 +5997,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -6155,7 +6155,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -6313,7 +6313,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -6471,7 +6471,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -6633,7 +6633,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -6783,7 +6783,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -6936,7 +6936,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -7093,7 +7093,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -7251,7 +7251,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -7409,7 +7409,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -7567,7 +7567,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -7729,7 +7729,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -7880,7 +7880,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -8034,7 +8034,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -8192,7 +8192,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -8350,7 +8350,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -8509,7 +8509,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -8667,7 +8667,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -8830,7 +8830,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -8981,7 +8981,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -9135,7 +9135,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -9293,7 +9293,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -9452,7 +9452,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -9611,7 +9611,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -9770,7 +9770,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -9933,7 +9933,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -10085,7 +10085,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -10240,7 +10240,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -10399,7 +10399,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -10558,7 +10558,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -10718,7 +10718,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -10877,7 +10877,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -11041,7 +11041,7 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         assertEquals(0.0, estimator.getRootPsdY(), 0.0);
         assertEquals(0.0, estimator.getRootPsdZ(), 0.0);
         assertEquals(0.0, estimator.getAvgPsd(), 0.0);
-        assertEquals(0.0, estimator.getAvgRootPsd(), 0.0);
+        assertEquals(0.0, estimator.getRootPsd(), 0.0);
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());
         final BodyMagneticFluxDensity expectedB1 = estimator
@@ -12383,8 +12383,11 @@ public class BodyMagneticFluxDensityBiasEstimatorTest
         final double expectedPsdB = (psdBx + psdBy + psdBz) / 3.0;
         assertEquals(expectedPsdB, avgPsdB, 0.0);
 
-        final double avgRootPsdB = estimator.getAvgRootPsd();
-        assertEquals(Math.sqrt(avgPsdB), avgRootPsdB, 0.0);
+        final double rootPsdB = estimator.getRootPsd();
+        assertEquals(Math.sqrt(psdBx + psdBy + psdBz), rootPsdB, 0.0);
+        assertEquals(Math.sqrt(rootPsdBx * rootPsdBx
+                + rootPsdBy * rootPsdBy
+                + rootPsdBz * rootPsdBz), rootPsdB, SMALL_ABSOLUTE_ERROR);
 
         assertEquals(N_SAMPLES, estimator.getNumberOfProcessedSamples());
         assertFalse(estimator.isRunning());

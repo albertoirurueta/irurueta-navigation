@@ -13,13 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.irurueta.navigation.inertial.calibration.gyroscope;
+package com.irurueta.navigation.inertial.calibration;
 
 import com.irurueta.algebra.AlgebraException;
 import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.Utils;
 import com.irurueta.algebra.WrongSizeException;
 import com.irurueta.navigation.inertial.BodyKinematics;
+import com.irurueta.units.Acceleration;
+import com.irurueta.units.AccelerationConverter;
+import com.irurueta.units.AccelerationUnit;
+import com.irurueta.units.AngularSpeed;
+import com.irurueta.units.AngularSpeedConverter;
+import com.irurueta.units.AngularSpeedUnit;
 
 /**
  * Fixes angular rate values taking into
@@ -71,6 +77,11 @@ public class AngularRateFixer {
      * True specific force to be reused.
      */
     private final double[] mTrueF = new double[BodyKinematics.COMPONENTS];
+
+    /**
+     * Array containing result values to be reused.
+     */
+    private final double[] mResult = new double[BodyKinematics.COMPONENTS];
 
     /**
      * Bias matrix to be reused.
@@ -135,6 +146,7 @@ public class AngularRateFixer {
      * Sets bias values expressed in radians per second (rad/s).
      *
      * @param bias bias values expressed in radians per second. Must be 3x1.
+     * @throws IllegalArgumentException if provided matrix is not 3x1.
      */
     public void setBias(final Matrix bias) {
         if (bias.getRows() != BodyKinematics.COMPONENTS || bias.getColumns() != 1) {
@@ -191,6 +203,40 @@ public class AngularRateFixer {
         } catch (final WrongSizeException ignore) {
             // never happens
         }
+    }
+
+    /**
+     * Gets angular speed bias.
+     *
+     * @return angular speed bias.
+     */
+    public AngularSpeedTriad getBiasAsTriad() {
+        return new AngularSpeedTriad(AngularSpeedUnit.RADIANS_PER_SECOND,
+                mBias.getElementAtIndex(0), mBias.getElementAtIndex(1), mBias.getElementAtIndex(2));
+    }
+
+    /**
+     * Gets angular speed bias.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getBiasAsTriad(final AngularSpeedTriad result) {
+        result.setValueCoordinates(mBias);
+        result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);
+    }
+
+    /**
+     * Sets angular speed bias.
+     *
+     * @param bias angular speed bias to be set.
+     */
+    public void setBias(final AngularSpeedTriad bias) {
+        final double biasX = convertAngularSpeed(bias.getValueX(), bias.getUnit());
+        final double biasY = convertAngularSpeed(bias.getValueY(), bias.getUnit());
+        final double biasZ = convertAngularSpeed(bias.getValueZ(), bias.getUnit());
+        mBias.setElementAtIndex(0, biasX);
+        mBias.setElementAtIndex(1, biasY);
+        mBias.setElementAtIndex(2, biasZ);
     }
 
     /**
@@ -265,6 +311,109 @@ public class AngularRateFixer {
     }
 
     /**
+     * Gets x-coordinate of bias.
+     *
+     * @return x-coordinate of bias.
+     */
+    public AngularSpeed getBiasXAsAngularSpeed() {
+        return new AngularSpeed(getBiasX(),
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+    }
+
+    /**
+     * Gets x-coordinate of bias.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getBiasXAsAngularSpeed(final AngularSpeed result) {
+        result.setValue(getBiasX());
+        result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);
+    }
+
+    /**
+     * Sets x-coordinate of bias.
+     *
+     * @param biasX x-coordinate of bias.
+     */
+    public void setBiasX(final AngularSpeed biasX) {
+        setBiasX(convertAngularSpeed(biasX));
+    }
+
+    /**
+     * Gets y-coordinate of bias.
+     *
+     * @return y-coordinate of bias.
+     */
+    public AngularSpeed getBiasYAsAngularSpeed() {
+        return new AngularSpeed(getBiasY(),
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+    }
+
+    /**
+     * Gets y-coordinate of bias.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getBiasYAsAngularSpeed(final AngularSpeed result) {
+        result.setValue(getBiasY());
+        result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);
+    }
+
+    /**
+     * Sets y-coordinate of bias.
+     *
+     * @param biasY y-coordinate of bias.
+     */
+    public void setBiasY(final AngularSpeed biasY) {
+        setBiasY(convertAngularSpeed(biasY));
+    }
+
+    /**
+     * Gets z-coordinate of bias.
+     *
+     * @return z-coordinate of bias.
+     */
+    public AngularSpeed getBiasZAsAngularSpeed() {
+        return new AngularSpeed(getBiasZ(),
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+    }
+
+    /**
+     * Gets z-coordinate of bias.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getBiasZAsAngularSpeed(final AngularSpeed result) {
+        result.setValue(getBiasZ());
+        result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);
+    }
+
+    /**
+     * Sets z-coordinate of bias.
+     *
+     * @param biasZ z-coordinate of bias.
+     */
+    public void setBiasZ(final AngularSpeed biasZ) {
+        setBiasZ(convertAngularSpeed(biasZ));
+    }
+
+    /**
+     * Sets coordinates of bias.
+     *
+     * @param biasX x-coordinate of bias.
+     * @param biasY y-coordinate of bias.
+     * @param biasZ z-coordinate of bias.
+     */
+    public void setBias(
+            final AngularSpeed biasX,
+            final AngularSpeed biasY,
+            final AngularSpeed biasZ) {
+        setBiasX(biasX);
+        setBiasY(biasY);
+        setBiasZ(biasZ);
+    }
+
+    /**
      * Gets cross coupling errors matrix.
      *
      * @return cross coupling errors matrix.
@@ -316,9 +465,15 @@ public class AngularRateFixer {
      * Sets x scaling factor
      *
      * @param sx x scaling factor.
+     * @throws AlgebraException if provided value makes cross coupling matrix
+     *                          non invertible.
      */
-    public void setSx(final double sx) {
-        mCrossCouplingErrors.setElementAt(0, 0, sx);
+    public void setSx(final double sx) throws AlgebraException {
+        final Matrix m = new Matrix(
+                AngularSpeedTriad.COMPONENTS, AngularSpeedTriad.COMPONENTS);
+        m.copyFrom(mCrossCouplingErrors);
+        m.setElementAt(0, 0, sx);
+        setCrossCouplingErrors(m);
     }
 
     /**
@@ -334,9 +489,15 @@ public class AngularRateFixer {
      * Sets y scaling factor.
      *
      * @param sy y scaling factor.
+     * @throws AlgebraException if provided value makes cross coupling matrix
+     *                          non invertible.
      */
-    public void setSy(final double sy) {
-        mCrossCouplingErrors.setElementAt(1, 1, sy);
+    public void setSy(final double sy) throws AlgebraException {
+        final Matrix m = new Matrix(
+                AngularSpeedTriad.COMPONENTS, AngularSpeedTriad.COMPONENTS);
+        m.copyFrom(mCrossCouplingErrors);
+        m.setElementAt(1, 1, sy);
+        setCrossCouplingErrors(m);
     }
 
     /**
@@ -352,9 +513,15 @@ public class AngularRateFixer {
      * Sets z scaling factor.
      *
      * @param sz z scaling factor.
+     * @throws AlgebraException if provided value makes cross coupling matrix
+     *                          non invertible.
      */
-    public void setSz(final double sz) {
-        mCrossCouplingErrors.setElementAt(2, 2, sz);
+    public void setSz(final double sz) throws AlgebraException {
+        final Matrix m = new Matrix(
+                AngularSpeedTriad.COMPONENTS, AngularSpeedTriad.COMPONENTS);
+        m.copyFrom(mCrossCouplingErrors);
+        m.setElementAt(2, 2, sz);
+        setCrossCouplingErrors(m);
     }
 
     /**
@@ -370,9 +537,15 @@ public class AngularRateFixer {
      * Sets x-y cross coupling error.
      *
      * @param mxy x-y cross coupling error.
+     * @throws AlgebraException if provided value makes cross coupling matrix
+     *                          non invertible.
      */
-    public void setMxy(final double mxy) {
-        mCrossCouplingErrors.setElementAt(0, 1, mxy);
+    public void setMxy(final double mxy) throws AlgebraException {
+        final Matrix m = new Matrix(
+                AngularSpeedTriad.COMPONENTS, AngularSpeedTriad.COMPONENTS);
+        m.copyFrom(mCrossCouplingErrors);
+        m.setElementAt(0, 1, mxy);
+        setCrossCouplingErrors(m);
     }
 
     /**
@@ -388,9 +561,15 @@ public class AngularRateFixer {
      * Sets x-z cross coupling error.
      *
      * @param mxz x-z cross coupling error.
+     * @throws AlgebraException if provided value makes cross coupling matrix
+     *                          non invertible.
      */
-    public void setMxz(final double mxz) {
-        mCrossCouplingErrors.setElementAt(0, 2, mxz);
+    public void setMxz(final double mxz) throws AlgebraException {
+        final Matrix m = new Matrix(
+                AngularSpeedTriad.COMPONENTS, AngularSpeedTriad.COMPONENTS);
+        m.copyFrom(mCrossCouplingErrors);
+        m.setElementAt(0, 2, mxz);
+        setCrossCouplingErrors(m);
     }
 
     /**
@@ -406,9 +585,15 @@ public class AngularRateFixer {
      * Sets y-x cross coupling error.
      *
      * @param myx y-x cross coupling error.
+     * @throws AlgebraException if provided value makes cross coupling matrix
+     *                          non invertible.
      */
-    public void setMyx(final double myx) {
-        mCrossCouplingErrors.setElementAt(1, 0, myx);
+    public void setMyx(final double myx) throws AlgebraException {
+        final Matrix m = new Matrix(
+                AngularSpeedTriad.COMPONENTS, AngularSpeedTriad.COMPONENTS);
+        m.copyFrom(mCrossCouplingErrors);
+        m.setElementAt(1, 0, myx);
+        setCrossCouplingErrors(m);
     }
 
     /**
@@ -424,9 +609,15 @@ public class AngularRateFixer {
      * Sets y-z cross coupling error.
      *
      * @param myz y-z cross coupling error.
+     * @throws AlgebraException if provided value makes cross coupling matrix
+     *                          non invertible.
      */
-    public void setMyz(final double myz) {
-        mCrossCouplingErrors.setElementAt(1, 2, myz);
+    public void setMyz(final double myz) throws AlgebraException {
+        final Matrix m = new Matrix(
+                AngularSpeedTriad.COMPONENTS, AngularSpeedTriad.COMPONENTS);
+        m.copyFrom(mCrossCouplingErrors);
+        m.setElementAt(1, 2, myz);
+        setCrossCouplingErrors(m);
     }
 
     /**
@@ -442,9 +633,15 @@ public class AngularRateFixer {
      * Sets z-x cross coupling error.
      *
      * @param mzx z-x cross coupling error.
+     * @throws AlgebraException if provided value makes cross coupling matrix
+     *                          non invertible.
      */
-    public void setMzx(final double mzx) {
-        mCrossCouplingErrors.setElementAt(2, 0, mzx);
+    public void setMzx(final double mzx) throws AlgebraException {
+        final Matrix m = new Matrix(
+                AngularSpeedTriad.COMPONENTS, AngularSpeedTriad.COMPONENTS);
+        m.copyFrom(mCrossCouplingErrors);
+        m.setElementAt(2, 0, mzx);
+        setCrossCouplingErrors(m);
     }
 
     /**
@@ -460,9 +657,15 @@ public class AngularRateFixer {
      * Sets z-y cross coupling error.
      *
      * @param mzy z-y cross coupling error.
+     * @throws AlgebraException if provided value makes cross coupling matrix
+     *                          non invertible.
      */
-    public void setMzy(final double mzy) {
-        mCrossCouplingErrors.setElementAt(2, 1, mzy);
+    public void setMzy(final double mzy) throws AlgebraException {
+        final Matrix m = new Matrix(
+                AngularSpeedTriad.COMPONENTS, AngularSpeedTriad.COMPONENTS);
+        m.copyFrom(mCrossCouplingErrors);
+        m.setElementAt(2, 1, mzy);
+        setCrossCouplingErrors(m);
     }
 
     /**
@@ -471,12 +674,19 @@ public class AngularRateFixer {
      * @param sx x scaling factor.
      * @param sy y scaling factor.
      * @param sz z scaling factor.
+     * @throws AlgebraException if provided values make cross coupling matrix
+     *                          non invertible.
      */
     public void setScalingFactors(
-            final double sx, final double sy, final double sz) {
-        setSx(sx);
-        setSy(sy);
-        setSz(sz);
+            final double sx, final double sy, final double sz)
+            throws AlgebraException {
+        final Matrix m = new Matrix(
+                AngularSpeedTriad.COMPONENTS, AngularSpeedTriad.COMPONENTS);
+        m.copyFrom(mCrossCouplingErrors);
+        m.setElementAt(0, 0, sx);
+        m.setElementAt(1, 1, sy);
+        m.setElementAt(2, 2, sz);
+        setCrossCouplingErrors(m);
     }
 
     /**
@@ -488,17 +698,24 @@ public class AngularRateFixer {
      * @param myz y-z cross coupling error.
      * @param mzx z-x cross coupling error.
      * @param mzy z-y cross coupling error.
+     * @throws AlgebraException if provided values make cross coupling matrix
+     *                          non invertible.
      */
     public void setCrossCouplingErrors(
             final double mxy, final double mxz,
             final double myx, final double myz,
-            final double mzx, final double mzy) {
-        setMxy(mxy);
-        setMxz(mxz);
-        setMyx(myx);
-        setMyz(myz);
-        setMzx(mzx);
-        setMzy(mzy);
+            final double mzx, final double mzy)
+            throws AlgebraException {
+        final Matrix m = new Matrix(
+                AngularSpeedTriad.COMPONENTS, AngularSpeedTriad.COMPONENTS);
+        m.copyFrom(mCrossCouplingErrors);
+        m.setElementAt(0, 1, mxy);
+        m.setElementAt(0, 2, mxz);
+        m.setElementAt(1, 0, myx);
+        m.setElementAt(1, 2, myz);
+        m.setElementAt(2, 0, mzx);
+        m.setElementAt(2, 1, mzy);
+        setCrossCouplingErrors(m);
     }
 
     /**
@@ -513,14 +730,27 @@ public class AngularRateFixer {
      * @param myz y-z cross coupling error.
      * @param mzx z-x cross coupling error.
      * @param mzy z-y cross coupling error.
+     * @throws AlgebraException if provided values make cross coupling matrix
+     *                          non invertible.
      */
     public void setScalingFactorsAndCrossCouplingErrors(
             final double sx, final double sy, final double sz,
             final double mxy, final double mxz,
             final double myx, final double myz,
-            final double mzx, final double mzy) {
-        setScalingFactors(sx, sy, sz);
-        setCrossCouplingErrors(mxy, mxz, myx, myz, mzx, mzy);
+            final double mzx, final double mzy) throws AlgebraException {
+        final Matrix m = new Matrix(
+                AngularSpeedTriad.COMPONENTS, AngularSpeedTriad.COMPONENTS);
+        m.copyFrom(mCrossCouplingErrors);
+        m.setElementAt(0, 0, sx);
+        m.setElementAt(1, 1, sy);
+        m.setElementAt(2, 2, sz);
+        m.setElementAt(0, 1, mxy);
+        m.setElementAt(0, 2, mxz);
+        m.setElementAt(1, 0, myx);
+        m.setElementAt(1, 2, myz);
+        m.setElementAt(2, 0, mzx);
+        m.setElementAt(2, 1, mzy);
+        setCrossCouplingErrors(m);
     }
 
     /**
@@ -554,6 +784,114 @@ public class AngularRateFixer {
         }
 
         mGDependantCrossBias = gDependantCrossBias;
+    }
+
+    /**
+     * Fixes provided measured angular rate values by undoing the errors
+     * introduced by the gyroscope model to restore the true angular rate.
+     * This method uses last provided bias and cross coupling errors.
+     *
+     * @param measuredAngularRate measured angular rate.
+     * @param trueF               true (i.e. fixed) specific force.
+     * @param result              instance where restored true angular rate will
+     *                            be stored. Must have length 3.
+     * @throws AlgebraException         if there are numerical instabilities.
+     * @throws IllegalArgumentException if length of provided result array is
+     *                                  not 3.
+     */
+    public void fix(final AngularSpeedTriad measuredAngularRate,
+                    final AccelerationTriad trueF,
+                    final double[] result) throws AlgebraException {
+        if (result.length != AngularSpeedTriad.COMPONENTS) {
+            throw new IllegalArgumentException();
+        }
+
+        final double wX = convertAngularSpeed(measuredAngularRate.getValueX(),
+                measuredAngularRate.getUnit());
+        final double wY = convertAngularSpeed(measuredAngularRate.getValueY(),
+                measuredAngularRate.getUnit());
+        final double wZ = convertAngularSpeed(measuredAngularRate.getValueZ(),
+                measuredAngularRate.getUnit());
+        final double trueFx = convertAcceleration(trueF.getValueX(),
+                trueF.getUnit());
+        final double trueFy = convertAcceleration(trueF.getValueY(),
+                trueF.getUnit());
+        final double trueFz = convertAcceleration(trueF.getValueZ(),
+                trueF.getUnit());
+        fix(wX, wY, wZ, trueFx, trueFy, trueFz, result);
+    }
+
+    /**
+     * Fixes provided measured angular rate values by undoing the errors
+     * introduced by the gyroscope model to restore the true angular rate.
+     * This method uses last provided bias and cross coupling errors.
+     *
+     * @param measuredAngularRate measured angular rate.
+     * @param trueF               true (i.e. fixed) specific force.
+     * @param result              instance where restored true angular rate will
+     *                            be stored. Must be 3x1.
+     * @throws AlgebraException         if there are numerical instabilities.
+     * @throws IllegalArgumentException if result matrix is not 3x1.
+     */
+    public void fix(final AngularSpeedTriad measuredAngularRate,
+                    final AccelerationTriad trueF,
+                    final Matrix result) throws AlgebraException {
+        if (result.getRows() != AngularSpeedTriad.COMPONENTS
+                || result.getColumns() != 1) {
+            throw new IllegalArgumentException();
+        }
+
+        fix(measuredAngularRate, trueF, result.getBuffer());
+    }
+
+    /**
+     * Fixes provided measured angular rate values by undoing the errors
+     * introduced by the gyroscope model to restore the true angular rate.
+     * This method uses last provided bias and cross coupling errors.
+     *
+     * @param measuredAngularRate measured angular rate.
+     * @param trueF               true (i.e. fixed) specific force.
+     * @param result              instance where restored true angular rate will be stored.
+     * @throws AlgebraException if there are numerical instabilities.
+     */
+    public void fix(final AngularSpeedTriad measuredAngularRate,
+                    final AccelerationTriad trueF,
+                    final AngularSpeedTriad result) throws AlgebraException {
+        fix(measuredAngularRate, trueF, mResult);
+        result.setValueCoordinates(mResult);
+        result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);
+    }
+
+    /**
+     * Fixes provided measured angular rate values by undoing the errors
+     * introduced by the gyroscope model to restore the true angular rate.
+     * This method uses last provided and cross coupling errors.
+     *
+     * @param measuredAngularRateX x-coordinate of measured angular rate.
+     * @param measuredAngularRateY y-coordinate of measured angular rate.
+     * @param measuredAngularRateZ z-coordinate of measured angular rate.
+     * @param trueFx               x-coordinate of true (i.e. fixed) specific force.
+     * @param trueFy               y-coordinate of true (i.e. fixed) specific force.
+     * @param trueFz               z-coordinate of true (i.e. fixed) specific force.
+     * @param result               instance where restored true angular rate will be stored.
+     * @throws AlgebraException if there are numerical instabilities.
+     */
+    public void fix(final AngularSpeed measuredAngularRateX,
+                    final AngularSpeed measuredAngularRateY,
+                    final AngularSpeed measuredAngularRateZ,
+                    final Acceleration trueFx,
+                    final Acceleration trueFy,
+                    final Acceleration trueFz,
+                    final AngularSpeedTriad result) throws AlgebraException {
+        final double wX = convertAngularSpeed(measuredAngularRateX);
+        final double wY = convertAngularSpeed(measuredAngularRateY);
+        final double wZ = convertAngularSpeed(measuredAngularRateZ);
+        final double fX = convertAcceleration(trueFx);
+        final double fY = convertAcceleration(trueFy);
+        final double fZ = convertAcceleration(trueFz);
+        fix(wX, wY, wZ, fX, fY, fZ, mResult);
+        result.setValueCoordinates(mResult);
+        result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);
     }
 
     /**
@@ -1206,6 +1544,51 @@ public class AngularRateFixer {
 
     /**
      * Fixes provided measured angular rate values by undoing the errors
+     * introduced by the gyroscope model to restore the true angular rate.
+     * This method uses last provided bias and cross coupling errors.
+     *
+     * @param measuredAngularRate measured angular rate.
+     * @param trueF               true (i.e. fixed) specific force.
+     * @return restored true angular rate.
+     * @throws AlgebraException if there are numerical instabilities.
+     */
+    public AngularSpeedTriad fixAndReturnNew(
+            final AngularSpeedTriad measuredAngularRate,
+            final AccelerationTriad trueF) throws AlgebraException {
+        final AngularSpeedTriad result = new AngularSpeedTriad();
+        fix(measuredAngularRate, trueF, result);
+        return result;
+    }
+
+    /**
+     * Fixes provided measured angular rate values by undoing the errors
+     * introduced by the gyroscope model to restore the true angular rate.
+     * This method uses last provided bias and cross coupling errors.
+     *
+     * @param measuredAngularRateX x-coordinate of measured angular rate.
+     * @param measuredAngularRateY y-coordinate of measured angular rate.
+     * @param measuredAngularRateZ z-coordinate of measured angular rate.
+     * @param trueFx               x-coordinate of true (i.e. fixed) specific force.
+     * @param trueFy               y-coordinate of true (i.e. fixed) specific force.
+     * @param trueFz               z-coordinate of true (i.e. fixed) specific force.
+     * @return restored true angular rate.
+     * @throws AlgebraException if there are numerical instabilities.
+     */
+    public AngularSpeedTriad fixAndReturnNew(
+            final AngularSpeed measuredAngularRateX,
+            final AngularSpeed measuredAngularRateY,
+            final AngularSpeed measuredAngularRateZ,
+            final Acceleration trueFx,
+            final Acceleration trueFy,
+            final Acceleration trueFz) throws AlgebraException {
+        final AngularSpeedTriad result = new AngularSpeedTriad();
+        fix(measuredAngularRateX, measuredAngularRateY, measuredAngularRateZ,
+                trueFx, trueFy, trueFz, result);
+        return result;
+    }
+
+    /**
+     * Fixes provided measured angular rate values by undoing the errors
      * introduced by the gyroscope model to restore the true angular
      * rate.
      * This method uses last provided bias and cross coupling errors.
@@ -1707,5 +2090,53 @@ public class AngularRateFixer {
                 g11, g21, g31, g12, g22, g32, g13, g23, g33,
                 result);
         return result;
+    }
+
+    /**
+     * Converts angular speed value and unit to radians per second (rad/s).
+     *
+     * @param value value to be converted.
+     * @param unit  unit of value to be converted.
+     * @return converted value.
+     */
+    private static double convertAngularSpeed(
+            final double value, final AngularSpeedUnit unit) {
+        return AngularSpeedConverter.convert(value, unit,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+    }
+
+    /**
+     * Converts angular speed measurement to radians per second (rad/s).
+     *
+     * @param angularSpeed angular speed to be converted.
+     * @return converted value.
+     */
+    private static double convertAngularSpeed(final AngularSpeed angularSpeed) {
+        return convertAngularSpeed(angularSpeed.getValue().doubleValue(),
+                angularSpeed.getUnit());
+    }
+
+    /**
+     * Converts acceleration value and unit to meters per squared second (m/s^2).
+     *
+     * @param value value to be converted.
+     * @param unit  unit of value to be converted.
+     * @return converted value.
+     */
+    private static double convertAcceleration(
+            final double value, final AccelerationUnit unit) {
+        return AccelerationConverter.convert(value, unit,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+    }
+
+    /**
+     * Converts acceleration measurement to meters per squared second (m/s^2).
+     *
+     * @param acceleration acceleration to be converted.
+     * @return converted value.
+     */
+    private static double convertAcceleration(final Acceleration acceleration) {
+        return convertAcceleration(acceleration.getValue().doubleValue(),
+                acceleration.getUnit());
     }
 }

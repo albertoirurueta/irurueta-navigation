@@ -3268,13 +3268,13 @@ public class BodyMagneticFluxDensityBiasEstimator {
     }
 
     /**
-     * Gets average magnetometer noise root PSD (Power Spectral Density) among
-     * x,y,z components expressed as (T * s^0.5).
+     * Gets magnetometer root noise root PSD (Power Spectral Density) which is
+     * the norm of root PSD components expressed as (T * s^0.5).
      *
      * @return average magnetometer noise root PSD.
      */
-    public double getAvgRootPsd() {
-        return Math.sqrt(getAvgPsd());
+    public double getRootPsd() {
+        return Math.sqrt(getPsdX() + getPsdY() + getPsdZ());
     }
 
     /**

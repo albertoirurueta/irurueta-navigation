@@ -31,6 +31,7 @@ import com.irurueta.navigation.inertial.calibration.AccelerationFixer;
 import com.irurueta.navigation.inertial.calibration.AngularSpeedTriad;
 import com.irurueta.navigation.inertial.calibration.BodyKinematicsSequence;
 import com.irurueta.navigation.inertial.calibration.CalibrationException;
+import com.irurueta.navigation.inertial.calibration.GyroscopeBiasUncertaintySource;
 import com.irurueta.navigation.inertial.calibration.GyroscopeCalibrationSource;
 import com.irurueta.navigation.inertial.calibration.StandardDeviationTimedBodyKinematics;
 import com.irurueta.numerical.EvaluationException;
@@ -93,7 +94,7 @@ import java.util.List;
  * David Tedaldi, Alberto Pretto, Emmanuelle Menegatti. A Robust and Easy to
  * Implement Method for IMU Calibration without External Equipments.
  */
-public class EasyGyroscopeCalibrator implements GyroscopeCalibrationSource {
+public class EasyGyroscopeCalibrator implements GyroscopeCalibrationSource, GyroscopeBiasUncertaintySource {
 
     /**
      * Indicates whether by default a common z-axis is assumed for both the accelerometer
@@ -3500,6 +3501,7 @@ public class EasyGyroscopeCalibrator implements GyroscopeCalibrationSource {
      * @return norm of estimated standard deviation of gyroscope bias or null
      * if not available.
      */
+    @Override
     public Double getEstimatedBiasStandardDeviationNorm() {
         return mEstimatedCovariance != null ?
                 Math.sqrt(getEstimatedBiasXVariance() + getEstimatedBiasYVariance() + getEstimatedBiasZVariance()) :

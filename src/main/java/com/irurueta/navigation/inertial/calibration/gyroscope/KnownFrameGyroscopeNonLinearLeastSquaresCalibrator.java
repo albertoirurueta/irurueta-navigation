@@ -26,6 +26,7 @@ import com.irurueta.navigation.inertial.INSLooselyCoupledKalmanInitializerConfig
 import com.irurueta.navigation.inertial.INSTightlyCoupledKalmanInitializerConfig;
 import com.irurueta.navigation.inertial.calibration.AngularSpeedTriad;
 import com.irurueta.navigation.inertial.calibration.CalibrationException;
+import com.irurueta.navigation.inertial.calibration.GyroscopeBiasUncertaintySource;
 import com.irurueta.navigation.inertial.calibration.GyroscopeCalibrationSource;
 import com.irurueta.navigation.inertial.calibration.StandardDeviationFrameBodyKinematics;
 import com.irurueta.navigation.inertial.estimators.ECEFKinematicsEstimator;
@@ -73,7 +74,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
         KnownFrameGyroscopeCalibrator<StandardDeviationFrameBodyKinematics,
                 KnownFrameGyroscopeNonLinearLeastSquaresCalibratorListener>,
         GyroscopeNonLinearCalibrator, UnknownBiasNonLinearGyroscopeCalibrator,
-        GyroscopeCalibrationSource {
+        GyroscopeCalibrationSource, GyroscopeBiasUncertaintySource {
 
     /**
      * Indicates whether by default a common z-axis is assumed for both the accelerometer
@@ -3935,6 +3936,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      * @return norm of estimated standard deviation of gyroscope bias or null
      * if not available.
      */
+    @Override
     public Double getEstimatedBiasStandardDeviationNorm() {
         return mEstimatedCovariance != null ?
                 Math.sqrt(getEstimatedBiasXVariance() + getEstimatedBiasYVariance() + getEstimatedBiasZVariance()) :

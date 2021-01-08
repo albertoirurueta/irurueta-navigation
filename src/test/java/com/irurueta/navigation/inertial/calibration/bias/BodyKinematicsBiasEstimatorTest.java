@@ -53,7 +53,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
     private static final double MAX_ANGLE_DEGREES = 180.0;
 
     private static final double MIN_LATITUDE_DEGREES = -90.0;
-    private static final double MAX_LATITUDE_DEGREEs = 90.0;
+    private static final double MAX_LATITUDE_DEGREES = 90.0;
     private static final double MIN_LONGITUDE_DEGREES = -180.0;
     private static final double MAX_LONGITUDE_DEGREES = 180.0;
     private static final double MIN_HEIGHT = -50.0;
@@ -524,7 +524,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
     public void testConstructor3() throws WrongSizeException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(randomizer.nextDouble(
                 MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -740,7 +740,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
     public void testConstructor4() throws WrongSizeException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final Angle latitude = new Angle(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs), AngleUnit.DEGREES);
+                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES), AngleUnit.DEGREES);
         final Angle longitude = new Angle(randomizer.nextDouble(
                 MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES), AngleUnit.DEGREES);
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -957,7 +957,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
     public void testConstructor5() throws WrongSizeException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final Angle latitude = new Angle(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs), AngleUnit.DEGREES);
+                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES), AngleUnit.DEGREES);
         final Angle longitude = new Angle(randomizer.nextDouble(
                 MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES), AngleUnit.DEGREES);
         final Distance height = new Distance(
@@ -1176,7 +1176,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
             InvalidSourceAndDestinationFrameTypeException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(randomizer.nextDouble(
                 MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -1413,7 +1413,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
         for (int t = 0; t < TIMES; t++) {
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
             final double latitude = Math.toRadians(randomizer.nextDouble(
-                    MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                    MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
             final double longitude = Math.toRadians(randomizer.nextDouble(
                     MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
             final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -2107,7 +2107,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
     public void testConstructor10() throws WrongSizeException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(randomizer.nextDouble(
                 MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -2323,7 +2323,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
     public void testConstructor11() throws WrongSizeException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final Angle latitude = new Angle(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs), AngleUnit.DEGREES);
+                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES), AngleUnit.DEGREES);
         final Angle longitude = new Angle(randomizer.nextDouble(
                 MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES), AngleUnit.DEGREES);
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -2540,7 +2540,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
     public void testConstructor12() throws WrongSizeException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final Angle latitude = new Angle(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs), AngleUnit.DEGREES);
+                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES), AngleUnit.DEGREES);
         final Angle longitude = new Angle(randomizer.nextDouble(
                 MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES), AngleUnit.DEGREES);
         final Distance height = new Distance(
@@ -2759,7 +2759,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
             InvalidSourceAndDestinationFrameTypeException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(randomizer.nextDouble(
                 MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -2999,7 +2999,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
         for (int t = 0; t < TIMES; t++) {
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
             final double latitude = Math.toRadians(randomizer.nextDouble(
-                    MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                    MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
             final double longitude = Math.toRadians(randomizer.nextDouble(
                     MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
             final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -3719,7 +3719,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
                 MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
 
         final double latitude = Math.toRadians(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(randomizer.nextDouble(
                 MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -3950,7 +3950,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
                 MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
 
         final Angle latitude = new Angle(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs), AngleUnit.DEGREES);
+                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES), AngleUnit.DEGREES);
         final Angle longitude = new Angle(randomizer.nextDouble(
                 MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES), AngleUnit.DEGREES);
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -4181,7 +4181,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
                 MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
 
         final Angle latitude = new Angle(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs), AngleUnit.DEGREES);
+                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES), AngleUnit.DEGREES);
         final Angle longitude = new Angle(randomizer.nextDouble(
                 MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES), AngleUnit.DEGREES);
         final Distance height = new Distance(
@@ -4413,7 +4413,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
                 MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
 
         final double latitude = Math.toRadians(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(randomizer.nextDouble(
                 MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -4663,7 +4663,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
                     MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
 
             final double latitude = Math.toRadians(randomizer.nextDouble(
-                    MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                    MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
             final double longitude = Math.toRadians(randomizer.nextDouble(
                     MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
             final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -5389,7 +5389,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
                 MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
 
         final double latitude = Math.toRadians(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(randomizer.nextDouble(
                 MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -5607,7 +5607,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
                 MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
 
         final Angle latitude = new Angle(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs), AngleUnit.DEGREES);
+                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES), AngleUnit.DEGREES);
         final Angle longitude = new Angle(randomizer.nextDouble(
                 MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES), AngleUnit.DEGREES);
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -5836,7 +5836,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
                 MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
 
         final Angle latitude = new Angle(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs), AngleUnit.DEGREES);
+                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES), AngleUnit.DEGREES);
         final Angle longitude = new Angle(randomizer.nextDouble(
                 MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES), AngleUnit.DEGREES);
         final Distance height = new Distance(
@@ -6068,7 +6068,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
                 MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
 
         final double latitude = Math.toRadians(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(randomizer.nextDouble(
                 MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -6318,7 +6318,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
                     MIN_TIME_INTERVAL, MAX_TIME_INTERVAL);
 
             final double latitude = Math.toRadians(randomizer.nextDouble(
-                    MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                    MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
             final double longitude = Math.toRadians(randomizer.nextDouble(
                     MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
             final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -7044,7 +7044,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
                 MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
 
         final double latitude = Math.toRadians(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(randomizer.nextDouble(
                 MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -7275,7 +7275,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
                 MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
 
         final Angle latitude = new Angle(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs), AngleUnit.DEGREES);
+                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES), AngleUnit.DEGREES);
         final Angle longitude = new Angle(randomizer.nextDouble(
                 MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES), AngleUnit.DEGREES);
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -7506,7 +7506,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
                 MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
 
         final Angle latitude = new Angle(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs), AngleUnit.DEGREES);
+                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES), AngleUnit.DEGREES);
         final Angle longitude = new Angle(randomizer.nextDouble(
                 MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES), AngleUnit.DEGREES);
         final Distance height = new Distance(
@@ -7738,7 +7738,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
                 MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
 
         final double latitude = Math.toRadians(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(randomizer.nextDouble(
                 MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -7988,7 +7988,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
                     MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
 
             final double latitude = Math.toRadians(randomizer.nextDouble(
-                    MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                    MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
             final double longitude = Math.toRadians(randomizer.nextDouble(
                     MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
             final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -8715,7 +8715,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
                 MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
 
         final double latitude = Math.toRadians(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(randomizer.nextDouble(
                 MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -8933,7 +8933,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
                 MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
 
         final Angle latitude = new Angle(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs), AngleUnit.DEGREES);
+                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES), AngleUnit.DEGREES);
         final Angle longitude = new Angle(randomizer.nextDouble(
                 MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES), AngleUnit.DEGREES);
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -9162,7 +9162,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
                 MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
 
         final Angle latitude = new Angle(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs), AngleUnit.DEGREES);
+                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES), AngleUnit.DEGREES);
         final Angle longitude = new Angle(randomizer.nextDouble(
                 MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES), AngleUnit.DEGREES);
         final Distance height = new Distance(
@@ -9394,7 +9394,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
                 MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
 
         final double latitude = Math.toRadians(randomizer.nextDouble(
-                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(randomizer.nextDouble(
                 MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -9645,7 +9645,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
                     MIN_TIME_INTERVAL, MAX_TIME_INTERVAL), TimeUnit.SECOND);
 
             final double latitude = Math.toRadians(randomizer.nextDouble(
-                    MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                    MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
             final double longitude = Math.toRadians(randomizer.nextDouble(
                     MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
             final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -10140,7 +10140,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -10176,7 +10176,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -10213,7 +10213,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final Angle latitude = new Angle(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs),
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES),
                 AngleUnit.DEGREES);
         final Angle longitude = new Angle(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES),
@@ -10254,7 +10254,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final Angle latitude = new Angle(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs),
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES),
                 AngleUnit.DEGREES);
         final Angle longitude = new Angle(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES),
@@ -10384,7 +10384,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
         // set new values
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -10440,7 +10440,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
         // set new values
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -10497,7 +10497,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
         // set new values
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final Angle latitude = new Angle(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs),
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES),
                 AngleUnit.DEGREES);
         final Angle longitude = new Angle(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES),
@@ -10559,7 +10559,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
         // set new values
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final Angle latitude = new Angle(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs),
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES),
                 AngleUnit.DEGREES);
         final Angle longitude = new Angle(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES),
@@ -10625,7 +10625,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
         // set new values
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -10701,7 +10701,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
         // set new values
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -10780,7 +10780,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
         // set new values
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -10859,7 +10859,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
         // set new values
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -10945,7 +10945,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
         // set new values
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -11018,7 +11018,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
         // set new values
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -11092,7 +11092,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
         // set new values
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final Angle latitude = new Angle(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs),
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES),
                 AngleUnit.DEGREES);
         final Angle longitude = new Angle(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES),
@@ -11171,7 +11171,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
         // set new values
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final Angle latitude = new Angle(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs),
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES),
                 AngleUnit.DEGREES);
         final Angle longitude = new Angle(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES),
@@ -11252,7 +11252,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
             // set new values
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
             final double latitude = Math.toRadians(
-                    randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                    randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
             final double longitude = Math.toRadians(
                     randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
             final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -11337,7 +11337,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
             // set new values
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
             final double latitude = Math.toRadians(
-                    randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                    randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
             final double longitude = Math.toRadians(
                     randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
             final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -11436,7 +11436,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
             // set new values
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
             final double latitude = Math.toRadians(
-                    randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                    randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
             final double longitude = Math.toRadians(
                     randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
             final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -11523,7 +11523,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
         // set new values
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -11660,7 +11660,7 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
         final Random random = new Random();
         final UniformRandomizer randomizer = new UniformRandomizer(random);
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -12052,14 +12052,20 @@ public class BodyKinematicsBiasEstimatorTest implements BodyKinematicsBiasEstima
         final double estimatedAccelNoiseRootPSD = estimator
                 .getAccelerometerNoiseRootPSD();
         final double estimatedGyroNoiseRootPSD = estimator.getGyroNoiseRootPSD();
-        assertEquals(Math.sqrt(accelerometerNoisePsd), estimatedAccelNoiseRootPSD,
+        assertEquals(Math.sqrt(psdFx + psdFy + psdFz), estimatedAccelNoiseRootPSD,
                 0.0);
-        assertEquals(Math.sqrt(gyroNoisePsd), estimatedGyroNoiseRootPSD,
-                0.0);
+        assertEquals(Math.sqrt(rootPsdFx * rootPsdFx + rootPsdFy * rootPsdFy + rootPsdFz * rootPsdFz),
+                estimatedAccelNoiseRootPSD, ABSOLUTE_ERROR);
+        assertEquals(Math.sqrt(psdAngularRateX + psdAngularRateY + psdAngularRateZ),
+                estimatedGyroNoiseRootPSD, 0.0);
+        assertEquals(Math.sqrt(rootPsdAngularRateX * rootPsdAngularRateX
+                + rootPsdAngularRateY * rootPsdAngularRateY
+                + rootPsdAngularRateZ * rootPsdAngularRateZ),
+                estimatedGyroNoiseRootPSD, ABSOLUTE_ERROR);
 
-        assertEquals(accelNoiseRootPSD, estimatedAccelNoiseRootPSD,
+        assertEquals(accelNoiseRootPSD, Math.sqrt(accelerometerNoisePsd),
                 ACCELEROMETER_NOISE_ROOT_PSD_ERROR);
-        assertEquals(gyroNoiseRootPSD, estimatedGyroNoiseRootPSD,
+        assertEquals(gyroNoiseRootPSD, Math.sqrt(gyroNoisePsd),
                 GYRO_NOISE_ROOT_PSD_ERROR);
 
         final Matrix accelerometerBias1 = Matrix.newFromArray(new double[]{

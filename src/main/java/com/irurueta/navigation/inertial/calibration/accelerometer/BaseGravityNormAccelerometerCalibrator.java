@@ -25,6 +25,7 @@ import com.irurueta.navigation.inertial.BodyKinematics;
 import com.irurueta.navigation.inertial.INSLooselyCoupledKalmanInitializerConfig;
 import com.irurueta.navigation.inertial.INSTightlyCoupledKalmanInitializerConfig;
 import com.irurueta.navigation.inertial.calibration.AccelerationTriad;
+import com.irurueta.navigation.inertial.calibration.AccelerometerBiasUncertaintySource;
 import com.irurueta.navigation.inertial.calibration.AccelerometerCalibrationSource;
 import com.irurueta.navigation.inertial.calibration.CalibrationException;
 import com.irurueta.navigation.inertial.calibration.StandardDeviationBodyKinematics;
@@ -70,7 +71,8 @@ import java.util.Collection;
  * @param <L> a listener type.
  */
 public abstract class BaseGravityNormAccelerometerCalibrator<C extends BaseGravityNormAccelerometerCalibrator<?, ?>,
-        L extends BaseGravityNormAccelerometerCalibratorListener<C>> implements AccelerometerCalibrationSource {
+        L extends BaseGravityNormAccelerometerCalibratorListener<C>> implements AccelerometerCalibrationSource,
+        AccelerometerBiasUncertaintySource {
 
     /**
      * Indicates whether by default a common z-axis is assumed for both the accelerometer
@@ -5821,6 +5823,7 @@ public abstract class BaseGravityNormAccelerometerCalibrator<C extends BaseGravi
      * @return norm of estimated standard deviation of accelerometer bias or null
      * if not available.
      */
+    @Override
     public Double getEstimatedBiasStandardDeviationNorm() {
         return mEstimatedCovariance != null ?
                 Math.sqrt(getEstimatedBiasFxVariance() + getEstimatedBiasFyVariance() + getEstimatedBiasFzVariance()) :

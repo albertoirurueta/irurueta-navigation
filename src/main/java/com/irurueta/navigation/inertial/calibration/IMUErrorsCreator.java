@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2020 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.irurueta.navigation.inertial.calibration;
 
 import com.irurueta.algebra.Matrix;
@@ -6,8 +21,9 @@ import com.irurueta.navigation.NotReadyException;
 /**
  * Utility class to create {@link IMUErrors} by combining different sources of estimated data.
  * Sources of data can be any accelerometer calibrator implementing {@link AccelerometerCalibrationSource},
- * any gyroscope calibrator implementing {@link GyroscopeCalibrationSource}, any measurement generator
- * implementing {@link AccelerometerNoiseRootPsdSource} or {@link GyroscopeNoiseRootPsdSource}.
+ * any gyroscope calibrator implementing {@link GyroscopeCalibrationSource}, or any measurement
+ * generator, static interval detector or noise estimator implementing {@link AccelerometerNoiseRootPsdSource}
+ * or {@link GyroscopeNoiseRootPsdSource}.
  */
 public class IMUErrorsCreator {
 

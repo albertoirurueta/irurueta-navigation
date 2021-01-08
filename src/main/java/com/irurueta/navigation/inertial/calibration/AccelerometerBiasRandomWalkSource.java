@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Alberto Irurueta Carro (alberto@irurueta.com)
+ * Copyright (C) 2021 Alberto Irurueta Carro (alberto@irurueta.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,15 @@
 package com.irurueta.navigation.inertial.calibration;
 
 /**
- * Defines a source for estimated gyroscope noise root PSD (Power Spectral Density).
+ * Defines a source for estimated accelerometer bias random walk PSD.
  */
-public interface GyroscopeNoiseRootPsdSource {
+public interface AccelerometerBiasRandomWalkSource {
 
     /**
-     * Gets gyroscope base noise level root PSD (Power Spectral Density)
-     * expressed in (rad * s^-0.5)
+     * Gets accelerometer bias random walk PSD (Power Spectral Density) expressed
+     * in (m^2 * s^-5).
      *
-     * @return gyroscope base noise level root PSD.
+     * @return accelerometer bias random walk PSD.
      */
-    double getGyroscopeBaseNoiseLevelRootPsd();
+    double getAccelerometerBiasPSD();
 }

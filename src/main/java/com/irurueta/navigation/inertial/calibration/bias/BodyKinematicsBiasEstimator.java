@@ -2872,13 +2872,13 @@ public class BodyKinematicsBiasEstimator {
     }
 
     /**
-     * Gets average accelerometer noise root PSD (Power Spectral Density) among
-     * x,y,z components expressed as (m * s^-1.5).
+     * Gets accelerometer noise root PSD (Power Spectral Density) which is the
+     * norm of root PSD components expressed as (m * s^-1.5).
      *
      * @return average accelerometer noise root PSD.
      */
     public double getAccelerometerNoiseRootPSD() {
-        return Math.sqrt(getAccelerometerNoisePSD());
+        return Math.sqrt(getPSDFx() + getPSDFy() + getPSDFz());
     }
 
     /**
@@ -2893,13 +2893,13 @@ public class BodyKinematicsBiasEstimator {
     }
 
     /**
-     * Gets average gyroscope noise root PSD (Power Spectral Density) among
-     * x,y,z components expressed in (rad * s^-0.5).
+     * Gets gyroscope noise root PSD (Power Spectral Density) which is the
+     * norm of root PSD components expressed in (rad * s^-0.5).
      *
      * @return average gyroscope noise root PSD.
      */
     public double getGyroNoiseRootPSD() {
-        return Math.sqrt(getGyroNoisePSD());
+        return Math.sqrt(getPSDAngularRateX() + getPSDAngularRateY() + getPSDAngularRateZ());
     }
 
     /**

@@ -40,6 +40,7 @@ import com.irurueta.navigation.inertial.NEDVelocity;
 import com.irurueta.navigation.inertial.calibration.AccelerationFixer;
 import com.irurueta.navigation.inertial.calibration.AngularSpeedTriad;
 import com.irurueta.navigation.inertial.calibration.CalibrationException;
+import com.irurueta.navigation.inertial.calibration.GyroscopeBiasUncertaintySource;
 import com.irurueta.navigation.inertial.calibration.GyroscopeCalibrationSource;
 import com.irurueta.navigation.inertial.calibration.StandardDeviationBodyKinematics;
 import com.irurueta.navigation.inertial.estimators.ECEFKinematicsEstimator;
@@ -96,7 +97,8 @@ import java.util.Collection;
  * - ftrue is ground-truth specific force. This is a 3x1 vector.
  * - w is measurement noise. This is a 3x1 vector.
  */
-public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource {
+public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
+        GyroscopeBiasUncertaintySource {
     /**
      * Indicates whether by default a common z-axis is assumed for both the accelerometer
      * and gyroscope.
@@ -4957,6 +4959,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource 
      * @return norm of estimated standard deviation of gyroscope bias or null
      * if not available.
      */
+    @Override
     public Double getEstimatedBiasStandardDeviationNorm() {
         return mEstimatedCovariance != null ?
                 Math.sqrt(getEstimatedBiasXVariance() + getEstimatedBiasYVariance() + getEstimatedBiasZVariance()) :

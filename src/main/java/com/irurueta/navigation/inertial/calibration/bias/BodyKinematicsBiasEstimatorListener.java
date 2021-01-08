@@ -16,7 +16,7 @@
 package com.irurueta.navigation.inertial.calibration.bias;
 
 /**
- * Listener fo {@link BodyKinematicsBiasEstimator} to handle generated events.
+ * Listener for {@link BodyKinematicsBiasEstimator} to handle generated events.
  */
 public interface BodyKinematicsBiasEstimatorListener {
 
@@ -28,7 +28,7 @@ public interface BodyKinematicsBiasEstimatorListener {
     void onStart(final BodyKinematicsBiasEstimator estimator);
 
     /**
-     * Called when a body kinematics samples is added containing new
+     * Called when a body kinematics sample is added containing new
      * accelerometer and gyroscope measures.
      *
      * @param estimator estimator that raised the event.

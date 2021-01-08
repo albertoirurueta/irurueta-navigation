@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Alberto Irurueta Carro (alberto@irurueta.com)
+ * Copyright (C) 2021 Alberto Irurueta Carro (alberto@irurueta.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,16 +15,15 @@
  */
 package com.irurueta.navigation.inertial.calibration;
 
-import com.irurueta.navigation.inertial.InertialException;
-
 /**
- * Exception raised when calibration fails.
+ * Exception raised if random walk estimation fails.
  */
-public class CalibrationException extends InertialException {
+public class RandomWalkEstimationException extends CalibrationException {
+
     /**
      * Constructor.
      */
-    public CalibrationException() {
+    public RandomWalkEstimationException() {
         super();
     }
 
@@ -33,7 +32,7 @@ public class CalibrationException extends InertialException {
      *
      * @param message message indicating the cause of the exception.
      */
-    public CalibrationException(final String message) {
+    public RandomWalkEstimationException(final String message) {
         super(message);
     }
 
@@ -43,7 +42,7 @@ public class CalibrationException extends InertialException {
      * @param message message describing the cause of the exception.
      * @param cause   instance containing the cause of the exception.
      */
-    public CalibrationException(final String message, final Throwable cause) {
+    public RandomWalkEstimationException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
@@ -52,7 +51,7 @@ public class CalibrationException extends InertialException {
      *
      * @param cause instance containing the cause of the exception.
      */
-    public CalibrationException(final Throwable cause) {
+    public RandomWalkEstimationException(final Throwable cause) {
         super(cause);
     }
 }

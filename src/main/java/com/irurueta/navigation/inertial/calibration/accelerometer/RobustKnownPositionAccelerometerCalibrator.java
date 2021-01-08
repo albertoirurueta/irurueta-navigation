@@ -32,6 +32,7 @@ import com.irurueta.navigation.inertial.INSTightlyCoupledKalmanInitializerConfig
 import com.irurueta.navigation.inertial.NEDPosition;
 import com.irurueta.navigation.inertial.NEDVelocity;
 import com.irurueta.navigation.inertial.calibration.AccelerationTriad;
+import com.irurueta.navigation.inertial.calibration.AccelerometerBiasUncertaintySource;
 import com.irurueta.navigation.inertial.calibration.AccelerometerCalibrationSource;
 import com.irurueta.navigation.inertial.calibration.CalibrationException;
 import com.irurueta.navigation.inertial.calibration.StandardDeviationBodyKinematics;
@@ -68,7 +69,8 @@ import java.util.List;
  * - ftrue is ground-trush specific force.
  * - w is measurement noise.
  */
-public abstract class RobustKnownPositionAccelerometerCalibrator implements AccelerometerCalibrationSource {
+public abstract class RobustKnownPositionAccelerometerCalibrator implements AccelerometerCalibrationSource,
+        AccelerometerBiasUncertaintySource {
     /**
      * Indicates whether by default a common z-axis is assumed for both the accelerometer
      * and gyroscope.
@@ -2823,6 +2825,7 @@ public abstract class RobustKnownPositionAccelerometerCalibrator implements Acce
      * @return norm of estimated standard deviation of accelerometer bias or null
      * if not available.
      */
+    @Override
     public Double getEstimatedBiasStandardDeviationNorm() {
         return mEstimatedCovariance != null ?
                 Math.sqrt(getEstimatedBiasFxVariance() + getEstimatedBiasFyVariance() + getEstimatedBiasFzVariance()) :

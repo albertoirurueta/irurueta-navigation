@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Alberto Irurueta Carro (alberto@irurueta.com)
+ * Copyright (C) 2021 Alberto Irurueta Carro (alberto@irurueta.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package com.irurueta.navigation.inertial.calibration;
 
+import com.irurueta.algebra.AlgebraException;
 import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.WrongSizeException;
 import com.irurueta.geometry.InvalidRotationMatrixException;
@@ -30,15 +31,13 @@ import com.irurueta.navigation.frames.converters.ECEFtoNEDFrameConverter;
 import com.irurueta.navigation.frames.converters.NEDtoECEFFrameConverter;
 import com.irurueta.navigation.inertial.BodyKinematics;
 import com.irurueta.navigation.inertial.ECEFGravity;
+import com.irurueta.navigation.inertial.INSLooselyCoupledKalmanConfig;
 import com.irurueta.navigation.inertial.NEDPosition;
-import com.irurueta.navigation.inertial.calibration.accelerometer.KnownFrameAccelerometerLinearLeastSquaresCalibrator;
 import com.irurueta.navigation.inertial.calibration.accelerometer.KnownGravityNormAccelerometerCalibrator;
 import com.irurueta.navigation.inertial.calibration.generators.AccelerometerAndGyroscopeMeasurementsGenerator;
 import com.irurueta.navigation.inertial.calibration.generators.AccelerometerAndGyroscopeMeasurementsGeneratorListener;
-import com.irurueta.navigation.inertial.calibration.generators.AccelerometerMeasurementsGenerator;
-import com.irurueta.navigation.inertial.calibration.generators.GyroscopeMeasurementsGenerator;
+import com.irurueta.navigation.inertial.calibration.generators.AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator;
 import com.irurueta.navigation.inertial.calibration.gyroscope.EasyGyroscopeCalibrator;
-import com.irurueta.navigation.inertial.calibration.gyroscope.KnownFrameGyroscopeLinearLeastSquaresCalibrator;
 import com.irurueta.navigation.inertial.calibration.gyroscope.QuaternionIntegrator;
 import com.irurueta.navigation.inertial.calibration.intervals.TriadStaticIntervalDetector;
 import com.irurueta.navigation.inertial.estimators.ECEFGravityEstimator;
@@ -52,7 +51,7 @@ import java.util.Random;
 
 import static org.junit.Assert.*;
 
-public class IMUErrorsCreatorTest {
+public class INSLooselyCoupledKalmanConfigCreatorTest {
 
     private static final double TIME_INTERVAL_SECONDS = 0.02;
 
@@ -76,208 +75,204 @@ public class IMUErrorsCreatorTest {
 
     private static final int TIMES = 100;
 
-    private static final double ABSOLUTE_ERROR = 5e-4;
-
-    private static final double SMALL_ABSOLUTE_ERROR = 1e-6;
-
-    private static final double SMALL_ROOT_PSD = 1e-15;
-
+    private static final double ABSOLUTE_ERROR = 1e-8;
 
     @Test
     public void testConstructor1() {
-        final IMUErrorsCreator creator = new IMUErrorsCreator();
+        final INSLooselyCoupledKalmanConfigCreator creator =
+                new INSLooselyCoupledKalmanConfigCreator();
 
         // check default values
-        assertNull(creator.getAccelerometerCalibrationSource());
-        assertNull(creator.getGyroscopeCalibrationSource());
         assertNull(creator.getAccelerometerNoiseRootPsdSource());
         assertNull(creator.getGyroscopeNoiseRootPsdSource());
-        assertEquals(0.0, creator.getAccelerometerQuantizationLevel(), 0.0);
-        assertEquals(0.0, creator.getGyroQuantizationLevel(), 0.0);
+        assertNull(creator.getAccelerometerBiasRandomWalkSource());
+        assertNull(creator.getGyroscopeBiasRandomWalkSource());
+        assertNull(creator.getPositionUncertaintySource());
+        assertNull(creator.getVelocityUncertaintySource());
         assertFalse(creator.isReady());
     }
 
     @Test
     public void testConstructor2() {
-        final KnownFrameAccelerometerLinearLeastSquaresCalibrator accelerometerCalibrator =
-                new KnownFrameAccelerometerLinearLeastSquaresCalibrator();
-        final KnownFrameGyroscopeLinearLeastSquaresCalibrator gyroscopeCalibrator =
-                new KnownFrameGyroscopeLinearLeastSquaresCalibrator();
-        final AccelerometerMeasurementsGenerator accelerometerGenerator =
-                new AccelerometerMeasurementsGenerator();
-        final GyroscopeMeasurementsGenerator gyroscopeGenerator =
-                new GyroscopeMeasurementsGenerator();
+        final AccelerometerAndGyroscopeMeasurementsGenerator generator1 =
+                new AccelerometerAndGyroscopeMeasurementsGenerator();
+        final AccelerometerAndGyroscopeMeasurementsGenerator generator2 =
+                new AccelerometerAndGyroscopeMeasurementsGenerator();
+        final RandomWalkEstimator randomWalkEstimator1 = new RandomWalkEstimator();
+        final RandomWalkEstimator randomWalkEstimator2 = new RandomWalkEstimator();
+        final RandomWalkEstimator randomWalkEstimator3 = new RandomWalkEstimator();
+        final RandomWalkEstimator randomWalkEstimator4 = new RandomWalkEstimator();
 
-        final IMUErrorsCreator creator = new IMUErrorsCreator(
-                accelerometerCalibrator, gyroscopeCalibrator,
-                accelerometerGenerator, gyroscopeGenerator);
+        final INSLooselyCoupledKalmanConfigCreator creator =
+                new INSLooselyCoupledKalmanConfigCreator(generator1, generator2,
+                        randomWalkEstimator1, randomWalkEstimator2,
+                        randomWalkEstimator3, randomWalkEstimator4);
 
         // check default values
-        assertSame(accelerometerCalibrator, creator.getAccelerometerCalibrationSource());
-        assertSame(gyroscopeCalibrator, creator.getGyroscopeCalibrationSource());
-        assertSame(accelerometerGenerator, creator.getAccelerometerNoiseRootPsdSource());
-        assertSame(gyroscopeGenerator, creator.getGyroscopeNoiseRootPsdSource());
-        assertEquals(0.0, creator.getAccelerometerQuantizationLevel(), 0.0);
-        assertEquals(0.0, creator.getGyroQuantizationLevel(), 0.0);
-        assertFalse(creator.isReady());
+        assertSame(generator1, creator.getAccelerometerNoiseRootPsdSource());
+        assertSame(generator2, creator.getGyroscopeNoiseRootPsdSource());
+        assertSame(randomWalkEstimator1, creator.getAccelerometerBiasRandomWalkSource());
+        assertSame(randomWalkEstimator2, creator.getGyroscopeBiasRandomWalkSource());
+        assertSame(randomWalkEstimator3, creator.getPositionUncertaintySource());
+        assertSame(randomWalkEstimator4, creator.getVelocityUncertaintySource());
+        assertTrue(creator.isReady());
     }
 
     @Test
     public void testConstructor3() {
-        final KnownFrameAccelerometerLinearLeastSquaresCalibrator accelerometerCalibrator =
-                new KnownFrameAccelerometerLinearLeastSquaresCalibrator();
-        final KnownFrameGyroscopeLinearLeastSquaresCalibrator gyroscopeCalibrator =
-                new KnownFrameGyroscopeLinearLeastSquaresCalibrator();
-        final AccelerometerMeasurementsGenerator accelerometerGenerator =
-                new AccelerometerMeasurementsGenerator();
-        final GyroscopeMeasurementsGenerator gyroscopeGenerator =
-                new GyroscopeMeasurementsGenerator();
+        final AccelerometerAndGyroscopeMeasurementsGenerator generator =
+                new AccelerometerAndGyroscopeMeasurementsGenerator();
+        final RandomWalkEstimator randomWalkEstimator = new RandomWalkEstimator();
 
-        final Random random = new Random();
-        final double accelerometerQuantizationLevel = random.nextDouble();
-        final double gyroscopeQuantizationLevel = random.nextDouble();
-
-        final IMUErrorsCreator creator = new IMUErrorsCreator(
-                accelerometerCalibrator, gyroscopeCalibrator,
-                accelerometerGenerator, gyroscopeGenerator,
-                accelerometerQuantizationLevel,
-                gyroscopeQuantizationLevel);
+        final INSLooselyCoupledKalmanConfigCreator creator =
+                new INSLooselyCoupledKalmanConfigCreator(generator,
+                        randomWalkEstimator);
 
         // check default values
-        assertSame(accelerometerCalibrator, creator.getAccelerometerCalibrationSource());
-        assertSame(gyroscopeCalibrator, creator.getGyroscopeCalibrationSource());
-        assertSame(accelerometerGenerator, creator.getAccelerometerNoiseRootPsdSource());
-        assertSame(gyroscopeGenerator, creator.getGyroscopeNoiseRootPsdSource());
-        assertEquals(accelerometerQuantizationLevel,
-                creator.getAccelerometerQuantizationLevel(), 0.0);
-        assertEquals(gyroscopeQuantizationLevel,
-                creator.getGyroQuantizationLevel(), 0.0);
-        assertFalse(creator.isReady());
+        assertSame(generator, creator.getAccelerometerNoiseRootPsdSource());
+        assertSame(generator, creator.getGyroscopeNoiseRootPsdSource());
+        assertSame(randomWalkEstimator, creator.getAccelerometerBiasRandomWalkSource());
+        assertSame(randomWalkEstimator, creator.getGyroscopeBiasRandomWalkSource());
+        assertSame(randomWalkEstimator, creator.getPositionUncertaintySource());
+        assertSame(randomWalkEstimator, creator.getVelocityUncertaintySource());
+        assertTrue(creator.isReady());
     }
 
     @Test
-    public void testGetSetAccelerometerCalibrationSource() {
-        final IMUErrorsCreator creator = new IMUErrorsCreator();
+    public void testConstructor4() {
+        final AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator generator =
+                new AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator();
+        final RandomWalkEstimator randomWalkEstimator = new RandomWalkEstimator();
 
-        // check default value
-        assertNull(creator.getAccelerometerCalibrationSource());
+        final INSLooselyCoupledKalmanConfigCreator creator =
+                new INSLooselyCoupledKalmanConfigCreator(generator,
+                        randomWalkEstimator);
 
-        // set new value
-        final KnownFrameAccelerometerLinearLeastSquaresCalibrator accelerometerCalibrator =
-                new KnownFrameAccelerometerLinearLeastSquaresCalibrator();
-
-        creator.setAccelerometerCalibrationSource(accelerometerCalibrator);
-
-        // check
-        assertSame(accelerometerCalibrator,
-                creator.getAccelerometerCalibrationSource());
-    }
-
-    @Test
-    public void testGetSetGyroscopeCalibrationSource() {
-        final IMUErrorsCreator creator = new IMUErrorsCreator();
-
-        // check default value
-        assertNull(creator.getGyroscopeCalibrationSource());
-
-        // set new value
-        final KnownFrameGyroscopeLinearLeastSquaresCalibrator gyroscopeCalibrator =
-                new KnownFrameGyroscopeLinearLeastSquaresCalibrator();
-
-        creator.setGyroscopeCalibrationSource(gyroscopeCalibrator);
-
-        // check
-        assertSame(gyroscopeCalibrator,
-                creator.getGyroscopeCalibrationSource());
+        // check default values
+        assertSame(generator, creator.getAccelerometerNoiseRootPsdSource());
+        assertSame(generator, creator.getGyroscopeNoiseRootPsdSource());
+        assertSame(randomWalkEstimator, creator.getAccelerometerBiasRandomWalkSource());
+        assertSame(randomWalkEstimator, creator.getGyroscopeBiasRandomWalkSource());
+        assertSame(randomWalkEstimator, creator.getPositionUncertaintySource());
+        assertSame(randomWalkEstimator, creator.getVelocityUncertaintySource());
+        assertTrue(creator.isReady());
     }
 
     @Test
     public void testGetSetAccelerometerNoiseRootPsdSource() {
-        final IMUErrorsCreator creator = new IMUErrorsCreator();
+        final INSLooselyCoupledKalmanConfigCreator creator =
+                new INSLooselyCoupledKalmanConfigCreator();
 
         // check default value
         assertNull(creator.getAccelerometerNoiseRootPsdSource());
 
         // set new value
-        final AccelerometerMeasurementsGenerator accelerometerGenerator =
-                new AccelerometerMeasurementsGenerator();
-
-        creator.setAccelerometerNoiseRootPsdSource(accelerometerGenerator);
+        final AccelerometerAndGyroscopeMeasurementsGenerator generator =
+                new AccelerometerAndGyroscopeMeasurementsGenerator();
+        creator.setAccelerometerNoiseRootPsdSource(generator);
 
         // check
-        assertSame(accelerometerGenerator,
-                creator.getAccelerometerNoiseRootPsdSource());
+        assertSame(generator, creator.getAccelerometerNoiseRootPsdSource());
     }
 
     @Test
     public void testGetSetGyroscopeNoiseRootPsdSource() {
-        final IMUErrorsCreator creator = new IMUErrorsCreator();
+        final INSLooselyCoupledKalmanConfigCreator creator =
+                new INSLooselyCoupledKalmanConfigCreator();
 
         // check default value
         assertNull(creator.getGyroscopeNoiseRootPsdSource());
 
         // set new value
-        final GyroscopeMeasurementsGenerator gyroscopeGenerator =
-                new GyroscopeMeasurementsGenerator();
-
-        creator.sstGyroscopeNoiseRootPsdSource(gyroscopeGenerator);
+        final AccelerometerAndGyroscopeMeasurementsGenerator generator =
+                new AccelerometerAndGyroscopeMeasurementsGenerator();
+        creator.sstGyroscopeNoiseRootPsdSource(generator);
 
         // check
-        assertSame(gyroscopeGenerator, creator.getGyroscopeNoiseRootPsdSource());
+        assertSame(generator, creator.getGyroscopeNoiseRootPsdSource());
     }
 
     @Test
-    public void testGetSetAccelerometerQuantizationLevel() {
-        final IMUErrorsCreator creator = new IMUErrorsCreator();
+    public void testGetSetAccelerometerBiasRandomWalkSource() {
+        final INSLooselyCoupledKalmanConfigCreator creator =
+                new INSLooselyCoupledKalmanConfigCreator();
 
         // check default value
-        assertEquals(0.0, creator.getAccelerometerQuantizationLevel(),
-                0.0);
+        assertNull(creator.getAccelerometerBiasRandomWalkSource());
 
         // set new value
-        final Random random = new Random();
-        final double accelerometerQuantizationLevel = random.nextDouble();
-
-        creator.setAccelerometerQuantizationLevel(accelerometerQuantizationLevel);
+        final RandomWalkEstimator estimator = new RandomWalkEstimator();
+        creator.setAccelerometerBiasRandomWalkSource(estimator);
 
         // check
-        assertEquals(accelerometerQuantizationLevel,
-                creator.getAccelerometerQuantizationLevel(), 0.0);
+        assertSame(estimator, creator.getAccelerometerBiasRandomWalkSource());
     }
 
     @Test
-    public void testGetSetGyroQuantizationLevel() {
-        final IMUErrorsCreator creator = new IMUErrorsCreator();
+    public void testGetSetGyroscopeBiasRandomWalkSource() {
+        final INSLooselyCoupledKalmanConfigCreator creator =
+                new INSLooselyCoupledKalmanConfigCreator();
 
         // check default value
-        assertEquals(0.0, creator.getGyroQuantizationLevel(), 0.0);
+        assertNull(creator.getGyroscopeBiasRandomWalkSource());
 
         // set new value
-        final Random random = new Random();
-        final double gyroscopeQuantizationLevel = random.nextDouble();
-
-        creator.setGyroQuantizationLevel(gyroscopeQuantizationLevel);
+        final RandomWalkEstimator estimator = new RandomWalkEstimator();
+        creator.setGyroscopeBiasRandomWalkSource(estimator);
 
         // check
-        assertEquals(gyroscopeQuantizationLevel,
-                creator.getGyroQuantizationLevel(), 0.0);
+        assertSame(estimator, creator.getGyroscopeBiasRandomWalkSource());
     }
 
     @Test
-    public void testCreate() throws WrongSizeException,
+    public void testGetSetPositionUncertaintySource() {
+        final INSLooselyCoupledKalmanConfigCreator creator =
+                new INSLooselyCoupledKalmanConfigCreator();
+
+        // check default value
+        assertNull(creator.getPositionUncertaintySource());
+
+        // set new value
+        final RandomWalkEstimator estimator = new RandomWalkEstimator();
+        creator.setPositionUncertaintySource(estimator);
+
+        // check
+        assertSame(estimator, creator.getPositionUncertaintySource());
+    }
+
+    @Test
+    public void testGetSetVelocityUncertaintySource() {
+        final INSLooselyCoupledKalmanConfigCreator creator =
+                new INSLooselyCoupledKalmanConfigCreator();
+
+        // check default value
+        assertNull(creator.getVelocityUncertaintySource());
+
+        // set new value
+        final RandomWalkEstimator estimator = new RandomWalkEstimator();
+        creator.setVelocityUncertaintySource(estimator);
+
+        // check
+        assertSame(estimator, creator.getVelocityUncertaintySource());
+    }
+
+    @Test
+    public void testCreate() throws AlgebraException,
             InvalidSourceAndDestinationFrameTypeException, LockedException,
-            InvalidRotationMatrixException, NotReadyException {
+            InvalidRotationMatrixException, NotReadyException,
+            RandomWalkEstimationException {
         final Matrix ba = generateBa();
         final Matrix bg = generateBg();
         final Matrix ma = generateMaCommonAxis();
         final Matrix mg = generateMg();
         final Matrix gg = new Matrix(3, 3);
 
-        final double gyroNoiseRootPSD = 0.0;
+        final double accelNoiseRootPSD = getAccelNoiseRootPSD();
+        final double gyroNoiseRootPSD = getGyroNoiseRootPSD();
         final double accelQuantLevel = 0.0;
         final double gyroQuantLevel = 0.0;
 
-        final IMUErrors errors = new IMUErrors(ba, bg, ma, mg, gg, SMALL_ROOT_PSD,
+        final IMUErrors errors = new IMUErrors(ba, bg, ma, mg, gg, accelNoiseRootPSD,
                 gyroNoiseRootPSD, accelQuantLevel, gyroQuantLevel);
 
         int numValid = 0;
@@ -457,86 +452,50 @@ public class IMUErrorsCreatorTest {
             final double[] estimatedBa = accelerometerCalibrator.getEstimatedBiases();
             final Matrix estimatedMa = accelerometerCalibrator.getEstimatedMa();
 
-            final double estimatedAccelerometerNoiseRootPsd =
-                    generator.getAccelerometerBaseNoiseLevelRootPsd();
-            final double estimatedGyroNoiseRootPsd =
-                    generator.getGyroscopeBaseNoiseLevelRootPsd();
-
             assertNotNull(estimatedBa);
             assertNotNull(estimatedMa);
             assertNotNull(estimatedBg);
             assertNotNull(estimatedMg);
             assertNotNull(estimatedGg);
 
-            final double accelerometerQuantizationLevel = random.nextDouble();
-            final double gyroscopeQuantizationLevel = random.nextDouble();
+            final RandomWalkEstimator randomWalkEstimator = new RandomWalkEstimator();
+            randomWalkEstimator.setNedPositionAndNedOrientation(nedPosition, nedC);
+            randomWalkEstimator.setAccelerationBias(estimatedBa);
+            randomWalkEstimator.setAccelerationCrossCouplingErrors(estimatedMa);
+            randomWalkEstimator.setAngularSpeedBias(estimatedBg);
+            randomWalkEstimator.setAngularSpeedCrossCouplingErrors(estimatedMg);
+            randomWalkEstimator.setAngularSpeedGDependantCrossBias(estimatedGg);
+            randomWalkEstimator.setTimeInterval(TIME_INTERVAL_SECONDS);
 
-            final IMUErrorsCreator creator = new IMUErrorsCreator(
-                    accelerometerCalibrator, gyroCalibrator,
-                    generator, generator, accelerometerQuantizationLevel,
-                    gyroscopeQuantizationLevel);
+            generateStaticSamples(randomWalkEstimator,
+                    trueKinematics, errors, random);
 
-            final IMUErrors estimatedErrors = creator.create();
+            final double accelerometerBiasPsd = randomWalkEstimator.getAccelerometerBiasPSD();
+            final double gyroBiasPsd = randomWalkEstimator.getGyroBiasPSD();
+            final double positionStd = randomWalkEstimator.getPositionStandardDeviation();
+            final double velocityStd = randomWalkEstimator.getVelocityStandardDeviation();
 
-            assertNotNull(estimatedErrors);
-            assertArrayEquals(estimatedBa,
-                    estimatedErrors.getAccelerometerBiases(), 0.0);
-            assertArrayEquals(estimatedBg,
-                    estimatedErrors.getGyroBiases(), 0.0);
-            assertEquals(estimatedMa,
-                    estimatedErrors.getAccelerometerScaleFactorAndCrossCouplingErrors());
-            assertEquals(estimatedMg,
-                    estimatedErrors.getGyroScaleFactorAndCrossCouplingErrors());
-            assertEquals(estimatedGg,
-                    estimatedErrors.getGyroGDependentBiases());
-            assertEquals(estimatedAccelerometerNoiseRootPsd,
-                    estimatedErrors.getAccelerometerNoiseRootPSD(), 0.0);
-            assertEquals(estimatedGyroNoiseRootPsd,
-                    estimatedErrors.getGyroNoiseRootPSD(), 0.0);
-            assertEquals(accelerometerQuantizationLevel,
-                    estimatedErrors.getAccelerometerQuantizationLevel(), 0.0);
-            assertEquals(gyroscopeQuantizationLevel,
-                    estimatedErrors.getGyroQuantizationLevel(), 0.0);
+            assertTrue(accelerometerBiasPsd > 0.0);
+            assertTrue(gyroBiasPsd > 0.0);
+            assertTrue(positionStd > 0.0);
+            assertTrue(velocityStd > 0.0);
 
-            if (!bg.equals(gyroCalibrator.getEstimatedBiasesAsMatrix(), ABSOLUTE_ERROR)) {
-                continue;
-            }
-            if (!mg.equals(estimatedMg, ABSOLUTE_ERROR)) {
-                continue;
-            }
-            if (!gg.equals(estimatedGg, 0.0)) {
-                continue;
-            }
-            assertTrue(bg.equals(gyroCalibrator.getEstimatedBiasesAsMatrix(), ABSOLUTE_ERROR));
-            assertTrue(mg.equals(estimatedMg, ABSOLUTE_ERROR));
-            assertTrue(gg.equals(estimatedGg, 0.0));
+            final double gyroNoisePsd = generator.getGyroscopeBaseNoiseLevelPsd();
+            final double accelNoisePsd = generator.getAccelerometerBaseNoiseLevelPsd();
 
-            if (!ba.equals(accelerometerCalibrator.getEstimatedBiasesAsMatrix(), SMALL_ABSOLUTE_ERROR)) {
-                continue;
-            }
-            if (!ma.equals(estimatedMa, SMALL_ABSOLUTE_ERROR)) {
-                continue;
-            }
-            assertTrue(ba.equals(accelerometerCalibrator.getEstimatedBiasesAsMatrix(), SMALL_ABSOLUTE_ERROR));
-            assertTrue(ma.equals(estimatedMa, SMALL_ABSOLUTE_ERROR));
+            final INSLooselyCoupledKalmanConfigCreator creator =
+                    new INSLooselyCoupledKalmanConfigCreator(generator, randomWalkEstimator);
+            final INSLooselyCoupledKalmanConfig config = creator.create();
 
-            assertTrue(estimatedAccelerometerNoiseRootPsd > 0.0);
-            assertTrue(estimatedGyroNoiseRootPsd > 0.0);
-
-            final double accelerometerNoiseLevel = generator.getAccelerometerBaseNoiseLevel();
-            final double gyroNoiseLevel = generator.getGyroscopeBaseNoiseLevel();
-            final double sqrtTimeInterval = Math.sqrt(generator.getTimeInterval());
-            assertEquals(accelerometerNoiseLevel * sqrtTimeInterval,
-                    estimatedAccelerometerNoiseRootPsd,
-                    SMALL_ABSOLUTE_ERROR);
-            assertEquals(gyroNoiseLevel * sqrtTimeInterval,
-                    estimatedGyroNoiseRootPsd,
-                    SMALL_ABSOLUTE_ERROR);
-
-            assertEquals(SMALL_ROOT_PSD, estimatedAccelerometerNoiseRootPsd,
-                    SMALL_ABSOLUTE_ERROR);
-            assertEquals(0.0, estimatedGyroNoiseRootPsd,
-                    SMALL_ABSOLUTE_ERROR);
+            assertEquals(gyroNoisePsd, config.getGyroNoisePSD(),
+                    ABSOLUTE_ERROR);
+            assertEquals(accelNoisePsd, config.getAccelerometerNoisePSD(),
+                    ABSOLUTE_ERROR);
+            assertEquals(accelerometerBiasPsd, config.getAccelerometerBiasPSD(),
+                    0.0);
+            assertEquals(gyroBiasPsd, config.getGyroBiasPSD(), 0.0);
+            assertEquals(positionStd, config.getPositionNoiseSD(), 0.0);
+            assertEquals(velocityStd, config.getVelocityNoiseSD(), 0.0);
 
             numValid++;
             break;
@@ -545,7 +504,8 @@ public class IMUErrorsCreatorTest {
         assertTrue(numValid > 0);
 
         // Force NotReadyException
-        final IMUErrorsCreator creator = new IMUErrorsCreator();
+        final INSLooselyCoupledKalmanConfigCreator creator =
+                new INSLooselyCoupledKalmanConfigCreator();
         try {
             creator.create();
             fail("NotReadyException expected but not thrown");
@@ -595,6 +555,23 @@ public class IMUErrorsCreatorTest {
 
     private double getGyroNoiseRootPSD() {
         return 0.01 * DEG_TO_RAD / 60.0;
+    }
+
+    private void generateStaticSamples(
+            final RandomWalkEstimator randomWalkEstimator,
+            final BodyKinematics trueKinematics,
+            final IMUErrors errors,
+            final Random random)
+            throws LockedException, RandomWalkEstimationException {
+
+        final BodyKinematics measuredKinematics = new BodyKinematics();
+        for (int i = 0, j = 0; i < 5000; i++, j++) {
+
+            BodyKinematicsGenerator.generate(TIME_INTERVAL_SECONDS,
+                    trueKinematics, errors, random, measuredKinematics);
+
+            randomWalkEstimator.addBodyKinematics(measuredKinematics);
+        }
     }
 
     private void generateStaticSamples(
