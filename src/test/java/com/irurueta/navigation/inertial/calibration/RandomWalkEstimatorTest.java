@@ -13720,10 +13720,10 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         estimator.getEcefPosition(ecefPosition2);
         assertTrue(ecefPosition1.equals(ecefPosition2, LARGE_ABSOLUTE_ERROR));
 
-        assertTrue(ecefFrame1.equals(estimator.getEcefFrame(), ABSOLUTE_ERROR));
+        assertTrue(ecefFrame1.equals(estimator.getEcefFrame(), LARGE_ABSOLUTE_ERROR));
         final ECEFFrame ecefFrame2 = new ECEFFrame();
         estimator.getEcefFrame(ecefFrame2);
-        assertTrue(ecefFrame1.equals(ecefFrame2, ABSOLUTE_ERROR));
+        assertTrue(ecefFrame1.equals(ecefFrame2, LARGE_ABSOLUTE_ERROR));
 
         assertTrue(nedFrame1.equals(estimator.getNedFrame(), ABSOLUTE_ERROR));
         final NEDFrame nedFrame2 = new NEDFrame();
