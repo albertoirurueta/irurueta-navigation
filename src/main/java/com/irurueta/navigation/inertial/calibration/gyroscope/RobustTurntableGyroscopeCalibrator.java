@@ -433,6 +433,11 @@ public abstract class RobustTurntableGyroscopeCalibrator implements GyroscopeCal
     private Matrix mEstimatedCovariance;
 
     /**
+     * Estimated mean square error respect to provided measurements.
+     */
+    private double mEstimatedMse;
+
+    /**
      * Indicates whether calibrator is running.
      */
     protected boolean mRunning;
@@ -4795,6 +4800,15 @@ public abstract class RobustTurntableGyroscopeCalibrator implements GyroscopeCal
     @Override
     public Matrix getEstimatedGg() {
         return mEstimatedGg;
+    }
+
+    /**
+     * Gets estimated mean square error respect to provided measurements.
+     *
+     * @return estimated mean square error respect to provided measurements.
+     */
+    public double getEstimatedMse() {
+        return mEstimatedMse;
     }
 
     /**
@@ -12966,6 +12980,14 @@ public abstract class RobustTurntableGyroscopeCalibrator implements GyroscopeCal
             result.mEstimatedMg = mInnerCalibrator.getEstimatedMg();
             result.mEstimatedGg = mInnerCalibrator.getEstimatedGg();
 
+            if (mKeepCovariance) {
+                result.mCovariance = mInnerCalibrator.getEstimatedCovariance();
+            } else {
+                result.mCovariance = null;
+            }
+
+            result.mEstimatedMse = mInnerCalibrator.getEstimatedMse();
+
             solutions.add(result);
         } catch (final LockedException | CalibrationException | NotReadyException e) {
             solutions.clear();
@@ -13023,17 +13045,21 @@ public abstract class RobustTurntableGyroscopeCalibrator implements GyroscopeCal
                     mEstimatedCovariance = null;
                 }
 
+                mEstimatedMse = mInnerCalibrator.getEstimatedMse();
+
             } catch (final LockedException | CalibrationException | NotReadyException e) {
-                mEstimatedCovariance = null;
+                mEstimatedCovariance = preliminaryResult.mCovariance;
                 mEstimatedBiases = preliminaryResult.mEstimatedBiases;
                 mEstimatedMg = preliminaryResult.mEstimatedMg;
                 mEstimatedGg = preliminaryResult.mEstimatedGg;
+                mEstimatedMse = preliminaryResult.mEstimatedMse;
             }
         } else {
-            mEstimatedCovariance = null;
+            mEstimatedCovariance = preliminaryResult.mCovariance;
             mEstimatedBiases = preliminaryResult.mEstimatedBiases;
             mEstimatedMg = preliminaryResult.mEstimatedMg;
             mEstimatedGg = preliminaryResult.mEstimatedGg;
+            mEstimatedMse = preliminaryResult.mEstimatedMse;
         }
     }
 
@@ -13154,5 +13180,15 @@ public abstract class RobustTurntableGyroscopeCalibrator implements GyroscopeCal
          * This instance allows any 3x3 matrix.
          */
         private Matrix mEstimatedGg;
+
+        /**
+         * Covariance matrix for estimated result.
+         */
+        private Matrix mCovariance;
+
+        /**
+         * Estimated Mean Square Error.
+         */
+        private double mEstimatedMse;
     }
 }

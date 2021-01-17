@@ -256,6 +256,11 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibrator implements
     private double mEstimatedChiSq;
 
     /**
+     * Estimated mean square error respect to provided measurements.
+     */
+    private double mEstimatedMse;
+
+    /**
      * Indicates whether calibrator is running.
      */
     private boolean mRunning;
@@ -4326,6 +4331,15 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibrator implements
     }
 
     /**
+     * Gets estimated mean square error respect to provided measurements.
+     *
+     * @return estimated mean square error respect to provided measurements.
+     */
+    public double getEstimatedMse() {
+        return mEstimatedMse;
+    }
+
+    /**
      * Gets variance of estimated x coordinate of magnetometer bias expressed in
      * squared Teslas (T^2).
      *
@@ -4864,6 +4878,7 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibrator implements
         jacobian.multiply(jacobianTrans);
         mEstimatedCovariance = jacobian;
         mEstimatedChiSq = mFitter.getChisq();
+        mEstimatedMse = mFitter.getMse();
     }
 
     /**
@@ -5121,6 +5136,7 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibrator implements
 
         mEstimatedCovariance = mFitter.getCovar();
         mEstimatedChiSq = mFitter.getChisq();
+        mEstimatedMse = mFitter.getMse();
     }
 
     /**

@@ -242,6 +242,11 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
     private double mEstimatedChiSq;
 
     /**
+     * Estimated mean square error respect to provided measurements.
+     */
+    private double mEstimatedMse;
+
+    /**
      * Indicates whether estimator is running.
      */
     private boolean mRunning;
@@ -5060,6 +5065,15 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
     }
 
     /**
+     * Gets estimated mean square error respect to provided measurements.
+     *
+     * @return estimated mean square error respect to provided measurements.
+     */
+    public double getEstimatedMse() {
+        return mEstimatedMse;
+    }
+
+    /**
      * Converts acceleration instance to meters per squared second.
      *
      * @param acceleration acceleration instance to be converted.
@@ -5466,6 +5480,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
         // since only a constant term is subtracted, covariance is preserved
         mEstimatedCovariance = mFitter.getCovar();
         mEstimatedChiSq = mFitter.getChisq();
+        mEstimatedMse = mFitter.getMse();
     }
 
     /**

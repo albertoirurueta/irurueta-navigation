@@ -253,6 +253,11 @@ public abstract class BaseGravityNormAccelerometerCalibrator<C extends BaseGravi
     private double mEstimatedChiSq;
 
     /**
+     * Estimated mean square error respect to provided measurements.
+     */
+    private double mEstimatedMse;
+
+    /**
      * Indicates whether estimator is running.
      */
     private boolean mRunning;
@@ -5590,6 +5595,15 @@ public abstract class BaseGravityNormAccelerometerCalibrator<C extends BaseGravi
     }
 
     /**
+     * Gets estimated mean square error respect to provided measurements.
+     *
+     * @return estimated mean square error respect to provided measurements.
+     */
+    public double getEstimatedMse() {
+        return mEstimatedMse;
+    }
+
+    /**
      * Gets variance of estimated x coordinate of accelerometer bias expressed in (m^2/s^4).
      *
      * @return variance of estimated x coordinate of accelerometer bias or null if not available.
@@ -6477,6 +6491,7 @@ public abstract class BaseGravityNormAccelerometerCalibrator<C extends BaseGravi
 
         mEstimatedCovariance = mFitter.getCovar();
         mEstimatedChiSq = mFitter.getChisq();
+        mEstimatedMse = mFitter.getMse();
     }
 
     /**

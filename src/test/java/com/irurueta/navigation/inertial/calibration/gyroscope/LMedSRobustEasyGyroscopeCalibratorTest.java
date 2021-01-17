@@ -313,6 +313,7 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -558,6 +559,7 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -843,6 +845,7 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -1136,6 +1139,7 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -1417,6 +1421,7 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -1720,6 +1725,7 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2043,9 +2049,9 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
-
         calibrator = null;
         try {
             calibrator = new LMedSRobustEasyGyroscopeCalibrator(
@@ -2368,9 +2374,9 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
-
         calibrator = null;
         try {
             calibrator = new LMedSRobustEasyGyroscopeCalibrator(
@@ -2708,9 +2714,9 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
-
         calibrator = null;
         try {
             calibrator = new LMedSRobustEasyGyroscopeCalibrator(
@@ -3029,6 +3035,7 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3328,6 +3335,7 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3628,6 +3636,7 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3921,6 +3930,7 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4231,6 +4241,7 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4572,6 +4583,7 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4913,9 +4925,9 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
-
         calibrator = null;
         try {
             calibrator = new LMedSRobustEasyGyroscopeCalibrator(
@@ -5273,9 +5285,9 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
-
         calibrator = null;
         try {
             calibrator = new LMedSRobustEasyGyroscopeCalibrator(
@@ -7269,6 +7281,7 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;
@@ -7523,6 +7536,7 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;
@@ -7788,6 +7802,7 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkCommonAxisAndGDependantCrossBiasesCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;
@@ -8053,6 +8068,7 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralAndGDependantCrossBiasesCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;
@@ -8321,6 +8337,7 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;
@@ -8589,6 +8606,7 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;
@@ -8860,6 +8878,7 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkCommonAxisAndGDependantCrossBiasesCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;
@@ -9131,6 +9150,7 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralAndGDependantCrossBiasesCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;

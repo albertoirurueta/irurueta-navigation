@@ -424,6 +424,11 @@ public class KnownBiasTurntableGyroscopeCalibrator {
     private double mEstimatedChiSq;
 
     /**
+     * Estimated mean square error respect to provided measurements.
+     */
+    private double mEstimatedMse;
+
+    /**
      * Indicates whether calibrator is running.
      */
     private boolean mRunning;
@@ -4455,6 +4460,15 @@ public class KnownBiasTurntableGyroscopeCalibrator {
     }
 
     /**
+     * Gets estimated mean square error respect to provided measurements.
+     *
+     * @return estimated mean square error respect to provided measurements.
+     */
+    public double getEstimatedMse() {
+        return mEstimatedMse;
+    }
+
+    /**
      * Internal method to perform calibration when common z-axis is assumed
      * for both the accelerometer and gyroscope and when G-dependent cross
      * biases are being estimated.
@@ -5804,6 +5818,7 @@ public class KnownBiasTurntableGyroscopeCalibrator {
 
         mEstimatedCovariance = mFitter.getCovar();
         mEstimatedChiSq = mFitter.getChisq();
+        mEstimatedMse = mFitter.getMse();
     }
 
     /**

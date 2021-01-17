@@ -372,6 +372,11 @@ public abstract class RobustKnownFrameGyroscopeCalibrator implements GyroscopeCa
     private Matrix mEstimatedCovariance;
 
     /**
+     * Estimated mean square error respect to provided measurements.
+     */
+    private double mEstimatedMse;
+
+    /**
      * A linear least squares calibrator.
      */
     private final KnownFrameGyroscopeLinearLeastSquaresCalibrator mLinearCalibrator =
@@ -1978,6 +1983,15 @@ public abstract class RobustKnownFrameGyroscopeCalibrator implements GyroscopeCa
     }
 
     /**
+     * Gets estimated mean square error respect to provided measurements.
+     *
+     * @return estimated mean square error respect to provided measurements.
+     */
+    public double getEstimatedMse() {
+        return mEstimatedMse;
+    }
+
+    /**
      * Gets estimated covariance matrix for estimated calibration solution.
      * Diagonal elements of the matrix contains variance for the following
      * parameters (following indicated order): bgx, bgy, bgz, sx, sy, sz,
@@ -3213,6 +3227,14 @@ public abstract class RobustKnownFrameGyroscopeCalibrator implements GyroscopeCa
                 mNonLinearCalibrator.getEstimatedBiases(result.mEstimatedBiases);
                 result.mEstimatedMg = mNonLinearCalibrator.getEstimatedMg();
                 result.mEstimatedGg = mNonLinearCalibrator.getEstimatedGg();
+
+                if (mKeepCovariance) {
+                    result.mCovariance = mNonLinearCalibrator.getEstimatedCovariance();
+                } else {
+                    result.mCovariance = null;
+                }
+
+                result.mEstimatedMse = mNonLinearCalibrator.getEstimatedMse();
             }
 
             solutions.add(result);
@@ -3262,17 +3284,21 @@ public abstract class RobustKnownFrameGyroscopeCalibrator implements GyroscopeCa
                     mEstimatedCovariance = null;
                 }
 
+                mEstimatedMse = mNonLinearCalibrator.getEstimatedMse();
+
             } catch (final LockedException | CalibrationException | NotReadyException e) {
-                mEstimatedCovariance = null;
+                mEstimatedCovariance = preliminaryResult.mCovariance;
                 mEstimatedBiases = preliminaryResult.mEstimatedBiases;
                 mEstimatedMg = preliminaryResult.mEstimatedMg;
                 mEstimatedGg = preliminaryResult.mEstimatedGg;
+                mEstimatedMse = preliminaryResult.mEstimatedMse;
             }
         } else {
-            mEstimatedCovariance = null;
+            mEstimatedCovariance = preliminaryResult.mCovariance;
             mEstimatedBiases = preliminaryResult.mEstimatedBiases;
             mEstimatedMg = preliminaryResult.mEstimatedMg;
             mEstimatedGg = preliminaryResult.mEstimatedGg;
+            mEstimatedMse = preliminaryResult.mEstimatedMse;
         }
     }
 
@@ -3355,5 +3381,15 @@ public abstract class RobustKnownFrameGyroscopeCalibrator implements GyroscopeCa
          * This instance allows any 3x3 matrix.
          */
         private Matrix mEstimatedGg;
+
+        /**
+         * Covariance matrix for estimated result.
+         */
+        private Matrix mCovariance;
+
+        /**
+         * Estimated Mean Square Error.
+         */
+        private double mEstimatedMse;
     }
 }

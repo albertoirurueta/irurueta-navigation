@@ -209,6 +209,7 @@ public class MSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTest
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -309,6 +310,7 @@ public class MSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTest
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -412,6 +414,7 @@ public class MSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTest
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -513,6 +516,7 @@ public class MSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTest
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -615,6 +619,7 @@ public class MSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTest
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -724,6 +729,7 @@ public class MSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTest
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -843,6 +849,7 @@ public class MSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTest
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -980,6 +987,7 @@ public class MSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTest
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -1121,6 +1129,7 @@ public class MSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTest
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -1236,6 +1245,7 @@ public class MSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTest
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -1351,6 +1361,7 @@ public class MSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTest
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -1466,6 +1477,7 @@ public class MSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTest
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -1581,6 +1593,7 @@ public class MSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTest
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -1702,6 +1715,7 @@ public class MSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTest
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -1833,6 +1847,7 @@ public class MSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTest
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -1964,6 +1979,7 @@ public class MSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTest
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2096,6 +2112,7 @@ public class MSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTest
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2228,6 +2245,7 @@ public class MSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTest
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2365,6 +2383,7 @@ public class MSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTest
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2504,6 +2523,7 @@ public class MSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTest
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2644,6 +2664,7 @@ public class MSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTest
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2796,6 +2817,7 @@ public class MSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTest
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2962,6 +2984,7 @@ public class MSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTest
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3129,6 +3152,7 @@ public class MSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTest
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3296,6 +3320,7 @@ public class MSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTest
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3442,6 +3467,7 @@ public class MSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTest
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -3558,6 +3584,7 @@ public class MSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTest
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -3674,6 +3701,7 @@ public class MSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTest
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -3790,6 +3818,7 @@ public class MSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTest
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -3906,6 +3935,7 @@ public class MSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTest
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -4028,6 +4058,7 @@ public class MSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTest
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4160,6 +4191,7 @@ public class MSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTest
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4292,6 +4324,7 @@ public class MSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTest
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4425,6 +4458,7 @@ public class MSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTest
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4558,6 +4592,7 @@ public class MSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTest
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4696,6 +4731,7 @@ public class MSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTest
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4836,6 +4872,7 @@ public class MSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTest
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4977,6 +5014,7 @@ public class MSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTest
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -5130,6 +5168,7 @@ public class MSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTest
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -5297,6 +5336,7 @@ public class MSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTest
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -5465,6 +5505,7 @@ public class MSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTest
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -5633,6 +5674,7 @@ public class MSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTest
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -6831,6 +6873,7 @@ public class MSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTest
             assertTrue(mm.equals(estimatedMm, ABSOLUTE_ERROR));
 
             assertEstimatedResult(estimatedMm, calibrator);
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;
@@ -6917,6 +6960,7 @@ public class MSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTest
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;
@@ -7009,6 +7053,7 @@ public class MSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTest
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;
@@ -7097,6 +7142,7 @@ public class MSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTest
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;
@@ -7184,6 +7230,7 @@ public class MSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTest
             assertEstimatedResult(estimatedMm, calibrator);
 
             assertNull(calibrator.getEstimatedCovariance());
+            assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
             numValid++;
             break;

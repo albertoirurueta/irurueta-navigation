@@ -222,6 +222,7 @@ public class LMedSRobustKnownFrameGyroscopeCalibratorTest
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -361,6 +362,7 @@ public class LMedSRobustKnownFrameGyroscopeCalibratorTest
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -502,6 +504,7 @@ public class LMedSRobustKnownFrameGyroscopeCalibratorTest
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -643,6 +646,7 @@ public class LMedSRobustKnownFrameGyroscopeCalibratorTest
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -782,6 +786,7 @@ public class LMedSRobustKnownFrameGyroscopeCalibratorTest
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -921,6 +926,7 @@ public class LMedSRobustKnownFrameGyroscopeCalibratorTest
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -1062,6 +1068,7 @@ public class LMedSRobustKnownFrameGyroscopeCalibratorTest
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -1203,6 +1210,7 @@ public class LMedSRobustKnownFrameGyroscopeCalibratorTest
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -2235,6 +2243,7 @@ public class LMedSRobustKnownFrameGyroscopeCalibratorTest
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;
@@ -2373,6 +2382,7 @@ public class LMedSRobustKnownFrameGyroscopeCalibratorTest
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;
@@ -2509,6 +2519,7 @@ public class LMedSRobustKnownFrameGyroscopeCalibratorTest
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;
@@ -2645,6 +2656,7 @@ public class LMedSRobustKnownFrameGyroscopeCalibratorTest
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;
@@ -2781,6 +2793,7 @@ public class LMedSRobustKnownFrameGyroscopeCalibratorTest
             assertEstimatedResult(estimatedBg, estimatedMg, estimatedGg, calibrator, false);
 
             assertNull(calibrator.getEstimatedCovariance());
+            assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
             numValid++;
             break;
@@ -2920,6 +2933,7 @@ public class LMedSRobustKnownFrameGyroscopeCalibratorTest
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;

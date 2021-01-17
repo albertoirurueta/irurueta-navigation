@@ -374,6 +374,11 @@ public abstract class RobustKnownBiasEasyGyroscopeCalibrator {
     private Matrix mEstimatedCovariance;
 
     /**
+     * Estimated mean square error respect to provided measurements.
+     */
+    private double mEstimatedMse;
+
+    /**
      * Indicates whether calibrator is running.
      */
     protected boolean mRunning;
@@ -3153,6 +3158,15 @@ public abstract class RobustKnownBiasEasyGyroscopeCalibrator {
      */
     public Matrix getEstimatedCovariance() {
         return mEstimatedCovariance;
+    }
+
+    /**
+     * Gets estimated mean square error respect to provided measurements.
+     *
+     * @return estimated mean square error respect to provided measurements.
+     */
+    public double getEstimatedMse() {
+        return mEstimatedMse;
     }
 
     /**
@@ -6026,6 +6040,8 @@ public abstract class RobustKnownBiasEasyGyroscopeCalibrator {
                 result.mCovariance = null;
             }
 
+            result.mEstimatedMse = mInnerCalibrator.getEstimatedMse();
+
             solutions.add(result);
         } catch (final LockedException | CalibrationException | NotReadyException e) {
             solutions.clear();
@@ -6072,17 +6088,26 @@ public abstract class RobustKnownBiasEasyGyroscopeCalibrator {
 
                 mEstimatedMg = mInnerCalibrator.getEstimatedMg();
                 mEstimatedGg = mInnerCalibrator.getEstimatedGg();
-                mEstimatedCovariance = mInnerCalibrator.getEstimatedCovariance();
+
+                if(mKeepCovariance) {
+                    mEstimatedCovariance = mInnerCalibrator.getEstimatedCovariance();
+                } else {
+                    mEstimatedCovariance = null;
+                }
+
+                mEstimatedMse = mInnerCalibrator.getEstimatedMse();
 
             } catch (final LockedException | CalibrationException | NotReadyException e) {
                 mEstimatedCovariance = preliminaryResult.mCovariance;
                 mEstimatedMg = preliminaryResult.mEstimatedMg;
                 mEstimatedGg = preliminaryResult.mEstimatedGg;
+                mEstimatedMse = preliminaryResult.mEstimatedMse;
             }
         } else {
             mEstimatedCovariance = preliminaryResult.mCovariance;
             mEstimatedMg = preliminaryResult.mEstimatedMg;
             mEstimatedGg = preliminaryResult.mEstimatedGg;
+            mEstimatedMse = preliminaryResult.mEstimatedMse;
         }
     }
 
@@ -6210,5 +6235,10 @@ public abstract class RobustKnownBiasEasyGyroscopeCalibrator {
          * Covariance matrix for estimated result.
          */
         private Matrix mCovariance;
+
+        /**
+         * Estimated Mean Square Error.
+         */
+        private double mEstimatedMse;
     }
 }

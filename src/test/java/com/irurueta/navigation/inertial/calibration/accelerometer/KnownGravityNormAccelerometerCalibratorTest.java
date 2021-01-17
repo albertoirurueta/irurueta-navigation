@@ -187,6 +187,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -310,6 +311,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -435,6 +437,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -561,6 +564,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -684,6 +688,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -808,6 +813,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -934,6 +940,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -1060,6 +1067,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -1188,6 +1196,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -1317,6 +1326,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -1449,6 +1459,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -1581,6 +1592,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -1710,6 +1722,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -1840,6 +1853,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -1972,6 +1986,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -2104,6 +2119,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -2239,6 +2255,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -2375,6 +2392,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -2514,6 +2532,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -2653,6 +2672,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -2789,6 +2809,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -2925,6 +2946,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -3064,6 +3086,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -3203,6 +3226,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -3338,6 +3362,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -3475,6 +3500,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -3612,6 +3638,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -3746,6 +3773,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -3881,6 +3909,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -4018,6 +4047,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -4155,6 +4185,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -4296,6 +4327,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -4437,6 +4469,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -4581,6 +4614,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -4725,6 +4759,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -4866,6 +4901,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -5007,6 +5043,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -5151,6 +5188,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -5296,6 +5334,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -5442,6 +5481,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -5591,6 +5631,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -5740,6 +5781,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -5886,6 +5928,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -6032,6 +6075,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -6181,6 +6225,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -6330,6 +6375,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -6482,6 +6528,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -6634,6 +6681,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -6791,6 +6839,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -6948,6 +6997,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -7101,6 +7151,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -7254,6 +7305,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -7410,6 +7462,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -7566,6 +7619,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -7695,6 +7749,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -7835,6 +7890,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -7978,6 +8034,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -8121,6 +8178,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -8261,6 +8319,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -8401,6 +8460,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -8544,6 +8604,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -8687,6 +8748,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -8826,6 +8888,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -8971,6 +9034,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -9119,6 +9183,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -9267,6 +9332,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -9414,6 +9480,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -9559,6 +9626,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -9709,6 +9777,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -9859,6 +9928,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -10021,6 +10091,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -10194,6 +10265,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -10370,6 +10442,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -10546,6 +10619,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -10722,6 +10796,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -10895,6 +10970,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -11075,6 +11151,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -11255,6 +11332,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         assertNull(calibrator.getGroundTruthGravityNorm());
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -11433,6 +11511,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -11588,6 +11667,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -11746,6 +11826,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -11904,6 +11985,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -12059,6 +12141,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -12214,6 +12297,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -12371,6 +12455,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -12528,6 +12613,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -12688,6 +12774,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -12848,6 +12935,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -13012,6 +13100,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -13177,6 +13266,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -13338,6 +13428,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -13499,6 +13590,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -13663,6 +13755,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -13828,6 +13921,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -13996,6 +14090,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -14163,6 +14258,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -14334,6 +14430,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -14505,6 +14602,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -14673,6 +14771,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -14840,6 +14939,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -15011,6 +15111,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -15183,6 +15284,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -15349,6 +15451,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -15518,6 +15621,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -15688,6 +15792,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -15855,6 +15960,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -16021,6 +16127,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -16192,6 +16299,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -16364,6 +16472,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -16538,6 +16647,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -16710,6 +16820,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -16886,6 +16997,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -17063,6 +17175,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -17236,6 +17349,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -17410,6 +17524,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -17587,6 +17702,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -17764,6 +17880,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -17942,6 +18059,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -18124,6 +18242,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -18307,6 +18426,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -18486,6 +18606,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -18664,6 +18785,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -18846,6 +18968,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -19030,6 +19153,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -19217,6 +19341,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -19402,6 +19527,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -19591,6 +19717,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -19781,6 +19908,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -19967,6 +20095,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -20152,6 +20281,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -20341,6 +20471,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -20531,6 +20662,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -20694,6 +20826,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -20861,6 +20994,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -21031,6 +21165,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -21201,6 +21336,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -21368,6 +21504,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -21535,6 +21672,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -21706,6 +21844,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -21878,6 +22017,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -22047,6 +22187,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -22220,6 +22361,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -22397,6 +22539,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -22575,6 +22718,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -22750,6 +22894,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -22925,6 +23070,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -23104,6 +23250,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -23284,6 +23431,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -23476,6 +23624,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -23677,6 +23826,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -23883,6 +24033,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -24091,6 +24242,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -24296,6 +24448,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -24501,6 +24654,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -24710,6 +24864,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -24920,6 +25075,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -25103,6 +25259,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -25261,6 +25418,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -25422,6 +25580,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -25583,6 +25742,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -25741,6 +25901,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -25899,6 +26060,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -26060,6 +26222,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -26222,6 +26385,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -26386,6 +26550,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -26549,6 +26714,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -26717,6 +26883,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -26885,6 +27052,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -27049,6 +27217,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -27212,6 +27381,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -27380,6 +27550,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -27548,6 +27719,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -27719,6 +27891,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -27889,6 +28062,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -28062,6 +28236,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -28236,6 +28411,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -28407,6 +28583,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -28578,6 +28755,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -28753,6 +28931,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -28928,6 +29107,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -29097,6 +29277,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -29269,6 +29450,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -29442,6 +29624,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -29611,6 +29794,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -29781,6 +29965,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -29955,6 +30140,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -30129,6 +30315,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -30306,6 +30493,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -30482,6 +30670,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -30662,6 +30851,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -30842,6 +31032,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -31018,6 +31209,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -31194,6 +31386,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -31374,6 +31567,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -31554,6 +31748,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -31735,6 +31930,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -31920,6 +32116,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -32106,6 +32303,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -32288,6 +32486,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -32469,6 +32668,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -32655,6 +32855,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -32841,6 +33042,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -33030,6 +33232,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -33218,6 +33421,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -33410,6 +33614,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -33603,6 +33808,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -33792,6 +33998,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -33981,6 +34188,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -34174,6 +34382,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -34367,6 +34576,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -34533,6 +34743,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -34703,6 +34914,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -34876,6 +35088,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -35049,6 +35262,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -35220,6 +35434,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -35390,6 +35605,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -35566,6 +35782,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -35742,6 +35959,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -35914,6 +36132,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -36091,6 +36310,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -36272,6 +36492,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -36454,6 +36675,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -36633,6 +36855,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -36811,6 +37034,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -36993,6 +37217,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -37176,6 +37401,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -37371,6 +37597,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -37576,6 +37803,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -37787,6 +38015,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -37998,6 +38227,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -38206,6 +38436,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -38414,6 +38645,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -38626,6 +38858,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -38839,6 +39072,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         final Acceleration invalidGravityNorm = new Acceleration(
@@ -39793,6 +40027,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
 
@@ -39919,6 +40154,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
 
@@ -40047,6 +40283,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
 
@@ -40173,6 +40410,7 @@ public class KnownGravityNormAccelerometerCalibratorTest implements
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
 

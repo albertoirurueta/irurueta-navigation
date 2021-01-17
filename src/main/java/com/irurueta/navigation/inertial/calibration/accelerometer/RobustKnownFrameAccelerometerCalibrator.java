@@ -353,6 +353,11 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
     private Matrix mEstimatedCovariance;
 
     /**
+     * Estimated mean square error respect to provided measurements.
+     */
+    private double mEstimatedMse;
+
+    /**
      * A linear least squares calibrator.
      */
     private final KnownFrameAccelerometerLinearLeastSquaresCalibrator mLinearCalibrator =
@@ -1907,6 +1912,15 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
     }
 
     /**
+     * Gets estimated mean square error respect to provided measurements.
+     *
+     * @return estimated mean square error respect to provided measurements.
+     */
+    public double getEstimatedMse() {
+        return mEstimatedMse;
+    }
+
+    /**
      * Gets estimated covariance matrix for estimated calibration solution.
      * Diagonal elements of the matrix contains variance for the following
      * parameters (following indicated order): bx, by, bz, sx, sy, sz,
@@ -3165,6 +3179,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
 
                 mEstimatedBiases = mNonLinearCalibrator.getEstimatedBiases();
                 mEstimatedMa = mNonLinearCalibrator.getEstimatedMa();
+                mEstimatedMse = mNonLinearCalibrator.getEstimatedMse();
 
                 if (mKeepCovariance) {
                     mEstimatedCovariance = mNonLinearCalibrator.getEstimatedCovariance();
@@ -3176,11 +3191,13 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
                 mEstimatedCovariance = null;
                 mEstimatedBiases = preliminaryResult.mEstimatedBiases;
                 mEstimatedMa = preliminaryResult.mEstimatedMa;
+                mEstimatedMse = 0.0;
             }
         } else {
             mEstimatedCovariance = null;
             mEstimatedBiases = preliminaryResult.mEstimatedBiases;
             mEstimatedMa = preliminaryResult.mEstimatedMa;
+            mEstimatedMse = 0.0;
         }
     }
 

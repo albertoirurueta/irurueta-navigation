@@ -185,6 +185,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -271,6 +272,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -359,6 +361,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -445,6 +448,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -532,6 +536,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -626,6 +631,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -730,6 +736,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -853,6 +860,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -976,6 +984,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -1073,6 +1082,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -1170,6 +1180,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -1267,6 +1278,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -1365,6 +1377,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -1470,6 +1483,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -1585,6 +1599,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -1701,6 +1716,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -1818,6 +1834,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -1933,6 +1950,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2058,6 +2076,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2181,6 +2200,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2304,6 +2324,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2438,6 +2459,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2587,6 +2609,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2736,6 +2759,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2885,6 +2909,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3016,6 +3041,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -3115,6 +3141,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -3214,6 +3241,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -3313,6 +3341,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -3413,6 +3442,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -3520,6 +3550,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3637,6 +3668,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3755,6 +3787,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3874,6 +3907,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3991,6 +4025,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4118,6 +4153,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4243,6 +4279,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4368,6 +4405,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4504,6 +4542,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4655,6 +4694,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4690,7 +4730,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
     }
 
     @Test
-    public void testConstructor24b() throws WrongSizeException {
+    public void testConstructor41() throws WrongSizeException {
         final NEDPosition nedPosition = new NEDPosition();
         final NEDVelocity nedVelocity = new NEDVelocity();
         final ECEFPosition ecefPosition = new ECEFPosition();
@@ -4806,6 +4846,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4841,7 +4882,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
     }
 
     @Test
-    public void testConstructor25b() throws WrongSizeException {
+    public void testConstructor42() throws WrongSizeException {
         final NEDPosition nedPosition = new NEDPosition();
         final NEDVelocity nedVelocity = new NEDVelocity();
         final ECEFPosition ecefPosition = new ECEFPosition();
@@ -4957,6 +4998,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -6005,6 +6047,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
 
@@ -6072,6 +6115,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
 
@@ -6140,6 +6184,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
 
@@ -6206,6 +6251,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
 

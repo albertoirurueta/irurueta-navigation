@@ -315,6 +315,7 @@ public class PROSACRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -562,6 +563,7 @@ public class PROSACRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -849,6 +851,7 @@ public class PROSACRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -1144,6 +1147,7 @@ public class PROSACRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -1427,6 +1431,7 @@ public class PROSACRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -1732,6 +1737,7 @@ public class PROSACRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2057,9 +2063,9 @@ public class PROSACRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
-
         calibrator = null;
         try {
             calibrator = new PROSACRobustEasyGyroscopeCalibrator(
@@ -2384,9 +2390,9 @@ public class PROSACRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
-
         calibrator = null;
         try {
             calibrator = new PROSACRobustEasyGyroscopeCalibrator(
@@ -2726,9 +2732,9 @@ public class PROSACRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
-
         calibrator = null;
         try {
             calibrator = new PROSACRobustEasyGyroscopeCalibrator(
@@ -3049,6 +3055,7 @@ public class PROSACRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3350,6 +3357,7 @@ public class PROSACRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3652,6 +3660,7 @@ public class PROSACRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3947,6 +3956,7 @@ public class PROSACRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4259,6 +4269,7 @@ public class PROSACRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4602,6 +4613,7 @@ public class PROSACRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4945,9 +4957,9 @@ public class PROSACRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
-
         calibrator = null;
         try {
             calibrator = new PROSACRobustEasyGyroscopeCalibrator(
@@ -5307,9 +5319,9 @@ public class PROSACRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
-
         calibrator = null;
         try {
             calibrator = new PROSACRobustEasyGyroscopeCalibrator(
@@ -5626,6 +5638,7 @@ public class PROSACRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -5884,6 +5897,7 @@ public class PROSACRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -6184,6 +6198,7 @@ public class PROSACRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -6492,6 +6507,7 @@ public class PROSACRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -6786,6 +6802,7 @@ public class PROSACRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -7103,6 +7120,7 @@ public class PROSACRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -7441,9 +7459,9 @@ public class PROSACRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
-
         calibrator = null;
         try {
             calibrator = new PROSACRobustEasyGyroscopeCalibrator(
@@ -7781,9 +7799,9 @@ public class PROSACRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
-
         calibrator = null;
         try {
             calibrator = new PROSACRobustEasyGyroscopeCalibrator(
@@ -8139,9 +8157,9 @@ public class PROSACRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
-
         calibrator = null;
         try {
             calibrator = new PROSACRobustEasyGyroscopeCalibrator(
@@ -8478,6 +8496,7 @@ public class PROSACRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -8788,6 +8807,7 @@ public class PROSACRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -9099,6 +9119,7 @@ public class PROSACRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -9403,6 +9424,7 @@ public class PROSACRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -9724,6 +9746,7 @@ public class PROSACRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -10076,6 +10099,7 @@ public class PROSACRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -10428,9 +10452,9 @@ public class PROSACRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
-
         calibrator = null;
         try {
             calibrator = new PROSACRobustEasyGyroscopeCalibrator(
@@ -10799,9 +10823,9 @@ public class PROSACRobustEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
-
         calibrator = null;
         try {
             calibrator = new PROSACRobustEasyGyroscopeCalibrator(
@@ -12869,6 +12893,7 @@ public class PROSACRobustEasyGyroscopeCalibratorTest implements
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;
@@ -13136,6 +13161,7 @@ public class PROSACRobustEasyGyroscopeCalibratorTest implements
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;
@@ -13413,6 +13439,7 @@ public class PROSACRobustEasyGyroscopeCalibratorTest implements
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkCommonAxisAndGDependantCrossBiasesCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;
@@ -13690,6 +13717,7 @@ public class PROSACRobustEasyGyroscopeCalibratorTest implements
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralAndGDependantCrossBiasesCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;
@@ -13965,6 +13993,7 @@ public class PROSACRobustEasyGyroscopeCalibratorTest implements
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;
@@ -14245,6 +14274,7 @@ public class PROSACRobustEasyGyroscopeCalibratorTest implements
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;
@@ -14530,6 +14560,7 @@ public class PROSACRobustEasyGyroscopeCalibratorTest implements
             if (calibrator.getEstimatedCovariance() != null) {
                 checkCommonAxisAndGDependantCrossBiasesCovariance(calibrator.getEstimatedCovariance());
             }
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;
@@ -14813,6 +14844,7 @@ public class PROSACRobustEasyGyroscopeCalibratorTest implements
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralAndGDependantCrossBiasesCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;

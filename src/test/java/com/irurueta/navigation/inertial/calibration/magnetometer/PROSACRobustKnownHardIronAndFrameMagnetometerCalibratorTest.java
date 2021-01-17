@@ -205,6 +205,7 @@ public class PROSACRobustKnownHardIronAndFrameMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownHardIronAndFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -305,6 +306,7 @@ public class PROSACRobustKnownHardIronAndFrameMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownHardIronAndFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -408,6 +410,7 @@ public class PROSACRobustKnownHardIronAndFrameMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownHardIronAndFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -511,6 +514,7 @@ public class PROSACRobustKnownHardIronAndFrameMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownHardIronAndFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -611,6 +615,7 @@ public class PROSACRobustKnownHardIronAndFrameMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownHardIronAndFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -711,6 +716,7 @@ public class PROSACRobustKnownHardIronAndFrameMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownHardIronAndFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -814,6 +820,7 @@ public class PROSACRobustKnownHardIronAndFrameMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownHardIronAndFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -917,6 +924,7 @@ public class PROSACRobustKnownHardIronAndFrameMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownHardIronAndFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -1018,6 +1026,7 @@ public class PROSACRobustKnownHardIronAndFrameMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownHardIronAndFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -1130,6 +1139,7 @@ public class PROSACRobustKnownHardIronAndFrameMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownHardIronAndFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -1245,6 +1255,7 @@ public class PROSACRobustKnownHardIronAndFrameMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownHardIronAndFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -1360,6 +1371,7 @@ public class PROSACRobustKnownHardIronAndFrameMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownHardIronAndFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -1472,6 +1484,7 @@ public class PROSACRobustKnownHardIronAndFrameMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownHardIronAndFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -1584,6 +1597,7 @@ public class PROSACRobustKnownHardIronAndFrameMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownHardIronAndFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -1699,6 +1713,7 @@ public class PROSACRobustKnownHardIronAndFrameMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownHardIronAndFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -1814,6 +1829,7 @@ public class PROSACRobustKnownHardIronAndFrameMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownHardIronAndFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2892,6 +2908,7 @@ public class PROSACRobustKnownHardIronAndFrameMagnetometerCalibratorTest impleme
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;
@@ -2977,6 +2994,7 @@ public class PROSACRobustKnownHardIronAndFrameMagnetometerCalibratorTest impleme
 
         assertNotNull(calibrator.getEstimatedCovariance());
         checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
+        assertTrue(calibrator.getEstimatedMse() > 0.0);
     }
 
     @Test
@@ -3064,6 +3082,7 @@ public class PROSACRobustKnownHardIronAndFrameMagnetometerCalibratorTest impleme
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;
@@ -3157,6 +3176,7 @@ public class PROSACRobustKnownHardIronAndFrameMagnetometerCalibratorTest impleme
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;
@@ -3248,6 +3268,7 @@ public class PROSACRobustKnownHardIronAndFrameMagnetometerCalibratorTest impleme
             assertEstimatedResult(estimatedMm, calibrator);
 
             assertNull(calibrator.getEstimatedCovariance());
+            assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
             numValid++;
             break;
@@ -3341,6 +3362,7 @@ public class PROSACRobustKnownHardIronAndFrameMagnetometerCalibratorTest impleme
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;

@@ -263,6 +263,7 @@ public class LMedSRobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), TurntableGyroscopeCalibrator
                 .MINIMUM_MEASUREMENTS_GENERAL_AND_CROSS_BIASES);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -476,6 +477,7 @@ public class LMedSRobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), TurntableGyroscopeCalibrator
                 .MINIMUM_MEASUREMENTS_GENERAL_AND_CROSS_BIASES);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -749,6 +751,7 @@ public class LMedSRobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), TurntableGyroscopeCalibrator
                 .MINIMUM_MEASUREMENTS_GENERAL_AND_CROSS_BIASES);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -1027,6 +1030,7 @@ public class LMedSRobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), TurntableGyroscopeCalibrator
                 .MINIMUM_MEASUREMENTS_GENERAL_AND_CROSS_BIASES);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -1293,6 +1297,7 @@ public class LMedSRobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), TurntableGyroscopeCalibrator
                 .MINIMUM_MEASUREMENTS_GENERAL_AND_CROSS_BIASES);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -1578,6 +1583,7 @@ public class LMedSRobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), TurntableGyroscopeCalibrator
                 .MINIMUM_MEASUREMENTS_GENERAL_AND_CROSS_BIASES);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -1888,6 +1894,7 @@ public class LMedSRobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), TurntableGyroscopeCalibrator
                 .MINIMUM_MEASUREMENTS_GENERAL_AND_CROSS_BIASES);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2198,6 +2205,7 @@ public class LMedSRobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), TurntableGyroscopeCalibrator
                 .MINIMUM_MEASUREMENTS_GENERAL_AND_CROSS_BIASES);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2518,6 +2526,7 @@ public class LMedSRobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), TurntableGyroscopeCalibrator
                 .MINIMUM_MEASUREMENTS_GENERAL_AND_CROSS_BIASES);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2819,6 +2828,7 @@ public class LMedSRobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), TurntableGyroscopeCalibrator
                 .MINIMUM_MEASUREMENTS_GENERAL_AND_CROSS_BIASES);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3106,6 +3116,7 @@ public class LMedSRobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), TurntableGyroscopeCalibrator
                 .MINIMUM_MEASUREMENTS_GENERAL_AND_CROSS_BIASES);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3394,6 +3405,7 @@ public class LMedSRobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), TurntableGyroscopeCalibrator
                 .MINIMUM_MEASUREMENTS_GENERAL_AND_CROSS_BIASES);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3672,6 +3684,7 @@ public class LMedSRobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), TurntableGyroscopeCalibrator
                 .MINIMUM_MEASUREMENTS_GENERAL_AND_CROSS_BIASES);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3970,6 +3983,7 @@ public class LMedSRobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), TurntableGyroscopeCalibrator
                 .MINIMUM_MEASUREMENTS_GENERAL_AND_CROSS_BIASES);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4298,6 +4312,7 @@ public class LMedSRobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), TurntableGyroscopeCalibrator
                 .MINIMUM_MEASUREMENTS_GENERAL_AND_CROSS_BIASES);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4631,6 +4646,7 @@ public class LMedSRobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), TurntableGyroscopeCalibrator
                 .MINIMUM_MEASUREMENTS_GENERAL_AND_CROSS_BIASES);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4977,6 +4993,7 @@ public class LMedSRobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), TurntableGyroscopeCalibrator
                 .MINIMUM_MEASUREMENTS_GENERAL_AND_CROSS_BIASES);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -5303,6 +5320,7 @@ public class LMedSRobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), TurntableGyroscopeCalibrator
                 .MINIMUM_MEASUREMENTS_GENERAL_AND_CROSS_BIASES);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -5576,6 +5594,7 @@ public class LMedSRobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), TurntableGyroscopeCalibrator
                 .MINIMUM_MEASUREMENTS_GENERAL_AND_CROSS_BIASES);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -5854,6 +5873,7 @@ public class LMedSRobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), TurntableGyroscopeCalibrator
                 .MINIMUM_MEASUREMENTS_GENERAL_AND_CROSS_BIASES);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -6120,6 +6140,7 @@ public class LMedSRobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), TurntableGyroscopeCalibrator
                 .MINIMUM_MEASUREMENTS_GENERAL_AND_CROSS_BIASES);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -6405,6 +6426,7 @@ public class LMedSRobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), TurntableGyroscopeCalibrator
                 .MINIMUM_MEASUREMENTS_GENERAL_AND_CROSS_BIASES);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -6715,6 +6737,7 @@ public class LMedSRobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), TurntableGyroscopeCalibrator
                 .MINIMUM_MEASUREMENTS_GENERAL_AND_CROSS_BIASES);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -7025,6 +7048,7 @@ public class LMedSRobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), TurntableGyroscopeCalibrator
                 .MINIMUM_MEASUREMENTS_GENERAL_AND_CROSS_BIASES);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -7345,6 +7369,7 @@ public class LMedSRobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), TurntableGyroscopeCalibrator
                 .MINIMUM_MEASUREMENTS_GENERAL_AND_CROSS_BIASES);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -7647,6 +7672,7 @@ public class LMedSRobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), TurntableGyroscopeCalibrator
                 .MINIMUM_MEASUREMENTS_GENERAL_AND_CROSS_BIASES);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -7934,6 +7960,7 @@ public class LMedSRobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), TurntableGyroscopeCalibrator
                 .MINIMUM_MEASUREMENTS_GENERAL_AND_CROSS_BIASES);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -8222,6 +8249,7 @@ public class LMedSRobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), TurntableGyroscopeCalibrator
                 .MINIMUM_MEASUREMENTS_GENERAL_AND_CROSS_BIASES);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -8500,6 +8528,7 @@ public class LMedSRobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), TurntableGyroscopeCalibrator
                 .MINIMUM_MEASUREMENTS_GENERAL_AND_CROSS_BIASES);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -8798,6 +8827,7 @@ public class LMedSRobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), TurntableGyroscopeCalibrator
                 .MINIMUM_MEASUREMENTS_GENERAL_AND_CROSS_BIASES);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -9126,6 +9156,7 @@ public class LMedSRobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), TurntableGyroscopeCalibrator
                 .MINIMUM_MEASUREMENTS_GENERAL_AND_CROSS_BIASES);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -9459,6 +9490,7 @@ public class LMedSRobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), TurntableGyroscopeCalibrator
                 .MINIMUM_MEASUREMENTS_GENERAL_AND_CROSS_BIASES);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -9805,6 +9837,7 @@ public class LMedSRobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(), TurntableGyroscopeCalibrator
                 .MINIMUM_MEASUREMENTS_GENERAL_AND_CROSS_BIASES);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -11826,6 +11859,7 @@ public class LMedSRobustKnownBiasTurntableGyroscopeCalibratorTest implements
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;
@@ -11983,6 +12017,7 @@ public class LMedSRobustKnownBiasTurntableGyroscopeCalibratorTest implements
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;
@@ -12141,6 +12176,7 @@ public class LMedSRobustKnownBiasTurntableGyroscopeCalibratorTest implements
             if (calibrator.getEstimatedCovariance() != null) {
                 checkCommonAxisAndGDependantCrossBiasesCovariance(calibrator.getEstimatedCovariance());
             }
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;
@@ -12305,6 +12341,7 @@ public class LMedSRobustKnownBiasTurntableGyroscopeCalibratorTest implements
             if (calibrator.getEstimatedCovariance() != null) {
                 checkGeneralAndGDependantCrossBiasesCovariance(calibrator.getEstimatedCovariance());
             }
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;
@@ -12463,6 +12500,7 @@ public class LMedSRobustKnownBiasTurntableGyroscopeCalibratorTest implements
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;
@@ -12624,6 +12662,7 @@ public class LMedSRobustKnownBiasTurntableGyroscopeCalibratorTest implements
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;
@@ -12786,6 +12825,7 @@ public class LMedSRobustKnownBiasTurntableGyroscopeCalibratorTest implements
             if (calibrator.getEstimatedCovariance() != null) {
                 checkCommonAxisAndGDependantCrossBiasesCovariance(calibrator.getEstimatedCovariance());
             }
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;
@@ -12951,6 +12991,7 @@ public class LMedSRobustKnownBiasTurntableGyroscopeCalibratorTest implements
             if (calibrator.getEstimatedCovariance() != null) {
                 checkGeneralAndGDependantCrossBiasesCovariance(calibrator.getEstimatedCovariance());
             }
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;

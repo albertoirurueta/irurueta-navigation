@@ -359,6 +359,11 @@ public abstract class RobustKnownBiasAndFrameGyroscopeCalibrator {
     private Matrix mEstimatedCovariance;
 
     /**
+     * Estimated mean square error respect to provided measurements.
+     */
+    private double mEstimatedMse;
+
+    /**
      * A linear least squares calibrator.
      */
     private final KnownBiasAndFrameGyroscopeLinearLeastSquaresCalibrator mLinearCalibrator =
@@ -2315,6 +2320,15 @@ public abstract class RobustKnownBiasAndFrameGyroscopeCalibrator {
      */
     public Matrix getEstimatedCovariance() {
         return mEstimatedCovariance;
+    }
+
+    /**
+     * Gets estimated mean square error respect to provided measurements.
+     *
+     * @return estimated mean square error respect to provided measurements.
+     */
+    public double getEstimatedMse() {
+        return mEstimatedMse;
     }
 
     /**
@@ -6090,6 +6104,17 @@ public abstract class RobustKnownBiasAndFrameGyroscopeCalibrator {
 
                 result.mEstimatedMg = mNonLinearCalibrator.getEstimatedMg();
                 result.mEstimatedGg = mNonLinearCalibrator.getEstimatedGg();
+
+                if (mKeepCovariance) {
+                    result.mCovariance = mNonLinearCalibrator.getEstimatedCovariance();
+                } else {
+                    result.mCovariance = null;
+                }
+
+                result.mEstimatedMse = mNonLinearCalibrator.getEstimatedMse();
+            } else {
+                result.mCovariance = null;
+                result.mEstimatedMse = 0.0;
             }
 
             solutions.add(result);
@@ -6137,16 +6162,19 @@ public abstract class RobustKnownBiasAndFrameGyroscopeCalibrator {
                 } else {
                     mEstimatedCovariance = null;
                 }
+                mEstimatedMse = mNonLinearCalibrator.getEstimatedMse();
 
             } catch (final LockedException | CalibrationException | NotReadyException e) {
-                mEstimatedCovariance = null;
+                mEstimatedCovariance = preliminaryResult.mCovariance;
                 mEstimatedMg = preliminaryResult.mEstimatedMg;
                 mEstimatedGg = preliminaryResult.mEstimatedGg;
+                mEstimatedMse = preliminaryResult.mEstimatedMse;
             }
         } else {
-            mEstimatedCovariance = null;
+            mEstimatedCovariance = preliminaryResult.mCovariance;
             mEstimatedMg = preliminaryResult.mEstimatedMg;
             mEstimatedGg = preliminaryResult.mEstimatedGg;
+            mEstimatedMse = preliminaryResult.mEstimatedMse;
         }
     }
 
@@ -6289,5 +6317,15 @@ public abstract class RobustKnownBiasAndFrameGyroscopeCalibrator {
          * This instance allows any 3x3 matrix.
          */
         private Matrix mEstimatedGg;
+
+        /**
+         * Covariance matrix for estimated result.
+         */
+        private Matrix mCovariance;
+
+        /**
+         * Estimated Mean Square Error.
+         */
+        private double mEstimatedMse;
     }
 }

@@ -322,6 +322,11 @@ public abstract class RobustKnownBiasAndGravityNormAccelerometerCalibrator {
     private Matrix mEstimatedCovariance;
 
     /**
+     * Estimated mean square error respect to provided measurements.
+     */
+    private double mEstimatedMse;
+
+    /**
      * Inner calibrator to compute calibration for each subset of data or during
      * final refining.
      */
@@ -2399,6 +2404,15 @@ public abstract class RobustKnownBiasAndGravityNormAccelerometerCalibrator {
      */
     public Matrix getEstimatedCovariance() {
         return mEstimatedCovariance;
+    }
+
+    /**
+     * Gets estimated mean square error respect to provided measurements.
+     *
+     * @return estimated mean square error respect to provided measurements.
+     */
+    public double getEstimatedMse() {
+        return mEstimatedMse;
     }
 
     /**
@@ -6783,6 +6797,7 @@ public abstract class RobustKnownBiasAndGravityNormAccelerometerCalibrator {
                 mInnerCalibrator.calibrate();
 
                 mEstimatedMa = mInnerCalibrator.getEstimatedMa();
+                mEstimatedMse = mInnerCalibrator.getEstimatedMse();
 
                 if (mKeepCovariance) {
                     mEstimatedCovariance = mInnerCalibrator.getEstimatedCovariance();
@@ -6792,10 +6807,12 @@ public abstract class RobustKnownBiasAndGravityNormAccelerometerCalibrator {
             } catch (final LockedException | CalibrationException | NotReadyException e) {
                 mEstimatedCovariance = null;
                 mEstimatedMa = preliminaryResult.mEstimatedMa;
+                mEstimatedMse = 0.0;
             }
         } else {
             mEstimatedCovariance = null;
             mEstimatedMa = preliminaryResult.mEstimatedMa;
+            mEstimatedMse = 0.0;
         }
     }
 

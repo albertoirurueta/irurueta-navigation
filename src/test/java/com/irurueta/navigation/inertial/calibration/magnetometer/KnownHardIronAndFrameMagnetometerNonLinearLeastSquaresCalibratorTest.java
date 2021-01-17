@@ -178,6 +178,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -260,6 +261,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -345,6 +347,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -430,6 +433,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -512,6 +516,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -594,6 +599,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -679,6 +685,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -764,6 +771,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -848,6 +856,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -932,6 +941,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -1018,6 +1028,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -1104,6 +1115,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -1188,6 +1200,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -1272,6 +1285,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -1358,6 +1372,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -1445,6 +1460,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -1534,6 +1550,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -1623,6 +1640,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -1715,6 +1733,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -1808,6 +1827,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -1898,6 +1918,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -1988,6 +2009,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -2081,6 +2103,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -2174,6 +2197,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -2264,6 +2288,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -2355,6 +2380,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -2449,6 +2475,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -2543,6 +2570,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -2634,6 +2662,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -2725,6 +2754,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -2819,6 +2849,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -2913,6 +2944,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -3008,6 +3040,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -3104,6 +3137,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -3203,6 +3237,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -3302,6 +3337,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -3398,6 +3434,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -3494,6 +3531,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -3593,6 +3631,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -3692,6 +3731,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -3789,6 +3829,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -3886,6 +3927,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -3986,6 +4028,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -4086,6 +4129,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -4183,6 +4227,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -4280,6 +4325,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -4381,6 +4427,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -4482,6 +4529,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -4583,6 +4631,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -4684,6 +4733,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -4788,6 +4838,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -4893,6 +4944,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -4994,6 +5046,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -5096,6 +5149,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -5201,6 +5255,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -5306,6 +5361,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -5408,6 +5464,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -5511,6 +5568,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -5617,6 +5675,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -5724,6 +5783,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -5827,6 +5887,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -5930,6 +5991,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -6035,6 +6097,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -6140,6 +6203,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -6229,6 +6293,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -6328,6 +6393,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -6429,6 +6495,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -6530,6 +6597,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -6629,6 +6697,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -6728,6 +6797,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -6829,6 +6899,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -6931,6 +7002,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -7032,6 +7104,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -7132,6 +7205,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -7234,6 +7308,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -7337,6 +7412,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -7438,6 +7514,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -7539,6 +7616,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -7643,6 +7721,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -7747,6 +7826,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -7848,6 +7928,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -7954,6 +8035,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -8062,6 +8144,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -8170,6 +8253,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -8278,6 +8362,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -8385,6 +8470,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -8495,6 +8581,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -8606,6 +8693,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -8715,6 +8803,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -8822,6 +8911,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -8933,6 +9023,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -9043,6 +9134,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -9153,6 +9245,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -9263,6 +9356,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -9375,6 +9469,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -9487,6 +9582,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -9607,6 +9703,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -9736,6 +9833,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -9870,6 +9968,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -10003,6 +10102,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -10137,6 +10237,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -10267,6 +10368,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -10404,6 +10506,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -10541,6 +10644,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -10676,6 +10780,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -10809,6 +10914,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -10946,6 +11052,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -11084,6 +11191,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -11220,6 +11328,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -11356,6 +11465,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -11494,6 +11604,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -11632,6 +11743,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -12485,6 +12597,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
 
         assertNotNull(calibrator.getEstimatedCovariance());
         checkGeneralCovariance(calibrator.getEstimatedCovariance());
+        assertTrue(calibrator.getEstimatedMse() > 0.0);
     }
 
     @Test
@@ -12534,6 +12647,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
 
         assertNotNull(calibrator.getEstimatedCovariance());
         checkGeneralCovariance(calibrator.getEstimatedCovariance());
+        assertTrue(calibrator.getEstimatedMse() > 0.0);
     }
 
     @Test
@@ -12592,6 +12706,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;
@@ -12655,6 +12770,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;
@@ -12713,6 +12829,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;
@@ -12767,6 +12884,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
 
         assertNotNull(calibrator.getEstimatedCovariance());
         checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
+        assertTrue(calibrator.getEstimatedMse() > 0.0);
     }
 
     @Test
@@ -12816,6 +12934,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
 
         assertNotNull(calibrator.getEstimatedCovariance());
         checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
+        assertTrue(calibrator.getEstimatedMse() > 0.0);
     }
 
     @Test
@@ -12874,6 +12993,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;
@@ -12937,6 +13057,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;
@@ -12995,6 +13116,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorTes
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;

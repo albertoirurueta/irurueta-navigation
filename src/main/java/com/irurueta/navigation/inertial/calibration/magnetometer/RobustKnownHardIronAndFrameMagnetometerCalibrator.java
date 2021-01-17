@@ -354,6 +354,11 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
     private Matrix mEstimatedCovariance;
 
     /**
+     * Estimated mean square error respect to provided measurements.
+     */
+    private double mEstimatedMse;
+
+    /**
      * Contains Earth's magnetic model.
      */
     private WorldMagneticModel mMagneticModel;
@@ -1723,6 +1728,15 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
     }
 
     /**
+     * Gets estimated mean square error respect to provided measurements.
+     *
+     * @return estimated mean square error respect to provided measurements.
+     */
+    public double getEstimatedMse() {
+        return mEstimatedMse;
+    }
+
+    /**
      * Gets estimated covariance matrix for estimated calibration parameters.
      * Diagonal elements of the matrix contains variance for the following
      * parameters (following indicated order): sx, sy, sz, mxy, mxz, myx,
@@ -2634,13 +2648,17 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
                     mEstimatedCovariance = null;
                 }
 
+                mEstimatedMse = mNonLinearCalibrator.getEstimatedMse();
+
             } catch (final LockedException | CalibrationException | NotReadyException e) {
                 mEstimatedCovariance = null;
                 mEstimatedMm = preliminaryResult;
+                mEstimatedMse = 0.0;
             }
         } else {
             mEstimatedCovariance = null;
             mEstimatedMm = preliminaryResult;
+            mEstimatedMse = 0.0;
         }
     }
 

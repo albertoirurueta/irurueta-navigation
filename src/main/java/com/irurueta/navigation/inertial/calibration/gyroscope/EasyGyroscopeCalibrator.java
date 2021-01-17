@@ -403,6 +403,11 @@ public class EasyGyroscopeCalibrator implements GyroscopeCalibrationSource, Gyro
     private double mEstimatedChiSq;
 
     /**
+     * Estimated mean square error respect to provided measurements.
+     */
+    private double mEstimatedMse;
+
+    /**
      * Indicates whether calibrator is running.
      */
     private boolean mRunning;
@@ -3268,6 +3273,15 @@ public class EasyGyroscopeCalibrator implements GyroscopeCalibrationSource, Gyro
     }
 
     /**
+     * Gets estimated mean square error respect to provided measurements.
+     *
+     * @return estimated mean square error respect to provided measurements.
+     */
+    public double getEstimatedMse() {
+        return mEstimatedMse;
+    }
+
+    /**
      * Gets variance of estimated x coordinate of gyroscope bias expressed in (rad^2/s^2).
      *
      * @return variance of estimated x coordinate of gyroscope bias or null if not available.
@@ -4947,6 +4961,7 @@ public class EasyGyroscopeCalibrator implements GyroscopeCalibrationSource, Gyro
 
         mEstimatedCovariance = mFitter.getCovar();
         mEstimatedChiSq = mFitter.getChisq();
+        mEstimatedMse = mFitter.getMse();
     }
 
     /**

@@ -268,6 +268,11 @@ public class KnownPositionAndInstantMagnetometerCalibrator {
     private double mEstimatedChiSq;
 
     /**
+     * Estimated mean square error respect to provided measurements.
+     */
+    private double mEstimatedMse;
+
+    /**
      * Indicates whether calibrator is running.
      */
     private boolean mRunning;
@@ -2669,6 +2674,15 @@ public class KnownPositionAndInstantMagnetometerCalibrator {
     }
 
     /**
+     * Gets estimated mean square error respect to provided measurements.
+     *
+     * @return estimated mean square error respect to provided measurements.
+     */
+    public double getEstimatedMse() {
+        return mEstimatedMse;
+    }
+
+    /**
      * Gets variance of estimated x coordinate of magnetometer bias expressed in
      * squared Teslas (T^2).
      *
@@ -3550,6 +3564,7 @@ public class KnownPositionAndInstantMagnetometerCalibrator {
 
         mEstimatedCovariance = mFitter.getCovar();
         mEstimatedChiSq = mFitter.getChisq();
+        mEstimatedMse = mFitter.getMse();
     }
 
     /**

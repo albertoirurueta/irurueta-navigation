@@ -227,6 +227,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -367,6 +368,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -510,6 +512,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -650,6 +653,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -794,6 +798,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -948,6 +953,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -1118,6 +1124,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -1301,6 +1308,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -1460,6 +1468,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -1619,6 +1628,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -1778,6 +1788,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -1937,6 +1948,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -2100,6 +2112,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2273,6 +2286,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2446,6 +2460,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2619,6 +2634,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2793,6 +2809,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2972,6 +2989,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3153,6 +3171,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3334,6 +3353,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3525,6 +3545,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3726,6 +3747,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3931,6 +3953,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4136,6 +4159,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4323,6 +4347,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -4482,6 +4507,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -4641,6 +4667,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -4800,6 +4827,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -4959,6 +4987,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -5122,6 +5151,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -5295,6 +5325,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -5468,6 +5499,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -5641,6 +5673,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -5815,6 +5848,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -5994,6 +6028,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -6175,6 +6210,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -6356,6 +6392,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -6547,6 +6584,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -6748,6 +6786,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -6953,6 +6992,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -7158,6 +7198,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -7351,6 +7392,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -7522,6 +7564,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -7693,6 +7736,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -7865,6 +7909,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -8041,6 +8086,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -8222,6 +8268,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -8405,6 +8452,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -8589,6 +8637,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -8772,6 +8821,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -8961,6 +9011,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -9150,6 +9201,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -9341,6 +9393,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -9541,6 +9594,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -9754,6 +9808,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -9968,6 +10023,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -10183,6 +10239,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -10383,6 +10440,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -10554,6 +10612,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         calibrator = null;
         try {
@@ -10724,6 +10783,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -10895,6 +10955,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -11071,6 +11132,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -11252,6 +11314,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -11434,6 +11497,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -11617,6 +11681,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -11799,6 +11864,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -11988,6 +12054,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -12178,6 +12245,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -12368,6 +12436,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -12567,6 +12636,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -12780,6 +12850,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -12995,6 +13066,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -13210,6 +13282,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -14369,6 +14442,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;
@@ -14513,6 +14587,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;
@@ -14657,6 +14732,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;
@@ -14801,6 +14877,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;
@@ -14945,6 +15022,7 @@ public class PROSACRobustKnownPositionAccelerometerCalibratorTest implements
             assertEstimatedResult(estimatedBa, estimatedMa, calibrator, false);
 
             assertNull(calibrator.getEstimatedCovariance());
+            assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
             numValid++;
             break;

@@ -37,7 +37,6 @@ import com.irurueta.numerical.robust.RobustEstimatorMethod;
 import com.irurueta.statistics.UniformRandomizer;
 import com.irurueta.units.Acceleration;
 import com.irurueta.units.AccelerationUnit;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -157,7 +156,7 @@ public class LMedSRobustKnownFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
         assertFalse(calibrator.isPreliminarySolutionRefined());
-        Assert.assertEquals(calibrator.getProgressDelta(),
+        assertEquals(calibrator.getProgressDelta(),
                 RobustKnownFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
@@ -216,6 +215,7 @@ public class LMedSRobustKnownFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
 
         // test constructor with listener
@@ -347,6 +347,7 @@ public class LMedSRobustKnownFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
 
         // test constructor with measurements
@@ -480,6 +481,7 @@ public class LMedSRobustKnownFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
 
         // test constructor with measurements and listener
@@ -612,6 +614,7 @@ public class LMedSRobustKnownFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
 
         // test constructor with common axis used
@@ -744,6 +747,7 @@ public class LMedSRobustKnownFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
 
         // test constructor with common axis used and listener
@@ -876,6 +880,7 @@ public class LMedSRobustKnownFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
 
         // test constructor with measurements and common axis used
@@ -1008,6 +1013,7 @@ public class LMedSRobustKnownFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
 
         // test constructor with measurements and common axis used
@@ -1140,6 +1146,7 @@ public class LMedSRobustKnownFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -2143,6 +2150,7 @@ public class LMedSRobustKnownFrameAccelerometerCalibratorTest implements
 
         assertNotNull(calibrator.getEstimatedCovariance());
         checkGeneralCovariance(calibrator.getEstimatedCovariance());
+        assertTrue(calibrator.getEstimatedMse() > 0.0);
     }
 
     @Test
@@ -2262,6 +2270,7 @@ public class LMedSRobustKnownFrameAccelerometerCalibratorTest implements
         checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
 
         assertNotNull(calibrator.getEstimatedCovariance());
+        assertTrue(calibrator.getEstimatedMse() > 0.0);
     }
 
     @Test
@@ -2391,6 +2400,7 @@ public class LMedSRobustKnownFrameAccelerometerCalibratorTest implements
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;
@@ -2526,6 +2536,7 @@ public class LMedSRobustKnownFrameAccelerometerCalibratorTest implements
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;
@@ -2661,6 +2672,7 @@ public class LMedSRobustKnownFrameAccelerometerCalibratorTest implements
             assertEstimatedResult(estimatedBa, estimatedMa, calibrator, false);
 
             assertNull(calibrator.getEstimatedCovariance());
+            assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
             numValid++;
             break;
@@ -2800,6 +2812,7 @@ public class LMedSRobustKnownFrameAccelerometerCalibratorTest implements
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralCovariance(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;

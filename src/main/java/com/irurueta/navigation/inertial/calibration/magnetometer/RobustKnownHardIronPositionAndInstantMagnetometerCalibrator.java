@@ -270,6 +270,11 @@ public abstract class RobustKnownHardIronPositionAndInstantMagnetometerCalibrato
     private Matrix mEstimatedCovariance;
 
     /**
+     * Estimated mean square error respect to provided measurements.
+     */
+    private double mEstimatedMse;
+
+    /**
      * Known x-coordinate of hard-iron bias to be used to find a solution.
      * This is expressed in Teslas (T).
      */
@@ -2622,6 +2627,15 @@ public abstract class RobustKnownHardIronPositionAndInstantMagnetometerCalibrato
     public Double getEstimatedMzy() {
         return mEstimatedMm != null ?
                 mEstimatedMm.getElementAt(2, 1) : null;
+    }
+
+    /**
+     * Gets estimated mean square error respect to provided measurements.
+     *
+     * @return estimated mean square error respect to provided measurements.
+     */
+    public double getEstimatedMse() {
+        return mEstimatedMse;
     }
 
     /**
@@ -7414,13 +7428,18 @@ public abstract class RobustKnownHardIronPositionAndInstantMagnetometerCalibrato
                 } else {
                     mEstimatedCovariance = null;
                 }
+
+                mEstimatedMse = mInnerCalibrator.getEstimatedMse();
+
             } catch (final LockedException | CalibrationException | NotReadyException e) {
                 mEstimatedCovariance = null;
                 mEstimatedMm = preliminaryResult;
+                mEstimatedMse = 0.0;
             }
         } else {
             mEstimatedCovariance = null;
             mEstimatedMm = preliminaryResult;
+            mEstimatedMse = 0.0;
         }
     }
 

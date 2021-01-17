@@ -234,6 +234,11 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator imple
     private double mEstimatedChiSq;
 
     /**
+     * Estimated mean square error respect to provided measurements.
+     */
+    private double mEstimatedMse;
+
+    /**
      * Indicates whether estimator is running.
      */
     private boolean mRunning;
@@ -2940,6 +2945,15 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator imple
     }
 
     /**
+     * Gets estimated mean square error respect to provided measurements.
+     *
+     * @return estimated mean square error respect to provided measurements.
+     */
+    public double getEstimatedMse() {
+        return mEstimatedMse;
+    }
+
+    /**
      * Internal method to perform calibration when common z-axis is assumed for both
      * the accelerometer and gyroscope.
      *
@@ -3151,6 +3165,7 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator imple
         jacobian.multiply(jacobianTrans);
         mEstimatedCovariance = jacobian;
         mEstimatedChiSq = mFitter.getChisq();
+        mEstimatedMse = mFitter.getMse();
     }
 
     /**
@@ -3364,6 +3379,7 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator imple
 
         mEstimatedCovariance = mFitter.getCovar();
         mEstimatedChiSq = mFitter.getChisq();
+        mEstimatedMse = mFitter.getMse();
     }
 
     /**

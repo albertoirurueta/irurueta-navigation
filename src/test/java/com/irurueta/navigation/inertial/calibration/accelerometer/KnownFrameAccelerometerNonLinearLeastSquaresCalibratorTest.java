@@ -188,6 +188,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -302,6 +303,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -418,6 +420,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -535,6 +538,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -648,6 +652,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -761,6 +766,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -876,6 +882,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -991,6 +998,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -1111,6 +1119,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -1231,6 +1240,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -1354,6 +1364,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -1477,6 +1488,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -1595,6 +1607,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -1714,6 +1727,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -1835,6 +1849,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -1957,6 +1972,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -2084,6 +2100,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -2211,6 +2228,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -2341,6 +2359,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -2471,6 +2490,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -2596,6 +2616,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -2721,6 +2742,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -2849,6 +2871,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -2977,6 +3000,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -3107,6 +3131,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -3237,6 +3262,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -3370,6 +3396,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -3503,6 +3530,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -3631,6 +3659,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -3759,6 +3788,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -3890,6 +3920,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -4021,6 +4052,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -4157,6 +4189,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -4293,6 +4326,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -4432,6 +4466,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -4571,6 +4606,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -4706,6 +4742,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -4841,6 +4878,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -4979,6 +5017,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -5117,6 +5156,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -5254,6 +5294,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -5394,6 +5435,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -5534,6 +5576,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -5669,6 +5712,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -5804,6 +5848,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -5942,6 +5987,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -6080,6 +6126,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -6224,6 +6271,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -6368,6 +6416,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -6515,6 +6564,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -6662,6 +6712,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -6805,6 +6856,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -6948,6 +7000,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -7094,6 +7147,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -7240,6 +7294,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
     }
 
     @Test
@@ -7362,6 +7417,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -7494,6 +7550,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -7629,6 +7686,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -7764,6 +7822,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -7894,6 +7953,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -8024,6 +8084,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -8157,6 +8218,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -8290,6 +8352,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -8422,6 +8485,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -8554,6 +8618,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -8689,6 +8754,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -8824,6 +8890,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -8954,6 +9021,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -9084,6 +9152,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -9217,6 +9286,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -9350,6 +9420,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -9499,6 +9570,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         calibrator = null;
         try {
@@ -9652,6 +9724,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         calibrator = null;
         try {
@@ -9808,6 +9881,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         calibrator = null;
         try {
@@ -9964,6 +10038,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         calibrator = null;
         try {
@@ -10115,6 +10190,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         calibrator = null;
         try {
@@ -10266,6 +10342,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         calibrator = null;
         try {
@@ -10420,6 +10497,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         calibrator = null;
         try {
@@ -10575,6 +10653,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNull(calibrator.getEstimatedBiasStandardDeviationNorm());
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAcceleration(null));
+        assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
 
         calibrator = null;
         try {
@@ -11407,6 +11486,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNotNull(calibrator.getEstimatedCovariance());
         checkGeneralCovariance(calibrator.getEstimatedCovariance());
         assertTrue(calibrator.getEstimatedChiSq() < 0.0);
+        assertTrue(calibrator.getEstimatedMse() > 0.0);
     }
 
     @Test
@@ -11519,6 +11599,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralCovariance(calibrator.getEstimatedCovariance());
             assertTrue(calibrator.getEstimatedChiSq() > 0.0);
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;
@@ -11624,6 +11705,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNotNull(calibrator.getEstimatedCovariance());
         checkGeneralCovariance(calibrator.getEstimatedCovariance());
         assertTrue(calibrator.getEstimatedChiSq() < 0.0);
+        assertTrue(calibrator.getEstimatedMse() > 0.0);
     }
 
     @Test
@@ -11725,6 +11807,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
 
         assertNotNull(calibrator.getEstimatedCovariance());
         checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
+        assertTrue(calibrator.getEstimatedMse() > 0.0);
     }
 
     @Test
@@ -11837,6 +11920,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
             assertNotNull(calibrator.getEstimatedCovariance());
             checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
             assertTrue(calibrator.getEstimatedChiSq() > 0.0);
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;
@@ -11942,6 +12026,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertNotNull(calibrator.getEstimatedCovariance());
         checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
         assertTrue(calibrator.getEstimatedChiSq() < 0.0);
+        assertTrue(calibrator.getEstimatedMse() > 0.0);
     }
 
     @Override

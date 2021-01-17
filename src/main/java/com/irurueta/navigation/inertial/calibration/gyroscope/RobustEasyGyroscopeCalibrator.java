@@ -385,6 +385,11 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
     private Matrix mEstimatedCovariance;
 
     /**
+     * Estimated mean square error respect to provided measurements.
+     */
+    private double mEstimatedMse;
+
+    /**
      * Indicates whether calibrator is running.
      */
     protected boolean mRunning;
@@ -3402,6 +3407,15 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      */
     public Matrix getEstimatedCovariance() {
         return mEstimatedCovariance;
+    }
+
+    /**
+     * Gets estimated mean square error respect to provided measurements.
+     *
+     * @return estimated mean square error respect to provided measurements.
+     */
+    public double getEstimatedMse() {
+        return mEstimatedMse;
     }
 
     /**
@@ -6551,6 +6565,8 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
                 result.mCovariance = null;
             }
 
+            result.mEstimatedMse = mInnerCalibrator.getEstimatedMse();
+
             solutions.add(result);
         } catch (final LockedException | CalibrationException | NotReadyException e) {
             solutions.clear();
@@ -6599,18 +6615,21 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
                 mEstimatedMg = mInnerCalibrator.getEstimatedMg();
                 mEstimatedGg = mInnerCalibrator.getEstimatedGg();
                 mEstimatedCovariance = mInnerCalibrator.getEstimatedCovariance();
+                mEstimatedMse = mInnerCalibrator.getEstimatedMse();
 
             } catch (LockedException | CalibrationException | NotReadyException e) {
                 mEstimatedCovariance = preliminaryResult.mCovariance;
                 mEstimatedBiases = preliminaryResult.mEstimatedBiases;
                 mEstimatedMg = preliminaryResult.mEstimatedMg;
                 mEstimatedGg = preliminaryResult.mEstimatedGg;
+                mEstimatedMse = preliminaryResult.mEstimatedMse;
             }
         } else {
             mEstimatedCovariance = preliminaryResult.mCovariance;
             mEstimatedBiases = preliminaryResult.mEstimatedBiases;
             mEstimatedMg = preliminaryResult.mEstimatedMg;
             mEstimatedGg = preliminaryResult.mEstimatedGg;
+            mEstimatedMse = preliminaryResult.mEstimatedMse;
         }
     }
 
@@ -6743,5 +6762,10 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
          * Covariance matrix for estimated result.
          */
         private Matrix mCovariance;
+
+        /**
+         * Estimated Mean Square Error.
+         */
+        private double mEstimatedMse;
     }
 }

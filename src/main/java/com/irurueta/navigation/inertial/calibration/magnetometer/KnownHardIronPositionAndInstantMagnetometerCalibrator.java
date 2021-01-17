@@ -261,6 +261,11 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
     private double mEstimatedChiSq;
 
     /**
+     * Estimated mean square error respect to provided measurements.
+     */
+    private double mEstimatedMse;
+
+    /**
      * Indicates whether calibrator is running.
      */
     private boolean mRunning;
@@ -2438,6 +2443,15 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
     }
 
     /**
+     * Gets estimated mean square error respect to provided measurements.
+     *
+     * @return estimated mean square error respect to provided measurements.
+     */
+    public double getEstimatedMse() {
+        return mEstimatedMse;
+    }
+
+    /**
      * Sets input data into Levenberg-Marquardt fitter.
      *
      * @throws WrongSizeException never happens.
@@ -2829,6 +2843,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
         // since only a constant term is subtracted, covariance is preserved
         mEstimatedCovariance = mFitter.getCovar();
         mEstimatedChiSq = mFitter.getChisq();
+        mEstimatedMse = mFitter.getMse();
     }
 
     /**

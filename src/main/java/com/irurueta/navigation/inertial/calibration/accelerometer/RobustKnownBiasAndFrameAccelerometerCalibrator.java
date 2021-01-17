@@ -343,6 +343,11 @@ public abstract class RobustKnownBiasAndFrameAccelerometerCalibrator {
     private Matrix mEstimatedCovariance;
 
     /**
+     * Estimated mean square error respect to provided measurements.
+     */
+    private double mEstimatedMse;
+
+    /**
      * A linear least squares calibrator.
      */
     private final KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator mLinearCalibrator =
@@ -2235,6 +2240,15 @@ public abstract class RobustKnownBiasAndFrameAccelerometerCalibrator {
      */
     public Matrix getEstimatedCovariance() {
         return mEstimatedCovariance;
+    }
+
+    /**
+     * Gets estimated mean square error respect to provided measurements.
+     *
+     * @return estimated mean square error respect to provided measurements.
+     */
+    public double getEstimatedMse() {
+        return mEstimatedMse;
     }
 
     /**
@@ -6017,6 +6031,7 @@ public abstract class RobustKnownBiasAndFrameAccelerometerCalibrator {
                 mNonLinearCalibrator.calibrate();
 
                 mEstimatedMa = mNonLinearCalibrator.getEstimatedMa();
+                mEstimatedMse = mNonLinearCalibrator.getEstimatedMse();
 
                 if (mKeepCovariance) {
                     mEstimatedCovariance = mNonLinearCalibrator.getEstimatedCovariance();
@@ -6027,10 +6042,12 @@ public abstract class RobustKnownBiasAndFrameAccelerometerCalibrator {
             } catch (final LockedException | CalibrationException | NotReadyException e) {
                 mEstimatedCovariance = null;
                 mEstimatedMa = preliminaryResult;
+                mEstimatedMse = 0.0;
             }
         } else {
             mEstimatedCovariance = null;
             mEstimatedMa = preliminaryResult;
+            mEstimatedMse = 0.0;
         }
     }
 

@@ -360,6 +360,11 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
     private Matrix mEstimatedCovariance;
 
     /**
+     * Estimated mean square error respect to provided measurements.
+     */
+    private double mEstimatedMse;
+
+    /**
      * Contains Earth's magnetic model.
      */
     private WorldMagneticModel mMagneticModel;
@@ -1964,6 +1969,15 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
     }
 
     /**
+     * Gets estimated mean square error respect to provided measurements.
+     *
+     * @return estimated mean square error respect to provided measurements.
+     */
+    public double getEstimatedMse() {
+        return mEstimatedMse;
+    }
+
+    /**
      * Gets estimated covariance matrix for estimated calibration parameters.
      * Diagonal elements of the matrix contains variance for the following
      * parameters (following indicated order): bx, by, bz, sx, sy, sz,
@@ -3119,6 +3133,14 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
 
                 mNonLinearCalibrator.getEstimatedHardIron(result.mEstimatedHardIron);
                 result.mEstimatedMm = mNonLinearCalibrator.getEstimatedMm();
+
+                if (mKeepCovariance) {
+                    result.mCovariance = mNonLinearCalibrator.getEstimatedCovariance();
+                } else {
+                    result.mCovariance = null;
+                }
+
+                result.mEstimatedMse = mNonLinearCalibrator.getEstimatedMse();
             }
 
             solutions.add(result);
@@ -3159,6 +3181,7 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
 
                 mEstimatedHardIron = mNonLinearCalibrator.getEstimatedHardIron();
                 mEstimatedMm = mNonLinearCalibrator.getEstimatedMm();
+                mEstimatedMse = mNonLinearCalibrator.getEstimatedMse();
 
                 if (mKeepCovariance) {
                     mEstimatedCovariance = mNonLinearCalibrator.getEstimatedCovariance();
@@ -3167,14 +3190,16 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
                 }
 
             } catch (final LockedException | CalibrationException | NotReadyException e) {
-                mEstimatedCovariance = null;
+                mEstimatedCovariance = preliminaryResult.mCovariance;
                 mEstimatedHardIron = preliminaryResult.mEstimatedHardIron;
                 mEstimatedMm = preliminaryResult.mEstimatedMm;
+                mEstimatedMse = preliminaryResult.mEstimatedMse;
             }
         } else {
-            mEstimatedCovariance = null;
+            mEstimatedCovariance = preliminaryResult.mCovariance;
             mEstimatedHardIron = preliminaryResult.mEstimatedHardIron;
             mEstimatedMm = preliminaryResult.mEstimatedMm;
+            mEstimatedMse = preliminaryResult.mEstimatedMse;
         }
     }
 
@@ -3252,5 +3277,15 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
          * Values of this matrix are unitless.
          */
         private Matrix mEstimatedMm;
+
+        /**
+         * Estimated covariance matrix.
+         */
+        private Matrix mCovariance;
+
+        /**
+         * Estimated Mean Squared Error (MSE).
+         */
+        private double mEstimatedMse;
     }
 }

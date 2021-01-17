@@ -276,6 +276,11 @@ public abstract class RobustKnownPositionAndInstantMagnetometerCalibrator {
     private Matrix mEstimatedCovariance;
 
     /**
+     * Estimated mean square error respect to provided measurements.
+     */
+    private double mEstimatedMse;
+
+    /**
      * Initial x-coordinate of hard-iron bias to be used to find a solution.
      * This is expressed in Teslas (T).
      */
@@ -2852,6 +2857,15 @@ public abstract class RobustKnownPositionAndInstantMagnetometerCalibrator {
     public Double getEstimatedMzy() {
         return mEstimatedMm != null ?
                 mEstimatedMm.getElementAt(2, 1) : null;
+    }
+
+    /**
+     * Gets estimated mean square error respect to provided measurements.
+     *
+     * @return estimated mean square error respect to provided measurements.
+     */
+    public double getEstimatedMse() {
+        return mEstimatedMse;
     }
 
     /**
@@ -7890,6 +7904,14 @@ public abstract class RobustKnownPositionAndInstantMagnetometerCalibrator {
             mInnerCalibrator.getEstimatedHardIron(result.mEstimatedHardIron);
             result.mEstimatedMm = mInnerCalibrator.getEstimatedMm();
 
+            if (mKeepCovariance) {
+                result.mCovariance = mInnerCalibrator.getEstimatedCovariance();
+            } else {
+                result.mCovariance = null;
+            }
+
+            result.mEstimatedMse = mInnerCalibrator.getEstimatedMse();
+
             solutions.add(result);
 
         } catch (final LockedException | CalibrationException | NotReadyException e) {
@@ -7937,15 +7959,20 @@ public abstract class RobustKnownPositionAndInstantMagnetometerCalibrator {
                 } else {
                     mEstimatedCovariance = null;
                 }
+
+                mEstimatedMse = mInnerCalibrator.getEstimatedMse();
+
             } catch (final LockedException | CalibrationException | NotReadyException e) {
-                mEstimatedCovariance = null;
+                mEstimatedCovariance = preliminaryResult.mCovariance;
                 mEstimatedHardIron = preliminaryResult.mEstimatedHardIron;
                 mEstimatedMm = preliminaryResult.mEstimatedMm;
+                mEstimatedMse = preliminaryResult.mEstimatedMse;
             }
         } else {
-            mEstimatedCovariance = null;
+            mEstimatedCovariance = preliminaryResult.mCovariance;
             mEstimatedHardIron = preliminaryResult.mEstimatedHardIron;
             mEstimatedMm = preliminaryResult.mEstimatedMm;
+            mEstimatedMse = preliminaryResult.mEstimatedMse;
         }
     }
 
@@ -8089,5 +8116,15 @@ public abstract class RobustKnownPositionAndInstantMagnetometerCalibrator {
          * Values of this matrix are unitless.
          */
         private Matrix mEstimatedMm;
+
+        /**
+         * Covariance matrix.
+         */
+        private Matrix mCovariance;
+
+        /**
+         * Estimated Mean Squared Error (MSE).
+         */
+        private double mEstimatedMse;
     }
 }
