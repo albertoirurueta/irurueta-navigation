@@ -252,6 +252,11 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
     private double mEstimatedChiSq;
 
     /**
+     * Estimated mean square error respect to provided measurements.
+     */
+    private double mEstimatedMse;
+
+    /**
      * Indicates whether calibrator is running.
      */
     private boolean mRunning;
@@ -259,14 +264,14 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
     /**
      * Constructor.
      */
-<span class="fc" id="L262">    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator() {</span>
+<span class="fc" id="L267">    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator() {</span>
         try {
-<span class="fc" id="L264">            mInitialGg = new Matrix(BodyKinematics.COMPONENTS,</span>
+<span class="fc" id="L269">            mInitialGg = new Matrix(BodyKinematics.COMPONENTS,</span>
                     BodyKinematics.COMPONENTS);
-<span class="nc" id="L266">        } catch (final WrongSizeException ignore) {</span>
+<span class="nc" id="L271">        } catch (final WrongSizeException ignore) {</span>
             // never happens
-<span class="fc" id="L268">        }</span>
-<span class="fc" id="L269">    }</span>
+<span class="fc" id="L273">        }</span>
+<span class="fc" id="L274">    }</span>
 
     /**
      * Constructor.
@@ -275,9 +280,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L278">        this();</span>
-<span class="fc" id="L279">        mListener = listener;</span>
-<span class="fc" id="L280">    }</span>
+<span class="fc" id="L283">        this();</span>
+<span class="fc" id="L284">        mListener = listener;</span>
+<span class="fc" id="L285">    }</span>
 
     /**
      * Constructor.
@@ -288,9 +293,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection&lt;StandardDeviationFrameBodyKinematics&gt; measurements) {
-<span class="fc" id="L291">        this();</span>
-<span class="fc" id="L292">        mMeasurements = measurements;</span>
-<span class="fc" id="L293">    }</span>
+<span class="fc" id="L296">        this();</span>
+<span class="fc" id="L297">        mMeasurements = measurements;</span>
+<span class="fc" id="L298">    }</span>
 
     /**
      * Constructor.
@@ -303,9 +308,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
     public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection&lt;StandardDeviationFrameBodyKinematics&gt; measurements,
             final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L306">        this(measurements);</span>
-<span class="fc" id="L307">        mListener = listener;</span>
-<span class="fc" id="L308">    }</span>
+<span class="fc" id="L311">        this(measurements);</span>
+<span class="fc" id="L312">        mListener = listener;</span>
+<span class="fc" id="L313">    }</span>
 
     /**
      * Constructor.
@@ -315,9 +320,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final boolean commonAxisUsed) {
-<span class="fc" id="L318">        this();</span>
-<span class="fc" id="L319">        mCommonAxisUsed = commonAxisUsed;</span>
-<span class="fc" id="L320">    }</span>
+<span class="fc" id="L323">        this();</span>
+<span class="fc" id="L324">        mCommonAxisUsed = commonAxisUsed;</span>
+<span class="fc" id="L325">    }</span>
 
     /**
      * Constructor.
@@ -329,9 +334,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
     public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final boolean commonAxisUsed,
             final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L332">        this(commonAxisUsed);</span>
-<span class="fc" id="L333">        mListener = listener;</span>
-<span class="fc" id="L334">    }</span>
+<span class="fc" id="L337">        this(commonAxisUsed);</span>
+<span class="fc" id="L338">        mListener = listener;</span>
+<span class="fc" id="L339">    }</span>
 
     /**
      * Constructor.
@@ -345,9 +350,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
     public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection&lt;StandardDeviationFrameBodyKinematics&gt; measurements,
             final boolean commonAxisUsed) {
-<span class="fc" id="L348">        this(measurements);</span>
-<span class="fc" id="L349">        mCommonAxisUsed = commonAxisUsed;</span>
-<span class="fc" id="L350">    }</span>
+<span class="fc" id="L353">        this(measurements);</span>
+<span class="fc" id="L354">        mCommonAxisUsed = commonAxisUsed;</span>
+<span class="fc" id="L355">    }</span>
 
     /**
      * Constructor.
@@ -363,9 +368,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final Collection&lt;StandardDeviationFrameBodyKinematics&gt; measurements,
             final boolean commonAxisUsed,
             final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L366">        this(measurements, commonAxisUsed);</span>
-<span class="fc" id="L367">        mListener = listener;</span>
-<span class="fc" id="L368">    }</span>
+<span class="fc" id="L371">        this(measurements, commonAxisUsed);</span>
+<span class="fc" id="L372">        mListener = listener;</span>
+<span class="fc" id="L373">    }</span>
 
     /**
      * Constructor.
@@ -379,13 +384,13 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final double biasX, final double biasY, final double biasZ) {
-<span class="fc" id="L382">        this();</span>
+<span class="fc" id="L387">        this();</span>
         try {
-<span class="fc" id="L384">            setBiasCoordinates(biasX, biasY, biasZ);</span>
-<span class="nc" id="L385">        } catch (final LockedException ignore) {</span>
+<span class="fc" id="L389">            setBiasCoordinates(biasX, biasY, biasZ);</span>
+<span class="nc" id="L390">        } catch (final LockedException ignore) {</span>
             // never happens
-<span class="fc" id="L387">        }</span>
-<span class="fc" id="L388">    }</span>
+<span class="fc" id="L392">        }</span>
+<span class="fc" id="L393">    }</span>
 
     /**
      * Constructor.
@@ -401,9 +406,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
     public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final double biasX, final double biasY, final double biasZ,
             final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L404">        this(biasX, biasY, biasZ);</span>
-<span class="fc" id="L405">        mListener = listener;</span>
-<span class="fc" id="L406">    }</span>
+<span class="fc" id="L409">        this(biasX, biasY, biasZ);</span>
+<span class="fc" id="L410">        mListener = listener;</span>
+<span class="fc" id="L411">    }</span>
 
     /**
      * Constructor.
@@ -421,9 +426,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
     public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection&lt;StandardDeviationFrameBodyKinematics&gt; measurements,
             final double biasX, final double biasY, final double biasZ) {
-<span class="fc" id="L424">        this(biasX, biasY, biasZ);</span>
-<span class="fc" id="L425">        mMeasurements = measurements;</span>
-<span class="fc" id="L426">    }</span>
+<span class="fc" id="L429">        this(biasX, biasY, biasZ);</span>
+<span class="fc" id="L430">        mMeasurements = measurements;</span>
+<span class="fc" id="L431">    }</span>
 
     /**
      * Constructor.
@@ -443,9 +448,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final Collection&lt;StandardDeviationFrameBodyKinematics&gt; measurements,
             final double biasX, final double biasY, final double biasZ,
             final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L446">        this(measurements, biasX, biasY, biasZ);</span>
-<span class="fc" id="L447">        mListener = listener;</span>
-<span class="fc" id="L448">    }</span>
+<span class="fc" id="L451">        this(measurements, biasX, biasY, biasZ);</span>
+<span class="fc" id="L452">        mListener = listener;</span>
+<span class="fc" id="L453">    }</span>
 
     /**
      * Constructor.
@@ -462,9 +467,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
     public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final boolean commonAxisUsed, final double biasX, final double biasY,
             final double biasZ) {
-<span class="fc" id="L465">        this(biasX, biasY, biasZ);</span>
-<span class="fc" id="L466">        mCommonAxisUsed = commonAxisUsed;</span>
-<span class="fc" id="L467">    }</span>
+<span class="fc" id="L470">        this(biasX, biasY, biasZ);</span>
+<span class="fc" id="L471">        mCommonAxisUsed = commonAxisUsed;</span>
+<span class="fc" id="L472">    }</span>
 
     /**
      * Constructor.
@@ -483,9 +488,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final boolean commonAxisUsed, final double biasX, final double biasY,
             final double biasZ,
             final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L486">        this(commonAxisUsed, biasX, biasY, biasZ);</span>
-<span class="fc" id="L487">        mListener = listener;</span>
-<span class="fc" id="L488">    }</span>
+<span class="fc" id="L491">        this(commonAxisUsed, biasX, biasY, biasZ);</span>
+<span class="fc" id="L492">        mListener = listener;</span>
+<span class="fc" id="L493">    }</span>
 
     /**
      * Constructor.
@@ -506,9 +511,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final Collection&lt;StandardDeviationFrameBodyKinematics&gt; measurements,
             final boolean commonAxisUsed, final double biasX, final double biasY,
             final double biasZ) {
-<span class="fc" id="L509">        this(commonAxisUsed, biasX, biasY, biasZ);</span>
-<span class="fc" id="L510">        mMeasurements = measurements;</span>
-<span class="fc" id="L511">    }</span>
+<span class="fc" id="L514">        this(commonAxisUsed, biasX, biasY, biasZ);</span>
+<span class="fc" id="L515">        mMeasurements = measurements;</span>
+<span class="fc" id="L516">    }</span>
 
     /**
      * Constructor.
@@ -531,9 +536,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final boolean commonAxisUsed, final double biasX, final double biasY,
             final double biasZ,
             final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L534">        this(measurements, commonAxisUsed, biasX, biasY, biasZ);</span>
-<span class="fc" id="L535">        mListener = listener;</span>
-<span class="fc" id="L536">    }</span>
+<span class="fc" id="L539">        this(measurements, commonAxisUsed, biasX, biasY, biasZ);</span>
+<span class="fc" id="L540">        mListener = listener;</span>
+<span class="fc" id="L541">    }</span>
 
     /**
      * Constructor.
@@ -545,13 +550,13 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
     public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final AngularSpeed biasX, final AngularSpeed biasY,
             final AngularSpeed biasZ) {
-<span class="fc" id="L548">        this();</span>
+<span class="fc" id="L553">        this();</span>
         try {
-<span class="fc" id="L550">            setBiasCoordinates(biasX, biasY, biasZ);</span>
-<span class="nc" id="L551">        } catch (final LockedException ignore) {</span>
+<span class="fc" id="L555">            setBiasCoordinates(biasX, biasY, biasZ);</span>
+<span class="nc" id="L556">        } catch (final LockedException ignore) {</span>
             // never happens
-<span class="fc" id="L553">        }</span>
-<span class="fc" id="L554">    }</span>
+<span class="fc" id="L558">        }</span>
+<span class="fc" id="L559">    }</span>
 
     /**
      * Constructor.
@@ -565,9 +570,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final AngularSpeed biasX, final AngularSpeed biasY,
             final AngularSpeed biasZ,
             final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L568">        this(biasX, biasY, biasZ);</span>
-<span class="fc" id="L569">        mListener = listener;</span>
-<span class="fc" id="L570">    }</span>
+<span class="fc" id="L573">        this(biasX, biasY, biasZ);</span>
+<span class="fc" id="L574">        mListener = listener;</span>
+<span class="fc" id="L575">    }</span>
 
     /**
      * Constructor.
@@ -583,9 +588,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final Collection&lt;StandardDeviationFrameBodyKinematics&gt; measurements,
             final AngularSpeed biasX, final AngularSpeed biasY,
             final AngularSpeed biasZ) {
-<span class="fc" id="L586">        this(biasX, biasY, biasZ);</span>
-<span class="fc" id="L587">        mMeasurements = measurements;</span>
-<span class="fc" id="L588">    }</span>
+<span class="fc" id="L591">        this(biasX, biasY, biasZ);</span>
+<span class="fc" id="L592">        mMeasurements = measurements;</span>
+<span class="fc" id="L593">    }</span>
 
     /**
      * Constructor.
@@ -603,9 +608,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final AngularSpeed biasX, final AngularSpeed biasY,
             final AngularSpeed biasZ,
             final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L606">        this(measurements, biasX, biasY, biasZ);</span>
-<span class="fc" id="L607">        mListener = listener;</span>
-<span class="fc" id="L608">    }</span>
+<span class="fc" id="L611">        this(measurements, biasX, biasY, biasZ);</span>
+<span class="fc" id="L612">        mListener = listener;</span>
+<span class="fc" id="L613">    }</span>
 
     /**
      * Constructor.
@@ -619,9 +624,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
     public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final boolean commonAxisUsed, final AngularSpeed biasX,
             final AngularSpeed biasY, final AngularSpeed biasZ) {
-<span class="fc" id="L622">        this(biasX, biasY, biasZ);</span>
-<span class="fc" id="L623">        mCommonAxisUsed = commonAxisUsed;</span>
-<span class="fc" id="L624">    }</span>
+<span class="fc" id="L627">        this(biasX, biasY, biasZ);</span>
+<span class="fc" id="L628">        mCommonAxisUsed = commonAxisUsed;</span>
+<span class="fc" id="L629">    }</span>
 
     /**
      * Constructor.
@@ -637,9 +642,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final boolean commonAxisUsed, final AngularSpeed biasX,
             final AngularSpeed biasY, final AngularSpeed biasZ,
             final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L640">        this(commonAxisUsed, biasX, biasY, biasZ);</span>
-<span class="fc" id="L641">        mListener = listener;</span>
-<span class="fc" id="L642">    }</span>
+<span class="fc" id="L645">        this(commonAxisUsed, biasX, biasY, biasZ);</span>
+<span class="fc" id="L646">        mListener = listener;</span>
+<span class="fc" id="L647">    }</span>
 
     /**
      * Constructor.
@@ -657,9 +662,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final Collection&lt;StandardDeviationFrameBodyKinematics&gt; measurements,
             final boolean commonAxisUsed, final AngularSpeed biasX,
             final AngularSpeed biasY, final AngularSpeed biasZ) {
-<span class="fc" id="L660">        this(commonAxisUsed, biasX, biasY, biasZ);</span>
-<span class="fc" id="L661">        mMeasurements = measurements;</span>
-<span class="fc" id="L662">    }</span>
+<span class="fc" id="L665">        this(commonAxisUsed, biasX, biasY, biasZ);</span>
+<span class="fc" id="L666">        mMeasurements = measurements;</span>
+<span class="fc" id="L667">    }</span>
 
     /**
      * Constructor.
@@ -679,9 +684,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final boolean commonAxisUsed, final AngularSpeed biasX,
             final AngularSpeed biasY, final AngularSpeed biasZ,
             final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L682">        this(measurements, commonAxisUsed, biasX, biasY, biasZ);</span>
-<span class="fc" id="L683">        mListener = listener;</span>
-<span class="fc" id="L684">    }</span>
+<span class="fc" id="L687">        this(measurements, commonAxisUsed, biasX, biasY, biasZ);</span>
+<span class="fc" id="L688">        mListener = listener;</span>
+<span class="fc" id="L689">    }</span>
 
     /**
      * Constructor.
@@ -699,13 +704,13 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
     public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final double biasX, final double biasY, final double biasZ,
             final double initialSx, final double initialSy, final double initialSz) {
-<span class="fc" id="L702">        this(biasX, biasY, biasZ);</span>
+<span class="fc" id="L707">        this(biasX, biasY, biasZ);</span>
         try {
-<span class="fc" id="L704">            setInitialScalingFactors(initialSx, initialSy, initialSz);</span>
-<span class="nc" id="L705">        } catch (final LockedException ignore) {</span>
+<span class="fc" id="L709">            setInitialScalingFactors(initialSx, initialSy, initialSz);</span>
+<span class="nc" id="L710">        } catch (final LockedException ignore) {</span>
             // never happens
-<span class="fc" id="L707">        }</span>
-<span class="fc" id="L708">    }</span>
+<span class="fc" id="L712">        }</span>
+<span class="fc" id="L713">    }</span>
 
     /**
      * Constructor.
@@ -727,9 +732,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final Collection&lt;StandardDeviationFrameBodyKinematics&gt; measurements,
             final double biasX, final double biasY, final double biasZ,
             final double initialSx, final double initialSy, final double initialSz) {
-<span class="fc" id="L730">        this(biasX, biasY, biasZ, initialSx, initialSy, initialSz);</span>
-<span class="fc" id="L731">        mMeasurements = measurements;</span>
-<span class="fc" id="L732">    }</span>
+<span class="fc" id="L735">        this(biasX, biasY, biasZ, initialSx, initialSy, initialSz);</span>
+<span class="fc" id="L736">        mMeasurements = measurements;</span>
+<span class="fc" id="L737">    }</span>
 
     /**
      * Constructor.
@@ -753,9 +758,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final double biasX, final double biasY, final double biasZ,
             final double initialSx, final double initialSy, final double initialSz,
             final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L756">        this(measurements, biasX, biasY, biasZ, initialSx, initialSy, initialSz);</span>
-<span class="fc" id="L757">        mListener = listener;</span>
-<span class="fc" id="L758">    }</span>
+<span class="fc" id="L761">        this(measurements, biasX, biasY, biasZ, initialSx, initialSy, initialSz);</span>
+<span class="fc" id="L762">        mListener = listener;</span>
+<span class="fc" id="L763">    }</span>
 
     /**
      * Constructor.
@@ -776,9 +781,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final boolean commonAxisUsed,
             final double biasX, final double biasY, final double biasZ,
             final double initialSx, final double initialSy, final double initialSz) {
-<span class="fc" id="L779">        this(biasX, biasY, biasZ, initialSx, initialSy, initialSz);</span>
-<span class="fc" id="L780">        mCommonAxisUsed = commonAxisUsed;</span>
-<span class="fc" id="L781">    }</span>
+<span class="fc" id="L784">        this(biasX, biasY, biasZ, initialSx, initialSy, initialSz);</span>
+<span class="fc" id="L785">        mCommonAxisUsed = commonAxisUsed;</span>
+<span class="fc" id="L786">    }</span>
 
     /**
      * Constructor.
@@ -801,9 +806,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final double biasZ, final double initialSx, final double initialSy,
             final double initialSz,
             final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L804">        this(commonAxisUsed, biasX, biasY, biasZ, initialSx, initialSy, initialSz);</span>
-<span class="fc" id="L805">        mListener = listener;</span>
-<span class="fc" id="L806">    }</span>
+<span class="fc" id="L809">        this(commonAxisUsed, biasX, biasY, biasZ, initialSx, initialSy, initialSz);</span>
+<span class="fc" id="L810">        mListener = listener;</span>
+<span class="fc" id="L811">    }</span>
 
     /**
      * Constructor.
@@ -828,9 +833,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final boolean commonAxisUsed,
             final double biasX, final double biasY, final double biasZ,
             final double initialSx, final double initialSy, final double initialSz) {
-<span class="fc" id="L831">        this(commonAxisUsed, biasX, biasY, biasZ, initialSx, initialSy, initialSz);</span>
-<span class="fc" id="L832">        mMeasurements = measurements;</span>
-<span class="fc" id="L833">    }</span>
+<span class="fc" id="L836">        this(commonAxisUsed, biasX, biasY, biasZ, initialSx, initialSy, initialSz);</span>
+<span class="fc" id="L837">        mMeasurements = measurements;</span>
+<span class="fc" id="L838">    }</span>
 
     /**
      * Constructor.
@@ -857,10 +862,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final double biasX, final double biasY, final double biasZ,
             final double initialSx, final double initialSy, final double initialSz,
             final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L860">        this(measurements, commonAxisUsed, biasX, biasY, biasZ,</span>
+<span class="fc" id="L865">        this(measurements, commonAxisUsed, biasX, biasY, biasZ,</span>
                 initialSx, initialSy, initialSz);
-<span class="fc" id="L862">        mListener = listener;</span>
-<span class="fc" id="L863">    }</span>
+<span class="fc" id="L867">        mListener = listener;</span>
+<span class="fc" id="L868">    }</span>
 
     /**
      * Constructor.
@@ -876,13 +881,13 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final AngularSpeed biasX, final AngularSpeed biasY,
             final AngularSpeed biasZ, final double initialSx, final double initialSy,
             final double initialSz) {
-<span class="fc" id="L879">        this(biasX, biasY, biasZ);</span>
+<span class="fc" id="L884">        this(biasX, biasY, biasZ);</span>
         try {
-<span class="fc" id="L881">            setInitialScalingFactors(initialSx, initialSy, initialSz);</span>
-<span class="nc" id="L882">        } catch (final LockedException ignore) {</span>
+<span class="fc" id="L886">            setInitialScalingFactors(initialSx, initialSy, initialSz);</span>
+<span class="nc" id="L887">        } catch (final LockedException ignore) {</span>
             // never happens
-<span class="fc" id="L884">        }</span>
-<span class="fc" id="L885">    }</span>
+<span class="fc" id="L889">        }</span>
+<span class="fc" id="L890">    }</span>
 
     /**
      * Constructor.
@@ -900,9 +905,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final AngularSpeed biasZ, final double initialSx, final double initialSy,
             final double initialSz,
             final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L903">        this(biasX, biasY, biasZ, initialSx, initialSy, initialSz);</span>
-<span class="fc" id="L904">        mListener = listener;</span>
-<span class="fc" id="L905">    }</span>
+<span class="fc" id="L908">        this(biasX, biasY, biasZ, initialSx, initialSy, initialSz);</span>
+<span class="fc" id="L909">        mListener = listener;</span>
+<span class="fc" id="L910">    }</span>
 
     /**
      * Constructor.
@@ -922,9 +927,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final AngularSpeed biasX, final AngularSpeed biasY,
             final AngularSpeed biasZ, final double initialSx, final double initialSy,
             final double initialSz) {
-<span class="fc" id="L925">        this(biasX, biasY, biasZ, initialSx, initialSy, initialSz);</span>
-<span class="fc" id="L926">        mMeasurements = measurements;</span>
-<span class="fc" id="L927">    }</span>
+<span class="fc" id="L930">        this(biasX, biasY, biasZ, initialSx, initialSy, initialSz);</span>
+<span class="fc" id="L931">        mMeasurements = measurements;</span>
+<span class="fc" id="L932">    }</span>
 
     /**
      * Constructor.
@@ -946,9 +951,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final AngularSpeed biasZ, final double initialSx, final double initialSy,
             final double initialSz,
             final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L949">        this(measurements, biasX, biasY, biasZ, initialSx, initialSy, initialSz);</span>
-<span class="fc" id="L950">        mListener = listener;</span>
-<span class="fc" id="L951">    }</span>
+<span class="fc" id="L954">        this(measurements, biasX, biasY, biasZ, initialSx, initialSy, initialSz);</span>
+<span class="fc" id="L955">        mListener = listener;</span>
+<span class="fc" id="L956">    }</span>
 
     /**
      * Constructor.
@@ -966,9 +971,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final boolean commonAxisUsed, final AngularSpeed biasX,
             final AngularSpeed biasY, final AngularSpeed biasZ, final double initialSx,
             final double initialSy, final double initialSz) {
-<span class="fc" id="L969">        this(biasX, biasY, biasZ, initialSx, initialSy, initialSz);</span>
-<span class="fc" id="L970">        mCommonAxisUsed = commonAxisUsed;</span>
-<span class="fc" id="L971">    }</span>
+<span class="fc" id="L974">        this(biasX, biasY, biasZ, initialSx, initialSy, initialSz);</span>
+<span class="fc" id="L975">        mCommonAxisUsed = commonAxisUsed;</span>
+<span class="fc" id="L976">    }</span>
 
     /**
      * Constructor.
@@ -988,9 +993,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final AngularSpeed biasY, final AngularSpeed biasZ,
             final double initialSx, final double initialSy, final double initialSz,
             final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L991">        this(commonAxisUsed, biasX, biasY, biasZ, initialSx, initialSy, initialSz);</span>
-<span class="fc" id="L992">        mListener = listener;</span>
-<span class="fc" id="L993">    }</span>
+<span class="fc" id="L996">        this(commonAxisUsed, biasX, biasY, biasZ, initialSx, initialSy, initialSz);</span>
+<span class="fc" id="L997">        mListener = listener;</span>
+<span class="fc" id="L998">    }</span>
 
     /**
      * Constructor.
@@ -1012,9 +1017,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final boolean commonAxisUsed, final AngularSpeed biasX,
             final AngularSpeed biasY, final AngularSpeed biasZ,
             final double initialSx, final double initialSy, final double initialSz) {
-<span class="fc" id="L1015">        this(commonAxisUsed, biasX, biasY, biasZ, initialSx, initialSy, initialSz);</span>
-<span class="fc" id="L1016">        mMeasurements = measurements;</span>
-<span class="fc" id="L1017">    }</span>
+<span class="fc" id="L1020">        this(commonAxisUsed, biasX, biasY, biasZ, initialSx, initialSy, initialSz);</span>
+<span class="fc" id="L1021">        mMeasurements = measurements;</span>
+<span class="fc" id="L1022">    }</span>
 
     /**
      * Constructor.
@@ -1038,10 +1043,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final AngularSpeed biasY, final AngularSpeed biasZ,
             final double initialSx, final double initialSy, final double initialSz,
             final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L1041">        this(measurements, commonAxisUsed, biasX, biasY, biasZ,</span>
+<span class="fc" id="L1046">        this(measurements, commonAxisUsed, biasX, biasY, biasZ,</span>
                 initialSx, initialSy, initialSz);
-<span class="fc" id="L1043">        mListener = listener;</span>
-<span class="fc" id="L1044">    }</span>
+<span class="fc" id="L1048">        mListener = listener;</span>
+<span class="fc" id="L1049">    }</span>
 
     /**
      * Constructor.
@@ -1068,14 +1073,14 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final double initialMxy, final double initialMxz,
             final double initialMyx, final double initialMyz,
             final double initialMzx, final double initialMzy) {
-<span class="fc" id="L1071">        this(biasX, biasY, biasZ);</span>
+<span class="fc" id="L1076">        this(biasX, biasY, biasZ);</span>
         try {
-<span class="fc" id="L1073">            setInitialScalingFactorsAndCrossCouplingErrors(initialSx, initialSy, initialSz,</span>
+<span class="fc" id="L1078">            setInitialScalingFactorsAndCrossCouplingErrors(initialSx, initialSy, initialSz,</span>
                     initialMxy, initialMxz, initialMyx, initialMyz, initialMzx, initialMzy);
-<span class="nc" id="L1075">        } catch (final LockedException ignore) {</span>
+<span class="nc" id="L1080">        } catch (final LockedException ignore) {</span>
             // never happens
-<span class="fc" id="L1077">        }</span>
-<span class="fc" id="L1078">    }</span>
+<span class="fc" id="L1082">        }</span>
+<span class="fc" id="L1083">    }</span>
 
     /**
      * Constructor.
@@ -1106,10 +1111,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final double initialMxy, final double initialMxz,
             final double initialMyx, final double initialMyz,
             final double initialMzx, final double initialMzy) {
-<span class="fc" id="L1109">        this(biasX, biasY, biasZ, initialSx, initialSy, initialSz,</span>
+<span class="fc" id="L1114">        this(biasX, biasY, biasZ, initialSx, initialSy, initialSz,</span>
                 initialMxy, initialMxz, initialMyx, initialMyz, initialMzx, initialMzy);
-<span class="fc" id="L1111">        mMeasurements = measurements;</span>
-<span class="fc" id="L1112">    }</span>
+<span class="fc" id="L1116">        mMeasurements = measurements;</span>
+<span class="fc" id="L1117">    }</span>
 
     /**
      * Constructor.
@@ -1142,11 +1147,11 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final double initialMyx, final double initialMyz,
             final double initialMzx, final double initialMzy,
             final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L1145">        this(measurements, biasX, biasY, biasZ, initialSx, initialSy, initialSz,</span>
+<span class="fc" id="L1150">        this(measurements, biasX, biasY, biasZ, initialSx, initialSy, initialSz,</span>
                 initialMxy, initialMxz, initialMyx, initialMyz,
                 initialMzx, initialMzy);
-<span class="fc" id="L1148">        mListener = listener;</span>
-<span class="fc" id="L1149">    }</span>
+<span class="fc" id="L1153">        mListener = listener;</span>
+<span class="fc" id="L1154">    }</span>
 
     /**
      * Constructor.
@@ -1176,11 +1181,11 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final double initialMxy, final double initialMxz,
             final double initialMyx, final double initialMyz,
             final double initialMzx, final double initialMzy) {
-<span class="fc" id="L1179">        this(biasX, biasY, biasZ, initialSx, initialSy, initialSz,</span>
+<span class="fc" id="L1184">        this(biasX, biasY, biasZ, initialSx, initialSy, initialSz,</span>
                 initialMxy, initialMxz, initialMyx, initialMyz,
                 initialMzx, initialMzy);
-<span class="fc" id="L1182">        mCommonAxisUsed = commonAxisUsed;</span>
-<span class="fc" id="L1183">    }</span>
+<span class="fc" id="L1187">        mCommonAxisUsed = commonAxisUsed;</span>
+<span class="fc" id="L1188">    }</span>
 
     /**
      * Constructor.
@@ -1212,11 +1217,11 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final double initialMyx, final double initialMyz,
             final double initialMzx, final double initialMzy,
             final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L1215">        this(commonAxisUsed, biasX, biasY, biasZ, initialSx, initialSy, initialSz,</span>
+<span class="fc" id="L1220">        this(commonAxisUsed, biasX, biasY, biasZ, initialSx, initialSy, initialSz,</span>
                 initialMxy, initialMxz, initialMyx, initialMyz,
                 initialMzx, initialMzy);
-<span class="fc" id="L1218">        mListener = listener;</span>
-<span class="fc" id="L1219">    }</span>
+<span class="fc" id="L1223">        mListener = listener;</span>
+<span class="fc" id="L1224">    }</span>
 
     /**
      * Constructor.
@@ -1250,11 +1255,11 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final double initialMxy, final double initialMxz,
             final double initialMyx, final double initialMyz,
             final double initialMzx, final double initialMzy) {
-<span class="fc" id="L1253">        this(commonAxisUsed, biasX, biasY, biasZ, initialSx, initialSy, initialSz,</span>
+<span class="fc" id="L1258">        this(commonAxisUsed, biasX, biasY, biasZ, initialSx, initialSy, initialSz,</span>
                 initialMxy, initialMxz, initialMyx, initialMyz,
                 initialMzx, initialMzy);
-<span class="fc" id="L1256">        mMeasurements = measurements;</span>
-<span class="fc" id="L1257">    }</span>
+<span class="fc" id="L1261">        mMeasurements = measurements;</span>
+<span class="fc" id="L1262">    }</span>
 
     /**
      * Constructor.
@@ -1290,11 +1295,11 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final double initialMyx, final double initialMyz,
             final double initialMzx, final double initialMzy,
             final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L1293">        this(measurements, commonAxisUsed, biasX, biasY, biasZ,</span>
+<span class="fc" id="L1298">        this(measurements, commonAxisUsed, biasX, biasY, biasZ,</span>
                 initialSx, initialSy, initialSz, initialMxy, initialMxz,
                 initialMyx, initialMyz, initialMzx, initialMzy);
-<span class="fc" id="L1296">        mListener = listener;</span>
-<span class="fc" id="L1297">    }</span>
+<span class="fc" id="L1301">        mListener = listener;</span>
+<span class="fc" id="L1302">    }</span>
 
     /**
      * Constructor.
@@ -1318,14 +1323,14 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final double initialMxy, final double initialMxz,
             final double initialMyx, final double initialMyz,
             final double initialMzx, final double initialMzy) {
-<span class="fc" id="L1321">        this(biasX, biasY, biasZ);</span>
+<span class="fc" id="L1326">        this(biasX, biasY, biasZ);</span>
         try {
-<span class="fc" id="L1323">            setInitialScalingFactorsAndCrossCouplingErrors(initialSx, initialSy, initialSz,</span>
+<span class="fc" id="L1328">            setInitialScalingFactorsAndCrossCouplingErrors(initialSx, initialSy, initialSz,</span>
                     initialMxy, initialMxz, initialMyx, initialMyz, initialMzx, initialMzy);
-<span class="nc" id="L1325">        } catch (final LockedException ignore) {</span>
+<span class="nc" id="L1330">        } catch (final LockedException ignore) {</span>
             // never happens
-<span class="fc" id="L1327">        }</span>
-<span class="fc" id="L1328">    }</span>
+<span class="fc" id="L1332">        }</span>
+<span class="fc" id="L1333">    }</span>
 
     /**
      * Constructor.
@@ -1351,10 +1356,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final double initialMyx, final double initialMyz,
             final double initialMzx, final double initialMzy,
             final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L1354">        this(biasX, biasY, biasZ, initialSx, initialSy, initialSz,</span>
+<span class="fc" id="L1359">        this(biasX, biasY, biasZ, initialSx, initialSy, initialSz,</span>
                 initialMxy, initialMxz, initialMyx, initialMyz, initialMzx, initialMzy);
-<span class="fc" id="L1356">        mListener = listener;</span>
-<span class="fc" id="L1357">    }</span>
+<span class="fc" id="L1361">        mListener = listener;</span>
+<span class="fc" id="L1362">    }</span>
 
     /**
      * Constructor.
@@ -1382,10 +1387,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final double initialMxy, final double initialMxz,
             final double initialMyx, final double initialMyz,
             final double initialMzx, final double initialMzy) {
-<span class="fc" id="L1385">        this(biasX, biasY, biasZ, initialSx, initialSy, initialSz,</span>
+<span class="fc" id="L1390">        this(biasX, biasY, biasZ, initialSx, initialSy, initialSz,</span>
                 initialMxy, initialMxz, initialMyx, initialMyz, initialMzx, initialMzy);
-<span class="fc" id="L1387">        mMeasurements = measurements;</span>
-<span class="fc" id="L1388">    }</span>
+<span class="fc" id="L1392">        mMeasurements = measurements;</span>
+<span class="fc" id="L1393">    }</span>
 
     /**
      * Constructor.
@@ -1415,10 +1420,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final double initialMyx, final double initialMyz,
             final double initialMzx, final double initialMzy,
             final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L1418">        this(measurements, biasX, biasY, biasZ, initialSx, initialSy, initialSz,</span>
+<span class="fc" id="L1423">        this(measurements, biasX, biasY, biasZ, initialSx, initialSy, initialSz,</span>
                 initialMxy, initialMxz, initialMyx, initialMyz, initialMzx, initialMzy);
-<span class="fc" id="L1420">        mListener = listener;</span>
-<span class="fc" id="L1421">    }</span>
+<span class="fc" id="L1425">        mListener = listener;</span>
+<span class="fc" id="L1426">    }</span>
 
     /**
      * Constructor.
@@ -1448,10 +1453,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final double initialMxy, final double initialMxz,
             final double initialMyx, final double initialMyz,
             final double initialMzx, final double initialMzy) {
-<span class="fc" id="L1451">        this(biasX, biasY, biasZ, initialSx, initialSy, initialSz,</span>
+<span class="fc" id="L1456">        this(biasX, biasY, biasZ, initialSx, initialSy, initialSz,</span>
                 initialMxy, initialMxz, initialMyx, initialMyz, initialMzx, initialMzy);
-<span class="fc" id="L1453">        mCommonAxisUsed = commonAxisUsed;</span>
-<span class="fc" id="L1454">    }</span>
+<span class="fc" id="L1458">        mCommonAxisUsed = commonAxisUsed;</span>
+<span class="fc" id="L1459">    }</span>
 
     /**
      * Constructor.
@@ -1483,10 +1488,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final double initialMyx, final double initialMyz,
             final double initialMzx, final double initialMzy,
             final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L1486">        this(commonAxisUsed, biasX, biasY, biasZ, initialSx, initialSy, initialSz,</span>
+<span class="fc" id="L1491">        this(commonAxisUsed, biasX, biasY, biasZ, initialSx, initialSy, initialSz,</span>
                 initialMxy, initialMxz, initialMyx, initialMyz, initialMzx, initialMzy);
-<span class="fc" id="L1488">        mListener = listener;</span>
-<span class="fc" id="L1489">    }</span>
+<span class="fc" id="L1493">        mListener = listener;</span>
+<span class="fc" id="L1494">    }</span>
 
     /**
      * Constructor.
@@ -1520,10 +1525,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final double initialMxy, final double initialMxz,
             final double initialMyx, final double initialMyz,
             final double initialMzx, final double initialMzy) {
-<span class="fc" id="L1523">        this(commonAxisUsed, biasX, biasY, biasZ, initialSx, initialSy, initialSz,</span>
+<span class="fc" id="L1528">        this(commonAxisUsed, biasX, biasY, biasZ, initialSx, initialSy, initialSz,</span>
                 initialMxy, initialMxz, initialMyx, initialMyz, initialMzx, initialMzy);
-<span class="fc" id="L1525">        mMeasurements = measurements;</span>
-<span class="fc" id="L1526">    }</span>
+<span class="fc" id="L1530">        mMeasurements = measurements;</span>
+<span class="fc" id="L1531">    }</span>
 
     /**
      * Constructor.
@@ -1559,11 +1564,11 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final double initialMyx, final double initialMyz,
             final double initialMzx, final double initialMzy,
             final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L1562">        this(measurements, commonAxisUsed, biasX, biasY, biasZ,</span>
+<span class="fc" id="L1567">        this(measurements, commonAxisUsed, biasX, biasY, biasZ,</span>
                 initialSx, initialSy, initialSz, initialMxy, initialMxz,
                 initialMyx, initialMyz, initialMzx, initialMzy);
-<span class="fc" id="L1565">        mListener = listener;</span>
-<span class="fc" id="L1566">    }</span>
+<span class="fc" id="L1570">        mListener = listener;</span>
+<span class="fc" id="L1571">    }</span>
 
     /**
      * Constructor.
@@ -1574,13 +1579,13 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final double[] bias) {
-<span class="fc" id="L1577">        this();</span>
+<span class="fc" id="L1582">        this();</span>
         try {
-<span class="fc" id="L1579">            setBias(bias);</span>
-<span class="nc" id="L1580">        } catch (final LockedException ignore) {</span>
+<span class="fc" id="L1584">            setBias(bias);</span>
+<span class="nc" id="L1585">        } catch (final LockedException ignore) {</span>
             // never happens
-<span class="fc" id="L1582">        }</span>
-<span class="fc" id="L1583">    }</span>
+<span class="fc" id="L1587">        }</span>
+<span class="fc" id="L1588">    }</span>
 
     /**
      * Constructor.
@@ -1593,9 +1598,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
     public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final double[] bias,
             final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L1596">        this(bias);</span>
-<span class="fc" id="L1597">        mListener = listener;</span>
-<span class="fc" id="L1598">    }</span>
+<span class="fc" id="L1601">        this(bias);</span>
+<span class="fc" id="L1602">        mListener = listener;</span>
+<span class="fc" id="L1603">    }</span>
 
     /**
      * Constructor.
@@ -1610,9 +1615,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
     public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection&lt;StandardDeviationFrameBodyKinematics&gt; measurements,
             final double[] bias) {
-<span class="fc" id="L1613">        this(bias);</span>
-<span class="fc" id="L1614">        mMeasurements = measurements;</span>
-<span class="fc" id="L1615">    }</span>
+<span class="fc" id="L1618">        this(bias);</span>
+<span class="fc" id="L1619">        mMeasurements = measurements;</span>
+<span class="fc" id="L1620">    }</span>
 
     /**
      * Constructor.
@@ -1629,9 +1634,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final Collection&lt;StandardDeviationFrameBodyKinematics&gt; measurements,
             final double[] bias,
             final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L1632">        this(measurements, bias);</span>
-<span class="fc" id="L1633">        mListener = listener;</span>
-<span class="fc" id="L1634">    }</span>
+<span class="fc" id="L1637">        this(measurements, bias);</span>
+<span class="fc" id="L1638">        mListener = listener;</span>
+<span class="fc" id="L1639">    }</span>
 
     /**
      * Constructor.
@@ -1644,9 +1649,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final boolean commonAxisUsed, final double[] bias) {
-<span class="fc" id="L1647">        this(bias);</span>
-<span class="fc" id="L1648">        mCommonAxisUsed = commonAxisUsed;</span>
-<span class="fc" id="L1649">    }</span>
+<span class="fc" id="L1652">        this(bias);</span>
+<span class="fc" id="L1653">        mCommonAxisUsed = commonAxisUsed;</span>
+<span class="fc" id="L1654">    }</span>
 
     /**
      * Constructor.
@@ -1661,9 +1666,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
     public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final boolean commonAxisUsed, final double[] bias,
             final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L1664">        this(commonAxisUsed, bias);</span>
-<span class="fc" id="L1665">        mListener = listener;</span>
-<span class="fc" id="L1666">    }</span>
+<span class="fc" id="L1669">        this(commonAxisUsed, bias);</span>
+<span class="fc" id="L1670">        mListener = listener;</span>
+<span class="fc" id="L1671">    }</span>
 
     /**
      * Constructor.
@@ -1680,9 +1685,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
     public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection&lt;StandardDeviationFrameBodyKinematics&gt; measurements,
             final boolean commonAxisUsed, final double[] bias) {
-<span class="fc" id="L1683">        this(commonAxisUsed, bias);</span>
-<span class="fc" id="L1684">        mMeasurements = measurements;</span>
-<span class="fc" id="L1685">    }</span>
+<span class="fc" id="L1688">        this(commonAxisUsed, bias);</span>
+<span class="fc" id="L1689">        mMeasurements = measurements;</span>
+<span class="fc" id="L1690">    }</span>
 
     /**
      * Constructor.
@@ -1701,9 +1706,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final Collection&lt;StandardDeviationFrameBodyKinematics&gt; measurements,
             final boolean commonAxisUsed, final double[] bias,
             final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L1704">        this(measurements, commonAxisUsed, bias);</span>
-<span class="fc" id="L1705">        mListener = listener;</span>
-<span class="fc" id="L1706">    }</span>
+<span class="fc" id="L1709">        this(measurements, commonAxisUsed, bias);</span>
+<span class="fc" id="L1710">        mListener = listener;</span>
+<span class="fc" id="L1711">    }</span>
 
     /**
      * Constructor.
@@ -1714,13 +1719,13 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Matrix bias) {
-<span class="fc" id="L1717">        this();</span>
+<span class="fc" id="L1722">        this();</span>
         try {
-<span class="fc" id="L1719">            setBias(bias);</span>
-<span class="nc" id="L1720">        } catch (final LockedException ignore) {</span>
+<span class="fc" id="L1724">            setBias(bias);</span>
+<span class="nc" id="L1725">        } catch (final LockedException ignore) {</span>
             // never happens
-<span class="fc" id="L1722">        }</span>
-<span class="fc" id="L1723">    }</span>
+<span class="fc" id="L1727">        }</span>
+<span class="fc" id="L1728">    }</span>
 
     /**
      * Constructor.
@@ -1733,9 +1738,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
     public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Matrix bias,
             final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L1736">        this(bias);</span>
-<span class="fc" id="L1737">        mListener = listener;</span>
-<span class="fc" id="L1738">    }</span>
+<span class="fc" id="L1741">        this(bias);</span>
+<span class="fc" id="L1742">        mListener = listener;</span>
+<span class="fc" id="L1743">    }</span>
 
     /**
      * Constructor.
@@ -1750,9 +1755,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
     public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection&lt;StandardDeviationFrameBodyKinematics&gt; measurements,
             final Matrix bias) {
-<span class="fc" id="L1753">        this(bias);</span>
-<span class="fc" id="L1754">        mMeasurements = measurements;</span>
-<span class="fc" id="L1755">    }</span>
+<span class="fc" id="L1758">        this(bias);</span>
+<span class="fc" id="L1759">        mMeasurements = measurements;</span>
+<span class="fc" id="L1760">    }</span>
 
     /**
      * Constructor.
@@ -1769,9 +1774,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final Collection&lt;StandardDeviationFrameBodyKinematics&gt; measurements,
             final Matrix bias,
             final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L1772">        this(measurements, bias);</span>
-<span class="fc" id="L1773">        mListener = listener;</span>
-<span class="fc" id="L1774">    }</span>
+<span class="fc" id="L1777">        this(measurements, bias);</span>
+<span class="fc" id="L1778">        mListener = listener;</span>
+<span class="fc" id="L1779">    }</span>
 
     /**
      * Constructor.
@@ -1784,9 +1789,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final boolean commonAxisUsed, final Matrix bias) {
-<span class="fc" id="L1787">        this(bias);</span>
-<span class="fc" id="L1788">        mCommonAxisUsed = commonAxisUsed;</span>
-<span class="fc" id="L1789">    }</span>
+<span class="fc" id="L1792">        this(bias);</span>
+<span class="fc" id="L1793">        mCommonAxisUsed = commonAxisUsed;</span>
+<span class="fc" id="L1794">    }</span>
 
     /**
      * Constructor.
@@ -1801,9 +1806,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
     public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final boolean commonAxisUsed, final Matrix bias,
             final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L1804">        this(commonAxisUsed, bias);</span>
-<span class="fc" id="L1805">        mListener = listener;</span>
-<span class="fc" id="L1806">    }</span>
+<span class="fc" id="L1809">        this(commonAxisUsed, bias);</span>
+<span class="fc" id="L1810">        mListener = listener;</span>
+<span class="fc" id="L1811">    }</span>
 
     /**
      * Constructor.
@@ -1820,9 +1825,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
     public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection&lt;StandardDeviationFrameBodyKinematics&gt; measurements,
             final boolean commonAxisUsed, final Matrix bias) {
-<span class="fc" id="L1823">        this(commonAxisUsed, bias);</span>
-<span class="fc" id="L1824">        mMeasurements = measurements;</span>
-<span class="fc" id="L1825">    }</span>
+<span class="fc" id="L1828">        this(commonAxisUsed, bias);</span>
+<span class="fc" id="L1829">        mMeasurements = measurements;</span>
+<span class="fc" id="L1830">    }</span>
 
     /**
      * Constructor.
@@ -1841,9 +1846,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final Collection&lt;StandardDeviationFrameBodyKinematics&gt; measurements,
             final boolean commonAxisUsed, final Matrix bias,
             final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L1844">        this(measurements, commonAxisUsed, bias);</span>
-<span class="fc" id="L1845">        mListener = listener;</span>
-<span class="fc" id="L1846">    }</span>
+<span class="fc" id="L1849">        this(measurements, commonAxisUsed, bias);</span>
+<span class="fc" id="L1850">        mListener = listener;</span>
+<span class="fc" id="L1851">    }</span>
 
     /**
      * Constructor.
@@ -1856,13 +1861,13 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Matrix bias, final Matrix initialMg) {
-<span class="fc" id="L1859">        this(bias);</span>
+<span class="fc" id="L1864">        this(bias);</span>
         try {
-<span class="fc" id="L1861">            setInitialMg(initialMg);</span>
-<span class="nc" id="L1862">        } catch (final LockedException ignore) {</span>
+<span class="fc" id="L1866">            setInitialMg(initialMg);</span>
+<span class="nc" id="L1867">        } catch (final LockedException ignore) {</span>
             // never happens
-<span class="fc" id="L1864">        }</span>
-<span class="fc" id="L1865">    }</span>
+<span class="fc" id="L1869">        }</span>
+<span class="fc" id="L1870">    }</span>
 
     /**
      * Constructor.
@@ -1877,9 +1882,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
     public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Matrix bias, final Matrix initialMg,
             final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L1880">        this(bias, initialMg);</span>
-<span class="fc" id="L1881">        mListener = listener;</span>
-<span class="fc" id="L1882">    }</span>
+<span class="fc" id="L1885">        this(bias, initialMg);</span>
+<span class="fc" id="L1886">        mListener = listener;</span>
+<span class="fc" id="L1887">    }</span>
 
     /**
      * Constructor.
@@ -1896,9 +1901,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
     public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection&lt;StandardDeviationFrameBodyKinematics&gt; measurements,
             final Matrix bias, final Matrix initialMg) {
-<span class="fc" id="L1899">        this(bias, initialMg);</span>
-<span class="fc" id="L1900">        mMeasurements = measurements;</span>
-<span class="fc" id="L1901">    }</span>
+<span class="fc" id="L1904">        this(bias, initialMg);</span>
+<span class="fc" id="L1905">        mMeasurements = measurements;</span>
+<span class="fc" id="L1906">    }</span>
 
     /**
      * Constructor.
@@ -1917,9 +1922,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final Collection&lt;StandardDeviationFrameBodyKinematics&gt; measurements,
             final Matrix bias, final Matrix initialMg,
             final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L1920">        this(measurements, bias, initialMg);</span>
-<span class="fc" id="L1921">        mListener = listener;</span>
-<span class="fc" id="L1922">    }</span>
+<span class="fc" id="L1925">        this(measurements, bias, initialMg);</span>
+<span class="fc" id="L1926">        mListener = listener;</span>
+<span class="fc" id="L1927">    }</span>
 
     /**
      * Constructor.
@@ -1935,9 +1940,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
     public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final boolean commonAxisUsed, final Matrix bias,
             final Matrix initialMg) {
-<span class="fc" id="L1938">        this(bias, initialMg);</span>
-<span class="fc" id="L1939">        mCommonAxisUsed = commonAxisUsed;</span>
-<span class="fc" id="L1940">    }</span>
+<span class="fc" id="L1943">        this(bias, initialMg);</span>
+<span class="fc" id="L1944">        mCommonAxisUsed = commonAxisUsed;</span>
+<span class="fc" id="L1945">    }</span>
 
     /**
      * Constructor.
@@ -1955,9 +1960,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final boolean commonAxisUsed, final Matrix bias,
             final Matrix initialMg,
             final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L1958">        this(commonAxisUsed, bias, initialMg);</span>
-<span class="fc" id="L1959">        mListener = listener;</span>
-<span class="fc" id="L1960">    }</span>
+<span class="fc" id="L1963">        this(commonAxisUsed, bias, initialMg);</span>
+<span class="fc" id="L1964">        mListener = listener;</span>
+<span class="fc" id="L1965">    }</span>
 
     /**
      * Constructor.
@@ -1977,9 +1982,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final Collection&lt;StandardDeviationFrameBodyKinematics&gt; measurements,
             final boolean commonAxisUsed, final Matrix bias,
             final Matrix initialMg) {
-<span class="fc" id="L1980">        this(commonAxisUsed, bias, initialMg);</span>
-<span class="fc" id="L1981">        mMeasurements = measurements;</span>
-<span class="fc" id="L1982">    }</span>
+<span class="fc" id="L1985">        this(commonAxisUsed, bias, initialMg);</span>
+<span class="fc" id="L1986">        mMeasurements = measurements;</span>
+<span class="fc" id="L1987">    }</span>
 
     /**
      * Constructor.
@@ -2001,9 +2006,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final boolean commonAxisUsed, final Matrix bias,
             final Matrix initialMg,
             final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L2004">        this(measurements, commonAxisUsed, bias, initialMg);</span>
-<span class="fc" id="L2005">        mListener = listener;</span>
-<span class="fc" id="L2006">    }</span>
+<span class="fc" id="L2009">        this(measurements, commonAxisUsed, bias, initialMg);</span>
+<span class="fc" id="L2010">        mListener = listener;</span>
+<span class="fc" id="L2011">    }</span>
 
     /**
      * Constructor.
@@ -2019,13 +2024,13 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
     public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Matrix bias, final Matrix initialMg,
             final Matrix initialGg) {
-<span class="fc" id="L2022">        this(bias, initialMg);</span>
+<span class="fc" id="L2027">        this(bias, initialMg);</span>
         try {
-<span class="fc" id="L2024">            setInitialGg(initialGg);</span>
-<span class="nc" id="L2025">        } catch (final LockedException ignore) {</span>
+<span class="fc" id="L2029">            setInitialGg(initialGg);</span>
+<span class="nc" id="L2030">        } catch (final LockedException ignore) {</span>
             // never happens
-<span class="fc" id="L2027">        }</span>
-<span class="fc" id="L2028">    }</span>
+<span class="fc" id="L2032">        }</span>
+<span class="fc" id="L2033">    }</span>
 
     /**
      * Constructor.
@@ -2043,9 +2048,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final Matrix bias, final Matrix initialMg,
             final Matrix initialGg,
             final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L2046">        this(bias, initialMg, initialGg);</span>
-<span class="fc" id="L2047">        mListener = listener;</span>
-<span class="fc" id="L2048">    }</span>
+<span class="fc" id="L2051">        this(bias, initialMg, initialGg);</span>
+<span class="fc" id="L2052">        mListener = listener;</span>
+<span class="fc" id="L2053">    }</span>
 
     /**
      * Constructor.
@@ -2065,9 +2070,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final Collection&lt;StandardDeviationFrameBodyKinematics&gt; measurements,
             final Matrix bias, final Matrix initialMg,
             final Matrix initialGg) {
-<span class="fc" id="L2068">        this(bias, initialMg, initialGg);</span>
-<span class="fc" id="L2069">        mMeasurements = measurements;</span>
-<span class="fc" id="L2070">    }</span>
+<span class="fc" id="L2073">        this(bias, initialMg, initialGg);</span>
+<span class="fc" id="L2074">        mMeasurements = measurements;</span>
+<span class="fc" id="L2075">    }</span>
 
     /**
      * Constructor.
@@ -2089,9 +2094,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final Matrix bias, final Matrix initialMg,
             final Matrix initialGg,
             final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L2092">        this(measurements, bias, initialMg, initialGg);</span>
-<span class="fc" id="L2093">        mListener = listener;</span>
-<span class="fc" id="L2094">    }</span>
+<span class="fc" id="L2097">        this(measurements, bias, initialMg, initialGg);</span>
+<span class="fc" id="L2098">        mListener = listener;</span>
+<span class="fc" id="L2099">    }</span>
 
     /**
      * Constructor.
@@ -2109,9 +2114,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
     public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final boolean commonAxisUsed, final Matrix bias, final Matrix initialMg,
             final Matrix initialGg) {
-<span class="fc" id="L2112">        this(bias, initialMg, initialGg);</span>
-<span class="fc" id="L2113">        mCommonAxisUsed = commonAxisUsed;</span>
-<span class="fc" id="L2114">    }</span>
+<span class="fc" id="L2117">        this(bias, initialMg, initialGg);</span>
+<span class="fc" id="L2118">        mCommonAxisUsed = commonAxisUsed;</span>
+<span class="fc" id="L2119">    }</span>
 
     /**
      * Constructor.
@@ -2131,9 +2136,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final boolean commonAxisUsed, final Matrix bias, final Matrix initialMg,
             final Matrix initialGg,
             final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L2134">        this(commonAxisUsed, bias, initialMg, initialGg);</span>
-<span class="fc" id="L2135">        mListener = listener;</span>
-<span class="fc" id="L2136">    }</span>
+<span class="fc" id="L2139">        this(commonAxisUsed, bias, initialMg, initialGg);</span>
+<span class="fc" id="L2140">        mListener = listener;</span>
+<span class="fc" id="L2141">    }</span>
 
     /**
      * Constructor.
@@ -2155,9 +2160,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final Collection&lt;StandardDeviationFrameBodyKinematics&gt; measurements,
             final boolean commonAxisUsed, final Matrix bias, final Matrix initialMg,
             final Matrix initialGg) {
-<span class="fc" id="L2158">        this(commonAxisUsed, bias, initialMg, initialGg);</span>
-<span class="fc" id="L2159">        mMeasurements = measurements;</span>
-<span class="fc" id="L2160">    }</span>
+<span class="fc" id="L2163">        this(commonAxisUsed, bias, initialMg, initialGg);</span>
+<span class="fc" id="L2164">        mMeasurements = measurements;</span>
+<span class="fc" id="L2165">    }</span>
 
     /**
      * Constructor.
@@ -2181,9 +2186,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final boolean commonAxisUsed, final Matrix bias,
             final Matrix initialMg, final Matrix initialGg,
             final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-<span class="fc" id="L2184">        this(measurements, commonAxisUsed, bias, initialMg, initialGg);</span>
-<span class="fc" id="L2185">        mListener = listener;</span>
-<span class="fc" id="L2186">    }</span>
+<span class="fc" id="L2189">        this(measurements, commonAxisUsed, bias, initialMg, initialGg);</span>
+<span class="fc" id="L2190">        mListener = listener;</span>
+<span class="fc" id="L2191">    }</span>
 
     /**
      * Gets initial x scaling factor.
@@ -2192,7 +2197,7 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public double getInitialSx() {
-<span class="fc" id="L2195">        return mInitialSx;</span>
+<span class="fc" id="L2200">        return mInitialSx;</span>
     }
 
     /**
@@ -2203,11 +2208,11 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public void setInitialSx(final double initialSx) throws LockedException {
-<span class="fc bfc" id="L2206" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L2207">            throw new LockedException();</span>
+<span class="fc bfc" id="L2211" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L2212">            throw new LockedException();</span>
         }
-<span class="fc" id="L2209">        mInitialSx = initialSx;</span>
-<span class="fc" id="L2210">    }</span>
+<span class="fc" id="L2214">        mInitialSx = initialSx;</span>
+<span class="fc" id="L2215">    }</span>
 
     /**
      * Gets initial y scaling factor.
@@ -2216,7 +2221,7 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public double getInitialSy() {
-<span class="fc" id="L2219">        return mInitialSy;</span>
+<span class="fc" id="L2224">        return mInitialSy;</span>
     }
 
     /**
@@ -2227,11 +2232,11 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public void setInitialSy(final double initialSy) throws LockedException {
-<span class="fc bfc" id="L2230" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L2231">            throw new LockedException();</span>
+<span class="fc bfc" id="L2235" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L2236">            throw new LockedException();</span>
         }
-<span class="fc" id="L2233">        mInitialSy = initialSy;</span>
-<span class="fc" id="L2234">    }</span>
+<span class="fc" id="L2238">        mInitialSy = initialSy;</span>
+<span class="fc" id="L2239">    }</span>
 
     /**
      * Gets initial z scaling factor.
@@ -2240,7 +2245,7 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public double getInitialSz() {
-<span class="fc" id="L2243">        return mInitialSz;</span>
+<span class="fc" id="L2248">        return mInitialSz;</span>
     }
 
     /**
@@ -2251,11 +2256,11 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public void setInitialSz(final double initialSz) throws LockedException {
-<span class="fc bfc" id="L2254" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L2255">            throw new LockedException();</span>
+<span class="fc bfc" id="L2259" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L2260">            throw new LockedException();</span>
         }
-<span class="fc" id="L2257">        mInitialSz = initialSz;</span>
-<span class="fc" id="L2258">    }</span>
+<span class="fc" id="L2262">        mInitialSz = initialSz;</span>
+<span class="fc" id="L2263">    }</span>
 
     /**
      * Gets initial x-y cross coupling error.
@@ -2264,7 +2269,7 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public double getInitialMxy() {
-<span class="fc" id="L2267">        return mInitialMxy;</span>
+<span class="fc" id="L2272">        return mInitialMxy;</span>
     }
 
     /**
@@ -2275,11 +2280,11 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public void setInitialMxy(final double initialMxy) throws LockedException {
-<span class="fc bfc" id="L2278" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L2279">            throw new LockedException();</span>
+<span class="fc bfc" id="L2283" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L2284">            throw new LockedException();</span>
         }
-<span class="fc" id="L2281">        mInitialMxy = initialMxy;</span>
-<span class="fc" id="L2282">    }</span>
+<span class="fc" id="L2286">        mInitialMxy = initialMxy;</span>
+<span class="fc" id="L2287">    }</span>
 
     /**
      * Gets initial x-z cross coupling error.
@@ -2288,7 +2293,7 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public double getInitialMxz() {
-<span class="fc" id="L2291">        return mInitialMxz;</span>
+<span class="fc" id="L2296">        return mInitialMxz;</span>
     }
 
     /**
@@ -2299,11 +2304,11 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public void setInitialMxz(final double initialMxz) throws LockedException {
-<span class="fc bfc" id="L2302" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L2303">            throw new LockedException();</span>
+<span class="fc bfc" id="L2307" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L2308">            throw new LockedException();</span>
         }
-<span class="fc" id="L2305">        mInitialMxz = initialMxz;</span>
-<span class="fc" id="L2306">    }</span>
+<span class="fc" id="L2310">        mInitialMxz = initialMxz;</span>
+<span class="fc" id="L2311">    }</span>
 
     /**
      * Gets initial y-x cross coupling error.
@@ -2312,7 +2317,7 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public double getInitialMyx() {
-<span class="fc" id="L2315">        return mInitialMyx;</span>
+<span class="fc" id="L2320">        return mInitialMyx;</span>
     }
 
     /**
@@ -2323,11 +2328,11 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public void setInitialMyx(final double initialMyx) throws LockedException {
-<span class="fc bfc" id="L2326" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L2327">            throw new LockedException();</span>
+<span class="fc bfc" id="L2331" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L2332">            throw new LockedException();</span>
         }
-<span class="fc" id="L2329">        mInitialMyx = initialMyx;</span>
-<span class="fc" id="L2330">    }</span>
+<span class="fc" id="L2334">        mInitialMyx = initialMyx;</span>
+<span class="fc" id="L2335">    }</span>
 
     /**
      * Gets initial y-z cross coupling error.
@@ -2336,7 +2341,7 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public double getInitialMyz() {
-<span class="fc" id="L2339">        return mInitialMyz;</span>
+<span class="fc" id="L2344">        return mInitialMyz;</span>
     }
 
     /**
@@ -2347,11 +2352,11 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public void setInitialMyz(final double initialMyz) throws LockedException {
-<span class="fc bfc" id="L2350" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L2351">            throw new LockedException();</span>
+<span class="fc bfc" id="L2355" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L2356">            throw new LockedException();</span>
         }
-<span class="fc" id="L2353">        mInitialMyz = initialMyz;</span>
-<span class="fc" id="L2354">    }</span>
+<span class="fc" id="L2358">        mInitialMyz = initialMyz;</span>
+<span class="fc" id="L2359">    }</span>
 
     /**
      * Gets initial z-x cross coupling error.
@@ -2360,7 +2365,7 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public double getInitialMzx() {
-<span class="fc" id="L2363">        return mInitialMzx;</span>
+<span class="fc" id="L2368">        return mInitialMzx;</span>
     }
 
     /**
@@ -2371,11 +2376,11 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public void setInitialMzx(final double initialMzx) throws LockedException {
-<span class="fc bfc" id="L2374" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L2375">            throw new LockedException();</span>
+<span class="fc bfc" id="L2379" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L2380">            throw new LockedException();</span>
         }
-<span class="fc" id="L2377">        mInitialMzx = initialMzx;</span>
-<span class="fc" id="L2378">    }</span>
+<span class="fc" id="L2382">        mInitialMzx = initialMzx;</span>
+<span class="fc" id="L2383">    }</span>
 
     /**
      * Gets initial z-y cross coupling error.
@@ -2384,7 +2389,7 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public double getInitialMzy() {
-<span class="fc" id="L2387">        return mInitialMzy;</span>
+<span class="fc" id="L2392">        return mInitialMzy;</span>
     }
 
     /**
@@ -2395,11 +2400,11 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public void setInitialMzy(final double initialMzy) throws LockedException {
-<span class="fc bfc" id="L2398" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L2399">            throw new LockedException();</span>
+<span class="fc bfc" id="L2403" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L2404">            throw new LockedException();</span>
         }
-<span class="fc" id="L2401">        mInitialMzy = initialMzy;</span>
-<span class="fc" id="L2402">    }</span>
+<span class="fc" id="L2406">        mInitialMzy = initialMzy;</span>
+<span class="fc" id="L2407">    }</span>
 
     /**
      * Sets initial scaling factors.
@@ -2413,13 +2418,13 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
     public void setInitialScalingFactors(
             final double initialSx, final double initialSy, final double initialSz)
             throws LockedException {
-<span class="fc bfc" id="L2416" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L2417">            throw new LockedException();</span>
+<span class="fc bfc" id="L2421" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L2422">            throw new LockedException();</span>
         }
-<span class="fc" id="L2419">        mInitialSx = initialSx;</span>
-<span class="fc" id="L2420">        mInitialSy = initialSy;</span>
-<span class="fc" id="L2421">        mInitialSz = initialSz;</span>
-<span class="fc" id="L2422">    }</span>
+<span class="fc" id="L2424">        mInitialSx = initialSx;</span>
+<span class="fc" id="L2425">        mInitialSy = initialSy;</span>
+<span class="fc" id="L2426">        mInitialSz = initialSz;</span>
+<span class="fc" id="L2427">    }</span>
 
     /**
      * Sets initial cross coupling errors.
@@ -2437,16 +2442,16 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final double initialMxy, final double initialMxz,
             final double initialMyx, final double initialMyz,
             final double initialMzx, final double initialMzy) throws LockedException {
-<span class="fc bfc" id="L2440" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L2441">            throw new LockedException();</span>
+<span class="fc bfc" id="L2445" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L2446">            throw new LockedException();</span>
         }
-<span class="fc" id="L2443">        mInitialMxy = initialMxy;</span>
-<span class="fc" id="L2444">        mInitialMxz = initialMxz;</span>
-<span class="fc" id="L2445">        mInitialMyx = initialMyx;</span>
-<span class="fc" id="L2446">        mInitialMyz = initialMyz;</span>
-<span class="fc" id="L2447">        mInitialMzx = initialMzx;</span>
-<span class="fc" id="L2448">        mInitialMzy = initialMzy;</span>
-<span class="fc" id="L2449">    }</span>
+<span class="fc" id="L2448">        mInitialMxy = initialMxy;</span>
+<span class="fc" id="L2449">        mInitialMxz = initialMxz;</span>
+<span class="fc" id="L2450">        mInitialMyx = initialMyx;</span>
+<span class="fc" id="L2451">        mInitialMyz = initialMyz;</span>
+<span class="fc" id="L2452">        mInitialMzx = initialMzx;</span>
+<span class="fc" id="L2453">        mInitialMzy = initialMzy;</span>
+<span class="fc" id="L2454">    }</span>
 
     /**
      * Sets initial scaling factors and cross coupling errors.
@@ -2468,13 +2473,13 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
             final double initialMxy, final double initialMxz,
             final double initialMyx, final double initialMyz,
             final double initialMzx, final double initialMzy) throws LockedException {
-<span class="fc bfc" id="L2471" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L2472">            throw new LockedException();</span>
+<span class="fc bfc" id="L2476" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L2477">            throw new LockedException();</span>
         }
-<span class="fc" id="L2474">        setInitialScalingFactors(initialSx, initialSy, initialSz);</span>
-<span class="fc" id="L2475">        setInitialCrossCouplingErrors(initialMxy, initialMxz, initialMyx,</span>
+<span class="fc" id="L2479">        setInitialScalingFactors(initialSx, initialSy, initialSz);</span>
+<span class="fc" id="L2480">        setInitialCrossCouplingErrors(initialMxy, initialMxz, initialMyx,</span>
                 initialMyz, initialMzx, initialMzy);
-<span class="fc" id="L2477">    }</span>
+<span class="fc" id="L2482">    }</span>
 
     /**
      * Gets initial scale factors and cross coupling errors matrix.
@@ -2485,14 +2490,14 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
     public Matrix getInitialMg() {
         Matrix result;
         try {
-<span class="fc" id="L2488">            result = new Matrix(BodyKinematics.COMPONENTS,</span>
+<span class="fc" id="L2493">            result = new Matrix(BodyKinematics.COMPONENTS,</span>
                     BodyKinematics.COMPONENTS);
-<span class="fc" id="L2490">            getInitialMg(result);</span>
-<span class="nc" id="L2491">        } catch (final WrongSizeException ignore) {</span>
+<span class="fc" id="L2495">            getInitialMg(result);</span>
+<span class="nc" id="L2496">        } catch (final WrongSizeException ignore) {</span>
             // never happens
-<span class="nc" id="L2493">            result = null;</span>
-<span class="fc" id="L2494">        }</span>
-<span class="fc" id="L2495">        return result;</span>
+<span class="nc" id="L2498">            result = null;</span>
+<span class="fc" id="L2499">        }</span>
+<span class="fc" id="L2500">        return result;</span>
     }
 
     /**
@@ -2503,22 +2508,22 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public void getInitialMg(final Matrix result) {
-<span class="fc bfc" id="L2506" title="All 2 branches covered.">        if (result.getRows() != BodyKinematics.COMPONENTS ||</span>
-<span class="fc bfc" id="L2507" title="All 2 branches covered.">                result.getColumns() != BodyKinematics.COMPONENTS) {</span>
-<span class="fc" id="L2508">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L2511" title="All 2 branches covered.">        if (result.getRows() != BodyKinematics.COMPONENTS ||</span>
+<span class="fc bfc" id="L2512" title="All 2 branches covered.">                result.getColumns() != BodyKinematics.COMPONENTS) {</span>
+<span class="fc" id="L2513">            throw new IllegalArgumentException();</span>
         }
-<span class="fc" id="L2510">        result.setElementAtIndex(0, mInitialSx);</span>
-<span class="fc" id="L2511">        result.setElementAtIndex(1, mInitialMyx);</span>
-<span class="fc" id="L2512">        result.setElementAtIndex(2, mInitialMzx);</span>
+<span class="fc" id="L2515">        result.setElementAtIndex(0, mInitialSx);</span>
+<span class="fc" id="L2516">        result.setElementAtIndex(1, mInitialMyx);</span>
+<span class="fc" id="L2517">        result.setElementAtIndex(2, mInitialMzx);</span>
 
-<span class="fc" id="L2514">        result.setElementAtIndex(3, mInitialMxy);</span>
-<span class="fc" id="L2515">        result.setElementAtIndex(4, mInitialSy);</span>
-<span class="fc" id="L2516">        result.setElementAtIndex(5, mInitialMzy);</span>
+<span class="fc" id="L2519">        result.setElementAtIndex(3, mInitialMxy);</span>
+<span class="fc" id="L2520">        result.setElementAtIndex(4, mInitialSy);</span>
+<span class="fc" id="L2521">        result.setElementAtIndex(5, mInitialMzy);</span>
 
-<span class="fc" id="L2518">        result.setElementAtIndex(6, mInitialMxz);</span>
-<span class="fc" id="L2519">        result.setElementAtIndex(7, mInitialMyz);</span>
-<span class="fc" id="L2520">        result.setElementAtIndex(8, mInitialSz);</span>
-<span class="fc" id="L2521">    }</span>
+<span class="fc" id="L2523">        result.setElementAtIndex(6, mInitialMxz);</span>
+<span class="fc" id="L2524">        result.setElementAtIndex(7, mInitialMyz);</span>
+<span class="fc" id="L2525">        result.setElementAtIndex(8, mInitialSz);</span>
+<span class="fc" id="L2526">    }</span>
 
     /**
      * Sets initial scale factors and cross coupling errors matrix.
@@ -2529,26 +2534,26 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public void setInitialMg(final Matrix initialMg) throws LockedException {
-<span class="fc bfc" id="L2532" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L2533">            throw new LockedException();</span>
+<span class="fc bfc" id="L2537" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L2538">            throw new LockedException();</span>
         }
-<span class="fc bfc" id="L2535" title="All 2 branches covered.">        if (initialMg.getRows() != BodyKinematics.COMPONENTS ||</span>
-<span class="fc bfc" id="L2536" title="All 2 branches covered.">                initialMg.getColumns() != BodyKinematics.COMPONENTS) {</span>
-<span class="fc" id="L2537">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L2540" title="All 2 branches covered.">        if (initialMg.getRows() != BodyKinematics.COMPONENTS ||</span>
+<span class="fc bfc" id="L2541" title="All 2 branches covered.">                initialMg.getColumns() != BodyKinematics.COMPONENTS) {</span>
+<span class="fc" id="L2542">            throw new IllegalArgumentException();</span>
         }
 
-<span class="fc" id="L2540">        mInitialSx = initialMg.getElementAtIndex(0);</span>
-<span class="fc" id="L2541">        mInitialMyx = initialMg.getElementAtIndex(1);</span>
-<span class="fc" id="L2542">        mInitialMzx = initialMg.getElementAtIndex(2);</span>
+<span class="fc" id="L2545">        mInitialSx = initialMg.getElementAtIndex(0);</span>
+<span class="fc" id="L2546">        mInitialMyx = initialMg.getElementAtIndex(1);</span>
+<span class="fc" id="L2547">        mInitialMzx = initialMg.getElementAtIndex(2);</span>
 
-<span class="fc" id="L2544">        mInitialMxy = initialMg.getElementAtIndex(3);</span>
-<span class="fc" id="L2545">        mInitialSy = initialMg.getElementAtIndex(4);</span>
-<span class="fc" id="L2546">        mInitialMzy = initialMg.getElementAtIndex(5);</span>
+<span class="fc" id="L2549">        mInitialMxy = initialMg.getElementAtIndex(3);</span>
+<span class="fc" id="L2550">        mInitialSy = initialMg.getElementAtIndex(4);</span>
+<span class="fc" id="L2551">        mInitialMzy = initialMg.getElementAtIndex(5);</span>
 
-<span class="fc" id="L2548">        mInitialMxz = initialMg.getElementAtIndex(6);</span>
-<span class="fc" id="L2549">        mInitialMyz = initialMg.getElementAtIndex(7);</span>
-<span class="fc" id="L2550">        mInitialSz = initialMg.getElementAtIndex(8);</span>
-<span class="fc" id="L2551">    }</span>
+<span class="fc" id="L2553">        mInitialMxz = initialMg.getElementAtIndex(6);</span>
+<span class="fc" id="L2554">        mInitialMyz = initialMg.getElementAtIndex(7);</span>
+<span class="fc" id="L2555">        mInitialSz = initialMg.getElementAtIndex(8);</span>
+<span class="fc" id="L2556">    }</span>
 
     /**
      * Gets initial G-dependent cross biases introduced on the gyroscope by the
@@ -2558,7 +2563,7 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public Matrix getInitialGg() {
-<span class="fc" id="L2561">        return new Matrix(mInitialGg);</span>
+<span class="fc" id="L2566">        return new Matrix(mInitialGg);</span>
     }
 
     /**
@@ -2571,13 +2576,13 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
     @Override
     public void getInitialGg(final Matrix result) {
 
-<span class="fc bfc" id="L2574" title="All 2 branches covered.">        if (result.getRows() != BodyKinematics.COMPONENTS</span>
-<span class="fc bfc" id="L2575" title="All 2 branches covered.">                || result.getColumns() != BodyKinematics.COMPONENTS) {</span>
-<span class="fc" id="L2576">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L2579" title="All 2 branches covered.">        if (result.getRows() != BodyKinematics.COMPONENTS</span>
+<span class="fc bfc" id="L2580" title="All 2 branches covered.">                || result.getColumns() != BodyKinematics.COMPONENTS) {</span>
+<span class="fc" id="L2581">            throw new IllegalArgumentException();</span>
         }
 
-<span class="fc" id="L2579">        result.copyFrom(mInitialGg);</span>
-<span class="fc" id="L2580">    }</span>
+<span class="fc" id="L2584">        result.copyFrom(mInitialGg);</span>
+<span class="fc" id="L2585">    }</span>
 
     /**
      * Sets initial G-dependent cross biases introduced on the gyroscope by the
@@ -2589,17 +2594,17 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public void setInitialGg(final Matrix initialGg) throws LockedException {
-<span class="fc bfc" id="L2592" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L2593">            throw new LockedException();</span>
+<span class="fc bfc" id="L2597" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L2598">            throw new LockedException();</span>
         }
 
-<span class="fc bfc" id="L2596" title="All 2 branches covered.">        if (initialGg.getRows() != BodyKinematics.COMPONENTS</span>
-<span class="fc bfc" id="L2597" title="All 2 branches covered.">                || initialGg.getColumns() != BodyKinematics.COMPONENTS) {</span>
-<span class="fc" id="L2598">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L2601" title="All 2 branches covered.">        if (initialGg.getRows() != BodyKinematics.COMPONENTS</span>
+<span class="fc bfc" id="L2602" title="All 2 branches covered.">                || initialGg.getColumns() != BodyKinematics.COMPONENTS) {</span>
+<span class="fc" id="L2603">            throw new IllegalArgumentException();</span>
         }
 
-<span class="fc" id="L2601">        initialGg.copyTo(mInitialGg);</span>
-<span class="fc" id="L2602">    }</span>
+<span class="fc" id="L2606">        initialGg.copyTo(mInitialGg);</span>
+<span class="fc" id="L2607">    }</span>
 
     /**
      * Gets a collection of body kinematics measurements taken at different
@@ -2619,7 +2624,7 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public Collection&lt;? extends StandardDeviationFrameBodyKinematics&gt; getMeasurements() {
-<span class="fc" id="L2622">        return mMeasurements;</span>
+<span class="fc" id="L2627">        return mMeasurements;</span>
     }
 
     /**
@@ -2643,11 +2648,11 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
     public void setMeasurements(
             final Collection&lt;? extends StandardDeviationFrameBodyKinematics&gt; measurements)
             throws LockedException {
-<span class="fc bfc" id="L2646" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L2647">            throw new LockedException();</span>
+<span class="fc bfc" id="L2651" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L2652">            throw new LockedException();</span>
         }
-<span class="fc" id="L2649">        mMeasurements = measurements;</span>
-<span class="fc" id="L2650">    }</span>
+<span class="fc" id="L2654">        mMeasurements = measurements;</span>
+<span class="fc" id="L2655">    }</span>
 
     /**
      * Indicates whether z-axis is assumed to be common for accelerometer and
@@ -2659,7 +2664,7 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public boolean isCommonAxisUsed() {
-<span class="fc" id="L2662">        return mCommonAxisUsed;</span>
+<span class="fc" id="L2667">        return mCommonAxisUsed;</span>
     }
 
     /**
@@ -2674,12 +2679,12 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
     @Override
     public void setCommonAxisUsed(final boolean commonAxisUsed)
             throws LockedException {
-<span class="fc bfc" id="L2677" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L2678">            throw new LockedException();</span>
+<span class="fc bfc" id="L2682" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L2683">            throw new LockedException();</span>
         }
 
-<span class="fc" id="L2681">        mCommonAxisUsed = commonAxisUsed;</span>
-<span class="fc" id="L2682">    }</span>
+<span class="fc" id="L2686">        mCommonAxisUsed = commonAxisUsed;</span>
+<span class="fc" id="L2687">    }</span>
 
     /**
      * Gets listener to handle events raised by this calibrator.
@@ -2688,7 +2693,7 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener getListener() {
-<span class="fc" id="L2691">        return mListener;</span>
+<span class="fc" id="L2696">        return mListener;</span>
     }
 
     /**
@@ -2701,12 +2706,12 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
     public void setListener(
             final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener)
             throws LockedException {
-<span class="fc bfc" id="L2704" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L2705">            throw new LockedException();</span>
+<span class="fc bfc" id="L2709" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L2710">            throw new LockedException();</span>
         }
 
-<span class="fc" id="L2708">        mListener = listener;</span>
-<span class="fc" id="L2709">    }</span>
+<span class="fc" id="L2713">        mListener = listener;</span>
+<span class="fc" id="L2714">    }</span>
 
     /**
      * Gets known x coordinate of gyroscope bias expressed in radians per second
@@ -2716,7 +2721,7 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public double getBiasX() {
-<span class="fc" id="L2719">        return mBiasX;</span>
+<span class="fc" id="L2724">        return mBiasX;</span>
     }
 
     /**
@@ -2728,11 +2733,11 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public void setBiasX(final double biasX) throws LockedException {
-<span class="fc bfc" id="L2731" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L2732">            throw new LockedException();</span>
+<span class="fc bfc" id="L2736" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L2737">            throw new LockedException();</span>
         }
-<span class="fc" id="L2734">        mBiasX = biasX;</span>
-<span class="fc" id="L2735">    }</span>
+<span class="fc" id="L2739">        mBiasX = biasX;</span>
+<span class="fc" id="L2740">    }</span>
 
     /**
      * Gets known y coordinate of gyroscope bias expressed in radians per second
@@ -2742,7 +2747,7 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public double getBiasY() {
-<span class="fc" id="L2745">        return mBiasY;</span>
+<span class="fc" id="L2750">        return mBiasY;</span>
     }
 
     /**
@@ -2754,11 +2759,11 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public void setBiasY(final double biasY) throws LockedException {
-<span class="fc bfc" id="L2757" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L2758">            throw new LockedException();</span>
+<span class="fc bfc" id="L2762" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L2763">            throw new LockedException();</span>
         }
-<span class="fc" id="L2760">        mBiasY = biasY;</span>
-<span class="fc" id="L2761">    }</span>
+<span class="fc" id="L2765">        mBiasY = biasY;</span>
+<span class="fc" id="L2766">    }</span>
 
     /**
      * Gets known z coordinate of gyroscope bias expressed in radians per second
@@ -2768,7 +2773,7 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public double getBiasZ() {
-<span class="fc" id="L2771">        return mBiasZ;</span>
+<span class="fc" id="L2776">        return mBiasZ;</span>
     }
 
     /**
@@ -2780,11 +2785,11 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public void setBiasZ(final double biasZ) throws LockedException {
-<span class="fc bfc" id="L2783" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L2784">            throw new LockedException();</span>
+<span class="fc bfc" id="L2788" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L2789">            throw new LockedException();</span>
         }
-<span class="fc" id="L2786">        mBiasZ = biasZ;</span>
-<span class="fc" id="L2787">    }</span>
+<span class="fc" id="L2791">        mBiasZ = biasZ;</span>
+<span class="fc" id="L2792">    }</span>
 
     /**
      * Gets known x coordinate of gyroscope bias.
@@ -2793,7 +2798,7 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public AngularSpeed getBiasAngularSpeedX() {
-<span class="fc" id="L2796">        return new AngularSpeed(mBiasX, AngularSpeedUnit.RADIANS_PER_SECOND);</span>
+<span class="fc" id="L2801">        return new AngularSpeed(mBiasX, AngularSpeedUnit.RADIANS_PER_SECOND);</span>
     }
 
     /**
@@ -2803,9 +2808,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public void getBiasAngularSpeedX(final AngularSpeed result) {
-<span class="fc" id="L2806">        result.setValue(mBiasX);</span>
-<span class="fc" id="L2807">        result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);</span>
-<span class="fc" id="L2808">    }</span>
+<span class="fc" id="L2811">        result.setValue(mBiasX);</span>
+<span class="fc" id="L2812">        result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);</span>
+<span class="fc" id="L2813">    }</span>
 
     /**
      * Sets known x coordinate of gyroscope bias.
@@ -2815,12 +2820,12 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public void setBiasX(final AngularSpeed biasX) throws LockedException {
-<span class="fc bfc" id="L2818" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L2819">            throw new LockedException();</span>
+<span class="fc bfc" id="L2823" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L2824">            throw new LockedException();</span>
         }
 
-<span class="fc" id="L2822">        mBiasX = convertAngularSpeed(biasX);</span>
-<span class="fc" id="L2823">    }</span>
+<span class="fc" id="L2827">        mBiasX = convertAngularSpeed(biasX);</span>
+<span class="fc" id="L2828">    }</span>
 
     /**
      * Gets known y coordinate of gyroscope bias.
@@ -2829,7 +2834,7 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public AngularSpeed getBiasAngularSpeedY() {
-<span class="fc" id="L2832">        return new AngularSpeed(mBiasY, AngularSpeedUnit.RADIANS_PER_SECOND);</span>
+<span class="fc" id="L2837">        return new AngularSpeed(mBiasY, AngularSpeedUnit.RADIANS_PER_SECOND);</span>
     }
 
     /**
@@ -2839,9 +2844,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public void getBiasAngularSpeedY(final AngularSpeed result) {
-<span class="fc" id="L2842">        result.setValue(mBiasY);</span>
-<span class="fc" id="L2843">        result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);</span>
-<span class="fc" id="L2844">    }</span>
+<span class="fc" id="L2847">        result.setValue(mBiasY);</span>
+<span class="fc" id="L2848">        result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);</span>
+<span class="fc" id="L2849">    }</span>
 
     /**
      * Sets known y coordinate of gyroscope bias.
@@ -2851,12 +2856,12 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public void setBiasY(final AngularSpeed biasY) throws LockedException {
-<span class="fc bfc" id="L2854" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L2855">            throw new LockedException();</span>
+<span class="fc bfc" id="L2859" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L2860">            throw new LockedException();</span>
         }
 
-<span class="fc" id="L2858">        mBiasY = convertAngularSpeed(biasY);</span>
-<span class="fc" id="L2859">    }</span>
+<span class="fc" id="L2863">        mBiasY = convertAngularSpeed(biasY);</span>
+<span class="fc" id="L2864">    }</span>
 
     /**
      * Gets known z coordinate of gyroscope bias.
@@ -2865,7 +2870,7 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public AngularSpeed getBiasAngularSpeedZ() {
-<span class="fc" id="L2868">        return new AngularSpeed(mBiasZ, AngularSpeedUnit.RADIANS_PER_SECOND);</span>
+<span class="fc" id="L2873">        return new AngularSpeed(mBiasZ, AngularSpeedUnit.RADIANS_PER_SECOND);</span>
     }
 
     /**
@@ -2875,9 +2880,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public void getBiasAngularSpeedZ(final AngularSpeed result) {
-<span class="fc" id="L2878">        result.setValue(mBiasZ);</span>
-<span class="fc" id="L2879">        result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);</span>
-<span class="fc" id="L2880">    }</span>
+<span class="fc" id="L2883">        result.setValue(mBiasZ);</span>
+<span class="fc" id="L2884">        result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);</span>
+<span class="fc" id="L2885">    }</span>
 
     /**
      * Sets known z coordinate of gyroscope bias.
@@ -2887,12 +2892,12 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public void setBiasZ(final AngularSpeed biasZ) throws LockedException {
-<span class="fc bfc" id="L2890" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L2891">            throw new LockedException();</span>
+<span class="fc bfc" id="L2895" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L2896">            throw new LockedException();</span>
         }
 
-<span class="fc" id="L2894">        mBiasZ = convertAngularSpeed(biasZ);</span>
-<span class="fc" id="L2895">    }</span>
+<span class="fc" id="L2899">        mBiasZ = convertAngularSpeed(biasZ);</span>
+<span class="fc" id="L2900">    }</span>
 
     /**
      * Sets known gyroscope bias coordinates expressed in radians per second
@@ -2907,14 +2912,14 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
     public void setBiasCoordinates(
             final double biasX, final double biasY, final double biasZ)
             throws LockedException {
-<span class="fc bfc" id="L2910" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L2911">            throw new LockedException();</span>
+<span class="fc bfc" id="L2915" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L2916">            throw new LockedException();</span>
         }
 
-<span class="fc" id="L2914">        mBiasX = biasX;</span>
-<span class="fc" id="L2915">        mBiasY = biasY;</span>
-<span class="fc" id="L2916">        mBiasZ = biasZ;</span>
-<span class="fc" id="L2917">    }</span>
+<span class="fc" id="L2919">        mBiasX = biasX;</span>
+<span class="fc" id="L2920">        mBiasY = biasY;</span>
+<span class="fc" id="L2921">        mBiasZ = biasZ;</span>
+<span class="fc" id="L2922">    }</span>
 
     /**
      * Sets known gyroscope bias coordinates.
@@ -2928,14 +2933,14 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
     public void setBiasCoordinates(
             final AngularSpeed biasX, final AngularSpeed biasY, final AngularSpeed biasZ)
             throws LockedException {
-<span class="fc bfc" id="L2931" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L2932">            throw new LockedException();</span>
+<span class="fc bfc" id="L2936" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L2937">            throw new LockedException();</span>
         }
 
-<span class="fc" id="L2935">        mBiasX = convertAngularSpeed(biasX);</span>
-<span class="fc" id="L2936">        mBiasY = convertAngularSpeed(biasY);</span>
-<span class="fc" id="L2937">        mBiasZ = convertAngularSpeed(biasZ);</span>
-<span class="fc" id="L2938">    }</span>
+<span class="fc" id="L2940">        mBiasX = convertAngularSpeed(biasX);</span>
+<span class="fc" id="L2941">        mBiasY = convertAngularSpeed(biasY);</span>
+<span class="fc" id="L2942">        mBiasZ = convertAngularSpeed(biasZ);</span>
+<span class="fc" id="L2943">    }</span>
 
     /**
      * Gets known gyroscope bias.
@@ -2943,7 +2948,7 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      * @return known gyroscope bias.
      */
     public AngularSpeedTriad getBiasAsTriad() {
-<span class="fc" id="L2946">        return new AngularSpeedTriad(</span>
+<span class="fc" id="L2951">        return new AngularSpeedTriad(</span>
                 AngularSpeedUnit.RADIANS_PER_SECOND,
                 mBiasX, mBiasY, mBiasZ);
     }
@@ -2954,9 +2959,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      * @param result instance where result will be stored.
      */
     public void getBiasAsTriad(final AngularSpeedTriad result) {
-<span class="fc" id="L2957">        result.setValueCoordinatesAndUnit(mBiasX, mBiasY, mBiasZ,</span>
+<span class="fc" id="L2962">        result.setValueCoordinatesAndUnit(mBiasX, mBiasY, mBiasZ,</span>
                 AngularSpeedUnit.RADIANS_PER_SECOND);
-<span class="fc" id="L2959">    }</span>
+<span class="fc" id="L2964">    }</span>
 
     /**
      * Sets known gyroscope bias.
@@ -2965,14 +2970,14 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      * @throws LockedException if calibrator is currently running.
      */
     public void setBias(final AngularSpeedTriad bias) throws LockedException {
-<span class="fc bfc" id="L2968" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L2969">            throw new LockedException();</span>
+<span class="fc bfc" id="L2973" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L2974">            throw new LockedException();</span>
         }
 
-<span class="fc" id="L2972">        mBiasX = convertAngularSpeed(bias.getValueX(), bias.getUnit());</span>
-<span class="fc" id="L2973">        mBiasY = convertAngularSpeed(bias.getValueY(), bias.getUnit());</span>
-<span class="fc" id="L2974">        mBiasZ = convertAngularSpeed(bias.getValueZ(), bias.getUnit());</span>
-<span class="fc" id="L2975">    }</span>
+<span class="fc" id="L2977">        mBiasX = convertAngularSpeed(bias.getValueX(), bias.getUnit());</span>
+<span class="fc" id="L2978">        mBiasY = convertAngularSpeed(bias.getValueY(), bias.getUnit());</span>
+<span class="fc" id="L2979">        mBiasZ = convertAngularSpeed(bias.getValueZ(), bias.getUnit());</span>
+<span class="fc" id="L2980">    }</span>
 
     /**
      * Gets known gyroscope bias as an array.
@@ -2982,9 +2987,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public double[] getBias() {
-<span class="fc" id="L2985">        final double[] result = new double[BodyKinematics.COMPONENTS];</span>
-<span class="fc" id="L2986">        getBias(result);</span>
-<span class="fc" id="L2987">        return result;</span>
+<span class="fc" id="L2990">        final double[] result = new double[BodyKinematics.COMPONENTS];</span>
+<span class="fc" id="L2991">        getBias(result);</span>
+<span class="fc" id="L2992">        return result;</span>
     }
 
     /**
@@ -2996,13 +3001,13 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public void getBias(final double[] result) {
-<span class="fc bfc" id="L2999" title="All 2 branches covered.">        if (result.length != BodyKinematics.COMPONENTS) {</span>
-<span class="fc" id="L3000">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L3004" title="All 2 branches covered.">        if (result.length != BodyKinematics.COMPONENTS) {</span>
+<span class="fc" id="L3005">            throw new IllegalArgumentException();</span>
         }
-<span class="fc" id="L3002">        result[0] = mBiasX;</span>
-<span class="fc" id="L3003">        result[1] = mBiasY;</span>
-<span class="fc" id="L3004">        result[2] = mBiasZ;</span>
-<span class="fc" id="L3005">    }</span>
+<span class="fc" id="L3007">        result[0] = mBiasX;</span>
+<span class="fc" id="L3008">        result[1] = mBiasY;</span>
+<span class="fc" id="L3009">        result[2] = mBiasZ;</span>
+<span class="fc" id="L3010">    }</span>
 
     /**
      * Sets known gyroscope bias as an array.
@@ -3014,17 +3019,17 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public void setBias(final double[] bias) throws LockedException {
-<span class="fc bfc" id="L3017" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L3018">            throw new LockedException();</span>
+<span class="fc bfc" id="L3022" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L3023">            throw new LockedException();</span>
         }
 
-<span class="fc bfc" id="L3021" title="All 2 branches covered.">        if (bias.length != BodyKinematics.COMPONENTS) {</span>
-<span class="fc" id="L3022">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L3026" title="All 2 branches covered.">        if (bias.length != BodyKinematics.COMPONENTS) {</span>
+<span class="fc" id="L3027">            throw new IllegalArgumentException();</span>
         }
-<span class="fc" id="L3024">        mBiasX = bias[0];</span>
-<span class="fc" id="L3025">        mBiasY = bias[1];</span>
-<span class="fc" id="L3026">        mBiasZ = bias[2];</span>
-<span class="fc" id="L3027">    }</span>
+<span class="fc" id="L3029">        mBiasX = bias[0];</span>
+<span class="fc" id="L3030">        mBiasY = bias[1];</span>
+<span class="fc" id="L3031">        mBiasZ = bias[2];</span>
+<span class="fc" id="L3032">    }</span>
 
     /**
      * Gets known gyroscope bias as a column matrix.
@@ -3035,13 +3040,13 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
     public Matrix getBiasAsMatrix() {
         Matrix result;
         try {
-<span class="fc" id="L3038">            result = new Matrix(BodyKinematics.COMPONENTS, 1);</span>
-<span class="fc" id="L3039">            getBiasAsMatrix(result);</span>
-<span class="nc" id="L3040">        } catch (final WrongSizeException ignore) {</span>
+<span class="fc" id="L3043">            result = new Matrix(BodyKinematics.COMPONENTS, 1);</span>
+<span class="fc" id="L3044">            getBiasAsMatrix(result);</span>
+<span class="nc" id="L3045">        } catch (final WrongSizeException ignore) {</span>
             // never happens
-<span class="nc" id="L3042">            result = null;</span>
-<span class="fc" id="L3043">        }</span>
-<span class="fc" id="L3044">        return result;</span>
+<span class="nc" id="L3047">            result = null;</span>
+<span class="fc" id="L3048">        }</span>
+<span class="fc" id="L3049">        return result;</span>
     }
 
     /**
@@ -3052,14 +3057,14 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public void getBiasAsMatrix(final Matrix result) {
-<span class="pc bpc" id="L3055" title="1 of 2 branches missed.">        if (result.getRows() != BodyKinematics.COMPONENTS</span>
-<span class="pc bpc" id="L3056" title="1 of 2 branches missed.">                || result.getColumns() != 1) {</span>
-<span class="nc" id="L3057">            throw new IllegalArgumentException();</span>
+<span class="pc bpc" id="L3060" title="1 of 2 branches missed.">        if (result.getRows() != BodyKinematics.COMPONENTS</span>
+<span class="pc bpc" id="L3061" title="1 of 2 branches missed.">                || result.getColumns() != 1) {</span>
+<span class="nc" id="L3062">            throw new IllegalArgumentException();</span>
         }
-<span class="fc" id="L3059">        result.setElementAtIndex(0, mBiasX);</span>
-<span class="fc" id="L3060">        result.setElementAtIndex(1, mBiasY);</span>
-<span class="fc" id="L3061">        result.setElementAtIndex(2, mBiasZ);</span>
-<span class="fc" id="L3062">    }</span>
+<span class="fc" id="L3064">        result.setElementAtIndex(0, mBiasX);</span>
+<span class="fc" id="L3065">        result.setElementAtIndex(1, mBiasY);</span>
+<span class="fc" id="L3066">        result.setElementAtIndex(2, mBiasZ);</span>
+<span class="fc" id="L3067">    }</span>
 
     /**
      * Sets known gyroscope bias as a column matrix.
@@ -3070,18 +3075,18 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public void setBias(final Matrix bias) throws LockedException {
-<span class="fc bfc" id="L3073" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L3074">            throw new LockedException();</span>
+<span class="fc bfc" id="L3078" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L3079">            throw new LockedException();</span>
         }
-<span class="fc bfc" id="L3076" title="All 2 branches covered.">        if (bias.getRows() != BodyKinematics.COMPONENTS</span>
-<span class="fc bfc" id="L3077" title="All 2 branches covered.">                || bias.getColumns() != 1) {</span>
-<span class="fc" id="L3078">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L3081" title="All 2 branches covered.">        if (bias.getRows() != BodyKinematics.COMPONENTS</span>
+<span class="fc bfc" id="L3082" title="All 2 branches covered.">                || bias.getColumns() != 1) {</span>
+<span class="fc" id="L3083">            throw new IllegalArgumentException();</span>
         }
 
-<span class="fc" id="L3081">        mBiasX = bias.getElementAtIndex(0);</span>
-<span class="fc" id="L3082">        mBiasY = bias.getElementAtIndex(1);</span>
-<span class="fc" id="L3083">        mBiasZ = bias.getElementAtIndex(2);</span>
-<span class="fc" id="L3084">    }</span>
+<span class="fc" id="L3086">        mBiasX = bias.getElementAtIndex(0);</span>
+<span class="fc" id="L3087">        mBiasY = bias.getElementAtIndex(1);</span>
+<span class="fc" id="L3088">        mBiasZ = bias.getElementAtIndex(2);</span>
+<span class="fc" id="L3089">    }</span>
 
     /**
      * Indicates whether calibrator is ready to start the calibration.
@@ -3090,8 +3095,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public boolean isReady() {
-<span class="fc bfc" id="L3093" title="All 2 branches covered.">        return mMeasurements != null</span>
-<span class="fc bfc" id="L3094" title="All 2 branches covered.">                &amp;&amp; mMeasurements.size() &gt;= MINIMUM_MEASUREMENTS;</span>
+<span class="fc bfc" id="L3098" title="All 2 branches covered.">        return mMeasurements != null</span>
+<span class="fc bfc" id="L3099" title="All 2 branches covered.">                &amp;&amp; mMeasurements.size() &gt;= MINIMUM_MEASUREMENTS;</span>
     }
 
     /**
@@ -3101,7 +3106,7 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public boolean isRunning() {
-<span class="fc" id="L3104">        return mRunning;</span>
+<span class="fc" id="L3109">        return mRunning;</span>
     }
 
     /**
@@ -3115,38 +3120,38 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
     @Override
     public void calibrate() throws LockedException, NotReadyException,
             CalibrationException {
-<span class="fc bfc" id="L3118" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L3119">            throw new LockedException();</span>
+<span class="fc bfc" id="L3123" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L3124">            throw new LockedException();</span>
         }
 
-<span class="pc bpc" id="L3122" title="1 of 2 branches missed.">        if (!isReady()) {</span>
-<span class="nc" id="L3123">            throw new NotReadyException();</span>
+<span class="pc bpc" id="L3127" title="1 of 2 branches missed.">        if (!isReady()) {</span>
+<span class="nc" id="L3128">            throw new NotReadyException();</span>
         }
 
         try {
-<span class="fc" id="L3127">            mRunning = true;</span>
+<span class="fc" id="L3132">            mRunning = true;</span>
 
-<span class="fc bfc" id="L3129" title="All 2 branches covered.">            if (mListener != null) {</span>
-<span class="fc" id="L3130">                mListener.onCalibrateStart(this);</span>
+<span class="fc bfc" id="L3134" title="All 2 branches covered.">            if (mListener != null) {</span>
+<span class="fc" id="L3135">                mListener.onCalibrateStart(this);</span>
             }
 
-<span class="fc bfc" id="L3133" title="All 2 branches covered.">            if (mCommonAxisUsed) {</span>
-<span class="fc" id="L3134">                calibrateCommonAxis();</span>
+<span class="fc bfc" id="L3138" title="All 2 branches covered.">            if (mCommonAxisUsed) {</span>
+<span class="fc" id="L3139">                calibrateCommonAxis();</span>
             } else {
-<span class="fc" id="L3136">                calibrateGeneral();</span>
+<span class="fc" id="L3141">                calibrateGeneral();</span>
             }
 
-<span class="fc bfc" id="L3139" title="All 2 branches covered.">            if (mListener != null) {</span>
-<span class="fc" id="L3140">                mListener.onCalibrateEnd(this);</span>
+<span class="fc bfc" id="L3144" title="All 2 branches covered.">            if (mListener != null) {</span>
+<span class="fc" id="L3145">                mListener.onCalibrateEnd(this);</span>
             }
 
-<span class="fc" id="L3143">        } catch (final AlgebraException | FittingException</span>
+<span class="fc" id="L3148">        } catch (final AlgebraException | FittingException</span>
                 | com.irurueta.numerical.NotReadyException e) {
-<span class="fc" id="L3145">            throw new CalibrationException(e);</span>
+<span class="fc" id="L3150">            throw new CalibrationException(e);</span>
         } finally {
-<span class="fc" id="L3147">            mRunning = false;</span>
+<span class="fc" id="L3152">            mRunning = false;</span>
         }
-<span class="fc" id="L3149">    }</span>
+<span class="fc" id="L3154">    }</span>
 
     /**
      * Gets estimated gyroscope scale factors and cross coupling errors.
@@ -3191,7 +3196,7 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public Matrix getEstimatedMg() {
-<span class="fc" id="L3194">        return mEstimatedMg;</span>
+<span class="fc" id="L3199">        return mEstimatedMg;</span>
     }
 
     /**
@@ -3201,8 +3206,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public Double getEstimatedSx() {
-<span class="fc bfc" id="L3204" title="All 2 branches covered.">        return mEstimatedMg != null ?</span>
-<span class="fc" id="L3205">                mEstimatedMg.getElementAt(0, 0) : null;</span>
+<span class="fc bfc" id="L3209" title="All 2 branches covered.">        return mEstimatedMg != null ?</span>
+<span class="fc" id="L3210">                mEstimatedMg.getElementAt(0, 0) : null;</span>
     }
 
     /**
@@ -3212,8 +3217,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public Double getEstimatedSy() {
-<span class="fc bfc" id="L3215" title="All 2 branches covered.">        return mEstimatedMg != null ?</span>
-<span class="fc" id="L3216">                mEstimatedMg.getElementAt(1, 1) : null;</span>
+<span class="fc bfc" id="L3220" title="All 2 branches covered.">        return mEstimatedMg != null ?</span>
+<span class="fc" id="L3221">                mEstimatedMg.getElementAt(1, 1) : null;</span>
     }
 
     /**
@@ -3223,8 +3228,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public Double getEstimatedSz() {
-<span class="fc bfc" id="L3226" title="All 2 branches covered.">        return mEstimatedMg != null ?</span>
-<span class="fc" id="L3227">                mEstimatedMg.getElementAt(2, 2) : null;</span>
+<span class="fc bfc" id="L3231" title="All 2 branches covered.">        return mEstimatedMg != null ?</span>
+<span class="fc" id="L3232">                mEstimatedMg.getElementAt(2, 2) : null;</span>
     }
 
     /**
@@ -3234,8 +3239,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public Double getEstimatedMxy() {
-<span class="fc bfc" id="L3237" title="All 2 branches covered.">        return mEstimatedMg != null ?</span>
-<span class="fc" id="L3238">                mEstimatedMg.getElementAt(0, 1) : null;</span>
+<span class="fc bfc" id="L3242" title="All 2 branches covered.">        return mEstimatedMg != null ?</span>
+<span class="fc" id="L3243">                mEstimatedMg.getElementAt(0, 1) : null;</span>
     }
 
     /**
@@ -3245,8 +3250,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public Double getEstimatedMxz() {
-<span class="fc bfc" id="L3248" title="All 2 branches covered.">        return mEstimatedMg != null ?</span>
-<span class="fc" id="L3249">                mEstimatedMg.getElementAt(0, 2) : null;</span>
+<span class="fc bfc" id="L3253" title="All 2 branches covered.">        return mEstimatedMg != null ?</span>
+<span class="fc" id="L3254">                mEstimatedMg.getElementAt(0, 2) : null;</span>
     }
 
     /**
@@ -3256,8 +3261,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public Double getEstimatedMyx() {
-<span class="fc bfc" id="L3259" title="All 2 branches covered.">        return mEstimatedMg != null ?</span>
-<span class="fc" id="L3260">                mEstimatedMg.getElementAt(1, 0) : null;</span>
+<span class="fc bfc" id="L3264" title="All 2 branches covered.">        return mEstimatedMg != null ?</span>
+<span class="fc" id="L3265">                mEstimatedMg.getElementAt(1, 0) : null;</span>
     }
 
     /**
@@ -3267,8 +3272,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public Double getEstimatedMyz() {
-<span class="fc bfc" id="L3270" title="All 2 branches covered.">        return mEstimatedMg != null ?</span>
-<span class="fc" id="L3271">                mEstimatedMg.getElementAt(1, 2) : null;</span>
+<span class="fc bfc" id="L3275" title="All 2 branches covered.">        return mEstimatedMg != null ?</span>
+<span class="fc" id="L3276">                mEstimatedMg.getElementAt(1, 2) : null;</span>
     }
 
     /**
@@ -3278,8 +3283,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public Double getEstimatedMzx() {
-<span class="fc bfc" id="L3281" title="All 2 branches covered.">        return mEstimatedMg != null ?</span>
-<span class="fc" id="L3282">                mEstimatedMg.getElementAt(2, 0) : null;</span>
+<span class="fc bfc" id="L3286" title="All 2 branches covered.">        return mEstimatedMg != null ?</span>
+<span class="fc" id="L3287">                mEstimatedMg.getElementAt(2, 0) : null;</span>
     }
 
     /**
@@ -3289,8 +3294,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public Double getEstimatedMzy() {
-<span class="fc bfc" id="L3292" title="All 2 branches covered.">        return mEstimatedMg != null ?</span>
-<span class="fc" id="L3293">                mEstimatedMg.getElementAt(2, 1) : null;</span>
+<span class="fc bfc" id="L3297" title="All 2 branches covered.">        return mEstimatedMg != null ?</span>
+<span class="fc" id="L3298">                mEstimatedMg.getElementAt(2, 1) : null;</span>
     }
 
     /**
@@ -3301,7 +3306,7 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public Matrix getEstimatedGg() {
-<span class="fc" id="L3304">        return mEstimatedGg;</span>
+<span class="fc" id="L3309">        return mEstimatedGg;</span>
     }
 
     /**
@@ -3314,7 +3319,7 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public Matrix getEstimatedCovariance() {
-<span class="fc" id="L3317">        return mEstimatedCovariance;</span>
+<span class="fc" id="L3322">        return mEstimatedCovariance;</span>
     }
 
     /**
@@ -3324,7 +3329,16 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      */
     @Override
     public double getEstimatedChiSq() {
-<span class="fc" id="L3327">        return mEstimatedChiSq;</span>
+<span class="fc" id="L3332">        return mEstimatedChiSq;</span>
+    }
+
+    /**
+     * Gets estimated mean square error respect to provided measurements.
+     *
+     * @return estimated mean square error respect to provided measurements.
+     */
+    public double getEstimatedMse() {
+<span class="fc" id="L3341">        return mEstimatedMse;</span>
     }
 
     /**
@@ -3385,37 +3399,37 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
         //                                                                                                                         [g32]
         //                                                                                                                         [g33]
 
-<span class="fc" id="L3388">        mFitter.setFunctionEvaluator(</span>
-<span class="fc" id="L3389">                new LevenbergMarquardtMultiVariateFunctionEvaluator() {</span>
+<span class="fc" id="L3402">        mFitter.setFunctionEvaluator(</span>
+<span class="fc" id="L3403">                new LevenbergMarquardtMultiVariateFunctionEvaluator() {</span>
                     @Override
                     public int getNumberOfDimensions() {
                         // Input points are true angular rate + specific force coordinates
-<span class="fc" id="L3393">                        return 2 * BodyKinematics.COMPONENTS;</span>
+<span class="fc" id="L3407">                        return 2 * BodyKinematics.COMPONENTS;</span>
                     }
 
                     @Override
                     public int getNumberOfVariables() {
                         // The multivariate function returns the components of measured angular rate
-<span class="fc" id="L3399">                        return BodyKinematics.COMPONENTS;</span>
+<span class="fc" id="L3413">                        return BodyKinematics.COMPONENTS;</span>
                     }
 
                     @Override
                     public double[] createInitialParametersArray() {
-<span class="fc" id="L3404">                        final double[] initial = new double[COMMON_Z_AXIS_UNKNOWNS];</span>
+<span class="fc" id="L3418">                        final double[] initial = new double[COMMON_Z_AXIS_UNKNOWNS];</span>
 
-<span class="fc" id="L3406">                        initial[0] = mInitialSx;</span>
-<span class="fc" id="L3407">                        initial[1] = mInitialSy;</span>
-<span class="fc" id="L3408">                        initial[2] = mInitialSz;</span>
+<span class="fc" id="L3420">                        initial[0] = mInitialSx;</span>
+<span class="fc" id="L3421">                        initial[1] = mInitialSy;</span>
+<span class="fc" id="L3422">                        initial[2] = mInitialSz;</span>
 
-<span class="fc" id="L3410">                        initial[3] = mInitialMxy;</span>
-<span class="fc" id="L3411">                        initial[4] = mInitialMxz;</span>
-<span class="fc" id="L3412">                        initial[5] = mInitialMyz;</span>
+<span class="fc" id="L3424">                        initial[3] = mInitialMxy;</span>
+<span class="fc" id="L3425">                        initial[4] = mInitialMxz;</span>
+<span class="fc" id="L3426">                        initial[5] = mInitialMyz;</span>
 
-<span class="fc" id="L3414">                        final double[] buffer = mInitialGg.getBuffer();</span>
-<span class="fc" id="L3415">                        final int num = buffer.length;</span>
-<span class="fc" id="L3416">                        System.arraycopy(buffer, 0, initial, 6, num);</span>
+<span class="fc" id="L3428">                        final double[] buffer = mInitialGg.getBuffer();</span>
+<span class="fc" id="L3429">                        final int num = buffer.length;</span>
+<span class="fc" id="L3430">                        System.arraycopy(buffer, 0, initial, 6, num);</span>
 
-<span class="fc" id="L3418">                        return initial;</span>
+<span class="fc" id="L3432">                        return initial;</span>
                     }
 
                     @Override
@@ -3479,147 +3493,147 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
                         // d(Ωmeasx)/d(g32) = ftruey
                         // d(Ωmeasx)/d(g33) = ftruez
 
-<span class="fc" id="L3482">                        final double sx = params[0];</span>
-<span class="fc" id="L3483">                        final double sy = params[1];</span>
-<span class="fc" id="L3484">                        final double sz = params[2];</span>
+<span class="fc" id="L3496">                        final double sx = params[0];</span>
+<span class="fc" id="L3497">                        final double sy = params[1];</span>
+<span class="fc" id="L3498">                        final double sz = params[2];</span>
 
-<span class="fc" id="L3486">                        final double mxy = params[3];</span>
-<span class="fc" id="L3487">                        final double mxz = params[4];</span>
-<span class="fc" id="L3488">                        final double myz = params[5];</span>
+<span class="fc" id="L3500">                        final double mxy = params[3];</span>
+<span class="fc" id="L3501">                        final double mxz = params[4];</span>
+<span class="fc" id="L3502">                        final double myz = params[5];</span>
 
-<span class="fc" id="L3490">                        final double g11 = params[6];</span>
-<span class="fc" id="L3491">                        final double g21 = params[7];</span>
-<span class="fc" id="L3492">                        final double g31 = params[8];</span>
-<span class="fc" id="L3493">                        final double g12 = params[9];</span>
-<span class="fc" id="L3494">                        final double g22 = params[10];</span>
-<span class="fc" id="L3495">                        final double g32 = params[11];</span>
-<span class="fc" id="L3496">                        final double g13 = params[12];</span>
-<span class="fc" id="L3497">                        final double g23 = params[13];</span>
-<span class="fc" id="L3498">                        final double g33 = params[14];</span>
+<span class="fc" id="L3504">                        final double g11 = params[6];</span>
+<span class="fc" id="L3505">                        final double g21 = params[7];</span>
+<span class="fc" id="L3506">                        final double g31 = params[8];</span>
+<span class="fc" id="L3507">                        final double g12 = params[9];</span>
+<span class="fc" id="L3508">                        final double g22 = params[10];</span>
+<span class="fc" id="L3509">                        final double g32 = params[11];</span>
+<span class="fc" id="L3510">                        final double g13 = params[12];</span>
+<span class="fc" id="L3511">                        final double g23 = params[13];</span>
+<span class="fc" id="L3512">                        final double g33 = params[14];</span>
 
-<span class="fc" id="L3500">                        final double omegatruex = point[0];</span>
-<span class="fc" id="L3501">                        final double omegatruey = point[1];</span>
-<span class="fc" id="L3502">                        final double omegatruez = point[2];</span>
+<span class="fc" id="L3514">                        final double omegatruex = point[0];</span>
+<span class="fc" id="L3515">                        final double omegatruey = point[1];</span>
+<span class="fc" id="L3516">                        final double omegatruez = point[2];</span>
 
-<span class="fc" id="L3504">                        final double ftruex = point[3];</span>
-<span class="fc" id="L3505">                        final double ftruey = point[4];</span>
-<span class="fc" id="L3506">                        final double ftruez = point[5];</span>
+<span class="fc" id="L3518">                        final double ftruex = point[3];</span>
+<span class="fc" id="L3519">                        final double ftruey = point[4];</span>
+<span class="fc" id="L3520">                        final double ftruez = point[5];</span>
 
-<span class="fc" id="L3508">                        result[0] = mBiasX + omegatruex + sx * omegatruex + mxy * omegatruey + mxz * omegatruez</span>
+<span class="fc" id="L3522">                        result[0] = mBiasX + omegatruex + sx * omegatruex + mxy * omegatruey + mxz * omegatruez</span>
                                 + g11 * ftruex + g12 * ftruey + g13 * ftruez;
-<span class="fc" id="L3510">                        result[1] = mBiasY + omegatruey + sy * omegatruey + myz * omegatruez</span>
+<span class="fc" id="L3524">                        result[1] = mBiasY + omegatruey + sy * omegatruey + myz * omegatruez</span>
                                 + g21 * ftruex * g22 * ftruey + g23 * ftruez;
-<span class="fc" id="L3512">                        result[2] = mBiasZ + omegatruez + sz * omegatruez</span>
+<span class="fc" id="L3526">                        result[2] = mBiasZ + omegatruez + sz * omegatruez</span>
                                 + g31 * ftruex + g32 * ftruey + g33 * ftruez;
 
-<span class="fc" id="L3515">                        jacobian.setElementAt(0, 0, omegatruex);</span>
-<span class="fc" id="L3516">                        jacobian.setElementAt(0, 1, 0.0);</span>
-<span class="fc" id="L3517">                        jacobian.setElementAt(0, 2, 0.0);</span>
-<span class="fc" id="L3518">                        jacobian.setElementAt(0, 3, omegatruey);</span>
-<span class="fc" id="L3519">                        jacobian.setElementAt(0, 4, omegatruez);</span>
-<span class="fc" id="L3520">                        jacobian.setElementAt(0, 5, 0.0);</span>
-<span class="fc" id="L3521">                        jacobian.setElementAt(0, 6, ftruex);</span>
-<span class="fc" id="L3522">                        jacobian.setElementAt(0, 7, ftruey);</span>
-<span class="fc" id="L3523">                        jacobian.setElementAt(0, 8, ftruez);</span>
-<span class="fc" id="L3524">                        jacobian.setElementAt(0, 9, 0.0);</span>
-<span class="fc" id="L3525">                        jacobian.setElementAt(0, 10, 0.0);</span>
-<span class="fc" id="L3526">                        jacobian.setElementAt(0, 11, 0.0);</span>
-<span class="fc" id="L3527">                        jacobian.setElementAt(0, 12, 0.0);</span>
-<span class="fc" id="L3528">                        jacobian.setElementAt(0, 13, 0.0);</span>
-<span class="fc" id="L3529">                        jacobian.setElementAt(0, 14, 0.0);</span>
+<span class="fc" id="L3529">                        jacobian.setElementAt(0, 0, omegatruex);</span>
+<span class="fc" id="L3530">                        jacobian.setElementAt(0, 1, 0.0);</span>
+<span class="fc" id="L3531">                        jacobian.setElementAt(0, 2, 0.0);</span>
+<span class="fc" id="L3532">                        jacobian.setElementAt(0, 3, omegatruey);</span>
+<span class="fc" id="L3533">                        jacobian.setElementAt(0, 4, omegatruez);</span>
+<span class="fc" id="L3534">                        jacobian.setElementAt(0, 5, 0.0);</span>
+<span class="fc" id="L3535">                        jacobian.setElementAt(0, 6, ftruex);</span>
+<span class="fc" id="L3536">                        jacobian.setElementAt(0, 7, ftruey);</span>
+<span class="fc" id="L3537">                        jacobian.setElementAt(0, 8, ftruez);</span>
+<span class="fc" id="L3538">                        jacobian.setElementAt(0, 9, 0.0);</span>
+<span class="fc" id="L3539">                        jacobian.setElementAt(0, 10, 0.0);</span>
+<span class="fc" id="L3540">                        jacobian.setElementAt(0, 11, 0.0);</span>
+<span class="fc" id="L3541">                        jacobian.setElementAt(0, 12, 0.0);</span>
+<span class="fc" id="L3542">                        jacobian.setElementAt(0, 13, 0.0);</span>
+<span class="fc" id="L3543">                        jacobian.setElementAt(0, 14, 0.0);</span>
 
-<span class="fc" id="L3531">                        jacobian.setElementAt(1, 0, 0.0);</span>
-<span class="fc" id="L3532">                        jacobian.setElementAt(1, 1, omegatruey);</span>
-<span class="fc" id="L3533">                        jacobian.setElementAt(1, 2, 0.0);</span>
-<span class="fc" id="L3534">                        jacobian.setElementAt(1, 3, 0.0);</span>
-<span class="fc" id="L3535">                        jacobian.setElementAt(1, 4, 0.0);</span>
-<span class="fc" id="L3536">                        jacobian.setElementAt(1, 5, omegatruez);</span>
-<span class="fc" id="L3537">                        jacobian.setElementAt(1, 6, 0.0);</span>
-<span class="fc" id="L3538">                        jacobian.setElementAt(1, 7, 0.0);</span>
-<span class="fc" id="L3539">                        jacobian.setElementAt(1, 8, 0.0);</span>
-<span class="fc" id="L3540">                        jacobian.setElementAt(1, 9, ftruex);</span>
-<span class="fc" id="L3541">                        jacobian.setElementAt(1, 10, ftruey);</span>
-<span class="fc" id="L3542">                        jacobian.setElementAt(1, 11, ftruez);</span>
-<span class="fc" id="L3543">                        jacobian.setElementAt(1, 12, 0.0);</span>
-<span class="fc" id="L3544">                        jacobian.setElementAt(1, 13, 0.0);</span>
-<span class="fc" id="L3545">                        jacobian.setElementAt(1, 14, 0.0);</span>
+<span class="fc" id="L3545">                        jacobian.setElementAt(1, 0, 0.0);</span>
+<span class="fc" id="L3546">                        jacobian.setElementAt(1, 1, omegatruey);</span>
+<span class="fc" id="L3547">                        jacobian.setElementAt(1, 2, 0.0);</span>
+<span class="fc" id="L3548">                        jacobian.setElementAt(1, 3, 0.0);</span>
+<span class="fc" id="L3549">                        jacobian.setElementAt(1, 4, 0.0);</span>
+<span class="fc" id="L3550">                        jacobian.setElementAt(1, 5, omegatruez);</span>
+<span class="fc" id="L3551">                        jacobian.setElementAt(1, 6, 0.0);</span>
+<span class="fc" id="L3552">                        jacobian.setElementAt(1, 7, 0.0);</span>
+<span class="fc" id="L3553">                        jacobian.setElementAt(1, 8, 0.0);</span>
+<span class="fc" id="L3554">                        jacobian.setElementAt(1, 9, ftruex);</span>
+<span class="fc" id="L3555">                        jacobian.setElementAt(1, 10, ftruey);</span>
+<span class="fc" id="L3556">                        jacobian.setElementAt(1, 11, ftruez);</span>
+<span class="fc" id="L3557">                        jacobian.setElementAt(1, 12, 0.0);</span>
+<span class="fc" id="L3558">                        jacobian.setElementAt(1, 13, 0.0);</span>
+<span class="fc" id="L3559">                        jacobian.setElementAt(1, 14, 0.0);</span>
 
-<span class="fc" id="L3547">                        jacobian.setElementAt(2, 0, 0.0);</span>
-<span class="fc" id="L3548">                        jacobian.setElementAt(2, 1, 0.0);</span>
-<span class="fc" id="L3549">                        jacobian.setElementAt(2, 2, omegatruez);</span>
-<span class="fc" id="L3550">                        jacobian.setElementAt(2, 3, 0.0);</span>
-<span class="fc" id="L3551">                        jacobian.setElementAt(2, 4, 0.0);</span>
-<span class="fc" id="L3552">                        jacobian.setElementAt(2, 5, 0.0);</span>
-<span class="fc" id="L3553">                        jacobian.setElementAt(2, 6, 0.0);</span>
-<span class="fc" id="L3554">                        jacobian.setElementAt(2, 7, 0.0);</span>
-<span class="fc" id="L3555">                        jacobian.setElementAt(2, 8, 0.0);</span>
-<span class="fc" id="L3556">                        jacobian.setElementAt(2, 9, 0.0);</span>
-<span class="fc" id="L3557">                        jacobian.setElementAt(2, 10, 0.0);</span>
-<span class="fc" id="L3558">                        jacobian.setElementAt(2, 11, 0.0);</span>
-<span class="fc" id="L3559">                        jacobian.setElementAt(2, 12, ftruex);</span>
-<span class="fc" id="L3560">                        jacobian.setElementAt(2, 13, ftruey);</span>
-<span class="fc" id="L3561">                        jacobian.setElementAt(2, 14, ftruez);</span>
-<span class="fc" id="L3562">                    }</span>
+<span class="fc" id="L3561">                        jacobian.setElementAt(2, 0, 0.0);</span>
+<span class="fc" id="L3562">                        jacobian.setElementAt(2, 1, 0.0);</span>
+<span class="fc" id="L3563">                        jacobian.setElementAt(2, 2, omegatruez);</span>
+<span class="fc" id="L3564">                        jacobian.setElementAt(2, 3, 0.0);</span>
+<span class="fc" id="L3565">                        jacobian.setElementAt(2, 4, 0.0);</span>
+<span class="fc" id="L3566">                        jacobian.setElementAt(2, 5, 0.0);</span>
+<span class="fc" id="L3567">                        jacobian.setElementAt(2, 6, 0.0);</span>
+<span class="fc" id="L3568">                        jacobian.setElementAt(2, 7, 0.0);</span>
+<span class="fc" id="L3569">                        jacobian.setElementAt(2, 8, 0.0);</span>
+<span class="fc" id="L3570">                        jacobian.setElementAt(2, 9, 0.0);</span>
+<span class="fc" id="L3571">                        jacobian.setElementAt(2, 10, 0.0);</span>
+<span class="fc" id="L3572">                        jacobian.setElementAt(2, 11, 0.0);</span>
+<span class="fc" id="L3573">                        jacobian.setElementAt(2, 12, ftruex);</span>
+<span class="fc" id="L3574">                        jacobian.setElementAt(2, 13, ftruey);</span>
+<span class="fc" id="L3575">                        jacobian.setElementAt(2, 14, ftruez);</span>
+<span class="fc" id="L3576">                    }</span>
                 });
 
-<span class="fc" id="L3565">        setInputData();</span>
+<span class="fc" id="L3579">        setInputData();</span>
 
-<span class="fc" id="L3567">        mFitter.fit();</span>
+<span class="fc" id="L3581">        mFitter.fit();</span>
 
-<span class="fc" id="L3569">        final double[] result = mFitter.getA();</span>
+<span class="fc" id="L3583">        final double[] result = mFitter.getA();</span>
 
-<span class="fc" id="L3571">        final double sx = result[0];</span>
-<span class="fc" id="L3572">        final double sy = result[1];</span>
-<span class="fc" id="L3573">        final double sz = result[2];</span>
+<span class="fc" id="L3585">        final double sx = result[0];</span>
+<span class="fc" id="L3586">        final double sy = result[1];</span>
+<span class="fc" id="L3587">        final double sz = result[2];</span>
 
-<span class="fc" id="L3575">        final double mxy = result[3];</span>
-<span class="fc" id="L3576">        final double mxz = result[4];</span>
-<span class="fc" id="L3577">        final double myz = result[5];</span>
+<span class="fc" id="L3589">        final double mxy = result[3];</span>
+<span class="fc" id="L3590">        final double mxz = result[4];</span>
+<span class="fc" id="L3591">        final double myz = result[5];</span>
 
-<span class="fc" id="L3579">        final double g11 = result[6];</span>
-<span class="fc" id="L3580">        final double g21 = result[7];</span>
-<span class="fc" id="L3581">        final double g31 = result[8];</span>
-<span class="fc" id="L3582">        final double g12 = result[9];</span>
-<span class="fc" id="L3583">        final double g22 = result[10];</span>
-<span class="fc" id="L3584">        final double g32 = result[11];</span>
-<span class="fc" id="L3585">        final double g13 = result[12];</span>
-<span class="fc" id="L3586">        final double g23 = result[13];</span>
-<span class="fc" id="L3587">        final double g33 = result[14];</span>
+<span class="fc" id="L3593">        final double g11 = result[6];</span>
+<span class="fc" id="L3594">        final double g21 = result[7];</span>
+<span class="fc" id="L3595">        final double g31 = result[8];</span>
+<span class="fc" id="L3596">        final double g12 = result[9];</span>
+<span class="fc" id="L3597">        final double g22 = result[10];</span>
+<span class="fc" id="L3598">        final double g32 = result[11];</span>
+<span class="fc" id="L3599">        final double g13 = result[12];</span>
+<span class="fc" id="L3600">        final double g23 = result[13];</span>
+<span class="fc" id="L3601">        final double g33 = result[14];</span>
 
-<span class="pc bpc" id="L3589" title="1 of 2 branches missed.">        if (mEstimatedMg == null) {</span>
-<span class="fc" id="L3590">            mEstimatedMg = new Matrix(BodyKinematics.COMPONENTS,</span>
+<span class="pc bpc" id="L3603" title="1 of 2 branches missed.">        if (mEstimatedMg == null) {</span>
+<span class="fc" id="L3604">            mEstimatedMg = new Matrix(BodyKinematics.COMPONENTS,</span>
                     BodyKinematics.COMPONENTS);
         } else {
-<span class="nc" id="L3593">            mEstimatedMg.initialize(0.0);</span>
+<span class="nc" id="L3607">            mEstimatedMg.initialize(0.0);</span>
         }
 
-<span class="fc" id="L3596">        mEstimatedMg.setElementAt(0, 0, sx);</span>
+<span class="fc" id="L3610">        mEstimatedMg.setElementAt(0, 0, sx);</span>
 
-<span class="fc" id="L3598">        mEstimatedMg.setElementAt(0, 1, mxy);</span>
-<span class="fc" id="L3599">        mEstimatedMg.setElementAt(1, 1, sy);</span>
+<span class="fc" id="L3612">        mEstimatedMg.setElementAt(0, 1, mxy);</span>
+<span class="fc" id="L3613">        mEstimatedMg.setElementAt(1, 1, sy);</span>
 
-<span class="fc" id="L3601">        mEstimatedMg.setElementAt(0, 2, mxz);</span>
-<span class="fc" id="L3602">        mEstimatedMg.setElementAt(1, 2, myz);</span>
-<span class="fc" id="L3603">        mEstimatedMg.setElementAt(2, 2, sz);</span>
+<span class="fc" id="L3615">        mEstimatedMg.setElementAt(0, 2, mxz);</span>
+<span class="fc" id="L3616">        mEstimatedMg.setElementAt(1, 2, myz);</span>
+<span class="fc" id="L3617">        mEstimatedMg.setElementAt(2, 2, sz);</span>
 
-<span class="pc bpc" id="L3605" title="1 of 2 branches missed.">        if (mEstimatedGg == null) {</span>
-<span class="fc" id="L3606">            mEstimatedGg = new Matrix(BodyKinematics.COMPONENTS,</span>
+<span class="pc bpc" id="L3619" title="1 of 2 branches missed.">        if (mEstimatedGg == null) {</span>
+<span class="fc" id="L3620">            mEstimatedGg = new Matrix(BodyKinematics.COMPONENTS,</span>
                     BodyKinematics.COMPONENTS);
         } else {
-<span class="nc" id="L3609">            mEstimatedGg.initialize(0.0);</span>
+<span class="nc" id="L3623">            mEstimatedGg.initialize(0.0);</span>
         }
 
-<span class="fc" id="L3612">        mEstimatedGg.setElementAtIndex(0, g11);</span>
-<span class="fc" id="L3613">        mEstimatedGg.setElementAtIndex(1, g21);</span>
-<span class="fc" id="L3614">        mEstimatedGg.setElementAtIndex(2, g31);</span>
-<span class="fc" id="L3615">        mEstimatedGg.setElementAtIndex(3, g12);</span>
-<span class="fc" id="L3616">        mEstimatedGg.setElementAtIndex(4, g22);</span>
-<span class="fc" id="L3617">        mEstimatedGg.setElementAtIndex(5, g32);</span>
-<span class="fc" id="L3618">        mEstimatedGg.setElementAtIndex(6, g13);</span>
-<span class="fc" id="L3619">        mEstimatedGg.setElementAtIndex(7, g23);</span>
-<span class="fc" id="L3620">        mEstimatedGg.setElementAtIndex(8, g33);</span>
+<span class="fc" id="L3626">        mEstimatedGg.setElementAtIndex(0, g11);</span>
+<span class="fc" id="L3627">        mEstimatedGg.setElementAtIndex(1, g21);</span>
+<span class="fc" id="L3628">        mEstimatedGg.setElementAtIndex(2, g31);</span>
+<span class="fc" id="L3629">        mEstimatedGg.setElementAtIndex(3, g12);</span>
+<span class="fc" id="L3630">        mEstimatedGg.setElementAtIndex(4, g22);</span>
+<span class="fc" id="L3631">        mEstimatedGg.setElementAtIndex(5, g32);</span>
+<span class="fc" id="L3632">        mEstimatedGg.setElementAtIndex(6, g13);</span>
+<span class="fc" id="L3633">        mEstimatedGg.setElementAtIndex(7, g23);</span>
+<span class="fc" id="L3634">        mEstimatedGg.setElementAtIndex(8, g33);</span>
 
-<span class="fc" id="L3622">        mEstimatedCovariance = mFitter.getCovar();</span>
+<span class="fc" id="L3636">        mEstimatedCovariance = mFitter.getCovar();</span>
 
         // propagate covariance matrix so that all parameters are taken into
         // account in the order: sx, sy, sz, mxy, mxz, myx, myz, mzx, mzy,
@@ -3649,24 +3663,24 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
         // As defined in com.irurueta.statistics.MultivariateNormalDist,
         // if we consider the jacobian of the lineal application the matrix shown
         // above, then covariance can be propagated as follows
-<span class="fc" id="L3652">        final Matrix jacobian = new Matrix(GENERAL_UNKNOWNS, COMMON_Z_AXIS_UNKNOWNS);</span>
-<span class="fc bfc" id="L3653" title="All 2 branches covered.">        for (int i = 0; i &lt; 5; i++) {</span>
-<span class="fc" id="L3654">            jacobian.setElementAt(i, i, 1.0);</span>
+<span class="fc" id="L3666">        final Matrix jacobian = new Matrix(GENERAL_UNKNOWNS, COMMON_Z_AXIS_UNKNOWNS);</span>
+<span class="fc bfc" id="L3667" title="All 2 branches covered.">        for (int i = 0; i &lt; 5; i++) {</span>
+<span class="fc" id="L3668">            jacobian.setElementAt(i, i, 1.0);</span>
         }
-<span class="fc" id="L3656">        jacobian.setElementAt(6, 5, 1.0);</span>
+<span class="fc" id="L3670">        jacobian.setElementAt(6, 5, 1.0);</span>
 
-<span class="fc bfc" id="L3658" title="All 2 branches covered.">        for (int j = 6, i = 9; j &lt; 15; j++, i++) {</span>
-<span class="fc" id="L3659">            jacobian.setElementAt(i, j, 1.0);</span>
+<span class="fc bfc" id="L3672" title="All 2 branches covered.">        for (int j = 6, i = 9; j &lt; 15; j++, i++) {</span>
+<span class="fc" id="L3673">            jacobian.setElementAt(i, j, 1.0);</span>
         }
 
         // propagated covariance is J * Cov * J'
-<span class="fc" id="L3663">        final Matrix jacobianTrans = jacobian.transposeAndReturnNew();</span>
-<span class="fc" id="L3664">        jacobian.multiply(mEstimatedCovariance);</span>
-<span class="fc" id="L3665">        jacobian.multiply(jacobianTrans);</span>
-<span class="fc" id="L3666">        mEstimatedCovariance = jacobian;</span>
-<span class="fc" id="L3667">        mEstimatedChiSq = mFitter.getChisq();</span>
-<span class="fc" id="L3668">        mEstimatedChiSq = mFitter.getChisq();</span>
-<span class="fc" id="L3669">    }</span>
+<span class="fc" id="L3677">        final Matrix jacobianTrans = jacobian.transposeAndReturnNew();</span>
+<span class="fc" id="L3678">        jacobian.multiply(mEstimatedCovariance);</span>
+<span class="fc" id="L3679">        jacobian.multiply(jacobianTrans);</span>
+<span class="fc" id="L3680">        mEstimatedCovariance = jacobian;</span>
+<span class="fc" id="L3681">        mEstimatedChiSq = mFitter.getChisq();</span>
+<span class="fc" id="L3682">        mEstimatedMse = mFitter.getMse();</span>
+<span class="fc" id="L3683">    }</span>
 
     /**
      * Internal method to perform general calibration.
@@ -3727,39 +3741,39 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
         //                                                                                                                                                 [g32]
         //                                                                                                                                                 [g33]
 
-<span class="fc" id="L3730">        mFitter.setFunctionEvaluator(new LevenbergMarquardtMultiVariateFunctionEvaluator() {</span>
+<span class="fc" id="L3744">        mFitter.setFunctionEvaluator(new LevenbergMarquardtMultiVariateFunctionEvaluator() {</span>
             @Override
             public int getNumberOfDimensions() {
                 // Input points are true angular rate + specific force coordinates
-<span class="fc" id="L3734">                return 2 * BodyKinematics.COMPONENTS;</span>
+<span class="fc" id="L3748">                return 2 * BodyKinematics.COMPONENTS;</span>
             }
 
             @Override
             public int getNumberOfVariables() {
                 // The multivariate function returns the components of measured angular rate
-<span class="fc" id="L3740">                return BodyKinematics.COMPONENTS;</span>
+<span class="fc" id="L3754">                return BodyKinematics.COMPONENTS;</span>
             }
 
             @Override
             public double[] createInitialParametersArray() {
-<span class="fc" id="L3745">                final double[] initial = new double[GENERAL_UNKNOWNS];</span>
+<span class="fc" id="L3759">                final double[] initial = new double[GENERAL_UNKNOWNS];</span>
 
-<span class="fc" id="L3747">                initial[0] = mInitialSx;</span>
-<span class="fc" id="L3748">                initial[1] = mInitialSy;</span>
-<span class="fc" id="L3749">                initial[2] = mInitialSz;</span>
+<span class="fc" id="L3761">                initial[0] = mInitialSx;</span>
+<span class="fc" id="L3762">                initial[1] = mInitialSy;</span>
+<span class="fc" id="L3763">                initial[2] = mInitialSz;</span>
 
-<span class="fc" id="L3751">                initial[3] = mInitialMxy;</span>
-<span class="fc" id="L3752">                initial[4] = mInitialMxz;</span>
-<span class="fc" id="L3753">                initial[5] = mInitialMyx;</span>
-<span class="fc" id="L3754">                initial[6] = mInitialMyz;</span>
-<span class="fc" id="L3755">                initial[7] = mInitialMzx;</span>
-<span class="fc" id="L3756">                initial[8] = mInitialMzy;</span>
+<span class="fc" id="L3765">                initial[3] = mInitialMxy;</span>
+<span class="fc" id="L3766">                initial[4] = mInitialMxz;</span>
+<span class="fc" id="L3767">                initial[5] = mInitialMyx;</span>
+<span class="fc" id="L3768">                initial[6] = mInitialMyz;</span>
+<span class="fc" id="L3769">                initial[7] = mInitialMzx;</span>
+<span class="fc" id="L3770">                initial[8] = mInitialMzy;</span>
 
-<span class="fc" id="L3758">                final double[] buffer = mInitialGg.getBuffer();</span>
-<span class="fc" id="L3759">                final int num = buffer.length;</span>
-<span class="fc" id="L3760">                System.arraycopy(buffer, 0, initial, 9, num);</span>
+<span class="fc" id="L3772">                final double[] buffer = mInitialGg.getBuffer();</span>
+<span class="fc" id="L3773">                final int num = buffer.length;</span>
+<span class="fc" id="L3774">                System.arraycopy(buffer, 0, initial, 9, num);</span>
 
-<span class="fc" id="L3762">                return initial;</span>
+<span class="fc" id="L3776">                return initial;</span>
             }
 
             @Override
@@ -3832,167 +3846,168 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
                 // d(Ωmeasx)/d(g32) = ftruey
                 // d(Ωmeasx)/d(g33) = ftruez
 
-<span class="fc" id="L3835">                final double sx = params[0];</span>
-<span class="fc" id="L3836">                final double sy = params[1];</span>
-<span class="fc" id="L3837">                final double sz = params[2];</span>
+<span class="fc" id="L3849">                final double sx = params[0];</span>
+<span class="fc" id="L3850">                final double sy = params[1];</span>
+<span class="fc" id="L3851">                final double sz = params[2];</span>
 
-<span class="fc" id="L3839">                final double mxy = params[3];</span>
-<span class="fc" id="L3840">                final double mxz = params[4];</span>
-<span class="fc" id="L3841">                final double myx = params[5];</span>
-<span class="fc" id="L3842">                final double myz = params[6];</span>
-<span class="fc" id="L3843">                final double mzx = params[7];</span>
-<span class="fc" id="L3844">                final double mzy = params[8];</span>
+<span class="fc" id="L3853">                final double mxy = params[3];</span>
+<span class="fc" id="L3854">                final double mxz = params[4];</span>
+<span class="fc" id="L3855">                final double myx = params[5];</span>
+<span class="fc" id="L3856">                final double myz = params[6];</span>
+<span class="fc" id="L3857">                final double mzx = params[7];</span>
+<span class="fc" id="L3858">                final double mzy = params[8];</span>
 
-<span class="fc" id="L3846">                final double g11 = params[9];</span>
-<span class="fc" id="L3847">                final double g21 = params[10];</span>
-<span class="fc" id="L3848">                final double g31 = params[11];</span>
-<span class="fc" id="L3849">                final double g12 = params[12];</span>
-<span class="fc" id="L3850">                final double g22 = params[13];</span>
-<span class="fc" id="L3851">                final double g32 = params[14];</span>
-<span class="fc" id="L3852">                final double g13 = params[15];</span>
-<span class="fc" id="L3853">                final double g23 = params[16];</span>
-<span class="fc" id="L3854">                final double g33 = params[17];</span>
+<span class="fc" id="L3860">                final double g11 = params[9];</span>
+<span class="fc" id="L3861">                final double g21 = params[10];</span>
+<span class="fc" id="L3862">                final double g31 = params[11];</span>
+<span class="fc" id="L3863">                final double g12 = params[12];</span>
+<span class="fc" id="L3864">                final double g22 = params[13];</span>
+<span class="fc" id="L3865">                final double g32 = params[14];</span>
+<span class="fc" id="L3866">                final double g13 = params[15];</span>
+<span class="fc" id="L3867">                final double g23 = params[16];</span>
+<span class="fc" id="L3868">                final double g33 = params[17];</span>
 
-<span class="fc" id="L3856">                final double omegatruex = point[0];</span>
-<span class="fc" id="L3857">                final double omegatruey = point[1];</span>
-<span class="fc" id="L3858">                final double omegatruez = point[2];</span>
+<span class="fc" id="L3870">                final double omegatruex = point[0];</span>
+<span class="fc" id="L3871">                final double omegatruey = point[1];</span>
+<span class="fc" id="L3872">                final double omegatruez = point[2];</span>
 
-<span class="fc" id="L3860">                final double ftruex = point[3];</span>
-<span class="fc" id="L3861">                final double ftruey = point[4];</span>
-<span class="fc" id="L3862">                final double ftruez = point[5];</span>
+<span class="fc" id="L3874">                final double ftruex = point[3];</span>
+<span class="fc" id="L3875">                final double ftruey = point[4];</span>
+<span class="fc" id="L3876">                final double ftruez = point[5];</span>
 
-<span class="fc" id="L3864">                result[0] = mBiasX + omegatruex + sx * omegatruex + mxy * omegatruey + mxz * omegatruez</span>
+<span class="fc" id="L3878">                result[0] = mBiasX + omegatruex + sx * omegatruex + mxy * omegatruey + mxz * omegatruez</span>
                         + g11 * ftruex + g12 * ftruey + g13 * ftruez;
-<span class="fc" id="L3866">                result[1] = mBiasY + myx * omegatruex + omegatruey + sy * omegatruey + myz * omegatruez</span>
+<span class="fc" id="L3880">                result[1] = mBiasY + myx * omegatruex + omegatruey + sy * omegatruey + myz * omegatruez</span>
                         + g21 * ftruex * g22 * ftruey + g23 * ftruez;
-<span class="fc" id="L3868">                result[2] = mBiasZ + mzx * omegatruex + mzy * omegatruey + omegatruez + sz * omegatruez</span>
+<span class="fc" id="L3882">                result[2] = mBiasZ + mzx * omegatruex + mzy * omegatruey + omegatruez + sz * omegatruez</span>
                         + g31 * ftruex + g32 * ftruey + g33 * ftruez;
 
-<span class="fc" id="L3871">                jacobian.setElementAt(0, 0, omegatruex);</span>
-<span class="fc" id="L3872">                jacobian.setElementAt(0, 1, 0.0);</span>
-<span class="fc" id="L3873">                jacobian.setElementAt(0, 2, 0.0);</span>
-<span class="fc" id="L3874">                jacobian.setElementAt(0, 3, omegatruey);</span>
-<span class="fc" id="L3875">                jacobian.setElementAt(0, 4, omegatruez);</span>
-<span class="fc" id="L3876">                jacobian.setElementAt(0, 5, 0.0);</span>
-<span class="fc" id="L3877">                jacobian.setElementAt(0, 6, 0.0);</span>
-<span class="fc" id="L3878">                jacobian.setElementAt(0, 7, 0.0);</span>
-<span class="fc" id="L3879">                jacobian.setElementAt(0, 8, 0.0);</span>
-<span class="fc" id="L3880">                jacobian.setElementAt(0, 9, ftruex);</span>
-<span class="fc" id="L3881">                jacobian.setElementAt(0, 10, ftruey);</span>
-<span class="fc" id="L3882">                jacobian.setElementAt(0, 11, ftruez);</span>
-<span class="fc" id="L3883">                jacobian.setElementAt(0, 12, 0.0);</span>
-<span class="fc" id="L3884">                jacobian.setElementAt(0, 13, 0.0);</span>
-<span class="fc" id="L3885">                jacobian.setElementAt(0, 14, 0.0);</span>
-<span class="fc" id="L3886">                jacobian.setElementAt(0, 15, 0.0);</span>
-<span class="fc" id="L3887">                jacobian.setElementAt(0, 16, 0.0);</span>
-<span class="fc" id="L3888">                jacobian.setElementAt(0, 17, 0.0);</span>
+<span class="fc" id="L3885">                jacobian.setElementAt(0, 0, omegatruex);</span>
+<span class="fc" id="L3886">                jacobian.setElementAt(0, 1, 0.0);</span>
+<span class="fc" id="L3887">                jacobian.setElementAt(0, 2, 0.0);</span>
+<span class="fc" id="L3888">                jacobian.setElementAt(0, 3, omegatruey);</span>
+<span class="fc" id="L3889">                jacobian.setElementAt(0, 4, omegatruez);</span>
+<span class="fc" id="L3890">                jacobian.setElementAt(0, 5, 0.0);</span>
+<span class="fc" id="L3891">                jacobian.setElementAt(0, 6, 0.0);</span>
+<span class="fc" id="L3892">                jacobian.setElementAt(0, 7, 0.0);</span>
+<span class="fc" id="L3893">                jacobian.setElementAt(0, 8, 0.0);</span>
+<span class="fc" id="L3894">                jacobian.setElementAt(0, 9, ftruex);</span>
+<span class="fc" id="L3895">                jacobian.setElementAt(0, 10, ftruey);</span>
+<span class="fc" id="L3896">                jacobian.setElementAt(0, 11, ftruez);</span>
+<span class="fc" id="L3897">                jacobian.setElementAt(0, 12, 0.0);</span>
+<span class="fc" id="L3898">                jacobian.setElementAt(0, 13, 0.0);</span>
+<span class="fc" id="L3899">                jacobian.setElementAt(0, 14, 0.0);</span>
+<span class="fc" id="L3900">                jacobian.setElementAt(0, 15, 0.0);</span>
+<span class="fc" id="L3901">                jacobian.setElementAt(0, 16, 0.0);</span>
+<span class="fc" id="L3902">                jacobian.setElementAt(0, 17, 0.0);</span>
 
-<span class="fc" id="L3890">                jacobian.setElementAt(1, 0, 0.0);</span>
-<span class="fc" id="L3891">                jacobian.setElementAt(1, 1, omegatruey);</span>
-<span class="fc" id="L3892">                jacobian.setElementAt(1, 2, 0.0);</span>
-<span class="fc" id="L3893">                jacobian.setElementAt(1, 3, 0.0);</span>
-<span class="fc" id="L3894">                jacobian.setElementAt(1, 4, 0.0);</span>
-<span class="fc" id="L3895">                jacobian.setElementAt(1, 5, omegatruex);</span>
-<span class="fc" id="L3896">                jacobian.setElementAt(1, 6, omegatruez);</span>
-<span class="fc" id="L3897">                jacobian.setElementAt(1, 7, 0.0);</span>
-<span class="fc" id="L3898">                jacobian.setElementAt(1, 8, 0.0);</span>
-<span class="fc" id="L3899">                jacobian.setElementAt(1, 9, 0.0);</span>
-<span class="fc" id="L3900">                jacobian.setElementAt(1, 10, 0.0);</span>
-<span class="fc" id="L3901">                jacobian.setElementAt(1, 11, 0.0);</span>
-<span class="fc" id="L3902">                jacobian.setElementAt(1, 12, ftruex);</span>
-<span class="fc" id="L3903">                jacobian.setElementAt(1, 13, ftruey);</span>
-<span class="fc" id="L3904">                jacobian.setElementAt(1, 14, ftruez);</span>
-<span class="fc" id="L3905">                jacobian.setElementAt(1, 15, 0.0);</span>
-<span class="fc" id="L3906">                jacobian.setElementAt(1, 16, 0.0);</span>
-<span class="fc" id="L3907">                jacobian.setElementAt(1, 17, 0.0);</span>
+<span class="fc" id="L3904">                jacobian.setElementAt(1, 0, 0.0);</span>
+<span class="fc" id="L3905">                jacobian.setElementAt(1, 1, omegatruey);</span>
+<span class="fc" id="L3906">                jacobian.setElementAt(1, 2, 0.0);</span>
+<span class="fc" id="L3907">                jacobian.setElementAt(1, 3, 0.0);</span>
+<span class="fc" id="L3908">                jacobian.setElementAt(1, 4, 0.0);</span>
+<span class="fc" id="L3909">                jacobian.setElementAt(1, 5, omegatruex);</span>
+<span class="fc" id="L3910">                jacobian.setElementAt(1, 6, omegatruez);</span>
+<span class="fc" id="L3911">                jacobian.setElementAt(1, 7, 0.0);</span>
+<span class="fc" id="L3912">                jacobian.setElementAt(1, 8, 0.0);</span>
+<span class="fc" id="L3913">                jacobian.setElementAt(1, 9, 0.0);</span>
+<span class="fc" id="L3914">                jacobian.setElementAt(1, 10, 0.0);</span>
+<span class="fc" id="L3915">                jacobian.setElementAt(1, 11, 0.0);</span>
+<span class="fc" id="L3916">                jacobian.setElementAt(1, 12, ftruex);</span>
+<span class="fc" id="L3917">                jacobian.setElementAt(1, 13, ftruey);</span>
+<span class="fc" id="L3918">                jacobian.setElementAt(1, 14, ftruez);</span>
+<span class="fc" id="L3919">                jacobian.setElementAt(1, 15, 0.0);</span>
+<span class="fc" id="L3920">                jacobian.setElementAt(1, 16, 0.0);</span>
+<span class="fc" id="L3921">                jacobian.setElementAt(1, 17, 0.0);</span>
 
-<span class="fc" id="L3909">                jacobian.setElementAt(2, 0, 0.0);</span>
-<span class="fc" id="L3910">                jacobian.setElementAt(2, 1, 0.0);</span>
-<span class="fc" id="L3911">                jacobian.setElementAt(2, 2, omegatruez);</span>
-<span class="fc" id="L3912">                jacobian.setElementAt(2, 3, 0.0);</span>
-<span class="fc" id="L3913">                jacobian.setElementAt(2, 4, 0.0);</span>
-<span class="fc" id="L3914">                jacobian.setElementAt(2, 5, 0.0);</span>
-<span class="fc" id="L3915">                jacobian.setElementAt(2, 6, 0.0);</span>
-<span class="fc" id="L3916">                jacobian.setElementAt(2, 7, omegatruex);</span>
-<span class="fc" id="L3917">                jacobian.setElementAt(2, 8, omegatruey);</span>
-<span class="fc" id="L3918">                jacobian.setElementAt(2, 9, 0.0);</span>
-<span class="fc" id="L3919">                jacobian.setElementAt(2, 10, 0.0);</span>
-<span class="fc" id="L3920">                jacobian.setElementAt(2, 11, 0.0);</span>
-<span class="fc" id="L3921">                jacobian.setElementAt(2, 12, 0.0);</span>
-<span class="fc" id="L3922">                jacobian.setElementAt(2, 13, 0.0);</span>
-<span class="fc" id="L3923">                jacobian.setElementAt(2, 14, 0.0);</span>
-<span class="fc" id="L3924">                jacobian.setElementAt(2, 15, ftruex);</span>
-<span class="fc" id="L3925">                jacobian.setElementAt(2, 16, ftruey);</span>
-<span class="fc" id="L3926">                jacobian.setElementAt(2, 17, ftruez);</span>
-<span class="fc" id="L3927">            }</span>
+<span class="fc" id="L3923">                jacobian.setElementAt(2, 0, 0.0);</span>
+<span class="fc" id="L3924">                jacobian.setElementAt(2, 1, 0.0);</span>
+<span class="fc" id="L3925">                jacobian.setElementAt(2, 2, omegatruez);</span>
+<span class="fc" id="L3926">                jacobian.setElementAt(2, 3, 0.0);</span>
+<span class="fc" id="L3927">                jacobian.setElementAt(2, 4, 0.0);</span>
+<span class="fc" id="L3928">                jacobian.setElementAt(2, 5, 0.0);</span>
+<span class="fc" id="L3929">                jacobian.setElementAt(2, 6, 0.0);</span>
+<span class="fc" id="L3930">                jacobian.setElementAt(2, 7, omegatruex);</span>
+<span class="fc" id="L3931">                jacobian.setElementAt(2, 8, omegatruey);</span>
+<span class="fc" id="L3932">                jacobian.setElementAt(2, 9, 0.0);</span>
+<span class="fc" id="L3933">                jacobian.setElementAt(2, 10, 0.0);</span>
+<span class="fc" id="L3934">                jacobian.setElementAt(2, 11, 0.0);</span>
+<span class="fc" id="L3935">                jacobian.setElementAt(2, 12, 0.0);</span>
+<span class="fc" id="L3936">                jacobian.setElementAt(2, 13, 0.0);</span>
+<span class="fc" id="L3937">                jacobian.setElementAt(2, 14, 0.0);</span>
+<span class="fc" id="L3938">                jacobian.setElementAt(2, 15, ftruex);</span>
+<span class="fc" id="L3939">                jacobian.setElementAt(2, 16, ftruey);</span>
+<span class="fc" id="L3940">                jacobian.setElementAt(2, 17, ftruez);</span>
+<span class="fc" id="L3941">            }</span>
         });
 
-<span class="fc" id="L3930">        setInputData();</span>
+<span class="fc" id="L3944">        setInputData();</span>
 
-<span class="fc" id="L3932">        mFitter.fit();</span>
+<span class="fc" id="L3946">        mFitter.fit();</span>
 
-<span class="fc" id="L3934">        final double[] result = mFitter.getA();</span>
+<span class="fc" id="L3948">        final double[] result = mFitter.getA();</span>
 
-<span class="fc" id="L3936">        final double sx = result[0];</span>
-<span class="fc" id="L3937">        final double sy = result[1];</span>
-<span class="fc" id="L3938">        final double sz = result[2];</span>
+<span class="fc" id="L3950">        final double sx = result[0];</span>
+<span class="fc" id="L3951">        final double sy = result[1];</span>
+<span class="fc" id="L3952">        final double sz = result[2];</span>
 
-<span class="fc" id="L3940">        final double mxy = result[3];</span>
-<span class="fc" id="L3941">        final double mxz = result[4];</span>
-<span class="fc" id="L3942">        final double myx = result[5];</span>
-<span class="fc" id="L3943">        final double myz = result[6];</span>
-<span class="fc" id="L3944">        final double mzx = result[7];</span>
-<span class="fc" id="L3945">        final double mzy = result[8];</span>
+<span class="fc" id="L3954">        final double mxy = result[3];</span>
+<span class="fc" id="L3955">        final double mxz = result[4];</span>
+<span class="fc" id="L3956">        final double myx = result[5];</span>
+<span class="fc" id="L3957">        final double myz = result[6];</span>
+<span class="fc" id="L3958">        final double mzx = result[7];</span>
+<span class="fc" id="L3959">        final double mzy = result[8];</span>
 
-<span class="fc" id="L3947">        final double g11 = result[9];</span>
-<span class="fc" id="L3948">        final double g21 = result[10];</span>
-<span class="fc" id="L3949">        final double g31 = result[11];</span>
-<span class="fc" id="L3950">        final double g12 = result[12];</span>
-<span class="fc" id="L3951">        final double g22 = result[13];</span>
-<span class="fc" id="L3952">        final double g32 = result[14];</span>
-<span class="fc" id="L3953">        final double g13 = result[15];</span>
-<span class="fc" id="L3954">        final double g23 = result[16];</span>
-<span class="fc" id="L3955">        final double g33 = result[17];</span>
+<span class="fc" id="L3961">        final double g11 = result[9];</span>
+<span class="fc" id="L3962">        final double g21 = result[10];</span>
+<span class="fc" id="L3963">        final double g31 = result[11];</span>
+<span class="fc" id="L3964">        final double g12 = result[12];</span>
+<span class="fc" id="L3965">        final double g22 = result[13];</span>
+<span class="fc" id="L3966">        final double g32 = result[14];</span>
+<span class="fc" id="L3967">        final double g13 = result[15];</span>
+<span class="fc" id="L3968">        final double g23 = result[16];</span>
+<span class="fc" id="L3969">        final double g33 = result[17];</span>
 
-<span class="pc bpc" id="L3957" title="1 of 2 branches missed.">        if (mEstimatedMg == null) {</span>
-<span class="fc" id="L3958">            mEstimatedMg = new Matrix(BodyKinematics.COMPONENTS,</span>
+<span class="pc bpc" id="L3971" title="1 of 2 branches missed.">        if (mEstimatedMg == null) {</span>
+<span class="fc" id="L3972">            mEstimatedMg = new Matrix(BodyKinematics.COMPONENTS,</span>
                     BodyKinematics.COMPONENTS);
         } else {
-<span class="nc" id="L3961">            mEstimatedMg.initialize(0.0);</span>
+<span class="nc" id="L3975">            mEstimatedMg.initialize(0.0);</span>
         }
 
-<span class="fc" id="L3964">        mEstimatedMg.setElementAt(0, 0, sx);</span>
-<span class="fc" id="L3965">        mEstimatedMg.setElementAt(1, 0, myx);</span>
-<span class="fc" id="L3966">        mEstimatedMg.setElementAt(2, 0, mzx);</span>
+<span class="fc" id="L3978">        mEstimatedMg.setElementAt(0, 0, sx);</span>
+<span class="fc" id="L3979">        mEstimatedMg.setElementAt(1, 0, myx);</span>
+<span class="fc" id="L3980">        mEstimatedMg.setElementAt(2, 0, mzx);</span>
 
-<span class="fc" id="L3968">        mEstimatedMg.setElementAt(0, 1, mxy);</span>
-<span class="fc" id="L3969">        mEstimatedMg.setElementAt(1, 1, sy);</span>
-<span class="fc" id="L3970">        mEstimatedMg.setElementAt(2, 1, mzy);</span>
+<span class="fc" id="L3982">        mEstimatedMg.setElementAt(0, 1, mxy);</span>
+<span class="fc" id="L3983">        mEstimatedMg.setElementAt(1, 1, sy);</span>
+<span class="fc" id="L3984">        mEstimatedMg.setElementAt(2, 1, mzy);</span>
 
-<span class="fc" id="L3972">        mEstimatedMg.setElementAt(0, 2, mxz);</span>
-<span class="fc" id="L3973">        mEstimatedMg.setElementAt(1, 2, myz);</span>
-<span class="fc" id="L3974">        mEstimatedMg.setElementAt(2, 2, sz);</span>
+<span class="fc" id="L3986">        mEstimatedMg.setElementAt(0, 2, mxz);</span>
+<span class="fc" id="L3987">        mEstimatedMg.setElementAt(1, 2, myz);</span>
+<span class="fc" id="L3988">        mEstimatedMg.setElementAt(2, 2, sz);</span>
 
-<span class="pc bpc" id="L3976" title="1 of 2 branches missed.">        if (mEstimatedGg == null) {</span>
-<span class="fc" id="L3977">            mEstimatedGg = new Matrix(BodyKinematics.COMPONENTS,</span>
+<span class="pc bpc" id="L3990" title="1 of 2 branches missed.">        if (mEstimatedGg == null) {</span>
+<span class="fc" id="L3991">            mEstimatedGg = new Matrix(BodyKinematics.COMPONENTS,</span>
                     BodyKinematics.COMPONENTS);
         } else {
-<span class="nc" id="L3980">            mEstimatedGg.initialize(0.0);</span>
+<span class="nc" id="L3994">            mEstimatedGg.initialize(0.0);</span>
         }
 
-<span class="fc" id="L3983">        mEstimatedGg.setElementAtIndex(0, g11);</span>
-<span class="fc" id="L3984">        mEstimatedGg.setElementAtIndex(1, g21);</span>
-<span class="fc" id="L3985">        mEstimatedGg.setElementAtIndex(2, g31);</span>
-<span class="fc" id="L3986">        mEstimatedGg.setElementAtIndex(3, g12);</span>
-<span class="fc" id="L3987">        mEstimatedGg.setElementAtIndex(4, g22);</span>
-<span class="fc" id="L3988">        mEstimatedGg.setElementAtIndex(5, g32);</span>
-<span class="fc" id="L3989">        mEstimatedGg.setElementAtIndex(6, g13);</span>
-<span class="fc" id="L3990">        mEstimatedGg.setElementAtIndex(7, g23);</span>
-<span class="fc" id="L3991">        mEstimatedGg.setElementAtIndex(8, g33);</span>
+<span class="fc" id="L3997">        mEstimatedGg.setElementAtIndex(0, g11);</span>
+<span class="fc" id="L3998">        mEstimatedGg.setElementAtIndex(1, g21);</span>
+<span class="fc" id="L3999">        mEstimatedGg.setElementAtIndex(2, g31);</span>
+<span class="fc" id="L4000">        mEstimatedGg.setElementAtIndex(3, g12);</span>
+<span class="fc" id="L4001">        mEstimatedGg.setElementAtIndex(4, g22);</span>
+<span class="fc" id="L4002">        mEstimatedGg.setElementAtIndex(5, g32);</span>
+<span class="fc" id="L4003">        mEstimatedGg.setElementAtIndex(6, g13);</span>
+<span class="fc" id="L4004">        mEstimatedGg.setElementAtIndex(7, g23);</span>
+<span class="fc" id="L4005">        mEstimatedGg.setElementAtIndex(8, g33);</span>
 
-<span class="fc" id="L3993">        mEstimatedCovariance = mFitter.getCovar();</span>
-<span class="fc" id="L3994">        mEstimatedChiSq = mFitter.getChisq();</span>
-<span class="fc" id="L3995">    }</span>
+<span class="fc" id="L4007">        mEstimatedCovariance = mFitter.getCovar();</span>
+<span class="fc" id="L4008">        mEstimatedChiSq = mFitter.getChisq();</span>
+<span class="fc" id="L4009">        mEstimatedMse = mFitter.getMse();</span>
+<span class="fc" id="L4010">    }</span>
 
     /**
      * Sets input data into Levenberg-Marquardt fitter.
@@ -4009,52 +4024,52 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
         //  fmeasy = by + myx * ftruex + ftruey + sy * ftruey + myz * ftruez
         //  fmeasz = bz + mzx * ftruex + mzy * ftruey + ftruez + sz * ftruez
 
-<span class="fc" id="L4012">        final BodyKinematics expectedKinematics = new BodyKinematics();</span>
+<span class="fc" id="L4027">        final BodyKinematics expectedKinematics = new BodyKinematics();</span>
 
-<span class="fc" id="L4014">        final int numMeasurements = mMeasurements.size();</span>
-<span class="fc" id="L4015">        final Matrix x = new Matrix(numMeasurements, 2 * BodyKinematics.COMPONENTS);</span>
-<span class="fc" id="L4016">        final Matrix y = new Matrix(numMeasurements, BodyKinematics.COMPONENTS);</span>
-<span class="fc" id="L4017">        final double[] standardDeviations = new double[numMeasurements];</span>
-<span class="fc" id="L4018">        int i = 0;</span>
-<span class="fc bfc" id="L4019" title="All 2 branches covered.">        for (final StandardDeviationFrameBodyKinematics measurement : mMeasurements) {</span>
-<span class="fc" id="L4020">            final BodyKinematics measuredKinematics = measurement.getKinematics();</span>
-<span class="fc" id="L4021">            final ECEFFrame ecefFrame = measurement.getFrame();</span>
-<span class="fc" id="L4022">            final ECEFFrame previousEcefFrame = measurement.getPreviousFrame();</span>
-<span class="fc" id="L4023">            final double timeInterval = measurement.getTimeInterval();</span>
+<span class="fc" id="L4029">        final int numMeasurements = mMeasurements.size();</span>
+<span class="fc" id="L4030">        final Matrix x = new Matrix(numMeasurements, 2 * BodyKinematics.COMPONENTS);</span>
+<span class="fc" id="L4031">        final Matrix y = new Matrix(numMeasurements, BodyKinematics.COMPONENTS);</span>
+<span class="fc" id="L4032">        final double[] standardDeviations = new double[numMeasurements];</span>
+<span class="fc" id="L4033">        int i = 0;</span>
+<span class="fc bfc" id="L4034" title="All 2 branches covered.">        for (final StandardDeviationFrameBodyKinematics measurement : mMeasurements) {</span>
+<span class="fc" id="L4035">            final BodyKinematics measuredKinematics = measurement.getKinematics();</span>
+<span class="fc" id="L4036">            final ECEFFrame ecefFrame = measurement.getFrame();</span>
+<span class="fc" id="L4037">            final ECEFFrame previousEcefFrame = measurement.getPreviousFrame();</span>
+<span class="fc" id="L4038">            final double timeInterval = measurement.getTimeInterval();</span>
 
-<span class="fc" id="L4025">            ECEFKinematicsEstimator.estimateKinematics(timeInterval, ecefFrame,</span>
+<span class="fc" id="L4040">            ECEFKinematicsEstimator.estimateKinematics(timeInterval, ecefFrame,</span>
                     previousEcefFrame, expectedKinematics);
 
-<span class="fc" id="L4028">            final double omegaMeasX = measuredKinematics.getAngularRateX();</span>
-<span class="fc" id="L4029">            final double omegaMeasY = measuredKinematics.getAngularRateY();</span>
-<span class="fc" id="L4030">            final double omegaMeasZ = measuredKinematics.getAngularRateZ();</span>
+<span class="fc" id="L4043">            final double omegaMeasX = measuredKinematics.getAngularRateX();</span>
+<span class="fc" id="L4044">            final double omegaMeasY = measuredKinematics.getAngularRateY();</span>
+<span class="fc" id="L4045">            final double omegaMeasZ = measuredKinematics.getAngularRateZ();</span>
 
-<span class="fc" id="L4032">            final double omegaTrueX = expectedKinematics.getAngularRateX();</span>
-<span class="fc" id="L4033">            final double omegaTrueY = expectedKinematics.getAngularRateY();</span>
-<span class="fc" id="L4034">            final double omegaTrueZ = expectedKinematics.getAngularRateZ();</span>
+<span class="fc" id="L4047">            final double omegaTrueX = expectedKinematics.getAngularRateX();</span>
+<span class="fc" id="L4048">            final double omegaTrueY = expectedKinematics.getAngularRateY();</span>
+<span class="fc" id="L4049">            final double omegaTrueZ = expectedKinematics.getAngularRateZ();</span>
 
-<span class="fc" id="L4036">            final double fTrueX = expectedKinematics.getFx();</span>
-<span class="fc" id="L4037">            final double fTrueY = expectedKinematics.getFy();</span>
-<span class="fc" id="L4038">            final double fTrueZ = expectedKinematics.getFz();</span>
+<span class="fc" id="L4051">            final double fTrueX = expectedKinematics.getFx();</span>
+<span class="fc" id="L4052">            final double fTrueY = expectedKinematics.getFy();</span>
+<span class="fc" id="L4053">            final double fTrueZ = expectedKinematics.getFz();</span>
 
-<span class="fc" id="L4040">            x.setElementAt(i, 0, omegaTrueX);</span>
-<span class="fc" id="L4041">            x.setElementAt(i, 1, omegaTrueY);</span>
-<span class="fc" id="L4042">            x.setElementAt(i, 2, omegaTrueZ);</span>
+<span class="fc" id="L4055">            x.setElementAt(i, 0, omegaTrueX);</span>
+<span class="fc" id="L4056">            x.setElementAt(i, 1, omegaTrueY);</span>
+<span class="fc" id="L4057">            x.setElementAt(i, 2, omegaTrueZ);</span>
 
-<span class="fc" id="L4044">            x.setElementAt(i, 3, fTrueX);</span>
-<span class="fc" id="L4045">            x.setElementAt(i, 4, fTrueY);</span>
-<span class="fc" id="L4046">            x.setElementAt(i, 5, fTrueZ);</span>
+<span class="fc" id="L4059">            x.setElementAt(i, 3, fTrueX);</span>
+<span class="fc" id="L4060">            x.setElementAt(i, 4, fTrueY);</span>
+<span class="fc" id="L4061">            x.setElementAt(i, 5, fTrueZ);</span>
 
-<span class="fc" id="L4048">            y.setElementAt(i, 0, omegaMeasX);</span>
-<span class="fc" id="L4049">            y.setElementAt(i, 1, omegaMeasY);</span>
-<span class="fc" id="L4050">            y.setElementAt(i, 2, omegaMeasZ);</span>
+<span class="fc" id="L4063">            y.setElementAt(i, 0, omegaMeasX);</span>
+<span class="fc" id="L4064">            y.setElementAt(i, 1, omegaMeasY);</span>
+<span class="fc" id="L4065">            y.setElementAt(i, 2, omegaMeasZ);</span>
 
-<span class="fc" id="L4052">            standardDeviations[i] = measurement.getAngularRateStandardDeviation();</span>
-<span class="fc" id="L4053">            i++;</span>
-<span class="fc" id="L4054">        }</span>
+<span class="fc" id="L4067">            standardDeviations[i] = measurement.getAngularRateStandardDeviation();</span>
+<span class="fc" id="L4068">            i++;</span>
+<span class="fc" id="L4069">        }</span>
 
-<span class="fc" id="L4056">        mFitter.setInputData(x, y, standardDeviations);</span>
-<span class="fc" id="L4057">    }</span>
+<span class="fc" id="L4071">        mFitter.setInputData(x, y, standardDeviations);</span>
+<span class="fc" id="L4072">    }</span>
 
     /**
      * Converts angular speed instance to radians per second (rad/s).
@@ -4064,7 +4079,7 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      * @return converted value.
      */
     private static double convertAngularSpeed(final double value, final AngularSpeedUnit unit) {
-<span class="fc" id="L4067">        return AngularSpeedConverter.convert(value, unit,</span>
+<span class="fc" id="L4082">        return AngularSpeedConverter.convert(value, unit,</span>
                 AngularSpeedUnit.RADIANS_PER_SECOND);
     }
 
@@ -4075,8 +4090,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      * @return converted value.
      */
     private static double convertAngularSpeed(final AngularSpeed angularSpeed) {
-<span class="fc" id="L4078">        return convertAngularSpeed(angularSpeed.getValue().doubleValue(),</span>
-<span class="fc" id="L4079">                angularSpeed.getUnit());</span>
+<span class="fc" id="L4093">        return convertAngularSpeed(angularSpeed.getValue().doubleValue(),</span>
+<span class="fc" id="L4094">                angularSpeed.getUnit());</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

@@ -12107,10 +12107,10 @@
 <a class="jxr_linenumber" name="L12099" href="#L12099">12099</a>         estimator.getEcefPosition(ecefPosition2);
 <a class="jxr_linenumber" name="L12100" href="#L12100">12100</a>         assertTrue(ecefPosition1.equals(ecefPosition2, LARGE_ABSOLUTE_ERROR));
 <a class="jxr_linenumber" name="L12101" href="#L12101">12101</a> 
-<a class="jxr_linenumber" name="L12102" href="#L12102">12102</a>         assertTrue(ecefFrame1.equals(estimator.getEcefFrame(), ABSOLUTE_ERROR));
+<a class="jxr_linenumber" name="L12102" href="#L12102">12102</a>         assertTrue(ecefFrame1.equals(estimator.getEcefFrame(), LARGE_ABSOLUTE_ERROR));
 <a class="jxr_linenumber" name="L12103" href="#L12103">12103</a>         <strong class="jxr_keyword">final</strong> ECEFFrame ecefFrame2 = <strong class="jxr_keyword">new</strong> ECEFFrame();
 <a class="jxr_linenumber" name="L12104" href="#L12104">12104</a>         estimator.getEcefFrame(ecefFrame2);
-<a class="jxr_linenumber" name="L12105" href="#L12105">12105</a>         assertTrue(ecefFrame1.equals(ecefFrame2, ABSOLUTE_ERROR));
+<a class="jxr_linenumber" name="L12105" href="#L12105">12105</a>         assertTrue(ecefFrame1.equals(ecefFrame2, LARGE_ABSOLUTE_ERROR));
 <a class="jxr_linenumber" name="L12106" href="#L12106">12106</a> 
 <a class="jxr_linenumber" name="L12107" href="#L12107">12107</a>         assertTrue(nedFrame1.equals(estimator.getNedFrame(), ABSOLUTE_ERROR));
 <a class="jxr_linenumber" name="L12108" href="#L12108">12108</a>         <strong class="jxr_keyword">final</strong> NEDFrame nedFrame2 = <strong class="jxr_keyword">new</strong> NEDFrame();
@@ -12729,15 +12729,15 @@
 <a class="jxr_linenumber" name="L12721" href="#L12721">12721</a>         <strong class="jxr_keyword">final</strong> ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
 <a class="jxr_linenumber" name="L12722" href="#L12722">12722</a>         <strong class="jxr_keyword">final</strong> CoordinateTransformation ecefC1 = ecefFrame1.getCoordinateTransformation();
 <a class="jxr_linenumber" name="L12723" href="#L12723">12723</a> 
-<a class="jxr_linenumber" name="L12724" href="#L12724">12724</a>         assertTrue(ecefPosition1.equals(estimator.getEcefPosition(), ABSOLUTE_ERROR));
+<a class="jxr_linenumber" name="L12724" href="#L12724">12724</a>         assertTrue(ecefPosition1.equals(estimator.getEcefPosition(), LARGE_ABSOLUTE_ERROR));
 <a class="jxr_linenumber" name="L12725" href="#L12725">12725</a>         <strong class="jxr_keyword">final</strong> ECEFPosition ecefPosition2 = <strong class="jxr_keyword">new</strong> ECEFPosition();
 <a class="jxr_linenumber" name="L12726" href="#L12726">12726</a>         estimator.getEcefPosition(ecefPosition2);
-<a class="jxr_linenumber" name="L12727" href="#L12727">12727</a>         assertTrue(ecefPosition1.equals(ecefPosition2, ABSOLUTE_ERROR));
+<a class="jxr_linenumber" name="L12727" href="#L12727">12727</a>         assertTrue(ecefPosition1.equals(ecefPosition2, LARGE_ABSOLUTE_ERROR));
 <a class="jxr_linenumber" name="L12728" href="#L12728">12728</a> 
-<a class="jxr_linenumber" name="L12729" href="#L12729">12729</a>         assertTrue(ecefFrame1.equals(estimator.getEcefFrame(), ABSOLUTE_ERROR));
+<a class="jxr_linenumber" name="L12729" href="#L12729">12729</a>         assertTrue(ecefFrame1.equals(estimator.getEcefFrame(), LARGE_ABSOLUTE_ERROR));
 <a class="jxr_linenumber" name="L12730" href="#L12730">12730</a>         <strong class="jxr_keyword">final</strong> ECEFFrame ecefFrame2 = <strong class="jxr_keyword">new</strong> ECEFFrame();
 <a class="jxr_linenumber" name="L12731" href="#L12731">12731</a>         estimator.getEcefFrame(ecefFrame2);
-<a class="jxr_linenumber" name="L12732" href="#L12732">12732</a>         assertTrue(ecefFrame1.equals(ecefFrame2, ABSOLUTE_ERROR));
+<a class="jxr_linenumber" name="L12732" href="#L12732">12732</a>         assertTrue(ecefFrame1.equals(ecefFrame2, LARGE_ABSOLUTE_ERROR));
 <a class="jxr_linenumber" name="L12733" href="#L12733">12733</a> 
 <a class="jxr_linenumber" name="L12734" href="#L12734">12734</a>         assertTrue(nedFrame1.equals(estimator.getNedFrame(), ABSOLUTE_ERROR));
 <a class="jxr_linenumber" name="L12735" href="#L12735">12735</a>         <strong class="jxr_keyword">final</strong> NEDFrame nedFrame2 = <strong class="jxr_keyword">new</strong> NEDFrame();

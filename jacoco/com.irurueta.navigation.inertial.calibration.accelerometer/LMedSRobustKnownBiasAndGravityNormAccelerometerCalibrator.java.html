@@ -1011,12 +1011,12 @@ public class LMedSRobustKnownBiasAndGravityNormAccelerometerCalibrator extends
                     public void onEstimateProgressChange(
                             final RobustEstimator&lt;PreliminaryResult&gt; estimator,
                             final float progress) {
-<span class="nc bnc" id="L1014" title="All 2 branches missed.">                        if (mListener != null) {</span>
-<span class="nc" id="L1015">                            mListener.onCalibrateProgressChange(</span>
+<span class="pc bpc" id="L1014" title="1 of 2 branches missed.">                        if (mListener != null) {</span>
+<span class="fc" id="L1015">                            mListener.onCalibrateProgressChange(</span>
                                     LMedSRobustKnownBiasAndGravityNormAccelerometerCalibrator.this,
                                     progress);
                         }
-<span class="nc" id="L1019">                    }</span>
+<span class="fc" id="L1019">                    }</span>
                 });
 
         try {
@@ -1061,4 +1061,4 @@ public class LMedSRobustKnownBiasAndGravityNormAccelerometerCalibrator extends
 <span class="fc" id="L1061">        return RobustEstimatorMethod.LMedS;</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

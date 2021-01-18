@@ -563,12 +563,12 @@ public class PROSACRobustKnownFrameGyroscopeCalibrator extends
                             public void onEstimateProgressChange(
                                     final RobustEstimator&lt;PreliminaryResult&gt; estimator,
                                     final float progress) {
-<span class="pc bpc" id="L566" title="1 of 2 branches missed.">                                if (mListener != null) {</span>
-<span class="fc" id="L567">                                    mListener.onCalibrateProgressChange(</span>
+<span class="nc bnc" id="L566" title="All 2 branches missed.">                                if (mListener != null) {</span>
+<span class="nc" id="L567">                                    mListener.onCalibrateProgressChange(</span>
                                             PROSACRobustKnownFrameGyroscopeCalibrator.this,
                                             progress);
                                 }
-<span class="fc" id="L571">                            }</span>
+<span class="nc" id="L571">                            }</span>
                         });
 
         try {
@@ -633,4 +633,4 @@ public class PROSACRobustKnownFrameGyroscopeCalibrator extends
 <span class="fc" id="L633">        mQualityScores = qualityScores;</span>
 <span class="fc" id="L634">    }</span>
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>
