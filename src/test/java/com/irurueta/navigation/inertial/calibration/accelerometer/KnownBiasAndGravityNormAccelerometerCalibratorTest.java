@@ -31102,7 +31102,7 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
     }
 
     @Test
-    public void testSetBias1() throws LockedException {
+    public void testSetBiasCoordinates1() throws LockedException {
         final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
                 new KnownBiasAndGravityNormAccelerometerCalibrator();
 
@@ -31117,7 +31117,7 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         final double biasY = ba.getElementAtIndex(1);
         final double biasZ = ba.getElementAtIndex(2);
 
-        calibrator.setBias(biasX, biasY, biasZ);
+        calibrator.setBiasCoordinates(biasX, biasY, biasZ);
 
         // check
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -31148,7 +31148,7 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         final Acceleration bz = new Acceleration(biasZ,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
 
-        calibrator.setBias(bx, by, bz);
+        calibrator.setBiasCoordinates(bx, by, bz);
 
         // check
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -32266,12 +32266,12 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         } catch (final LockedException ignore) {
         }
         try {
-            calibrator.setBias(0.0, 0.0, 0.0);
+            calibrator.setBiasCoordinates(0.0, 0.0, 0.0);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
         try {
-            calibrator.setBias(null, null, null);
+            calibrator.setBiasCoordinates(null, null, null);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }

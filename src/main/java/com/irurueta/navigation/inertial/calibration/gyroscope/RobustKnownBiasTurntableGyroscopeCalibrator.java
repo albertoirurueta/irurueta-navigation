@@ -93,7 +93,8 @@ import java.util.List;
  * - ftrue is ground-truth specific force. This is a 3x1 vector.
  * - w is measurement noise. This is a 3x1 vector.
  */
-public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
+public abstract class RobustKnownBiasTurntableGyroscopeCalibrator implements
+        GyroscopeNonLinearCalibrator, KnownBiasGyroscopeCalibrator {
     /**
      * Indicates whether by default a common z-axis is assumed for both the accelerometer
      * and gyroscope.
@@ -420,6 +421,11 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * Estimated covariance matrix for estimated parameters.
      */
     private Matrix mEstimatedCovariance;
+
+    /**
+     * Estimated chi square value.
+     */
+    private double mEstimatedChiSq;
 
     /**
      * Estimated mean square error respect to provided measurements.
@@ -3070,6 +3076,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      *
      * @return known x-coordinate of gyroscope bias.
      */
+    @Override
     public double getBiasX() {
         return mBiasX;
     }
@@ -3081,6 +3088,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * @param biasX known x-coordinate of gyroscope bias.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setBiasX(final double biasX)
             throws LockedException {
         if (mRunning) {
@@ -3095,6 +3103,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      *
      * @return known y-coordinate of gyroscope bias.
      */
+    @Override
     public double getBiasY() {
         return mBiasY;
     }
@@ -3106,6 +3115,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * @param biasY known y-coordinate of gyroscope bias.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setBiasY(final double biasY)
             throws LockedException {
         if (mRunning) {
@@ -3114,12 +3124,14 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
         mBiasY = biasY;
     }
 
+
     /**
      * Gets known z-coordinate of gyroscope bias.
      * This is expressed in radians per second (rad/s).
      *
      * @return known z-coordinate of gyroscope bias.
      */
+    @Override
     public double getBiasZ() {
         return mBiasZ;
     }
@@ -3131,6 +3143,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * @param biasZ known z-coordinate of gyroscope bias.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setBiasZ(final double biasZ)
             throws LockedException {
         if (mRunning) {
@@ -3144,6 +3157,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      *
      * @return known x-coordinate of gyroscope bias.
      */
+    @Override
     public AngularSpeed getBiasAngularSpeedX() {
         return new AngularSpeed(mBiasX,
                 AngularSpeedUnit.RADIANS_PER_SECOND);
@@ -3154,6 +3168,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      *
      * @param result instance where result data will be stored.
      */
+    @Override
     public void getBiasAngularSpeedX(final AngularSpeed result) {
         result.setValue(mBiasX);
         result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);
@@ -3165,6 +3180,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * @param biasX known x-coordinate of gyroscope bias.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setBiasX(final AngularSpeed biasX)
             throws LockedException {
         if (mRunning) {
@@ -3178,6 +3194,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      *
      * @return known y-coordinate of gyroscope bias.
      */
+    @Override
     public AngularSpeed getBiasAngularSpeedY() {
         return new AngularSpeed(mBiasY,
                 AngularSpeedUnit.RADIANS_PER_SECOND);
@@ -3188,6 +3205,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      *
      * @param result instance where result data will be stored.
      */
+    @Override
     public void getBiasAngularSpeedY(final AngularSpeed result) {
         result.setValue(mBiasY);
         result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);
@@ -3199,6 +3217,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * @param biasY known y-coordinate of gyroscope bias.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setBiasY(final AngularSpeed biasY)
             throws LockedException {
         if (mRunning) {
@@ -3212,6 +3231,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      *
      * @return known z-coordinate of gyroscope bias.
      */
+    @Override
     public AngularSpeed getBiasAngularSpeedZ() {
         return new AngularSpeed(mBiasZ,
                 AngularSpeedUnit.RADIANS_PER_SECOND);
@@ -3222,6 +3242,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      *
      * @param result instance where result data will be stored.
      */
+    @Override
     public void getBiasAngularSpeedZ(final AngularSpeed result) {
         result.setValue(mBiasZ);
         result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);
@@ -3233,6 +3254,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * @param biasZ known z-coordinate of gyroscope bias.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setBiasZ(final AngularSpeed biasZ)
             throws LockedException {
         if (mRunning) {
@@ -3250,7 +3272,8 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * @param biasZ known z-coordinate of gyroscope bias.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setBias(
+    @Override
+    public void setBiasCoordinates(
             final double biasX, final double biasY,
             final double biasZ) throws LockedException {
         if (mRunning) {
@@ -3269,7 +3292,8 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * @param biasZ known z-coordinate of gyroscope bias.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setBias(
+    @Override
+    public void setBiasCoordinates(
             final AngularSpeed biasX,
             final AngularSpeed biasY,
             final AngularSpeed biasZ) throws LockedException {
@@ -3323,6 +3347,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      *
      * @return initial x scaling factor of gyroscope.
      */
+    @Override
     public double getInitialSx() {
         return mInitialSx;
     }
@@ -3333,6 +3358,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * @param initialSx initial x scaling factor of gyroscope.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialSx(final double initialSx)
             throws LockedException {
         if (mRunning) {
@@ -3346,6 +3372,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      *
      * @return initial y scaling factor of gyroscope.
      */
+    @Override
     public double getInitialSy() {
         return mInitialSy;
     }
@@ -3356,6 +3383,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * @param initialSy initial y scaling factor of gyroscope.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialSy(final double initialSy)
             throws LockedException {
         if (mRunning) {
@@ -3369,6 +3397,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      *
      * @return initial z scaling factor of gyroscope.
      */
+    @Override
     public double getInitialSz() {
         return mInitialSz;
     }
@@ -3379,6 +3408,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * @param initialSz initial z scaling factor of gyroscope.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialSz(final double initialSz)
             throws LockedException {
         if (mRunning) {
@@ -3392,6 +3422,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      *
      * @return initial x-y cross coupling error of gyroscope.
      */
+    @Override
     public double getInitialMxy() {
         return mInitialMxy;
     }
@@ -3402,6 +3433,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * @param initialMxy initial x-y cross coupling error of gyroscope.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialMxy(final double initialMxy)
             throws LockedException {
         if (mRunning) {
@@ -3415,6 +3447,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      *
      * @return initial x-z cross coupling error of gyroscope.
      */
+    @Override
     public double getInitialMxz() {
         return mInitialMxz;
     }
@@ -3425,6 +3458,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * @param initialMxz initial x-z cross coupling error of gyroscope.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialMxz(final double initialMxz)
             throws LockedException {
         if (mRunning) {
@@ -3438,6 +3472,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      *
      * @return initial y-x cross coupling error of gyroscope.
      */
+    @Override
     public double getInitialMyx() {
         return mInitialMyx;
     }
@@ -3448,6 +3483,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * @param initialMyx initial y-x cross coupling error of gyroscope.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialMyx(final double initialMyx)
             throws LockedException {
         if (mRunning) {
@@ -3461,6 +3497,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      *
      * @return initial y-z cross coupling error of gyroscope.
      */
+    @Override
     public double getInitialMyz() {
         return mInitialMyz;
     }
@@ -3471,6 +3508,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * @param initialMyz initial y-z cross coupling error of gyroscope.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialMyz(final double initialMyz)
             throws LockedException {
         if (mRunning) {
@@ -3484,6 +3522,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      *
      * @return initial z-x cross coupling error of gyroscope.
      */
+    @Override
     public double getInitialMzx() {
         return mInitialMzx;
     }
@@ -3494,6 +3533,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * @param initialMzx initial z-x cross coupling error of gyroscope.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialMzx(final double initialMzx)
             throws LockedException {
         if (mRunning) {
@@ -3507,6 +3547,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      *
      * @return initial z-y cross coupling error of gyroscope.
      */
+    @Override
     public double getInitialMzy() {
         return mInitialMzy;
     }
@@ -3517,6 +3558,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * @param initialMzy initial z-y cross coupling error of gyroscope.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialMzy(final double initialMzy)
             throws LockedException {
         if (mRunning) {
@@ -3533,6 +3575,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * @param initialSz initial z scaling factor of gyroscope.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialScalingFactors(
             final double initialSx, final double initialSy,
             final double initialSz) throws LockedException {
@@ -3555,6 +3598,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * @param initialMzy initial z-y cross coupling error of gyroscope.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialCrossCouplingErrors(
             final double initialMxy, final double initialMxz, final double initialMyx,
             final double initialMyz, final double initialMzx, final double initialMzy)
@@ -3585,6 +3629,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * @param initialMzy initial z-y cross coupling error of gyroscope.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialScalingFactorsAndCrossCouplingErrors(
             final double initialSx, final double initialSy, final double initialSz,
             final double initialMxy, final double initialMxz, final double initialMyx,
@@ -3604,6 +3649,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      *
      * @return array containing coordinates of known gyroscope bias.
      */
+    @Override
     public double[] getBias() {
         final double[] result = new double[BodyKinematics.COMPONENTS];
         getBias(result);
@@ -3617,6 +3663,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * @param result instance where result data will be copied to.
      * @throws IllegalArgumentException if provided array does not have length 3.
      */
+    @Override
     public void getBias(final double[] result) {
         if (result.length != BodyKinematics.COMPONENTS) {
             throw new IllegalArgumentException();
@@ -3634,6 +3681,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * @throws LockedException          if calibrator is currently running.
      * @throws IllegalArgumentException if provided array does not have length 3.
      */
+    @Override
     public void setBias(final double[] bias)
             throws LockedException {
         if (mRunning) {
@@ -3653,6 +3701,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      *
      * @return known gyroscope bias as a column matrix.
      */
+    @Override
     public Matrix getBiasAsMatrix() {
         Matrix result;
         try {
@@ -3671,6 +3720,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * @param result instance where result data will be copied to.
      * @throws IllegalArgumentException if provided matrix is not 3x1.
      */
+    @Override
     public void getBiasAsMatrix(final Matrix result) {
         if (result.getRows() != BodyKinematics.COMPONENTS
                 || result.getColumns() != 1) {
@@ -3688,6 +3738,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * @throws LockedException          if calibrator is currently running.
      * @throws IllegalArgumentException if provided matrix is not 3x1.
      */
+    @Override
     public void setBias(final Matrix bias) throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -3709,6 +3760,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * @return initial gyroscope scale factors and cross coupling errors
      * matrix.
      */
+    @Override
     public Matrix getInitialMg() {
         Matrix result;
         try {
@@ -3729,6 +3781,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * @param result instance where data will be stored.
      * @throws IllegalArgumentException if provided matrix is not 3x3.
      */
+    @Override
     public void getInitialMg(final Matrix result) {
         if (result.getRows() != BodyKinematics.COMPONENTS ||
                 result.getColumns() != BodyKinematics.COMPONENTS) {
@@ -3754,6 +3807,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * @throws IllegalArgumentException if provided matrix is not 3x3.
      * @throws LockedException          if calibrator is currently running.
      */
+    @Override
     public void setInitialMg(final Matrix initialMg) throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -3782,6 +3836,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      *
      * @return a 3x3 matrix containing initial g-dependent cross biases.
      */
+    @Override
     public Matrix getInitialGg() {
         return new Matrix(mInitialGg);
     }
@@ -3793,6 +3848,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * @param result instance where data will be stored.
      * @throws IllegalArgumentException if provided matrix is not 3x3.
      */
+    @Override
     public void getInitialGg(final Matrix result) {
 
         if (result.getRows() != BodyKinematics.COMPONENTS
@@ -3811,6 +3867,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * @throws LockedException          if calibrator is currently running.
      * @throws IllegalArgumentException if provided matrix is not 3x3.
      */
+    @Override
     public void setInitialGg(final Matrix initialGg) throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -4070,6 +4127,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * @return true if z-axis is assumed to be common for accelerometer and gyroscope,
      * false otherwise.
      */
+    @Override
     public boolean isCommonAxisUsed() {
         return mCommonAxisUsed;
     }
@@ -4083,6 +4141,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      *                       and gyroscope, false otherwise.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setCommonAxisUsed(final boolean commonAxisUsed)
             throws LockedException {
         if (mRunning) {
@@ -4177,6 +4236,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      *
      * @return true if calibrator is ready, false otherwise.
      */
+    @Override
     public boolean isReady() {
         return mMeasurements != null
                 && mMeasurements.size() >= getMinimumRequiredMeasurements();
@@ -4187,6 +4247,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      *
      * @return true if calibrator is running, false otherwise.
      */
+    @Override
     public boolean isRunning() {
         return mRunning;
     }
@@ -4383,6 +4444,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * @throws NotReadyException    if calibrator is not ready.
      * @throws CalibrationException if estimation fails for numerical reasons.
      */
+    @Override
     public abstract void calibrate() throws LockedException, NotReadyException,
             CalibrationException;
 
@@ -4428,6 +4490,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * @return estimated gyroscope scale factors and cross coupling errors, or null
      * if not available.
      */
+    @Override
     public Matrix getEstimatedMg() {
         return mEstimatedMg;
     }
@@ -4438,6 +4501,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * @return estimated gyroscope x-axis scale factor or null
      * if not available.
      */
+    @Override
     public Double getEstimatedSx() {
         return mEstimatedMg != null ?
                 mEstimatedMg.getElementAt(0, 0) : null;
@@ -4449,6 +4513,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * @return estimated gyroscope y-axis scale factor or null
      * if not available.
      */
+    @Override
     public Double getEstimatedSy() {
         return mEstimatedMg != null ?
                 mEstimatedMg.getElementAt(1, 1) : null;
@@ -4460,6 +4525,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * @return estimated gyroscope z-axis scale factor or null
      * if not available.
      */
+    @Override
     public Double getEstimatedSz() {
         return mEstimatedMg != null ?
                 mEstimatedMg.getElementAt(2, 2) : null;
@@ -4471,6 +4537,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * @return estimated gyroscope x-y cross-coupling error or null
      * if not available.
      */
+    @Override
     public Double getEstimatedMxy() {
         return mEstimatedMg != null ?
                 mEstimatedMg.getElementAt(0, 1) : null;
@@ -4482,6 +4549,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * @return estimated gyroscope x-z cross-coupling error or null
      * if not available.
      */
+    @Override
     public Double getEstimatedMxz() {
         return mEstimatedMg != null ?
                 mEstimatedMg.getElementAt(0, 2) : null;
@@ -4493,6 +4561,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * @return estimated gyroscope y-x cross-coupling error or null
      * if not available.
      */
+    @Override
     public Double getEstimatedMyx() {
         return mEstimatedMg != null ?
                 mEstimatedMg.getElementAt(1, 0) : null;
@@ -4504,6 +4573,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * @return estimated gyroscope y-z cross-coupling error or null
      * if not available.
      */
+    @Override
     public Double getEstimatedMyz() {
         return mEstimatedMg != null ?
                 mEstimatedMg.getElementAt(1, 2) : null;
@@ -4515,6 +4585,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * @return estimated gyroscope z-x cross-coupling error or null
      * if not available.
      */
+    @Override
     public Double getEstimatedMzx() {
         return mEstimatedMg != null ?
                 mEstimatedMg.getElementAt(2, 0) : null;
@@ -4526,6 +4597,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * @return estimated gyroscope z-y cross-coupling error or null
      * if not available.
      */
+    @Override
     public Double getEstimatedMzy() {
         return mEstimatedMg != null ?
                 mEstimatedMg.getElementAt(2, 1) : null;
@@ -4538,6 +4610,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      *
      * @return estimated G-dependent cross biases.
      */
+    @Override
     public Matrix getEstimatedGg() {
         return mEstimatedGg;
     }
@@ -4550,8 +4623,19 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      *
      * @return estimated covariance matrix for estimated parameters.
      */
+    @Override
     public Matrix getEstimatedCovariance() {
         return mEstimatedCovariance;
+    }
+
+    /**
+     * Gets estimated chi square value.
+     *
+     * @return estimated chi square value.
+     */
+    @Override
+    public double getEstimatedChiSq() {
+        return mEstimatedChiSq;
     }
 
     /**
@@ -4559,6 +4643,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      *
      * @return estimated mean square error respect to provided measurements.
      */
+    @Override
     public double getEstimatedMse() {
         return mEstimatedMse;
     }
@@ -12078,6 +12163,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
             }
 
             result.mEstimatedMse = mInnerCalibrator.getEstimatedMse();
+            result.mEstimatedChiSq = mInnerCalibrator.getEstimatedChiSq();
 
             solutions.add(result);
         } catch (final LockedException | CalibrationException | NotReadyException e) {
@@ -12135,18 +12221,21 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
                 }
 
                 mEstimatedMse = mInnerCalibrator.getEstimatedMse();
+                mEstimatedChiSq = mInnerCalibrator.getEstimatedChiSq();
 
             } catch (LockedException | CalibrationException | NotReadyException e) {
                 mEstimatedCovariance = preliminaryResult.mCovariance;
                 mEstimatedMg = preliminaryResult.mEstimatedMg;
                 mEstimatedGg = preliminaryResult.mEstimatedGg;
                 mEstimatedMse = preliminaryResult.mEstimatedMse;
+                mEstimatedChiSq = preliminaryResult.mEstimatedChiSq;
             }
         } else {
             mEstimatedCovariance = preliminaryResult.mCovariance;
             mEstimatedMg = preliminaryResult.mEstimatedMg;
             mEstimatedGg = preliminaryResult.mEstimatedGg;
             mEstimatedMse = preliminaryResult.mEstimatedMse;
+            mEstimatedChiSq = preliminaryResult.mEstimatedChiSq;
         }
     }
 
@@ -12181,7 +12270,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * Converts angular speed instance to radians per second (rad/s).
      *
      * @param value angular speed value.
-     * @param unit unit of angular speed value.
+     * @param unit  unit of angular speed value.
      * @return converted value.
      */
     private static double convertAngularSpeed(final double value, final AngularSpeedUnit unit) {
@@ -12272,5 +12361,10 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
          * Estimated Mean Square Error.
          */
         private double mEstimatedMse;
+
+        /**
+         * Estimated chi square value.
+         */
+        private double mEstimatedChiSq;
     }
 }

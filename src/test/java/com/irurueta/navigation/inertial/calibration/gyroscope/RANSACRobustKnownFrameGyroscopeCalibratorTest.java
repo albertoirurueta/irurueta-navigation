@@ -227,6 +227,7 @@ public class RANSACRobustKnownFrameGyroscopeCalibratorTest
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -371,6 +372,7 @@ public class RANSACRobustKnownFrameGyroscopeCalibratorTest
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -517,6 +519,7 @@ public class RANSACRobustKnownFrameGyroscopeCalibratorTest
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -663,6 +666,7 @@ public class RANSACRobustKnownFrameGyroscopeCalibratorTest
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -807,6 +811,7 @@ public class RANSACRobustKnownFrameGyroscopeCalibratorTest
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -951,6 +956,7 @@ public class RANSACRobustKnownFrameGyroscopeCalibratorTest
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -1097,6 +1103,7 @@ public class RANSACRobustKnownFrameGyroscopeCalibratorTest
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -1243,6 +1250,7 @@ public class RANSACRobustKnownFrameGyroscopeCalibratorTest
         assertNull(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed());
         assertFalse(calibrator.getEstimatedBiasStandardDeviationNormAsAngularSpeed(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -2306,6 +2314,7 @@ public class RANSACRobustKnownFrameGyroscopeCalibratorTest
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralCovariance(calibrator.getEstimatedCovariance());
             assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
             break;
@@ -2445,6 +2454,7 @@ public class RANSACRobustKnownFrameGyroscopeCalibratorTest
             assertNotNull(calibrator.getEstimatedCovariance());
             checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
             assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
             break;
@@ -2582,6 +2592,7 @@ public class RANSACRobustKnownFrameGyroscopeCalibratorTest
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralCovariance(calibrator.getEstimatedCovariance());
             assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
             break;
@@ -2719,6 +2730,7 @@ public class RANSACRobustKnownFrameGyroscopeCalibratorTest
             assertNotNull(calibrator.getEstimatedCovariance());
             checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
             assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
             break;
@@ -2856,6 +2868,7 @@ public class RANSACRobustKnownFrameGyroscopeCalibratorTest
 
             assertNull(calibrator.getEstimatedCovariance());
             assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+            assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
             numValid++;
             break;
@@ -2996,6 +3009,7 @@ public class RANSACRobustKnownFrameGyroscopeCalibratorTest
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralCovariance(calibrator.getEstimatedCovariance());
             assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
             break;

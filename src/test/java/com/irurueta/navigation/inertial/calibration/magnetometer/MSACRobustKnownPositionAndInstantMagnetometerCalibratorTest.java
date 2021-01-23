@@ -245,6 +245,7 @@ public class MSACRobustKnownPositionAndInstantMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity());
         assertFalse(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -381,6 +382,7 @@ public class MSACRobustKnownPositionAndInstantMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity());
         assertFalse(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -520,6 +522,7 @@ public class MSACRobustKnownPositionAndInstantMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity());
         assertFalse(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -657,6 +660,7 @@ public class MSACRobustKnownPositionAndInstantMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity());
         assertFalse(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -795,6 +799,7 @@ public class MSACRobustKnownPositionAndInstantMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity());
         assertFalse(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -940,6 +945,7 @@ public class MSACRobustKnownPositionAndInstantMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity());
         assertFalse(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -1095,6 +1101,7 @@ public class MSACRobustKnownPositionAndInstantMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity());
         assertFalse(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -1268,6 +1275,7 @@ public class MSACRobustKnownPositionAndInstantMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity());
         assertFalse(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -1445,6 +1453,7 @@ public class MSACRobustKnownPositionAndInstantMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity());
         assertFalse(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -1596,6 +1605,7 @@ public class MSACRobustKnownPositionAndInstantMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity());
         assertFalse(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -1747,6 +1757,7 @@ public class MSACRobustKnownPositionAndInstantMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity());
         assertFalse(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -1898,6 +1909,7 @@ public class MSACRobustKnownPositionAndInstantMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity());
         assertFalse(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -2049,6 +2061,7 @@ public class MSACRobustKnownPositionAndInstantMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity());
         assertFalse(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -2206,6 +2219,7 @@ public class MSACRobustKnownPositionAndInstantMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity());
         assertFalse(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2373,6 +2387,7 @@ public class MSACRobustKnownPositionAndInstantMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity());
         assertFalse(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2540,6 +2555,7 @@ public class MSACRobustKnownPositionAndInstantMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity());
         assertFalse(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2708,6 +2724,7 @@ public class MSACRobustKnownPositionAndInstantMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity());
         assertFalse(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2876,6 +2893,7 @@ public class MSACRobustKnownPositionAndInstantMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity());
         assertFalse(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3049,6 +3067,7 @@ public class MSACRobustKnownPositionAndInstantMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity());
         assertFalse(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3224,6 +3243,7 @@ public class MSACRobustKnownPositionAndInstantMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity());
         assertFalse(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3400,6 +3420,7 @@ public class MSACRobustKnownPositionAndInstantMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity());
         assertFalse(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3588,6 +3609,7 @@ public class MSACRobustKnownPositionAndInstantMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity());
         assertFalse(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3790,6 +3812,7 @@ public class MSACRobustKnownPositionAndInstantMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity());
         assertFalse(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3993,6 +4016,7 @@ public class MSACRobustKnownPositionAndInstantMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity());
         assertFalse(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4196,6 +4220,7 @@ public class MSACRobustKnownPositionAndInstantMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity());
         assertFalse(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4378,6 +4403,7 @@ public class MSACRobustKnownPositionAndInstantMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity());
         assertFalse(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -4530,6 +4556,7 @@ public class MSACRobustKnownPositionAndInstantMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity());
         assertFalse(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -4682,6 +4709,7 @@ public class MSACRobustKnownPositionAndInstantMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity());
         assertFalse(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -4834,6 +4862,7 @@ public class MSACRobustKnownPositionAndInstantMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity());
         assertFalse(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -4986,6 +5015,7 @@ public class MSACRobustKnownPositionAndInstantMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity());
         assertFalse(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -5144,6 +5174,7 @@ public class MSACRobustKnownPositionAndInstantMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity());
         assertFalse(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -5312,6 +5343,7 @@ public class MSACRobustKnownPositionAndInstantMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity());
         assertFalse(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -5480,6 +5512,7 @@ public class MSACRobustKnownPositionAndInstantMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity());
         assertFalse(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -5649,6 +5682,7 @@ public class MSACRobustKnownPositionAndInstantMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity());
         assertFalse(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -5818,6 +5852,7 @@ public class MSACRobustKnownPositionAndInstantMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity());
         assertFalse(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -5992,6 +6027,7 @@ public class MSACRobustKnownPositionAndInstantMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity());
         assertFalse(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -6168,6 +6204,7 @@ public class MSACRobustKnownPositionAndInstantMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity());
         assertFalse(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -6345,6 +6382,7 @@ public class MSACRobustKnownPositionAndInstantMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity());
         assertFalse(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -6534,6 +6572,7 @@ public class MSACRobustKnownPositionAndInstantMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity());
         assertFalse(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -6737,6 +6776,7 @@ public class MSACRobustKnownPositionAndInstantMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity());
         assertFalse(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -6941,6 +6981,7 @@ public class MSACRobustKnownPositionAndInstantMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity());
         assertFalse(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -7145,6 +7186,7 @@ public class MSACRobustKnownPositionAndInstantMagnetometerCalibratorTest impleme
         assertNull(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity());
         assertFalse(calibrator.getEstimatedHardIronStandardDeviationNormAsMagneticFluxDensity(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -8355,6 +8397,7 @@ public class MSACRobustKnownPositionAndInstantMagnetometerCalibratorTest impleme
             assertEstimatedResult(estimatedHardIron, estimatedMm, calibrator, true);
             checkGeneralCovariance(calibrator.getEstimatedCovariance());
             assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
             break;
@@ -8445,6 +8488,7 @@ public class MSACRobustKnownPositionAndInstantMagnetometerCalibratorTest impleme
 
             assertEstimatedResult(estimatedHardIron, estimatedMm, calibrator, false);
             assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
             break;
@@ -8544,6 +8588,7 @@ public class MSACRobustKnownPositionAndInstantMagnetometerCalibratorTest impleme
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralCovariance(calibrator.getEstimatedCovariance());
             assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
             break;
@@ -8639,6 +8684,7 @@ public class MSACRobustKnownPositionAndInstantMagnetometerCalibratorTest impleme
             assertNotNull(calibrator.getEstimatedCovariance());
             checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
             assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
             break;
@@ -8734,6 +8780,7 @@ public class MSACRobustKnownPositionAndInstantMagnetometerCalibratorTest impleme
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralCovariance(calibrator.getEstimatedCovariance());
             assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
             break;

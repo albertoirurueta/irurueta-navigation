@@ -68,7 +68,8 @@ import java.util.List;
  * - mBtrue is ground-truth magnetic flux density. This is a 3x1 vector.
  * - w is measurement noise. This is a 3x1 vector.
  */
-public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
+public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator implements
+        MagnetometerNonLinearCalibrator, KnownHardIronMagnetometerCalibrator {
 
     /**
      * Indicates whether by default a common z-axis is assumed for the accelerometer,
@@ -354,6 +355,11 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
     private Matrix mEstimatedCovariance;
 
     /**
+     * Estimated chi square value.
+     */
+    private double mEstimatedChiSq;
+
+    /**
      * Estimated mean square error respect to provided measurements.
      */
     private double mEstimatedMse;
@@ -488,6 +494,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      *
      * @return x-coordinate of known magnetometer hard-iron bias.
      */
+    @Override
     public double getHardIronX() {
         return mHardIronX;
     }
@@ -499,6 +506,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      * @param hardIronX x coordinate of magnetometer hard-iron.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setHardIronX(
             final double hardIronX) throws LockedException {
         if (mRunning) {
@@ -513,6 +521,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      *
      * @return y-coordinate of known magnetometer hard-iron bias.
      */
+    @Override
     public double getHardIronY() {
         return mHardIronY;
     }
@@ -524,6 +533,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      * @param hardIronY y coordinate of magnetometer hard-iron.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setHardIronY(
             final double hardIronY) throws LockedException {
         if (mRunning) {
@@ -538,6 +548,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      *
      * @return z-coordinate of known magnetometer hard-iron bias.
      */
+    @Override
     public double getHardIronZ() {
         return mHardIronZ;
     }
@@ -549,6 +560,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      * @param hardIronZ z coordinate of magnetometer hard-iron.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setHardIronZ(
             final double hardIronZ) throws LockedException {
         if (mRunning) {
@@ -562,6 +574,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      *
      * @return x coordinate of magnetometer hard-iron.
      */
+    @Override
     public MagneticFluxDensity getHardIronXAsMagneticFluxDensity() {
         return new MagneticFluxDensity(mHardIronX,
                 MagneticFluxDensityUnit.TESLA);
@@ -572,6 +585,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      *
      * @param result instance where result will be stored.
      */
+    @Override
     public void getHardIronXAsMagneticFluxDensity(
             final MagneticFluxDensity result) {
         result.setValue(mHardIronX);
@@ -584,6 +598,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      * @param hardIronX known x-coordinate of magnetometer hard-iron.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setHardIronX(final MagneticFluxDensity hardIronX)
             throws LockedException {
         if (mRunning) {
@@ -597,6 +612,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      *
      * @return y coordinate of magnetometer hard-iron.
      */
+    @Override
     public MagneticFluxDensity getHardIronYAsMagneticFluxDensity() {
         return new MagneticFluxDensity(mHardIronY,
                 MagneticFluxDensityUnit.TESLA);
@@ -607,6 +623,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      *
      * @param result instance where result will be stored.
      */
+    @Override
     public void getHardIronYAsMagneticFluxDensity(
             final MagneticFluxDensity result) {
         result.setValue(mHardIronY);
@@ -619,6 +636,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      * @param hardIronY known y-coordinate of magnetometer hard-iron.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setHardIronY(final MagneticFluxDensity hardIronY)
             throws LockedException {
         if (mRunning) {
@@ -632,6 +650,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      *
      * @return z coordinate of magnetometer hard-iron.
      */
+    @Override
     public MagneticFluxDensity getHardIronZAsMagneticFluxDensity() {
         return new MagneticFluxDensity(mHardIronZ,
                 MagneticFluxDensityUnit.TESLA);
@@ -642,6 +661,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      *
      * @param result instance where result will be stored.
      */
+    @Override
     public void getHardIronZAsMagneticFluxDensity(
             final MagneticFluxDensity result) {
         result.setValue(mHardIronZ);
@@ -654,6 +674,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      * @param hardIronZ known z-coordinate of magnetometer hard-iron.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setHardIronZ(final MagneticFluxDensity hardIronZ)
             throws LockedException {
         if (mRunning) {
@@ -671,6 +692,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      * @param hardIronZ z-coordinate of magnetometer hard-iron.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setHardIronCoordinates(
             final double hardIronX,
             final double hardIronY,
@@ -691,6 +713,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      * @param hardIronZ z-coordinate of magnetometer hard-iron.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setHardIronCoordinates(
             final MagneticFluxDensity hardIronX,
             final MagneticFluxDensity hardIronY,
@@ -708,6 +731,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      *
      * @return known hard-iron.
      */
+    @Override
     public MagneticFluxDensityTriad getHardIronAsTriad() {
         return new MagneticFluxDensityTriad(MagneticFluxDensityUnit.TESLA,
                 mHardIronX, mHardIronY, mHardIronZ);
@@ -718,6 +742,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      *
      * @param result instance where result will be stored.
      */
+    @Override
     public void getHardIronAsTriad(final MagneticFluxDensityTriad result) {
         result.setValueCoordinatesAndUnit(
                 mHardIronX, mHardIronY, mHardIronZ,
@@ -730,6 +755,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      * @param hardIron hard-iron to be set.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setHardIron(final MagneticFluxDensityTriad hardIron)
             throws LockedException {
         if (mRunning) {
@@ -746,6 +772,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      *
      * @return initial x scaling factor.
      */
+    @Override
     public double getInitialSx() {
         return mInitialSx;
     }
@@ -756,6 +783,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      * @param initialSx initial x scaling factor.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialSx(
             final double initialSx) throws LockedException {
         if (mRunning) {
@@ -769,6 +797,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      *
      * @return initial y scaling factor.
      */
+    @Override
     public double getInitialSy() {
         return mInitialSy;
     }
@@ -779,6 +808,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      * @param initialSy initial y scaling factor.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialSy(
             final double initialSy) throws LockedException {
         if (mRunning) {
@@ -792,6 +822,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      *
      * @return initial z scaling factor.
      */
+    @Override
     public double getInitialSz() {
         return mInitialSz;
     }
@@ -802,6 +833,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      * @param initialSz initial z scaling factor.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialSz(
             final double initialSz) throws LockedException {
         if (mRunning) {
@@ -815,6 +847,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      *
      * @return initial x-y cross coupling error.
      */
+    @Override
     public double getInitialMxy() {
         return mInitialMxy;
     }
@@ -825,6 +858,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      * @param initialMxy initial x-y cross coupling error.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialMxy(
             final double initialMxy) throws LockedException {
         if (mRunning) {
@@ -838,6 +872,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      *
      * @return initial x-z cross coupling error.
      */
+    @Override
     public double getInitialMxz() {
         return mInitialMxz;
     }
@@ -848,6 +883,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      * @param initialMxz initial x-z cross coupling error.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialMxz(
             final double initialMxz) throws LockedException {
         if (mRunning) {
@@ -861,6 +897,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      *
      * @return initial y-x cross coupling error.
      */
+    @Override
     public double getInitialMyx() {
         return mInitialMyx;
     }
@@ -871,6 +908,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      * @param initialMyx initial y-x cross coupling error.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialMyx(
             final double initialMyx) throws LockedException {
         if (mRunning) {
@@ -884,6 +922,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      *
      * @return initial y-z cross coupling error.
      */
+    @Override
     public double getInitialMyz() {
         return mInitialMyz;
     }
@@ -894,6 +933,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      * @param initialMyz initial y-z cross coupling error.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialMyz(
             final double initialMyz) throws LockedException {
         if (mRunning) {
@@ -907,6 +947,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      *
      * @return initial z-x cross coupling error.
      */
+    @Override
     public double getInitialMzx() {
         return mInitialMzx;
     }
@@ -917,6 +958,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      * @param initialMzx initial z-x cross coupling error.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialMzx(
             final double initialMzx) throws LockedException {
         if (mRunning) {
@@ -930,6 +972,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      *
      * @return initial z-y cross coupling error.
      */
+    @Override
     public double getInitialMzy() {
         return mInitialMzy;
     }
@@ -940,6 +983,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      * @param initialMzy initial z-y cross coupling error.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialMzy(
             final double initialMzy) throws LockedException {
         if (mRunning) {
@@ -956,6 +1000,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      * @param initialSz initial z scaling factor.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialScalingFactors(
             final double initialSx,
             final double initialSy,
@@ -979,6 +1024,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      * @param initialMzy initial z-y cross coupling error.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialCrossCouplingErrors(
             final double initialMxy,
             final double initialMxz,
@@ -1011,6 +1057,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      * @param initialMzy initial z-y cross coupling error.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialScalingFactorsAndCrossCouplingErrors(
             final double initialSx,
             final double initialSy,
@@ -1035,6 +1082,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      *
      * @return array containing coordinates of initial bias.
      */
+    @Override
     public double[] getHardIron() {
         final double[] result = new double[
                 BodyMagneticFluxDensity.COMPONENTS];
@@ -1050,6 +1098,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      * @throws IllegalArgumentException if provided array does not have
      *                                  length 3.
      */
+    @Override
     public void getHardIron(final double[] result) {
         if (result.length != BodyMagneticFluxDensity.COMPONENTS) {
             throw new IllegalArgumentException();
@@ -1068,6 +1117,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      * @throws IllegalArgumentException if provided array does not have
      *                                  length 3.
      */
+    @Override
     public void setHardIron(final double[] hardIron) throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -1086,6 +1136,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      *
      * @return hard-iron bias as a column matrix.
      */
+    @Override
     public Matrix getHardIronMatrix() {
         Matrix result;
         try {
@@ -1105,6 +1156,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      * @param result instance where result data will be copied to.
      * @throws IllegalArgumentException if provided matrix is not 3x1.
      */
+    @Override
     public void getHardIronMatrix(final Matrix result) {
         if (result.getRows() != BodyMagneticFluxDensity.COMPONENTS
                 || result.getColumns() != 1) {
@@ -1122,6 +1174,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      * @throws LockedException          if calibrator is currently running.
      * @throws IllegalArgumentException if provided matrix is not 3x1.
      */
+    @Override
     public void setHardIron(final Matrix hardIron) throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -1141,6 +1194,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      *
      * @return initial scale factors and cross coupling errors matrix.
      */
+    @Override
     public Matrix getInitialMm() {
         Matrix result;
         try {
@@ -1160,6 +1214,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      * @param result instance where data will be stored.
      * @throws IllegalArgumentException if provided matrix is not 3x3.
      */
+    @Override
     public void getInitialMm(final Matrix result) {
         if (result.getRows() != BodyKinematics.COMPONENTS ||
                 result.getColumns() != BodyKinematics.COMPONENTS) {
@@ -1185,6 +1240,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      * @throws IllegalArgumentException if provided matrix is not 3x3.
      * @throws LockedException          if calibrator is currently running.
      */
+    @Override
     public void setInitialMm(final Matrix initialMm)
             throws LockedException {
         if (mRunning) {
@@ -1263,6 +1319,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      * @return true if z-axis is assumed to be common for accelerometer,
      * gyroscope and magnetometer, false otherwise.
      */
+    @Override
     public boolean isCommonAxisUsed() {
         return mCommonAxisUsed;
     }
@@ -1277,6 +1334,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      *                       otherwise.
      * @throws LockedException if estimator is currently running.
      */
+    @Override
     public void setCommonAxisUsed(final boolean commonAxisUsed)
             throws LockedException {
         if (mRunning) {
@@ -1316,6 +1374,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      *
      * @return true if calibrator is ready, false otherwise.
      */
+    @Override
     public boolean isReady() {
         return mMeasurements != null && mMeasurements.size() >= MINIMUM_MEASUREMENTS;
     }
@@ -1325,6 +1384,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      *
      * @return true if calibrator is running, false otherwise.
      */
+    @Override
     public boolean isRunning() {
         return mRunning;
     }
@@ -1334,6 +1394,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      *
      * @return Earth's magnetic model or null if not provided.
      */
+    @Override
     public WorldMagneticModel getMagneticModel() {
         return mMagneticModel;
     }
@@ -1344,6 +1405,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      * @param magneticModel Earth's magnetic model to be set.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setMagneticModel(final WorldMagneticModel magneticModel)
             throws LockedException {
         if (mRunning) {
@@ -1633,6 +1695,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      * @return estimated magnetometer soft-iron scale factors and cross coupling errors,
      * or null if not available.
      */
+    @Override
     public Matrix getEstimatedMm() {
         return mEstimatedMm;
     }
@@ -1642,6 +1705,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      *
      * @return estimated x-axis scale factor or null if not available.
      */
+    @Override
     public Double getEstimatedSx() {
         return mEstimatedMm != null ?
                 mEstimatedMm.getElementAt(0, 0) : null;
@@ -1652,6 +1716,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      *
      * @return estimated y-axis scale factor or null if not available.
      */
+    @Override
     public Double getEstimatedSy() {
         return mEstimatedMm != null ?
                 mEstimatedMm.getElementAt(1, 1) : null;
@@ -1662,6 +1727,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      *
      * @return estimated z-axis scale factor or null if not available.
      */
+    @Override
     public Double getEstimatedSz() {
         return mEstimatedMm != null ?
                 mEstimatedMm.getElementAt(2, 2) : null;
@@ -1672,6 +1738,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      *
      * @return estimated x-y cross-coupling error or null if not available.
      */
+    @Override
     public Double getEstimatedMxy() {
         return mEstimatedMm != null ?
                 mEstimatedMm.getElementAt(0, 1) : null;
@@ -1682,6 +1749,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      *
      * @return estimated x-z cross-coupling error or null if not available.
      */
+    @Override
     public Double getEstimatedMxz() {
         return mEstimatedMm != null ?
                 mEstimatedMm.getElementAt(0, 2) : null;
@@ -1692,6 +1760,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      *
      * @return estimated y-x cross-coupling error or null if not available.
      */
+    @Override
     public Double getEstimatedMyx() {
         return mEstimatedMm != null ?
                 mEstimatedMm.getElementAt(1, 0) : null;
@@ -1702,6 +1771,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      *
      * @return estimated y-z cross-coupling error or null if not available.
      */
+    @Override
     public Double getEstimatedMyz() {
         return mEstimatedMm != null ?
                 mEstimatedMm.getElementAt(1, 2) : null;
@@ -1712,6 +1782,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      *
      * @return estimated z-x cross-coupling error or null if not available.
      */
+    @Override
     public Double getEstimatedMzx() {
         return mEstimatedMm != null ?
                 mEstimatedMm.getElementAt(2, 0) : null;
@@ -1722,9 +1793,20 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      *
      * @return estimated z-y cross-coupling error or null if not available.
      */
+    @Override
     public Double getEstimatedMzy() {
         return mEstimatedMm != null ?
                 mEstimatedMm.getElementAt(2, 1) : null;
+    }
+
+    /**
+     * Gets estimated chi square value.
+     *
+     * @return estimated chi square value.
+     */
+    @Override
+    public double getEstimatedChiSq() {
+        return mEstimatedChiSq;
     }
 
     /**
@@ -1732,6 +1814,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      *
      * @return estimated mean square error respect to provided measurements.
      */
+    @Override
     public double getEstimatedMse() {
         return mEstimatedMse;
     }
@@ -1744,6 +1827,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      *
      * @return estimated covariance matrix for estimated position.
      */
+    @Override
     public Matrix getEstimatedCovariance() {
         return mEstimatedCovariance;
     }
@@ -1786,6 +1870,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      * @throws NotReadyException    if calibrator is not ready.
      * @throws CalibrationException if estimation fails for numerical reasons.
      */
+    @Override
     public abstract void calibrate() throws LockedException, NotReadyException,
             CalibrationException;
 
@@ -2649,16 +2734,19 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
                 }
 
                 mEstimatedMse = mNonLinearCalibrator.getEstimatedMse();
+                mEstimatedChiSq = mNonLinearCalibrator.getEstimatedChiSq();
 
             } catch (final LockedException | CalibrationException | NotReadyException e) {
                 mEstimatedCovariance = null;
                 mEstimatedMm = preliminaryResult;
                 mEstimatedMse = 0.0;
+                mEstimatedChiSq = 0.0;
             }
         } else {
             mEstimatedCovariance = null;
             mEstimatedMm = preliminaryResult;
             mEstimatedMse = 0.0;
+            mEstimatedChiSq = 0.0;
         }
     }
 

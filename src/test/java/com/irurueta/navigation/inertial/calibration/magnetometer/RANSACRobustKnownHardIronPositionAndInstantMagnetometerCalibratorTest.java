@@ -141,10 +141,10 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final double[] b2 = new double[3];
         calibrator.getHardIron(b2);
         assertArrayEquals(b1, b2, 0.0);
-        final Matrix bm1 = calibrator.getHardIronAsMatrix();
+        final Matrix bm1 = calibrator.getHardIronMatrix();
         assertEquals(bm1, new Matrix(3, 1));
         final Matrix bm2 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(bm2);
+        calibrator.getHardIronMatrix(bm2);
         assertEquals(bm1, bm2);
         MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
@@ -214,6 +214,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -246,10 +247,10 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final double[] b2 = new double[3];
         calibrator.getHardIron(b2);
         assertArrayEquals(b1, b2, 0.0);
-        final Matrix bm1 = calibrator.getHardIronAsMatrix();
+        final Matrix bm1 = calibrator.getHardIronMatrix();
         assertEquals(bm1, new Matrix(3, 1));
         final Matrix bm2 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(bm2);
+        calibrator.getHardIronMatrix(bm2);
         assertEquals(bm1, bm2);
         MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
@@ -319,6 +320,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -354,10 +356,10 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final double[] b2 = new double[3];
         calibrator.getHardIron(b2);
         assertArrayEquals(b1, b2, 0.0);
-        final Matrix bm1 = calibrator.getHardIronAsMatrix();
+        final Matrix bm1 = calibrator.getHardIronMatrix();
         assertEquals(bm1, new Matrix(3, 1));
         final Matrix bm2 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(bm2);
+        calibrator.getHardIronMatrix(bm2);
         assertEquals(bm1, bm2);
         MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
@@ -427,6 +429,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -460,10 +463,10 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final double[] b2 = new double[3];
         calibrator.getHardIron(b2);
         assertArrayEquals(b1, b2, 0.0);
-        final Matrix bm1 = calibrator.getHardIronAsMatrix();
+        final Matrix bm1 = calibrator.getHardIronMatrix();
         assertEquals(bm1, new Matrix(3, 1));
         final Matrix bm2 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(bm2);
+        calibrator.getHardIronMatrix(bm2);
         assertEquals(bm1, bm2);
         MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
@@ -533,6 +536,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -567,10 +571,10 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final double[] b2 = new double[3];
         calibrator.getHardIron(b2);
         assertArrayEquals(b1, b2, 0.0);
-        final Matrix bm1 = calibrator.getHardIronAsMatrix();
+        final Matrix bm1 = calibrator.getHardIronMatrix();
         assertEquals(bm1, new Matrix(3, 1));
         final Matrix bm2 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(bm2);
+        calibrator.getHardIronMatrix(bm2);
         assertEquals(bm1, bm2);
         MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
@@ -640,6 +644,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -681,10 +686,10 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final double[] b2 = new double[3];
         calibrator.getHardIron(b2);
         assertArrayEquals(b1, b2, 0.0);
-        final Matrix bm1 = calibrator.getHardIronAsMatrix();
+        final Matrix bm1 = calibrator.getHardIronMatrix();
         assertEquals(bm1, bm);
         final Matrix bm2 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(bm2);
+        calibrator.getHardIronMatrix(bm2);
         assertEquals(bm1, bm2);
         MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
@@ -754,6 +759,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -805,10 +811,10 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final double[] b2 = new double[3];
         calibrator.getHardIron(b2);
         assertArrayEquals(b1, b2, 0.0);
-        final Matrix bm1 = calibrator.getHardIronAsMatrix();
+        final Matrix bm1 = calibrator.getHardIronMatrix();
         assertEquals(bm1, bm);
         final Matrix bm2 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(bm2);
+        calibrator.getHardIronMatrix(bm2);
         assertEquals(bm1, bm2);
         MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
@@ -878,6 +884,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -947,10 +954,10 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final double[] b2 = new double[3];
         calibrator.getHardIron(b2);
         assertArrayEquals(b1, b2, 0.0);
-        final Matrix bm1 = calibrator.getHardIronAsMatrix();
+        final Matrix bm1 = calibrator.getHardIronMatrix();
         assertEquals(bm1, bm);
         final Matrix bm2 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(bm2);
+        calibrator.getHardIronMatrix(bm2);
         assertEquals(bm1, bm2);
         MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
@@ -1020,6 +1027,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -1090,10 +1098,10 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final double[] b2 = new double[3];
         calibrator.getHardIron(b2);
         assertArrayEquals(b1, b2, 0.0);
-        final Matrix bm1 = calibrator.getHardIronAsMatrix();
+        final Matrix bm1 = calibrator.getHardIronMatrix();
         assertEquals(bm1, new Matrix(3, 1));
         final Matrix bm2 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(bm2);
+        calibrator.getHardIronMatrix(bm2);
         assertEquals(bm1, bm2);
         MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
@@ -1166,6 +1174,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -1210,10 +1219,10 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final double[] b2 = new double[3];
         calibrator.getHardIron(b2);
         assertArrayEquals(b1, b2, 0.0);
-        final Matrix bm1 = calibrator.getHardIronAsMatrix();
+        final Matrix bm1 = calibrator.getHardIronMatrix();
         assertEquals(bm1, new Matrix(3, 1));
         final Matrix bm2 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(bm2);
+        calibrator.getHardIronMatrix(bm2);
         assertEquals(bm1, bm2);
         MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
@@ -1286,6 +1295,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -1330,10 +1340,10 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final double[] b2 = new double[3];
         calibrator.getHardIron(b2);
         assertArrayEquals(b1, b2, 0.0);
-        final Matrix bm1 = calibrator.getHardIronAsMatrix();
+        final Matrix bm1 = calibrator.getHardIronMatrix();
         assertEquals(bm1, new Matrix(3, 1));
         final Matrix bm2 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(bm2);
+        calibrator.getHardIronMatrix(bm2);
         assertEquals(bm1, bm2);
         MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
@@ -1406,6 +1416,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -1450,10 +1461,10 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final double[] b2 = new double[3];
         calibrator.getHardIron(b2);
         assertArrayEquals(b1, b2, 0.0);
-        final Matrix bm1 = calibrator.getHardIronAsMatrix();
+        final Matrix bm1 = calibrator.getHardIronMatrix();
         assertEquals(bm1, new Matrix(3, 1));
         final Matrix bm2 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(bm2);
+        calibrator.getHardIronMatrix(bm2);
         assertEquals(bm1, bm2);
         MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
@@ -1526,6 +1537,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -1570,10 +1582,10 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final double[] b2 = new double[3];
         calibrator.getHardIron(b2);
         assertArrayEquals(b1, b2, 0.0);
-        final Matrix bm1 = calibrator.getHardIronAsMatrix();
+        final Matrix bm1 = calibrator.getHardIronMatrix();
         assertEquals(bm1, new Matrix(3, 1));
         final Matrix bm2 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(bm2);
+        calibrator.getHardIronMatrix(bm2);
         assertEquals(bm1, bm2);
         MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
@@ -1646,6 +1658,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -1696,10 +1709,10 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final double[] b2 = new double[3];
         calibrator.getHardIron(b2);
         assertArrayEquals(b1, b2, 0.0);
-        final Matrix bm1 = calibrator.getHardIronAsMatrix();
+        final Matrix bm1 = calibrator.getHardIronMatrix();
         assertEquals(bm1, bm);
         final Matrix bm2 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(bm2);
+        calibrator.getHardIronMatrix(bm2);
         assertEquals(bm1, bm2);
         MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
@@ -1772,6 +1785,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -1832,10 +1846,10 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final double[] b2 = new double[3];
         calibrator.getHardIron(b2);
         assertArrayEquals(b1, b2, 0.0);
-        final Matrix bm1 = calibrator.getHardIronAsMatrix();
+        final Matrix bm1 = calibrator.getHardIronMatrix();
         assertEquals(bm1, bm);
         final Matrix bm2 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(bm2);
+        calibrator.getHardIronMatrix(bm2);
         assertEquals(bm1, bm2);
         MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
@@ -1908,6 +1922,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -1968,10 +1983,10 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final double[] b2 = new double[3];
         calibrator.getHardIron(b2);
         assertArrayEquals(b1, b2, 0.0);
-        final Matrix bm1 = calibrator.getHardIronAsMatrix();
+        final Matrix bm1 = calibrator.getHardIronMatrix();
         assertEquals(bm1, bm);
         final Matrix bm2 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(bm2);
+        calibrator.getHardIronMatrix(bm2);
         assertEquals(bm1, bm2);
         MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
@@ -2044,6 +2059,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2105,10 +2121,10 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final double[] b2 = new double[3];
         calibrator.getHardIron(b2);
         assertArrayEquals(b1, b2, 0.0);
-        final Matrix bm1 = calibrator.getHardIronAsMatrix();
+        final Matrix bm1 = calibrator.getHardIronMatrix();
         assertEquals(bm1, bm);
         final Matrix bm2 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(bm2);
+        calibrator.getHardIronMatrix(bm2);
         assertEquals(bm1, bm2);
         MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
@@ -2181,6 +2197,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2242,10 +2259,10 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final double[] b2 = new double[3];
         calibrator.getHardIron(b2);
         assertArrayEquals(b1, b2, 0.0);
-        final Matrix bm1 = calibrator.getHardIronAsMatrix();
+        final Matrix bm1 = calibrator.getHardIronMatrix();
         assertEquals(bm1, bm);
         final Matrix bm2 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(bm2);
+        calibrator.getHardIronMatrix(bm2);
         assertEquals(bm1, bm2);
         MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
@@ -2318,6 +2335,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2384,10 +2402,10 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final double[] b2 = new double[3];
         calibrator.getHardIron(b2);
         assertArrayEquals(b1, b2, 0.0);
-        final Matrix bm1 = calibrator.getHardIronAsMatrix();
+        final Matrix bm1 = calibrator.getHardIronMatrix();
         assertEquals(bm1, bm);
         final Matrix bm2 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(bm2);
+        calibrator.getHardIronMatrix(bm2);
         assertEquals(bm1, bm2);
         MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
@@ -2460,6 +2478,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2528,10 +2547,10 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final double[] b2 = new double[3];
         calibrator.getHardIron(b2);
         assertArrayEquals(b1, b2, 0.0);
-        final Matrix bm1 = calibrator.getHardIronAsMatrix();
+        final Matrix bm1 = calibrator.getHardIronMatrix();
         assertEquals(bm1, bm);
         final Matrix bm2 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(bm2);
+        calibrator.getHardIronMatrix(bm2);
         assertEquals(bm1, bm2);
         MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
@@ -2604,6 +2623,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2673,10 +2693,10 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final double[] b2 = new double[3];
         calibrator.getHardIron(b2);
         assertArrayEquals(b1, b2, 0.0);
-        final Matrix bm1 = calibrator.getHardIronAsMatrix();
+        final Matrix bm1 = calibrator.getHardIronMatrix();
         assertEquals(bm1, bm);
         final Matrix bm2 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(bm2);
+        calibrator.getHardIronMatrix(bm2);
         assertEquals(bm1, bm2);
         MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
@@ -2749,6 +2769,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2830,10 +2851,10 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final double[] b2 = new double[3];
         calibrator.getHardIron(b2);
         assertArrayEquals(b1, b2, 0.0);
-        final Matrix bm1 = calibrator.getHardIronAsMatrix();
+        final Matrix bm1 = calibrator.getHardIronMatrix();
         assertEquals(bm1, bm);
         final Matrix bm2 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(bm2);
+        calibrator.getHardIronMatrix(bm2);
         assertEquals(bm1, bm2);
         MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
@@ -2906,6 +2927,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3001,10 +3023,10 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final double[] b2 = new double[3];
         calibrator.getHardIron(b2);
         assertArrayEquals(b1, b2, 0.0);
-        final Matrix bm1 = calibrator.getHardIronAsMatrix();
+        final Matrix bm1 = calibrator.getHardIronMatrix();
         assertEquals(bm1, bm);
         final Matrix bm2 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(bm2);
+        calibrator.getHardIronMatrix(bm2);
         assertEquals(bm1, bm2);
         MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
@@ -3077,6 +3099,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3173,10 +3196,10 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final double[] b2 = new double[3];
         calibrator.getHardIron(b2);
         assertArrayEquals(b1, b2, 0.0);
-        final Matrix bm1 = calibrator.getHardIronAsMatrix();
+        final Matrix bm1 = calibrator.getHardIronMatrix();
         assertEquals(bm1, bm);
         final Matrix bm2 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(bm2);
+        calibrator.getHardIronMatrix(bm2);
         assertEquals(bm1, bm2);
         MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
@@ -3249,6 +3272,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3345,10 +3369,10 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final double[] b2 = new double[3];
         calibrator.getHardIron(b2);
         assertArrayEquals(b1, b2, 0.0);
-        final Matrix bm1 = calibrator.getHardIronAsMatrix();
+        final Matrix bm1 = calibrator.getHardIronMatrix();
         assertEquals(bm1, bm);
         final Matrix bm2 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(bm2);
+        calibrator.getHardIronMatrix(bm2);
         assertEquals(bm1, bm2);
         MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
@@ -3421,6 +3445,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3495,10 +3520,10 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final double[] b2 = new double[3];
         calibrator.getHardIron(b2);
         assertArrayEquals(b1, b2, 0.0);
-        final Matrix bm1 = calibrator.getHardIronAsMatrix();
+        final Matrix bm1 = calibrator.getHardIronMatrix();
         assertEquals(bm1, new Matrix(3, 1));
         final Matrix bm2 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(bm2);
+        calibrator.getHardIronMatrix(bm2);
         assertEquals(bm1, bm2);
         MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
@@ -3572,6 +3597,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -3616,10 +3642,10 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final double[] b2 = new double[3];
         calibrator.getHardIron(b2);
         assertArrayEquals(b1, b2, 0.0);
-        final Matrix bm1 = calibrator.getHardIronAsMatrix();
+        final Matrix bm1 = calibrator.getHardIronMatrix();
         assertEquals(bm1, new Matrix(3, 1));
         final Matrix bm2 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(bm2);
+        calibrator.getHardIronMatrix(bm2);
         assertEquals(bm1, bm2);
         MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
@@ -3693,6 +3719,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -3737,10 +3764,10 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final double[] b2 = new double[3];
         calibrator.getHardIron(b2);
         assertArrayEquals(b1, b2, 0.0);
-        final Matrix bm1 = calibrator.getHardIronAsMatrix();
+        final Matrix bm1 = calibrator.getHardIronMatrix();
         assertEquals(bm1, new Matrix(3, 1));
         final Matrix bm2 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(bm2);
+        calibrator.getHardIronMatrix(bm2);
         assertEquals(bm1, bm2);
         MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
@@ -3814,6 +3841,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -3858,10 +3886,10 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final double[] b2 = new double[3];
         calibrator.getHardIron(b2);
         assertArrayEquals(b1, b2, 0.0);
-        final Matrix bm1 = calibrator.getHardIronAsMatrix();
+        final Matrix bm1 = calibrator.getHardIronMatrix();
         assertEquals(bm1, new Matrix(3, 1));
         final Matrix bm2 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(bm2);
+        calibrator.getHardIronMatrix(bm2);
         assertEquals(bm1, bm2);
         MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
@@ -3935,6 +3963,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -3979,10 +4008,10 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final double[] b2 = new double[3];
         calibrator.getHardIron(b2);
         assertArrayEquals(b1, b2, 0.0);
-        final Matrix bm1 = calibrator.getHardIronAsMatrix();
+        final Matrix bm1 = calibrator.getHardIronMatrix();
         assertEquals(bm1, new Matrix(3, 1));
         final Matrix bm2 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(bm2);
+        calibrator.getHardIronMatrix(bm2);
         assertEquals(bm1, bm2);
         MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(mb1.getValue().doubleValue(), 0.0, 0.0);
@@ -4056,6 +4085,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -4106,10 +4136,10 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final double[] b2 = new double[3];
         calibrator.getHardIron(b2);
         assertArrayEquals(b1, b2, 0.0);
-        final Matrix bm1 = calibrator.getHardIronAsMatrix();
+        final Matrix bm1 = calibrator.getHardIronMatrix();
         assertEquals(bm1, bm);
         final Matrix bm2 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(bm2);
+        calibrator.getHardIronMatrix(bm2);
         assertEquals(bm1, bm2);
         MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
@@ -4183,6 +4213,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4243,10 +4274,10 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final double[] b2 = new double[3];
         calibrator.getHardIron(b2);
         assertArrayEquals(b1, b2, 0.0);
-        final Matrix bm1 = calibrator.getHardIronAsMatrix();
+        final Matrix bm1 = calibrator.getHardIronMatrix();
         assertEquals(bm1, bm);
         final Matrix bm2 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(bm2);
+        calibrator.getHardIronMatrix(bm2);
         assertEquals(bm1, bm2);
         MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
@@ -4320,6 +4351,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4380,10 +4412,10 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final double[] b2 = new double[3];
         calibrator.getHardIron(b2);
         assertArrayEquals(b1, b2, 0.0);
-        final Matrix bm1 = calibrator.getHardIronAsMatrix();
+        final Matrix bm1 = calibrator.getHardIronMatrix();
         assertEquals(bm1, bm);
         final Matrix bm2 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(bm2);
+        calibrator.getHardIronMatrix(bm2);
         assertEquals(bm1, bm2);
         MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
@@ -4457,6 +4489,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4518,10 +4551,10 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final double[] b2 = new double[3];
         calibrator.getHardIron(b2);
         assertArrayEquals(b1, b2, 0.0);
-        final Matrix bm1 = calibrator.getHardIronAsMatrix();
+        final Matrix bm1 = calibrator.getHardIronMatrix();
         assertEquals(bm1, bm);
         final Matrix bm2 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(bm2);
+        calibrator.getHardIronMatrix(bm2);
         assertEquals(bm1, bm2);
         MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
@@ -4595,6 +4628,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4656,10 +4690,10 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final double[] b2 = new double[3];
         calibrator.getHardIron(b2);
         assertArrayEquals(b1, b2, 0.0);
-        final Matrix bm1 = calibrator.getHardIronAsMatrix();
+        final Matrix bm1 = calibrator.getHardIronMatrix();
         assertEquals(bm1, bm);
         final Matrix bm2 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(bm2);
+        calibrator.getHardIronMatrix(bm2);
         assertEquals(bm1, bm2);
         MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
@@ -4733,6 +4767,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4799,10 +4834,10 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final double[] b2 = new double[3];
         calibrator.getHardIron(b2);
         assertArrayEquals(b1, b2, 0.0);
-        final Matrix bm1 = calibrator.getHardIronAsMatrix();
+        final Matrix bm1 = calibrator.getHardIronMatrix();
         assertEquals(bm1, bm);
         final Matrix bm2 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(bm2);
+        calibrator.getHardIronMatrix(bm2);
         assertEquals(bm1, bm2);
         MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
@@ -4876,6 +4911,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4944,10 +4980,10 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final double[] b2 = new double[3];
         calibrator.getHardIron(b2);
         assertArrayEquals(b1, b2, 0.0);
-        final Matrix bm1 = calibrator.getHardIronAsMatrix();
+        final Matrix bm1 = calibrator.getHardIronMatrix();
         assertEquals(bm1, bm);
         final Matrix bm2 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(bm2);
+        calibrator.getHardIronMatrix(bm2);
         assertEquals(bm1, bm2);
         MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
@@ -5021,6 +5057,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -5090,10 +5127,10 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final double[] b2 = new double[3];
         calibrator.getHardIron(b2);
         assertArrayEquals(b1, b2, 0.0);
-        final Matrix bm1 = calibrator.getHardIronAsMatrix();
+        final Matrix bm1 = calibrator.getHardIronMatrix();
         assertEquals(bm1, bm);
         final Matrix bm2 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(bm2);
+        calibrator.getHardIronMatrix(bm2);
         assertEquals(bm1, bm2);
         MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
@@ -5167,6 +5204,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -5248,10 +5286,10 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final double[] b2 = new double[3];
         calibrator.getHardIron(b2);
         assertArrayEquals(b1, b2, 0.0);
-        final Matrix bm1 = calibrator.getHardIronAsMatrix();
+        final Matrix bm1 = calibrator.getHardIronMatrix();
         assertEquals(bm1, bm);
         final Matrix bm2 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(bm2);
+        calibrator.getHardIronMatrix(bm2);
         assertEquals(bm1, bm2);
         MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
@@ -5325,6 +5363,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -5420,10 +5459,10 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final double[] b2 = new double[3];
         calibrator.getHardIron(b2);
         assertArrayEquals(b1, b2, 0.0);
-        final Matrix bm1 = calibrator.getHardIronAsMatrix();
+        final Matrix bm1 = calibrator.getHardIronMatrix();
         assertEquals(bm1, bm);
         final Matrix bm2 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(bm2);
+        calibrator.getHardIronMatrix(bm2);
         assertEquals(bm1, bm2);
         MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
@@ -5497,6 +5536,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -5593,10 +5633,10 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final double[] b2 = new double[3];
         calibrator.getHardIron(b2);
         assertArrayEquals(b1, b2, 0.0);
-        final Matrix bm1 = calibrator.getHardIronAsMatrix();
+        final Matrix bm1 = calibrator.getHardIronMatrix();
         assertEquals(bm1, bm);
         final Matrix bm2 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(bm2);
+        calibrator.getHardIronMatrix(bm2);
         assertEquals(bm1, bm2);
         MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
@@ -5670,6 +5710,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -5766,10 +5807,10 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final double[] b2 = new double[3];
         calibrator.getHardIron(b2);
         assertArrayEquals(b1, b2, 0.0);
-        final Matrix bm1 = calibrator.getHardIronAsMatrix();
+        final Matrix bm1 = calibrator.getHardIronMatrix();
         assertEquals(bm1, bm);
         final Matrix bm2 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(bm2);
+        calibrator.getHardIronMatrix(bm2);
         assertEquals(bm1, bm2);
         MagneticFluxDensity mb1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(mb1.getValue().doubleValue(), bmx, 0.0);
@@ -5843,6 +5884,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         assertEquals(calibrator.getPreliminarySubsetSize(), 10);
         assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -6093,7 +6135,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
     }
 
     @Test
-    public void testSetHardIron1() throws LockedException {
+    public void testSetHardIronCoordinates1() throws LockedException {
         final RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibrator calibrator =
                 new RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibrator();
 
@@ -6110,7 +6152,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final double hardIronY = mb[1];
         final double hardIronZ = mb[2];
 
-        calibrator.setHardIron(hardIronX, hardIronY, hardIronZ);
+        calibrator.setHardIronCoordinates(hardIronX, hardIronY, hardIronZ);
 
         // check
         assertEquals(calibrator.getHardIronX(), hardIronX, 0.0);
@@ -6119,7 +6161,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
     }
 
     @Test
-    public void testSetHardIron2() throws LockedException {
+    public void testSetHardIronCoordinates2() throws LockedException {
         final RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibrator calibrator =
                 new RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibrator();
 
@@ -6139,7 +6181,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         final MagneticFluxDensity hardIronZ = new MagneticFluxDensity(
                 hardIron[2], MagneticFluxDensityUnit.TESLA);
 
-        calibrator.setHardIron(hardIronX, hardIronY, hardIronZ);
+        calibrator.setHardIronCoordinates(hardIronX, hardIronY, hardIronZ);
 
         // check
         assertEquals(calibrator.getHardIronXAsMagneticFluxDensity(), hardIronX);
@@ -6508,16 +6550,16 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
     }
 
     @Test
-    public void testGetHardIronAsMatrix() throws LockedException,
+    public void testGetHardIronMatrix() throws LockedException,
             WrongSizeException {
         final RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibrator calibrator =
                 new RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibrator();
 
         // check default value
-        assertEquals(calibrator.getHardIronAsMatrix(),
+        assertEquals(calibrator.getHardIronMatrix(),
                 new Matrix(3, 1));
         final Matrix result1 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(result1);
+        calibrator.getHardIronMatrix(result1);
         assertEquals(result1, new Matrix(3, 1));
 
         // set new value
@@ -6528,19 +6570,19 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         calibrator.setHardIron(b);
 
         // check
-        assertEquals(calibrator.getHardIronAsMatrix(), b);
+        assertEquals(calibrator.getHardIronMatrix(), b);
         final Matrix result2 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(result2);
+        calibrator.getHardIronMatrix(result2);
         assertEquals(result2, b);
 
         // Force IllegalArgumentException
         try {
-            calibrator.getHardIronAsMatrix(new Matrix(1, 1));
+            calibrator.getHardIronMatrix(new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator.getHardIronAsMatrix(new Matrix(3, 3));
+            calibrator.getHardIronMatrix(new Matrix(3, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -7078,6 +7120,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
             assertEstimatedResult(estimatedMm, calibrator);
             checkGeneralCovariance(calibrator.getEstimatedCovariance());
             assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
             break;
@@ -7172,6 +7215,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
             assertNotNull(calibrator.getEstimatedCovariance());
             checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
             assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
             break;
@@ -7353,6 +7397,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
             assertNotNull(calibrator.getEstimatedCovariance());
             checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
             assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
             break;
@@ -7441,6 +7486,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
 
             assertNull(calibrator.getEstimatedCovariance());
             assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+            assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
             numValid++;
             break;
@@ -7520,8 +7566,14 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
         } catch (final LockedException ignore) {
         }
         try {
-            calibrator.setHardIron(
+            calibrator.setHardIronCoordinates(
                     0.0, 0.0, 0.0);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
+        try {
+            calibrator.setHardIronCoordinates(
+                    null, null, null);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }

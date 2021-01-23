@@ -10058,7 +10058,7 @@ public class KnownBiasTurntableGyroscopeCalibratorTest implements
     }
 
     @Test
-    public void testSetBias1() throws LockedException {
+    public void testSetBiasCoordinates1() throws LockedException {
         final KnownBiasTurntableGyroscopeCalibrator calibrator =
                 new KnownBiasTurntableGyroscopeCalibrator();
 
@@ -10073,7 +10073,7 @@ public class KnownBiasTurntableGyroscopeCalibratorTest implements
         final double by = bg.getElementAtIndex(1);
         final double bz = bg.getElementAtIndex(2);
 
-        calibrator.setBias(bx, by, bz);
+        calibrator.setBiasCoordinates(bx, by, bz);
 
         // check
         assertEquals(calibrator.getBiasX(), bx, 0.0);
@@ -10082,7 +10082,7 @@ public class KnownBiasTurntableGyroscopeCalibratorTest implements
     }
 
     @Test
-    public void testSetBias2() throws LockedException {
+    public void testSetBiasCoordinates2() throws LockedException {
         final KnownBiasTurntableGyroscopeCalibrator calibrator =
                 new KnownBiasTurntableGyroscopeCalibrator();
 
@@ -10104,7 +10104,7 @@ public class KnownBiasTurntableGyroscopeCalibratorTest implements
         final AngularSpeed angularSpeedZ = new AngularSpeed(bz,
                 AngularSpeedUnit.RADIANS_PER_SECOND);
 
-        calibrator.setBias(
+        calibrator.setBiasCoordinates(
                 angularSpeedX, angularSpeedY, angularSpeedZ);
 
         // check
@@ -12216,12 +12216,12 @@ public class KnownBiasTurntableGyroscopeCalibratorTest implements
         } catch (final LockedException ignore) {
         }
         try {
-            calibrator.setBias(0.0, 0.0, 0.0);
+            calibrator.setBiasCoordinates(0.0, 0.0, 0.0);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
         try {
-            calibrator.setBias(null, null, null);
+            calibrator.setBiasCoordinates(null, null, null);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }

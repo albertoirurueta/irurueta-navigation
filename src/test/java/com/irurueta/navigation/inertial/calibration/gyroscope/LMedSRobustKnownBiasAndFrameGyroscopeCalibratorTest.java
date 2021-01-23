@@ -190,6 +190,7 @@ public class LMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -298,6 +299,7 @@ public class LMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -409,6 +411,7 @@ public class LMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -521,6 +524,7 @@ public class LMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -630,6 +634,7 @@ public class LMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -739,6 +744,7 @@ public class LMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -851,6 +857,7 @@ public class LMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -963,6 +970,7 @@ public class LMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -1078,6 +1086,7 @@ public class LMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -1193,6 +1202,7 @@ public class LMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -1310,6 +1320,7 @@ public class LMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -1427,6 +1438,7 @@ public class LMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -1542,6 +1554,7 @@ public class LMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -1657,6 +1670,7 @@ public class LMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -1774,6 +1788,7 @@ public class LMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -1891,6 +1906,7 @@ public class LMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -2013,6 +2029,7 @@ public class LMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -2135,6 +2152,7 @@ public class LMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -2260,6 +2278,7 @@ public class LMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -2385,6 +2404,7 @@ public class LMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -2507,6 +2527,7 @@ public class LMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -2629,6 +2650,7 @@ public class LMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -2754,6 +2776,7 @@ public class LMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -2879,6 +2902,7 @@ public class LMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -2993,6 +3017,7 @@ public class LMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3116,6 +3141,7 @@ public class LMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3244,6 +3270,7 @@ public class LMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3372,6 +3399,7 @@ public class LMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3497,6 +3525,7 @@ public class LMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3622,6 +3651,7 @@ public class LMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3750,6 +3780,7 @@ public class LMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3878,6 +3909,7 @@ public class LMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4002,6 +4034,7 @@ public class LMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4132,6 +4165,7 @@ public class LMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4265,6 +4299,7 @@ public class LMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4399,6 +4434,7 @@ public class LMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4529,6 +4565,7 @@ public class LMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4660,6 +4697,7 @@ public class LMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4796,6 +4834,7 @@ public class LMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4932,6 +4971,7 @@ public class LMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -5975,6 +6015,7 @@ public class LMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralCovariance(calibrator.getEstimatedCovariance());
             assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
             break;
@@ -6109,6 +6150,7 @@ public class LMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
             assertNotNull(calibrator.getEstimatedCovariance());
             checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
             assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
             break;
@@ -6241,6 +6283,7 @@ public class LMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralCovariance(calibrator.getEstimatedCovariance());
             assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
             break;
@@ -6373,6 +6416,7 @@ public class LMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
             assertNotNull(calibrator.getEstimatedCovariance());
             checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
             assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
             break;
@@ -6505,6 +6549,7 @@ public class LMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
 
             assertNull(calibrator.getEstimatedCovariance());
             assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+            assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
             numValid++;
             break;
@@ -6639,6 +6684,7 @@ public class LMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralCovariance(calibrator.getEstimatedCovariance());
             assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
             break;

@@ -222,6 +222,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -359,6 +360,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -499,6 +501,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -636,6 +639,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -777,6 +781,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -928,6 +933,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -1095,6 +1101,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -1275,6 +1282,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -1431,6 +1439,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -1587,6 +1596,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -1743,6 +1753,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -1899,6 +1910,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -2059,6 +2071,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2229,6 +2242,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2399,6 +2413,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2569,6 +2584,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2740,6 +2756,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2916,6 +2933,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3094,6 +3112,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3272,6 +3291,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3460,6 +3480,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3658,6 +3679,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3860,6 +3882,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4062,6 +4085,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4246,6 +4270,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -4402,6 +4427,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -4558,6 +4584,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -4714,6 +4741,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -4870,6 +4898,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -5030,6 +5059,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -5200,6 +5230,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -5370,6 +5401,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -5540,6 +5572,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -5711,6 +5744,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -5887,6 +5921,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -6065,6 +6100,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -6243,6 +6279,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -6431,6 +6468,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -6629,6 +6667,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -6831,6 +6870,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -7033,6 +7073,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -7223,6 +7264,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -7391,6 +7433,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -7559,6 +7602,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -7728,6 +7772,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -7901,6 +7946,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -8079,6 +8125,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -8259,6 +8306,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -8440,6 +8488,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -8620,6 +8669,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -8806,6 +8856,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -8992,6 +9043,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -9180,6 +9232,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -9377,6 +9430,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -9587,6 +9641,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -9798,6 +9853,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -10010,6 +10066,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -10207,6 +10264,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -10375,6 +10433,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         calibrator = null;
         try {
@@ -10542,6 +10601,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -10710,6 +10770,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -10883,6 +10944,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -11061,6 +11123,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -11240,6 +11303,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -11420,6 +11484,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -11599,6 +11664,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -11785,6 +11851,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -11972,6 +12039,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -12159,6 +12227,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -12355,6 +12424,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -12565,6 +12635,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -12777,6 +12848,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -12989,6 +13061,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -14119,6 +14192,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralCovariance(calibrator.getEstimatedCovariance());
             assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
             break;
@@ -14264,6 +14338,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
             assertNotNull(calibrator.getEstimatedCovariance());
             checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
             assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
             break;
@@ -14407,8 +14482,9 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
 
             assertEstimatedResult(estimatedBa, estimatedMa, calibrator, false);
 
-            assertNull(calibrator.getEstimatedCovariance());
-            assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+            assertNotNull(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
             break;

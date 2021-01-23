@@ -278,6 +278,7 @@ public class LMedSRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -489,6 +490,7 @@ public class LMedSRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -740,6 +742,7 @@ public class LMedSRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         calibrator = null;
         try {
@@ -998,6 +1001,7 @@ public class LMedSRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -1245,6 +1249,7 @@ public class LMedSRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -1514,6 +1519,7 @@ public class LMedSRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -1803,6 +1809,7 @@ public class LMedSRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2093,6 +2100,7 @@ public class LMedSRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2398,6 +2406,7 @@ public class LMedSRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2684,6 +2693,7 @@ public class LMedSRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2949,6 +2959,7 @@ public class LMedSRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3215,6 +3226,7 @@ public class LMedSRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3474,6 +3486,7 @@ public class LMedSRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3750,6 +3763,7 @@ public class LMedSRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4057,6 +4071,7 @@ public class LMedSRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4364,6 +4379,7 @@ public class LMedSRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4689,6 +4705,7 @@ public class LMedSRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -5612,7 +5629,7 @@ public class LMedSRobustKnownBiasEasyGyroscopeCalibratorTest implements
     }
 
     @Test
-    public void testSetBias1() throws LockedException {
+    public void testSetBiasCoordinates1() throws LockedException {
         final LMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
                 new LMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
@@ -5627,7 +5644,7 @@ public class LMedSRobustKnownBiasEasyGyroscopeCalibratorTest implements
         final double bgy = bg.getElementAtIndex(1);
         final double bgz = bg.getElementAtIndex(2);
 
-        calibrator.setBias(bgx, bgy, bgz);
+        calibrator.setBiasCoordinates(bgx, bgy, bgz);
 
         // check
         assertEquals(bgx, calibrator.getBiasX(), 0.0);
@@ -5636,7 +5653,7 @@ public class LMedSRobustKnownBiasEasyGyroscopeCalibratorTest implements
     }
 
     @Test
-    public void testSetBias2() throws LockedException {
+    public void testSetBiasCoordinates2() throws LockedException {
         final LMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
                 new LMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
@@ -5658,7 +5675,7 @@ public class LMedSRobustKnownBiasEasyGyroscopeCalibratorTest implements
         final AngularSpeed bgz1 = new AngularSpeed(bgz,
                 AngularSpeedUnit.RADIANS_PER_SECOND);
 
-        calibrator.setBias(bgx1, bgy1, bgz1);
+        calibrator.setBiasCoordinates(bgx1, bgy1, bgz1);
 
         // check
         assertEquals(bgx, calibrator.getBiasX(), 0.0);
@@ -6677,6 +6694,7 @@ public class LMedSRobustKnownBiasEasyGyroscopeCalibratorTest implements
             assertNotNull(calibrator.getEstimatedCovariance());
             checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
             assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
             break;
@@ -6930,6 +6948,7 @@ public class LMedSRobustKnownBiasEasyGyroscopeCalibratorTest implements
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralCovariance(calibrator.getEstimatedCovariance());
             assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
             break;
@@ -7191,6 +7210,7 @@ public class LMedSRobustKnownBiasEasyGyroscopeCalibratorTest implements
             assertNotNull(calibrator.getEstimatedCovariance());
             checkCommonAxisAndGDependantCrossBiasesCovariance(calibrator.getEstimatedCovariance());
             assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
             break;
@@ -7452,6 +7472,7 @@ public class LMedSRobustKnownBiasEasyGyroscopeCalibratorTest implements
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralAndGDependantCrossBiasesCovariance(calibrator.getEstimatedCovariance());
             assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
             break;
@@ -7713,6 +7734,7 @@ public class LMedSRobustKnownBiasEasyGyroscopeCalibratorTest implements
             assertNotNull(calibrator.getEstimatedCovariance());
             checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
             assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
             break;
@@ -7977,6 +7999,7 @@ public class LMedSRobustKnownBiasEasyGyroscopeCalibratorTest implements
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralCovariance(calibrator.getEstimatedCovariance());
             assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
             break;
@@ -8244,6 +8267,7 @@ public class LMedSRobustKnownBiasEasyGyroscopeCalibratorTest implements
             assertNotNull(calibrator.getEstimatedCovariance());
             checkCommonAxisAndGDependantCrossBiasesCovariance(calibrator.getEstimatedCovariance());
             assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
             break;
@@ -8511,6 +8535,7 @@ public class LMedSRobustKnownBiasEasyGyroscopeCalibratorTest implements
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralAndGDependantCrossBiasesCovariance(calibrator.getEstimatedCovariance());
             assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
             break;
@@ -8713,12 +8738,12 @@ public class LMedSRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final LockedException ignore) {
         }
         try {
-            calibrator.setBias(0.0, 0.0, 0.0);
+            calibrator.setBiasCoordinates(0.0, 0.0, 0.0);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
         try {
-            calibrator.setBias(null, null, null);
+            calibrator.setBiasCoordinates(null, null, null);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }

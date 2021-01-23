@@ -191,6 +191,7 @@ public class MSACRobustKnownBiasAndGravityNormAccelerometerCalibratorTest implem
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -293,6 +294,7 @@ public class MSACRobustKnownBiasAndGravityNormAccelerometerCalibratorTest implem
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -398,6 +400,7 @@ public class MSACRobustKnownBiasAndGravityNormAccelerometerCalibratorTest implem
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -500,6 +503,7 @@ public class MSACRobustKnownBiasAndGravityNormAccelerometerCalibratorTest implem
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -606,6 +610,7 @@ public class MSACRobustKnownBiasAndGravityNormAccelerometerCalibratorTest implem
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -722,6 +727,7 @@ public class MSACRobustKnownBiasAndGravityNormAccelerometerCalibratorTest implem
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -854,6 +860,7 @@ public class MSACRobustKnownBiasAndGravityNormAccelerometerCalibratorTest implem
         assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -1005,6 +1012,7 @@ public class MSACRobustKnownBiasAndGravityNormAccelerometerCalibratorTest implem
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -1132,6 +1140,7 @@ public class MSACRobustKnownBiasAndGravityNormAccelerometerCalibratorTest implem
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -1259,6 +1268,7 @@ public class MSACRobustKnownBiasAndGravityNormAccelerometerCalibratorTest implem
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -1386,6 +1396,7 @@ public class MSACRobustKnownBiasAndGravityNormAccelerometerCalibratorTest implem
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -1513,6 +1524,7 @@ public class MSACRobustKnownBiasAndGravityNormAccelerometerCalibratorTest implem
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -1644,6 +1656,7 @@ public class MSACRobustKnownBiasAndGravityNormAccelerometerCalibratorTest implem
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -1926,6 +1939,7 @@ public class MSACRobustKnownBiasAndGravityNormAccelerometerCalibratorTest implem
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2067,6 +2081,7 @@ public class MSACRobustKnownBiasAndGravityNormAccelerometerCalibratorTest implem
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2209,6 +2224,7 @@ public class MSACRobustKnownBiasAndGravityNormAccelerometerCalibratorTest implem
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2356,6 +2372,7 @@ public class MSACRobustKnownBiasAndGravityNormAccelerometerCalibratorTest implem
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2505,6 +2522,7 @@ public class MSACRobustKnownBiasAndGravityNormAccelerometerCalibratorTest implem
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2654,6 +2672,7 @@ public class MSACRobustKnownBiasAndGravityNormAccelerometerCalibratorTest implem
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2813,6 +2832,7 @@ public class MSACRobustKnownBiasAndGravityNormAccelerometerCalibratorTest implem
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2982,6 +3002,7 @@ public class MSACRobustKnownBiasAndGravityNormAccelerometerCalibratorTest implem
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3155,6 +3176,7 @@ public class MSACRobustKnownBiasAndGravityNormAccelerometerCalibratorTest implem
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3328,6 +3350,7 @@ public class MSACRobustKnownBiasAndGravityNormAccelerometerCalibratorTest implem
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3483,6 +3506,7 @@ public class MSACRobustKnownBiasAndGravityNormAccelerometerCalibratorTest implem
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -3610,6 +3634,7 @@ public class MSACRobustKnownBiasAndGravityNormAccelerometerCalibratorTest implem
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -3737,6 +3762,7 @@ public class MSACRobustKnownBiasAndGravityNormAccelerometerCalibratorTest implem
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -3864,6 +3890,7 @@ public class MSACRobustKnownBiasAndGravityNormAccelerometerCalibratorTest implem
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -3991,6 +4018,7 @@ public class MSACRobustKnownBiasAndGravityNormAccelerometerCalibratorTest implem
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -4122,6 +4150,7 @@ public class MSACRobustKnownBiasAndGravityNormAccelerometerCalibratorTest implem
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4263,6 +4292,7 @@ public class MSACRobustKnownBiasAndGravityNormAccelerometerCalibratorTest implem
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4404,6 +4434,7 @@ public class MSACRobustKnownBiasAndGravityNormAccelerometerCalibratorTest implem
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4545,6 +4576,7 @@ public class MSACRobustKnownBiasAndGravityNormAccelerometerCalibratorTest implem
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4687,6 +4719,7 @@ public class MSACRobustKnownBiasAndGravityNormAccelerometerCalibratorTest implem
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4834,6 +4867,7 @@ public class MSACRobustKnownBiasAndGravityNormAccelerometerCalibratorTest implem
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4983,6 +5017,7 @@ public class MSACRobustKnownBiasAndGravityNormAccelerometerCalibratorTest implem
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -5132,6 +5167,7 @@ public class MSACRobustKnownBiasAndGravityNormAccelerometerCalibratorTest implem
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -5291,6 +5327,7 @@ public class MSACRobustKnownBiasAndGravityNormAccelerometerCalibratorTest implem
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -5460,6 +5497,7 @@ public class MSACRobustKnownBiasAndGravityNormAccelerometerCalibratorTest implem
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -5633,6 +5671,7 @@ public class MSACRobustKnownBiasAndGravityNormAccelerometerCalibratorTest implem
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -5806,6 +5845,7 @@ public class MSACRobustKnownBiasAndGravityNormAccelerometerCalibratorTest implem
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -6005,7 +6045,7 @@ public class MSACRobustKnownBiasAndGravityNormAccelerometerCalibratorTest implem
     }
 
     @Test
-    public void testSetBias1() throws LockedException {
+    public void testSetBiasCoordinates1() throws LockedException {
         final MSACRobustKnownBiasAndGravityNormAccelerometerCalibrator calibrator =
                 new MSACRobustKnownBiasAndGravityNormAccelerometerCalibrator();
 
@@ -6020,7 +6060,7 @@ public class MSACRobustKnownBiasAndGravityNormAccelerometerCalibratorTest implem
         final double biasY = ba.getElementAtIndex(1);
         final double biasZ = ba.getElementAtIndex(2);
 
-        calibrator.setBias(biasX, biasY, biasZ);
+        calibrator.setBiasCoordinates(biasX, biasY, biasZ);
 
         // check
         assertEquals(biasX, calibrator.getBiasX(), 0.0);
@@ -6029,7 +6069,7 @@ public class MSACRobustKnownBiasAndGravityNormAccelerometerCalibratorTest implem
     }
 
     @Test
-    public void testSetBias2() throws LockedException {
+    public void testSetBiasCoordinates2() throws LockedException {
         final MSACRobustKnownBiasAndGravityNormAccelerometerCalibrator calibrator =
                 new MSACRobustKnownBiasAndGravityNormAccelerometerCalibrator();
 
@@ -6051,7 +6091,7 @@ public class MSACRobustKnownBiasAndGravityNormAccelerometerCalibratorTest implem
         final Acceleration baz = new Acceleration(biasZ,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
 
-        calibrator.setBias(bax, bay, baz);
+        calibrator.setBiasCoordinates(bax, bay, baz);
 
         // check
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -6960,6 +7000,7 @@ public class MSACRobustKnownBiasAndGravityNormAccelerometerCalibratorTest implem
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralCovariance(calibrator.getEstimatedCovariance());
             assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
             break;
@@ -7098,6 +7139,7 @@ public class MSACRobustKnownBiasAndGravityNormAccelerometerCalibratorTest implem
             assertNotNull(calibrator.getEstimatedCovariance());
             checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
             assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
             break;
@@ -7236,6 +7278,7 @@ public class MSACRobustKnownBiasAndGravityNormAccelerometerCalibratorTest implem
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralCovariance(calibrator.getEstimatedCovariance());
             assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
             break;
@@ -7374,6 +7417,7 @@ public class MSACRobustKnownBiasAndGravityNormAccelerometerCalibratorTest implem
             assertNotNull(calibrator.getEstimatedCovariance());
             checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
             assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
             break;
@@ -7510,8 +7554,9 @@ public class MSACRobustKnownBiasAndGravityNormAccelerometerCalibratorTest implem
 
             assertEstimatedResult(estimatedMa, calibrator);
 
-            assertNull(calibrator.getEstimatedCovariance());
-            assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+            assertNotNull(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
             break;
@@ -7584,12 +7629,12 @@ public class MSACRobustKnownBiasAndGravityNormAccelerometerCalibratorTest implem
         } catch (final LockedException ignore) {
         }
         try {
-            calibrator.setBias(0.0, 0.0, 0.0);
+            calibrator.setBiasCoordinates(0.0, 0.0, 0.0);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
         try {
-            calibrator.setBias(null, null, null);
+            calibrator.setBiasCoordinates(null, null, null);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }

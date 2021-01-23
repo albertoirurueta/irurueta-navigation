@@ -3441,6 +3441,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibrator implements
      *
      * @return estimated mean square error respect to provided measurements.
      */
+    @Override
     public double getEstimatedMse() {
         return mEstimatedMse;
     }

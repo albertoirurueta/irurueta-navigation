@@ -202,6 +202,7 @@ public class MSACRobustKnownHardIronAndFrameMagnetometerCalibratorTest implement
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownHardIronAndFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -299,6 +300,7 @@ public class MSACRobustKnownHardIronAndFrameMagnetometerCalibratorTest implement
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownHardIronAndFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -399,6 +401,7 @@ public class MSACRobustKnownHardIronAndFrameMagnetometerCalibratorTest implement
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownHardIronAndFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -499,6 +502,7 @@ public class MSACRobustKnownHardIronAndFrameMagnetometerCalibratorTest implement
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownHardIronAndFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -596,6 +600,7 @@ public class MSACRobustKnownHardIronAndFrameMagnetometerCalibratorTest implement
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownHardIronAndFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -693,6 +698,7 @@ public class MSACRobustKnownHardIronAndFrameMagnetometerCalibratorTest implement
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownHardIronAndFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -793,6 +799,7 @@ public class MSACRobustKnownHardIronAndFrameMagnetometerCalibratorTest implement
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownHardIronAndFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -893,6 +900,7 @@ public class MSACRobustKnownHardIronAndFrameMagnetometerCalibratorTest implement
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownHardIronAndFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -1894,6 +1902,7 @@ public class MSACRobustKnownHardIronAndFrameMagnetometerCalibratorTest implement
         assertNotNull(calibrator.getEstimatedCovariance());
         checkGeneralCovariance(calibrator.getEstimatedCovariance());
         assertTrue(calibrator.getEstimatedMse() > 0.0);
+        assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
     }
 
     @Test
@@ -1967,6 +1976,7 @@ public class MSACRobustKnownHardIronAndFrameMagnetometerCalibratorTest implement
         assertNotNull(calibrator.getEstimatedCovariance());
         checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
         assertTrue(calibrator.getEstimatedMse() > 0.0);
+        assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
     }
 
     @Test
@@ -2048,6 +2058,7 @@ public class MSACRobustKnownHardIronAndFrameMagnetometerCalibratorTest implement
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralCovariance(calibrator.getEstimatedCovariance());
             assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
             break;
@@ -2135,6 +2146,7 @@ public class MSACRobustKnownHardIronAndFrameMagnetometerCalibratorTest implement
             assertNotNull(calibrator.getEstimatedCovariance());
             checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
             assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
             break;
@@ -2220,6 +2232,7 @@ public class MSACRobustKnownHardIronAndFrameMagnetometerCalibratorTest implement
 
             assertNull(calibrator.getEstimatedCovariance());
             assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+            assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
             numValid++;
             break;
@@ -2307,6 +2320,7 @@ public class MSACRobustKnownHardIronAndFrameMagnetometerCalibratorTest implement
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralCovariance(calibrator.getEstimatedCovariance());
             assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
             break;

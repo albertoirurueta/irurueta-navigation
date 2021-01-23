@@ -218,6 +218,7 @@ public class PROSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
 
         // test constructor with listener
@@ -354,6 +355,7 @@ public class PROSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
 
         // test constructor with measurements
@@ -492,6 +494,7 @@ public class PROSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
 
         // test constructor with measurements and listener
@@ -629,6 +632,7 @@ public class PROSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
 
         // test constructor with common axis used
@@ -766,6 +770,7 @@ public class PROSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
 
         // test constructor with common axis used and listener
@@ -903,6 +908,7 @@ public class PROSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
 
         // test constructor with measurements and common axis used
@@ -1040,6 +1046,7 @@ public class PROSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
 
         // test constructor with measurements, common axis used and listener
@@ -1177,6 +1184,7 @@ public class PROSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
 
         // test constructor with quality scores
@@ -1315,6 +1323,7 @@ public class PROSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
 
         // Force IllegalArgumentException
@@ -1462,6 +1471,7 @@ public class PROSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -1609,6 +1619,7 @@ public class PROSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -1756,6 +1767,7 @@ public class PROSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -1903,6 +1915,7 @@ public class PROSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2049,6 +2062,7 @@ public class PROSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2196,6 +2210,7 @@ public class PROSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2344,6 +2359,7 @@ public class PROSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3406,6 +3422,7 @@ public class PROSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertNotNull(calibrator.getEstimatedCovariance());
         checkGeneralCovariance(calibrator.getEstimatedCovariance());
         assertTrue(calibrator.getEstimatedMse() > 0.0);
+        assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
     }
 
     @Test
@@ -3535,6 +3552,7 @@ public class PROSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertNotNull(calibrator.getEstimatedCovariance());
         checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
         assertTrue(calibrator.getEstimatedMse() > 0.0);
+        assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
     }
 
     @Test
@@ -3674,6 +3692,7 @@ public class PROSACRobustKnownFrameAccelerometerCalibratorTest implements
 
             assertNull(calibrator.getEstimatedCovariance());
             assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+            assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
             numValid++;
             break;
@@ -3823,6 +3842,7 @@ public class PROSACRobustKnownFrameAccelerometerCalibratorTest implements
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralCovariance(calibrator.getEstimatedCovariance());
             assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
             break;

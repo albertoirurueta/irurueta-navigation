@@ -206,6 +206,7 @@ public class RANSACRobustKnownHardIronAndFrameMagnetometerCalibratorTest impleme
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownHardIronAndFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -307,6 +308,7 @@ public class RANSACRobustKnownHardIronAndFrameMagnetometerCalibratorTest impleme
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownHardIronAndFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -411,6 +413,7 @@ public class RANSACRobustKnownHardIronAndFrameMagnetometerCalibratorTest impleme
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownHardIronAndFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -515,6 +518,7 @@ public class RANSACRobustKnownHardIronAndFrameMagnetometerCalibratorTest impleme
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownHardIronAndFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -616,6 +620,7 @@ public class RANSACRobustKnownHardIronAndFrameMagnetometerCalibratorTest impleme
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownHardIronAndFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -717,6 +722,7 @@ public class RANSACRobustKnownHardIronAndFrameMagnetometerCalibratorTest impleme
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownHardIronAndFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -821,6 +827,7 @@ public class RANSACRobustKnownHardIronAndFrameMagnetometerCalibratorTest impleme
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownHardIronAndFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -925,6 +932,7 @@ public class RANSACRobustKnownHardIronAndFrameMagnetometerCalibratorTest impleme
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownHardIronAndFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -1961,6 +1969,7 @@ public class RANSACRobustKnownHardIronAndFrameMagnetometerCalibratorTest impleme
 
         assertNotNull(calibrator.getEstimatedCovariance());
         assertTrue(calibrator.getEstimatedMse() > 0.0);
+        assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
     }
 
     @Test
@@ -2039,6 +2048,7 @@ public class RANSACRobustKnownHardIronAndFrameMagnetometerCalibratorTest impleme
             assertNotNull(calibrator.getEstimatedCovariance());
             checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
             assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
             break;
@@ -2126,6 +2136,7 @@ public class RANSACRobustKnownHardIronAndFrameMagnetometerCalibratorTest impleme
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralCovariance(calibrator.getEstimatedCovariance());
             assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
             break;
@@ -2213,6 +2224,7 @@ public class RANSACRobustKnownHardIronAndFrameMagnetometerCalibratorTest impleme
             assertNotNull(calibrator.getEstimatedCovariance());
             checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
             assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
             break;
@@ -2298,6 +2310,7 @@ public class RANSACRobustKnownHardIronAndFrameMagnetometerCalibratorTest impleme
 
             assertNull(calibrator.getEstimatedCovariance());
             assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+            assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
             numValid++;
             break;
@@ -2385,6 +2398,7 @@ public class RANSACRobustKnownHardIronAndFrameMagnetometerCalibratorTest impleme
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralCovariance(calibrator.getEstimatedCovariance());
             assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
             break;

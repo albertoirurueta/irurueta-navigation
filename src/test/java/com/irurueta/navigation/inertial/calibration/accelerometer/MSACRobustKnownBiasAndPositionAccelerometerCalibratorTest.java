@@ -189,6 +189,7 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -291,6 +292,7 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -396,6 +398,7 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -498,6 +501,7 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -604,6 +608,7 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -720,6 +725,7 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -852,6 +858,7 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -997,6 +1004,7 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -1118,6 +1126,7 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -1239,6 +1248,7 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -1360,6 +1370,7 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -1481,6 +1492,7 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -1606,6 +1618,7 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -1741,6 +1754,7 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -1876,6 +1890,7 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2011,6 +2026,7 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2147,6 +2163,7 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2288,6 +2305,7 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2431,6 +2449,7 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2574,6 +2593,7 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2727,6 +2747,7 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -2890,6 +2911,7 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3057,6 +3079,7 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3224,6 +3247,7 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -3373,6 +3397,7 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -3494,6 +3519,7 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -3615,6 +3641,7 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -3736,6 +3763,7 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -3857,6 +3885,7 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
     }
 
     @Test
@@ -3982,6 +4011,7 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4117,6 +4147,7 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4252,6 +4283,7 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4387,6 +4419,7 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4523,6 +4556,7 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4664,6 +4698,7 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4807,6 +4842,7 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -4950,6 +4986,7 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -5103,6 +5140,7 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -5266,6 +5304,7 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -5433,6 +5472,7 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -5600,6 +5640,7 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -5799,7 +5840,7 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
     }
 
     @Test
-    public void testSetBias1() throws LockedException {
+    public void testSetBiasCoordinates1() throws LockedException {
         final MSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
                 new MSACRobustKnownBiasAndPositionAccelerometerCalibrator();
 
@@ -5814,7 +5855,7 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
         final double biasY = ba.getElementAtIndex(1);
         final double biasZ = ba.getElementAtIndex(2);
 
-        calibrator.setBias(biasX, biasY, biasZ);
+        calibrator.setBiasCoordinates(biasX, biasY, biasZ);
 
         // check
         assertEquals(biasX, calibrator.getBiasX(), 0.0);
@@ -5823,7 +5864,7 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
     }
 
     @Test
-    public void testSetBias2() throws LockedException {
+    public void testSetBiasCoordinates2() throws LockedException {
         final MSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
                 new MSACRobustKnownBiasAndPositionAccelerometerCalibrator();
 
@@ -5845,7 +5886,7 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
         final Acceleration baz = new Acceleration(biasZ,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
 
-        calibrator.setBias(bax, bay, baz);
+        calibrator.setBiasCoordinates(bax, bay, baz);
 
         // check
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -6715,6 +6756,7 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralCovariance(calibrator.getEstimatedCovariance());
             assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
             break;
@@ -6845,6 +6887,7 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
             assertNotNull(calibrator.getEstimatedCovariance());
             checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
             assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
             break;
@@ -6976,6 +7019,7 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralCovariance(calibrator.getEstimatedCovariance());
             assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
             break;
@@ -7107,6 +7151,7 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
             assertNotNull(calibrator.getEstimatedCovariance());
             checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
             assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
             break;
@@ -7235,8 +7280,9 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
 
             assertEstimatedResult(estimatedMa, calibrator);
 
-            assertNull(calibrator.getEstimatedCovariance());
-            assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+            assertNotNull(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
             break;
@@ -7315,12 +7361,12 @@ public class MSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implement
         } catch (final LockedException ignore) {
         }
         try {
-            calibrator.setBias(0.0, 0.0, 0.0);
+            calibrator.setBiasCoordinates(0.0, 0.0, 0.0);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
         try {
-            calibrator.setBias(null, null, null);
+            calibrator.setBiasCoordinates(null, null, null);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }

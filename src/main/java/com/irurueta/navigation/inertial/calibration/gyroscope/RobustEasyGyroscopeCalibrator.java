@@ -78,8 +78,9 @@ import java.util.List;
  * - ftrue is ground-truth specific force. This is a 3x1 vector.
  * - w is measurement noise. This is a 3x1 vector.
  */
-public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrationSource,
-        GyroscopeBiasUncertaintySource {
+public abstract class RobustEasyGyroscopeCalibrator implements
+        GyroscopeNonLinearCalibrator, UnknownBiasGyroscopeCalibrator,
+        GyroscopeCalibrationSource, GyroscopeBiasUncertaintySource {
 
     /**
      * Indicates whether by default a common z-axis is assumed for both the accelerometer
@@ -383,6 +384,11 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      * Estimated covariance matrix for estimated parameters.
      */
     private Matrix mEstimatedCovariance;
+
+    /**
+     * Estimated chi square value.
+     */
+    private double mEstimatedChiSq;
 
     /**
      * Estimated mean square error respect to provided measurements.
@@ -2138,6 +2144,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      *
      * @return initial x scaling factor of gyroscope.
      */
+    @Override
     public double getInitialSx() {
         return mInitialSx;
     }
@@ -2148,6 +2155,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      * @param initialSx initial x scaling factor of gyroscope.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialSx(final double initialSx)
             throws LockedException {
         if (mRunning) {
@@ -2161,6 +2169,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      *
      * @return initial y scaling factor of gyroscope.
      */
+    @Override
     public double getInitialSy() {
         return mInitialSy;
     }
@@ -2171,6 +2180,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      * @param initialSy initial y scaling factor of gyroscope.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialSy(final double initialSy)
             throws LockedException {
         if (mRunning) {
@@ -2184,6 +2194,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      *
      * @return initial z scaling factor of gyroscope.
      */
+    @Override
     public double getInitialSz() {
         return mInitialSz;
     }
@@ -2194,6 +2205,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      * @param initialSz initial z scaling factor of gyroscope.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialSz(final double initialSz)
             throws LockedException {
         if (mRunning) {
@@ -2207,6 +2219,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      *
      * @return initial x-y cross coupling error of gyroscope.
      */
+    @Override
     public double getInitialMxy() {
         return mInitialMxy;
     }
@@ -2217,6 +2230,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      * @param initialMxy initial x-y cross coupling error of gyroscope.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialMxy(final double initialMxy)
             throws LockedException {
         if (mRunning) {
@@ -2230,6 +2244,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      *
      * @return initial x-z cross coupling error of gyroscope.
      */
+    @Override
     public double getInitialMxz() {
         return mInitialMxz;
     }
@@ -2240,6 +2255,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      * @param initialMxz initial x-z cross coupling error of gyroscope.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialMxz(final double initialMxz)
             throws LockedException {
         if (mRunning) {
@@ -2253,6 +2269,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      *
      * @return initial y-x cross coupling error of gyroscope.
      */
+    @Override
     public double getInitialMyx() {
         return mInitialMyx;
     }
@@ -2263,6 +2280,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      * @param initialMyx initial y-x cross coupling error of gyroscope.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialMyx(final double initialMyx)
             throws LockedException {
         if (mRunning) {
@@ -2276,6 +2294,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      *
      * @return initial y-z cross coupling error of gyroscope.
      */
+    @Override
     public double getInitialMyz() {
         return mInitialMyz;
     }
@@ -2286,6 +2305,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      * @param initialMyz initial y-z cross coupling error of gyroscope.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialMyz(final double initialMyz)
             throws LockedException {
         if (mRunning) {
@@ -2299,6 +2319,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      *
      * @return initial z-x cross coupling error of gyroscope.
      */
+    @Override
     public double getInitialMzx() {
         return mInitialMzx;
     }
@@ -2309,6 +2330,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      * @param initialMzx initial z-x cross coupling error of gyroscope.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialMzx(final double initialMzx)
             throws LockedException {
         if (mRunning) {
@@ -2322,6 +2344,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      *
      * @return initial z-y cross coupling error of gyroscope.
      */
+    @Override
     public double getInitialMzy() {
         return mInitialMzy;
     }
@@ -2332,6 +2355,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      * @param initialMzy initial z-y cross coupling error of gyroscope.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialMzy(final double initialMzy)
             throws LockedException {
         if (mRunning) {
@@ -2348,6 +2372,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      * @param initialSz initial z scaling factor of gyroscope.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialScalingFactors(
             final double initialSx, final double initialSy,
             final double initialSz) throws LockedException {
@@ -2370,6 +2395,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      * @param initialMzy initial z-y cross coupling error of gyroscope.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialCrossCouplingErrors(
             final double initialMxy, final double initialMxz, final double initialMyx,
             final double initialMyz, final double initialMzx, final double initialMzy)
@@ -2400,6 +2426,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      * @param initialMzy initial z-y cross coupling error of gyroscope.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialScalingFactorsAndCrossCouplingErrors(
             final double initialSx, final double initialSy, final double initialSz,
             final double initialMxy, final double initialMxz, final double initialMyx,
@@ -2573,6 +2600,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      * @return initial gyroscope scale factors and cross coupling errors
      * matrix.
      */
+    @Override
     public Matrix getInitialMg() {
         Matrix result;
         try {
@@ -2593,6 +2621,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      * @param result instance where data will be stored.
      * @throws IllegalArgumentException if provided matrix is not 3x3.
      */
+    @Override
     public void getInitialMg(final Matrix result) {
         if (result.getRows() != BodyKinematics.COMPONENTS ||
                 result.getColumns() != BodyKinematics.COMPONENTS) {
@@ -2618,6 +2647,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      * @throws IllegalArgumentException if provided matrix is not 3x3.
      * @throws LockedException          if calibrator is currently running.
      */
+    @Override
     public void setInitialMg(final Matrix initialMg) throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -2646,6 +2676,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      *
      * @return a 3x3 matrix containing initial g-dependent cross biases.
      */
+    @Override
     public Matrix getInitialGg() {
         return new Matrix(mInitialGg);
     }
@@ -2657,6 +2688,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      * @param result instance where data will be stored.
      * @throws IllegalArgumentException if provided matrix is not 3x3.
      */
+    @Override
     public void getInitialGg(final Matrix result) {
 
         if (result.getRows() != BodyKinematics.COMPONENTS
@@ -2675,6 +2707,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      * @throws LockedException          if calibrator is currently running.
      * @throws IllegalArgumentException if provided matrix is not 3x3.
      */
+    @Override
     public void setInitialGg(final Matrix initialGg) throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -2726,6 +2759,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      * @return true if z-axis is assumed to be common for accelerometer and gyroscope,
      * false otherwise.
      */
+    @Override
     public boolean isCommonAxisUsed() {
         return mCommonAxisUsed;
     }
@@ -2739,6 +2773,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      *                       and gyroscope, false otherwise.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setCommonAxisUsed(final boolean commonAxisUsed) throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -2832,6 +2867,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      *
      * @return true if calibrator is ready, false otherwise.
      */
+    @Override
     public boolean isReady() {
         return mSequences != null
                 && mSequences.size() >= getMinimumRequiredSequences();
@@ -2842,6 +2878,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      *
      * @return true if calibrator is running, false otherwise.
      */
+    @Override
     public boolean isRunning() {
         return mRunning;
     }
@@ -3037,6 +3074,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      * @throws NotReadyException    if calibrator is not ready.
      * @throws CalibrationException if estimation fails for numerical reasons.
      */
+    @Override
     public abstract void calibrate() throws LockedException, NotReadyException,
             CalibrationException;
 
@@ -3059,6 +3097,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      * @return true if result instance was updated, false otherwise (when estimation
      * is not yet available).
      */
+    @Override
     public boolean getEstimatedBiases(final double[] result) {
         if (mEstimatedBiases != null) {
             System.arraycopy(mEstimatedBiases, 0, result,
@@ -3076,6 +3115,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      * @return column matrix containing x,y,z components of estimated gyroscope
      * biases.
      */
+    @Override
     public Matrix getEstimatedBiasesAsMatrix() {
         return mEstimatedBiases != null ? Matrix.newFromArray(mEstimatedBiases) : null;
     }
@@ -3088,6 +3128,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      * @return true if result was updated, false otherwise.
      * @throws WrongSizeException if provided result instance has invalid size.
      */
+    @Override
     public boolean getEstimatedBiasesAsMatrix(final Matrix result)
             throws WrongSizeException {
         if (mEstimatedBiases != null) {
@@ -3104,6 +3145,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      *
      * @return x coordinate of estimated gyroscope bias or null if not available.
      */
+    @Override
     public Double getEstimatedBiasX() {
         return mEstimatedBiases != null ? mEstimatedBiases[0] : null;
     }
@@ -3114,6 +3156,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      *
      * @return y coordinate of estimated gyroscope bias or null if not available.
      */
+    @Override
     public Double getEstimatedBiasY() {
         return mEstimatedBiases != null ? mEstimatedBiases[1] : null;
     }
@@ -3124,6 +3167,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      *
      * @return z coordinate of estimated gyroscope bias or null if not available.
      */
+    @Override
     public Double getEstimatedBiasZ() {
         return mEstimatedBiases != null ? mEstimatedBiases[2] : null;
     }
@@ -3133,6 +3177,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      *
      * @return x coordinate of estimated gyroscope bias or null if not available.
      */
+    @Override
     public AngularSpeed getEstimatedBiasAngularSpeedX() {
         return mEstimatedBiases != null ?
                 new AngularSpeed(mEstimatedBiases[0],
@@ -3145,6 +3190,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      * @param result instance where result will be stored.
      * @return true if result was updated, false if estimation is not available.
      */
+    @Override
     public boolean getEstimatedBiasAngularSpeedX(final AngularSpeed result) {
         if (mEstimatedBiases != null) {
             result.setValue(mEstimatedBiases[0]);
@@ -3160,6 +3206,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      *
      * @return y coordinate of estimated gyroscope bias or null if not available.
      */
+    @Override
     public AngularSpeed getEstimatedBiasAngularSpeedY() {
         return mEstimatedBiases != null ?
                 new AngularSpeed(mEstimatedBiases[1],
@@ -3172,6 +3219,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      * @param result instance where result will be stored.
      * @return true if result was updated, false if estimation is not available.
      */
+    @Override
     public boolean getEstimatedBiasAngularSpeedY(final AngularSpeed result) {
         if (mEstimatedBiases != null) {
             result.setValue(mEstimatedBiases[1]);
@@ -3187,6 +3235,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      *
      * @return z coordinate of estimated gyroscope bias or null if not available.
      */
+    @Override
     public AngularSpeed getEstimatedBiasAngularSpeedZ() {
         return mEstimatedBiases != null ?
                 new AngularSpeed(mEstimatedBiases[2],
@@ -3199,6 +3248,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      * @param result instance where result will be stored.
      * @return true if result was updated, false if estimation is not available.
      */
+    @Override
     public boolean getEstimatedBiasAngularSpeedZ(final AngularSpeed result) {
         if (mEstimatedBiases != null) {
             result.setValue(mEstimatedBiases[2]);
@@ -3214,6 +3264,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      *
      * @return estimated gyroscope bias or null if not available.
      */
+    @Override
     public AngularSpeedTriad getEstimatedBiasAsTriad() {
         return mEstimatedBiases != null ?
                 new AngularSpeedTriad(AngularSpeedUnit.RADIANS_PER_SECOND,
@@ -3227,6 +3278,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      * @return true if estimated gyroscope bias is available and result was
      * modified, false otherwise.
      */
+    @Override
     public boolean getEstimatedBiasAsTriad(final AngularSpeedTriad result) {
         if (mEstimatedBiases != null) {
             result.setValueCoordinatesAndUnit(
@@ -3291,6 +3343,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      * @return estimated gyroscope x-axis scale factor or null
      * if not available.
      */
+    @Override
     public Double getEstimatedSx() {
         return mEstimatedMg != null ?
                 mEstimatedMg.getElementAt(0, 0) : null;
@@ -3302,6 +3355,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      * @return estimated gyroscope y-axis scale factor or null
      * if not available.
      */
+    @Override
     public Double getEstimatedSy() {
         return mEstimatedMg != null ?
                 mEstimatedMg.getElementAt(1, 1) : null;
@@ -3313,6 +3367,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      * @return estimated gyroscope z-axis scale factor or null
      * if not available.
      */
+    @Override
     public Double getEstimatedSz() {
         return mEstimatedMg != null ?
                 mEstimatedMg.getElementAt(2, 2) : null;
@@ -3324,6 +3379,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      * @return estimated gyroscope x-y cross-coupling error or null
      * if not available.
      */
+    @Override
     public Double getEstimatedMxy() {
         return mEstimatedMg != null ?
                 mEstimatedMg.getElementAt(0, 1) : null;
@@ -3335,6 +3391,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      * @return estimated gyroscope x-z cross-coupling error or null
      * if not available.
      */
+    @Override
     public Double getEstimatedMxz() {
         return mEstimatedMg != null ?
                 mEstimatedMg.getElementAt(0, 2) : null;
@@ -3346,6 +3403,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      * @return estimated gyroscope y-x cross-coupling error or null
      * if not available.
      */
+    @Override
     public Double getEstimatedMyx() {
         return mEstimatedMg != null ?
                 mEstimatedMg.getElementAt(1, 0) : null;
@@ -3357,6 +3415,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      * @return estimated gyroscope y-z cross-coupling error or null
      * if not available.
      */
+    @Override
     public Double getEstimatedMyz() {
         return mEstimatedMg != null ?
                 mEstimatedMg.getElementAt(1, 2) : null;
@@ -3368,6 +3427,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      * @return estimated gyroscope z-x cross-coupling error or null
      * if not available.
      */
+    @Override
     public Double getEstimatedMzx() {
         return mEstimatedMg != null ?
                 mEstimatedMg.getElementAt(2, 0) : null;
@@ -3379,6 +3439,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      * @return estimated gyroscope z-y cross-coupling error or null
      * if not available.
      */
+    @Override
     public Double getEstimatedMzy() {
         return mEstimatedMg != null ?
                 mEstimatedMg.getElementAt(2, 1) : null;
@@ -3405,8 +3466,18 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      *
      * @return estimated covariance matrix for estimated parameters.
      */
+    @Override
     public Matrix getEstimatedCovariance() {
         return mEstimatedCovariance;
+    }
+
+    /**
+     * Gets estimated chi square value.
+     *
+     * @return estimated chi square value.
+     */
+    public double getEstimatedChiSq() {
+        return mEstimatedChiSq;
     }
 
     /**
@@ -3414,6 +3485,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
      *
      * @return estimated mean square error respect to provided measurements.
      */
+    @Override
     public double getEstimatedMse() {
         return mEstimatedMse;
     }
@@ -6566,6 +6638,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
             }
 
             result.mEstimatedMse = mInnerCalibrator.getEstimatedMse();
+            result.mEstimatedChiSq = mInnerCalibrator.getEstimatedChiSq();
 
             solutions.add(result);
         } catch (final LockedException | CalibrationException | NotReadyException e) {
@@ -6616,6 +6689,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
                 mEstimatedGg = mInnerCalibrator.getEstimatedGg();
                 mEstimatedCovariance = mInnerCalibrator.getEstimatedCovariance();
                 mEstimatedMse = mInnerCalibrator.getEstimatedMse();
+                mEstimatedChiSq = mInnerCalibrator.getEstimatedChiSq();
 
             } catch (LockedException | CalibrationException | NotReadyException e) {
                 mEstimatedCovariance = preliminaryResult.mCovariance;
@@ -6623,6 +6697,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
                 mEstimatedMg = preliminaryResult.mEstimatedMg;
                 mEstimatedGg = preliminaryResult.mEstimatedGg;
                 mEstimatedMse = preliminaryResult.mEstimatedMse;
+                mEstimatedChiSq = preliminaryResult.mEstimatedChiSq;
             }
         } else {
             mEstimatedCovariance = preliminaryResult.mCovariance;
@@ -6630,6 +6705,7 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
             mEstimatedMg = preliminaryResult.mEstimatedMg;
             mEstimatedGg = preliminaryResult.mEstimatedGg;
             mEstimatedMse = preliminaryResult.mEstimatedMse;
+            mEstimatedChiSq = preliminaryResult.mEstimatedChiSq;
         }
     }
 
@@ -6767,5 +6843,10 @@ public abstract class RobustEasyGyroscopeCalibrator implements GyroscopeCalibrat
          * Estimated Mean Square Error.
          */
         private double mEstimatedMse;
+
+        /**
+         * Estimated chi square value.
+         */
+        private double mEstimatedChiSq;
     }
 }

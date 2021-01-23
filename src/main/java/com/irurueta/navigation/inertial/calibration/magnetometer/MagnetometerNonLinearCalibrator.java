@@ -21,7 +21,7 @@ import com.irurueta.navigation.LockedException;
 /**
  * Interface for non-linear accelerometer calibrators.
  */
-public interface MagnetometerNonLinearCalibrator {
+public interface MagnetometerNonLinearCalibrator extends MagnetometerCalibrator {
 
     /**
      * Gets initial x scaling factor.
@@ -243,4 +243,11 @@ public interface MagnetometerNonLinearCalibrator {
      * @return estimated chi square value.
      */
     double getEstimatedChiSq();
+
+    /**
+     * Gets estimated mean square error respect to provided measurements.
+     *
+     * @return estimated mean square error respect to provided measurements.
+     */
+    double getEstimatedMse();
 }

@@ -67,7 +67,8 @@ import java.util.Collection;
  */
 public abstract class BaseBiasGravityNormAccelerometerCalibrator<
         C extends BaseBiasGravityNormAccelerometerCalibrator<?, ?>,
-        L extends BaseBiasGravityNormAccelerometerCalibratorListener<C>> {
+        L extends BaseBiasGravityNormAccelerometerCalibratorListener<C>> implements AccelerometerNonLinearCalibrator, 
+        KnownBiasAccelerometerCalibrator {
 
     /**
      * Indicates whether by default a common z-axis is assumed for both the accelerometer
@@ -413,7 +414,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
             final double biasX, final double biasY,
             final double biasZ) {
         try {
-            setBias(biasX, biasY, biasZ);
+            setBiasCoordinates(biasX, biasY, biasZ);
         } catch (final LockedException ignore) {
             // never happens
         }
@@ -582,7 +583,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
             final Acceleration biasX, final Acceleration biasY,
             final Acceleration biasZ) {
         try {
-            setBias(biasX, biasY, biasZ);
+            setBiasCoordinates(biasX, biasY, biasZ);
         } catch (final LockedException ignore) {
             // never happens
         }
@@ -4065,6 +4066,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      *
      * @return x-coordinate of known accelerometer bias.
      */
+    @Override
     public double getBiasX() {
         return mBiasX;
     }
@@ -4076,6 +4078,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      * @param biasX x-coordinate of known accelerometer bias.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setBiasX(final double biasX) throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -4089,6 +4092,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      *
      * @return y-coordinate of known accelerometer bias.
      */
+    @Override
     public double getBiasY() {
         return mBiasY;
     }
@@ -4100,6 +4104,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      * @param biasY y-coordinate of known accelerometer bias.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setBiasY(final double biasY) throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -4113,6 +4118,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      *
      * @return z-coordinate of known accelerometer bias.
      */
+    @Override
     public double getBiasZ() {
         return mBiasZ;
     }
@@ -4124,6 +4130,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      * @param biasZ z-coordinate of known accelerometer bias.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setBiasZ(final double biasZ) throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -4136,6 +4143,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      *
      * @return x-coordinate of known accelerometer bias.
      */
+    @Override
     public Acceleration getBiasXAsAcceleration() {
         return new Acceleration(mBiasX,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
@@ -4146,6 +4154,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      *
      * @param result instance where result data will be stored.
      */
+    @Override
     public void getBiasXAsAcceleration(final Acceleration result) {
         result.setValue(mBiasX);
         result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);
@@ -4157,6 +4166,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      * @param biasX x-coordinate of known accelerometer bias.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setBiasX(final Acceleration biasX)
             throws LockedException {
         if (mRunning) {
@@ -4170,6 +4180,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      *
      * @return y-coordinate of known accelerometer bias.
      */
+    @Override
     public Acceleration getBiasYAsAcceleration() {
         return new Acceleration(mBiasY,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
@@ -4180,6 +4191,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      *
      * @param result instance where result data will be stored.
      */
+    @Override
     public void getBiasYAsAcceleration(final Acceleration result) {
         result.setValue(mBiasY);
         result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);
@@ -4191,6 +4203,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      * @param biasY y-coordinate of known accelerometer bias.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setBiasY(final Acceleration biasY)
             throws LockedException {
         if (mRunning) {
@@ -4204,6 +4217,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      *
      * @return z-coordinate of known accelerometer bias.
      */
+    @Override
     public Acceleration getBiasZAsAcceleration() {
         return new Acceleration(mBiasZ,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
@@ -4214,6 +4228,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      *
      * @param result instance where result data will be stored.
      */
+    @Override
     public void getBiasZAsAcceleration(final Acceleration result) {
         result.setValue(mBiasZ);
         result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);
@@ -4225,6 +4240,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      * @param biasZ z-coordinate of known accelerometer bias.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setBiasZ(final Acceleration biasZ)
             throws LockedException {
         if (mRunning) {
@@ -4242,8 +4258,9 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      * @param biasZ z-coordinate of known accelerometer bias.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setBias(final double biasX, final double biasY,
-                        final double biasZ) throws LockedException {
+    @Override
+    public void setBiasCoordinates(final double biasX, final double biasY,
+                                   final double biasZ) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -4260,9 +4277,10 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      * @param biasZ z-coordinate of known accelerometer bias.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setBias(final Acceleration biasX,
-                        final Acceleration biasY,
-                        final Acceleration biasZ) throws LockedException {
+    @Override
+    public void setBiasCoordinates(final Acceleration biasX,
+                                   final Acceleration biasY,
+                                   final Acceleration biasZ) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -4276,6 +4294,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      *
      * @return known accelerometer bias.
      */
+    @Override
     public AccelerationTriad getBiasAsTriad() {
         return new AccelerationTriad(
                 AccelerationUnit.METERS_PER_SQUARED_SECOND,
@@ -4287,6 +4306,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      *
      * @param result instance where result will be stored.
      */
+    @Override
     public void getBiasAsTriad(final AccelerationTriad result) {
         result.setValueCoordinatesAndUnit(mBiasX, mBiasY, mBiasZ,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
@@ -4298,6 +4318,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      * @param bias accelerometer bias to be set.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setBias(final AccelerationTriad bias) throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -4313,6 +4334,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      *
      * @return initial x scaling factor.
      */
+    @Override
     public double getInitialSx() {
         return mInitialSx;
     }
@@ -4323,6 +4345,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      * @param initialSx initial x scaling factor.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialSx(final double initialSx) throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -4335,6 +4358,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      *
      * @return initial y scaling factor.
      */
+    @Override
     public double getInitialSy() {
         return mInitialSy;
     }
@@ -4345,6 +4369,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      * @param initialSy initial y scaling factor.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialSy(final double initialSy) throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -4357,6 +4382,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      *
      * @return initial z scaling factor.
      */
+    @Override
     public double getInitialSz() {
         return mInitialSz;
     }
@@ -4367,6 +4393,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      * @param initialSz initial z scaling factor.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialSz(final double initialSz) throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -4379,6 +4406,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      *
      * @return initial x-y cross coupling error.
      */
+    @Override
     public double getInitialMxy() {
         return mInitialMxy;
     }
@@ -4389,6 +4417,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      * @param initialMxy initial x-y cross coupling error.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialMxy(final double initialMxy) throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -4401,6 +4430,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      *
      * @return initial x-z cross coupling error.
      */
+    @Override
     public double getInitialMxz() {
         return mInitialMxz;
     }
@@ -4411,6 +4441,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      * @param initialMxz initial x-z cross coupling error.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialMxz(final double initialMxz) throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -4423,6 +4454,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      *
      * @return initial y-x cross coupling error.
      */
+    @Override
     public double getInitialMyx() {
         return mInitialMyx;
     }
@@ -4433,6 +4465,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      * @param initialMyx initial y-x cross coupling error.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialMyx(final double initialMyx) throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -4445,6 +4478,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      *
      * @return initial y-z cross coupling error.
      */
+    @Override
     public double getInitialMyz() {
         return mInitialMyz;
     }
@@ -4455,6 +4489,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      * @param initialMyz initial y-z cross coupling error.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialMyz(final double initialMyz) throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -4467,6 +4502,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      *
      * @return initial z-x cross coupling error.
      */
+    @Override
     public double getInitialMzx() {
         return mInitialMzx;
     }
@@ -4477,6 +4513,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      * @param initialMzx initial z-x cross coupling error.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialMzx(final double initialMzx) throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -4489,6 +4526,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      *
      * @return initial z-y cross coupling error.
      */
+    @Override
     public double getInitialMzy() {
         return mInitialMzy;
     }
@@ -4499,6 +4537,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      * @param initialMzy initial z-y cross coupling error.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialMzy(final double initialMzy) throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -4514,6 +4553,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      * @param initialSz initial z scaling factor.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialScalingFactors(
             final double initialSx, final double initialSy, final double initialSz)
             throws LockedException {
@@ -4536,6 +4576,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      * @param initialMzy initial z-y cross coupling error.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialCrossCouplingErrors(
             final double initialMxy, final double initialMxz, final double initialMyx,
             final double initialMyz, final double initialMzx, final double initialMzy)
@@ -4565,6 +4606,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      * @param initialMzy initial z-y cross coupling error.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialScalingFactorsAndCrossCouplingErrors(
             final double initialSx, final double initialSy, final double initialSz,
             final double initialMxy, final double initialMxz, final double initialMyx,
@@ -4584,6 +4626,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      *
      * @return array containing coordinates of known bias.
      */
+    @Override
     public double[] getBias() {
         final double[] result = new double[BodyKinematics.COMPONENTS];
         getBias(result);
@@ -4597,6 +4640,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      * @param result instance where result data will be copied to.
      * @throws IllegalArgumentException if provided array does not have length 3.
      */
+    @Override
     public void getBias(final double[] result) {
         if (result.length != BodyKinematics.COMPONENTS) {
             throw new IllegalArgumentException();
@@ -4614,6 +4658,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      * @throws LockedException          if calibrator is currently running.
      * @throws IllegalArgumentException if provided array does not have length 3.
      */
+    @Override
     public void setBias(final double[] bias) throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -4632,6 +4677,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      *
      * @return known bias as a column matrix.
      */
+    @Override
     public Matrix getBiasAsMatrix() {
         Matrix result;
         try {
@@ -4650,6 +4696,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      * @param result instance where result data will be copied to.
      * @throws IllegalArgumentException if provided matrix is not 3x1.
      */
+    @Override
     public void getBiasAsMatrix(final Matrix result) {
         if (result.getRows() != BodyKinematics.COMPONENTS
                 || result.getColumns() != 1) {
@@ -4667,6 +4714,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      * @throws LockedException          if calibrator is currently running.
      * @throws IllegalArgumentException if provided matrix is not 3x1.
      */
+    @Override
     public void setBias(final Matrix bias) throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -4686,6 +4734,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      *
      * @return initial scale factors and cross coupling errors matrix.
      */
+    @Override
     public Matrix getInitialMa() {
         Matrix result;
         try {
@@ -4705,6 +4754,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      * @param result instance where data will be stored.
      * @throws IllegalArgumentException if provided matrix is not 3x3.
      */
+    @Override
     public void getInitialMa(final Matrix result) {
         if (result.getRows() != BodyKinematics.COMPONENTS ||
                 result.getColumns() != BodyKinematics.COMPONENTS) {
@@ -4730,6 +4780,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      * @throws IllegalArgumentException if provided matrix is not 3x3.
      * @throws LockedException          if calibrator is currently running.
      */
+    @Override
     public void setInitialMa(final Matrix initialMa) throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -4790,6 +4841,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      * @return true if z-axis is assumed to be common for accelerometer and gyroscope,
      * false otherwise.
      */
+    @Override
     public boolean isCommonAxisUsed() {
         return mCommonAxisUsed;
     }
@@ -4803,6 +4855,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      *                       and gyroscope, false otherwise.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setCommonAxisUsed(final boolean commonAxisUsed) throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -4849,6 +4902,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      *
      * @return true if calibrator is ready, false otherwise.
      */
+    @Override
     public boolean isReady() {
         return mMeasurements != null && mMeasurements.size() >= getMinimumRequiredMeasurements()
                 && mGroundTruthGravityNorm != null;
@@ -4859,6 +4913,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      *
      * @return true if calibrator is running, false otherwise.
      */
+    @Override
     public boolean isRunning() {
         return mRunning;
     }
@@ -4871,6 +4926,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      * @throws NotReadyException    if calibrator is not ready.
      * @throws CalibrationException if estimation fails for numerical reasons.
      */
+    @Override
     public void calibrate() throws LockedException, NotReadyException, CalibrationException {
         if (mRunning) {
             throw new LockedException();
@@ -4949,6 +5005,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      * @return estimated accelerometer scale factors and cross coupling errors, or null
      * if not available.
      */
+    @Override
     public Matrix getEstimatedMa() {
         return mEstimatedMa;
     }
@@ -4958,6 +5015,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      *
      * @return estimated x-axis scale factor or null if not available.
      */
+    @Override
     public Double getEstimatedSx() {
         return mEstimatedMa != null ?
                 mEstimatedMa.getElementAt(0, 0) : null;
@@ -4968,6 +5026,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      *
      * @return estimated y-axis scale factor or null if not available.
      */
+    @Override
     public Double getEstimatedSy() {
         return mEstimatedMa != null ?
                 mEstimatedMa.getElementAt(1, 1) : null;
@@ -4978,6 +5037,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      *
      * @return estimated z-axis scale factor or null if not available.
      */
+    @Override
     public Double getEstimatedSz() {
         return mEstimatedMa != null ?
                 mEstimatedMa.getElementAt(2, 2) : null;
@@ -4988,6 +5048,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      *
      * @return estimated x-y cross-coupling error or null if not available.
      */
+    @Override
     public Double getEstimatedMxy() {
         return mEstimatedMa != null ?
                 mEstimatedMa.getElementAt(0, 1) : null;
@@ -4998,6 +5059,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      *
      * @return estimated x-z cross-coupling error or null if not available.
      */
+    @Override
     public Double getEstimatedMxz() {
         return mEstimatedMa != null ?
                 mEstimatedMa.getElementAt(0, 2) : null;
@@ -5008,6 +5070,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      *
      * @return estimated y-x cross-coupling error or null if not available.
      */
+    @Override
     public Double getEstimatedMyx() {
         return mEstimatedMa != null ?
                 mEstimatedMa.getElementAt(1, 0) : null;
@@ -5018,6 +5081,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      *
      * @return estimated y-z cross-coupling error or null if not available.
      */
+    @Override
     public Double getEstimatedMyz() {
         return mEstimatedMa != null ?
                 mEstimatedMa.getElementAt(1, 2) : null;
@@ -5028,6 +5092,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      *
      * @return estimated z-x cross-coupling error or null if not available.
      */
+    @Override
     public Double getEstimatedMzx() {
         return mEstimatedMa != null ?
                 mEstimatedMa.getElementAt(2, 0) : null;
@@ -5038,6 +5103,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      *
      * @return estimated z-y cross-coupling error or null if not available.
      */
+    @Override
     public Double getEstimatedMzy() {
         return mEstimatedMa != null ?
                 mEstimatedMa.getElementAt(2, 1) : null;
@@ -5051,6 +5117,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      *
      * @return estimated covariance matrix for estimated calibration parameters.
      */
+    @Override
     public Matrix getEstimatedCovariance() {
         return mEstimatedCovariance;
     }
@@ -5060,6 +5127,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      *
      * @return estimated chi square value.
      */
+    @Override
     public double getEstimatedChiSq() {
         return mEstimatedChiSq;
     }
@@ -5069,6 +5137,7 @@ public abstract class BaseBiasGravityNormAccelerometerCalibrator<
      *
      * @return estimated mean square error respect to provided measurements.
      */
+    @Override
     public double getEstimatedMse() {
         return mEstimatedMse;
     }

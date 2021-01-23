@@ -62,7 +62,8 @@ import java.util.List;
  * - ftrue is ground-trush specific force.
  * - w is measurement noise.
  */
-public abstract class RobustKnownFrameAccelerometerCalibrator implements AccelerometerCalibrationSource,
+public abstract class RobustKnownFrameAccelerometerCalibrator implements
+        AccelerometerNonLinearCalibrator, UnknownBiasNonLinearAccelerometerCalibrator, AccelerometerCalibrationSource,
         AccelerometerBiasUncertaintySource {
 
     /**
@@ -353,6 +354,11 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
     private Matrix mEstimatedCovariance;
 
     /**
+     * Estimated chi square value.
+     */
+    private double mEstimatedChiSq;
+
+    /**
      * Estimated mean square error respect to provided measurements.
      */
     private double mEstimatedMse;
@@ -478,6 +484,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      *
      * @return initial x-coordinate of accelerometer bias.
      */
+    @Override
     public double getInitialBiasX() {
         return mInitialBiasX;
     }
@@ -490,6 +497,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      * @param initialBiasX initial x-coordinate of accelerometer bias.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialBiasX(final double initialBiasX) throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -504,6 +512,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      *
      * @return initial y-coordinate of accelerometer bias.
      */
+    @Override
     public double getInitialBiasY() {
         return mInitialBiasY;
     }
@@ -516,6 +525,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      * @param initialBiasY initial y-coordinate of accelerometer bias.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialBiasY(final double initialBiasY) throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -530,6 +540,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      *
      * @return initial z-coordinate of accelerometer bias.
      */
+    @Override
     public double getInitialBiasZ() {
         return mInitialBiasZ;
     }
@@ -542,6 +553,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      * @param initialBiasZ initial z-coordinate of accelerometer bias.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialBiasZ(final double initialBiasZ) throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -555,6 +567,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      *
      * @return initial x-coordinate of accelerometer bias.
      */
+    @Override
     public Acceleration getInitialBiasXAsAcceleration() {
         return new Acceleration(mInitialBiasX,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
@@ -566,6 +579,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      *
      * @param result instance where result data will be stored.
      */
+    @Override
     public void getInitialBiasXAsAcceleration(final Acceleration result) {
         result.setValue(mInitialBiasX);
         result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);
@@ -578,6 +592,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      * @param initialBiasX initial x-coordinate of accelerometer bias.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialBiasX(final Acceleration initialBiasX)
             throws LockedException {
         if (mRunning) {
@@ -592,6 +607,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      *
      * @return initial y-coordinate of accelerometer bias.
      */
+    @Override
     public Acceleration getInitialBiasYAsAcceleration() {
         return new Acceleration(mInitialBiasY,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
@@ -603,6 +619,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      *
      * @param result instance where result data will be stored.
      */
+    @Override
     public void getInitialBiasYAsAcceleration(final Acceleration result) {
         result.setValue(mInitialBiasY);
         result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);
@@ -615,6 +632,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      * @param initialBiasY initial y-coordinate of accelerometer bias.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialBiasY(final Acceleration initialBiasY)
             throws LockedException {
         if (mRunning) {
@@ -629,6 +647,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      *
      * @return initial z-coordinate of accelerometer bias.
      */
+    @Override
     public Acceleration getInitialBiasZAsAcceleration() {
         return new Acceleration(mInitialBiasZ,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
@@ -640,6 +659,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      *
      * @param result instance where result data will be stored.
      */
+    @Override
     public void getInitialBiasZAsAcceleration(final Acceleration result) {
         result.setValue(mInitialBiasZ);
         result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);
@@ -652,6 +672,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      * @param initialBiasZ initial z-coordinate of accelerometer bias.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialBiasZ(final Acceleration initialBiasZ)
             throws LockedException {
         if (mRunning) {
@@ -670,6 +691,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      * @param initialBiasZ initial z-coordinate of accelerometer bias.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialBias(final double initialBiasX, final double initialBiasY,
                                final double initialBiasZ) throws LockedException {
         if (mRunning) {
@@ -689,6 +711,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      * @param initialBiasZ initial z-coordinate of accelerometer bias.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialBias(final Acceleration initialBiasX,
                                final Acceleration initialBiasY,
                                final Acceleration initialBiasZ) throws LockedException {
@@ -705,6 +728,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      *
      * @return initial bias coordinates.
      */
+    @Override
     public AccelerationTriad getInitialBiasAsTriad() {
         return new AccelerationTriad(
                 AccelerationUnit.METERS_PER_SQUARED_SECOND,
@@ -716,6 +740,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      *
      * @param result instance where result will be stored.
      */
+    @Override
     public void getInitialBiasAsTriad(final AccelerationTriad result) {
         result.setValueCoordinatesAndUnit(
                 mInitialBiasX, mInitialBiasY, mInitialBiasZ,
@@ -727,6 +752,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      *
      * @param initialBias initial bias coordinates to be set.
      */
+    @Override
     public void setInitialBias(final AccelerationTriad initialBias) {
         mInitialBiasX = convertAcceleration(
                 initialBias.getValueX(), initialBias.getUnit());
@@ -742,6 +768,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      *
      * @return initial x scaling factor.
      */
+    @Override
     public double getInitialSx() {
         return mInitialSx;
     }
@@ -753,6 +780,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      * @param initialSx initial x scaling factor.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialSx(final double initialSx) throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -766,6 +794,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      *
      * @return initial y scaling factor.
      */
+    @Override
     public double getInitialSy() {
         return mInitialSy;
     }
@@ -777,6 +806,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      * @param initialSy initial y scaling factor.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialSy(final double initialSy) throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -790,6 +820,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      *
      * @return initial z scaling factor.
      */
+    @Override
     public double getInitialSz() {
         return mInitialSz;
     }
@@ -801,6 +832,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      * @param initialSz initial z scaling factor.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialSz(final double initialSz) throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -814,6 +846,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      *
      * @return initial x-y cross coupling error.
      */
+    @Override
     public double getInitialMxy() {
         return mInitialMxy;
     }
@@ -825,6 +858,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      * @param initialMxy initial x-y cross coupling error.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialMxy(final double initialMxy) throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -838,6 +872,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      *
      * @return initial x-z cross coupling error.
      */
+    @Override
     public double getInitialMxz() {
         return mInitialMxz;
     }
@@ -849,6 +884,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      * @param initialMxz initial x-z cross coupling error.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialMxz(final double initialMxz) throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -862,6 +898,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      *
      * @return initial y-x cross coupling error.
      */
+    @Override
     public double getInitialMyx() {
         return mInitialMyx;
     }
@@ -873,6 +910,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      * @param initialMyx initial y-x cross coupling error.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialMyx(final double initialMyx) throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -886,6 +924,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      *
      * @return initial y-z cross coupling error.
      */
+    @Override
     public double getInitialMyz() {
         return mInitialMyz;
     }
@@ -897,6 +936,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      * @param initialMyz initial y-z cross coupling error.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialMyz(final double initialMyz) throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -910,6 +950,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      *
      * @return initial z-x cross coupling error.
      */
+    @Override
     public double getInitialMzx() {
         return mInitialMzx;
     }
@@ -921,6 +962,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      * @param initialMzx initial z-x cross coupling error.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialMzx(final double initialMzx) throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -934,6 +976,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      *
      * @return initial z-y cross coupling error.
      */
+    @Override
     public double getInitialMzy() {
         return mInitialMzy;
     }
@@ -945,6 +988,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      * @param initialMzy initial z-y cross coupling error.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialMzy(final double initialMzy) throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -961,6 +1005,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      * @param initialSz initial z scaling factor.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialScalingFactors(
             final double initialSx, final double initialSy, final double initialSz)
             throws LockedException {
@@ -984,6 +1029,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      * @param initialMzy initial z-y cross coupling error.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialCrossCouplingErrors(
             final double initialMxy, final double initialMxz, final double initialMyx,
             final double initialMyz, final double initialMzx, final double initialMzy)
@@ -1014,6 +1060,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      * @param initialMzy initial z-y cross coupling error.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialScalingFactorsAndCrossCouplingErrors(
             final double initialSx, final double initialSy, final double initialSz,
             final double initialMxy, final double initialMxz, final double initialMyx,
@@ -1034,6 +1081,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      *
      * @return array containing coordinates of initial bias.
      */
+    @Override
     public double[] getInitialBias() {
         final double[] result = new double[BodyKinematics.COMPONENTS];
         getInitialBias(result);
@@ -1048,6 +1096,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      * @param result instance where result data will be copied to.
      * @throws IllegalArgumentException if provided array does not have length 3.
      */
+    @Override
     public void getInitialBias(final double[] result) {
         if (result.length != BodyKinematics.COMPONENTS) {
             throw new IllegalArgumentException();
@@ -1066,6 +1115,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      * @throws LockedException          if calibrator is currently running.
      * @throws IllegalArgumentException if provided array does not have length 3.
      */
+    @Override
     public void setInitialBias(final double[] initialBias) throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -1086,6 +1136,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      *
      * @return initial bias to be used to find a solution as a column matrix.
      */
+    @Override
     public Matrix getInitialBiasAsMatrix() {
         Matrix result;
         try {
@@ -1106,6 +1157,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      * @param result instance where result data will be copied to.
      * @throws IllegalArgumentException if provided matrix is not 3x1.
      */
+    @Override
     public void getInitialBiasAsMatrix(final Matrix result) {
         if (result.getRows() != BodyKinematics.COMPONENTS
                 || result.getColumns() != 1) {
@@ -1125,6 +1177,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      * @throws LockedException          if calibrator is currently running.
      * @throws IllegalArgumentException if provided matrix is not 3x1.
      */
+    @Override
     public void setInitialBias(final Matrix initialBias) throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -1145,6 +1198,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      *
      * @return initial scale factors and cross coupling errors matrix.
      */
+    @Override
     public Matrix getInitialMa() {
         Matrix result;
         try {
@@ -1165,6 +1219,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      * @param result instance where data will be stored.
      * @throws IllegalArgumentException if provided matrix is not 3x3.
      */
+    @Override
     public void getInitialMa(final Matrix result) {
         if (result.getRows() != BodyKinematics.COMPONENTS ||
                 result.getColumns() != BodyKinematics.COMPONENTS) {
@@ -1191,6 +1246,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      * @throws IllegalArgumentException if provided matrix is not 3x3.
      * @throws LockedException          if calibrator is currently running.
      */
+    @Override
     public void setInitialMa(final Matrix initialMa) throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -1269,6 +1325,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      * @return true if z-axis is assumed to be common for accelerometer and gyroscope,
      * false otherwise.
      */
+    @Override
     public boolean isCommonAxisUsed() {
         return mCommonAxisUsed;
     }
@@ -1282,6 +1339,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      *                       and gyroscope, false otherwise.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setCommonAxisUsed(final boolean commonAxisUsed) throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -1320,6 +1378,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      *
      * @return true if calibrator is ready, false otherwise.
      */
+    @Override
     public boolean isReady() {
         return mMeasurements != null && mMeasurements.size() >= MINIMUM_MEASUREMENTS;
     }
@@ -1329,6 +1388,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      *
      * @return true if calibrator is running, false otherwise.
      */
+    @Override
     public boolean isRunning() {
         return mRunning;
     }
@@ -1595,6 +1655,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      * @return true if result instance was updated, false otherwise (when estimation
      * is not yet available).
      */
+    @Override
     public boolean getEstimatedBiases(final double[] result) {
         if (mEstimatedBiases != null) {
             System.arraycopy(mEstimatedBiases, 0, result,
@@ -1612,6 +1673,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      * @return column matrix containing x,y,z components of estimated accelerometer
      * biases
      */
+    @Override
     public Matrix getEstimatedBiasesAsMatrix() {
         return mEstimatedBiases != null ? Matrix.newFromArray(mEstimatedBiases) : null;
     }
@@ -1624,6 +1686,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      * @return true if result was updated, false otherwise.
      * @throws WrongSizeException if provided result instance has invalid size.
      */
+    @Override
     public boolean getEstimatedBiasesAsMatrix(final Matrix result)
             throws WrongSizeException {
         if (mEstimatedBiases != null) {
@@ -1640,6 +1703,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      *
      * @return x coordinate of estimated accelerometer bias or null if not available.
      */
+    @Override
     public Double getEstimatedBiasFx() {
         return mEstimatedBiases != null ? mEstimatedBiases[0] : null;
     }
@@ -1650,6 +1714,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      *
      * @return y coordinate of estimated accelerometer bias or null if not available.
      */
+    @Override
     public Double getEstimatedBiasFy() {
         return mEstimatedBiases != null ? mEstimatedBiases[1] : null;
     }
@@ -1660,6 +1725,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      *
      * @return z coordinate of estimated accelerometer bias or null if not available.
      */
+    @Override
     public Double getEstimatedBiasFz() {
         return mEstimatedBiases != null ? mEstimatedBiases[2] : null;
     }
@@ -1669,6 +1735,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      *
      * @return x coordinate of estimated accelerometer bias or null if not available.
      */
+    @Override
     public Acceleration getEstimatedBiasFxAsAcceleration() {
         return mEstimatedBiases != null ?
                 new Acceleration(mEstimatedBiases[0],
@@ -1681,6 +1748,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      * @param result instance where result will be stored.
      * @return true if result was updated, false if estimation is not available.
      */
+    @Override
     public boolean getEstimatedBiasFxAsAcceleration(final Acceleration result) {
         if (mEstimatedBiases != null) {
             result.setValue(mEstimatedBiases[0]);
@@ -1696,6 +1764,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      *
      * @return y coordinate of estimated accelerometer bias or null if not available.
      */
+    @Override
     public Acceleration getEstimatedBiasFyAsAcceleration() {
         return mEstimatedBiases != null ?
                 new Acceleration(mEstimatedBiases[1],
@@ -1708,6 +1777,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      * @param result instance where result will be stored.
      * @return true if result was updated, false if estimation is not available.
      */
+    @Override
     public boolean getEstimatedBiasFyAsAcceleration(final Acceleration result) {
         if (mEstimatedBiases != null) {
             result.setValue(mEstimatedBiases[1]);
@@ -1723,6 +1793,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      *
      * @return z coordinate of estimated accelerometer bias or null if not available.
      */
+    @Override
     public Acceleration getEstimatedBiasFzAsAcceleration() {
         return mEstimatedBiases != null ?
                 new Acceleration(mEstimatedBiases[2],
@@ -1735,6 +1806,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      * @param result instance where result will be stored.
      * @return true if result was updated, false if estimation is not available.
      */
+    @Override
     public boolean getEstimatedBiasFzAsAcceleration(final Acceleration result) {
         if (mEstimatedBiases != null) {
             result.setValue(mEstimatedBiases[2]);
@@ -1750,6 +1822,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      *
      * @return estimated accelerometer bias or null if not available.
      */
+    @Override
     public AccelerationTriad getEstimatedBiasAsTriad() {
         return mEstimatedBiases != null ?
                 new AccelerationTriad(AccelerationUnit.METERS_PER_SQUARED_SECOND,
@@ -1763,6 +1836,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      * @return true if estimated accelerometer bias is available and result was
      * modified, false otherwise.
      */
+    @Override
     public boolean getEstimatedBiasAsTriad(final AccelerationTriad result) {
         if (mEstimatedBiases != null) {
             result.setValueCoordinatesAndUnit(
@@ -1826,6 +1900,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      *
      * @return estimated x-axis scale factor or null if not available.
      */
+    @Override
     public Double getEstimatedSx() {
         return mEstimatedMa != null ?
                 mEstimatedMa.getElementAt(0, 0) : null;
@@ -1836,6 +1911,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      *
      * @return estimated y-axis scale factor or null if not available.
      */
+    @Override
     public Double getEstimatedSy() {
         return mEstimatedMa != null ?
                 mEstimatedMa.getElementAt(1, 1) : null;
@@ -1846,6 +1922,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      *
      * @return estimated z-axis scale factor or null if not available.
      */
+    @Override
     public Double getEstimatedSz() {
         return mEstimatedMa != null ?
                 mEstimatedMa.getElementAt(2, 2) : null;
@@ -1856,6 +1933,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      *
      * @return estimated x-y cross-coupling error or null if not available.
      */
+    @Override
     public Double getEstimatedMxy() {
         return mEstimatedMa != null ?
                 mEstimatedMa.getElementAt(0, 1) : null;
@@ -1866,6 +1944,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      *
      * @return estimated x-z cross-coupling error or null if not available.
      */
+    @Override
     public Double getEstimatedMxz() {
         return mEstimatedMa != null ?
                 mEstimatedMa.getElementAt(0, 2) : null;
@@ -1876,6 +1955,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      *
      * @return estimated y-x cross-coupling error or null if not available.
      */
+    @Override
     public Double getEstimatedMyx() {
         return mEstimatedMa != null ?
                 mEstimatedMa.getElementAt(1, 0) : null;
@@ -1886,6 +1966,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      *
      * @return estimated y-z cross-coupling error or null if not available.
      */
+    @Override
     public Double getEstimatedMyz() {
         return mEstimatedMa != null ?
                 mEstimatedMa.getElementAt(1, 2) : null;
@@ -1896,6 +1977,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      *
      * @return estimated z-x cross-coupling error or null if not available.
      */
+    @Override
     public Double getEstimatedMzx() {
         return mEstimatedMa != null ?
                 mEstimatedMa.getElementAt(2, 0) : null;
@@ -1906,9 +1988,20 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      *
      * @return estimated z-y cross-coupling error or null if not available.
      */
+    @Override
     public Double getEstimatedMzy() {
         return mEstimatedMa != null ?
                 mEstimatedMa.getElementAt(2, 1) : null;
+    }
+
+    /**
+     * Gets estimated chi square value.
+     *
+     * @return estimated chi square value.
+     */
+    @Override
+    public double getEstimatedChiSq() {
+        return mEstimatedChiSq;
     }
 
     /**
@@ -1916,6 +2009,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      *
      * @return estimated mean square error respect to provided measurements.
      */
+    @Override
     public double getEstimatedMse() {
         return mEstimatedMse;
     }
@@ -1930,6 +2024,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      *
      * @return estimated covariance matrix for estimated position.
      */
+    @Override
     public Matrix getEstimatedCovariance() {
         return mEstimatedCovariance;
     }
@@ -2246,6 +2341,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
      * @throws NotReadyException    if calibrator is not ready.
      * @throws CalibrationException if estimation fails for numerical reasons.
      */
+    @Override
     public abstract void calibrate() throws LockedException, NotReadyException,
             CalibrationException;
 
@@ -3139,6 +3235,15 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
 
                 mNonLinearCalibrator.getEstimatedBiases(result.mEstimatedBiases);
                 result.mEstimatedMa = mNonLinearCalibrator.getEstimatedMa();
+
+                if (mKeepCovariance) {
+                    result.mCovariance = mNonLinearCalibrator.getEstimatedCovariance();
+                } else {
+                    result.mCovariance = null;
+                }
+
+                result.mEstimatedMse = mNonLinearCalibrator.getEstimatedMse();
+                result.mEstimatedChiSq = mNonLinearCalibrator.getEstimatedChiSq();
             }
 
             solutions.add(result);
@@ -3180,6 +3285,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
                 mEstimatedBiases = mNonLinearCalibrator.getEstimatedBiases();
                 mEstimatedMa = mNonLinearCalibrator.getEstimatedMa();
                 mEstimatedMse = mNonLinearCalibrator.getEstimatedMse();
+                mEstimatedChiSq = mNonLinearCalibrator.getEstimatedChiSq();
 
                 if (mKeepCovariance) {
                     mEstimatedCovariance = mNonLinearCalibrator.getEstimatedCovariance();
@@ -3188,16 +3294,18 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
                 }
 
             } catch (final LockedException | CalibrationException | NotReadyException e) {
-                mEstimatedCovariance = null;
+                mEstimatedCovariance = preliminaryResult.mCovariance;
                 mEstimatedBiases = preliminaryResult.mEstimatedBiases;
                 mEstimatedMa = preliminaryResult.mEstimatedMa;
-                mEstimatedMse = 0.0;
+                mEstimatedMse = preliminaryResult.mEstimatedMse;
+                mEstimatedChiSq = preliminaryResult.mEstimatedChiSq;
             }
         } else {
-            mEstimatedCovariance = null;
+            mEstimatedCovariance = preliminaryResult.mCovariance;
             mEstimatedBiases = preliminaryResult.mEstimatedBiases;
             mEstimatedMa = preliminaryResult.mEstimatedMa;
-            mEstimatedMse = 0.0;
+            mEstimatedMse = preliminaryResult.mEstimatedMse;
+            mEstimatedChiSq = preliminaryResult.mEstimatedChiSq;
         }
     }
 
@@ -3271,8 +3379,23 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements Acceler
          *          [0     sy   myz]
          *          [0     0    sz ]
          * </pre>
-         * Values of this matrix are unitless.
+         * Values of this matrix are unit-less.
          */
         private Matrix mEstimatedMa;
+
+        /**
+         * Estimated covariance matrix.
+         */
+        private Matrix mCovariance;
+
+        /**
+         * Estimated MSE (Mean Square Error).
+         */
+        private double mEstimatedMse;
+
+        /**
+         * Estimated chi square value.
+         */
+        private double mEstimatedChiSq;
     }
 }

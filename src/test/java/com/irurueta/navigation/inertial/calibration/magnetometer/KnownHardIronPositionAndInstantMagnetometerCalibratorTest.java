@@ -125,10 +125,10 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         final double[] hardIron = new double[3];
         calibrator.getHardIron(hardIron);
         assertArrayEquals(hardIron, new double[3], 0.0);
-        assertEquals(calibrator.getHardIronAsMatrix(),
+        assertEquals(calibrator.getHardIronMatrix(),
                 new Matrix(3, 1));
         final Matrix hardIronMatrix = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(hardIronMatrix);
+        calibrator.getHardIronMatrix(hardIronMatrix);
         assertEquals(hardIronMatrix, new Matrix(3, 1));
         assertEquals(calibrator.getInitialMm(),
                 new Matrix(3, 3));
@@ -212,10 +212,10 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         final double[] hardIron = new double[3];
         calibrator.getHardIron(hardIron);
         assertArrayEquals(hardIron, new double[3], 0.0);
-        assertEquals(calibrator.getHardIronAsMatrix(),
+        assertEquals(calibrator.getHardIronMatrix(),
                 new Matrix(3, 1));
         final Matrix hardIronMatrix = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(hardIronMatrix);
+        calibrator.getHardIronMatrix(hardIronMatrix);
         assertEquals(hardIronMatrix, new Matrix(3, 1));
         assertEquals(calibrator.getInitialMm(),
                 new Matrix(3, 3));
@@ -301,10 +301,10 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         final double[] hardIron = new double[3];
         calibrator.getHardIron(hardIron);
         assertArrayEquals(hardIron, new double[3], 0.0);
-        assertEquals(calibrator.getHardIronAsMatrix(),
+        assertEquals(calibrator.getHardIronMatrix(),
                 new Matrix(3, 1));
         final Matrix hardIronMatrix = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(hardIronMatrix);
+        calibrator.getHardIronMatrix(hardIronMatrix);
         assertEquals(hardIronMatrix, new Matrix(3, 1));
         MagneticFluxDensity b1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(b1.getValue().doubleValue(), 0.0, 0.0);
@@ -388,10 +388,10 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         final double[] hardIron = new double[3];
         calibrator.getHardIron(hardIron);
         assertArrayEquals(hardIron, new double[3], 0.0);
-        assertEquals(calibrator.getHardIronAsMatrix(),
+        assertEquals(calibrator.getHardIronMatrix(),
                 new Matrix(3, 1));
         final Matrix hardIronMatrix = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(hardIronMatrix);
+        calibrator.getHardIronMatrix(hardIronMatrix);
         assertEquals(hardIronMatrix, new Matrix(3, 1));
         MagneticFluxDensity b1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(b1.getValue().doubleValue(), 0.0, 0.0);
@@ -476,10 +476,10 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         final double[] hardIron = new double[3];
         calibrator.getHardIron(hardIron);
         assertArrayEquals(hardIron, new double[3], 0.0);
-        assertEquals(calibrator.getHardIronAsMatrix(),
+        assertEquals(calibrator.getHardIronMatrix(),
                 new Matrix(3, 1));
         final Matrix hardIronMatrix = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(hardIronMatrix);
+        calibrator.getHardIronMatrix(hardIronMatrix);
         assertEquals(hardIronMatrix, new Matrix(3, 1));
         MagneticFluxDensity b1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(b1.getValue().doubleValue(), 0.0, 0.0);
@@ -571,10 +571,10 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         final double[] hardIron1 = new double[3];
         calibrator.getHardIron(hardIron1);
         assertArrayEquals(hardIron1, hardIron, 0.0);
-        assertEquals(calibrator.getHardIronAsMatrix(),
+        assertEquals(calibrator.getHardIronMatrix(),
                 hardIronMatrix);
         final Matrix hardIronMatrix1 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(hardIronMatrix1);
+        calibrator.getHardIronMatrix(hardIronMatrix1);
         assertEquals(hardIronMatrix, hardIronMatrix1);
         MagneticFluxDensity b1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(b1.getValue().doubleValue(), hardIronX, 0.0);
@@ -676,10 +676,10 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         final double[] hardIron1 = new double[3];
         calibrator.getHardIron(hardIron1);
         assertArrayEquals(hardIron1, hardIron, 0.0);
-        assertEquals(calibrator.getHardIronAsMatrix(),
+        assertEquals(calibrator.getHardIronMatrix(),
                 hardIronMatrix);
         final Matrix hardIronMatrix1 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(hardIronMatrix1);
+        calibrator.getHardIronMatrix(hardIronMatrix1);
         assertEquals(hardIronMatrix, hardIronMatrix1);
         MagneticFluxDensity b1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(b1.getValue().doubleValue(), hardIronX, 0.0);
@@ -801,10 +801,10 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         final double[] hardIron1 = new double[3];
         calibrator.getHardIron(hardIron1);
         assertArrayEquals(hardIron1, hardIron, 0.0);
-        assertEquals(calibrator.getHardIronAsMatrix(),
+        assertEquals(calibrator.getHardIronMatrix(),
                 hardIronMatrix);
         final Matrix hardIronMatrix1 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(hardIronMatrix1);
+        calibrator.getHardIronMatrix(hardIronMatrix1);
         assertEquals(hardIronMatrix, hardIronMatrix1);
         MagneticFluxDensity b1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(b1.getValue().doubleValue(), hardIronX, 0.0);
@@ -922,10 +922,10 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         final double[] hardIron = new double[3];
         calibrator.getHardIron(hardIron);
         assertArrayEquals(hardIron, new double[3], 0.0);
-        assertEquals(calibrator.getHardIronAsMatrix(),
+        assertEquals(calibrator.getHardIronMatrix(),
                 new Matrix(3, 1));
         final Matrix hardIronMatrix = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(hardIronMatrix);
+        calibrator.getHardIronMatrix(hardIronMatrix);
         assertEquals(hardIronMatrix, new Matrix(3, 1));
         MagneticFluxDensity b1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(b1.getValue().doubleValue(), 0.0, 0.0);
@@ -1020,10 +1020,10 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         final double[] hardIron = new double[3];
         calibrator.getHardIron(hardIron);
         assertArrayEquals(hardIron, new double[3], 0.0);
-        assertEquals(calibrator.getHardIronAsMatrix(),
+        assertEquals(calibrator.getHardIronMatrix(),
                 new Matrix(3, 1));
         final Matrix hardIronMatrix = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(hardIronMatrix);
+        calibrator.getHardIronMatrix(hardIronMatrix);
         assertEquals(hardIronMatrix, new Matrix(3, 1));
         MagneticFluxDensity b1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(b1.getValue().doubleValue(), 0.0, 0.0);
@@ -1118,10 +1118,10 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         final double[] hardIron = new double[3];
         calibrator.getHardIron(hardIron);
         assertArrayEquals(hardIron, new double[3], 0.0);
-        assertEquals(calibrator.getHardIronAsMatrix(),
+        assertEquals(calibrator.getHardIronMatrix(),
                 new Matrix(3, 1));
         final Matrix hardIronMatrix = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(hardIronMatrix);
+        calibrator.getHardIronMatrix(hardIronMatrix);
         assertEquals(hardIronMatrix, new Matrix(3, 1));
         MagneticFluxDensity b1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(b1.getValue().doubleValue(), 0.0, 0.0);
@@ -1216,10 +1216,10 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         final double[] hardIron = new double[3];
         calibrator.getHardIron(hardIron);
         assertArrayEquals(hardIron, new double[3], 0.0);
-        assertEquals(calibrator.getHardIronAsMatrix(),
+        assertEquals(calibrator.getHardIronMatrix(),
                 new Matrix(3, 1));
         final Matrix hardIronMatrix = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(hardIronMatrix);
+        calibrator.getHardIronMatrix(hardIronMatrix);
         assertEquals(hardIronMatrix, new Matrix(3, 1));
         MagneticFluxDensity b1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(b1.getValue().doubleValue(), 0.0, 0.0);
@@ -1315,10 +1315,10 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         final double[] hardIron = new double[3];
         calibrator.getHardIron(hardIron);
         assertArrayEquals(hardIron, new double[3], 0.0);
-        assertEquals(calibrator.getHardIronAsMatrix(),
+        assertEquals(calibrator.getHardIronMatrix(),
                 new Matrix(3, 1));
         final Matrix hardIronMatrix = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(hardIronMatrix);
+        calibrator.getHardIronMatrix(hardIronMatrix);
         assertEquals(hardIronMatrix, new Matrix(3, 1));
         MagneticFluxDensity b1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(b1.getValue().doubleValue(), 0.0, 0.0);
@@ -1421,10 +1421,10 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         final double[] hardIron1 = new double[3];
         calibrator.getHardIron(hardIron1);
         assertArrayEquals(hardIron, hardIron1, 0.0);
-        assertEquals(calibrator.getHardIronAsMatrix(),
+        assertEquals(calibrator.getHardIronMatrix(),
                 hardIronMatrix);
         final Matrix hardIronMatrix1 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(hardIronMatrix1);
+        calibrator.getHardIronMatrix(hardIronMatrix1);
         assertEquals(hardIronMatrix, hardIronMatrix1);
         MagneticFluxDensity b1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(b1.getValue().doubleValue(), hardIronX, 0.0);
@@ -1537,10 +1537,10 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         final double[] hardIron1 = new double[3];
         calibrator.getHardIron(hardIron1);
         assertArrayEquals(hardIron, hardIron1, 0.0);
-        assertEquals(calibrator.getHardIronAsMatrix(),
+        assertEquals(calibrator.getHardIronMatrix(),
                 hardIronMatrix);
         final Matrix hardIronMatrix1 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(hardIronMatrix1);
+        calibrator.getHardIronMatrix(hardIronMatrix1);
         assertEquals(hardIronMatrix, hardIronMatrix1);
         MagneticFluxDensity b1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(b1.getValue().doubleValue(), hardIronX, 0.0);
@@ -1654,10 +1654,10 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         final double[] hardIron1 = new double[3];
         calibrator.getHardIron(hardIron1);
         assertArrayEquals(hardIron, hardIron1, 0.0);
-        assertEquals(calibrator.getHardIronAsMatrix(),
+        assertEquals(calibrator.getHardIronMatrix(),
                 hardIronMatrix);
         final Matrix hardIronMatrix1 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(hardIronMatrix1);
+        calibrator.getHardIronMatrix(hardIronMatrix1);
         assertEquals(hardIronMatrix, hardIronMatrix1);
         MagneticFluxDensity b1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(b1.getValue().doubleValue(), hardIronX, 0.0);
@@ -1772,10 +1772,10 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         final double[] hardIron1 = new double[3];
         calibrator.getHardIron(hardIron1);
         assertArrayEquals(hardIron, hardIron1, 0.0);
-        assertEquals(calibrator.getHardIronAsMatrix(),
+        assertEquals(calibrator.getHardIronMatrix(),
                 hardIronMatrix);
         final Matrix hardIronMatrix1 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(hardIronMatrix1);
+        calibrator.getHardIronMatrix(hardIronMatrix1);
         assertEquals(hardIronMatrix, hardIronMatrix1);
         MagneticFluxDensity b1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(b1.getValue().doubleValue(), hardIronX, 0.0);
@@ -1888,10 +1888,10 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         final double[] hardIron1 = new double[3];
         calibrator.getHardIron(hardIron1);
         assertArrayEquals(hardIron, hardIron1, 0.0);
-        assertEquals(calibrator.getHardIronAsMatrix(),
+        assertEquals(calibrator.getHardIronMatrix(),
                 hardIronMatrix);
         final Matrix hardIronMatrix1 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(hardIronMatrix1);
+        calibrator.getHardIronMatrix(hardIronMatrix1);
         assertEquals(hardIronMatrix, hardIronMatrix1);
         MagneticFluxDensity b1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(b1.getValue().doubleValue(), hardIronX, 0.0);
@@ -2014,10 +2014,10 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         final double[] hardIron1 = new double[3];
         calibrator.getHardIron(hardIron1);
         assertArrayEquals(hardIron, hardIron1, 0.0);
-        assertEquals(calibrator.getHardIronAsMatrix(),
+        assertEquals(calibrator.getHardIronMatrix(),
                 hardIronMatrix);
         final Matrix hardIronMatrix1 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(hardIronMatrix1);
+        calibrator.getHardIronMatrix(hardIronMatrix1);
         assertEquals(hardIronMatrix, hardIronMatrix1);
         MagneticFluxDensity b1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(b1.getValue().doubleValue(), hardIronX, 0.0);
@@ -2138,10 +2138,10 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         final double[] hardIron1 = new double[3];
         calibrator.getHardIron(hardIron1);
         assertArrayEquals(hardIron, hardIron1, 0.0);
-        assertEquals(calibrator.getHardIronAsMatrix(),
+        assertEquals(calibrator.getHardIronMatrix(),
                 hardIronMatrix);
         final Matrix hardIronMatrix1 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(hardIronMatrix1);
+        calibrator.getHardIronMatrix(hardIronMatrix1);
         assertEquals(hardIronMatrix, hardIronMatrix1);
         MagneticFluxDensity b1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(b1.getValue().doubleValue(), hardIronX, 0.0);
@@ -2262,10 +2262,10 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         final double[] hardIron1 = new double[3];
         calibrator.getHardIron(hardIron1);
         assertArrayEquals(hardIron, hardIron1, 0.0);
-        assertEquals(calibrator.getHardIronAsMatrix(),
+        assertEquals(calibrator.getHardIronMatrix(),
                 hardIronMatrix);
         final Matrix hardIronMatrix1 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(hardIronMatrix1);
+        calibrator.getHardIronMatrix(hardIronMatrix1);
         assertEquals(hardIronMatrix, hardIronMatrix1);
         MagneticFluxDensity b1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(b1.getValue().doubleValue(), hardIronX, 0.0);
@@ -2398,10 +2398,10 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         final double[] hardIron1 = new double[3];
         calibrator.getHardIron(hardIron1);
         assertArrayEquals(hardIron, hardIron1, 0.0);
-        assertEquals(calibrator.getHardIronAsMatrix(),
+        assertEquals(calibrator.getHardIronMatrix(),
                 hardIronMatrix);
         final Matrix hardIronMatrix1 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(hardIronMatrix1);
+        calibrator.getHardIronMatrix(hardIronMatrix1);
         assertEquals(hardIronMatrix, hardIronMatrix1);
         MagneticFluxDensity b1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(b1.getValue().doubleValue(), hardIronX, 0.0);
@@ -2548,10 +2548,10 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         final double[] hardIron1 = new double[3];
         calibrator.getHardIron(hardIron1);
         assertArrayEquals(hardIron, hardIron1, 0.0);
-        assertEquals(calibrator.getHardIronAsMatrix(),
+        assertEquals(calibrator.getHardIronMatrix(),
                 hardIronMatrix);
         final Matrix hardIronMatrix1 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(hardIronMatrix1);
+        calibrator.getHardIronMatrix(hardIronMatrix1);
         assertEquals(hardIronMatrix, hardIronMatrix1);
         MagneticFluxDensity b1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(b1.getValue().doubleValue(), hardIronX, 0.0);
@@ -2698,10 +2698,10 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         final double[] hardIron1 = new double[3];
         calibrator.getHardIron(hardIron1);
         assertArrayEquals(hardIron, hardIron1, 0.0);
-        assertEquals(calibrator.getHardIronAsMatrix(),
+        assertEquals(calibrator.getHardIronMatrix(),
                 hardIronMatrix);
         final Matrix hardIronMatrix1 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(hardIronMatrix1);
+        calibrator.getHardIronMatrix(hardIronMatrix1);
         assertEquals(hardIronMatrix, hardIronMatrix1);
         MagneticFluxDensity b1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(b1.getValue().doubleValue(), hardIronX, 0.0);
@@ -2848,10 +2848,10 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         final double[] hardIron1 = new double[3];
         calibrator.getHardIron(hardIron1);
         assertArrayEquals(hardIron, hardIron1, 0.0);
-        assertEquals(calibrator.getHardIronAsMatrix(),
+        assertEquals(calibrator.getHardIronMatrix(),
                 hardIronMatrix);
         final Matrix hardIronMatrix1 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(hardIronMatrix1);
+        calibrator.getHardIronMatrix(hardIronMatrix1);
         assertEquals(hardIronMatrix, hardIronMatrix1);
         MagneticFluxDensity b1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(b1.getValue().doubleValue(), hardIronX, 0.0);
@@ -2977,10 +2977,10 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         final double[] hardIron = new double[3];
         calibrator.getHardIron(hardIron);
         assertArrayEquals(hardIron, new double[3], 0.0);
-        assertEquals(calibrator.getHardIronAsMatrix(),
+        assertEquals(calibrator.getHardIronMatrix(),
                 new Matrix(3, 1));
         final Matrix hardIronMatrix = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(hardIronMatrix);
+        calibrator.getHardIronMatrix(hardIronMatrix);
         assertEquals(hardIronMatrix, new Matrix(3, 1));
         MagneticFluxDensity b1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(b1.getValue().doubleValue(), 0.0, 0.0);
@@ -3077,10 +3077,10 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         final double[] hardIron = new double[3];
         calibrator.getHardIron(hardIron);
         assertArrayEquals(hardIron, new double[3], 0.0);
-        assertEquals(calibrator.getHardIronAsMatrix(),
+        assertEquals(calibrator.getHardIronMatrix(),
                 new Matrix(3, 1));
         final Matrix hardIronMatrix = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(hardIronMatrix);
+        calibrator.getHardIronMatrix(hardIronMatrix);
         assertEquals(hardIronMatrix, new Matrix(3, 1));
         MagneticFluxDensity b1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(b1.getValue().doubleValue(), 0.0, 0.0);
@@ -3177,10 +3177,10 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         final double[] hardIron = new double[3];
         calibrator.getHardIron(hardIron);
         assertArrayEquals(hardIron, new double[3], 0.0);
-        assertEquals(calibrator.getHardIronAsMatrix(),
+        assertEquals(calibrator.getHardIronMatrix(),
                 new Matrix(3, 1));
         final Matrix hardIronMatrix = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(hardIronMatrix);
+        calibrator.getHardIronMatrix(hardIronMatrix);
         assertEquals(hardIronMatrix, new Matrix(3, 1));
         MagneticFluxDensity b1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(b1.getValue().doubleValue(), 0.0, 0.0);
@@ -3277,10 +3277,10 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         final double[] hardIron = new double[3];
         calibrator.getHardIron(hardIron);
         assertArrayEquals(hardIron, new double[3], 0.0);
-        assertEquals(calibrator.getHardIronAsMatrix(),
+        assertEquals(calibrator.getHardIronMatrix(),
                 new Matrix(3, 1));
         final Matrix hardIronMatrix = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(hardIronMatrix);
+        calibrator.getHardIronMatrix(hardIronMatrix);
         assertEquals(hardIronMatrix, new Matrix(3, 1));
         MagneticFluxDensity b1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(b1.getValue().doubleValue(), 0.0, 0.0);
@@ -3378,10 +3378,10 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         final double[] hardIron = new double[3];
         calibrator.getHardIron(hardIron);
         assertArrayEquals(hardIron, new double[3], 0.0);
-        assertEquals(calibrator.getHardIronAsMatrix(),
+        assertEquals(calibrator.getHardIronMatrix(),
                 new Matrix(3, 1));
         final Matrix hardIronMatrix = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(hardIronMatrix);
+        calibrator.getHardIronMatrix(hardIronMatrix);
         assertEquals(hardIronMatrix, new Matrix(3, 1));
         MagneticFluxDensity b1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(b1.getValue().doubleValue(), 0.0, 0.0);
@@ -3486,10 +3486,10 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         final double[] hardIron1 = new double[3];
         calibrator.getHardIron(hardIron1);
         assertArrayEquals(hardIron, hardIron1, 0.0);
-        assertEquals(calibrator.getHardIronAsMatrix(),
+        assertEquals(calibrator.getHardIronMatrix(),
                 hardIronMatrix);
         final Matrix hardIronMatrix1 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(hardIronMatrix1);
+        calibrator.getHardIronMatrix(hardIronMatrix1);
         assertEquals(hardIronMatrix, hardIronMatrix1);
         MagneticFluxDensity b1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(b1.getValue().doubleValue(), hardIronX, 0.0);
@@ -3604,10 +3604,10 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         final double[] hardIron1 = new double[3];
         calibrator.getHardIron(hardIron1);
         assertArrayEquals(hardIron, hardIron1, 0.0);
-        assertEquals(calibrator.getHardIronAsMatrix(),
+        assertEquals(calibrator.getHardIronMatrix(),
                 hardIronMatrix);
         final Matrix hardIronMatrix1 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(hardIronMatrix1);
+        calibrator.getHardIronMatrix(hardIronMatrix1);
         assertEquals(hardIronMatrix, hardIronMatrix1);
         MagneticFluxDensity b1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(b1.getValue().doubleValue(), hardIronX, 0.0);
@@ -3723,10 +3723,10 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         final double[] hardIron1 = new double[3];
         calibrator.getHardIron(hardIron1);
         assertArrayEquals(hardIron, hardIron1, 0.0);
-        assertEquals(calibrator.getHardIronAsMatrix(),
+        assertEquals(calibrator.getHardIronMatrix(),
                 hardIronMatrix);
         final Matrix hardIronMatrix1 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(hardIronMatrix1);
+        calibrator.getHardIronMatrix(hardIronMatrix1);
         assertEquals(hardIronMatrix, hardIronMatrix1);
         MagneticFluxDensity b1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(b1.getValue().doubleValue(), hardIronX, 0.0);
@@ -3843,10 +3843,10 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         final double[] hardIron1 = new double[3];
         calibrator.getHardIron(hardIron1);
         assertArrayEquals(hardIron, hardIron1, 0.0);
-        assertEquals(calibrator.getHardIronAsMatrix(),
+        assertEquals(calibrator.getHardIronMatrix(),
                 hardIronMatrix);
         final Matrix hardIronMatrix1 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(hardIronMatrix1);
+        calibrator.getHardIronMatrix(hardIronMatrix1);
         assertEquals(hardIronMatrix, hardIronMatrix1);
         MagneticFluxDensity b1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(b1.getValue().doubleValue(), hardIronX, 0.0);
@@ -3961,10 +3961,10 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         final double[] hardIron1 = new double[3];
         calibrator.getHardIron(hardIron1);
         assertArrayEquals(hardIron, hardIron1, 0.0);
-        assertEquals(calibrator.getHardIronAsMatrix(),
+        assertEquals(calibrator.getHardIronMatrix(),
                 hardIronMatrix);
         final Matrix hardIronMatrix1 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(hardIronMatrix1);
+        calibrator.getHardIronMatrix(hardIronMatrix1);
         assertEquals(hardIronMatrix, hardIronMatrix1);
         MagneticFluxDensity b1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(b1.getValue().doubleValue(), hardIronX, 0.0);
@@ -4089,10 +4089,10 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         final double[] hardIron1 = new double[3];
         calibrator.getHardIron(hardIron1);
         assertArrayEquals(hardIron, hardIron1, 0.0);
-        assertEquals(calibrator.getHardIronAsMatrix(),
+        assertEquals(calibrator.getHardIronMatrix(),
                 hardIronMatrix);
         final Matrix hardIronMatrix1 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(hardIronMatrix1);
+        calibrator.getHardIronMatrix(hardIronMatrix1);
         assertEquals(hardIronMatrix, hardIronMatrix1);
         MagneticFluxDensity b1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(b1.getValue().doubleValue(), hardIronX, 0.0);
@@ -4215,10 +4215,10 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         final double[] hardIron1 = new double[3];
         calibrator.getHardIron(hardIron1);
         assertArrayEquals(hardIron, hardIron1, 0.0);
-        assertEquals(calibrator.getHardIronAsMatrix(),
+        assertEquals(calibrator.getHardIronMatrix(),
                 hardIronMatrix);
         final Matrix hardIronMatrix1 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(hardIronMatrix1);
+        calibrator.getHardIronMatrix(hardIronMatrix1);
         assertEquals(hardIronMatrix, hardIronMatrix1);
         MagneticFluxDensity b1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(b1.getValue().doubleValue(), hardIronX, 0.0);
@@ -4341,10 +4341,10 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         final double[] hardIron1 = new double[3];
         calibrator.getHardIron(hardIron1);
         assertArrayEquals(hardIron, hardIron1, 0.0);
-        assertEquals(calibrator.getHardIronAsMatrix(),
+        assertEquals(calibrator.getHardIronMatrix(),
                 hardIronMatrix);
         final Matrix hardIronMatrix1 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(hardIronMatrix1);
+        calibrator.getHardIronMatrix(hardIronMatrix1);
         assertEquals(hardIronMatrix, hardIronMatrix1);
         MagneticFluxDensity b1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(b1.getValue().doubleValue(), hardIronX, 0.0);
@@ -4479,10 +4479,10 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         final double[] hardIron1 = new double[3];
         calibrator.getHardIron(hardIron1);
         assertArrayEquals(hardIron, hardIron1, 0.0);
-        assertEquals(calibrator.getHardIronAsMatrix(),
+        assertEquals(calibrator.getHardIronMatrix(),
                 hardIronMatrix);
         final Matrix hardIronMatrix1 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(hardIronMatrix1);
+        calibrator.getHardIronMatrix(hardIronMatrix1);
         assertEquals(hardIronMatrix, hardIronMatrix1);
         MagneticFluxDensity b1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(b1.getValue().doubleValue(), hardIronX, 0.0);
@@ -4631,10 +4631,10 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         final double[] hardIron1 = new double[3];
         calibrator.getHardIron(hardIron1);
         assertArrayEquals(hardIron, hardIron1, 0.0);
-        assertEquals(calibrator.getHardIronAsMatrix(),
+        assertEquals(calibrator.getHardIronMatrix(),
                 hardIronMatrix);
         final Matrix hardIronMatrix1 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(hardIronMatrix1);
+        calibrator.getHardIronMatrix(hardIronMatrix1);
         assertEquals(hardIronMatrix, hardIronMatrix1);
         MagneticFluxDensity b1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(b1.getValue().doubleValue(), hardIronX, 0.0);
@@ -4783,10 +4783,10 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         final double[] hardIron1 = new double[3];
         calibrator.getHardIron(hardIron1);
         assertArrayEquals(hardIron, hardIron1, 0.0);
-        assertEquals(calibrator.getHardIronAsMatrix(),
+        assertEquals(calibrator.getHardIronMatrix(),
                 hardIronMatrix);
         final Matrix hardIronMatrix1 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(hardIronMatrix1);
+        calibrator.getHardIronMatrix(hardIronMatrix1);
         assertEquals(hardIronMatrix, hardIronMatrix1);
         MagneticFluxDensity b1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(b1.getValue().doubleValue(), hardIronX, 0.0);
@@ -4935,10 +4935,10 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         final double[] hardIron1 = new double[3];
         calibrator.getHardIron(hardIron1);
         assertArrayEquals(hardIron, hardIron1, 0.0);
-        assertEquals(calibrator.getHardIronAsMatrix(),
+        assertEquals(calibrator.getHardIronMatrix(),
                 hardIronMatrix);
         final Matrix hardIronMatrix1 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(hardIronMatrix1);
+        calibrator.getHardIronMatrix(hardIronMatrix1);
         assertEquals(hardIronMatrix, hardIronMatrix1);
         MagneticFluxDensity b1 = calibrator.getHardIronXAsMagneticFluxDensity();
         assertEquals(b1.getValue().doubleValue(), hardIronX, 0.0);
@@ -5189,7 +5189,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
     }
 
     @Test
-    public void testSetHardIron1() throws LockedException {
+    public void testSetHardIronCoordinates1() throws LockedException {
         final KnownHardIronPositionAndInstantMagnetometerCalibrator calibrator =
                 new KnownHardIronPositionAndInstantMagnetometerCalibrator();
 
@@ -5206,7 +5206,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         final double hardIronY = hardIron[1];
         final double hardIronZ = hardIron[2];
 
-        calibrator.setHardIron(hardIronX, hardIronY, hardIronZ);
+        calibrator.setHardIronCoordinates(hardIronX, hardIronY, hardIronZ);
 
         // check
         assertEquals(calibrator.getHardIronX(), hardIronX, 0.0);
@@ -5215,7 +5215,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
     }
 
     @Test
-    public void testSetHardIron2() throws LockedException {
+    public void testSetHardIronCoordinates2() throws LockedException {
         final KnownHardIronPositionAndInstantMagnetometerCalibrator calibrator =
                 new KnownHardIronPositionAndInstantMagnetometerCalibrator();
 
@@ -5235,7 +5235,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         final MagneticFluxDensity hardIronZ = new MagneticFluxDensity(
                 hardIron[2], MagneticFluxDensityUnit.TESLA);
 
-        calibrator.setHardIron(hardIronX, hardIronY, hardIronZ);
+        calibrator.setHardIronCoordinates(hardIronX, hardIronY, hardIronZ);
 
         // check
         assertEquals(calibrator.getHardIronXAsMagneticFluxDensity(), hardIronX);
@@ -5605,15 +5605,15 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
     }
 
     @Test
-    public void testGetSetHardIronAsMatrix() throws WrongSizeException,
+    public void testGetSetHardIronMatrix() throws WrongSizeException,
             LockedException {
         final KnownHardIronPositionAndInstantMagnetometerCalibrator calibrator =
                 new KnownHardIronPositionAndInstantMagnetometerCalibrator();
 
         // check default values
-        final Matrix hardIron1 = calibrator.getHardIronAsMatrix();
+        final Matrix hardIron1 = calibrator.getHardIronMatrix();
         final Matrix hardIron2 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(hardIron2);
+        calibrator.getHardIronMatrix(hardIron2);
 
         assertEquals(hardIron1, new Matrix(3, 1));
         assertEquals(hardIron1, hardIron2);
@@ -5627,20 +5627,20 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         calibrator.setHardIron(hardIron3);
 
         // check
-        final Matrix hardIron4 = calibrator.getHardIronAsMatrix();
+        final Matrix hardIron4 = calibrator.getHardIronMatrix();
         final Matrix hardIron5 = new Matrix(3, 1);
-        calibrator.getHardIronAsMatrix(hardIron5);
+        calibrator.getHardIronMatrix(hardIron5);
         assertEquals(hardIron3, hardIron4);
         assertEquals(hardIron3, hardIron5);
 
         // Force IllegalArgumentException
         try {
-            calibrator.getHardIronAsMatrix(new Matrix(1, 1));
+            calibrator.getHardIronMatrix(new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator.getHardIronAsMatrix(new Matrix(3, 3));
+            calibrator.getHardIronMatrix(new Matrix(3, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -6048,6 +6048,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralCovariance(calibrator.getEstimatedCovariance());
             assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
 
@@ -6116,6 +6117,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralCovariance(calibrator.getEstimatedCovariance());
             assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
 
@@ -6185,6 +6187,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
             assertNotNull(calibrator.getEstimatedCovariance());
             checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
             assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
 
@@ -6252,6 +6255,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
             assertNotNull(calibrator.getEstimatedCovariance());
             checkCommonAxisCovariance(calibrator.getEstimatedCovariance());
             assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;
 
@@ -6314,13 +6318,14 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         } catch (final LockedException ignore) {
         }
         try {
-            calibrator.setHardIron(
+            calibrator.setHardIronCoordinates(
                     0.0, 0.0, 0.0);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
         try {
-            calibrator.setHardIron(null, null, null);
+            calibrator.setHardIronCoordinates(
+                    null, null, null);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }

@@ -244,4 +244,11 @@ public interface AccelerometerNonLinearCalibrator
      * @return estimated chi square value.
      */
     double getEstimatedChiSq();
+
+    /**
+     * Gets estimated mean square error respect to provided measurements.
+     *
+     * @return estimated mean square error respect to provided measurements.
+     */
+    double getEstimatedMse();
 }

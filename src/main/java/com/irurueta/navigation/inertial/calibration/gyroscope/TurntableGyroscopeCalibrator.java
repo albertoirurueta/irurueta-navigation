@@ -97,8 +97,10 @@ import java.util.Collection;
  * - ftrue is ground-truth specific force. This is a 3x1 vector.
  * - w is measurement noise. This is a 3x1 vector.
  */
-public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
-        GyroscopeBiasUncertaintySource {
+public class TurntableGyroscopeCalibrator implements
+        GyroscopeNonLinearCalibrator, UnknownBiasGyroscopeCalibrator,
+        GyroscopeCalibrationSource, GyroscopeBiasUncertaintySource {
+
     /**
      * Indicates whether by default a common z-axis is assumed for both the accelerometer
      * and gyroscope.
@@ -3389,6 +3391,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      *
      * @return initial x scaling factor of gyroscope.
      */
+    @Override
     public double getInitialSx() {
         return mInitialSx;
     }
@@ -3399,6 +3402,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      * @param initialSx initial x scaling factor of gyroscope.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialSx(final double initialSx)
             throws LockedException {
         if (mRunning) {
@@ -3412,6 +3416,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      *
      * @return initial y scaling factor of gyroscope.
      */
+    @Override
     public double getInitialSy() {
         return mInitialSy;
     }
@@ -3422,6 +3427,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      * @param initialSy initial y scaling factor of gyroscope.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialSy(final double initialSy)
             throws LockedException {
         if (mRunning) {
@@ -3435,6 +3441,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      *
      * @return initial z scaling factor of gyroscope.
      */
+    @Override
     public double getInitialSz() {
         return mInitialSz;
     }
@@ -3445,6 +3452,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      * @param initialSz initial z scaling factor of gyroscope.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialSz(final double initialSz)
             throws LockedException {
         if (mRunning) {
@@ -3458,6 +3466,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      *
      * @return initial x-y cross coupling error of gyroscope.
      */
+    @Override
     public double getInitialMxy() {
         return mInitialMxy;
     }
@@ -3468,6 +3477,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      * @param initialMxy initial x-y cross coupling error of gyroscope.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialMxy(final double initialMxy)
             throws LockedException {
         if (mRunning) {
@@ -3481,6 +3491,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      *
      * @return initial x-z cross coupling error of gyroscope.
      */
+    @Override
     public double getInitialMxz() {
         return mInitialMxz;
     }
@@ -3491,6 +3502,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      * @param initialMxz initial x-z cross coupling error of gyroscope.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialMxz(final double initialMxz)
             throws LockedException {
         if (mRunning) {
@@ -3504,6 +3516,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      *
      * @return initial y-x cross coupling error of gyroscope.
      */
+    @Override
     public double getInitialMyx() {
         return mInitialMyx;
     }
@@ -3514,6 +3527,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      * @param initialMyx initial y-x cross coupling error of gyroscope.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialMyx(final double initialMyx)
             throws LockedException {
         if (mRunning) {
@@ -3527,6 +3541,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      *
      * @return initial y-z cross coupling error of gyroscope.
      */
+    @Override
     public double getInitialMyz() {
         return mInitialMyz;
     }
@@ -3537,6 +3552,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      * @param initialMyz initial y-z cross coupling error of gyroscope.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialMyz(final double initialMyz)
             throws LockedException {
         if (mRunning) {
@@ -3550,6 +3566,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      *
      * @return initial z-x cross coupling error of gyroscope.
      */
+    @Override
     public double getInitialMzx() {
         return mInitialMzx;
     }
@@ -3560,6 +3577,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      * @param initialMzx initial z-x cross coupling error of gyroscope.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialMzx(final double initialMzx)
             throws LockedException {
         if (mRunning) {
@@ -3573,6 +3591,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      *
      * @return initial z-y cross coupling error of gyroscope.
      */
+    @Override
     public double getInitialMzy() {
         return mInitialMzy;
     }
@@ -3583,6 +3602,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      * @param initialMzy initial z-y cross coupling error of gyroscope.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialMzy(final double initialMzy)
             throws LockedException {
         if (mRunning) {
@@ -3599,6 +3619,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      * @param initialSz initial z scaling factor of gyroscope.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialScalingFactors(
             final double initialSx, final double initialSy,
             final double initialSz) throws LockedException {
@@ -3621,6 +3642,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      * @param initialMzy initial z-y cross coupling error of gyroscope.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialCrossCouplingErrors(
             final double initialMxy, final double initialMxz, final double initialMyx,
             final double initialMyz, final double initialMzx, final double initialMzy)
@@ -3651,6 +3673,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      * @param initialMzy initial z-y cross coupling error of gyroscope.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setInitialScalingFactorsAndCrossCouplingErrors(
             final double initialSx, final double initialSy, final double initialSz,
             final double initialMxy, final double initialMxz, final double initialMyx,
@@ -3822,6 +3845,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      * @return initial gyroscope scale factors and cross coupling errors
      * matrix.
      */
+    @Override
     public Matrix getInitialMg() {
         Matrix result;
         try {
@@ -3842,6 +3866,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      * @param result instance where data will be stored.
      * @throws IllegalArgumentException if provided matrix is not 3x3.
      */
+    @Override
     public void getInitialMg(final Matrix result) {
         if (result.getRows() != BodyKinematics.COMPONENTS ||
                 result.getColumns() != BodyKinematics.COMPONENTS) {
@@ -3867,6 +3892,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      * @throws IllegalArgumentException if provided matrix is not 3x3.
      * @throws LockedException          if calibrator is currently running.
      */
+    @Override
     public void setInitialMg(final Matrix initialMg) throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -3895,6 +3921,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      *
      * @return a 3x3 matrix containing initial g-dependent cross biases.
      */
+    @Override
     public Matrix getInitialGg() {
         return new Matrix(mInitialGg);
     }
@@ -3906,6 +3933,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      * @param result instance where data will be stored.
      * @throws IllegalArgumentException if provided matrix is not 3x3.
      */
+    @Override
     public void getInitialGg(final Matrix result) {
 
         if (result.getRows() != BodyKinematics.COMPONENTS
@@ -3924,6 +3952,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      * @throws LockedException          if calibrator is currently running.
      * @throws IllegalArgumentException if provided matrix is not 3x3.
      */
+    @Override
     public void setInitialGg(final Matrix initialGg) throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -4181,6 +4210,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      * @return true if z-axis is assumed to be common for accelerometer and gyroscope,
      * false otherwise.
      */
+    @Override
     public boolean isCommonAxisUsed() {
         return mCommonAxisUsed;
     }
@@ -4194,6 +4224,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      *                       and gyroscope, false otherwise.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setCommonAxisUsed(final boolean commonAxisUsed)
             throws LockedException {
         if (mRunning) {
@@ -4286,6 +4317,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      *
      * @return true if calibrator is ready, false otherwise.
      */
+    @Override
     public boolean isReady() {
         return mMeasurements != null
                 && mMeasurements.size() >= getMinimumRequiredMeasurements();
@@ -4296,6 +4328,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      *
      * @return true if calibrator is running, false otherwise.
      */
+    @Override
     public boolean isRunning() {
         return mRunning;
     }
@@ -4308,6 +4341,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      * @throws NotReadyException    if calibrator is not ready.
      * @throws CalibrationException if estimation fails for numerical reasons.
      */
+    @Override
     public void calibrate() throws LockedException, NotReadyException,
             CalibrationException {
         if (mRunning) {
@@ -4371,6 +4405,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      * @return true if result instance was updated, false otherwise (when estimation
      * is not yet available).
      */
+    @Override
     public boolean getEstimatedBiases(final double[] result) {
         if (mEstimatedBiases != null) {
             System.arraycopy(mEstimatedBiases, 0, result,
@@ -4388,6 +4423,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      * @return column matrix containing x,y,z components of estimated gyroscope
      * biases.
      */
+    @Override
     public Matrix getEstimatedBiasesAsMatrix() {
         return mEstimatedBiases != null ? Matrix.newFromArray(mEstimatedBiases) : null;
     }
@@ -4400,6 +4436,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      * @return true if result was updated, false otherwise.
      * @throws WrongSizeException if provided result instance has invalid size.
      */
+    @Override
     public boolean getEstimatedBiasesAsMatrix(final Matrix result)
             throws WrongSizeException {
         if (mEstimatedBiases != null) {
@@ -4416,6 +4453,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      *
      * @return x coordinate of estimated gyroscope bias or null if not available.
      */
+    @Override
     public Double getEstimatedBiasX() {
         return mEstimatedBiases != null ? mEstimatedBiases[0] : null;
     }
@@ -4426,6 +4464,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      *
      * @return y coordinate of estimated gyroscope bias or null if not available.
      */
+    @Override
     public Double getEstimatedBiasY() {
         return mEstimatedBiases != null ? mEstimatedBiases[1] : null;
     }
@@ -4436,6 +4475,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      *
      * @return z coordinate of estimated gyroscope bias or null if not available.
      */
+    @Override
     public Double getEstimatedBiasZ() {
         return mEstimatedBiases != null ? mEstimatedBiases[2] : null;
     }
@@ -4445,6 +4485,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      *
      * @return x coordinate of estimated gyroscope bias or null if not available.
      */
+    @Override
     public AngularSpeed getEstimatedBiasAngularSpeedX() {
         return mEstimatedBiases != null ?
                 new AngularSpeed(mEstimatedBiases[0],
@@ -4457,6 +4498,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      * @param result instance where result will be stored.
      * @return true if result was updated, false if estimation is not available.
      */
+    @Override
     public boolean getEstimatedBiasAngularSpeedX(final AngularSpeed result) {
         if (mEstimatedBiases != null) {
             result.setValue(mEstimatedBiases[0]);
@@ -4472,6 +4514,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      *
      * @return y coordinate of estimated gyroscope bias or null if not available.
      */
+    @Override
     public AngularSpeed getEstimatedBiasAngularSpeedY() {
         return mEstimatedBiases != null ?
                 new AngularSpeed(mEstimatedBiases[1],
@@ -4484,6 +4527,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      * @param result instance where result will be stored.
      * @return true if result was updated, false if estimation is not available.
      */
+    @Override
     public boolean getEstimatedBiasAngularSpeedY(final AngularSpeed result) {
         if (mEstimatedBiases != null) {
             result.setValue(mEstimatedBiases[1]);
@@ -4499,6 +4543,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      *
      * @return z coordinate of estimated gyroscope bias or null if not available.
      */
+    @Override
     public AngularSpeed getEstimatedBiasAngularSpeedZ() {
         return mEstimatedBiases != null ?
                 new AngularSpeed(mEstimatedBiases[2],
@@ -4511,6 +4556,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      * @param result instance where result will be stored.
      * @return true if result was updated, false if estimation is not available.
      */
+    @Override
     public boolean getEstimatedBiasAngularSpeedZ(final AngularSpeed result) {
         if (mEstimatedBiases != null) {
             result.setValue(mEstimatedBiases[2]);
@@ -4526,6 +4572,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      *
      * @return estimated gyroscope bias or null if not available.
      */
+    @Override
     public AngularSpeedTriad getEstimatedBiasAsTriad() {
         return mEstimatedBiases != null ?
                 new AngularSpeedTriad(AngularSpeedUnit.RADIANS_PER_SECOND,
@@ -4539,6 +4586,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      * @return true if estimated gyroscope bias is available and result was
      * modified, false otherwise.
      */
+    @Override
     public boolean getEstimatedBiasAsTriad(final AngularSpeedTriad result) {
         if (mEstimatedBiases != null) {
             result.setValueCoordinatesAndUnit(
@@ -4603,6 +4651,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      * @return estimated gyroscope x-axis scale factor or null
      * if not available.
      */
+    @Override
     public Double getEstimatedSx() {
         return mEstimatedMg != null ?
                 mEstimatedMg.getElementAt(0, 0) : null;
@@ -4614,6 +4663,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      * @return estimated gyroscope y-axis scale factor or null
      * if not available.
      */
+    @Override
     public Double getEstimatedSy() {
         return mEstimatedMg != null ?
                 mEstimatedMg.getElementAt(1, 1) : null;
@@ -4625,6 +4675,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      * @return estimated gyroscope z-axis scale factor or null
      * if not available.
      */
+    @Override
     public Double getEstimatedSz() {
         return mEstimatedMg != null ?
                 mEstimatedMg.getElementAt(2, 2) : null;
@@ -4636,6 +4687,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      * @return estimated gyroscope x-y cross-coupling error or null
      * if not available.
      */
+    @Override
     public Double getEstimatedMxy() {
         return mEstimatedMg != null ?
                 mEstimatedMg.getElementAt(0, 1) : null;
@@ -4647,6 +4699,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      * @return estimated gyroscope x-z cross-coupling error or null
      * if not available.
      */
+    @Override
     public Double getEstimatedMxz() {
         return mEstimatedMg != null ?
                 mEstimatedMg.getElementAt(0, 2) : null;
@@ -4658,6 +4711,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      * @return estimated gyroscope y-x cross-coupling error or null
      * if not available.
      */
+    @Override
     public Double getEstimatedMyx() {
         return mEstimatedMg != null ?
                 mEstimatedMg.getElementAt(1, 0) : null;
@@ -4669,6 +4723,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      * @return estimated gyroscope y-z cross-coupling error or null
      * if not available.
      */
+    @Override
     public Double getEstimatedMyz() {
         return mEstimatedMg != null ?
                 mEstimatedMg.getElementAt(1, 2) : null;
@@ -4680,6 +4735,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      * @return estimated gyroscope z-x cross-coupling error or null
      * if not available.
      */
+    @Override
     public Double getEstimatedMzx() {
         return mEstimatedMg != null ?
                 mEstimatedMg.getElementAt(2, 0) : null;
@@ -4691,6 +4747,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      * @return estimated gyroscope z-y cross-coupling error or null
      * if not available.
      */
+    @Override
     public Double getEstimatedMzy() {
         return mEstimatedMg != null ?
                 mEstimatedMg.getElementAt(2, 1) : null;
@@ -4717,6 +4774,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      *
      * @return estimated covariance matrix for estimated parameters.
      */
+    @Override
     public Matrix getEstimatedCovariance() {
         return mEstimatedCovariance;
     }
@@ -4726,6 +4784,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      *
      * @return estimated chi square value.
      */
+    @Override
     public double getEstimatedChiSq() {
         return mEstimatedChiSq;
     }
@@ -4735,6 +4794,7 @@ public class TurntableGyroscopeCalibrator implements GyroscopeCalibrationSource,
      *
      * @return estimated mean square error respect to provided measurements.
      */
+    @Override
     public double getEstimatedMse() {
         return mEstimatedMse;
     }

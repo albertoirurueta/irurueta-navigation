@@ -8938,8 +8938,8 @@ public class MSACRobustKnownGravityNormAccelerometerCalibratorTest implements
 
             assertEstimatedResult(estimatedBa, estimatedMa, calibrator, false);
 
-            assertNull(calibrator.getEstimatedCovariance());
-            assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+            assertNotNull(calibrator.getEstimatedCovariance());
+            assertTrue(calibrator.getEstimatedMse() > 0.0);
 
             numValid++;
             break;
