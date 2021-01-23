@@ -8946,8 +8946,8 @@
 <a class="jxr_linenumber" name="L8938" href="#L8938">8938</a> 
 <a class="jxr_linenumber" name="L8939" href="#L8939">8939</a>             assertEstimatedResult(estimatedBa, estimatedMa, calibrator, false);
 <a class="jxr_linenumber" name="L8940" href="#L8940">8940</a> 
-<a class="jxr_linenumber" name="L8941" href="#L8941">8941</a>             assertNull(calibrator.getEstimatedCovariance());
-<a class="jxr_linenumber" name="L8942" href="#L8942">8942</a>             assertEquals(calibrator.getEstimatedMse(), 0.0, 0.0);
+<a class="jxr_linenumber" name="L8941" href="#L8941">8941</a>             assertNotNull(calibrator.getEstimatedCovariance());
+<a class="jxr_linenumber" name="L8942" href="#L8942">8942</a>             assertTrue(calibrator.getEstimatedMse() &gt; 0.0);
 <a class="jxr_linenumber" name="L8943" href="#L8943">8943</a> 
 <a class="jxr_linenumber" name="L8944" href="#L8944">8944</a>             numValid++;
 <a class="jxr_linenumber" name="L8945" href="#L8945">8945</a>             <strong class="jxr_keyword">break</strong>;

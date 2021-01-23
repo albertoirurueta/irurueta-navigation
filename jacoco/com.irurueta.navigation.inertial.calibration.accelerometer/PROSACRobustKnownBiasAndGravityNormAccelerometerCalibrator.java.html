@@ -2021,12 +2021,12 @@ public class PROSACRobustKnownBiasAndGravityNormAccelerometerCalibrator extends
                             public void onEstimateProgressChange(
                                     final RobustEstimator&lt;PreliminaryResult&gt; estimator,
                                     final float progress) {
-<span class="nc bnc" id="L2024" title="All 2 branches missed.">                                if (mListener != null) {</span>
-<span class="nc" id="L2025">                                    mListener.onCalibrateProgressChange(</span>
+<span class="pc bpc" id="L2024" title="1 of 2 branches missed.">                                if (mListener != null) {</span>
+<span class="fc" id="L2025">                                    mListener.onCalibrateProgressChange(</span>
                                             PROSACRobustKnownBiasAndGravityNormAccelerometerCalibrator.this,
                                             progress);
                                 }
-<span class="nc" id="L2029">                            }</span>
+<span class="fc" id="L2029">                            }</span>
                         });
 
         try {

@@ -950,12 +950,12 @@ public class LMedSRobustKnownPositionAccelerometerCalibrator extends
                     public void onEstimateProgressChange(
                             final RobustEstimator&lt;PreliminaryResult&gt; estimator,
                             final float progress) {
-<span class="pc bpc" id="L953" title="1 of 2 branches missed.">                        if (mListener != null) {</span>
-<span class="fc" id="L954">                            mListener.onCalibrateProgressChange(</span>
+<span class="nc bnc" id="L953" title="All 2 branches missed.">                        if (mListener != null) {</span>
+<span class="nc" id="L954">                            mListener.onCalibrateProgressChange(</span>
                                     LMedSRobustKnownPositionAccelerometerCalibrator.this,
                                     progress);
                         }
-<span class="fc" id="L958">                    }</span>
+<span class="nc" id="L958">                    }</span>
                 });
 
         try {

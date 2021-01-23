@@ -3337,8 +3337,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      *
      * @return estimated mean square error respect to provided measurements.
      */
+    @Override
     public double getEstimatedMse() {
-<span class="fc" id="L3341">        return mEstimatedMse;</span>
+<span class="fc" id="L3342">        return mEstimatedMse;</span>
     }
 
     /**
@@ -3399,37 +3400,37 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
         //                                                                                                                         [g32]
         //                                                                                                                         [g33]
 
-<span class="fc" id="L3402">        mFitter.setFunctionEvaluator(</span>
-<span class="fc" id="L3403">                new LevenbergMarquardtMultiVariateFunctionEvaluator() {</span>
+<span class="fc" id="L3403">        mFitter.setFunctionEvaluator(</span>
+<span class="fc" id="L3404">                new LevenbergMarquardtMultiVariateFunctionEvaluator() {</span>
                     @Override
                     public int getNumberOfDimensions() {
                         // Input points are true angular rate + specific force coordinates
-<span class="fc" id="L3407">                        return 2 * BodyKinematics.COMPONENTS;</span>
+<span class="fc" id="L3408">                        return 2 * BodyKinematics.COMPONENTS;</span>
                     }
 
                     @Override
                     public int getNumberOfVariables() {
                         // The multivariate function returns the components of measured angular rate
-<span class="fc" id="L3413">                        return BodyKinematics.COMPONENTS;</span>
+<span class="fc" id="L3414">                        return BodyKinematics.COMPONENTS;</span>
                     }
 
                     @Override
                     public double[] createInitialParametersArray() {
-<span class="fc" id="L3418">                        final double[] initial = new double[COMMON_Z_AXIS_UNKNOWNS];</span>
+<span class="fc" id="L3419">                        final double[] initial = new double[COMMON_Z_AXIS_UNKNOWNS];</span>
 
-<span class="fc" id="L3420">                        initial[0] = mInitialSx;</span>
-<span class="fc" id="L3421">                        initial[1] = mInitialSy;</span>
-<span class="fc" id="L3422">                        initial[2] = mInitialSz;</span>
+<span class="fc" id="L3421">                        initial[0] = mInitialSx;</span>
+<span class="fc" id="L3422">                        initial[1] = mInitialSy;</span>
+<span class="fc" id="L3423">                        initial[2] = mInitialSz;</span>
 
-<span class="fc" id="L3424">                        initial[3] = mInitialMxy;</span>
-<span class="fc" id="L3425">                        initial[4] = mInitialMxz;</span>
-<span class="fc" id="L3426">                        initial[5] = mInitialMyz;</span>
+<span class="fc" id="L3425">                        initial[3] = mInitialMxy;</span>
+<span class="fc" id="L3426">                        initial[4] = mInitialMxz;</span>
+<span class="fc" id="L3427">                        initial[5] = mInitialMyz;</span>
 
-<span class="fc" id="L3428">                        final double[] buffer = mInitialGg.getBuffer();</span>
-<span class="fc" id="L3429">                        final int num = buffer.length;</span>
-<span class="fc" id="L3430">                        System.arraycopy(buffer, 0, initial, 6, num);</span>
+<span class="fc" id="L3429">                        final double[] buffer = mInitialGg.getBuffer();</span>
+<span class="fc" id="L3430">                        final int num = buffer.length;</span>
+<span class="fc" id="L3431">                        System.arraycopy(buffer, 0, initial, 6, num);</span>
 
-<span class="fc" id="L3432">                        return initial;</span>
+<span class="fc" id="L3433">                        return initial;</span>
                     }
 
                     @Override
@@ -3493,147 +3494,147 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
                         // d(Ωmeasx)/d(g32) = ftruey
                         // d(Ωmeasx)/d(g33) = ftruez
 
-<span class="fc" id="L3496">                        final double sx = params[0];</span>
-<span class="fc" id="L3497">                        final double sy = params[1];</span>
-<span class="fc" id="L3498">                        final double sz = params[2];</span>
+<span class="fc" id="L3497">                        final double sx = params[0];</span>
+<span class="fc" id="L3498">                        final double sy = params[1];</span>
+<span class="fc" id="L3499">                        final double sz = params[2];</span>
 
-<span class="fc" id="L3500">                        final double mxy = params[3];</span>
-<span class="fc" id="L3501">                        final double mxz = params[4];</span>
-<span class="fc" id="L3502">                        final double myz = params[5];</span>
+<span class="fc" id="L3501">                        final double mxy = params[3];</span>
+<span class="fc" id="L3502">                        final double mxz = params[4];</span>
+<span class="fc" id="L3503">                        final double myz = params[5];</span>
 
-<span class="fc" id="L3504">                        final double g11 = params[6];</span>
-<span class="fc" id="L3505">                        final double g21 = params[7];</span>
-<span class="fc" id="L3506">                        final double g31 = params[8];</span>
-<span class="fc" id="L3507">                        final double g12 = params[9];</span>
-<span class="fc" id="L3508">                        final double g22 = params[10];</span>
-<span class="fc" id="L3509">                        final double g32 = params[11];</span>
-<span class="fc" id="L3510">                        final double g13 = params[12];</span>
-<span class="fc" id="L3511">                        final double g23 = params[13];</span>
-<span class="fc" id="L3512">                        final double g33 = params[14];</span>
+<span class="fc" id="L3505">                        final double g11 = params[6];</span>
+<span class="fc" id="L3506">                        final double g21 = params[7];</span>
+<span class="fc" id="L3507">                        final double g31 = params[8];</span>
+<span class="fc" id="L3508">                        final double g12 = params[9];</span>
+<span class="fc" id="L3509">                        final double g22 = params[10];</span>
+<span class="fc" id="L3510">                        final double g32 = params[11];</span>
+<span class="fc" id="L3511">                        final double g13 = params[12];</span>
+<span class="fc" id="L3512">                        final double g23 = params[13];</span>
+<span class="fc" id="L3513">                        final double g33 = params[14];</span>
 
-<span class="fc" id="L3514">                        final double omegatruex = point[0];</span>
-<span class="fc" id="L3515">                        final double omegatruey = point[1];</span>
-<span class="fc" id="L3516">                        final double omegatruez = point[2];</span>
+<span class="fc" id="L3515">                        final double omegatruex = point[0];</span>
+<span class="fc" id="L3516">                        final double omegatruey = point[1];</span>
+<span class="fc" id="L3517">                        final double omegatruez = point[2];</span>
 
-<span class="fc" id="L3518">                        final double ftruex = point[3];</span>
-<span class="fc" id="L3519">                        final double ftruey = point[4];</span>
-<span class="fc" id="L3520">                        final double ftruez = point[5];</span>
+<span class="fc" id="L3519">                        final double ftruex = point[3];</span>
+<span class="fc" id="L3520">                        final double ftruey = point[4];</span>
+<span class="fc" id="L3521">                        final double ftruez = point[5];</span>
 
-<span class="fc" id="L3522">                        result[0] = mBiasX + omegatruex + sx * omegatruex + mxy * omegatruey + mxz * omegatruez</span>
+<span class="fc" id="L3523">                        result[0] = mBiasX + omegatruex + sx * omegatruex + mxy * omegatruey + mxz * omegatruez</span>
                                 + g11 * ftruex + g12 * ftruey + g13 * ftruez;
-<span class="fc" id="L3524">                        result[1] = mBiasY + omegatruey + sy * omegatruey + myz * omegatruez</span>
+<span class="fc" id="L3525">                        result[1] = mBiasY + omegatruey + sy * omegatruey + myz * omegatruez</span>
                                 + g21 * ftruex * g22 * ftruey + g23 * ftruez;
-<span class="fc" id="L3526">                        result[2] = mBiasZ + omegatruez + sz * omegatruez</span>
+<span class="fc" id="L3527">                        result[2] = mBiasZ + omegatruez + sz * omegatruez</span>
                                 + g31 * ftruex + g32 * ftruey + g33 * ftruez;
 
-<span class="fc" id="L3529">                        jacobian.setElementAt(0, 0, omegatruex);</span>
-<span class="fc" id="L3530">                        jacobian.setElementAt(0, 1, 0.0);</span>
-<span class="fc" id="L3531">                        jacobian.setElementAt(0, 2, 0.0);</span>
-<span class="fc" id="L3532">                        jacobian.setElementAt(0, 3, omegatruey);</span>
-<span class="fc" id="L3533">                        jacobian.setElementAt(0, 4, omegatruez);</span>
-<span class="fc" id="L3534">                        jacobian.setElementAt(0, 5, 0.0);</span>
-<span class="fc" id="L3535">                        jacobian.setElementAt(0, 6, ftruex);</span>
-<span class="fc" id="L3536">                        jacobian.setElementAt(0, 7, ftruey);</span>
-<span class="fc" id="L3537">                        jacobian.setElementAt(0, 8, ftruez);</span>
-<span class="fc" id="L3538">                        jacobian.setElementAt(0, 9, 0.0);</span>
-<span class="fc" id="L3539">                        jacobian.setElementAt(0, 10, 0.0);</span>
-<span class="fc" id="L3540">                        jacobian.setElementAt(0, 11, 0.0);</span>
-<span class="fc" id="L3541">                        jacobian.setElementAt(0, 12, 0.0);</span>
-<span class="fc" id="L3542">                        jacobian.setElementAt(0, 13, 0.0);</span>
-<span class="fc" id="L3543">                        jacobian.setElementAt(0, 14, 0.0);</span>
+<span class="fc" id="L3530">                        jacobian.setElementAt(0, 0, omegatruex);</span>
+<span class="fc" id="L3531">                        jacobian.setElementAt(0, 1, 0.0);</span>
+<span class="fc" id="L3532">                        jacobian.setElementAt(0, 2, 0.0);</span>
+<span class="fc" id="L3533">                        jacobian.setElementAt(0, 3, omegatruey);</span>
+<span class="fc" id="L3534">                        jacobian.setElementAt(0, 4, omegatruez);</span>
+<span class="fc" id="L3535">                        jacobian.setElementAt(0, 5, 0.0);</span>
+<span class="fc" id="L3536">                        jacobian.setElementAt(0, 6, ftruex);</span>
+<span class="fc" id="L3537">                        jacobian.setElementAt(0, 7, ftruey);</span>
+<span class="fc" id="L3538">                        jacobian.setElementAt(0, 8, ftruez);</span>
+<span class="fc" id="L3539">                        jacobian.setElementAt(0, 9, 0.0);</span>
+<span class="fc" id="L3540">                        jacobian.setElementAt(0, 10, 0.0);</span>
+<span class="fc" id="L3541">                        jacobian.setElementAt(0, 11, 0.0);</span>
+<span class="fc" id="L3542">                        jacobian.setElementAt(0, 12, 0.0);</span>
+<span class="fc" id="L3543">                        jacobian.setElementAt(0, 13, 0.0);</span>
+<span class="fc" id="L3544">                        jacobian.setElementAt(0, 14, 0.0);</span>
 
-<span class="fc" id="L3545">                        jacobian.setElementAt(1, 0, 0.0);</span>
-<span class="fc" id="L3546">                        jacobian.setElementAt(1, 1, omegatruey);</span>
-<span class="fc" id="L3547">                        jacobian.setElementAt(1, 2, 0.0);</span>
-<span class="fc" id="L3548">                        jacobian.setElementAt(1, 3, 0.0);</span>
-<span class="fc" id="L3549">                        jacobian.setElementAt(1, 4, 0.0);</span>
-<span class="fc" id="L3550">                        jacobian.setElementAt(1, 5, omegatruez);</span>
-<span class="fc" id="L3551">                        jacobian.setElementAt(1, 6, 0.0);</span>
-<span class="fc" id="L3552">                        jacobian.setElementAt(1, 7, 0.0);</span>
-<span class="fc" id="L3553">                        jacobian.setElementAt(1, 8, 0.0);</span>
-<span class="fc" id="L3554">                        jacobian.setElementAt(1, 9, ftruex);</span>
-<span class="fc" id="L3555">                        jacobian.setElementAt(1, 10, ftruey);</span>
-<span class="fc" id="L3556">                        jacobian.setElementAt(1, 11, ftruez);</span>
-<span class="fc" id="L3557">                        jacobian.setElementAt(1, 12, 0.0);</span>
-<span class="fc" id="L3558">                        jacobian.setElementAt(1, 13, 0.0);</span>
-<span class="fc" id="L3559">                        jacobian.setElementAt(1, 14, 0.0);</span>
+<span class="fc" id="L3546">                        jacobian.setElementAt(1, 0, 0.0);</span>
+<span class="fc" id="L3547">                        jacobian.setElementAt(1, 1, omegatruey);</span>
+<span class="fc" id="L3548">                        jacobian.setElementAt(1, 2, 0.0);</span>
+<span class="fc" id="L3549">                        jacobian.setElementAt(1, 3, 0.0);</span>
+<span class="fc" id="L3550">                        jacobian.setElementAt(1, 4, 0.0);</span>
+<span class="fc" id="L3551">                        jacobian.setElementAt(1, 5, omegatruez);</span>
+<span class="fc" id="L3552">                        jacobian.setElementAt(1, 6, 0.0);</span>
+<span class="fc" id="L3553">                        jacobian.setElementAt(1, 7, 0.0);</span>
+<span class="fc" id="L3554">                        jacobian.setElementAt(1, 8, 0.0);</span>
+<span class="fc" id="L3555">                        jacobian.setElementAt(1, 9, ftruex);</span>
+<span class="fc" id="L3556">                        jacobian.setElementAt(1, 10, ftruey);</span>
+<span class="fc" id="L3557">                        jacobian.setElementAt(1, 11, ftruez);</span>
+<span class="fc" id="L3558">                        jacobian.setElementAt(1, 12, 0.0);</span>
+<span class="fc" id="L3559">                        jacobian.setElementAt(1, 13, 0.0);</span>
+<span class="fc" id="L3560">                        jacobian.setElementAt(1, 14, 0.0);</span>
 
-<span class="fc" id="L3561">                        jacobian.setElementAt(2, 0, 0.0);</span>
-<span class="fc" id="L3562">                        jacobian.setElementAt(2, 1, 0.0);</span>
-<span class="fc" id="L3563">                        jacobian.setElementAt(2, 2, omegatruez);</span>
-<span class="fc" id="L3564">                        jacobian.setElementAt(2, 3, 0.0);</span>
-<span class="fc" id="L3565">                        jacobian.setElementAt(2, 4, 0.0);</span>
-<span class="fc" id="L3566">                        jacobian.setElementAt(2, 5, 0.0);</span>
-<span class="fc" id="L3567">                        jacobian.setElementAt(2, 6, 0.0);</span>
-<span class="fc" id="L3568">                        jacobian.setElementAt(2, 7, 0.0);</span>
-<span class="fc" id="L3569">                        jacobian.setElementAt(2, 8, 0.0);</span>
-<span class="fc" id="L3570">                        jacobian.setElementAt(2, 9, 0.0);</span>
-<span class="fc" id="L3571">                        jacobian.setElementAt(2, 10, 0.0);</span>
-<span class="fc" id="L3572">                        jacobian.setElementAt(2, 11, 0.0);</span>
-<span class="fc" id="L3573">                        jacobian.setElementAt(2, 12, ftruex);</span>
-<span class="fc" id="L3574">                        jacobian.setElementAt(2, 13, ftruey);</span>
-<span class="fc" id="L3575">                        jacobian.setElementAt(2, 14, ftruez);</span>
-<span class="fc" id="L3576">                    }</span>
+<span class="fc" id="L3562">                        jacobian.setElementAt(2, 0, 0.0);</span>
+<span class="fc" id="L3563">                        jacobian.setElementAt(2, 1, 0.0);</span>
+<span class="fc" id="L3564">                        jacobian.setElementAt(2, 2, omegatruez);</span>
+<span class="fc" id="L3565">                        jacobian.setElementAt(2, 3, 0.0);</span>
+<span class="fc" id="L3566">                        jacobian.setElementAt(2, 4, 0.0);</span>
+<span class="fc" id="L3567">                        jacobian.setElementAt(2, 5, 0.0);</span>
+<span class="fc" id="L3568">                        jacobian.setElementAt(2, 6, 0.0);</span>
+<span class="fc" id="L3569">                        jacobian.setElementAt(2, 7, 0.0);</span>
+<span class="fc" id="L3570">                        jacobian.setElementAt(2, 8, 0.0);</span>
+<span class="fc" id="L3571">                        jacobian.setElementAt(2, 9, 0.0);</span>
+<span class="fc" id="L3572">                        jacobian.setElementAt(2, 10, 0.0);</span>
+<span class="fc" id="L3573">                        jacobian.setElementAt(2, 11, 0.0);</span>
+<span class="fc" id="L3574">                        jacobian.setElementAt(2, 12, ftruex);</span>
+<span class="fc" id="L3575">                        jacobian.setElementAt(2, 13, ftruey);</span>
+<span class="fc" id="L3576">                        jacobian.setElementAt(2, 14, ftruez);</span>
+<span class="fc" id="L3577">                    }</span>
                 });
 
-<span class="fc" id="L3579">        setInputData();</span>
+<span class="fc" id="L3580">        setInputData();</span>
 
-<span class="fc" id="L3581">        mFitter.fit();</span>
+<span class="fc" id="L3582">        mFitter.fit();</span>
 
-<span class="fc" id="L3583">        final double[] result = mFitter.getA();</span>
+<span class="fc" id="L3584">        final double[] result = mFitter.getA();</span>
 
-<span class="fc" id="L3585">        final double sx = result[0];</span>
-<span class="fc" id="L3586">        final double sy = result[1];</span>
-<span class="fc" id="L3587">        final double sz = result[2];</span>
+<span class="fc" id="L3586">        final double sx = result[0];</span>
+<span class="fc" id="L3587">        final double sy = result[1];</span>
+<span class="fc" id="L3588">        final double sz = result[2];</span>
 
-<span class="fc" id="L3589">        final double mxy = result[3];</span>
-<span class="fc" id="L3590">        final double mxz = result[4];</span>
-<span class="fc" id="L3591">        final double myz = result[5];</span>
+<span class="fc" id="L3590">        final double mxy = result[3];</span>
+<span class="fc" id="L3591">        final double mxz = result[4];</span>
+<span class="fc" id="L3592">        final double myz = result[5];</span>
 
-<span class="fc" id="L3593">        final double g11 = result[6];</span>
-<span class="fc" id="L3594">        final double g21 = result[7];</span>
-<span class="fc" id="L3595">        final double g31 = result[8];</span>
-<span class="fc" id="L3596">        final double g12 = result[9];</span>
-<span class="fc" id="L3597">        final double g22 = result[10];</span>
-<span class="fc" id="L3598">        final double g32 = result[11];</span>
-<span class="fc" id="L3599">        final double g13 = result[12];</span>
-<span class="fc" id="L3600">        final double g23 = result[13];</span>
-<span class="fc" id="L3601">        final double g33 = result[14];</span>
+<span class="fc" id="L3594">        final double g11 = result[6];</span>
+<span class="fc" id="L3595">        final double g21 = result[7];</span>
+<span class="fc" id="L3596">        final double g31 = result[8];</span>
+<span class="fc" id="L3597">        final double g12 = result[9];</span>
+<span class="fc" id="L3598">        final double g22 = result[10];</span>
+<span class="fc" id="L3599">        final double g32 = result[11];</span>
+<span class="fc" id="L3600">        final double g13 = result[12];</span>
+<span class="fc" id="L3601">        final double g23 = result[13];</span>
+<span class="fc" id="L3602">        final double g33 = result[14];</span>
 
-<span class="pc bpc" id="L3603" title="1 of 2 branches missed.">        if (mEstimatedMg == null) {</span>
-<span class="fc" id="L3604">            mEstimatedMg = new Matrix(BodyKinematics.COMPONENTS,</span>
+<span class="pc bpc" id="L3604" title="1 of 2 branches missed.">        if (mEstimatedMg == null) {</span>
+<span class="fc" id="L3605">            mEstimatedMg = new Matrix(BodyKinematics.COMPONENTS,</span>
                     BodyKinematics.COMPONENTS);
         } else {
-<span class="nc" id="L3607">            mEstimatedMg.initialize(0.0);</span>
+<span class="nc" id="L3608">            mEstimatedMg.initialize(0.0);</span>
         }
 
-<span class="fc" id="L3610">        mEstimatedMg.setElementAt(0, 0, sx);</span>
+<span class="fc" id="L3611">        mEstimatedMg.setElementAt(0, 0, sx);</span>
 
-<span class="fc" id="L3612">        mEstimatedMg.setElementAt(0, 1, mxy);</span>
-<span class="fc" id="L3613">        mEstimatedMg.setElementAt(1, 1, sy);</span>
+<span class="fc" id="L3613">        mEstimatedMg.setElementAt(0, 1, mxy);</span>
+<span class="fc" id="L3614">        mEstimatedMg.setElementAt(1, 1, sy);</span>
 
-<span class="fc" id="L3615">        mEstimatedMg.setElementAt(0, 2, mxz);</span>
-<span class="fc" id="L3616">        mEstimatedMg.setElementAt(1, 2, myz);</span>
-<span class="fc" id="L3617">        mEstimatedMg.setElementAt(2, 2, sz);</span>
+<span class="fc" id="L3616">        mEstimatedMg.setElementAt(0, 2, mxz);</span>
+<span class="fc" id="L3617">        mEstimatedMg.setElementAt(1, 2, myz);</span>
+<span class="fc" id="L3618">        mEstimatedMg.setElementAt(2, 2, sz);</span>
 
-<span class="pc bpc" id="L3619" title="1 of 2 branches missed.">        if (mEstimatedGg == null) {</span>
-<span class="fc" id="L3620">            mEstimatedGg = new Matrix(BodyKinematics.COMPONENTS,</span>
+<span class="pc bpc" id="L3620" title="1 of 2 branches missed.">        if (mEstimatedGg == null) {</span>
+<span class="fc" id="L3621">            mEstimatedGg = new Matrix(BodyKinematics.COMPONENTS,</span>
                     BodyKinematics.COMPONENTS);
         } else {
-<span class="nc" id="L3623">            mEstimatedGg.initialize(0.0);</span>
+<span class="nc" id="L3624">            mEstimatedGg.initialize(0.0);</span>
         }
 
-<span class="fc" id="L3626">        mEstimatedGg.setElementAtIndex(0, g11);</span>
-<span class="fc" id="L3627">        mEstimatedGg.setElementAtIndex(1, g21);</span>
-<span class="fc" id="L3628">        mEstimatedGg.setElementAtIndex(2, g31);</span>
-<span class="fc" id="L3629">        mEstimatedGg.setElementAtIndex(3, g12);</span>
-<span class="fc" id="L3630">        mEstimatedGg.setElementAtIndex(4, g22);</span>
-<span class="fc" id="L3631">        mEstimatedGg.setElementAtIndex(5, g32);</span>
-<span class="fc" id="L3632">        mEstimatedGg.setElementAtIndex(6, g13);</span>
-<span class="fc" id="L3633">        mEstimatedGg.setElementAtIndex(7, g23);</span>
-<span class="fc" id="L3634">        mEstimatedGg.setElementAtIndex(8, g33);</span>
+<span class="fc" id="L3627">        mEstimatedGg.setElementAtIndex(0, g11);</span>
+<span class="fc" id="L3628">        mEstimatedGg.setElementAtIndex(1, g21);</span>
+<span class="fc" id="L3629">        mEstimatedGg.setElementAtIndex(2, g31);</span>
+<span class="fc" id="L3630">        mEstimatedGg.setElementAtIndex(3, g12);</span>
+<span class="fc" id="L3631">        mEstimatedGg.setElementAtIndex(4, g22);</span>
+<span class="fc" id="L3632">        mEstimatedGg.setElementAtIndex(5, g32);</span>
+<span class="fc" id="L3633">        mEstimatedGg.setElementAtIndex(6, g13);</span>
+<span class="fc" id="L3634">        mEstimatedGg.setElementAtIndex(7, g23);</span>
+<span class="fc" id="L3635">        mEstimatedGg.setElementAtIndex(8, g33);</span>
 
-<span class="fc" id="L3636">        mEstimatedCovariance = mFitter.getCovar();</span>
+<span class="fc" id="L3637">        mEstimatedCovariance = mFitter.getCovar();</span>
 
         // propagate covariance matrix so that all parameters are taken into
         // account in the order: sx, sy, sz, mxy, mxz, myx, myz, mzx, mzy,
@@ -3663,24 +3664,24 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
         // As defined in com.irurueta.statistics.MultivariateNormalDist,
         // if we consider the jacobian of the lineal application the matrix shown
         // above, then covariance can be propagated as follows
-<span class="fc" id="L3666">        final Matrix jacobian = new Matrix(GENERAL_UNKNOWNS, COMMON_Z_AXIS_UNKNOWNS);</span>
-<span class="fc bfc" id="L3667" title="All 2 branches covered.">        for (int i = 0; i &lt; 5; i++) {</span>
-<span class="fc" id="L3668">            jacobian.setElementAt(i, i, 1.0);</span>
+<span class="fc" id="L3667">        final Matrix jacobian = new Matrix(GENERAL_UNKNOWNS, COMMON_Z_AXIS_UNKNOWNS);</span>
+<span class="fc bfc" id="L3668" title="All 2 branches covered.">        for (int i = 0; i &lt; 5; i++) {</span>
+<span class="fc" id="L3669">            jacobian.setElementAt(i, i, 1.0);</span>
         }
-<span class="fc" id="L3670">        jacobian.setElementAt(6, 5, 1.0);</span>
+<span class="fc" id="L3671">        jacobian.setElementAt(6, 5, 1.0);</span>
 
-<span class="fc bfc" id="L3672" title="All 2 branches covered.">        for (int j = 6, i = 9; j &lt; 15; j++, i++) {</span>
-<span class="fc" id="L3673">            jacobian.setElementAt(i, j, 1.0);</span>
+<span class="fc bfc" id="L3673" title="All 2 branches covered.">        for (int j = 6, i = 9; j &lt; 15; j++, i++) {</span>
+<span class="fc" id="L3674">            jacobian.setElementAt(i, j, 1.0);</span>
         }
 
         // propagated covariance is J * Cov * J'
-<span class="fc" id="L3677">        final Matrix jacobianTrans = jacobian.transposeAndReturnNew();</span>
-<span class="fc" id="L3678">        jacobian.multiply(mEstimatedCovariance);</span>
-<span class="fc" id="L3679">        jacobian.multiply(jacobianTrans);</span>
-<span class="fc" id="L3680">        mEstimatedCovariance = jacobian;</span>
-<span class="fc" id="L3681">        mEstimatedChiSq = mFitter.getChisq();</span>
-<span class="fc" id="L3682">        mEstimatedMse = mFitter.getMse();</span>
-<span class="fc" id="L3683">    }</span>
+<span class="fc" id="L3678">        final Matrix jacobianTrans = jacobian.transposeAndReturnNew();</span>
+<span class="fc" id="L3679">        jacobian.multiply(mEstimatedCovariance);</span>
+<span class="fc" id="L3680">        jacobian.multiply(jacobianTrans);</span>
+<span class="fc" id="L3681">        mEstimatedCovariance = jacobian;</span>
+<span class="fc" id="L3682">        mEstimatedChiSq = mFitter.getChisq();</span>
+<span class="fc" id="L3683">        mEstimatedMse = mFitter.getMse();</span>
+<span class="fc" id="L3684">    }</span>
 
     /**
      * Internal method to perform general calibration.
@@ -3741,39 +3742,39 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
         //                                                                                                                                                 [g32]
         //                                                                                                                                                 [g33]
 
-<span class="fc" id="L3744">        mFitter.setFunctionEvaluator(new LevenbergMarquardtMultiVariateFunctionEvaluator() {</span>
+<span class="fc" id="L3745">        mFitter.setFunctionEvaluator(new LevenbergMarquardtMultiVariateFunctionEvaluator() {</span>
             @Override
             public int getNumberOfDimensions() {
                 // Input points are true angular rate + specific force coordinates
-<span class="fc" id="L3748">                return 2 * BodyKinematics.COMPONENTS;</span>
+<span class="fc" id="L3749">                return 2 * BodyKinematics.COMPONENTS;</span>
             }
 
             @Override
             public int getNumberOfVariables() {
                 // The multivariate function returns the components of measured angular rate
-<span class="fc" id="L3754">                return BodyKinematics.COMPONENTS;</span>
+<span class="fc" id="L3755">                return BodyKinematics.COMPONENTS;</span>
             }
 
             @Override
             public double[] createInitialParametersArray() {
-<span class="fc" id="L3759">                final double[] initial = new double[GENERAL_UNKNOWNS];</span>
+<span class="fc" id="L3760">                final double[] initial = new double[GENERAL_UNKNOWNS];</span>
 
-<span class="fc" id="L3761">                initial[0] = mInitialSx;</span>
-<span class="fc" id="L3762">                initial[1] = mInitialSy;</span>
-<span class="fc" id="L3763">                initial[2] = mInitialSz;</span>
+<span class="fc" id="L3762">                initial[0] = mInitialSx;</span>
+<span class="fc" id="L3763">                initial[1] = mInitialSy;</span>
+<span class="fc" id="L3764">                initial[2] = mInitialSz;</span>
 
-<span class="fc" id="L3765">                initial[3] = mInitialMxy;</span>
-<span class="fc" id="L3766">                initial[4] = mInitialMxz;</span>
-<span class="fc" id="L3767">                initial[5] = mInitialMyx;</span>
-<span class="fc" id="L3768">                initial[6] = mInitialMyz;</span>
-<span class="fc" id="L3769">                initial[7] = mInitialMzx;</span>
-<span class="fc" id="L3770">                initial[8] = mInitialMzy;</span>
+<span class="fc" id="L3766">                initial[3] = mInitialMxy;</span>
+<span class="fc" id="L3767">                initial[4] = mInitialMxz;</span>
+<span class="fc" id="L3768">                initial[5] = mInitialMyx;</span>
+<span class="fc" id="L3769">                initial[6] = mInitialMyz;</span>
+<span class="fc" id="L3770">                initial[7] = mInitialMzx;</span>
+<span class="fc" id="L3771">                initial[8] = mInitialMzy;</span>
 
-<span class="fc" id="L3772">                final double[] buffer = mInitialGg.getBuffer();</span>
-<span class="fc" id="L3773">                final int num = buffer.length;</span>
-<span class="fc" id="L3774">                System.arraycopy(buffer, 0, initial, 9, num);</span>
+<span class="fc" id="L3773">                final double[] buffer = mInitialGg.getBuffer();</span>
+<span class="fc" id="L3774">                final int num = buffer.length;</span>
+<span class="fc" id="L3775">                System.arraycopy(buffer, 0, initial, 9, num);</span>
 
-<span class="fc" id="L3776">                return initial;</span>
+<span class="fc" id="L3777">                return initial;</span>
             }
 
             @Override
@@ -3846,168 +3847,168 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
                 // d(Ωmeasx)/d(g32) = ftruey
                 // d(Ωmeasx)/d(g33) = ftruez
 
-<span class="fc" id="L3849">                final double sx = params[0];</span>
-<span class="fc" id="L3850">                final double sy = params[1];</span>
-<span class="fc" id="L3851">                final double sz = params[2];</span>
+<span class="fc" id="L3850">                final double sx = params[0];</span>
+<span class="fc" id="L3851">                final double sy = params[1];</span>
+<span class="fc" id="L3852">                final double sz = params[2];</span>
 
-<span class="fc" id="L3853">                final double mxy = params[3];</span>
-<span class="fc" id="L3854">                final double mxz = params[4];</span>
-<span class="fc" id="L3855">                final double myx = params[5];</span>
-<span class="fc" id="L3856">                final double myz = params[6];</span>
-<span class="fc" id="L3857">                final double mzx = params[7];</span>
-<span class="fc" id="L3858">                final double mzy = params[8];</span>
+<span class="fc" id="L3854">                final double mxy = params[3];</span>
+<span class="fc" id="L3855">                final double mxz = params[4];</span>
+<span class="fc" id="L3856">                final double myx = params[5];</span>
+<span class="fc" id="L3857">                final double myz = params[6];</span>
+<span class="fc" id="L3858">                final double mzx = params[7];</span>
+<span class="fc" id="L3859">                final double mzy = params[8];</span>
 
-<span class="fc" id="L3860">                final double g11 = params[9];</span>
-<span class="fc" id="L3861">                final double g21 = params[10];</span>
-<span class="fc" id="L3862">                final double g31 = params[11];</span>
-<span class="fc" id="L3863">                final double g12 = params[12];</span>
-<span class="fc" id="L3864">                final double g22 = params[13];</span>
-<span class="fc" id="L3865">                final double g32 = params[14];</span>
-<span class="fc" id="L3866">                final double g13 = params[15];</span>
-<span class="fc" id="L3867">                final double g23 = params[16];</span>
-<span class="fc" id="L3868">                final double g33 = params[17];</span>
+<span class="fc" id="L3861">                final double g11 = params[9];</span>
+<span class="fc" id="L3862">                final double g21 = params[10];</span>
+<span class="fc" id="L3863">                final double g31 = params[11];</span>
+<span class="fc" id="L3864">                final double g12 = params[12];</span>
+<span class="fc" id="L3865">                final double g22 = params[13];</span>
+<span class="fc" id="L3866">                final double g32 = params[14];</span>
+<span class="fc" id="L3867">                final double g13 = params[15];</span>
+<span class="fc" id="L3868">                final double g23 = params[16];</span>
+<span class="fc" id="L3869">                final double g33 = params[17];</span>
 
-<span class="fc" id="L3870">                final double omegatruex = point[0];</span>
-<span class="fc" id="L3871">                final double omegatruey = point[1];</span>
-<span class="fc" id="L3872">                final double omegatruez = point[2];</span>
+<span class="fc" id="L3871">                final double omegatruex = point[0];</span>
+<span class="fc" id="L3872">                final double omegatruey = point[1];</span>
+<span class="fc" id="L3873">                final double omegatruez = point[2];</span>
 
-<span class="fc" id="L3874">                final double ftruex = point[3];</span>
-<span class="fc" id="L3875">                final double ftruey = point[4];</span>
-<span class="fc" id="L3876">                final double ftruez = point[5];</span>
+<span class="fc" id="L3875">                final double ftruex = point[3];</span>
+<span class="fc" id="L3876">                final double ftruey = point[4];</span>
+<span class="fc" id="L3877">                final double ftruez = point[5];</span>
 
-<span class="fc" id="L3878">                result[0] = mBiasX + omegatruex + sx * omegatruex + mxy * omegatruey + mxz * omegatruez</span>
+<span class="fc" id="L3879">                result[0] = mBiasX + omegatruex + sx * omegatruex + mxy * omegatruey + mxz * omegatruez</span>
                         + g11 * ftruex + g12 * ftruey + g13 * ftruez;
-<span class="fc" id="L3880">                result[1] = mBiasY + myx * omegatruex + omegatruey + sy * omegatruey + myz * omegatruez</span>
+<span class="fc" id="L3881">                result[1] = mBiasY + myx * omegatruex + omegatruey + sy * omegatruey + myz * omegatruez</span>
                         + g21 * ftruex * g22 * ftruey + g23 * ftruez;
-<span class="fc" id="L3882">                result[2] = mBiasZ + mzx * omegatruex + mzy * omegatruey + omegatruez + sz * omegatruez</span>
+<span class="fc" id="L3883">                result[2] = mBiasZ + mzx * omegatruex + mzy * omegatruey + omegatruez + sz * omegatruez</span>
                         + g31 * ftruex + g32 * ftruey + g33 * ftruez;
 
-<span class="fc" id="L3885">                jacobian.setElementAt(0, 0, omegatruex);</span>
-<span class="fc" id="L3886">                jacobian.setElementAt(0, 1, 0.0);</span>
-<span class="fc" id="L3887">                jacobian.setElementAt(0, 2, 0.0);</span>
-<span class="fc" id="L3888">                jacobian.setElementAt(0, 3, omegatruey);</span>
-<span class="fc" id="L3889">                jacobian.setElementAt(0, 4, omegatruez);</span>
-<span class="fc" id="L3890">                jacobian.setElementAt(0, 5, 0.0);</span>
-<span class="fc" id="L3891">                jacobian.setElementAt(0, 6, 0.0);</span>
-<span class="fc" id="L3892">                jacobian.setElementAt(0, 7, 0.0);</span>
-<span class="fc" id="L3893">                jacobian.setElementAt(0, 8, 0.0);</span>
-<span class="fc" id="L3894">                jacobian.setElementAt(0, 9, ftruex);</span>
-<span class="fc" id="L3895">                jacobian.setElementAt(0, 10, ftruey);</span>
-<span class="fc" id="L3896">                jacobian.setElementAt(0, 11, ftruez);</span>
-<span class="fc" id="L3897">                jacobian.setElementAt(0, 12, 0.0);</span>
-<span class="fc" id="L3898">                jacobian.setElementAt(0, 13, 0.0);</span>
-<span class="fc" id="L3899">                jacobian.setElementAt(0, 14, 0.0);</span>
-<span class="fc" id="L3900">                jacobian.setElementAt(0, 15, 0.0);</span>
-<span class="fc" id="L3901">                jacobian.setElementAt(0, 16, 0.0);</span>
-<span class="fc" id="L3902">                jacobian.setElementAt(0, 17, 0.0);</span>
+<span class="fc" id="L3886">                jacobian.setElementAt(0, 0, omegatruex);</span>
+<span class="fc" id="L3887">                jacobian.setElementAt(0, 1, 0.0);</span>
+<span class="fc" id="L3888">                jacobian.setElementAt(0, 2, 0.0);</span>
+<span class="fc" id="L3889">                jacobian.setElementAt(0, 3, omegatruey);</span>
+<span class="fc" id="L3890">                jacobian.setElementAt(0, 4, omegatruez);</span>
+<span class="fc" id="L3891">                jacobian.setElementAt(0, 5, 0.0);</span>
+<span class="fc" id="L3892">                jacobian.setElementAt(0, 6, 0.0);</span>
+<span class="fc" id="L3893">                jacobian.setElementAt(0, 7, 0.0);</span>
+<span class="fc" id="L3894">                jacobian.setElementAt(0, 8, 0.0);</span>
+<span class="fc" id="L3895">                jacobian.setElementAt(0, 9, ftruex);</span>
+<span class="fc" id="L3896">                jacobian.setElementAt(0, 10, ftruey);</span>
+<span class="fc" id="L3897">                jacobian.setElementAt(0, 11, ftruez);</span>
+<span class="fc" id="L3898">                jacobian.setElementAt(0, 12, 0.0);</span>
+<span class="fc" id="L3899">                jacobian.setElementAt(0, 13, 0.0);</span>
+<span class="fc" id="L3900">                jacobian.setElementAt(0, 14, 0.0);</span>
+<span class="fc" id="L3901">                jacobian.setElementAt(0, 15, 0.0);</span>
+<span class="fc" id="L3902">                jacobian.setElementAt(0, 16, 0.0);</span>
+<span class="fc" id="L3903">                jacobian.setElementAt(0, 17, 0.0);</span>
 
-<span class="fc" id="L3904">                jacobian.setElementAt(1, 0, 0.0);</span>
-<span class="fc" id="L3905">                jacobian.setElementAt(1, 1, omegatruey);</span>
-<span class="fc" id="L3906">                jacobian.setElementAt(1, 2, 0.0);</span>
-<span class="fc" id="L3907">                jacobian.setElementAt(1, 3, 0.0);</span>
-<span class="fc" id="L3908">                jacobian.setElementAt(1, 4, 0.0);</span>
-<span class="fc" id="L3909">                jacobian.setElementAt(1, 5, omegatruex);</span>
-<span class="fc" id="L3910">                jacobian.setElementAt(1, 6, omegatruez);</span>
-<span class="fc" id="L3911">                jacobian.setElementAt(1, 7, 0.0);</span>
-<span class="fc" id="L3912">                jacobian.setElementAt(1, 8, 0.0);</span>
-<span class="fc" id="L3913">                jacobian.setElementAt(1, 9, 0.0);</span>
-<span class="fc" id="L3914">                jacobian.setElementAt(1, 10, 0.0);</span>
-<span class="fc" id="L3915">                jacobian.setElementAt(1, 11, 0.0);</span>
-<span class="fc" id="L3916">                jacobian.setElementAt(1, 12, ftruex);</span>
-<span class="fc" id="L3917">                jacobian.setElementAt(1, 13, ftruey);</span>
-<span class="fc" id="L3918">                jacobian.setElementAt(1, 14, ftruez);</span>
-<span class="fc" id="L3919">                jacobian.setElementAt(1, 15, 0.0);</span>
-<span class="fc" id="L3920">                jacobian.setElementAt(1, 16, 0.0);</span>
-<span class="fc" id="L3921">                jacobian.setElementAt(1, 17, 0.0);</span>
+<span class="fc" id="L3905">                jacobian.setElementAt(1, 0, 0.0);</span>
+<span class="fc" id="L3906">                jacobian.setElementAt(1, 1, omegatruey);</span>
+<span class="fc" id="L3907">                jacobian.setElementAt(1, 2, 0.0);</span>
+<span class="fc" id="L3908">                jacobian.setElementAt(1, 3, 0.0);</span>
+<span class="fc" id="L3909">                jacobian.setElementAt(1, 4, 0.0);</span>
+<span class="fc" id="L3910">                jacobian.setElementAt(1, 5, omegatruex);</span>
+<span class="fc" id="L3911">                jacobian.setElementAt(1, 6, omegatruez);</span>
+<span class="fc" id="L3912">                jacobian.setElementAt(1, 7, 0.0);</span>
+<span class="fc" id="L3913">                jacobian.setElementAt(1, 8, 0.0);</span>
+<span class="fc" id="L3914">                jacobian.setElementAt(1, 9, 0.0);</span>
+<span class="fc" id="L3915">                jacobian.setElementAt(1, 10, 0.0);</span>
+<span class="fc" id="L3916">                jacobian.setElementAt(1, 11, 0.0);</span>
+<span class="fc" id="L3917">                jacobian.setElementAt(1, 12, ftruex);</span>
+<span class="fc" id="L3918">                jacobian.setElementAt(1, 13, ftruey);</span>
+<span class="fc" id="L3919">                jacobian.setElementAt(1, 14, ftruez);</span>
+<span class="fc" id="L3920">                jacobian.setElementAt(1, 15, 0.0);</span>
+<span class="fc" id="L3921">                jacobian.setElementAt(1, 16, 0.0);</span>
+<span class="fc" id="L3922">                jacobian.setElementAt(1, 17, 0.0);</span>
 
-<span class="fc" id="L3923">                jacobian.setElementAt(2, 0, 0.0);</span>
-<span class="fc" id="L3924">                jacobian.setElementAt(2, 1, 0.0);</span>
-<span class="fc" id="L3925">                jacobian.setElementAt(2, 2, omegatruez);</span>
-<span class="fc" id="L3926">                jacobian.setElementAt(2, 3, 0.0);</span>
-<span class="fc" id="L3927">                jacobian.setElementAt(2, 4, 0.0);</span>
-<span class="fc" id="L3928">                jacobian.setElementAt(2, 5, 0.0);</span>
-<span class="fc" id="L3929">                jacobian.setElementAt(2, 6, 0.0);</span>
-<span class="fc" id="L3930">                jacobian.setElementAt(2, 7, omegatruex);</span>
-<span class="fc" id="L3931">                jacobian.setElementAt(2, 8, omegatruey);</span>
-<span class="fc" id="L3932">                jacobian.setElementAt(2, 9, 0.0);</span>
-<span class="fc" id="L3933">                jacobian.setElementAt(2, 10, 0.0);</span>
-<span class="fc" id="L3934">                jacobian.setElementAt(2, 11, 0.0);</span>
-<span class="fc" id="L3935">                jacobian.setElementAt(2, 12, 0.0);</span>
-<span class="fc" id="L3936">                jacobian.setElementAt(2, 13, 0.0);</span>
-<span class="fc" id="L3937">                jacobian.setElementAt(2, 14, 0.0);</span>
-<span class="fc" id="L3938">                jacobian.setElementAt(2, 15, ftruex);</span>
-<span class="fc" id="L3939">                jacobian.setElementAt(2, 16, ftruey);</span>
-<span class="fc" id="L3940">                jacobian.setElementAt(2, 17, ftruez);</span>
-<span class="fc" id="L3941">            }</span>
+<span class="fc" id="L3924">                jacobian.setElementAt(2, 0, 0.0);</span>
+<span class="fc" id="L3925">                jacobian.setElementAt(2, 1, 0.0);</span>
+<span class="fc" id="L3926">                jacobian.setElementAt(2, 2, omegatruez);</span>
+<span class="fc" id="L3927">                jacobian.setElementAt(2, 3, 0.0);</span>
+<span class="fc" id="L3928">                jacobian.setElementAt(2, 4, 0.0);</span>
+<span class="fc" id="L3929">                jacobian.setElementAt(2, 5, 0.0);</span>
+<span class="fc" id="L3930">                jacobian.setElementAt(2, 6, 0.0);</span>
+<span class="fc" id="L3931">                jacobian.setElementAt(2, 7, omegatruex);</span>
+<span class="fc" id="L3932">                jacobian.setElementAt(2, 8, omegatruey);</span>
+<span class="fc" id="L3933">                jacobian.setElementAt(2, 9, 0.0);</span>
+<span class="fc" id="L3934">                jacobian.setElementAt(2, 10, 0.0);</span>
+<span class="fc" id="L3935">                jacobian.setElementAt(2, 11, 0.0);</span>
+<span class="fc" id="L3936">                jacobian.setElementAt(2, 12, 0.0);</span>
+<span class="fc" id="L3937">                jacobian.setElementAt(2, 13, 0.0);</span>
+<span class="fc" id="L3938">                jacobian.setElementAt(2, 14, 0.0);</span>
+<span class="fc" id="L3939">                jacobian.setElementAt(2, 15, ftruex);</span>
+<span class="fc" id="L3940">                jacobian.setElementAt(2, 16, ftruey);</span>
+<span class="fc" id="L3941">                jacobian.setElementAt(2, 17, ftruez);</span>
+<span class="fc" id="L3942">            }</span>
         });
 
-<span class="fc" id="L3944">        setInputData();</span>
+<span class="fc" id="L3945">        setInputData();</span>
 
-<span class="fc" id="L3946">        mFitter.fit();</span>
+<span class="fc" id="L3947">        mFitter.fit();</span>
 
-<span class="fc" id="L3948">        final double[] result = mFitter.getA();</span>
+<span class="fc" id="L3949">        final double[] result = mFitter.getA();</span>
 
-<span class="fc" id="L3950">        final double sx = result[0];</span>
-<span class="fc" id="L3951">        final double sy = result[1];</span>
-<span class="fc" id="L3952">        final double sz = result[2];</span>
+<span class="fc" id="L3951">        final double sx = result[0];</span>
+<span class="fc" id="L3952">        final double sy = result[1];</span>
+<span class="fc" id="L3953">        final double sz = result[2];</span>
 
-<span class="fc" id="L3954">        final double mxy = result[3];</span>
-<span class="fc" id="L3955">        final double mxz = result[4];</span>
-<span class="fc" id="L3956">        final double myx = result[5];</span>
-<span class="fc" id="L3957">        final double myz = result[6];</span>
-<span class="fc" id="L3958">        final double mzx = result[7];</span>
-<span class="fc" id="L3959">        final double mzy = result[8];</span>
+<span class="fc" id="L3955">        final double mxy = result[3];</span>
+<span class="fc" id="L3956">        final double mxz = result[4];</span>
+<span class="fc" id="L3957">        final double myx = result[5];</span>
+<span class="fc" id="L3958">        final double myz = result[6];</span>
+<span class="fc" id="L3959">        final double mzx = result[7];</span>
+<span class="fc" id="L3960">        final double mzy = result[8];</span>
 
-<span class="fc" id="L3961">        final double g11 = result[9];</span>
-<span class="fc" id="L3962">        final double g21 = result[10];</span>
-<span class="fc" id="L3963">        final double g31 = result[11];</span>
-<span class="fc" id="L3964">        final double g12 = result[12];</span>
-<span class="fc" id="L3965">        final double g22 = result[13];</span>
-<span class="fc" id="L3966">        final double g32 = result[14];</span>
-<span class="fc" id="L3967">        final double g13 = result[15];</span>
-<span class="fc" id="L3968">        final double g23 = result[16];</span>
-<span class="fc" id="L3969">        final double g33 = result[17];</span>
+<span class="fc" id="L3962">        final double g11 = result[9];</span>
+<span class="fc" id="L3963">        final double g21 = result[10];</span>
+<span class="fc" id="L3964">        final double g31 = result[11];</span>
+<span class="fc" id="L3965">        final double g12 = result[12];</span>
+<span class="fc" id="L3966">        final double g22 = result[13];</span>
+<span class="fc" id="L3967">        final double g32 = result[14];</span>
+<span class="fc" id="L3968">        final double g13 = result[15];</span>
+<span class="fc" id="L3969">        final double g23 = result[16];</span>
+<span class="fc" id="L3970">        final double g33 = result[17];</span>
 
-<span class="pc bpc" id="L3971" title="1 of 2 branches missed.">        if (mEstimatedMg == null) {</span>
-<span class="fc" id="L3972">            mEstimatedMg = new Matrix(BodyKinematics.COMPONENTS,</span>
+<span class="pc bpc" id="L3972" title="1 of 2 branches missed.">        if (mEstimatedMg == null) {</span>
+<span class="fc" id="L3973">            mEstimatedMg = new Matrix(BodyKinematics.COMPONENTS,</span>
                     BodyKinematics.COMPONENTS);
         } else {
-<span class="nc" id="L3975">            mEstimatedMg.initialize(0.0);</span>
+<span class="nc" id="L3976">            mEstimatedMg.initialize(0.0);</span>
         }
 
-<span class="fc" id="L3978">        mEstimatedMg.setElementAt(0, 0, sx);</span>
-<span class="fc" id="L3979">        mEstimatedMg.setElementAt(1, 0, myx);</span>
-<span class="fc" id="L3980">        mEstimatedMg.setElementAt(2, 0, mzx);</span>
+<span class="fc" id="L3979">        mEstimatedMg.setElementAt(0, 0, sx);</span>
+<span class="fc" id="L3980">        mEstimatedMg.setElementAt(1, 0, myx);</span>
+<span class="fc" id="L3981">        mEstimatedMg.setElementAt(2, 0, mzx);</span>
 
-<span class="fc" id="L3982">        mEstimatedMg.setElementAt(0, 1, mxy);</span>
-<span class="fc" id="L3983">        mEstimatedMg.setElementAt(1, 1, sy);</span>
-<span class="fc" id="L3984">        mEstimatedMg.setElementAt(2, 1, mzy);</span>
+<span class="fc" id="L3983">        mEstimatedMg.setElementAt(0, 1, mxy);</span>
+<span class="fc" id="L3984">        mEstimatedMg.setElementAt(1, 1, sy);</span>
+<span class="fc" id="L3985">        mEstimatedMg.setElementAt(2, 1, mzy);</span>
 
-<span class="fc" id="L3986">        mEstimatedMg.setElementAt(0, 2, mxz);</span>
-<span class="fc" id="L3987">        mEstimatedMg.setElementAt(1, 2, myz);</span>
-<span class="fc" id="L3988">        mEstimatedMg.setElementAt(2, 2, sz);</span>
+<span class="fc" id="L3987">        mEstimatedMg.setElementAt(0, 2, mxz);</span>
+<span class="fc" id="L3988">        mEstimatedMg.setElementAt(1, 2, myz);</span>
+<span class="fc" id="L3989">        mEstimatedMg.setElementAt(2, 2, sz);</span>
 
-<span class="pc bpc" id="L3990" title="1 of 2 branches missed.">        if (mEstimatedGg == null) {</span>
-<span class="fc" id="L3991">            mEstimatedGg = new Matrix(BodyKinematics.COMPONENTS,</span>
+<span class="pc bpc" id="L3991" title="1 of 2 branches missed.">        if (mEstimatedGg == null) {</span>
+<span class="fc" id="L3992">            mEstimatedGg = new Matrix(BodyKinematics.COMPONENTS,</span>
                     BodyKinematics.COMPONENTS);
         } else {
-<span class="nc" id="L3994">            mEstimatedGg.initialize(0.0);</span>
+<span class="nc" id="L3995">            mEstimatedGg.initialize(0.0);</span>
         }
 
-<span class="fc" id="L3997">        mEstimatedGg.setElementAtIndex(0, g11);</span>
-<span class="fc" id="L3998">        mEstimatedGg.setElementAtIndex(1, g21);</span>
-<span class="fc" id="L3999">        mEstimatedGg.setElementAtIndex(2, g31);</span>
-<span class="fc" id="L4000">        mEstimatedGg.setElementAtIndex(3, g12);</span>
-<span class="fc" id="L4001">        mEstimatedGg.setElementAtIndex(4, g22);</span>
-<span class="fc" id="L4002">        mEstimatedGg.setElementAtIndex(5, g32);</span>
-<span class="fc" id="L4003">        mEstimatedGg.setElementAtIndex(6, g13);</span>
-<span class="fc" id="L4004">        mEstimatedGg.setElementAtIndex(7, g23);</span>
-<span class="fc" id="L4005">        mEstimatedGg.setElementAtIndex(8, g33);</span>
+<span class="fc" id="L3998">        mEstimatedGg.setElementAtIndex(0, g11);</span>
+<span class="fc" id="L3999">        mEstimatedGg.setElementAtIndex(1, g21);</span>
+<span class="fc" id="L4000">        mEstimatedGg.setElementAtIndex(2, g31);</span>
+<span class="fc" id="L4001">        mEstimatedGg.setElementAtIndex(3, g12);</span>
+<span class="fc" id="L4002">        mEstimatedGg.setElementAtIndex(4, g22);</span>
+<span class="fc" id="L4003">        mEstimatedGg.setElementAtIndex(5, g32);</span>
+<span class="fc" id="L4004">        mEstimatedGg.setElementAtIndex(6, g13);</span>
+<span class="fc" id="L4005">        mEstimatedGg.setElementAtIndex(7, g23);</span>
+<span class="fc" id="L4006">        mEstimatedGg.setElementAtIndex(8, g33);</span>
 
-<span class="fc" id="L4007">        mEstimatedCovariance = mFitter.getCovar();</span>
-<span class="fc" id="L4008">        mEstimatedChiSq = mFitter.getChisq();</span>
-<span class="fc" id="L4009">        mEstimatedMse = mFitter.getMse();</span>
-<span class="fc" id="L4010">    }</span>
+<span class="fc" id="L4008">        mEstimatedCovariance = mFitter.getCovar();</span>
+<span class="fc" id="L4009">        mEstimatedChiSq = mFitter.getChisq();</span>
+<span class="fc" id="L4010">        mEstimatedMse = mFitter.getMse();</span>
+<span class="fc" id="L4011">    }</span>
 
     /**
      * Sets input data into Levenberg-Marquardt fitter.
@@ -4024,52 +4025,52 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
         //  fmeasy = by + myx * ftruex + ftruey + sy * ftruey + myz * ftruez
         //  fmeasz = bz + mzx * ftruex + mzy * ftruey + ftruez + sz * ftruez
 
-<span class="fc" id="L4027">        final BodyKinematics expectedKinematics = new BodyKinematics();</span>
+<span class="fc" id="L4028">        final BodyKinematics expectedKinematics = new BodyKinematics();</span>
 
-<span class="fc" id="L4029">        final int numMeasurements = mMeasurements.size();</span>
-<span class="fc" id="L4030">        final Matrix x = new Matrix(numMeasurements, 2 * BodyKinematics.COMPONENTS);</span>
-<span class="fc" id="L4031">        final Matrix y = new Matrix(numMeasurements, BodyKinematics.COMPONENTS);</span>
-<span class="fc" id="L4032">        final double[] standardDeviations = new double[numMeasurements];</span>
-<span class="fc" id="L4033">        int i = 0;</span>
-<span class="fc bfc" id="L4034" title="All 2 branches covered.">        for (final StandardDeviationFrameBodyKinematics measurement : mMeasurements) {</span>
-<span class="fc" id="L4035">            final BodyKinematics measuredKinematics = measurement.getKinematics();</span>
-<span class="fc" id="L4036">            final ECEFFrame ecefFrame = measurement.getFrame();</span>
-<span class="fc" id="L4037">            final ECEFFrame previousEcefFrame = measurement.getPreviousFrame();</span>
-<span class="fc" id="L4038">            final double timeInterval = measurement.getTimeInterval();</span>
+<span class="fc" id="L4030">        final int numMeasurements = mMeasurements.size();</span>
+<span class="fc" id="L4031">        final Matrix x = new Matrix(numMeasurements, 2 * BodyKinematics.COMPONENTS);</span>
+<span class="fc" id="L4032">        final Matrix y = new Matrix(numMeasurements, BodyKinematics.COMPONENTS);</span>
+<span class="fc" id="L4033">        final double[] standardDeviations = new double[numMeasurements];</span>
+<span class="fc" id="L4034">        int i = 0;</span>
+<span class="fc bfc" id="L4035" title="All 2 branches covered.">        for (final StandardDeviationFrameBodyKinematics measurement : mMeasurements) {</span>
+<span class="fc" id="L4036">            final BodyKinematics measuredKinematics = measurement.getKinematics();</span>
+<span class="fc" id="L4037">            final ECEFFrame ecefFrame = measurement.getFrame();</span>
+<span class="fc" id="L4038">            final ECEFFrame previousEcefFrame = measurement.getPreviousFrame();</span>
+<span class="fc" id="L4039">            final double timeInterval = measurement.getTimeInterval();</span>
 
-<span class="fc" id="L4040">            ECEFKinematicsEstimator.estimateKinematics(timeInterval, ecefFrame,</span>
+<span class="fc" id="L4041">            ECEFKinematicsEstimator.estimateKinematics(timeInterval, ecefFrame,</span>
                     previousEcefFrame, expectedKinematics);
 
-<span class="fc" id="L4043">            final double omegaMeasX = measuredKinematics.getAngularRateX();</span>
-<span class="fc" id="L4044">            final double omegaMeasY = measuredKinematics.getAngularRateY();</span>
-<span class="fc" id="L4045">            final double omegaMeasZ = measuredKinematics.getAngularRateZ();</span>
+<span class="fc" id="L4044">            final double omegaMeasX = measuredKinematics.getAngularRateX();</span>
+<span class="fc" id="L4045">            final double omegaMeasY = measuredKinematics.getAngularRateY();</span>
+<span class="fc" id="L4046">            final double omegaMeasZ = measuredKinematics.getAngularRateZ();</span>
 
-<span class="fc" id="L4047">            final double omegaTrueX = expectedKinematics.getAngularRateX();</span>
-<span class="fc" id="L4048">            final double omegaTrueY = expectedKinematics.getAngularRateY();</span>
-<span class="fc" id="L4049">            final double omegaTrueZ = expectedKinematics.getAngularRateZ();</span>
+<span class="fc" id="L4048">            final double omegaTrueX = expectedKinematics.getAngularRateX();</span>
+<span class="fc" id="L4049">            final double omegaTrueY = expectedKinematics.getAngularRateY();</span>
+<span class="fc" id="L4050">            final double omegaTrueZ = expectedKinematics.getAngularRateZ();</span>
 
-<span class="fc" id="L4051">            final double fTrueX = expectedKinematics.getFx();</span>
-<span class="fc" id="L4052">            final double fTrueY = expectedKinematics.getFy();</span>
-<span class="fc" id="L4053">            final double fTrueZ = expectedKinematics.getFz();</span>
+<span class="fc" id="L4052">            final double fTrueX = expectedKinematics.getFx();</span>
+<span class="fc" id="L4053">            final double fTrueY = expectedKinematics.getFy();</span>
+<span class="fc" id="L4054">            final double fTrueZ = expectedKinematics.getFz();</span>
 
-<span class="fc" id="L4055">            x.setElementAt(i, 0, omegaTrueX);</span>
-<span class="fc" id="L4056">            x.setElementAt(i, 1, omegaTrueY);</span>
-<span class="fc" id="L4057">            x.setElementAt(i, 2, omegaTrueZ);</span>
+<span class="fc" id="L4056">            x.setElementAt(i, 0, omegaTrueX);</span>
+<span class="fc" id="L4057">            x.setElementAt(i, 1, omegaTrueY);</span>
+<span class="fc" id="L4058">            x.setElementAt(i, 2, omegaTrueZ);</span>
 
-<span class="fc" id="L4059">            x.setElementAt(i, 3, fTrueX);</span>
-<span class="fc" id="L4060">            x.setElementAt(i, 4, fTrueY);</span>
-<span class="fc" id="L4061">            x.setElementAt(i, 5, fTrueZ);</span>
+<span class="fc" id="L4060">            x.setElementAt(i, 3, fTrueX);</span>
+<span class="fc" id="L4061">            x.setElementAt(i, 4, fTrueY);</span>
+<span class="fc" id="L4062">            x.setElementAt(i, 5, fTrueZ);</span>
 
-<span class="fc" id="L4063">            y.setElementAt(i, 0, omegaMeasX);</span>
-<span class="fc" id="L4064">            y.setElementAt(i, 1, omegaMeasY);</span>
-<span class="fc" id="L4065">            y.setElementAt(i, 2, omegaMeasZ);</span>
+<span class="fc" id="L4064">            y.setElementAt(i, 0, omegaMeasX);</span>
+<span class="fc" id="L4065">            y.setElementAt(i, 1, omegaMeasY);</span>
+<span class="fc" id="L4066">            y.setElementAt(i, 2, omegaMeasZ);</span>
 
-<span class="fc" id="L4067">            standardDeviations[i] = measurement.getAngularRateStandardDeviation();</span>
-<span class="fc" id="L4068">            i++;</span>
-<span class="fc" id="L4069">        }</span>
+<span class="fc" id="L4068">            standardDeviations[i] = measurement.getAngularRateStandardDeviation();</span>
+<span class="fc" id="L4069">            i++;</span>
+<span class="fc" id="L4070">        }</span>
 
-<span class="fc" id="L4071">        mFitter.setInputData(x, y, standardDeviations);</span>
-<span class="fc" id="L4072">    }</span>
+<span class="fc" id="L4072">        mFitter.setInputData(x, y, standardDeviations);</span>
+<span class="fc" id="L4073">    }</span>
 
     /**
      * Converts angular speed instance to radians per second (rad/s).
@@ -4079,7 +4080,7 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      * @return converted value.
      */
     private static double convertAngularSpeed(final double value, final AngularSpeedUnit unit) {
-<span class="fc" id="L4082">        return AngularSpeedConverter.convert(value, unit,</span>
+<span class="fc" id="L4083">        return AngularSpeedConverter.convert(value, unit,</span>
                 AngularSpeedUnit.RADIANS_PER_SECOND);
     }
 
@@ -4090,8 +4091,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implement
      * @return converted value.
      */
     private static double convertAngularSpeed(final AngularSpeed angularSpeed) {
-<span class="fc" id="L4093">        return convertAngularSpeed(angularSpeed.getValue().doubleValue(),</span>
-<span class="fc" id="L4094">                angularSpeed.getUnit());</span>
+<span class="fc" id="L4094">        return convertAngularSpeed(angularSpeed.getValue().doubleValue(),</span>
+<span class="fc" id="L4095">                angularSpeed.getUnit());</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

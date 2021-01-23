@@ -3441,8 +3441,9 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibrator implements
      *
      * @return estimated mean square error respect to provided measurements.
      */
+    @Override
     public double getEstimatedMse() {
-<span class="fc" id="L3445">        return mEstimatedMse;</span>
+<span class="fc" id="L3446">        return mEstimatedMse;</span>
     }
 
     /**
@@ -3451,7 +3452,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibrator implements
      * @return variance of estimated x coordinate of accelerometer bias or null if not available.
      */
     public Double getEstimatedBiasFxVariance() {
-<span class="fc bfc" id="L3454" title="All 2 branches covered.">        return mEstimatedCovariance != null ? mEstimatedCovariance.getElementAt(0, 0) : null;</span>
+<span class="fc bfc" id="L3455" title="All 2 branches covered.">        return mEstimatedCovariance != null ? mEstimatedCovariance.getElementAt(0, 0) : null;</span>
     }
 
     /**
@@ -3462,8 +3463,8 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibrator implements
      * available.
      */
     public Double getEstimatedBiasFxStandardDeviation() {
-<span class="fc" id="L3465">        final Double variance = getEstimatedBiasFxVariance();</span>
-<span class="fc bfc" id="L3466" title="All 2 branches covered.">        return variance != null ? Math.sqrt(variance) : null;</span>
+<span class="fc" id="L3466">        final Double variance = getEstimatedBiasFxVariance();</span>
+<span class="fc bfc" id="L3467" title="All 2 branches covered.">        return variance != null ? Math.sqrt(variance) : null;</span>
     }
 
     /**
@@ -3473,9 +3474,9 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibrator implements
      * available.
      */
     public Acceleration getEstimatedBiasFxStandardDeviationAsAcceleration() {
-<span class="fc bfc" id="L3476" title="All 2 branches covered.">        return mEstimatedCovariance != null ?</span>
-<span class="fc" id="L3477">                new Acceleration(getEstimatedBiasFxStandardDeviation(), AccelerationUnit.METERS_PER_SQUARED_SECOND) :</span>
-<span class="fc" id="L3478">                null;</span>
+<span class="fc bfc" id="L3477" title="All 2 branches covered.">        return mEstimatedCovariance != null ?</span>
+<span class="fc" id="L3478">                new Acceleration(getEstimatedBiasFxStandardDeviation(), AccelerationUnit.METERS_PER_SQUARED_SECOND) :</span>
+<span class="fc" id="L3479">                null;</span>
     }
 
     /**
@@ -3486,12 +3487,12 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibrator implements
      * false otherwise.
      */
     public boolean getEstimatedBiasFxStandardDeviationAsAcceleration(final Acceleration result) {
-<span class="fc bfc" id="L3489" title="All 2 branches covered.">        if (mEstimatedCovariance != null) {</span>
-<span class="fc" id="L3490">            result.setValue(getEstimatedBiasFxStandardDeviation());</span>
-<span class="fc" id="L3491">            result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);</span>
-<span class="fc" id="L3492">            return true;</span>
+<span class="fc bfc" id="L3490" title="All 2 branches covered.">        if (mEstimatedCovariance != null) {</span>
+<span class="fc" id="L3491">            result.setValue(getEstimatedBiasFxStandardDeviation());</span>
+<span class="fc" id="L3492">            result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);</span>
+<span class="fc" id="L3493">            return true;</span>
         } else {
-<span class="fc" id="L3494">            return false;</span>
+<span class="fc" id="L3495">            return false;</span>
         }
     }
 
@@ -3501,7 +3502,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibrator implements
      * @return variance of estimated y coordinate of accelerometer bias or null if not available.
      */
     public Double getEstimatedBiasFyVariance() {
-<span class="fc bfc" id="L3504" title="All 2 branches covered.">        return mEstimatedCovariance != null ? mEstimatedCovariance.getElementAt(1, 1) : null;</span>
+<span class="fc bfc" id="L3505" title="All 2 branches covered.">        return mEstimatedCovariance != null ? mEstimatedCovariance.getElementAt(1, 1) : null;</span>
     }
 
     /**
@@ -3512,8 +3513,8 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibrator implements
      * available.
      */
     public Double getEstimatedBiasFyStandardDeviation() {
-<span class="fc" id="L3515">        final Double variance = getEstimatedBiasFyVariance();</span>
-<span class="fc bfc" id="L3516" title="All 2 branches covered.">        return variance != null ? Math.sqrt(variance) : null;</span>
+<span class="fc" id="L3516">        final Double variance = getEstimatedBiasFyVariance();</span>
+<span class="fc bfc" id="L3517" title="All 2 branches covered.">        return variance != null ? Math.sqrt(variance) : null;</span>
     }
 
     /**
@@ -3523,9 +3524,9 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibrator implements
      * available.
      */
     public Acceleration getEstimatedBiasFyStandardDeviationAsAcceleration() {
-<span class="fc bfc" id="L3526" title="All 2 branches covered.">        return mEstimatedCovariance != null ?</span>
-<span class="fc" id="L3527">                new Acceleration(getEstimatedBiasFyStandardDeviation(), AccelerationUnit.METERS_PER_SQUARED_SECOND) :</span>
-<span class="fc" id="L3528">                null;</span>
+<span class="fc bfc" id="L3527" title="All 2 branches covered.">        return mEstimatedCovariance != null ?</span>
+<span class="fc" id="L3528">                new Acceleration(getEstimatedBiasFyStandardDeviation(), AccelerationUnit.METERS_PER_SQUARED_SECOND) :</span>
+<span class="fc" id="L3529">                null;</span>
     }
 
     /**
@@ -3536,12 +3537,12 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibrator implements
      * false otherwise.
      */
     public boolean getEstimatedBiasFyStandardDeviationAsAcceleration(final Acceleration result) {
-<span class="fc bfc" id="L3539" title="All 2 branches covered.">        if (mEstimatedCovariance != null) {</span>
-<span class="fc" id="L3540">            result.setValue(getEstimatedBiasFyStandardDeviation());</span>
-<span class="fc" id="L3541">            result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);</span>
-<span class="fc" id="L3542">            return true;</span>
+<span class="fc bfc" id="L3540" title="All 2 branches covered.">        if (mEstimatedCovariance != null) {</span>
+<span class="fc" id="L3541">            result.setValue(getEstimatedBiasFyStandardDeviation());</span>
+<span class="fc" id="L3542">            result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);</span>
+<span class="fc" id="L3543">            return true;</span>
         } else {
-<span class="fc" id="L3544">            return false;</span>
+<span class="fc" id="L3545">            return false;</span>
         }
     }
 
@@ -3551,7 +3552,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibrator implements
      * @return variance of estimated z coordinate of accelerometer bias or null if not available.
      */
     public Double getEstimatedBiasFzVariance() {
-<span class="fc bfc" id="L3554" title="All 2 branches covered.">        return mEstimatedCovariance != null ? mEstimatedCovariance.getElementAt(2, 2) : null;</span>
+<span class="fc bfc" id="L3555" title="All 2 branches covered.">        return mEstimatedCovariance != null ? mEstimatedCovariance.getElementAt(2, 2) : null;</span>
     }
 
     /**
@@ -3562,8 +3563,8 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibrator implements
      * available.
      */
     public Double getEstimatedBiasFzStandardDeviation() {
-<span class="fc" id="L3565">        final Double variance = getEstimatedBiasFzVariance();</span>
-<span class="fc bfc" id="L3566" title="All 2 branches covered.">        return variance != null ? Math.sqrt(variance) : null;</span>
+<span class="fc" id="L3566">        final Double variance = getEstimatedBiasFzVariance();</span>
+<span class="fc bfc" id="L3567" title="All 2 branches covered.">        return variance != null ? Math.sqrt(variance) : null;</span>
     }
 
     /**
@@ -3573,9 +3574,9 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibrator implements
      * available.
      */
     public Acceleration getEstimatedBiasFzStandardDeviationAsAcceleration() {
-<span class="fc bfc" id="L3576" title="All 2 branches covered.">        return mEstimatedCovariance != null ?</span>
-<span class="fc" id="L3577">                new Acceleration(getEstimatedBiasFzStandardDeviation(), AccelerationUnit.METERS_PER_SQUARED_SECOND) :</span>
-<span class="fc" id="L3578">                null;</span>
+<span class="fc bfc" id="L3577" title="All 2 branches covered.">        return mEstimatedCovariance != null ?</span>
+<span class="fc" id="L3578">                new Acceleration(getEstimatedBiasFzStandardDeviation(), AccelerationUnit.METERS_PER_SQUARED_SECOND) :</span>
+<span class="fc" id="L3579">                null;</span>
     }
 
     /**
@@ -3586,12 +3587,12 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibrator implements
      * false otherwise.
      */
     public boolean getEstimatedBiasFzStandardDeviationAsAcceleration(final Acceleration result) {
-<span class="fc bfc" id="L3589" title="All 2 branches covered.">        if (mEstimatedCovariance != null) {</span>
-<span class="fc" id="L3590">            result.setValue(getEstimatedBiasFzStandardDeviation());</span>
-<span class="fc" id="L3591">            result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);</span>
-<span class="fc" id="L3592">            return true;</span>
+<span class="fc bfc" id="L3590" title="All 2 branches covered.">        if (mEstimatedCovariance != null) {</span>
+<span class="fc" id="L3591">            result.setValue(getEstimatedBiasFzStandardDeviation());</span>
+<span class="fc" id="L3592">            result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);</span>
+<span class="fc" id="L3593">            return true;</span>
         } else {
-<span class="fc" id="L3594">            return false;</span>
+<span class="fc" id="L3595">            return false;</span>
         }
     }
 
@@ -3601,11 +3602,11 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibrator implements
      * @return standard deviation of estimated accelerometer bias coordinates.
      */
     public AccelerationTriad getEstimatedBiasStandardDeviation() {
-<span class="fc bfc" id="L3604" title="All 2 branches covered.">        return mEstimatedCovariance != null ?</span>
-<span class="fc" id="L3605">                new AccelerationTriad(AccelerationUnit.METERS_PER_SQUARED_SECOND,</span>
-<span class="fc" id="L3606">                        getEstimatedBiasFxStandardDeviation(),</span>
-<span class="fc" id="L3607">                        getEstimatedBiasFyStandardDeviation(),</span>
-<span class="fc" id="L3608">                        getEstimatedBiasFzStandardDeviation()) : null;</span>
+<span class="fc bfc" id="L3605" title="All 2 branches covered.">        return mEstimatedCovariance != null ?</span>
+<span class="fc" id="L3606">                new AccelerationTriad(AccelerationUnit.METERS_PER_SQUARED_SECOND,</span>
+<span class="fc" id="L3607">                        getEstimatedBiasFxStandardDeviation(),</span>
+<span class="fc" id="L3608">                        getEstimatedBiasFyStandardDeviation(),</span>
+<span class="fc" id="L3609">                        getEstimatedBiasFzStandardDeviation()) : null;</span>
     }
 
     /**
@@ -3616,15 +3617,15 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibrator implements
      * otherwise.
      */
     public boolean getEstimatedBiasStandardDeviation(final AccelerationTriad result) {
-<span class="fc bfc" id="L3619" title="All 2 branches covered.">        if (mEstimatedCovariance != null) {</span>
-<span class="fc" id="L3620">            result.setValueCoordinatesAndUnit(</span>
-<span class="fc" id="L3621">                    getEstimatedBiasFxStandardDeviation(),</span>
-<span class="fc" id="L3622">                    getEstimatedBiasFyStandardDeviation(),</span>
-<span class="fc" id="L3623">                    getEstimatedBiasFzStandardDeviation(),</span>
+<span class="fc bfc" id="L3620" title="All 2 branches covered.">        if (mEstimatedCovariance != null) {</span>
+<span class="fc" id="L3621">            result.setValueCoordinatesAndUnit(</span>
+<span class="fc" id="L3622">                    getEstimatedBiasFxStandardDeviation(),</span>
+<span class="fc" id="L3623">                    getEstimatedBiasFyStandardDeviation(),</span>
+<span class="fc" id="L3624">                    getEstimatedBiasFzStandardDeviation(),</span>
                     AccelerationUnit.METERS_PER_SQUARED_SECOND);
-<span class="fc" id="L3625">            return true;</span>
+<span class="fc" id="L3626">            return true;</span>
         } else {
-<span class="fc" id="L3627">            return false;</span>
+<span class="fc" id="L3628">            return false;</span>
         }
     }
 
@@ -3636,10 +3637,10 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibrator implements
      * if not available.
      */
     public Double getEstimatedBiasStandardDeviationAverage() {
-<span class="fc bfc" id="L3639" title="All 2 branches covered.">        return mEstimatedCovariance != null ?</span>
-<span class="fc" id="L3640">                (getEstimatedBiasFxStandardDeviation() +</span>
-<span class="fc" id="L3641">                        getEstimatedBiasFyStandardDeviation() +</span>
-<span class="fc" id="L3642">                        getEstimatedBiasFzStandardDeviation()) / 3.0 : null;</span>
+<span class="fc bfc" id="L3640" title="All 2 branches covered.">        return mEstimatedCovariance != null ?</span>
+<span class="fc" id="L3641">                (getEstimatedBiasFxStandardDeviation() +</span>
+<span class="fc" id="L3642">                        getEstimatedBiasFyStandardDeviation() +</span>
+<span class="fc" id="L3643">                        getEstimatedBiasFzStandardDeviation()) / 3.0 : null;</span>
     }
 
     /**
@@ -3648,9 +3649,9 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibrator implements
      * @return average of estimated standard deviation of accelerometer bias coordinates or null.
      */
     public Acceleration getEstimatedBiasStandardDeviationAverageAsAcceleration() {
-<span class="fc bfc" id="L3651" title="All 2 branches covered.">        return mEstimatedCovariance != null ?</span>
-<span class="fc" id="L3652">                new Acceleration(getEstimatedBiasStandardDeviationAverage(),</span>
-<span class="fc" id="L3653">                        AccelerationUnit.METERS_PER_SQUARED_SECOND) : null;</span>
+<span class="fc bfc" id="L3652" title="All 2 branches covered.">        return mEstimatedCovariance != null ?</span>
+<span class="fc" id="L3653">                new Acceleration(getEstimatedBiasStandardDeviationAverage(),</span>
+<span class="fc" id="L3654">                        AccelerationUnit.METERS_PER_SQUARED_SECOND) : null;</span>
     }
 
     /**
@@ -3661,12 +3662,12 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibrator implements
      * false otherwise.
      */
     public boolean getEstimatedBiasStandardDeviationAverageAsAcceleration(final Acceleration result) {
-<span class="fc bfc" id="L3664" title="All 2 branches covered.">        if (mEstimatedCovariance != null) {</span>
-<span class="fc" id="L3665">            result.setValue(getEstimatedBiasStandardDeviationAverage());</span>
-<span class="fc" id="L3666">            result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);</span>
-<span class="fc" id="L3667">            return true;</span>
+<span class="fc bfc" id="L3665" title="All 2 branches covered.">        if (mEstimatedCovariance != null) {</span>
+<span class="fc" id="L3666">            result.setValue(getEstimatedBiasStandardDeviationAverage());</span>
+<span class="fc" id="L3667">            result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);</span>
+<span class="fc" id="L3668">            return true;</span>
         } else {
-<span class="fc" id="L3669">            return false;</span>
+<span class="fc" id="L3670">            return false;</span>
         }
     }
 
@@ -3681,9 +3682,9 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibrator implements
      */
     @Override
     public Double getEstimatedBiasStandardDeviationNorm() {
-<span class="fc bfc" id="L3684" title="All 2 branches covered.">        return mEstimatedCovariance != null ?</span>
-<span class="fc" id="L3685">                Math.sqrt(getEstimatedBiasFxVariance() + getEstimatedBiasFyVariance() + getEstimatedBiasFzVariance()) :</span>
-<span class="fc" id="L3686">                null;</span>
+<span class="fc bfc" id="L3685" title="All 2 branches covered.">        return mEstimatedCovariance != null ?</span>
+<span class="fc" id="L3686">                Math.sqrt(getEstimatedBiasFxVariance() + getEstimatedBiasFyVariance() + getEstimatedBiasFzVariance()) :</span>
+<span class="fc" id="L3687">                null;</span>
     }
 
     /**
@@ -3695,9 +3696,9 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibrator implements
      * if not available.
      */
     public Acceleration getEstimatedBiasStandardDeviationNormAsAcceleration() {
-<span class="fc bfc" id="L3698" title="All 2 branches covered.">        return mEstimatedCovariance != null ?</span>
-<span class="fc" id="L3699">                new Acceleration(getEstimatedBiasStandardDeviationNorm(),</span>
-<span class="fc" id="L3700">                        AccelerationUnit.METERS_PER_SQUARED_SECOND) : null;</span>
+<span class="fc bfc" id="L3699" title="All 2 branches covered.">        return mEstimatedCovariance != null ?</span>
+<span class="fc" id="L3700">                new Acceleration(getEstimatedBiasStandardDeviationNorm(),</span>
+<span class="fc" id="L3701">                        AccelerationUnit.METERS_PER_SQUARED_SECOND) : null;</span>
     }
 
     /**
@@ -3710,12 +3711,12 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibrator implements
      * available, false otherwise.
      */
     public boolean getEstimatedBiasStandardDeviationNormAsAcceleration(final Acceleration result) {
-<span class="fc bfc" id="L3713" title="All 2 branches covered.">        if (mEstimatedCovariance != null) {</span>
-<span class="fc" id="L3714">            result.setValue(getEstimatedBiasStandardDeviationNorm());</span>
-<span class="fc" id="L3715">            result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);</span>
-<span class="fc" id="L3716">            return true;</span>
+<span class="fc bfc" id="L3714" title="All 2 branches covered.">        if (mEstimatedCovariance != null) {</span>
+<span class="fc" id="L3715">            result.setValue(getEstimatedBiasStandardDeviationNorm());</span>
+<span class="fc" id="L3716">            result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);</span>
+<span class="fc" id="L3717">            return true;</span>
         } else {
-<span class="fc" id="L3718">            return false;</span>
+<span class="fc" id="L3719">            return false;</span>
         }
     }
 
@@ -3775,36 +3776,36 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibrator implements
         //                                                             [mxz]
         //                                                             [myz]
 
-<span class="fc" id="L3778">        mFitter.setFunctionEvaluator(new LevenbergMarquardtMultiVariateFunctionEvaluator() {</span>
+<span class="fc" id="L3779">        mFitter.setFunctionEvaluator(new LevenbergMarquardtMultiVariateFunctionEvaluator() {</span>
             @Override
             public int getNumberOfDimensions() {
                 // Input points are true specific force coordinates
-<span class="fc" id="L3782">                return BodyKinematics.COMPONENTS;</span>
+<span class="fc" id="L3783">                return BodyKinematics.COMPONENTS;</span>
             }
 
             @Override
             public int getNumberOfVariables() {
                 // The multivariate function returns the components of measured specific force
-<span class="fc" id="L3788">                return BodyKinematics.COMPONENTS;</span>
+<span class="fc" id="L3789">                return BodyKinematics.COMPONENTS;</span>
             }
 
             @Override
             public double[] createInitialParametersArray() {
-<span class="fc" id="L3793">                final double[] initial = new double[COMMON_Z_AXIS_UNKNOWNS];</span>
+<span class="fc" id="L3794">                final double[] initial = new double[COMMON_Z_AXIS_UNKNOWNS];</span>
 
-<span class="fc" id="L3795">                initial[0] = mInitialBiasX;</span>
-<span class="fc" id="L3796">                initial[1] = mInitialBiasY;</span>
-<span class="fc" id="L3797">                initial[2] = mInitialBiasZ;</span>
+<span class="fc" id="L3796">                initial[0] = mInitialBiasX;</span>
+<span class="fc" id="L3797">                initial[1] = mInitialBiasY;</span>
+<span class="fc" id="L3798">                initial[2] = mInitialBiasZ;</span>
 
-<span class="fc" id="L3799">                initial[3] = mInitialSx;</span>
-<span class="fc" id="L3800">                initial[4] = mInitialSy;</span>
-<span class="fc" id="L3801">                initial[5] = mInitialSz;</span>
+<span class="fc" id="L3800">                initial[3] = mInitialSx;</span>
+<span class="fc" id="L3801">                initial[4] = mInitialSy;</span>
+<span class="fc" id="L3802">                initial[5] = mInitialSz;</span>
 
-<span class="fc" id="L3803">                initial[6] = mInitialMxy;</span>
-<span class="fc" id="L3804">                initial[7] = mInitialMxz;</span>
-<span class="fc" id="L3805">                initial[8] = mInitialMyz;</span>
+<span class="fc" id="L3804">                initial[6] = mInitialMxy;</span>
+<span class="fc" id="L3805">                initial[7] = mInitialMxz;</span>
+<span class="fc" id="L3806">                initial[8] = mInitialMyz;</span>
 
-<span class="fc" id="L3807">                return initial;</span>
+<span class="fc" id="L3808">                return initial;</span>
             }
 
             @Override
@@ -3849,101 +3850,101 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibrator implements
                 // d(fmeasz)/d(mxz) = 0.0
                 // d(fmeasz)/d(myz) = 0.0
 
-<span class="fc" id="L3852">                final double bx = params[0];</span>
-<span class="fc" id="L3853">                final double by = params[1];</span>
-<span class="fc" id="L3854">                final double bz = params[2];</span>
+<span class="fc" id="L3853">                final double bx = params[0];</span>
+<span class="fc" id="L3854">                final double by = params[1];</span>
+<span class="fc" id="L3855">                final double bz = params[2];</span>
 
-<span class="fc" id="L3856">                final double sx = params[3];</span>
-<span class="fc" id="L3857">                final double sy = params[4];</span>
-<span class="fc" id="L3858">                final double sz = params[5];</span>
+<span class="fc" id="L3857">                final double sx = params[3];</span>
+<span class="fc" id="L3858">                final double sy = params[4];</span>
+<span class="fc" id="L3859">                final double sz = params[5];</span>
 
-<span class="fc" id="L3860">                final double mxy = params[6];</span>
-<span class="fc" id="L3861">                final double mxz = params[7];</span>
-<span class="fc" id="L3862">                final double myz = params[8];</span>
+<span class="fc" id="L3861">                final double mxy = params[6];</span>
+<span class="fc" id="L3862">                final double mxz = params[7];</span>
+<span class="fc" id="L3863">                final double myz = params[8];</span>
 
-<span class="fc" id="L3864">                final double ftruex = point[0];</span>
-<span class="fc" id="L3865">                final double ftruey = point[1];</span>
-<span class="fc" id="L3866">                final double ftruez = point[2];</span>
+<span class="fc" id="L3865">                final double ftruex = point[0];</span>
+<span class="fc" id="L3866">                final double ftruey = point[1];</span>
+<span class="fc" id="L3867">                final double ftruez = point[2];</span>
 
-<span class="fc" id="L3868">                result[0] = bx + ftruex + sx * ftruex + mxy * ftruey + mxz * ftruez;</span>
-<span class="fc" id="L3869">                result[1] = by + ftruey + sy * ftruey + myz * ftruez;</span>
-<span class="fc" id="L3870">                result[2] = bz + ftruez + sz * ftruez;</span>
+<span class="fc" id="L3869">                result[0] = bx + ftruex + sx * ftruex + mxy * ftruey + mxz * ftruez;</span>
+<span class="fc" id="L3870">                result[1] = by + ftruey + sy * ftruey + myz * ftruez;</span>
+<span class="fc" id="L3871">                result[2] = bz + ftruez + sz * ftruez;</span>
 
-<span class="fc" id="L3872">                jacobian.setElementAt(0, 0, 1.0);</span>
-<span class="fc" id="L3873">                jacobian.setElementAt(0, 1, 0.0);</span>
-<span class="fc" id="L3874">                jacobian.setElementAt(0, 2, 0.0);</span>
-<span class="fc" id="L3875">                jacobian.setElementAt(0, 3, ftruex);</span>
-<span class="fc" id="L3876">                jacobian.setElementAt(0, 4, 0.0);</span>
-<span class="fc" id="L3877">                jacobian.setElementAt(0, 5, 0.0);</span>
-<span class="fc" id="L3878">                jacobian.setElementAt(0, 6, ftruey);</span>
-<span class="fc" id="L3879">                jacobian.setElementAt(0, 7, ftruez);</span>
-<span class="fc" id="L3880">                jacobian.setElementAt(0, 8, 0.0);</span>
+<span class="fc" id="L3873">                jacobian.setElementAt(0, 0, 1.0);</span>
+<span class="fc" id="L3874">                jacobian.setElementAt(0, 1, 0.0);</span>
+<span class="fc" id="L3875">                jacobian.setElementAt(0, 2, 0.0);</span>
+<span class="fc" id="L3876">                jacobian.setElementAt(0, 3, ftruex);</span>
+<span class="fc" id="L3877">                jacobian.setElementAt(0, 4, 0.0);</span>
+<span class="fc" id="L3878">                jacobian.setElementAt(0, 5, 0.0);</span>
+<span class="fc" id="L3879">                jacobian.setElementAt(0, 6, ftruey);</span>
+<span class="fc" id="L3880">                jacobian.setElementAt(0, 7, ftruez);</span>
+<span class="fc" id="L3881">                jacobian.setElementAt(0, 8, 0.0);</span>
 
-<span class="fc" id="L3882">                jacobian.setElementAt(1, 0, 0.0);</span>
-<span class="fc" id="L3883">                jacobian.setElementAt(1, 1, 1.0);</span>
-<span class="fc" id="L3884">                jacobian.setElementAt(1, 2, 0.0);</span>
-<span class="fc" id="L3885">                jacobian.setElementAt(1, 3, 0.0);</span>
-<span class="fc" id="L3886">                jacobian.setElementAt(1, 4, ftruey);</span>
-<span class="fc" id="L3887">                jacobian.setElementAt(1, 5, 0.0);</span>
-<span class="fc" id="L3888">                jacobian.setElementAt(1, 6, 0.0);</span>
-<span class="fc" id="L3889">                jacobian.setElementAt(1, 7, 0.0);</span>
-<span class="fc" id="L3890">                jacobian.setElementAt(1, 8, ftruez);</span>
+<span class="fc" id="L3883">                jacobian.setElementAt(1, 0, 0.0);</span>
+<span class="fc" id="L3884">                jacobian.setElementAt(1, 1, 1.0);</span>
+<span class="fc" id="L3885">                jacobian.setElementAt(1, 2, 0.0);</span>
+<span class="fc" id="L3886">                jacobian.setElementAt(1, 3, 0.0);</span>
+<span class="fc" id="L3887">                jacobian.setElementAt(1, 4, ftruey);</span>
+<span class="fc" id="L3888">                jacobian.setElementAt(1, 5, 0.0);</span>
+<span class="fc" id="L3889">                jacobian.setElementAt(1, 6, 0.0);</span>
+<span class="fc" id="L3890">                jacobian.setElementAt(1, 7, 0.0);</span>
+<span class="fc" id="L3891">                jacobian.setElementAt(1, 8, ftruez);</span>
 
-<span class="fc" id="L3892">                jacobian.setElementAt(2, 0, 0.0);</span>
-<span class="fc" id="L3893">                jacobian.setElementAt(2, 1, 0.0);</span>
-<span class="fc" id="L3894">                jacobian.setElementAt(2, 2, 1.0);</span>
-<span class="fc" id="L3895">                jacobian.setElementAt(2, 3, 0.0);</span>
-<span class="fc" id="L3896">                jacobian.setElementAt(2, 4, 0.0);</span>
-<span class="fc" id="L3897">                jacobian.setElementAt(2, 5, ftruez);</span>
-<span class="fc" id="L3898">                jacobian.setElementAt(2, 6, 0.0);</span>
-<span class="fc" id="L3899">                jacobian.setElementAt(2, 7, 0.0);</span>
-<span class="fc" id="L3900">                jacobian.setElementAt(2, 8, 0.0);</span>
-<span class="fc" id="L3901">            }</span>
+<span class="fc" id="L3893">                jacobian.setElementAt(2, 0, 0.0);</span>
+<span class="fc" id="L3894">                jacobian.setElementAt(2, 1, 0.0);</span>
+<span class="fc" id="L3895">                jacobian.setElementAt(2, 2, 1.0);</span>
+<span class="fc" id="L3896">                jacobian.setElementAt(2, 3, 0.0);</span>
+<span class="fc" id="L3897">                jacobian.setElementAt(2, 4, 0.0);</span>
+<span class="fc" id="L3898">                jacobian.setElementAt(2, 5, ftruez);</span>
+<span class="fc" id="L3899">                jacobian.setElementAt(2, 6, 0.0);</span>
+<span class="fc" id="L3900">                jacobian.setElementAt(2, 7, 0.0);</span>
+<span class="fc" id="L3901">                jacobian.setElementAt(2, 8, 0.0);</span>
+<span class="fc" id="L3902">            }</span>
         });
 
-<span class="fc" id="L3904">        setInputData();</span>
+<span class="fc" id="L3905">        setInputData();</span>
 
-<span class="fc" id="L3906">        mFitter.fit();</span>
+<span class="fc" id="L3907">        mFitter.fit();</span>
 
-<span class="fc" id="L3908">        final double[] result = mFitter.getA();</span>
+<span class="fc" id="L3909">        final double[] result = mFitter.getA();</span>
 
-<span class="fc" id="L3910">        final double bx = result[0];</span>
-<span class="fc" id="L3911">        final double by = result[1];</span>
-<span class="fc" id="L3912">        final double bz = result[2];</span>
+<span class="fc" id="L3911">        final double bx = result[0];</span>
+<span class="fc" id="L3912">        final double by = result[1];</span>
+<span class="fc" id="L3913">        final double bz = result[2];</span>
 
-<span class="fc" id="L3914">        final double sx = result[3];</span>
-<span class="fc" id="L3915">        final double sy = result[4];</span>
-<span class="fc" id="L3916">        final double sz = result[5];</span>
+<span class="fc" id="L3915">        final double sx = result[3];</span>
+<span class="fc" id="L3916">        final double sy = result[4];</span>
+<span class="fc" id="L3917">        final double sz = result[5];</span>
 
-<span class="fc" id="L3918">        final double mxy = result[6];</span>
-<span class="fc" id="L3919">        final double mxz = result[7];</span>
-<span class="fc" id="L3920">        final double myz = result[8];</span>
+<span class="fc" id="L3919">        final double mxy = result[6];</span>
+<span class="fc" id="L3920">        final double mxz = result[7];</span>
+<span class="fc" id="L3921">        final double myz = result[8];</span>
 
-<span class="pc bpc" id="L3922" title="1 of 2 branches missed.">        if (mEstimatedBiases == null) {</span>
-<span class="fc" id="L3923">            mEstimatedBiases = new double[BodyKinematics.COMPONENTS];</span>
+<span class="pc bpc" id="L3923" title="1 of 2 branches missed.">        if (mEstimatedBiases == null) {</span>
+<span class="fc" id="L3924">            mEstimatedBiases = new double[BodyKinematics.COMPONENTS];</span>
         }
 
-<span class="fc" id="L3926">        mEstimatedBiases[0] = bx;</span>
-<span class="fc" id="L3927">        mEstimatedBiases[1] = by;</span>
-<span class="fc" id="L3928">        mEstimatedBiases[2] = bz;</span>
+<span class="fc" id="L3927">        mEstimatedBiases[0] = bx;</span>
+<span class="fc" id="L3928">        mEstimatedBiases[1] = by;</span>
+<span class="fc" id="L3929">        mEstimatedBiases[2] = bz;</span>
 
-<span class="pc bpc" id="L3930" title="1 of 2 branches missed.">        if (mEstimatedMa == null) {</span>
-<span class="fc" id="L3931">            mEstimatedMa = new Matrix(BodyKinematics.COMPONENTS,</span>
+<span class="pc bpc" id="L3931" title="1 of 2 branches missed.">        if (mEstimatedMa == null) {</span>
+<span class="fc" id="L3932">            mEstimatedMa = new Matrix(BodyKinematics.COMPONENTS,</span>
                     BodyKinematics.COMPONENTS);
         } else {
-<span class="nc" id="L3934">            mEstimatedMa.initialize(0.0);</span>
+<span class="nc" id="L3935">            mEstimatedMa.initialize(0.0);</span>
         }
 
-<span class="fc" id="L3937">        mEstimatedMa.setElementAt(0, 0, sx);</span>
+<span class="fc" id="L3938">        mEstimatedMa.setElementAt(0, 0, sx);</span>
 
-<span class="fc" id="L3939">        mEstimatedMa.setElementAt(0, 1, mxy);</span>
-<span class="fc" id="L3940">        mEstimatedMa.setElementAt(1, 1, sy);</span>
+<span class="fc" id="L3940">        mEstimatedMa.setElementAt(0, 1, mxy);</span>
+<span class="fc" id="L3941">        mEstimatedMa.setElementAt(1, 1, sy);</span>
 
-<span class="fc" id="L3942">        mEstimatedMa.setElementAt(0, 2, mxz);</span>
-<span class="fc" id="L3943">        mEstimatedMa.setElementAt(1, 2, myz);</span>
-<span class="fc" id="L3944">        mEstimatedMa.setElementAt(2, 2, sz);</span>
+<span class="fc" id="L3943">        mEstimatedMa.setElementAt(0, 2, mxz);</span>
+<span class="fc" id="L3944">        mEstimatedMa.setElementAt(1, 2, myz);</span>
+<span class="fc" id="L3945">        mEstimatedMa.setElementAt(2, 2, sz);</span>
 
-<span class="fc" id="L3946">        mEstimatedCovariance = mFitter.getCovar();</span>
+<span class="fc" id="L3947">        mEstimatedCovariance = mFitter.getCovar();</span>
 
         // propagate covariance matrix so that all parameters are taken into
         // account in the order: bx, by, bz, sx, sy, sz, mxy, mxz, myx,
@@ -3967,17 +3968,17 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibrator implements
         // As defined in com.irurueta.statistics.MultivariateNormalDist,
         // if we consider the jacobian of the lineal application the matrix shown
         // above, then covariance can be propagated as follows
-<span class="fc" id="L3970">        final Matrix jacobian = Matrix.identity(GENERAL_UNKNOWNS, COMMON_Z_AXIS_UNKNOWNS);</span>
-<span class="fc" id="L3971">        jacobian.setElementAt(8, 8, 0.0);</span>
-<span class="fc" id="L3972">        jacobian.setElementAt(9, 8, 1.0);</span>
+<span class="fc" id="L3971">        final Matrix jacobian = Matrix.identity(GENERAL_UNKNOWNS, COMMON_Z_AXIS_UNKNOWNS);</span>
+<span class="fc" id="L3972">        jacobian.setElementAt(8, 8, 0.0);</span>
+<span class="fc" id="L3973">        jacobian.setElementAt(9, 8, 1.0);</span>
         // propagated covariance is J * Cov * J'
-<span class="fc" id="L3974">        final Matrix jacobianTrans = jacobian.transposeAndReturnNew();</span>
-<span class="fc" id="L3975">        jacobian.multiply(mEstimatedCovariance);</span>
-<span class="fc" id="L3976">        jacobian.multiply(jacobianTrans);</span>
-<span class="fc" id="L3977">        mEstimatedCovariance = jacobian;</span>
-<span class="fc" id="L3978">        mEstimatedChiSq = mFitter.getChisq();</span>
-<span class="fc" id="L3979">        mEstimatedMse = mFitter.getMse();</span>
-<span class="fc" id="L3980">    }</span>
+<span class="fc" id="L3975">        final Matrix jacobianTrans = jacobian.transposeAndReturnNew();</span>
+<span class="fc" id="L3976">        jacobian.multiply(mEstimatedCovariance);</span>
+<span class="fc" id="L3977">        jacobian.multiply(jacobianTrans);</span>
+<span class="fc" id="L3978">        mEstimatedCovariance = jacobian;</span>
+<span class="fc" id="L3979">        mEstimatedChiSq = mFitter.getChisq();</span>
+<span class="fc" id="L3980">        mEstimatedMse = mFitter.getMse();</span>
+<span class="fc" id="L3981">    }</span>
 
     /**
      * Internal method to perform general calibration.
@@ -4030,39 +4031,39 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibrator implements
         //                                                                                     [mzx]
         //                                                                                     [mzy]
 
-<span class="fc" id="L4033">        mFitter.setFunctionEvaluator(new LevenbergMarquardtMultiVariateFunctionEvaluator() {</span>
+<span class="fc" id="L4034">        mFitter.setFunctionEvaluator(new LevenbergMarquardtMultiVariateFunctionEvaluator() {</span>
             @Override
             public int getNumberOfDimensions() {
                 // Input points are true specific force coordinates
-<span class="fc" id="L4037">                return BodyKinematics.COMPONENTS;</span>
+<span class="fc" id="L4038">                return BodyKinematics.COMPONENTS;</span>
             }
 
             @Override
             public int getNumberOfVariables() {
                 // The multivariate function returns the components of measured specific force
-<span class="fc" id="L4043">                return BodyKinematics.COMPONENTS;</span>
+<span class="fc" id="L4044">                return BodyKinematics.COMPONENTS;</span>
             }
 
             @Override
             public double[] createInitialParametersArray() {
-<span class="fc" id="L4048">                final double[] initial = new double[GENERAL_UNKNOWNS];</span>
+<span class="fc" id="L4049">                final double[] initial = new double[GENERAL_UNKNOWNS];</span>
 
-<span class="fc" id="L4050">                initial[0] = mInitialBiasX;</span>
-<span class="fc" id="L4051">                initial[1] = mInitialBiasY;</span>
-<span class="fc" id="L4052">                initial[2] = mInitialBiasZ;</span>
+<span class="fc" id="L4051">                initial[0] = mInitialBiasX;</span>
+<span class="fc" id="L4052">                initial[1] = mInitialBiasY;</span>
+<span class="fc" id="L4053">                initial[2] = mInitialBiasZ;</span>
 
-<span class="fc" id="L4054">                initial[3] = mInitialSx;</span>
-<span class="fc" id="L4055">                initial[4] = mInitialSy;</span>
-<span class="fc" id="L4056">                initial[5] = mInitialSz;</span>
+<span class="fc" id="L4055">                initial[3] = mInitialSx;</span>
+<span class="fc" id="L4056">                initial[4] = mInitialSy;</span>
+<span class="fc" id="L4057">                initial[5] = mInitialSz;</span>
 
-<span class="fc" id="L4058">                initial[6] = mInitialMxy;</span>
-<span class="fc" id="L4059">                initial[7] = mInitialMxz;</span>
-<span class="fc" id="L4060">                initial[8] = mInitialMyx;</span>
-<span class="fc" id="L4061">                initial[9] = mInitialMyz;</span>
-<span class="fc" id="L4062">                initial[10] = mInitialMzx;</span>
-<span class="fc" id="L4063">                initial[11] = mInitialMzy;</span>
+<span class="fc" id="L4059">                initial[6] = mInitialMxy;</span>
+<span class="fc" id="L4060">                initial[7] = mInitialMxz;</span>
+<span class="fc" id="L4061">                initial[8] = mInitialMyx;</span>
+<span class="fc" id="L4062">                initial[9] = mInitialMyz;</span>
+<span class="fc" id="L4063">                initial[10] = mInitialMzx;</span>
+<span class="fc" id="L4064">                initial[11] = mInitialMzy;</span>
 
-<span class="fc" id="L4065">                return initial;</span>
+<span class="fc" id="L4066">                return initial;</span>
             }
 
             @Override
@@ -4116,122 +4117,122 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibrator implements
                 // d(fmeasz)/d(mzx) = ftruex
                 // d(fmeasz)/d(mzy) = ftruey
 
-<span class="fc" id="L4119">                final double bx = params[0];</span>
-<span class="fc" id="L4120">                final double by = params[1];</span>
-<span class="fc" id="L4121">                final double bz = params[2];</span>
+<span class="fc" id="L4120">                final double bx = params[0];</span>
+<span class="fc" id="L4121">                final double by = params[1];</span>
+<span class="fc" id="L4122">                final double bz = params[2];</span>
 
-<span class="fc" id="L4123">                final double sx = params[3];</span>
-<span class="fc" id="L4124">                final double sy = params[4];</span>
-<span class="fc" id="L4125">                final double sz = params[5];</span>
+<span class="fc" id="L4124">                final double sx = params[3];</span>
+<span class="fc" id="L4125">                final double sy = params[4];</span>
+<span class="fc" id="L4126">                final double sz = params[5];</span>
 
-<span class="fc" id="L4127">                final double mxy = params[6];</span>
-<span class="fc" id="L4128">                final double mxz = params[7];</span>
-<span class="fc" id="L4129">                final double myx = params[8];</span>
-<span class="fc" id="L4130">                final double myz = params[9];</span>
-<span class="fc" id="L4131">                final double mzx = params[10];</span>
-<span class="fc" id="L4132">                final double mzy = params[11];</span>
+<span class="fc" id="L4128">                final double mxy = params[6];</span>
+<span class="fc" id="L4129">                final double mxz = params[7];</span>
+<span class="fc" id="L4130">                final double myx = params[8];</span>
+<span class="fc" id="L4131">                final double myz = params[9];</span>
+<span class="fc" id="L4132">                final double mzx = params[10];</span>
+<span class="fc" id="L4133">                final double mzy = params[11];</span>
 
-<span class="fc" id="L4134">                final double ftruex = point[0];</span>
-<span class="fc" id="L4135">                final double ftruey = point[1];</span>
-<span class="fc" id="L4136">                final double ftruez = point[2];</span>
+<span class="fc" id="L4135">                final double ftruex = point[0];</span>
+<span class="fc" id="L4136">                final double ftruey = point[1];</span>
+<span class="fc" id="L4137">                final double ftruez = point[2];</span>
 
-<span class="fc" id="L4138">                result[0] = bx + ftruex + sx * ftruex + mxy * ftruey + mxz * ftruez;</span>
-<span class="fc" id="L4139">                result[1] = by + myx * ftruex + ftruey + sy * ftruey + myz * ftruez;</span>
-<span class="fc" id="L4140">                result[2] = bz + mzx * ftruex + mzy * ftruey + ftruez + sz * ftruez;</span>
+<span class="fc" id="L4139">                result[0] = bx + ftruex + sx * ftruex + mxy * ftruey + mxz * ftruez;</span>
+<span class="fc" id="L4140">                result[1] = by + myx * ftruex + ftruey + sy * ftruey + myz * ftruez;</span>
+<span class="fc" id="L4141">                result[2] = bz + mzx * ftruex + mzy * ftruey + ftruez + sz * ftruez;</span>
 
-<span class="fc" id="L4142">                jacobian.setElementAt(0, 0, 1.0);</span>
-<span class="fc" id="L4143">                jacobian.setElementAt(0, 1, 0.0);</span>
-<span class="fc" id="L4144">                jacobian.setElementAt(0, 2, 0.0);</span>
-<span class="fc" id="L4145">                jacobian.setElementAt(0, 3, ftruex);</span>
-<span class="fc" id="L4146">                jacobian.setElementAt(0, 4, 0.0);</span>
-<span class="fc" id="L4147">                jacobian.setElementAt(0, 5, 0.0);</span>
-<span class="fc" id="L4148">                jacobian.setElementAt(0, 6, ftruey);</span>
-<span class="fc" id="L4149">                jacobian.setElementAt(0, 7, ftruez);</span>
-<span class="fc" id="L4150">                jacobian.setElementAt(0, 8, 0.0);</span>
-<span class="fc" id="L4151">                jacobian.setElementAt(0, 9, 0.0);</span>
-<span class="fc" id="L4152">                jacobian.setElementAt(0, 10, 0.0);</span>
-<span class="fc" id="L4153">                jacobian.setElementAt(0, 11, 0.0);</span>
+<span class="fc" id="L4143">                jacobian.setElementAt(0, 0, 1.0);</span>
+<span class="fc" id="L4144">                jacobian.setElementAt(0, 1, 0.0);</span>
+<span class="fc" id="L4145">                jacobian.setElementAt(0, 2, 0.0);</span>
+<span class="fc" id="L4146">                jacobian.setElementAt(0, 3, ftruex);</span>
+<span class="fc" id="L4147">                jacobian.setElementAt(0, 4, 0.0);</span>
+<span class="fc" id="L4148">                jacobian.setElementAt(0, 5, 0.0);</span>
+<span class="fc" id="L4149">                jacobian.setElementAt(0, 6, ftruey);</span>
+<span class="fc" id="L4150">                jacobian.setElementAt(0, 7, ftruez);</span>
+<span class="fc" id="L4151">                jacobian.setElementAt(0, 8, 0.0);</span>
+<span class="fc" id="L4152">                jacobian.setElementAt(0, 9, 0.0);</span>
+<span class="fc" id="L4153">                jacobian.setElementAt(0, 10, 0.0);</span>
+<span class="fc" id="L4154">                jacobian.setElementAt(0, 11, 0.0);</span>
 
-<span class="fc" id="L4155">                jacobian.setElementAt(1, 0, 0.0);</span>
-<span class="fc" id="L4156">                jacobian.setElementAt(1, 1, 1.0);</span>
-<span class="fc" id="L4157">                jacobian.setElementAt(1, 2, 0.0);</span>
-<span class="fc" id="L4158">                jacobian.setElementAt(1, 3, 0.0);</span>
-<span class="fc" id="L4159">                jacobian.setElementAt(1, 4, ftruey);</span>
-<span class="fc" id="L4160">                jacobian.setElementAt(1, 5, 0.0);</span>
-<span class="fc" id="L4161">                jacobian.setElementAt(1, 6, 0.0);</span>
-<span class="fc" id="L4162">                jacobian.setElementAt(1, 7, 0.0);</span>
-<span class="fc" id="L4163">                jacobian.setElementAt(1, 8, ftruex);</span>
-<span class="fc" id="L4164">                jacobian.setElementAt(1, 9, ftruez);</span>
-<span class="fc" id="L4165">                jacobian.setElementAt(1, 10, 0.0);</span>
-<span class="fc" id="L4166">                jacobian.setElementAt(1, 11, 0.0);</span>
+<span class="fc" id="L4156">                jacobian.setElementAt(1, 0, 0.0);</span>
+<span class="fc" id="L4157">                jacobian.setElementAt(1, 1, 1.0);</span>
+<span class="fc" id="L4158">                jacobian.setElementAt(1, 2, 0.0);</span>
+<span class="fc" id="L4159">                jacobian.setElementAt(1, 3, 0.0);</span>
+<span class="fc" id="L4160">                jacobian.setElementAt(1, 4, ftruey);</span>
+<span class="fc" id="L4161">                jacobian.setElementAt(1, 5, 0.0);</span>
+<span class="fc" id="L4162">                jacobian.setElementAt(1, 6, 0.0);</span>
+<span class="fc" id="L4163">                jacobian.setElementAt(1, 7, 0.0);</span>
+<span class="fc" id="L4164">                jacobian.setElementAt(1, 8, ftruex);</span>
+<span class="fc" id="L4165">                jacobian.setElementAt(1, 9, ftruez);</span>
+<span class="fc" id="L4166">                jacobian.setElementAt(1, 10, 0.0);</span>
+<span class="fc" id="L4167">                jacobian.setElementAt(1, 11, 0.0);</span>
 
-<span class="fc" id="L4168">                jacobian.setElementAt(2, 0, 0.0);</span>
-<span class="fc" id="L4169">                jacobian.setElementAt(2, 1, 0.0);</span>
-<span class="fc" id="L4170">                jacobian.setElementAt(2, 2, 1.0);</span>
-<span class="fc" id="L4171">                jacobian.setElementAt(2, 3, 0.0);</span>
-<span class="fc" id="L4172">                jacobian.setElementAt(2, 4, 0.0);</span>
-<span class="fc" id="L4173">                jacobian.setElementAt(2, 5, ftruez);</span>
-<span class="fc" id="L4174">                jacobian.setElementAt(2, 6, 0.0);</span>
-<span class="fc" id="L4175">                jacobian.setElementAt(2, 7, 0.0);</span>
-<span class="fc" id="L4176">                jacobian.setElementAt(2, 8, 0.0);</span>
-<span class="fc" id="L4177">                jacobian.setElementAt(2, 9, 0.0);</span>
-<span class="fc" id="L4178">                jacobian.setElementAt(2, 10, ftruex);</span>
-<span class="fc" id="L4179">                jacobian.setElementAt(2, 11, ftruey);</span>
-<span class="fc" id="L4180">            }</span>
+<span class="fc" id="L4169">                jacobian.setElementAt(2, 0, 0.0);</span>
+<span class="fc" id="L4170">                jacobian.setElementAt(2, 1, 0.0);</span>
+<span class="fc" id="L4171">                jacobian.setElementAt(2, 2, 1.0);</span>
+<span class="fc" id="L4172">                jacobian.setElementAt(2, 3, 0.0);</span>
+<span class="fc" id="L4173">                jacobian.setElementAt(2, 4, 0.0);</span>
+<span class="fc" id="L4174">                jacobian.setElementAt(2, 5, ftruez);</span>
+<span class="fc" id="L4175">                jacobian.setElementAt(2, 6, 0.0);</span>
+<span class="fc" id="L4176">                jacobian.setElementAt(2, 7, 0.0);</span>
+<span class="fc" id="L4177">                jacobian.setElementAt(2, 8, 0.0);</span>
+<span class="fc" id="L4178">                jacobian.setElementAt(2, 9, 0.0);</span>
+<span class="fc" id="L4179">                jacobian.setElementAt(2, 10, ftruex);</span>
+<span class="fc" id="L4180">                jacobian.setElementAt(2, 11, ftruey);</span>
+<span class="fc" id="L4181">            }</span>
         });
 
-<span class="fc" id="L4183">        setInputData();</span>
+<span class="fc" id="L4184">        setInputData();</span>
 
-<span class="fc" id="L4185">        mFitter.fit();</span>
+<span class="fc" id="L4186">        mFitter.fit();</span>
 
-<span class="fc" id="L4187">        final double[] result = mFitter.getA();</span>
+<span class="fc" id="L4188">        final double[] result = mFitter.getA();</span>
 
-<span class="fc" id="L4189">        final double bx = result[0];</span>
-<span class="fc" id="L4190">        final double by = result[1];</span>
-<span class="fc" id="L4191">        final double bz = result[2];</span>
+<span class="fc" id="L4190">        final double bx = result[0];</span>
+<span class="fc" id="L4191">        final double by = result[1];</span>
+<span class="fc" id="L4192">        final double bz = result[2];</span>
 
-<span class="fc" id="L4193">        final double sx = result[3];</span>
-<span class="fc" id="L4194">        final double sy = result[4];</span>
-<span class="fc" id="L4195">        final double sz = result[5];</span>
+<span class="fc" id="L4194">        final double sx = result[3];</span>
+<span class="fc" id="L4195">        final double sy = result[4];</span>
+<span class="fc" id="L4196">        final double sz = result[5];</span>
 
-<span class="fc" id="L4197">        final double mxy = result[6];</span>
-<span class="fc" id="L4198">        final double mxz = result[7];</span>
-<span class="fc" id="L4199">        final double myx = result[8];</span>
-<span class="fc" id="L4200">        final double myz = result[9];</span>
-<span class="fc" id="L4201">        final double mzx = result[10];</span>
-<span class="fc" id="L4202">        final double mzy = result[11];</span>
+<span class="fc" id="L4198">        final double mxy = result[6];</span>
+<span class="fc" id="L4199">        final double mxz = result[7];</span>
+<span class="fc" id="L4200">        final double myx = result[8];</span>
+<span class="fc" id="L4201">        final double myz = result[9];</span>
+<span class="fc" id="L4202">        final double mzx = result[10];</span>
+<span class="fc" id="L4203">        final double mzy = result[11];</span>
 
-<span class="fc bfc" id="L4204" title="All 2 branches covered.">        if (mEstimatedBiases == null) {</span>
-<span class="fc" id="L4205">            mEstimatedBiases = new double[BodyKinematics.COMPONENTS];</span>
+<span class="fc bfc" id="L4205" title="All 2 branches covered.">        if (mEstimatedBiases == null) {</span>
+<span class="fc" id="L4206">            mEstimatedBiases = new double[BodyKinematics.COMPONENTS];</span>
         }
 
-<span class="fc" id="L4208">        mEstimatedBiases[0] = bx;</span>
-<span class="fc" id="L4209">        mEstimatedBiases[1] = by;</span>
-<span class="fc" id="L4210">        mEstimatedBiases[2] = bz;</span>
+<span class="fc" id="L4209">        mEstimatedBiases[0] = bx;</span>
+<span class="fc" id="L4210">        mEstimatedBiases[1] = by;</span>
+<span class="fc" id="L4211">        mEstimatedBiases[2] = bz;</span>
 
-<span class="fc bfc" id="L4212" title="All 2 branches covered.">        if (mEstimatedMa == null) {</span>
-<span class="fc" id="L4213">            mEstimatedMa = new Matrix(BodyKinematics.COMPONENTS,</span>
+<span class="fc bfc" id="L4213" title="All 2 branches covered.">        if (mEstimatedMa == null) {</span>
+<span class="fc" id="L4214">            mEstimatedMa = new Matrix(BodyKinematics.COMPONENTS,</span>
                     BodyKinematics.COMPONENTS);
         } else {
-<span class="fc" id="L4216">            mEstimatedMa.initialize(0.0);</span>
+<span class="fc" id="L4217">            mEstimatedMa.initialize(0.0);</span>
         }
 
-<span class="fc" id="L4219">        mEstimatedMa.setElementAt(0, 0, sx);</span>
-<span class="fc" id="L4220">        mEstimatedMa.setElementAt(1, 0, myx);</span>
-<span class="fc" id="L4221">        mEstimatedMa.setElementAt(2, 0, mzx);</span>
+<span class="fc" id="L4220">        mEstimatedMa.setElementAt(0, 0, sx);</span>
+<span class="fc" id="L4221">        mEstimatedMa.setElementAt(1, 0, myx);</span>
+<span class="fc" id="L4222">        mEstimatedMa.setElementAt(2, 0, mzx);</span>
 
-<span class="fc" id="L4223">        mEstimatedMa.setElementAt(0, 1, mxy);</span>
-<span class="fc" id="L4224">        mEstimatedMa.setElementAt(1, 1, sy);</span>
-<span class="fc" id="L4225">        mEstimatedMa.setElementAt(2, 1, mzy);</span>
+<span class="fc" id="L4224">        mEstimatedMa.setElementAt(0, 1, mxy);</span>
+<span class="fc" id="L4225">        mEstimatedMa.setElementAt(1, 1, sy);</span>
+<span class="fc" id="L4226">        mEstimatedMa.setElementAt(2, 1, mzy);</span>
 
-<span class="fc" id="L4227">        mEstimatedMa.setElementAt(0, 2, mxz);</span>
-<span class="fc" id="L4228">        mEstimatedMa.setElementAt(1, 2, myz);</span>
-<span class="fc" id="L4229">        mEstimatedMa.setElementAt(2, 2, sz);</span>
+<span class="fc" id="L4228">        mEstimatedMa.setElementAt(0, 2, mxz);</span>
+<span class="fc" id="L4229">        mEstimatedMa.setElementAt(1, 2, myz);</span>
+<span class="fc" id="L4230">        mEstimatedMa.setElementAt(2, 2, sz);</span>
 
-<span class="fc" id="L4231">        mEstimatedCovariance = mFitter.getCovar();</span>
-<span class="fc" id="L4232">        mEstimatedChiSq = mFitter.getChisq();</span>
-<span class="fc" id="L4233">        mEstimatedMse = mFitter.getMse();</span>
-<span class="fc" id="L4234">    }</span>
+<span class="fc" id="L4232">        mEstimatedCovariance = mFitter.getCovar();</span>
+<span class="fc" id="L4233">        mEstimatedChiSq = mFitter.getChisq();</span>
+<span class="fc" id="L4234">        mEstimatedMse = mFitter.getMse();</span>
+<span class="fc" id="L4235">    }</span>
 
     /**
      * Sets input data into Levenberg-Marquardt fitter.
@@ -4244,45 +4245,45 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibrator implements
         //  fmeasy = by + myx * ftruex + ftruey + sy * ftruey + myz * ftruez
         //  fmeasz = bz + mzx * ftruex + mzy * ftruey + ftruez + sz * ftruez
 
-<span class="fc" id="L4247">        final BodyKinematics expectedKinematics = new BodyKinematics();</span>
+<span class="fc" id="L4248">        final BodyKinematics expectedKinematics = new BodyKinematics();</span>
 
-<span class="fc" id="L4249">        final int numMeasurements = mMeasurements.size();</span>
-<span class="fc" id="L4250">        final Matrix x = new Matrix(numMeasurements, BodyKinematics.COMPONENTS);</span>
-<span class="fc" id="L4251">        final Matrix y = new Matrix(numMeasurements, BodyKinematics.COMPONENTS);</span>
-<span class="fc" id="L4252">        final double[] specificForceStandardDeviations = new double[numMeasurements];</span>
-<span class="fc" id="L4253">        int i = 0;</span>
-<span class="fc bfc" id="L4254" title="All 2 branches covered.">        for (final StandardDeviationFrameBodyKinematics measurement : mMeasurements) {</span>
-<span class="fc" id="L4255">            final BodyKinematics measuredKinematics = measurement.getKinematics();</span>
-<span class="fc" id="L4256">            final ECEFFrame ecefFrame = measurement.getFrame();</span>
-<span class="fc" id="L4257">            final ECEFFrame previousEcefFrame = measurement.getPreviousFrame();</span>
-<span class="fc" id="L4258">            final double timeInterval = measurement.getTimeInterval();</span>
+<span class="fc" id="L4250">        final int numMeasurements = mMeasurements.size();</span>
+<span class="fc" id="L4251">        final Matrix x = new Matrix(numMeasurements, BodyKinematics.COMPONENTS);</span>
+<span class="fc" id="L4252">        final Matrix y = new Matrix(numMeasurements, BodyKinematics.COMPONENTS);</span>
+<span class="fc" id="L4253">        final double[] specificForceStandardDeviations = new double[numMeasurements];</span>
+<span class="fc" id="L4254">        int i = 0;</span>
+<span class="fc bfc" id="L4255" title="All 2 branches covered.">        for (final StandardDeviationFrameBodyKinematics measurement : mMeasurements) {</span>
+<span class="fc" id="L4256">            final BodyKinematics measuredKinematics = measurement.getKinematics();</span>
+<span class="fc" id="L4257">            final ECEFFrame ecefFrame = measurement.getFrame();</span>
+<span class="fc" id="L4258">            final ECEFFrame previousEcefFrame = measurement.getPreviousFrame();</span>
+<span class="fc" id="L4259">            final double timeInterval = measurement.getTimeInterval();</span>
 
-<span class="fc" id="L4260">            ECEFKinematicsEstimator.estimateKinematics(timeInterval, ecefFrame,</span>
+<span class="fc" id="L4261">            ECEFKinematicsEstimator.estimateKinematics(timeInterval, ecefFrame,</span>
                     previousEcefFrame, expectedKinematics);
 
-<span class="fc" id="L4263">            final double fMeasX = measuredKinematics.getFx();</span>
-<span class="fc" id="L4264">            final double fMeasY = measuredKinematics.getFy();</span>
-<span class="fc" id="L4265">            final double fMeasZ = measuredKinematics.getFz();</span>
+<span class="fc" id="L4264">            final double fMeasX = measuredKinematics.getFx();</span>
+<span class="fc" id="L4265">            final double fMeasY = measuredKinematics.getFy();</span>
+<span class="fc" id="L4266">            final double fMeasZ = measuredKinematics.getFz();</span>
 
-<span class="fc" id="L4267">            final double fTrueX = expectedKinematics.getFx();</span>
-<span class="fc" id="L4268">            final double fTrueY = expectedKinematics.getFy();</span>
-<span class="fc" id="L4269">            final double fTrueZ = expectedKinematics.getFz();</span>
+<span class="fc" id="L4268">            final double fTrueX = expectedKinematics.getFx();</span>
+<span class="fc" id="L4269">            final double fTrueY = expectedKinematics.getFy();</span>
+<span class="fc" id="L4270">            final double fTrueZ = expectedKinematics.getFz();</span>
 
-<span class="fc" id="L4271">            x.setElementAt(i, 0, fTrueX);</span>
-<span class="fc" id="L4272">            x.setElementAt(i, 1, fTrueY);</span>
-<span class="fc" id="L4273">            x.setElementAt(i, 2, fTrueZ);</span>
+<span class="fc" id="L4272">            x.setElementAt(i, 0, fTrueX);</span>
+<span class="fc" id="L4273">            x.setElementAt(i, 1, fTrueY);</span>
+<span class="fc" id="L4274">            x.setElementAt(i, 2, fTrueZ);</span>
 
-<span class="fc" id="L4275">            y.setElementAt(i, 0, fMeasX);</span>
-<span class="fc" id="L4276">            y.setElementAt(i, 1, fMeasY);</span>
-<span class="fc" id="L4277">            y.setElementAt(i, 2, fMeasZ);</span>
+<span class="fc" id="L4276">            y.setElementAt(i, 0, fMeasX);</span>
+<span class="fc" id="L4277">            y.setElementAt(i, 1, fMeasY);</span>
+<span class="fc" id="L4278">            y.setElementAt(i, 2, fMeasZ);</span>
 
-<span class="fc" id="L4279">            specificForceStandardDeviations[i] =</span>
-<span class="fc" id="L4280">                    measurement.getSpecificForceStandardDeviation();</span>
-<span class="fc" id="L4281">            i++;</span>
-<span class="fc" id="L4282">        }</span>
+<span class="fc" id="L4280">            specificForceStandardDeviations[i] =</span>
+<span class="fc" id="L4281">                    measurement.getSpecificForceStandardDeviation();</span>
+<span class="fc" id="L4282">            i++;</span>
+<span class="fc" id="L4283">        }</span>
 
-<span class="fc" id="L4284">        mFitter.setInputData(x, y, specificForceStandardDeviations);</span>
-<span class="fc" id="L4285">    }</span>
+<span class="fc" id="L4285">        mFitter.setInputData(x, y, specificForceStandardDeviations);</span>
+<span class="fc" id="L4286">    }</span>
 
     /**
      * Converts acceleration value and unit to meters per squared second.
@@ -4292,7 +4293,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibrator implements
      * @return converted value.
      */
     private static double convertAcceleration(final double value, final AccelerationUnit unit) {
-<span class="fc" id="L4295">        return AccelerationConverter.convert(value, unit,</span>
+<span class="fc" id="L4296">        return AccelerationConverter.convert(value, unit,</span>
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
     }
 
@@ -4303,8 +4304,8 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibrator implements
      * @return converted value.
      */
     private static double convertAcceleration(final Acceleration acceleration) {
-<span class="fc" id="L4306">        return convertAcceleration(acceleration.getValue().doubleValue(),</span>
-<span class="fc" id="L4307">                acceleration.getUnit());</span>
+<span class="fc" id="L4307">        return convertAcceleration(acceleration.getValue().doubleValue(),</span>
+<span class="fc" id="L4308">                acceleration.getUnit());</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

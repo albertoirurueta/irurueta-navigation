@@ -29,7 +29,7 @@
 <a class="jxr_linenumber" name="L21" href="#L21">21</a>  <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L22" href="#L22">22</a>  <em class="jxr_javadoccomment"> * Interface for non-linear accelerometer calibrators.</em>
 <a class="jxr_linenumber" name="L23" href="#L23">23</a>  <em class="jxr_javadoccomment"> */</em>
-<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">interface</strong> <a href="../../../../../../com/irurueta/navigation/inertial/calibration/magnetometer/MagnetometerNonLinearCalibrator.html">MagnetometerNonLinearCalibrator</a> {
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">interface</strong> <a href="../../../../../../com/irurueta/navigation/inertial/calibration/magnetometer/MagnetometerNonLinearCalibrator.html">MagnetometerNonLinearCalibrator</a> <strong class="jxr_keyword">extends</strong> <a href="../../../../../../com/irurueta/navigation/inertial/calibration/magnetometer/MagnetometerCalibrator.html">MagnetometerCalibrator</a> {
 <a class="jxr_linenumber" name="L25" href="#L25">25</a>  
 <a class="jxr_linenumber" name="L26" href="#L26">26</a>      <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>  <em class="jxr_javadoccomment">     * Gets initial x scaling factor.</em>
@@ -251,7 +251,14 @@
 <a class="jxr_linenumber" name="L243" href="#L243">243</a> <em class="jxr_javadoccomment">     * @return estimated chi square value.</em>
 <a class="jxr_linenumber" name="L244" href="#L244">244</a> <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="L245" href="#L245">245</a>     <strong class="jxr_keyword">double</strong> getEstimatedChiSq();
-<a class="jxr_linenumber" name="L246" href="#L246">246</a> }
+<a class="jxr_linenumber" name="L246" href="#L246">246</a> 
+<a class="jxr_linenumber" name="L247" href="#L247">247</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L248" href="#L248">248</a> <em class="jxr_javadoccomment">     * Gets estimated mean square error respect to provided measurements.</em>
+<a class="jxr_linenumber" name="L249" href="#L249">249</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L250" href="#L250">250</a> <em class="jxr_javadoccomment">     * @return estimated mean square error respect to provided measurements.</em>
+<a class="jxr_linenumber" name="L251" href="#L251">251</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L252" href="#L252">252</a>     <strong class="jxr_keyword">double</strong> getEstimatedMse();
+<a class="jxr_linenumber" name="L253" href="#L253">253</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2018&#x2013;2021. All rights reserved.</div>

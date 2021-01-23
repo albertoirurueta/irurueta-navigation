@@ -10066,7 +10066,7 @@
 <a class="jxr_linenumber" name="L10058" href="#L10058">10058</a>     }
 <a class="jxr_linenumber" name="L10059" href="#L10059">10059</a> 
 <a class="jxr_linenumber" name="L10060" href="#L10060">10060</a>     @Test
-<a class="jxr_linenumber" name="L10061" href="#L10061">10061</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testSetBias1() <strong class="jxr_keyword">throws</strong> LockedException {
+<a class="jxr_linenumber" name="L10061" href="#L10061">10061</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testSetBiasCoordinates1() <strong class="jxr_keyword">throws</strong> LockedException {
 <a class="jxr_linenumber" name="L10062" href="#L10062">10062</a>         <strong class="jxr_keyword">final</strong> KnownBiasTurntableGyroscopeCalibrator calibrator =
 <a class="jxr_linenumber" name="L10063" href="#L10063">10063</a>                 <strong class="jxr_keyword">new</strong> KnownBiasTurntableGyroscopeCalibrator();
 <a class="jxr_linenumber" name="L10064" href="#L10064">10064</a> 
@@ -10081,7 +10081,7 @@
 <a class="jxr_linenumber" name="L10073" href="#L10073">10073</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> by = bg.getElementAtIndex(1);
 <a class="jxr_linenumber" name="L10074" href="#L10074">10074</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> bz = bg.getElementAtIndex(2);
 <a class="jxr_linenumber" name="L10075" href="#L10075">10075</a> 
-<a class="jxr_linenumber" name="L10076" href="#L10076">10076</a>         calibrator.setBias(bx, by, bz);
+<a class="jxr_linenumber" name="L10076" href="#L10076">10076</a>         calibrator.setBiasCoordinates(bx, by, bz);
 <a class="jxr_linenumber" name="L10077" href="#L10077">10077</a> 
 <a class="jxr_linenumber" name="L10078" href="#L10078">10078</a>         <em class="jxr_comment">// check</em>
 <a class="jxr_linenumber" name="L10079" href="#L10079">10079</a>         assertEquals(calibrator.getBiasX(), bx, 0.0);
@@ -10090,7 +10090,7 @@
 <a class="jxr_linenumber" name="L10082" href="#L10082">10082</a>     }
 <a class="jxr_linenumber" name="L10083" href="#L10083">10083</a> 
 <a class="jxr_linenumber" name="L10084" href="#L10084">10084</a>     @Test
-<a class="jxr_linenumber" name="L10085" href="#L10085">10085</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testSetBias2() <strong class="jxr_keyword">throws</strong> LockedException {
+<a class="jxr_linenumber" name="L10085" href="#L10085">10085</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testSetBiasCoordinates2() <strong class="jxr_keyword">throws</strong> LockedException {
 <a class="jxr_linenumber" name="L10086" href="#L10086">10086</a>         <strong class="jxr_keyword">final</strong> KnownBiasTurntableGyroscopeCalibrator calibrator =
 <a class="jxr_linenumber" name="L10087" href="#L10087">10087</a>                 <strong class="jxr_keyword">new</strong> KnownBiasTurntableGyroscopeCalibrator();
 <a class="jxr_linenumber" name="L10088" href="#L10088">10088</a> 
@@ -10112,7 +10112,7 @@
 <a class="jxr_linenumber" name="L10104" href="#L10104">10104</a>         <strong class="jxr_keyword">final</strong> AngularSpeed angularSpeedZ = <strong class="jxr_keyword">new</strong> AngularSpeed(bz,
 <a class="jxr_linenumber" name="L10105" href="#L10105">10105</a>                 AngularSpeedUnit.RADIANS_PER_SECOND);
 <a class="jxr_linenumber" name="L10106" href="#L10106">10106</a> 
-<a class="jxr_linenumber" name="L10107" href="#L10107">10107</a>         calibrator.setBias(
+<a class="jxr_linenumber" name="L10107" href="#L10107">10107</a>         calibrator.setBiasCoordinates(
 <a class="jxr_linenumber" name="L10108" href="#L10108">10108</a>                 angularSpeedX, angularSpeedY, angularSpeedZ);
 <a class="jxr_linenumber" name="L10109" href="#L10109">10109</a> 
 <a class="jxr_linenumber" name="L10110" href="#L10110">10110</a>         <em class="jxr_comment">// check</em>
@@ -12224,12 +12224,12 @@
 <a class="jxr_linenumber" name="L12216" href="#L12216">12216</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
 <a class="jxr_linenumber" name="L12217" href="#L12217">12217</a>         }
 <a class="jxr_linenumber" name="L12218" href="#L12218">12218</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L12219" href="#L12219">12219</a>             calibrator.setBias(0.0, 0.0, 0.0);
+<a class="jxr_linenumber" name="L12219" href="#L12219">12219</a>             calibrator.setBiasCoordinates(0.0, 0.0, 0.0);
 <a class="jxr_linenumber" name="L12220" href="#L12220">12220</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
 <a class="jxr_linenumber" name="L12221" href="#L12221">12221</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
 <a class="jxr_linenumber" name="L12222" href="#L12222">12222</a>         }
 <a class="jxr_linenumber" name="L12223" href="#L12223">12223</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L12224" href="#L12224">12224</a>             calibrator.setBias(<strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L12224" href="#L12224">12224</a>             calibrator.setBiasCoordinates(<strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>);
 <a class="jxr_linenumber" name="L12225" href="#L12225">12225</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
 <a class="jxr_linenumber" name="L12226" href="#L12226">12226</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> LockedException ignore) {
 <a class="jxr_linenumber" name="L12227" href="#L12227">12227</a>         }

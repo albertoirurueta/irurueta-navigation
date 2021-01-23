@@ -1907,12 +1907,12 @@ public class PROSACRobustKnownPositionAccelerometerCalibrator extends
                             public void onEstimateProgressChange(
                                     final RobustEstimator&lt;PreliminaryResult&gt; estimator,
                                     final float progress) {
-<span class="nc bnc" id="L1910" title="All 2 branches missed.">                                if (mListener != null) {</span>
-<span class="nc" id="L1911">                                    mListener.onCalibrateProgressChange(</span>
+<span class="pc bpc" id="L1910" title="1 of 2 branches missed.">                                if (mListener != null) {</span>
+<span class="fc" id="L1911">                                    mListener.onCalibrateProgressChange(</span>
                                             PROSACRobustKnownPositionAccelerometerCalibrator.this,
                                             progress);
                                 }
-<span class="nc" id="L1915">                            }</span>
+<span class="fc" id="L1915">                            }</span>
                         });
 
         try {
