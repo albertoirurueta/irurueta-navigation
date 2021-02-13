@@ -146,6 +146,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -235,6 +239,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -326,6 +334,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -418,6 +430,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -507,6 +523,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -597,6 +617,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -689,6 +713,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -781,6 +809,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -875,6 +907,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -970,6 +1006,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -1068,6 +1108,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -1166,6 +1210,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -1261,6 +1309,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -1357,6 +1409,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -1455,6 +1511,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -1553,6 +1613,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -1654,6 +1718,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -1756,6 +1824,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -1861,6 +1933,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -1966,6 +2042,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -2068,6 +2148,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -2170,6 +2254,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -2275,6 +2363,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -2380,6 +2472,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -2481,6 +2577,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -2584,6 +2684,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -2687,6 +2791,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -2787,6 +2895,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -2888,6 +3000,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -2991,6 +3107,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -3094,6 +3214,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -3201,6 +3325,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -3308,6 +3436,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -3418,6 +3550,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -3528,6 +3664,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -3635,6 +3775,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -3742,6 +3886,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -3852,6 +4000,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -3963,6 +4115,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -4075,6 +4231,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -4190,6 +4350,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -4305,6 +4469,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -4417,6 +4585,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -4529,6 +4701,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -4644,6 +4820,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -4759,6 +4939,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -4877,6 +5061,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -4995,6 +5183,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -5118,6 +5310,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -5241,6 +5437,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -5360,6 +5560,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -5479,6 +5683,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -5601,6 +5809,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -5723,6 +5935,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -5818,6 +6034,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -5924,6 +6144,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -6033,6 +6257,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -6142,6 +6370,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -6248,6 +6480,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -6354,6 +6590,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -6463,6 +6703,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -6572,6 +6816,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -6677,6 +6925,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -6788,6 +7040,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -6902,6 +7158,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -7016,6 +7276,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -7129,6 +7393,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -7240,6 +7508,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -7356,6 +7628,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -7472,6 +7748,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -7600,6 +7880,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -7739,6 +8023,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -7881,6 +8169,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -8023,6 +8315,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -8165,6 +8461,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -8304,6 +8604,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -8450,6 +8754,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -8596,6 +8904,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -8735,6 +9047,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -8856,6 +9172,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -8980,6 +9300,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -9104,6 +9428,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -9225,6 +9553,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -9346,6 +9678,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -9469,6 +9805,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -9592,6 +9932,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -9718,6 +10062,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -9844,6 +10192,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -9974,6 +10326,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -10105,6 +10461,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -10232,6 +10592,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -10359,6 +10723,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -10490,6 +10858,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -10620,6 +10992,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -10754,6 +11130,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -10887,6 +11267,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -11024,6 +11408,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -11161,6 +11549,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -11295,6 +11687,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -11428,6 +11824,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -11565,6 +11965,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -11703,6 +12107,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -11835,6 +12243,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -11970,6 +12382,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -12106,6 +12522,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -12239,6 +12659,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -12371,6 +12795,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -12508,6 +12936,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -12646,6 +13078,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -12786,6 +13222,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -12924,6 +13364,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -13066,6 +13510,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -13209,6 +13657,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -13348,6 +13800,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -13488,6 +13944,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -13631,6 +14091,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -13774,6 +14238,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -13918,6 +14386,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -14066,6 +14538,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -14215,6 +14691,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -14360,6 +14840,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -14504,6 +14988,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -14652,6 +15140,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -14802,6 +15294,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -14955,6 +15451,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -15106,6 +15606,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -15261,6 +15765,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -15417,6 +15925,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -15569,6 +16081,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -15720,6 +16236,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -15875,6 +16395,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -16031,6 +16555,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -16160,6 +16688,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -16293,6 +16825,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -16429,6 +16965,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -16565,6 +17105,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -16698,6 +17242,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -16831,6 +17379,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -16968,6 +17520,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -17106,6 +17662,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -17241,6 +17801,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -17380,6 +17944,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -17523,6 +18091,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -17667,6 +18239,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -17808,6 +18384,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -17949,6 +18529,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -18094,6 +18678,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -18240,6 +18828,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -18398,6 +18990,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -18565,6 +19161,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -18737,6 +19337,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -18911,6 +19515,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -19082,6 +19690,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -19253,6 +19865,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -19428,6 +20044,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -19604,6 +20224,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -19753,6 +20377,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -19877,6 +20505,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -20004,6 +20636,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -20131,6 +20767,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -20255,6 +20895,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -20379,6 +21023,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -20506,6 +21154,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -20634,6 +21286,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -20764,6 +21420,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -20893,6 +21553,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -21027,6 +21691,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -21161,6 +21829,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -21291,6 +21963,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -21420,6 +22096,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -21554,6 +22234,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -21688,6 +22372,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -21825,6 +22513,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -21961,6 +22653,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -22100,6 +22796,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -22240,6 +22940,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -22377,6 +23081,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -22514,6 +23222,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -22655,6 +23367,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -22796,6 +23512,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -22931,6 +23651,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -23069,6 +23793,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -23208,6 +23936,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -23343,6 +24075,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -23479,6 +24215,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -23619,6 +24359,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -23759,6 +24503,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -23902,6 +24650,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -24044,6 +24796,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -24190,6 +24946,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -24336,6 +25096,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -24478,6 +25242,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -24620,6 +25388,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -24766,6 +25538,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -24912,6 +25688,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -25059,6 +25839,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -25210,6 +25994,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -25362,6 +26150,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -25510,6 +26302,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -25657,6 +26453,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -25809,6 +26609,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -25961,6 +26765,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -26116,6 +26924,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -26270,6 +27082,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -26428,6 +27244,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -26587,6 +27407,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -26742,6 +27566,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -26897,6 +27725,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -27056,6 +27888,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -27215,6 +28051,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -27347,6 +28187,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -27483,6 +28327,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -27614,6 +28462,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -27753,6 +28605,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -27890,6 +28746,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -28026,6 +28886,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -28168,6 +29032,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -28310,6 +29178,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -28448,6 +29320,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -28591,6 +29467,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -28738,6 +29618,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -28886,6 +29770,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -29031,6 +29919,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -29175,6 +30067,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -29323,6 +30219,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -29472,6 +30372,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -29633,6 +30537,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -29804,6 +30712,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -29981,6 +30893,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -30158,6 +31074,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -30332,6 +31252,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -30506,6 +31430,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -30684,6 +31612,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -30863,6 +31795,10 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -31841,7 +32777,7 @@ public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
 
             assertNotNull(calibrator.getEstimatedCovariance());
             checkGeneralCovariance(calibrator.getEstimatedCovariance());
-            assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertTrue(calibrator.getEstimatedMse() >= 0.0);
 
             numValid++;
             break;

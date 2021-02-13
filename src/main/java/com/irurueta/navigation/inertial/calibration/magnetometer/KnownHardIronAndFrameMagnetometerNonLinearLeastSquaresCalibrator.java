@@ -73,7 +73,8 @@ import java.util.Collection;
 public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibrator implements
         KnownHardIronAndFrameMagnetometerCalibrator<StandardDeviationFrameBodyMagneticFluxDensity,
                 KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibratorListener>,
-        MagnetometerNonLinearCalibrator {
+        MagnetometerNonLinearCalibrator,
+        UnorderedStandardDeviationFrameBodyMagneticFluxDensityMagnetometerCalibrator {
 
     /**
      * Indicates whether by default a common z-axis is assumed for the accelerometer,
@@ -3737,6 +3738,38 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibrator im
     }
 
     /**
+     * Indicates the type of measurement used by this calibrator.
+     *
+     * @return type of measurement used by this calibrator.
+     */
+    @Override
+    public MagnetometerCalibratorMeasurementType getMeasurementType() {
+        return MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_MAGNETIC_FLUX_DENSITY;
+    }
+
+    /**
+     * Indicates whether this calibrator requires ordered measurements in a
+     * list or not.
+     *
+     * @return true if measurements must be ordered, false otherwise.
+     */
+    @Override
+    public boolean isOrderedMeasurementsRequired() {
+        return false;
+    }
+
+    /**
+     * Indicates whether this calibrator requires quality scores for each
+     * measurement or not.
+     *
+     * @return true if quality scores are required, false otherwise.
+     */
+    @Override
+    public boolean isQualityScoresRequired() {
+        return false;
+    }
+
+    /**
      * Indicates whether z-axis is assumed to be common for accelerometer,
      * gyroscope and magnetometer.
      * When enabled, this eliminates 3 variables from Mm (soft-iron) matrix.
@@ -3794,6 +3827,16 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibrator im
         }
 
         mListener = listener;
+    }
+
+    /**
+     * Gets minimum number of required measurements.
+     *
+     * @return minimum number of required measurements.
+     */
+    @Override
+    public int getMinimumRequiredMeasurements() {
+        return MINIMUM_MEASUREMENTS;
     }
 
     /**

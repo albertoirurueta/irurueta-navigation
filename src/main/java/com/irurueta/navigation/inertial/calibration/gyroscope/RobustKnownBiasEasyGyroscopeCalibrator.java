@@ -75,7 +75,9 @@ import java.util.List;
  * - w is measurement noise. This is a 3x1 vector.
  */
 public abstract class RobustKnownBiasEasyGyroscopeCalibrator implements
-        GyroscopeNonLinearCalibrator, KnownBiasGyroscopeCalibrator {
+        GyroscopeNonLinearCalibrator, KnownBiasGyroscopeCalibrator,
+        OrderedBodyKinematicsSequenceGyroscopeCalibrator,
+        QualityScoredGyroscopeCalibrator {
 
     /**
      * Indicates whether by default a common z-axis is assumed for both the accelerometer
@@ -2704,6 +2706,7 @@ public abstract class RobustKnownBiasEasyGyroscopeCalibrator implements
      * @return collection of sequences of timestamped body kinematics
      * measurements.
      */
+    @Override
     public List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> getSequences() {
         return mSequences;
     }
@@ -2717,6 +2720,7 @@ public abstract class RobustKnownBiasEasyGyroscopeCalibrator implements
      *                  kinematics measurements.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setSequences(
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences)
             throws LockedException {
@@ -2724,6 +2728,27 @@ public abstract class RobustKnownBiasEasyGyroscopeCalibrator implements
             throw new LockedException();
         }
         mSequences = sequences;
+    }
+
+    /**
+     * Indicates the type of measurement or sequence used by this calibrator.
+     *
+     * @return type of measurement or sequence used by this calibrator.
+     */
+    @Override
+    public GyroscopeCalibratorMeasurementOrSequenceType getMeasurementOrSequenceType() {
+        return GyroscopeCalibratorMeasurementOrSequenceType.BODY_KINEMATICS_SEQUENCE;
+    }
+
+    /**
+     * Indicates whether this calibrator requires ordered measurements or sequences
+     * in a list or not.
+     *
+     * @return true if measurements or sequences must be ordered, false otherwise.
+     */
+    @Override
+    public boolean isOrderedMeasurementsOrSequencesRequired() {
+        return true;
     }
 
     /**
@@ -2819,7 +2844,8 @@ public abstract class RobustKnownBiasEasyGyroscopeCalibrator implements
      *
      * @return minimum number of required sequences.
      */
-    public int getMinimumRequiredSequences() {
+    @Override
+    public int getMinimumRequiredMeasurementsOrSequences() {
         if (mCommonAxisUsed) {
             if (mEstimateGDependentCrossBiases) {
                 return KnownBiasEasyGyroscopeCalibrator
@@ -2845,7 +2871,7 @@ public abstract class RobustKnownBiasEasyGyroscopeCalibrator implements
     @Override
     public boolean isReady() {
         return mSequences != null
-                && mSequences.size() >= getMinimumRequiredSequences();
+                && mSequences.size() >= getMinimumRequiredMeasurementsOrSequences();
     }
 
     /**
@@ -3022,6 +3048,7 @@ public abstract class RobustKnownBiasEasyGyroscopeCalibrator implements
      *
      * @return quality scores corresponding to each sample.
      */
+    @Override
     public double[] getQualityScores() {
         return null;
     }
@@ -3037,6 +3064,7 @@ public abstract class RobustKnownBiasEasyGyroscopeCalibrator implements
      *                                  is smaller than minimum required samples.
      * @throws LockedException          if calibrator is currently running.
      */
+    @Override
     public void setQualityScores(final double[] qualityScores)
             throws LockedException {
     }
@@ -3255,7 +3283,7 @@ public abstract class RobustKnownBiasEasyGyroscopeCalibrator implements
 
     /**
      * Gets size of subsets to be checked during robust estimation.
-     * This has to be at least {@link #getMinimumRequiredSequences()}.
+     * This has to be at least {@link #getMinimumRequiredMeasurementsOrSequences()}.
      *
      * @return size of subsets to be checked during robust estimation.
      */
@@ -3265,19 +3293,19 @@ public abstract class RobustKnownBiasEasyGyroscopeCalibrator implements
 
     /**
      * Sets size of subsets to be checked during robust estimation.
-     * This has to be at least {@link #getMinimumRequiredSequences}.
+     * This has to be at least {@link #getMinimumRequiredMeasurementsOrSequences}.
      *
      * @param preliminarySubsetSize size of subsets to be checked during robust estimation.
      * @throws LockedException          if calibrator is currently running.
      * @throws IllegalArgumentException if provided value is less than
-     *                                  {@link #getMinimumRequiredSequences}.
+     *                                  {@link #getMinimumRequiredMeasurementsOrSequences}.
      */
     public void setPreliminarySubsetSize(
             final int preliminarySubsetSize) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
-        if (preliminarySubsetSize < getMinimumRequiredSequences()) {
+        if (preliminarySubsetSize < getMinimumRequiredMeasurementsOrSequences()) {
             throw new IllegalArgumentException();
         }
 

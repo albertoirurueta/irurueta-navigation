@@ -100,6 +100,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.DEFAULT_USE_COMMON_Z_AXIS);
         assertNull(calibrator.getListener());
@@ -145,6 +149,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -188,6 +194,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.DEFAULT_USE_COMMON_Z_AXIS);
         assertSame(calibrator.getListener(), this);
@@ -233,6 +243,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -279,6 +291,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.DEFAULT_USE_COMMON_Z_AXIS);
         assertNull(calibrator.getListener());
@@ -324,6 +340,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -370,6 +388,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.DEFAULT_USE_COMMON_Z_AXIS);
         assertSame(calibrator.getListener(), this);
@@ -415,6 +437,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -459,6 +483,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getBiasX(), 0.0, 0.0);
@@ -495,6 +523,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix b2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(b2);
         assertEquals(b1, b2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         final AngularSpeedTriad biasTriad1 = calibrator.getBiasAsTriad();
@@ -547,6 +577,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getBiasX(), 0.0, 0.0);
@@ -591,6 +625,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -637,6 +673,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getBiasX(), 0.0, 0.0);
@@ -681,6 +721,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -727,6 +769,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getBiasX(), 0.0, 0.0);
@@ -771,6 +817,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -819,6 +867,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.DEFAULT_USE_COMMON_Z_AXIS);
         assertNull(calibrator.getListener());
@@ -864,6 +916,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -912,6 +966,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.DEFAULT_USE_COMMON_Z_AXIS);
         assertSame(calibrator.getListener(), this);
@@ -957,6 +1015,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -1007,6 +1067,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.DEFAULT_USE_COMMON_Z_AXIS);
         assertNull(calibrator.getListener());
@@ -1052,6 +1116,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -1102,6 +1168,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.DEFAULT_USE_COMMON_Z_AXIS);
         assertSame(calibrator.getListener(), this);
@@ -1147,6 +1217,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -1195,6 +1267,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -1239,6 +1315,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -1287,6 +1365,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -1331,6 +1413,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -1381,6 +1465,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -1425,6 +1513,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -1476,6 +1566,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -1520,6 +1614,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -1574,6 +1670,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.DEFAULT_USE_COMMON_Z_AXIS);
         assertNull(calibrator.getListener());
@@ -1619,6 +1719,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -1673,6 +1775,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.DEFAULT_USE_COMMON_Z_AXIS);
         assertSame(calibrator.getListener(), this);
@@ -1718,6 +1824,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -1774,6 +1882,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.DEFAULT_USE_COMMON_Z_AXIS);
         assertNull(calibrator.getListener());
@@ -1819,6 +1931,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -1875,6 +1989,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.DEFAULT_USE_COMMON_Z_AXIS);
         assertSame(calibrator.getListener(), this);
@@ -1920,6 +2038,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -1974,6 +2094,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -2018,6 +2142,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -2072,6 +2198,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -2116,6 +2246,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -2172,6 +2304,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -2216,6 +2352,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -2272,6 +2410,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -2316,6 +2458,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -2374,6 +2518,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.DEFAULT_USE_COMMON_Z_AXIS);
         assertNull(calibrator.getListener());
@@ -2419,6 +2567,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -2480,6 +2630,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.DEFAULT_USE_COMMON_Z_AXIS);
         assertNull(calibrator.getListener());
@@ -2525,6 +2679,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -2586,6 +2742,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.DEFAULT_USE_COMMON_Z_AXIS);
         assertSame(calibrator.getListener(), this);
@@ -2631,6 +2791,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -2690,6 +2852,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -2734,6 +2900,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -2793,6 +2961,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -2837,6 +3009,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -2898,6 +3072,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -2942,6 +3120,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -3003,6 +3183,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -3047,6 +3231,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -3111,6 +3297,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.DEFAULT_USE_COMMON_Z_AXIS);
         assertNull(calibrator.getListener());
@@ -3156,6 +3346,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -3220,6 +3412,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.DEFAULT_USE_COMMON_Z_AXIS);
         assertSame(calibrator.getListener(), this);
@@ -3265,6 +3461,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -3331,6 +3529,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.DEFAULT_USE_COMMON_Z_AXIS);
         assertNull(calibrator.getListener());
@@ -3376,6 +3578,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -3443,6 +3647,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.DEFAULT_USE_COMMON_Z_AXIS);
         assertSame(calibrator.getListener(), this);
@@ -3488,6 +3696,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -3553,6 +3763,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -3597,6 +3811,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -3662,6 +3878,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -3706,6 +3926,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -3773,6 +3995,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -3817,6 +4043,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -3884,6 +4112,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -3928,6 +4160,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -3989,6 +4223,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.DEFAULT_USE_COMMON_Z_AXIS);
         assertNull(calibrator.getListener());
@@ -4034,6 +4272,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -4098,6 +4338,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.DEFAULT_USE_COMMON_Z_AXIS);
         assertNull(calibrator.getListener());
@@ -4143,6 +4387,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -4207,6 +4453,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.DEFAULT_USE_COMMON_Z_AXIS);
         assertSame(calibrator.getListener(), this);
@@ -4252,6 +4502,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -4314,6 +4566,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -4358,6 +4614,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -4420,6 +4678,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -4464,6 +4726,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -4528,6 +4792,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -4572,6 +4840,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -4636,6 +4906,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -4680,6 +4954,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -4747,6 +5023,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.DEFAULT_USE_COMMON_Z_AXIS);
         assertNull(calibrator.getListener());
@@ -4792,6 +5072,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -4859,6 +5141,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.DEFAULT_USE_COMMON_Z_AXIS);
         assertSame(calibrator.getListener(), this);
@@ -4904,6 +5190,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -4973,6 +5261,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.DEFAULT_USE_COMMON_Z_AXIS);
         assertNull(calibrator.getListener());
@@ -5018,6 +5310,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -5087,6 +5381,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.DEFAULT_USE_COMMON_Z_AXIS);
         assertSame(calibrator.getListener(), this);
@@ -5132,6 +5430,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -5199,6 +5499,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -5243,6 +5547,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -5310,6 +5616,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -5354,6 +5664,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -5424,6 +5736,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -5468,6 +5784,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -5538,6 +5856,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -5582,6 +5904,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -5631,6 +5955,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.DEFAULT_USE_COMMON_Z_AXIS);
         assertNull(calibrator.getListener());
@@ -5676,6 +6004,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -5735,6 +6065,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.DEFAULT_USE_COMMON_Z_AXIS);
         assertSame(calibrator.getListener(), this);
@@ -5780,6 +6114,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -5841,6 +6177,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.DEFAULT_USE_COMMON_Z_AXIS);
         assertNull(calibrator.getListener());
@@ -5886,6 +6226,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -5947,6 +6289,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.DEFAULT_USE_COMMON_Z_AXIS);
         assertSame(calibrator.getListener(), this);
@@ -5992,6 +6338,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -6051,6 +6399,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -6095,6 +6447,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -6154,6 +6508,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -6198,6 +6556,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -6259,6 +6619,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -6303,6 +6667,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -6364,6 +6730,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -6408,6 +6778,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -6466,6 +6838,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.DEFAULT_USE_COMMON_Z_AXIS);
         assertNull(calibrator.getListener());
@@ -6511,6 +6887,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -6575,6 +6953,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.DEFAULT_USE_COMMON_Z_AXIS);
         assertSame(calibrator.getListener(), this);
@@ -6620,6 +7002,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -6686,6 +7070,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.DEFAULT_USE_COMMON_Z_AXIS);
         assertNull(calibrator.getListener());
@@ -6731,6 +7119,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -6797,6 +7187,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.DEFAULT_USE_COMMON_Z_AXIS);
         assertSame(calibrator.getListener(), this);
@@ -6842,6 +7236,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -6906,6 +7302,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -6950,6 +7350,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -7014,6 +7416,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -7058,6 +7464,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -7124,6 +7532,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -7168,6 +7580,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -7234,6 +7648,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -7278,6 +7696,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -7355,6 +7775,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.DEFAULT_USE_COMMON_Z_AXIS);
         assertNull(calibrator.getListener());
@@ -7400,6 +7824,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -7487,6 +7913,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.DEFAULT_USE_COMMON_Z_AXIS);
         assertSame(calibrator.getListener(), this);
@@ -7532,6 +7962,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -7621,6 +8053,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.DEFAULT_USE_COMMON_Z_AXIS);
         assertNull(calibrator.getListener());
@@ -7666,6 +8102,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -7755,6 +8193,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.DEFAULT_USE_COMMON_Z_AXIS);
         assertSame(calibrator.getListener(), this);
@@ -7800,6 +8242,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -7887,6 +8331,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -7931,6 +8379,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -8018,6 +8468,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -8062,6 +8516,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -8151,6 +8607,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -8195,6 +8655,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -8284,6 +8746,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -8328,6 +8794,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -8416,6 +8884,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.DEFAULT_USE_COMMON_Z_AXIS);
         assertNull(calibrator.getListener());
@@ -8461,6 +8933,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -8561,6 +9035,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.DEFAULT_USE_COMMON_Z_AXIS);
         assertSame(calibrator.getListener(), this);
@@ -8606,6 +9084,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -8708,6 +9188,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.DEFAULT_USE_COMMON_Z_AXIS);
         assertNull(calibrator.getListener());
@@ -8753,6 +9237,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -8855,6 +9341,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.DEFAULT_USE_COMMON_Z_AXIS);
         assertSame(calibrator.getListener(), this);
@@ -8900,6 +9390,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -9000,6 +9492,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -9044,6 +9540,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -9144,6 +9642,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -9188,6 +9690,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -9296,6 +9800,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -9340,6 +9848,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());
@@ -9442,6 +9952,10 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix gg2 = new Matrix(3, 3);
         calibrator.getInitialGg(gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -9486,6 +10000,8 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final AngularSpeedTriad biasTriad2 = new AngularSpeedTriad();
         calibrator.getBiasAsTriad(biasTriad2);
         assertEquals(biasTriad1, biasTriad2);
+        assertEquals(KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMg());

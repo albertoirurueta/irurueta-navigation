@@ -157,8 +157,14 @@ public class PROMedSRobustKnownFrameGyroscopeCalibratorTest
         calibrator.getInitialGg(gg2);
         assertEquals(gg1, gg2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertTrue(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(RobustKnownFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -298,8 +304,14 @@ public class PROMedSRobustKnownFrameGyroscopeCalibratorTest
         calibrator.getInitialGg(gg2);
         assertEquals(gg1, gg2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertTrue(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(RobustKnownFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -441,8 +453,14 @@ public class PROMedSRobustKnownFrameGyroscopeCalibratorTest
         calibrator.getInitialGg(gg2);
         assertEquals(gg1, gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertTrue(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(RobustKnownFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -584,8 +602,14 @@ public class PROMedSRobustKnownFrameGyroscopeCalibratorTest
         calibrator.getInitialGg(gg2);
         assertEquals(gg1, gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertTrue(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(RobustKnownFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -725,8 +749,14 @@ public class PROMedSRobustKnownFrameGyroscopeCalibratorTest
         calibrator.getInitialGg(gg2);
         assertEquals(gg1, gg2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertTrue(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(RobustKnownFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -866,8 +896,14 @@ public class PROMedSRobustKnownFrameGyroscopeCalibratorTest
         calibrator.getInitialGg(gg2);
         assertEquals(gg1, gg2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertTrue(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(RobustKnownFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -1009,8 +1045,14 @@ public class PROMedSRobustKnownFrameGyroscopeCalibratorTest
         calibrator.getInitialGg(gg2);
         assertEquals(gg1, gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertTrue(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(RobustKnownFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -1152,8 +1194,14 @@ public class PROMedSRobustKnownFrameGyroscopeCalibratorTest
         calibrator.getInitialGg(gg2);
         assertEquals(gg1, gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertTrue(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(RobustKnownFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -1295,8 +1343,14 @@ public class PROMedSRobustKnownFrameGyroscopeCalibratorTest
         calibrator.getInitialGg(gg2);
         assertEquals(gg1, gg2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertTrue(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(RobustKnownFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -1449,8 +1503,14 @@ public class PROMedSRobustKnownFrameGyroscopeCalibratorTest
         calibrator.getInitialGg(gg2);
         assertEquals(gg1, gg2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertTrue(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(RobustKnownFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -1605,8 +1665,14 @@ public class PROMedSRobustKnownFrameGyroscopeCalibratorTest
         calibrator.getInitialGg(gg2);
         assertEquals(gg1, gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertTrue(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(RobustKnownFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -1761,8 +1827,14 @@ public class PROMedSRobustKnownFrameGyroscopeCalibratorTest
         calibrator.getInitialGg(gg2);
         assertEquals(gg1, gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertTrue(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(RobustKnownFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -1915,8 +1987,14 @@ public class PROMedSRobustKnownFrameGyroscopeCalibratorTest
         calibrator.getInitialGg(gg2);
         assertEquals(gg1, gg2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertTrue(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(RobustKnownFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -2070,8 +2148,14 @@ public class PROMedSRobustKnownFrameGyroscopeCalibratorTest
         calibrator.getInitialGg(gg2);
         assertEquals(gg1, gg2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertTrue(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(RobustKnownFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -2226,8 +2310,14 @@ public class PROMedSRobustKnownFrameGyroscopeCalibratorTest
         calibrator.getInitialGg(gg2);
         assertEquals(gg1, gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertTrue(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(RobustKnownFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -2382,8 +2472,14 @@ public class PROMedSRobustKnownFrameGyroscopeCalibratorTest
         calibrator.getInitialGg(gg2);
         assertEquals(gg1, gg2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertTrue(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(RobustKnownFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());

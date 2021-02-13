@@ -163,6 +163,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertNull(calibrator.getNedPosition());
         assertFalse(calibrator.getNedPosition(null));
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         Assert.assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -270,6 +274,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertNull(calibrator.getNedPosition());
         assertFalse(calibrator.getNedPosition(null));
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -380,6 +388,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertNull(calibrator.getNedPosition());
         assertFalse(calibrator.getNedPosition(null));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -487,6 +499,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertNull(calibrator.getNedPosition());
         assertFalse(calibrator.getNedPosition(null));
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -598,6 +614,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertNull(calibrator.getNedPosition());
         assertFalse(calibrator.getNedPosition(null));
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -719,6 +739,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertNull(calibrator.getNedPosition());
         assertFalse(calibrator.getNedPosition(null));
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -856,6 +880,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertNull(calibrator.getNedPosition());
         assertFalse(calibrator.getNedPosition(null));
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -1006,6 +1034,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -1132,6 +1164,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -1258,6 +1294,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -1384,6 +1424,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -1510,6 +1554,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -1640,6 +1688,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -1780,6 +1832,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -1920,6 +1976,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -2060,6 +2120,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -2201,6 +2265,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -2347,6 +2415,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -2495,6 +2567,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -2643,6 +2719,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -2801,6 +2881,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -2969,6 +3053,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -3141,6 +3229,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -3313,6 +3405,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -3467,6 +3563,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -3593,6 +3693,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -3719,6 +3823,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -3845,6 +3953,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -3971,6 +4083,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -4101,6 +4217,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -4241,6 +4361,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -4381,6 +4505,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -4521,6 +4649,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -4662,6 +4794,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -4808,6 +4944,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -4956,6 +5096,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -5104,6 +5248,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -5262,6 +5410,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -5430,6 +5582,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -5602,6 +5758,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -5774,6 +5934,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -5934,6 +6098,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -6063,6 +6231,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -6192,6 +6364,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -6321,6 +6497,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -6453,6 +6633,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -6596,6 +6780,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -6739,6 +6927,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -6882,6 +7074,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -7025,6 +7221,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -7174,6 +7374,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -7325,6 +7529,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -7476,6 +7684,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -7636,6 +7848,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -7807,6 +8023,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -7982,6 +8202,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -8157,6 +8381,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -8317,6 +8545,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -8445,6 +8677,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -8574,6 +8810,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -8703,6 +8943,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -8835,6 +9079,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -8977,6 +9225,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -9120,6 +9372,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -9263,6 +9519,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -9406,6 +9666,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -9555,6 +9819,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -9706,6 +9974,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -9857,6 +10129,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -10017,6 +10293,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -10187,6 +10467,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -10361,6 +10645,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -10536,6 +10824,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),

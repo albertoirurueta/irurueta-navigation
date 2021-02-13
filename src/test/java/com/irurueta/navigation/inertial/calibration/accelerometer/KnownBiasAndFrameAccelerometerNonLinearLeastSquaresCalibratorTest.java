@@ -136,10 +136,16 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         Assert.assertEquals(calibrator.isCommonAxisUsed(),
                 KnownFrameAccelerometerNonLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
         assertNull(calibrator.getListener());
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -216,10 +222,16 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownFrameAccelerometerNonLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -299,10 +311,16 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownFrameAccelerometerNonLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
         assertNull(calibrator.getListener());
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -383,10 +401,16 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownFrameAccelerometerNonLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -464,8 +488,14 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -543,8 +573,14 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -625,8 +661,14 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -707,8 +749,14 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -791,10 +839,16 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownFrameAccelerometerNonLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
         assertNull(calibrator.getListener());
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -877,10 +931,16 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownFrameAccelerometerNonLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -966,10 +1026,16 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownFrameAccelerometerNonLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
         assertNull(calibrator.getListener());
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -1055,10 +1121,16 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownFrameAccelerometerNonLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -1141,8 +1213,14 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -1225,8 +1303,14 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -1312,8 +1396,14 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -1399,8 +1489,14 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -1490,10 +1586,16 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownFrameAccelerometerNonLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
         assertNull(calibrator.getListener());
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -1583,10 +1685,16 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownFrameAccelerometerNonLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -1679,10 +1787,16 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownFrameAccelerometerNonLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
         assertNull(calibrator.getListener());
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -1775,10 +1889,16 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownFrameAccelerometerNonLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -1868,8 +1988,14 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -1959,8 +2085,14 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -2053,8 +2185,14 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -2147,8 +2285,14 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -2240,10 +2384,16 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownFrameAccelerometerNonLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
         assertNull(calibrator.getListener());
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -2338,10 +2488,16 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownFrameAccelerometerNonLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
         assertNull(calibrator.getListener());
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -2436,10 +2592,16 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownFrameAccelerometerNonLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -2532,8 +2694,14 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -2626,8 +2794,14 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -2723,8 +2897,14 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -2820,8 +3000,14 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -2920,10 +3106,16 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownFrameAccelerometerNonLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
         assertNull(calibrator.getListener());
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -3022,10 +3214,16 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownFrameAccelerometerNonLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -3127,10 +3325,16 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownFrameAccelerometerNonLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
         assertNull(calibrator.getListener());
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -3233,10 +3437,16 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownFrameAccelerometerNonLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -3336,8 +3546,14 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -3440,8 +3656,14 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -3544,8 +3766,14 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -3645,10 +3873,16 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownFrameAccelerometerNonLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
         assertNull(calibrator.getListener());
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -3752,10 +3986,16 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownFrameAccelerometerNonLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
         assertNull(calibrator.getListener());
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -3857,8 +4097,14 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -3960,8 +4206,14 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -4065,8 +4317,14 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -4170,8 +4428,14 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -4278,10 +4542,16 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownFrameAccelerometerNonLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
         assertNull(calibrator.getListener());
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -4388,10 +4658,16 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownFrameAccelerometerNonLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -4501,10 +4777,16 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownFrameAccelerometerNonLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
         assertNull(calibrator.getListener());
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -4614,10 +4896,16 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownFrameAccelerometerNonLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -4724,8 +5012,14 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -4833,8 +5127,14 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -4945,8 +5245,14 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -5057,8 +5363,14 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -5142,10 +5454,16 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownFrameAccelerometerNonLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
         assertNull(calibrator.getListener());
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -5239,10 +5557,16 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownFrameAccelerometerNonLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -5339,10 +5663,16 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownFrameAccelerometerNonLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
         assertNull(calibrator.getListener());
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -5439,10 +5769,16 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownFrameAccelerometerNonLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -5536,8 +5872,14 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -5631,8 +5973,14 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -5729,8 +6077,14 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -5827,8 +6181,14 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -5920,10 +6280,16 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownFrameAccelerometerNonLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
         assertNull(calibrator.getListener());
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -6022,10 +6388,16 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownFrameAccelerometerNonLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -6127,10 +6499,16 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownFrameAccelerometerNonLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
         assertNull(calibrator.getListener());
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -6232,10 +6610,16 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownFrameAccelerometerNonLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -6334,8 +6718,14 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -6434,8 +6824,14 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -6537,8 +6933,14 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -6640,8 +7042,14 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -6757,10 +7165,16 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownFrameAccelerometerNonLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
         assertNull(calibrator.getListener());
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -6886,10 +7300,16 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownFrameAccelerometerNonLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -7018,10 +7438,16 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownFrameAccelerometerNonLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
         assertNull(calibrator.getListener());
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -7150,10 +7576,16 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownFrameAccelerometerNonLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -7279,8 +7711,14 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -7406,8 +7844,14 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -7536,8 +7980,14 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -7670,8 +8120,14 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());

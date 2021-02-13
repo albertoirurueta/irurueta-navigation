@@ -66,7 +66,9 @@ import java.util.List;
  * - w is measurement noise. This is a 3x1 vector.
  */
 public abstract class RobustKnownBiasAndFrameGyroscopeCalibrator implements
-        GyroscopeNonLinearCalibrator, KnownBiasGyroscopeCalibrator {
+        GyroscopeNonLinearCalibrator, KnownBiasGyroscopeCalibrator,
+        OrderedStandardDeviationFrameBodyKinematicsGyroscopeCalibrator,
+        QualityScoredGyroscopeCalibrator {
 
     /**
      * Indicates whether by default a common z-axis is assumed for both the accelerometer
@@ -1873,6 +1875,7 @@ public abstract class RobustKnownBiasAndFrameGyroscopeCalibrator implements
      * @return a collection of body kinematics measurements taken at different
      * frames (positions, orientations and velocities).
      */
+    @Override
     public List<StandardDeviationFrameBodyKinematics> getMeasurements() {
         return mMeasurements;
     }
@@ -1895,6 +1898,7 @@ public abstract class RobustKnownBiasAndFrameGyroscopeCalibrator implements
      *                     frames (positions, orientations and velocities).
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setMeasurements(
             final List<StandardDeviationFrameBodyKinematics> measurements)
             throws LockedException {
@@ -1902,6 +1906,27 @@ public abstract class RobustKnownBiasAndFrameGyroscopeCalibrator implements
             throw new LockedException();
         }
         mMeasurements = measurements;
+    }
+
+    /**
+     * Indicates the type of measurement or sequence used by this calibrator.
+     *
+     * @return type of measurement or sequence used by this calibrator.
+     */
+    @Override
+    public GyroscopeCalibratorMeasurementOrSequenceType getMeasurementOrSequenceType() {
+        return GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS_MEASUREMENT;
+    }
+
+    /**
+     * Indicates whether this calibrator requires ordered measurements or sequences
+     * in a list or not.
+     *
+     * @return true if measurements or sequences must be ordered, false otherwise.
+     */
+    @Override
+    public boolean isOrderedMeasurementsOrSequencesRequired() {
+        return true;
     }
 
     /**
@@ -1959,6 +1984,16 @@ public abstract class RobustKnownBiasAndFrameGyroscopeCalibrator implements
         }
 
         mListener = listener;
+    }
+
+    /**
+     * Gets minimum number of required measurements.
+     *
+     * @return minimum number of required measurements.
+     */
+    @Override
+    public int getMinimumRequiredMeasurementsOrSequences() {
+        return MINIMUM_MEASUREMENTS;
     }
 
     /**
@@ -2201,6 +2236,7 @@ public abstract class RobustKnownBiasAndFrameGyroscopeCalibrator implements
      *
      * @return quality scores corresponding to each sample.
      */
+    @Override
     public double[] getQualityScores() {
         return null;
     }
@@ -2217,6 +2253,7 @@ public abstract class RobustKnownBiasAndFrameGyroscopeCalibrator implements
      *                                  is smaller than minimum required samples.
      * @throws LockedException          if calibrator is currently running.
      */
+    @Override
     public void setQualityScores(final double[] qualityScores)
             throws LockedException {
     }

@@ -178,6 +178,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertFalse(calibrator.getEcefPosition(null));
         assertNotNull(calibrator.getYear());
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
@@ -315,6 +319,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertFalse(calibrator.getEcefPosition(null));
         assertNotNull(calibrator.getYear());
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
@@ -455,6 +463,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertFalse(calibrator.getEcefPosition(null));
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
@@ -593,6 +605,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertFalse(calibrator.getEcefPosition(null));
         assertNotNull(calibrator.getYear());
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -732,6 +748,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertFalse(calibrator.getEcefPosition(null));
         assertNotNull(calibrator.getYear());
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
@@ -878,6 +898,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertFalse(calibrator.getEcefPosition(null));
         assertNotNull(calibrator.getYear());
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
@@ -1034,6 +1058,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertFalse(calibrator.getEcefPosition(null));
         assertNotNull(calibrator.getYear());
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
@@ -1208,6 +1236,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertFalse(calibrator.getEcefPosition(null));
         assertNotNull(calibrator.getYear());
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
@@ -1386,6 +1418,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
@@ -1538,6 +1574,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
@@ -1690,6 +1730,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
@@ -1842,6 +1886,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -1994,6 +2042,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -2152,6 +2204,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
@@ -2320,6 +2376,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
@@ -2488,6 +2548,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -2657,6 +2721,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -2826,6 +2894,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
@@ -3000,6 +3072,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
@@ -3176,6 +3252,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -3353,6 +3433,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -3542,6 +3626,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
@@ -3745,6 +3833,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
@@ -3949,6 +4041,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -4153,6 +4249,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -4336,6 +4436,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertTrue(ecefPosition1.equals(ecefPosition, LARGE_ABSOLUTE_ERROR));
         assertNotNull(calibrator.getYear());
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
@@ -4489,6 +4593,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertTrue(ecefPosition1.equals(ecefPosition, LARGE_ABSOLUTE_ERROR));
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
@@ -4642,6 +4750,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertTrue(ecefPosition1.equals(ecefPosition, LARGE_ABSOLUTE_ERROR));
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
@@ -4795,6 +4907,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertTrue(ecefPosition1.equals(ecefPosition, LARGE_ABSOLUTE_ERROR));
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -4948,6 +5064,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertTrue(ecefPosition1.equals(ecefPosition, LARGE_ABSOLUTE_ERROR));
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -5107,6 +5227,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertTrue(ecefPosition1.equals(ecefPosition, LARGE_ABSOLUTE_ERROR));
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
@@ -5276,6 +5400,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertTrue(ecefPosition1.equals(ecefPosition, LARGE_ABSOLUTE_ERROR));
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
@@ -5445,6 +5573,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertTrue(ecefPosition1.equals(ecefPosition, LARGE_ABSOLUTE_ERROR));
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -5615,6 +5747,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertTrue(ecefPosition1.equals(ecefPosition, LARGE_ABSOLUTE_ERROR));
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -5785,6 +5921,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertTrue(ecefPosition1.equals(ecefPosition, LARGE_ABSOLUTE_ERROR));
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
@@ -5960,6 +6100,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertTrue(ecefPosition1.equals(ecefPosition, LARGE_ABSOLUTE_ERROR));
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
@@ -6137,6 +6281,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertTrue(ecefPosition1.equals(ecefPosition, LARGE_ABSOLUTE_ERROR));
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -6315,6 +6463,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertTrue(ecefPosition1.equals(ecefPosition, LARGE_ABSOLUTE_ERROR));
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -6505,6 +6657,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertTrue(ecefPosition1.equals(ecefPosition, LARGE_ABSOLUTE_ERROR));
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
@@ -6709,6 +6865,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertTrue(ecefPosition1.equals(ecefPosition, LARGE_ABSOLUTE_ERROR));
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
@@ -6914,6 +7074,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertTrue(ecefPosition1.equals(ecefPosition, LARGE_ABSOLUTE_ERROR));
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -7119,6 +7283,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertTrue(ecefPosition1.equals(ecefPosition, LARGE_ABSOLUTE_ERROR));
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -7292,6 +7460,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertFalse(calibrator.getEcefPosition(null));
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
@@ -7441,6 +7613,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertFalse(calibrator.getEcefPosition(null));
         assertNotNull(calibrator.getYear());
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -7591,6 +7767,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertFalse(calibrator.getEcefPosition(null));
         assertNotNull(calibrator.getYear());
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
@@ -7748,6 +7928,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertFalse(calibrator.getEcefPosition(null));
         assertNotNull(calibrator.getYear());
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
@@ -7911,6 +8095,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertFalse(calibrator.getEcefPosition(null));
         assertNotNull(calibrator.getYear());
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
@@ -8092,6 +8280,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertFalse(calibrator.getEcefPosition(null));
         assertNotNull(calibrator.getYear());
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
@@ -8277,6 +8469,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
@@ -8440,6 +8636,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
@@ -8603,6 +8803,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
@@ -8767,6 +8971,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -8931,6 +9139,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -9101,6 +9313,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
@@ -9277,6 +9493,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
@@ -9448,6 +9668,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -9625,6 +9849,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -9801,6 +10029,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
@@ -9985,6 +10217,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
@@ -10169,6 +10405,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -10354,6 +10594,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -10553,6 +10797,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
@@ -10764,6 +11012,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
@@ -10975,6 +11227,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -11187,6 +11443,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -11382,6 +11642,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertTrue(ecefPosition1.equals(ecefPosition, LARGE_ABSOLUTE_ERROR));
         assertNotNull(calibrator.getYear());
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
@@ -11546,6 +11810,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertTrue(ecefPosition1.equals(ecefPosition, LARGE_ABSOLUTE_ERROR));
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
@@ -11711,6 +11979,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertTrue(ecefPosition1.equals(ecefPosition, LARGE_ABSOLUTE_ERROR));
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
@@ -11876,6 +12148,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertTrue(ecefPosition1.equals(ecefPosition, LARGE_ABSOLUTE_ERROR));
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -12041,6 +12317,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertTrue(ecefPosition1.equals(ecefPosition, LARGE_ABSOLUTE_ERROR));
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -12212,6 +12492,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertTrue(ecefPosition1.equals(ecefPosition, LARGE_ABSOLUTE_ERROR));
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
@@ -12389,6 +12673,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertTrue(ecefPosition1.equals(ecefPosition, LARGE_ABSOLUTE_ERROR));
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
@@ -12567,6 +12855,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertTrue(ecefPosition1.equals(ecefPosition, LARGE_ABSOLUTE_ERROR));
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -12746,6 +13038,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertTrue(ecefPosition1.equals(ecefPosition, LARGE_ABSOLUTE_ERROR));
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -12924,6 +13220,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertTrue(ecefPosition1.equals(ecefPosition, LARGE_ABSOLUTE_ERROR));
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
@@ -13109,6 +13409,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertTrue(ecefPosition1.equals(ecefPosition, LARGE_ABSOLUTE_ERROR));
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
@@ -13288,6 +13592,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertTrue(ecefPosition1.equals(ecefPosition, LARGE_ABSOLUTE_ERROR));
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -13474,6 +13782,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertTrue(ecefPosition1.equals(ecefPosition, LARGE_ABSOLUTE_ERROR));
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -13674,6 +13986,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertTrue(ecefPosition1.equals(ecefPosition, LARGE_ABSOLUTE_ERROR));
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
@@ -13886,6 +14202,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertTrue(ecefPosition1.equals(ecefPosition, LARGE_ABSOLUTE_ERROR));
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
@@ -14099,6 +14419,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertTrue(ecefPosition1.equals(ecefPosition, LARGE_ABSOLUTE_ERROR));
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
@@ -14316,6 +14640,10 @@ public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest impl
         assertTrue(ecefPosition1.equals(ecefPosition, LARGE_ABSOLUTE_ERROR));
         assertNotNull(calibrator.getYear());
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);

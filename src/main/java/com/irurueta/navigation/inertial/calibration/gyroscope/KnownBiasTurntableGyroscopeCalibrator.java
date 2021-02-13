@@ -94,7 +94,7 @@ import java.util.Collection;
  * - w is measurement noise. This is a 3x1 vector.
  */
 public class KnownBiasTurntableGyroscopeCalibrator implements GyroscopeNonLinearCalibrator,
-        KnownBiasGyroscopeCalibrator {
+        KnownBiasGyroscopeCalibrator, UnorderedStandardDeviationBodyKinematicsGyroscopeCalibrator {
 
     /**
      * Indicates whether by default a common z-axis is assumed for both the accelerometer
@@ -4063,6 +4063,7 @@ public class KnownBiasTurntableGyroscopeCalibrator implements GyroscopeNonLinear
      * @return collection of body kinematics measurements at a known position
      * with unknown orientations.
      */
+    @Override
     public Collection<StandardDeviationBodyKinematics> getMeasurements() {
         return mMeasurements;
     }
@@ -4076,6 +4077,7 @@ public class KnownBiasTurntableGyroscopeCalibrator implements GyroscopeNonLinear
      *                     known position witn unknown orientations.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setMeasurements(
             final Collection<StandardDeviationBodyKinematics> measurements)
             throws LockedException {
@@ -4155,6 +4157,38 @@ public class KnownBiasTurntableGyroscopeCalibrator implements GyroscopeNonLinear
         }
 
         mPosition = convertPosition(position);
+    }
+
+    /**
+     * Indicates the type of measurement or sequence used by this calibrator.
+     *
+     * @return type of measurement or sequence used by this calibrator.
+     */
+    @Override
+    public GyroscopeCalibratorMeasurementOrSequenceType getMeasurementOrSequenceType() {
+        return GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_BODY_KINEMATICS_MEASUREMENT;
+    }
+
+    /**
+     * Indicates whether this calibrator requires ordered measurements or sequences
+     * in a list or not.
+     *
+     * @return true if measurements or sequences must be ordered, false otherwise.
+     */
+    @Override
+    public boolean isOrderedMeasurementsOrSequencesRequired() {
+        return false;
+    }
+
+    /**
+     * Indicates whether this calibrator requires quality scores for each
+     * measurement/sequence or not.
+     *
+     * @return true if quality scores are required, false otherwise.
+     */
+    @Override
+    public boolean isQualityScoresRequired() {
+        return false;
     }
 
     /**
@@ -4250,7 +4284,8 @@ public class KnownBiasTurntableGyroscopeCalibrator implements GyroscopeNonLinear
      *
      * @return minimum number of required measurements.
      */
-    public int getMinimumRequiredMeasurements() {
+    @Override
+    public int getMinimumRequiredMeasurementsOrSequences() {
         if (mCommonAxisUsed) {
             if (mEstimateGDependentCrossBiases) {
                 return MINIMUM_MEASUREMENTS_COMMON_Z_AXIS_AND_CROSS_BIASES;
@@ -4274,7 +4309,7 @@ public class KnownBiasTurntableGyroscopeCalibrator implements GyroscopeNonLinear
     @Override
     public boolean isReady() {
         return mMeasurements != null
-                && mMeasurements.size() >= getMinimumRequiredMeasurements();
+                && mMeasurements.size() >= getMinimumRequiredMeasurementsOrSequences();
     }
 
     /**

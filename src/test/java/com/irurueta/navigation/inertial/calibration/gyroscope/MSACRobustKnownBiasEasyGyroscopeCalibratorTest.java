@@ -239,10 +239,14 @@ public class MSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
         assertNull(calibrator.getSequences());
 
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.BODY_KINEMATICS_SEQUENCE,
+                calibrator.getMeasurementOrSequenceType());
+        assertTrue(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredSequences(), 16);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 16);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
 
@@ -451,10 +455,14 @@ public class MSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
         assertSame(calibrator.getSequences(), sequences);
 
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.BODY_KINEMATICS_SEQUENCE,
+                calibrator.getMeasurementOrSequenceType());
+        assertTrue(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredSequences(), 16);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 16);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
 
@@ -703,10 +711,14 @@ public class MSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
         assertSame(calibrator.getSequences(), sequences);
 
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.BODY_KINEMATICS_SEQUENCE,
+                calibrator.getMeasurementOrSequenceType());
+        assertTrue(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredSequences(), 16);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 16);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
 
@@ -962,10 +974,14 @@ public class MSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
         assertSame(calibrator.getSequences(), sequences);
 
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.BODY_KINEMATICS_SEQUENCE,
+                calibrator.getMeasurementOrSequenceType());
+        assertTrue(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredSequences(), 16);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 16);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
 
@@ -1210,10 +1226,14 @@ public class MSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
         assertSame(calibrator.getSequences(), sequences);
 
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.BODY_KINEMATICS_SEQUENCE,
+                calibrator.getMeasurementOrSequenceType());
+        assertTrue(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredSequences(), 16);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 16);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
 
@@ -1480,10 +1500,14 @@ public class MSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
         assertSame(calibrator.getSequences(), sequences);
 
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.BODY_KINEMATICS_SEQUENCE,
+                calibrator.getMeasurementOrSequenceType());
+        assertTrue(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredSequences(), 16);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 16);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
 
@@ -1770,10 +1794,14 @@ public class MSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
         assertSame(calibrator.getSequences(), sequences);
 
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.BODY_KINEMATICS_SEQUENCE,
+                calibrator.getMeasurementOrSequenceType());
+        assertTrue(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredSequences(), 16);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 16);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
 
@@ -2061,10 +2089,14 @@ public class MSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
         assertSame(calibrator.getSequences(), sequences);
 
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.BODY_KINEMATICS_SEQUENCE,
+                calibrator.getMeasurementOrSequenceType());
+        assertTrue(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredSequences(), 16);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 16);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
 
@@ -2367,10 +2399,14 @@ public class MSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
         assertSame(calibrator.getSequences(), sequences);
 
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.BODY_KINEMATICS_SEQUENCE,
+                calibrator.getMeasurementOrSequenceType());
+        assertTrue(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredSequences(), 16);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 16);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
 
@@ -2654,10 +2690,14 @@ public class MSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
         assertSame(calibrator.getSequences(), sequences);
 
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.BODY_KINEMATICS_SEQUENCE,
+                calibrator.getMeasurementOrSequenceType());
+        assertTrue(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredSequences(), 10);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 10);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
 
@@ -2920,10 +2960,14 @@ public class MSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
         assertSame(calibrator.getSequences(), sequences);
 
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.BODY_KINEMATICS_SEQUENCE,
+                calibrator.getMeasurementOrSequenceType());
+        assertTrue(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredSequences(), 10);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 10);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
 
@@ -3187,10 +3231,14 @@ public class MSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
         assertSame(calibrator.getSequences(), sequences);
 
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.BODY_KINEMATICS_SEQUENCE,
+                calibrator.getMeasurementOrSequenceType());
+        assertTrue(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredSequences(), 10);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 10);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
 
@@ -3447,10 +3495,14 @@ public class MSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
         assertSame(calibrator.getSequences(), sequences);
 
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.BODY_KINEMATICS_SEQUENCE,
+                calibrator.getMeasurementOrSequenceType());
+        assertTrue(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredSequences(), 10);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 10);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
 
@@ -3724,10 +3776,14 @@ public class MSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
         assertSame(calibrator.getSequences(), sequences);
 
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.BODY_KINEMATICS_SEQUENCE,
+                calibrator.getMeasurementOrSequenceType());
+        assertTrue(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredSequences(), 10);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 10);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
 
@@ -4032,10 +4088,14 @@ public class MSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
         assertSame(calibrator.getSequences(), sequences);
 
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.BODY_KINEMATICS_SEQUENCE,
+                calibrator.getMeasurementOrSequenceType());
+        assertTrue(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredSequences(), 10);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 10);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
 
@@ -4340,10 +4400,14 @@ public class MSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
         assertSame(calibrator.getSequences(), sequences);
 
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.BODY_KINEMATICS_SEQUENCE,
+                calibrator.getMeasurementOrSequenceType());
+        assertTrue(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredSequences(), 10);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 10);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
 
@@ -4666,10 +4730,14 @@ public class MSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
         assertSame(calibrator.getSequences(), sequences);
 
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.BODY_KINEMATICS_SEQUENCE,
+                calibrator.getMeasurementOrSequenceType());
+        assertTrue(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredSequences(), 10);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 10);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
 
@@ -6242,12 +6310,12 @@ public class MSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
     }
 
     @Test
-    public void testGetMinimumRequiredSequences() throws LockedException {
+    public void testGetMinimumRequiredMeasurementsOrSequences() throws LockedException {
         final MSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
                 new MSACRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check initial value
-        assertEquals(calibrator.getMinimumRequiredSequences(), 16);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 16);
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
 
@@ -6255,7 +6323,7 @@ public class MSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         calibrator.setGDependentCrossBiasesEstimated(false);
 
         // check
-        assertEquals(calibrator.getMinimumRequiredSequences(), 7);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 7);
         assertTrue(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
 
@@ -6263,7 +6331,7 @@ public class MSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         calibrator.setCommonAxisUsed(false);
 
         // check
-        assertEquals(calibrator.getMinimumRequiredSequences(), 10);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 10);
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
 
@@ -6271,7 +6339,7 @@ public class MSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         calibrator.setGDependentCrossBiasesEstimated(true);
 
         // check
-        assertEquals(calibrator.getMinimumRequiredSequences(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 19);
         assertFalse(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
     }
@@ -6294,7 +6362,7 @@ public class MSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         // set enough sequences
         final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences2 =
                 new ArrayList<>();
-        for (int i = 0; i < calibrator.getMinimumRequiredSequences(); i++) {
+        for (int i = 0; i < calibrator.getMinimumRequiredMeasurementsOrSequences(); i++) {
             sequences2.add(new BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>());
         }
         calibrator.setSequences(sequences2);
@@ -7697,7 +7765,7 @@ public class MSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
                     new MSACRobustKnownBiasEasyGyroscopeCalibrator(sequences,
                             true, false,
                             bg, mg, gg, ba, ma, this);
-            final int subsetSize = calibrator.getMinimumRequiredSequences();
+            final int subsetSize = calibrator.getMinimumRequiredMeasurementsOrSequences();
             calibrator.setPreliminarySubsetSize(subsetSize);
             calibrator.setThreshold(THRESHOLD);
 
@@ -7965,7 +8033,7 @@ public class MSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
                     new MSACRobustKnownBiasEasyGyroscopeCalibrator(sequences,
                             false, false,
                             bg, mg, gg, ba, ma, this);
-            final int subsetSize = calibrator.getMinimumRequiredSequences();
+            final int subsetSize = calibrator.getMinimumRequiredMeasurementsOrSequences();
             calibrator.setPreliminarySubsetSize(subsetSize);
             calibrator.setThreshold(THRESHOLD);
 
@@ -8230,7 +8298,7 @@ public class MSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
                     new MSACRobustKnownBiasEasyGyroscopeCalibrator(sequences,
                             true, true,
                             bg, mg, gg, ba, ma, this);
-            final int subsetSize = calibrator.getMinimumRequiredSequences();
+            final int subsetSize = calibrator.getMinimumRequiredMeasurementsOrSequences();
             calibrator.setPreliminarySubsetSize(subsetSize);
             calibrator.setThreshold(THRESHOLD);
 
@@ -8498,7 +8566,7 @@ public class MSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
                     new MSACRobustKnownBiasEasyGyroscopeCalibrator(sequences,
                             false, true,
                             bg, mg, gg, ba, ma, this);
-            final int subsetSize = calibrator.getMinimumRequiredSequences();
+            final int subsetSize = calibrator.getMinimumRequiredMeasurementsOrSequences();
             calibrator.setPreliminarySubsetSize(subsetSize);
             calibrator.setThreshold(THRESHOLD);
 

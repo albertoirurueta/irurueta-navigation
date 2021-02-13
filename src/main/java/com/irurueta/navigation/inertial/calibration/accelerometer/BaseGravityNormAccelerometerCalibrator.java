@@ -73,7 +73,7 @@ import java.util.Collection;
 public abstract class BaseGravityNormAccelerometerCalibrator<C extends BaseGravityNormAccelerometerCalibrator<?, ?>,
         L extends BaseGravityNormAccelerometerCalibratorListener<C>> implements AccelerometerNonLinearCalibrator,
         UnknownBiasNonLinearAccelerometerCalibrator, AccelerometerCalibrationSource,
-        AccelerometerBiasUncertaintySource {
+        AccelerometerBiasUncertaintySource, UnorderedStandardDeviationBodyKinematicsAccelerometerCalibrator {
 
     /**
      * Indicates whether by default a common z-axis is assumed for both the accelerometer
@@ -279,7 +279,7 @@ public abstract class BaseGravityNormAccelerometerCalibrator<C extends BaseGravi
     private double mFmeasZ;
 
     /**
-     * Internaly holds measured specific force during calibration expressed as
+     * Internally holds measured specific force during calibration expressed as
      * a column matrix.
      */
     private Matrix mFmeas;
@@ -5142,6 +5142,7 @@ public abstract class BaseGravityNormAccelerometerCalibrator<C extends BaseGravi
      * @return collection of body kinematics measurements at a known position
      * with unknown orientations.
      */
+    @Override
     public Collection<StandardDeviationBodyKinematics> getMeasurements() {
         return mMeasurements;
     }
@@ -5155,12 +5156,45 @@ public abstract class BaseGravityNormAccelerometerCalibrator<C extends BaseGravi
      *                     known position witn unknown orientations.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setMeasurements(final Collection<StandardDeviationBodyKinematics> measurements)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
         mMeasurements = measurements;
+    }
+
+    /**
+     * Indicates the type of measurement used by this calibrator.
+     *
+     * @return type of measurement used by this calibrator.
+     */
+    @Override
+    public AccelerometerCalibratorMeasurementType getMeasurementType() {
+        return AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS;
+    }
+
+    /**
+     * Indicates whether this calibrator requires ordered measurements in a
+     * list or not.
+     *
+     * @return true if measurements must be ordered, false otherwise.
+     */
+    @Override
+    public boolean isOrderedMeasurementsRequired() {
+        return false;
+    }
+
+    /**
+     * Indicates whether this calibrator requires quality scores for each
+     * measurement or not.
+     *
+     * @return true if quality scores are required, false otherwise.
+     */
+    @Override
+    public boolean isQualityScoresRequired() {
+        return false;
     }
 
     /**
@@ -5222,6 +5256,7 @@ public abstract class BaseGravityNormAccelerometerCalibrator<C extends BaseGravi
      *
      * @return minimum number of required measurements.
      */
+    @Override
     public int getMinimumRequiredMeasurements() {
         return mCommonAxisUsed ? MINIMUM_MEASUREMENTS_COMON_Z_AXIS :
                 MINIMUM_MEASUREMENTS_GENERAL;

@@ -84,10 +84,16 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibratorTest implements
 
         // check default values
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownFrameAccelerometerLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
         assertNull(calibrator.getListener());
+        assertEquals(KnownFrameAccelerometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedBiases());
@@ -122,10 +128,18 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibratorTest implements
 
         // check default values
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownFrameAccelerometerLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownFrameAccelerometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
+        assertEquals(KnownFrameAccelerometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedBiases());
@@ -162,10 +176,16 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibratorTest implements
 
         // check default values
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownFrameAccelerometerLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
         assertNull(calibrator.getListener());
+        assertEquals(KnownFrameAccelerometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedBiases());
@@ -201,10 +221,16 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibratorTest implements
 
         // check default values
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownFrameAccelerometerLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownFrameAccelerometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedBiases());
@@ -240,8 +266,14 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibratorTest implements
 
         // check default values
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownFrameAccelerometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedBiases());
@@ -277,8 +309,14 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibratorTest implements
 
         // check default values
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownFrameAccelerometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedBiases());
@@ -314,8 +352,14 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibratorTest implements
 
         // check default values
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownFrameAccelerometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedBiases());
@@ -351,8 +395,14 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibratorTest implements
 
         // check default values
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownFrameAccelerometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedBiases());

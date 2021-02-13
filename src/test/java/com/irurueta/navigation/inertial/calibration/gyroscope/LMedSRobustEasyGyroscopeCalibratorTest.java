@@ -240,10 +240,14 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
 
         assertNull(calibrator.getSequences());
 
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.BODY_KINEMATICS_SEQUENCE,
+                calibrator.getMeasurementOrSequenceType());
+        assertTrue(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredSequences(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 19);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
 
@@ -487,10 +491,14 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
 
         assertSame(calibrator.getSequences(), sequences);
 
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.BODY_KINEMATICS_SEQUENCE,
+                calibrator.getMeasurementOrSequenceType());
+        assertTrue(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredSequences(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 19);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
 
@@ -774,10 +782,14 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
 
         assertSame(calibrator.getSequences(), sequences);
 
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.BODY_KINEMATICS_SEQUENCE,
+                calibrator.getMeasurementOrSequenceType());
+        assertTrue(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredSequences(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 19);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
 
@@ -1069,10 +1081,14 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
 
         assertSame(calibrator.getSequences(), sequences);
 
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.BODY_KINEMATICS_SEQUENCE,
+                calibrator.getMeasurementOrSequenceType());
+        assertTrue(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredSequences(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 19);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
 
@@ -1352,10 +1368,14 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
 
         assertSame(calibrator.getSequences(), sequences);
 
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.BODY_KINEMATICS_SEQUENCE,
+                calibrator.getMeasurementOrSequenceType());
+        assertTrue(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredSequences(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 19);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
 
@@ -1657,10 +1677,14 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
 
         assertSame(calibrator.getSequences(), sequences);
 
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.BODY_KINEMATICS_SEQUENCE,
+                calibrator.getMeasurementOrSequenceType());
+        assertTrue(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredSequences(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 19);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
 
@@ -1982,10 +2006,14 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
 
         assertSame(calibrator.getSequences(), sequences);
 
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.BODY_KINEMATICS_SEQUENCE,
+                calibrator.getMeasurementOrSequenceType());
+        assertTrue(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredSequences(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 19);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
 
@@ -2308,10 +2336,14 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
 
         assertSame(calibrator.getSequences(), sequences);
 
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.BODY_KINEMATICS_SEQUENCE,
+                calibrator.getMeasurementOrSequenceType());
+        assertTrue(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredSequences(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 19);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
 
@@ -2649,10 +2681,14 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
 
         assertSame(calibrator.getSequences(), sequences);
 
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.BODY_KINEMATICS_SEQUENCE,
+                calibrator.getMeasurementOrSequenceType());
+        assertTrue(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredSequences(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 19);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
 
@@ -2971,10 +3007,14 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
 
         assertSame(calibrator.getSequences(), sequences);
 
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.BODY_KINEMATICS_SEQUENCE,
+                calibrator.getMeasurementOrSequenceType());
+        assertTrue(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredSequences(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 13);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
 
@@ -3272,10 +3312,14 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
 
         assertSame(calibrator.getSequences(), sequences);
 
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.BODY_KINEMATICS_SEQUENCE,
+                calibrator.getMeasurementOrSequenceType());
+        assertTrue(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredSequences(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 13);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
 
@@ -3574,10 +3618,14 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
 
         assertSame(calibrator.getSequences(), sequences);
 
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.BODY_KINEMATICS_SEQUENCE,
+                calibrator.getMeasurementOrSequenceType());
+        assertTrue(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredSequences(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 13);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
 
@@ -3869,10 +3917,14 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
 
         assertSame(calibrator.getSequences(), sequences);
 
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.BODY_KINEMATICS_SEQUENCE,
+                calibrator.getMeasurementOrSequenceType());
+        assertTrue(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredSequences(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 13);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
 
@@ -4181,10 +4233,14 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
 
         assertSame(calibrator.getSequences(), sequences);
 
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.BODY_KINEMATICS_SEQUENCE,
+                calibrator.getMeasurementOrSequenceType());
+        assertTrue(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredSequences(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 13);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
 
@@ -4524,10 +4580,14 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
 
         assertSame(calibrator.getSequences(), sequences);
 
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.BODY_KINEMATICS_SEQUENCE,
+                calibrator.getMeasurementOrSequenceType());
+        assertTrue(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredSequences(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 13);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
 
@@ -4867,10 +4927,14 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
 
         assertSame(calibrator.getSequences(), sequences);
 
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.BODY_KINEMATICS_SEQUENCE,
+                calibrator.getMeasurementOrSequenceType());
+        assertTrue(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredSequences(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 13);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
 
@@ -5228,10 +5292,14 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
 
         assertSame(calibrator.getSequences(), sequences);
 
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.BODY_KINEMATICS_SEQUENCE,
+                calibrator.getMeasurementOrSequenceType());
+        assertTrue(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredSequences(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 13);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
 
@@ -6845,12 +6913,12 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
     }
 
     @Test
-    public void testGetMinimumRequiredSequences() throws LockedException {
+    public void testGetMinimumRequiredMeasurementsOrSequences() throws LockedException {
         final LMedSRobustEasyGyroscopeCalibrator calibrator =
                 new LMedSRobustEasyGyroscopeCalibrator();
 
         // check initial value
-        assertEquals(calibrator.getMinimumRequiredSequences(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 19);
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
 
@@ -6858,7 +6926,7 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
         calibrator.setGDependentCrossBiasesEstimated(false);
 
         // check
-        assertEquals(calibrator.getMinimumRequiredSequences(), 10);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 10);
         assertTrue(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
 
@@ -6866,7 +6934,7 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
         calibrator.setCommonAxisUsed(false);
 
         // check
-        assertEquals(calibrator.getMinimumRequiredSequences(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 13);
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
 
@@ -6874,7 +6942,7 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
         calibrator.setGDependentCrossBiasesEstimated(true);
 
         // check
-        assertEquals(calibrator.getMinimumRequiredSequences(), 22);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 22);
         assertFalse(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
     }
@@ -6897,7 +6965,7 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
         // set enough sequences
         final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences2 =
                 new ArrayList<>();
-        for (int i = 0; i < calibrator.getMinimumRequiredSequences(); i++) {
+        for (int i = 0; i < calibrator.getMinimumRequiredMeasurementsOrSequences(); i++) {
             sequences2.add(new BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>());
         }
         calibrator.setSequences(sequences2);
@@ -8314,7 +8382,7 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
                     new LMedSRobustEasyGyroscopeCalibrator(sequences,
                             true, false,
                             bg, mg, gg, ba, ma, this);
-            final int subsetSize = calibrator.getMinimumRequiredSequences();
+            final int subsetSize = calibrator.getMinimumRequiredMeasurementsOrSequences();
             calibrator.setPreliminarySubsetSize(subsetSize);
             calibrator.setStopThreshold(THRESHOLD);
 
@@ -8584,7 +8652,7 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
                     new LMedSRobustEasyGyroscopeCalibrator(sequences,
                             false, false,
                             bg, mg, gg, ba, ma, this);
-            final int subsetSize = calibrator.getMinimumRequiredSequences();
+            final int subsetSize = calibrator.getMinimumRequiredMeasurementsOrSequences();
             calibrator.setPreliminarySubsetSize(subsetSize);
             calibrator.setStopThreshold(THRESHOLD);
 
@@ -8854,7 +8922,7 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
                     new LMedSRobustEasyGyroscopeCalibrator(sequences,
                             true, true,
                             bg, mg, gg, ba, ma, this);
-            final int subsetSize = calibrator.getMinimumRequiredSequences();
+            final int subsetSize = calibrator.getMinimumRequiredMeasurementsOrSequences();
             calibrator.setPreliminarySubsetSize(subsetSize);
             calibrator.setStopThreshold(THRESHOLD);
 
@@ -9127,7 +9195,7 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
                     new LMedSRobustEasyGyroscopeCalibrator(sequences,
                             false, true,
                             bg, mg, gg, ba, ma, this);
-            final int subsetSize = calibrator.getMinimumRequiredSequences();
+            final int subsetSize = calibrator.getMinimumRequiredMeasurementsOrSequences();
             calibrator.setPreliminarySubsetSize(subsetSize);
             calibrator.setStopThreshold(THRESHOLD);
 

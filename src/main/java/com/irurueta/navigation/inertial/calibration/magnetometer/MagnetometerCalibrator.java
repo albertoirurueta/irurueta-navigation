@@ -27,6 +27,29 @@ import com.irurueta.navigation.inertial.calibration.CalibrationException;
 public interface MagnetometerCalibrator {
 
     /**
+     * Indicates the type of measurement used by this calibrator.
+     *
+     * @return type of measurement used by this calibrator.
+     */
+    MagnetometerCalibratorMeasurementType getMeasurementType();
+
+    /**
+     * Indicates whether this calibrator requires ordered measurements in a
+     * list or not.
+     *
+     * @return true if measurements must be ordered, false otherwise.
+     */
+    boolean isOrderedMeasurementsRequired();
+
+    /**
+     * Indicates whether this calibrator requires quality scores for each
+     * measurement or not.
+     *
+     * @return true if quality scores are required, false otherwise.
+     */
+    boolean isQualityScoresRequired();
+
+    /**
      * Indicates whether z-axis is assumed to be common for accelerometer,
      * gyroscope and magnetometer.
      * When enabled, this eliminates 3 variables from Mm (soft-iron) matrix.
@@ -47,6 +70,13 @@ public interface MagnetometerCalibrator {
      * @throws LockedException if estimator is currently running.
      */
     void setCommonAxisUsed(final boolean commonAxisUsed) throws LockedException;
+
+    /**
+     * Gets minimum number of required measurements.
+     *
+     * @return minimum number of required measurements.
+     */
+    int getMinimumRequiredMeasurements();
 
     /**
      * Indicates whether calibrator is ready to start the estimator.

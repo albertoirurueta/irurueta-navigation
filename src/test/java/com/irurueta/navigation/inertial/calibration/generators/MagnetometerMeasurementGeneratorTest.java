@@ -1907,5 +1907,4 @@ public class MagnetometerMeasurementGeneratorTest implements MagnetometerMeasure
         ECEFKinematicsEstimator.estimateKinematics(TIME_INTERVAL_SECONDS,
                 newEcefFrame, newEcefFrame, trueKinematics);
     }
-
 }

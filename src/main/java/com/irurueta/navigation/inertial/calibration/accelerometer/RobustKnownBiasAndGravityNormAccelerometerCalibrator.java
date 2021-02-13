@@ -59,7 +59,9 @@ import java.util.List;
  * - w is measurement noise.
  */
 public abstract class RobustKnownBiasAndGravityNormAccelerometerCalibrator implements
-        AccelerometerNonLinearCalibrator, KnownBiasAccelerometerCalibrator {
+        AccelerometerNonLinearCalibrator, KnownBiasAccelerometerCalibrator,
+        OrderedStandardDeviationBodyKinematicsAccelerometerCalibrator,
+        QualityScoredAccelerometerCalibrator {
 
     /**
      * Indicates whether by default a common z-axis is assumed for both the accelerometer
@@ -2028,6 +2030,7 @@ public abstract class RobustKnownBiasAndGravityNormAccelerometerCalibrator imple
      *
      * @return list of body kinematics measurements.
      */
+    @Override
     public List<StandardDeviationBodyKinematics> getMeasurements() {
         return mMeasurements;
     }
@@ -2040,6 +2043,7 @@ public abstract class RobustKnownBiasAndGravityNormAccelerometerCalibrator imple
      * @param measurements list of body kinematics measurements.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setMeasurements(
             final List<StandardDeviationBodyKinematics> measurements)
             throws LockedException {
@@ -2047,6 +2051,27 @@ public abstract class RobustKnownBiasAndGravityNormAccelerometerCalibrator imple
             throw new LockedException();
         }
         mMeasurements = measurements;
+    }
+
+    /**
+     * Indicates the type of measurement used by this calibrator.
+     *
+     * @return type of measurement used by this calibrator.
+     */
+    @Override
+    public AccelerometerCalibratorMeasurementType getMeasurementType() {
+        return AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS;
+    }
+
+    /**
+     * Indicates whether this calibrator requires ordered measurements in a
+     * list or not.
+     *
+     * @return true if measurements must be ordered, false otherwise.
+     */
+    @Override
+    public boolean isOrderedMeasurementsRequired() {
+        return true;
     }
 
     /**
@@ -2110,6 +2135,7 @@ public abstract class RobustKnownBiasAndGravityNormAccelerometerCalibrator imple
      *
      * @return minimum number of required measurements.
      */
+    @Override
     public int getMinimumRequiredMeasurements() {
         return mCommonAxisUsed ? MINIMUM_MEASUREMENTS_COMMON_Z_AXIS :
                 MINIMUM_MEASUREMENTS_GENERAL;
@@ -2296,6 +2322,7 @@ public abstract class RobustKnownBiasAndGravityNormAccelerometerCalibrator imple
      *
      * @return quality scores corresponding to each sample.
      */
+    @Override
     public double[] getQualityScores() {
         return null;
     }
@@ -2312,6 +2339,7 @@ public abstract class RobustKnownBiasAndGravityNormAccelerometerCalibrator imple
      *                                  is smaller than minimum required samples.
      * @throws LockedException          if calibrator is currently running.
      */
+    @Override
     public void setQualityScores(final double[] qualityScores)
             throws LockedException {
     }

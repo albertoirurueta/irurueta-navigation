@@ -24,6 +24,30 @@ import com.irurueta.navigation.inertial.calibration.CalibrationException;
  * Interface for gyroscope calibrators.
  */
 public interface GyroscopeCalibrator {
+
+    /**
+     * Indicates the type of measurement or sequence used by this calibrator.
+     *
+     * @return type of measurement or sequence used by this calibrator.
+     */
+    GyroscopeCalibratorMeasurementOrSequenceType getMeasurementOrSequenceType();
+
+    /**
+     * Indicates whether this calibrator requires ordered measurements or sequences
+     * in a list or not.
+     *
+     * @return true if measurements or sequences must be ordered, false otherwise.
+     */
+    boolean isOrderedMeasurementsOrSequencesRequired();
+
+    /**
+     * Indicates whether this calibrator requires quality scores for each
+     * measurement/sequence or not.
+     *
+     * @return true if quality scores are required, false otherwise.
+     */
+    boolean isQualityScoresRequired();
+
     /**
      * Indicates whether z-axis is assumed to be common for accelerometer and
      * gyroscope.
@@ -44,6 +68,15 @@ public interface GyroscopeCalibrator {
      * @throws LockedException if calibrator is currently running.
      */
     void setCommonAxisUsed(final boolean commonAxisUsed) throws LockedException;
+
+    /**
+     * Gets minimum number of required measurements or
+     * sequences.
+     *
+     * @return minimum number of required measurements
+     * or sequences.
+     */
+    int getMinimumRequiredMeasurementsOrSequences();
 
     /**
      * Indicates whether calibrator is ready to start the calibration.

@@ -68,7 +68,8 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibrator implements
         KnownFrameAccelerometerCalibrator<StandardDeviationFrameBodyKinematics,
                 KnownFrameAccelerometerNonLinearLeastSquaresCalibratorListener>,
         AccelerometerNonLinearCalibrator, UnknownBiasNonLinearAccelerometerCalibrator,
-        AccelerometerCalibrationSource, AccelerometerBiasUncertaintySource {
+        AccelerometerCalibrationSource, AccelerometerBiasUncertaintySource,
+        UnorderedStandardDeviationFrameBodyKinematicsAccelerometerCalibrator {
 
     /**
      * Indicates whether by default a common z-axis is assumed for both the accelerometer
@@ -2935,6 +2936,38 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibrator implements
     }
 
     /**
+     * Indicates the type of measurement used by this calibrator.
+     *
+     * @return type of measurement used by this calibrator.
+     */
+    @Override
+    public AccelerometerCalibratorMeasurementType getMeasurementType() {
+        return AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS;
+    }
+
+    /**
+     * Indicates whether this calibrator requires ordered measurements in a
+     * list or not.
+     *
+     * @return true if measurements must be ordered, false otherwise.
+     */
+    @Override
+    public boolean isOrderedMeasurementsRequired() {
+        return false;
+    }
+
+    /**
+     * Indicates whether this calibrator requires quality scores for each
+     * measurement or not.
+     *
+     * @return true if quality scores are required, false otherwise.
+     */
+    @Override
+    public boolean isQualityScoresRequired() {
+        return false;
+    }
+
+    /**
      * Indicates whether z-axis is assumed to be common for accelerometer and
      * gyroscope.
      * When enabled, this eliminates 3 variables from Ma matrix.
@@ -2990,6 +3023,16 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibrator implements
         }
 
         mListener = listener;
+    }
+
+    /**
+     * Gets minimum number of required measurements.
+     *
+     * @return minimum number of required measurements.
+     */
+    @Override
+    public int getMinimumRequiredMeasurements() {
+        return MINIMUM_MEASUREMENTS;
     }
 
     /**

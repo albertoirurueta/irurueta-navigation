@@ -76,7 +76,9 @@ import java.util.List;
  * constant at provided location and instant.
  */
 public abstract class RobustKnownHardIronPositionAndInstantMagnetometerCalibrator implements
-        MagnetometerNonLinearCalibrator, KnownHardIronMagnetometerCalibrator {
+        MagnetometerNonLinearCalibrator, KnownHardIronMagnetometerCalibrator,
+        OrderedStandardDeviationBodyMagneticFluxDensityMagnetometerCalibrator,
+        QualityScoredMagnetometerCalibrator {
 
     /**
      * Indicates whether by default a common z-axis is assumed for the accelerometer,
@@ -2237,6 +2239,7 @@ public abstract class RobustKnownHardIronPositionAndInstantMagnetometerCalibrato
      * @return collection of body magnetic flux density measurements at
      * a known position and timestamp with unknown orientations.
      */
+    @Override
     public List<StandardDeviationBodyMagneticFluxDensity> getMeasurements() {
         return mMeasurements;
     }
@@ -2251,6 +2254,7 @@ public abstract class RobustKnownHardIronPositionAndInstantMagnetometerCalibrato
      *                     with unknown orientations.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setMeasurements(
             final List<StandardDeviationBodyMagneticFluxDensity> measurements)
             throws LockedException {
@@ -2258,6 +2262,27 @@ public abstract class RobustKnownHardIronPositionAndInstantMagnetometerCalibrato
             throw new LockedException();
         }
         mMeasurements = measurements;
+    }
+
+    /**
+     * Indicates the type of measurement used by this calibrator.
+     *
+     * @return type of measurement used by this calibrator.
+     */
+    @Override
+    public MagnetometerCalibratorMeasurementType getMeasurementType() {
+        return MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY;
+    }
+
+    /**
+     * Indicates whether this calibrator requires ordered measurements in a
+     * list or not.
+     *
+     * @return true if measurements must be ordered, false otherwise.
+     */
+    @Override
+    public boolean isOrderedMeasurementsRequired() {
+        return true;
     }
 
     /**
@@ -2323,6 +2348,7 @@ public abstract class RobustKnownHardIronPositionAndInstantMagnetometerCalibrato
      *
      * @return minimum number of required measurements.
      */
+    @Override
     public int getMinimumRequiredMeasurements() {
         return mCommonAxisUsed ? MINIMUM_MEASUREMENTS_COMMON_Z_AXIS :
                 MINIMUM_MEASUREMENTS_GENERAL;
@@ -2534,6 +2560,7 @@ public abstract class RobustKnownHardIronPositionAndInstantMagnetometerCalibrato
      *
      * @return quality scores corresponding to each sample.
      */
+    @Override
     public double[] getQualityScores() {
         return null;
     }
@@ -2550,6 +2577,7 @@ public abstract class RobustKnownHardIronPositionAndInstantMagnetometerCalibrato
      *                                  is smaller than minimum required samples.
      * @throws LockedException          if calibrator is currently running.
      */
+    @Override
     public void setQualityScores(final double[] qualityScores)
             throws LockedException {
     }

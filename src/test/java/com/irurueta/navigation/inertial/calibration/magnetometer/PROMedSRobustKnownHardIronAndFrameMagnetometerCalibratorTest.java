@@ -169,8 +169,14 @@ public class PROMedSRobustKnownHardIronAndFrameMagnetometerCalibratorTest implem
         calibrator.getInitialMm(mm);
         assertEquals(mm, new Matrix(3, 3));
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(RobustKnownHardIronAndFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -267,8 +273,14 @@ public class PROMedSRobustKnownHardIronAndFrameMagnetometerCalibratorTest implem
         calibrator.getInitialMm(mm);
         assertEquals(mm, new Matrix(3, 3));
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(RobustKnownHardIronAndFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -368,8 +380,14 @@ public class PROMedSRobustKnownHardIronAndFrameMagnetometerCalibratorTest implem
         calibrator.getInitialMm(mm);
         assertEquals(mm, new Matrix(3, 3));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(RobustKnownHardIronAndFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -469,8 +487,14 @@ public class PROMedSRobustKnownHardIronAndFrameMagnetometerCalibratorTest implem
         calibrator.getInitialMm(mm);
         assertEquals(mm, new Matrix(3, 3));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(RobustKnownHardIronAndFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -567,8 +591,14 @@ public class PROMedSRobustKnownHardIronAndFrameMagnetometerCalibratorTest implem
         calibrator.getInitialMm(mm);
         assertEquals(mm, new Matrix(3, 3));
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(RobustKnownHardIronAndFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -665,8 +695,14 @@ public class PROMedSRobustKnownHardIronAndFrameMagnetometerCalibratorTest implem
         calibrator.getInitialMm(mm);
         assertEquals(mm, new Matrix(3, 3));
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(RobustKnownHardIronAndFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -766,8 +802,14 @@ public class PROMedSRobustKnownHardIronAndFrameMagnetometerCalibratorTest implem
         calibrator.getInitialMm(mm);
         assertEquals(mm, new Matrix(3, 3));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(RobustKnownHardIronAndFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -867,8 +909,14 @@ public class PROMedSRobustKnownHardIronAndFrameMagnetometerCalibratorTest implem
         calibrator.getInitialMm(mm);
         assertEquals(mm, new Matrix(3, 3));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(RobustKnownHardIronAndFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -966,8 +1014,14 @@ public class PROMedSRobustKnownHardIronAndFrameMagnetometerCalibratorTest implem
         calibrator.getInitialMm(mm);
         assertEquals(mm, new Matrix(3, 3));
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(RobustKnownHardIronAndFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -1076,8 +1130,14 @@ public class PROMedSRobustKnownHardIronAndFrameMagnetometerCalibratorTest implem
         calibrator.getInitialMm(mm);
         assertEquals(mm, new Matrix(3, 3));
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(RobustKnownHardIronAndFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -1189,8 +1249,14 @@ public class PROMedSRobustKnownHardIronAndFrameMagnetometerCalibratorTest implem
         calibrator.getInitialMm(mm);
         assertEquals(mm, new Matrix(3, 3));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(RobustKnownHardIronAndFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -1302,8 +1368,14 @@ public class PROMedSRobustKnownHardIronAndFrameMagnetometerCalibratorTest implem
         calibrator.getInitialMm(mm);
         assertEquals(mm, new Matrix(3, 3));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(RobustKnownHardIronAndFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -1412,8 +1484,14 @@ public class PROMedSRobustKnownHardIronAndFrameMagnetometerCalibratorTest implem
         calibrator.getInitialMm(mm);
         assertEquals(mm, new Matrix(3, 3));
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(RobustKnownHardIronAndFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -1522,8 +1600,14 @@ public class PROMedSRobustKnownHardIronAndFrameMagnetometerCalibratorTest implem
         calibrator.getInitialMm(mm);
         assertEquals(mm, new Matrix(3, 3));
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(RobustKnownHardIronAndFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -1635,8 +1719,14 @@ public class PROMedSRobustKnownHardIronAndFrameMagnetometerCalibratorTest implem
         calibrator.getInitialMm(mm);
         assertEquals(mm, new Matrix(3, 3));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(RobustKnownHardIronAndFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -1748,8 +1838,14 @@ public class PROMedSRobustKnownHardIronAndFrameMagnetometerCalibratorTest implem
         calibrator.getInitialMm(mm);
         assertEquals(mm, new Matrix(3, 3));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertTrue(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(RobustKnownHardIronAndFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());

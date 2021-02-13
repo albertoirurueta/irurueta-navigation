@@ -52,7 +52,7 @@ public class GyroscopeMeasurementsGenerator extends
         MeasurementsGenerator<
                 BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>,
                 GyroscopeMeasurementsGenerator,
-                GyroscopeMeasurementGeneratorListener, TimedBodyKinematics> 
+                GyroscopeMeasurementsGeneratorListener, TimedBodyKinematics>
         implements GyroscopeNoiseRootPsdSource {
 
     /**
@@ -145,7 +145,7 @@ public class GyroscopeMeasurementsGenerator extends
      * @param listener listener to handle events raised by this generator.
      */
     public GyroscopeMeasurementsGenerator(
-            final GyroscopeMeasurementGeneratorListener listener) {
+            final GyroscopeMeasurementsGeneratorListener listener) {
         super(listener);
     }
 
@@ -327,13 +327,15 @@ public class GyroscopeMeasurementsGenerator extends
                 mCurrentAvgZ = mStaticIntervalDetector.getInstantaneousAvgZ();
 
                 // we have all required data to generate a sequence
-                final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence =
-                        new BodyKinematicsSequence<>();
-                sequence.setBeforeMeanSpecificForceCoordinates(
-                        mPreviousAvgX, mPreviousAvgY, mPreviousAvgZ);
-                sequence.setItems(mCurrentSequenceItems);
-                sequence.setAfterMeanSpecificForceCoordinates(
-                        mCurrentAvgX, mCurrentAvgY, mCurrentAvgZ);
+                BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence = null;
+                if (mListener != null) {
+                    sequence = new BodyKinematicsSequence<>();
+                    sequence.setBeforeMeanSpecificForceCoordinates(
+                            mPreviousAvgX, mPreviousAvgY, mPreviousAvgZ);
+                    sequence.setItems(mCurrentSequenceItems);
+                    sequence.setAfterMeanSpecificForceCoordinates(
+                            mCurrentAvgX, mCurrentAvgY, mCurrentAvgZ);
+                }
 
                 mCurrentSequenceItems = null;
 

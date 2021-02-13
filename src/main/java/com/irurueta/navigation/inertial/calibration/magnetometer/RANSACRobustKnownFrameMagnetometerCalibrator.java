@@ -406,4 +406,15 @@ public class RANSACRobustKnownFrameMagnetometerCalibrator extends
     public RobustEstimatorMethod getMethod() {
         return RobustEstimatorMethod.RANSAC;
     }
+
+    /**
+     * Indicates whether this calibrator requires quality scores for each
+     * measurement or not.
+     *
+     * @return true if quality scores are required, false otherwise.
+     */
+    @Override
+    public boolean isQualityScoresRequired() {
+        return false;
+    }
 }

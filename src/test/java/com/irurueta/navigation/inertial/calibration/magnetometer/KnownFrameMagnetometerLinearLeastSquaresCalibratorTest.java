@@ -107,8 +107,14 @@ public class KnownFrameMagnetometerLinearLeastSquaresCalibratorTest implements
 
         // check default values
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -147,8 +153,14 @@ public class KnownFrameMagnetometerLinearLeastSquaresCalibratorTest implements
 
         // check default values
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -189,8 +201,14 @@ public class KnownFrameMagnetometerLinearLeastSquaresCalibratorTest implements
 
         // check default values
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -231,8 +249,14 @@ public class KnownFrameMagnetometerLinearLeastSquaresCalibratorTest implements
 
         // check default values
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -271,8 +295,14 @@ public class KnownFrameMagnetometerLinearLeastSquaresCalibratorTest implements
 
         // check default values
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -311,8 +341,14 @@ public class KnownFrameMagnetometerLinearLeastSquaresCalibratorTest implements
 
         // check default values
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -353,8 +389,14 @@ public class KnownFrameMagnetometerLinearLeastSquaresCalibratorTest implements
 
         // check default values
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -395,8 +437,14 @@ public class KnownFrameMagnetometerLinearLeastSquaresCalibratorTest implements
 
         // check default values
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -436,8 +484,14 @@ public class KnownFrameMagnetometerLinearLeastSquaresCalibratorTest implements
 
         // check default values
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertSame(calibrator.getMagneticModel(), model);
@@ -477,8 +531,14 @@ public class KnownFrameMagnetometerLinearLeastSquaresCalibratorTest implements
 
         // check default values
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertSame(calibrator.getMagneticModel(), model);
@@ -520,8 +580,14 @@ public class KnownFrameMagnetometerLinearLeastSquaresCalibratorTest implements
 
         // check default values
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertSame(calibrator.getMagneticModel(), model);
@@ -563,8 +629,14 @@ public class KnownFrameMagnetometerLinearLeastSquaresCalibratorTest implements
 
         // check default values
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertSame(calibrator.getMagneticModel(), model);
@@ -604,8 +676,14 @@ public class KnownFrameMagnetometerLinearLeastSquaresCalibratorTest implements
 
         // check default values
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertSame(calibrator.getMagneticModel(), model);
@@ -645,8 +723,14 @@ public class KnownFrameMagnetometerLinearLeastSquaresCalibratorTest implements
 
         // check default values
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertSame(calibrator.getMagneticModel(), model);
@@ -688,8 +772,14 @@ public class KnownFrameMagnetometerLinearLeastSquaresCalibratorTest implements
 
         // check default values
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertSame(calibrator.getMagneticModel(), model);
@@ -732,8 +822,14 @@ public class KnownFrameMagnetometerLinearLeastSquaresCalibratorTest implements
 
         // check default values
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertSame(calibrator.getMagneticModel(), model);

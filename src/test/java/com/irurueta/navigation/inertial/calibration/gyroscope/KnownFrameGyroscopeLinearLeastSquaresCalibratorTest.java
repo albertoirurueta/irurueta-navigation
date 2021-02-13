@@ -83,10 +83,16 @@ public class KnownFrameGyroscopeLinearLeastSquaresCalibratorTest implements
 
         // check default values
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownFrameGyroscopeLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
         assertNull(calibrator.getListener());
+        assertEquals(KnownFrameGyroscopeLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedBiases());
@@ -123,10 +129,16 @@ public class KnownFrameGyroscopeLinearLeastSquaresCalibratorTest implements
 
         // check default values
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownFrameGyroscopeLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownFrameGyroscopeLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedBiases());
@@ -165,10 +177,16 @@ public class KnownFrameGyroscopeLinearLeastSquaresCalibratorTest implements
 
         // check default values
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownFrameGyroscopeLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
         assertNull(calibrator.getListener());
+        assertEquals(KnownFrameGyroscopeLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedBiases());
@@ -205,10 +223,16 @@ public class KnownFrameGyroscopeLinearLeastSquaresCalibratorTest implements
 
         // check default values
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownFrameGyroscopeLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownFrameGyroscopeLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedBiases());
@@ -245,8 +269,14 @@ public class KnownFrameGyroscopeLinearLeastSquaresCalibratorTest implements
 
         // check default values
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownFrameGyroscopeLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedBiases());
@@ -283,8 +313,14 @@ public class KnownFrameGyroscopeLinearLeastSquaresCalibratorTest implements
 
         // check default values
         assertNull(calibrator.getMeasurements());
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownFrameGyroscopeLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedBiases());
@@ -321,8 +357,14 @@ public class KnownFrameGyroscopeLinearLeastSquaresCalibratorTest implements
 
         // check default values
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownFrameGyroscopeLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedBiases());
@@ -359,8 +401,14 @@ public class KnownFrameGyroscopeLinearLeastSquaresCalibratorTest implements
 
         // check default values
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.FRAME_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownFrameGyroscopeLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurementsOrSequences());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedBiases());
@@ -1159,7 +1207,7 @@ public class KnownFrameGyroscopeLinearLeastSquaresCalibratorTest implements
         assertEquals(AngularSpeedUnit.RADIANS_PER_SECOND, bTriad1.getUnit());
         final AngularSpeedTriad bTriad2 = new AngularSpeedTriad();
         assertTrue(calibrator.getEstimatedBiasAsTriad(bTriad2));
-        assertEquals(bTriad1, bTriad2);
+        assertTrue(bTriad1.equals(bTriad2, ABSOLUTE_ERROR));
 
         assertEquals(mg.getElementAt(0, 0), calibrator.getEstimatedSx(),
                 0.0);

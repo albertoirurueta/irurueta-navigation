@@ -1989,4 +1989,15 @@ public class MSACRobustKnownBiasTurntableGyroscopeCalibrator extends
     public RobustEstimatorMethod getMethod() {
         return RobustEstimatorMethod.MSAC;
     }
+
+    /**
+     * Indicates whether this calibrator requires quality scores for each
+     * measurement/sequence or not.
+     *
+     * @return true if quality scores are required, false otherwise.
+     */
+    @Override
+    public boolean isQualityScoresRequired() {
+        return false;
+    }
 }

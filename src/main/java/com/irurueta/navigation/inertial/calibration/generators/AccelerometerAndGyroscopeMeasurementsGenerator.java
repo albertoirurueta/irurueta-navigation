@@ -127,8 +127,8 @@ public class AccelerometerAndGyroscopeMeasurementsGenerator
     /**
      * Listener for internal gyroscope measurements generator.
      */
-    private final GyroscopeMeasurementGeneratorListener mGyroscopeListener =
-            new GyroscopeMeasurementGeneratorListener() {
+    private final GyroscopeMeasurementsGeneratorListener mGyroscopeListener =
+            new GyroscopeMeasurementsGeneratorListener() {
                 @Override
                 public void onInitializationStarted(
                         final GyroscopeMeasurementsGenerator generator) {

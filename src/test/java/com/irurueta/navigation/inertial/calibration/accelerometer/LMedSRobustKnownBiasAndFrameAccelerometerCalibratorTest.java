@@ -151,8 +151,14 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -249,8 +255,14 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -350,8 +362,14 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -449,8 +467,18 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -548,8 +576,14 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -647,8 +681,14 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -746,8 +786,14 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -845,8 +891,14 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -949,8 +1001,14 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -1048,8 +1106,14 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -1147,8 +1211,14 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -1246,8 +1316,14 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -1345,8 +1421,14 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -1444,8 +1526,14 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -1543,8 +1631,14 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -1643,8 +1737,14 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -1748,8 +1848,14 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -1847,8 +1953,14 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -1946,8 +2058,14 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -2045,8 +2163,14 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -2144,8 +2268,14 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -2244,8 +2374,14 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -2343,8 +2479,14 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -2442,8 +2584,14 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -2542,8 +2690,14 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -2651,8 +2805,14 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -2760,8 +2920,14 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -2869,8 +3035,14 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -2978,8 +3150,14 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -3087,8 +3265,14 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -3196,8 +3380,14 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -3305,8 +3495,14 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -3413,8 +3609,14 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -3527,8 +3729,14 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -3642,8 +3850,14 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -3757,8 +3971,14 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -3872,8 +4092,14 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -3987,8 +4213,14 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -4102,8 +4334,14 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -4217,8 +4455,14 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());

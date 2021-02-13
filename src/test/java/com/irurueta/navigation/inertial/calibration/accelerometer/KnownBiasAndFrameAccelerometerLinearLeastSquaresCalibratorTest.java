@@ -84,6 +84,10 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
 
         // check default values
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
@@ -133,6 +137,8 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
         Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        assertEquals(KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -153,6 +159,10 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
 
         // check default values
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
@@ -202,6 +212,8 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
         biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        assertEquals(KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -224,6 +236,10 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
 
         // check default values
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
@@ -273,6 +289,8 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
         biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        assertEquals(KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -293,6 +311,10 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
 
         // check default values
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
@@ -342,6 +364,8 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
         biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        assertEquals(KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -362,6 +386,10 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
 
         // check default values
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getBiasX(), 0.0, 0.0);
@@ -409,6 +437,8 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
         biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        assertEquals(KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -429,6 +459,10 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
 
         // check default values
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getBiasX(), 0.0, 0.0);
@@ -476,6 +510,8 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
         biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        assertEquals(KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -496,6 +532,10 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
 
         // check default values
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getBiasX(), 0.0, 0.0);
@@ -543,6 +583,8 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
         biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        assertEquals(KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -563,6 +605,10 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
 
         // check default values
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getBiasX(), 0.0, 0.0);
@@ -610,6 +656,8 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
         biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        assertEquals(KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -635,6 +683,10 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
 
         // check default values
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
@@ -684,6 +736,8 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
         biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        assertEquals(KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -704,6 +758,10 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
 
         // check default values
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
@@ -753,6 +811,8 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
         biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        assertEquals(KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -773,6 +833,10 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
 
         // check default values
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
@@ -822,6 +886,8 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
         biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        assertEquals(KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -842,6 +908,10 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
 
         // check default values
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
@@ -891,6 +961,8 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
         biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        assertEquals(KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -911,6 +983,10 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
 
         // check default values
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -958,6 +1034,8 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
         biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        assertEquals(KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -978,6 +1056,10 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
 
         // check default values
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -1025,6 +1107,8 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
         biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        assertEquals(KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -1045,6 +1129,10 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
 
         // check default values
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -1092,6 +1180,8 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
         biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        assertEquals(KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -1112,6 +1202,10 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
 
         // check default values
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -1159,6 +1253,8 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
         biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        assertEquals(KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -1186,6 +1282,10 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
 
         // check default values
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
@@ -1235,6 +1335,8 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
         biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        assertEquals(KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -1255,6 +1357,10 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
 
         // check default values
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
@@ -1304,6 +1410,8 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
         biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        assertEquals(KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -1324,6 +1432,10 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
 
         // check default values
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
@@ -1373,6 +1485,8 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
         biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        assertEquals(KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -1394,6 +1508,10 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
 
         // check default values
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertEquals(calibrator.isCommonAxisUsed(),
                 KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator
                         .DEFAULT_USE_COMMON_Z_AXIS);
@@ -1443,6 +1561,8 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
         biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        assertEquals(KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -1464,6 +1584,10 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
 
         // check default values
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -1511,6 +1635,8 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
         biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        assertEquals(KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -1533,6 +1659,10 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
 
         // check default values
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -1580,6 +1710,8 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
         biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        assertEquals(KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -1602,6 +1734,10 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
 
         // check default values
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -1649,6 +1785,8 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
         biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        assertEquals(KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -1671,6 +1809,10 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
 
         // check default values
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.FRAME_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -1718,6 +1860,8 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
         biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
+        assertEquals(KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());

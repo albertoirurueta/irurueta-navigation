@@ -6839,10 +6839,10 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         final CoordinateTransformation ecefC1 = ecefFrame1.getCoordinateTransformation();
 
         assertTrue(ecefPosition1.equals(estimator.getEcefPosition(),
-                LARGE_ABSOLUTE_ERROR));
+                10.0 * LARGE_ABSOLUTE_ERROR));
         final ECEFPosition ecefPosition2 = new ECEFPosition();
         estimator.getEcefPosition(ecefPosition2);
-        assertTrue(ecefPosition1.equals(ecefPosition2, LARGE_ABSOLUTE_ERROR));
+        assertTrue(ecefPosition1.equals(ecefPosition2, 10.0 * LARGE_ABSOLUTE_ERROR));
 
         assertTrue(ecefFrame1.equals(estimator.getEcefFrame(),
                 LARGE_ABSOLUTE_ERROR));

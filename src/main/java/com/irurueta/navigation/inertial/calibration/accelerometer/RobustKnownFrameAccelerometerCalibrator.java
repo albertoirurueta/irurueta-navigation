@@ -64,7 +64,8 @@ import java.util.List;
  */
 public abstract class RobustKnownFrameAccelerometerCalibrator implements
         AccelerometerNonLinearCalibrator, UnknownBiasNonLinearAccelerometerCalibrator, AccelerometerCalibrationSource,
-        AccelerometerBiasUncertaintySource {
+        AccelerometerBiasUncertaintySource, OrderedStandardDeviationFrameBodyKinematicsAccelerometerCalibrator,
+        QualityScoredAccelerometerCalibrator {
 
     /**
      * Indicates whether by default a common z-axis is assumed for both the accelerometer
@@ -1286,6 +1287,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements
      * @return a collection of body kinematics measurements taken at different
      * frames (positions, orientations and velocities).
      */
+    @Override
     public List<StandardDeviationFrameBodyKinematics> getMeasurements() {
         return mMeasurements;
     }
@@ -1308,6 +1310,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements
      *                     frames (positions, orientations and velocities).
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setMeasurements(
             final List<StandardDeviationFrameBodyKinematics> measurements)
             throws LockedException {
@@ -1315,6 +1318,27 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements
             throw new LockedException();
         }
         mMeasurements = measurements;
+    }
+
+    /**
+     * Indicates the type of measurement used by this calibrator.
+     *
+     * @return type of measurement used by this calibrator.
+     */
+    @Override
+    public AccelerometerCalibratorMeasurementType getMeasurementType() {
+        return AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_FRAME_BODY_KINEMATICS;
+    }
+
+    /**
+     * Indicates whether this calibrator requires ordered measurements in a
+     * list or not.
+     *
+     * @return true if measurements must be ordered, false otherwise.
+     */
+    @Override
+    public boolean isOrderedMeasurementsRequired() {
+        return true;
     }
 
     /**
@@ -1371,6 +1395,16 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements
         }
 
         mListener = listener;
+    }
+
+    /**
+     * Gets minimum number of required measurements.
+     *
+     * @return minimum number of required measurements.
+     */
+    @Override
+    public int getMinimumRequiredMeasurements() {
+        return MINIMUM_MEASUREMENTS;
     }
 
     /**
@@ -1616,6 +1650,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements
      *
      * @return quality scores corresponding to each sample.
      */
+    @Override
     public double[] getQualityScores() {
         return null;
     }
@@ -1632,6 +1667,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator implements
      *                                  is smaller than minimum required samples.
      * @throws LockedException          if calibrator is currently running.
      */
+    @Override
     public void setQualityScores(final double[] qualityScores)
             throws LockedException {
     }

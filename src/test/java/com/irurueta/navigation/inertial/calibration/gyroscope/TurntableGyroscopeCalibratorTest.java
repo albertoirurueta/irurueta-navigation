@@ -236,10 +236,14 @@ public class TurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getEcefPosition());
         assertNull(calibrator.getNedPosition());
         assertFalse(calibrator.getNedPosition(null));
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 19);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedBiases());
@@ -473,10 +477,14 @@ public class TurntableGyroscopeCalibratorTest implements
         final NEDPosition nedPosition2 = new NEDPosition();
         assertTrue(calibrator.getNedPosition(nedPosition2));
         assertTrue(nedPosition2.equals(nedPosition, LARGE_ABSOLUTE_ERROR));
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 19);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedBiases());
@@ -762,10 +770,14 @@ public class TurntableGyroscopeCalibratorTest implements
         final NEDPosition nedPosition2 = new NEDPosition();
         assertTrue(calibrator.getNedPosition(nedPosition2));
         assertTrue(nedPosition2.equals(nedPosition, LARGE_ABSOLUTE_ERROR));
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 19);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedBiases());
@@ -1053,10 +1065,14 @@ public class TurntableGyroscopeCalibratorTest implements
         final NEDPosition nedPosition2 = new NEDPosition();
         assertTrue(calibrator.getNedPosition(nedPosition2));
         assertTrue(nedPosition2.equals(nedPosition, LARGE_ABSOLUTE_ERROR));
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 19);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedBiases());
@@ -1336,10 +1352,14 @@ public class TurntableGyroscopeCalibratorTest implements
         final NEDPosition nedPosition2 = new NEDPosition();
         assertTrue(calibrator.getNedPosition(nedPosition2));
         assertTrue(nedPosition2.equals(nedPosition, LARGE_ABSOLUTE_ERROR));
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 19);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedBiases());
@@ -1638,10 +1658,14 @@ public class TurntableGyroscopeCalibratorTest implements
         final NEDPosition nedPosition2 = new NEDPosition();
         assertTrue(calibrator.getNedPosition(nedPosition2));
         assertTrue(nedPosition2.equals(nedPosition, LARGE_ABSOLUTE_ERROR));
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 19);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedBiases());
@@ -1964,10 +1988,14 @@ public class TurntableGyroscopeCalibratorTest implements
         final NEDPosition nedPosition2 = new NEDPosition();
         assertTrue(calibrator.getNedPosition(nedPosition2));
         assertTrue(nedPosition2.equals(nedPosition, LARGE_ABSOLUTE_ERROR));
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 19);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedBiases());
@@ -2293,10 +2321,14 @@ public class TurntableGyroscopeCalibratorTest implements
         final NEDPosition nedPosition2 = new NEDPosition();
         assertTrue(calibrator.getNedPosition(nedPosition2));
         assertTrue(nedPosition2.equals(nedPosition, LARGE_ABSOLUTE_ERROR));
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 19);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedBiases());
@@ -2630,10 +2662,14 @@ public class TurntableGyroscopeCalibratorTest implements
         final NEDPosition nedPosition2 = new NEDPosition();
         assertTrue(calibrator.getNedPosition(nedPosition2));
         assertTrue(nedPosition2.equals(nedPosition, LARGE_ABSOLUTE_ERROR));
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 19);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedBiases());
@@ -2954,10 +2990,14 @@ public class TurntableGyroscopeCalibratorTest implements
         final NEDPosition nedPosition2 = new NEDPosition();
         assertTrue(calibrator.getNedPosition(nedPosition2));
         assertTrue(nedPosition2.equals(nedPosition, LARGE_ABSOLUTE_ERROR));
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 13);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedBiases());
@@ -3260,10 +3300,14 @@ public class TurntableGyroscopeCalibratorTest implements
         final NEDPosition nedPosition2 = new NEDPosition();
         assertTrue(calibrator.getNedPosition(nedPosition2));
         assertTrue(nedPosition2.equals(nedPosition, LARGE_ABSOLUTE_ERROR));
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 13);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedBiases());
@@ -3567,10 +3611,14 @@ public class TurntableGyroscopeCalibratorTest implements
         final NEDPosition nedPosition2 = new NEDPosition();
         assertTrue(calibrator.getNedPosition(nedPosition2));
         assertTrue(nedPosition2.equals(nedPosition, LARGE_ABSOLUTE_ERROR));
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 13);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedBiases());
@@ -3863,10 +3911,14 @@ public class TurntableGyroscopeCalibratorTest implements
         final NEDPosition nedPosition2 = new NEDPosition();
         assertTrue(calibrator.getNedPosition(nedPosition2));
         assertTrue(nedPosition2.equals(nedPosition, LARGE_ABSOLUTE_ERROR));
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 13);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedBiases());
@@ -4180,10 +4232,14 @@ public class TurntableGyroscopeCalibratorTest implements
         final NEDPosition nedPosition2 = new NEDPosition();
         assertTrue(calibrator.getNedPosition(nedPosition2));
         assertTrue(nedPosition2.equals(nedPosition, LARGE_ABSOLUTE_ERROR));
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 13);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedBiases());
@@ -4529,10 +4585,14 @@ public class TurntableGyroscopeCalibratorTest implements
         final NEDPosition nedPosition2 = new NEDPosition();
         assertTrue(calibrator.getNedPosition(nedPosition2));
         assertTrue(nedPosition2.equals(nedPosition, LARGE_ABSOLUTE_ERROR));
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 13);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedBiases());
@@ -4876,10 +4936,14 @@ public class TurntableGyroscopeCalibratorTest implements
         final NEDPosition nedPosition2 = new NEDPosition();
         assertTrue(calibrator.getNedPosition(nedPosition2));
         assertTrue(nedPosition2.equals(nedPosition, LARGE_ABSOLUTE_ERROR));
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 13);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedBiases());
@@ -5225,10 +5289,14 @@ public class TurntableGyroscopeCalibratorTest implements
         final NEDPosition nedPosition2 = new NEDPosition();
         assertTrue(calibrator.getNedPosition(nedPosition2));
         assertTrue(nedPosition2.equals(nedPosition, LARGE_ABSOLUTE_ERROR));
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 13);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedBiases());
@@ -5570,10 +5638,14 @@ public class TurntableGyroscopeCalibratorTest implements
         final NEDPosition nedPosition2 = new NEDPosition();
         assertTrue(calibrator.getNedPosition(nedPosition2));
         assertTrue(nedPosition2.equals(nedPosition, LARGE_ABSOLUTE_ERROR));
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 19);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedBiases());
@@ -5859,10 +5931,14 @@ public class TurntableGyroscopeCalibratorTest implements
         final NEDPosition nedPosition2 = new NEDPosition();
         assertTrue(calibrator.getNedPosition(nedPosition2));
         assertTrue(nedPosition2.equals(nedPosition, LARGE_ABSOLUTE_ERROR));
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 19);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedBiases());
@@ -6150,10 +6226,14 @@ public class TurntableGyroscopeCalibratorTest implements
         final NEDPosition nedPosition2 = new NEDPosition();
         assertTrue(calibrator.getNedPosition(nedPosition2));
         assertTrue(nedPosition2.equals(nedPosition, LARGE_ABSOLUTE_ERROR));
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 19);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedBiases());
@@ -6433,10 +6513,14 @@ public class TurntableGyroscopeCalibratorTest implements
         final NEDPosition nedPosition2 = new NEDPosition();
         assertTrue(calibrator.getNedPosition(nedPosition2));
         assertTrue(nedPosition2.equals(nedPosition, LARGE_ABSOLUTE_ERROR));
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 19);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedBiases());
@@ -6736,10 +6820,14 @@ public class TurntableGyroscopeCalibratorTest implements
         final NEDPosition nedPosition2 = new NEDPosition();
         assertTrue(calibrator.getNedPosition(nedPosition2));
         assertTrue(nedPosition2.equals(nedPosition, LARGE_ABSOLUTE_ERROR));
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 19);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedBiases());
@@ -7063,10 +7151,14 @@ public class TurntableGyroscopeCalibratorTest implements
         final NEDPosition nedPosition2 = new NEDPosition();
         assertTrue(calibrator.getNedPosition(nedPosition2));
         assertTrue(nedPosition2.equals(nedPosition, LARGE_ABSOLUTE_ERROR));
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 19);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedBiases());
@@ -7391,10 +7483,14 @@ public class TurntableGyroscopeCalibratorTest implements
         final NEDPosition nedPosition2 = new NEDPosition();
         assertTrue(calibrator.getNedPosition(nedPosition2));
         assertTrue(nedPosition2.equals(nedPosition, LARGE_ABSOLUTE_ERROR));
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 19);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedBiases());
@@ -7727,10 +7823,14 @@ public class TurntableGyroscopeCalibratorTest implements
         final NEDPosition nedPosition2 = new NEDPosition();
         assertTrue(calibrator.getNedPosition(nedPosition2));
         assertTrue(nedPosition2.equals(nedPosition, LARGE_ABSOLUTE_ERROR));
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 19);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedBiases());
@@ -8050,10 +8150,14 @@ public class TurntableGyroscopeCalibratorTest implements
         final NEDPosition nedPosition2 = new NEDPosition();
         assertTrue(calibrator.getNedPosition(nedPosition2));
         assertTrue(nedPosition2.equals(nedPosition, LARGE_ABSOLUTE_ERROR));
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 13);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedBiases());
@@ -8354,10 +8458,14 @@ public class TurntableGyroscopeCalibratorTest implements
         final NEDPosition nedPosition2 = new NEDPosition();
         assertTrue(calibrator.getNedPosition(nedPosition2));
         assertTrue(nedPosition2.equals(nedPosition, LARGE_ABSOLUTE_ERROR));
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 13);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedBiases());
@@ -8659,10 +8767,14 @@ public class TurntableGyroscopeCalibratorTest implements
         final NEDPosition nedPosition2 = new NEDPosition();
         assertTrue(calibrator.getNedPosition(nedPosition2));
         assertTrue(nedPosition2.equals(nedPosition, LARGE_ABSOLUTE_ERROR));
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 13);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedBiases());
@@ -8955,10 +9067,14 @@ public class TurntableGyroscopeCalibratorTest implements
         final NEDPosition nedPosition2 = new NEDPosition();
         assertTrue(calibrator.getNedPosition(nedPosition2));
         assertTrue(nedPosition2.equals(nedPosition, LARGE_ABSOLUTE_ERROR));
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 13);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedBiases());
@@ -9271,10 +9387,14 @@ public class TurntableGyroscopeCalibratorTest implements
         final NEDPosition nedPosition2 = new NEDPosition();
         assertTrue(calibrator.getNedPosition(nedPosition2));
         assertTrue(nedPosition2.equals(nedPosition, LARGE_ABSOLUTE_ERROR));
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 13);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedBiases());
@@ -9620,10 +9740,14 @@ public class TurntableGyroscopeCalibratorTest implements
         final NEDPosition nedPosition2 = new NEDPosition();
         assertTrue(calibrator.getNedPosition(nedPosition2));
         assertTrue(nedPosition2.equals(nedPosition, LARGE_ABSOLUTE_ERROR));
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 13);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedBiases());
@@ -9968,10 +10092,14 @@ public class TurntableGyroscopeCalibratorTest implements
         final NEDPosition nedPosition2 = new NEDPosition();
         assertTrue(calibrator.getNedPosition(nedPosition2));
         assertTrue(nedPosition2.equals(nedPosition, LARGE_ABSOLUTE_ERROR));
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 13);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedBiases());
@@ -10317,10 +10445,14 @@ public class TurntableGyroscopeCalibratorTest implements
         final NEDPosition nedPosition2 = new NEDPosition();
         assertTrue(calibrator.getNedPosition(nedPosition2));
         assertTrue(nedPosition2.equals(nedPosition, LARGE_ABSOLUTE_ERROR));
+        assertEquals(GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_BODY_KINEMATICS_MEASUREMENT,
+                calibrator.getMeasurementOrSequenceType());
+        assertFalse(calibrator.isOrderedMeasurementsOrSequencesRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(), 13);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedBiases());
@@ -11996,12 +12128,12 @@ public class TurntableGyroscopeCalibratorTest implements
     }
 
     @Test
-    public void testGetMinimumRequiredMeasurements() throws LockedException {
+    public void testGetMinimumRequiredMeasurementsOrSequences() throws LockedException {
         final TurntableGyroscopeCalibrator calibrator =
                 new TurntableGyroscopeCalibrator();
 
         // check default value
-        assertEquals(calibrator.getMinimumRequiredMeasurements(),
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(),
                 19);
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
@@ -12010,7 +12142,7 @@ public class TurntableGyroscopeCalibratorTest implements
         calibrator.setGDependentCrossBiasesEstimated(false);
 
         // check
-        assertEquals(calibrator.getMinimumRequiredMeasurements(),
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(),
                 10);
         assertTrue(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
@@ -12019,7 +12151,7 @@ public class TurntableGyroscopeCalibratorTest implements
         calibrator.setCommonAxisUsed(false);
 
         // check
-        assertEquals(calibrator.getMinimumRequiredMeasurements(),
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(),
                 13);
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
@@ -12028,7 +12160,7 @@ public class TurntableGyroscopeCalibratorTest implements
         calibrator.setGDependentCrossBiasesEstimated(true);
 
         // check
-        assertEquals(calibrator.getMinimumRequiredMeasurements(),
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(),
                 22);
         assertFalse(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
@@ -12041,7 +12173,7 @@ public class TurntableGyroscopeCalibratorTest implements
 
         // check default value
         assertFalse(calibrator.isReady());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(),
+        assertEquals(calibrator.getMinimumRequiredMeasurementsOrSequences(),
                 19);
 
         // set empty measurements

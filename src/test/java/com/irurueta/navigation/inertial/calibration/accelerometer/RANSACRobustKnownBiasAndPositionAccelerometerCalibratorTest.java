@@ -162,6 +162,10 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertNull(calibrator.getNedPosition());
         assertFalse(calibrator.getNedPosition(null));
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         Assert.assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -269,6 +273,10 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertNull(calibrator.getNedPosition());
         assertFalse(calibrator.getNedPosition(null));
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -379,6 +387,10 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertNull(calibrator.getNedPosition());
         assertFalse(calibrator.getNedPosition(null));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -486,6 +498,10 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertNull(calibrator.getNedPosition());
         assertFalse(calibrator.getNedPosition(null));
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -597,6 +613,10 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertNull(calibrator.getNedPosition());
         assertFalse(calibrator.getNedPosition(null));
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -718,6 +738,10 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertNull(calibrator.getNedPosition());
         assertFalse(calibrator.getNedPosition(null));
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -855,6 +879,10 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertNull(calibrator.getNedPosition());
         assertFalse(calibrator.getNedPosition(null));
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -1005,6 +1033,10 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -1131,6 +1163,10 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -1257,6 +1293,10 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -1383,6 +1423,10 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -1509,6 +1553,10 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -1639,6 +1687,10 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -1779,6 +1831,10 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -1919,6 +1975,10 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -2059,6 +2119,10 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -2200,6 +2264,10 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -2346,6 +2414,10 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -2494,6 +2566,10 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -2642,6 +2718,10 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -2800,6 +2880,10 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -2968,6 +3052,10 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -3140,6 +3228,10 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -3312,6 +3404,10 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -3466,6 +3562,10 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -3592,6 +3692,10 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -3718,6 +3822,10 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -3844,6 +3952,10 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -3970,6 +4082,10 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -4100,6 +4216,10 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -4240,6 +4360,10 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -4380,6 +4504,10 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -4520,6 +4648,10 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -4661,6 +4793,10 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -4807,6 +4943,10 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -4955,6 +5095,10 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -5103,6 +5247,10 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -5261,6 +5409,10 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -5429,6 +5581,10 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -5601,6 +5757,10 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -5773,6 +5933,10 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
         assertTrue(calibrator.getNedPosition(nedPosition1));
         assertTrue(nedPosition1.equals(nedPosition, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(AccelerometerCalibratorMeasurementType.STANDARD_DEVIATION_BODY_KINEMATICS,
+                calibrator.getMeasurementType());
+        assertTrue(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -7475,7 +7639,7 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibratorTest impleme
             assertEstimatedResult(estimatedMa, calibrator);
 
             assertNotNull(calibrator.getEstimatedCovariance());
-            assertTrue(calibrator.getEstimatedMse() > 0.0);
+            assertTrue(calibrator.getEstimatedMse() >= 0.0);
             assertNotEquals(calibrator.getEstimatedChiSq(), 0.0);
 
             numValid++;

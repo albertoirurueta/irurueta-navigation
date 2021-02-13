@@ -96,7 +96,8 @@ import java.util.List;
  */
 public class EasyGyroscopeCalibrator implements
         GyroscopeNonLinearCalibrator, UnknownBiasGyroscopeCalibrator,
-        GyroscopeCalibrationSource, GyroscopeBiasUncertaintySource {
+        GyroscopeCalibrationSource, GyroscopeBiasUncertaintySource,
+        OrderedBodyKinematicsSequenceGyroscopeCalibrator {
 
     /**
      * Indicates whether by default a common z-axis is assumed for both the accelerometer
@@ -2723,6 +2724,7 @@ public class EasyGyroscopeCalibrator implements
      * @return collection of sequences of timestamped body kinematics
      * measurements.
      */
+    @Override
     public List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> getSequences() {
         return mSequences;
     }
@@ -2736,6 +2738,7 @@ public class EasyGyroscopeCalibrator implements
      *                  kinematics measurements.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setSequences(
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences)
             throws LockedException {
@@ -2743,6 +2746,38 @@ public class EasyGyroscopeCalibrator implements
             throw new LockedException();
         }
         mSequences = sequences;
+    }
+
+    /**
+     * Indicates the type of measurement or sequence used by this calibrator.
+     *
+     * @return type of measurement or sequence used by this calibrator.
+     */
+    @Override
+    public GyroscopeCalibratorMeasurementOrSequenceType getMeasurementOrSequenceType() {
+        return GyroscopeCalibratorMeasurementOrSequenceType.BODY_KINEMATICS_SEQUENCE;
+    }
+
+    /**
+     * Indicates whether this calibrator requires ordered measurements or sequences
+     * in a list or not.
+     *
+     * @return true if measurements or sequences must be ordered, false otherwise.
+     */
+    @Override
+    public boolean isOrderedMeasurementsOrSequencesRequired() {
+        return true;
+    }
+
+    /**
+     * Indicates whether this calibrator requires quality scores for each
+     * measurement/sequence or not.
+     *
+     * @return true if quality scores are required, false otherwise.
+     */
+    @Override
+    public boolean isQualityScoresRequired() {
+        return false;
     }
 
     /**
@@ -2838,7 +2873,8 @@ public class EasyGyroscopeCalibrator implements
      *
      * @return minimum number of required sequences.
      */
-    public int getMinimumRequiredSequences() {
+    @Override
+    public int getMinimumRequiredMeasurementsOrSequences() {
         if (mCommonAxisUsed) {
             if (mEstimateGDependentCrossBiases) {
                 return MINIMUM_SEQUENCES_COMMON_Z_AXIS_AND_CROSS_BIASES;
@@ -2862,7 +2898,7 @@ public class EasyGyroscopeCalibrator implements
     @Override
     public boolean isReady() {
         return mSequences != null
-                && mSequences.size() >= getMinimumRequiredSequences();
+                && mSequences.size() >= getMinimumRequiredMeasurementsOrSequences();
     }
 
     /**
@@ -2896,6 +2932,8 @@ public class EasyGyroscopeCalibrator implements
 
         try {
             mRunning = true;
+
+            reset();
 
             if (mListener != null) {
                 mListener.onCalibrateStart(this);
@@ -5384,5 +5422,29 @@ public class EasyGyroscopeCalibrator implements
                 mTrueAngularRate.getElementAtIndex(0),
                 mTrueAngularRate.getElementAtIndex(1),
                 mTrueAngularRate.getElementAtIndex(2));
+    }
+
+    /**
+     * Resets any previous estimations.
+     */
+    private void reset() {
+        mEstimatedBiases = null;
+        mEstimatedMg = null;
+        mEstimatedGg = null;
+        mEstimatedCovariance = null;
+        mEstimatedChiSq = 0.0;
+        mEstimatedMse = 0.0;
+        mI = 0;
+        mFixedSequences = null;
+        mMeasuredSpecificForce = null;
+        mTrueSpecificForce = null;
+        mMeasuredAngularRate = null;
+        mTrueAngularRate = null;
+        mM = null;
+        mInvM = null;
+        mB = null;
+        mG = null;
+        mTmp = null;
+        mPoint = null;
     }
 }

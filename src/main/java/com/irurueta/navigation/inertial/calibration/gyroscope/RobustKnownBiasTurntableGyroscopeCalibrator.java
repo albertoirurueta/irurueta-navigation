@@ -94,7 +94,10 @@ import java.util.List;
  * - w is measurement noise. This is a 3x1 vector.
  */
 public abstract class RobustKnownBiasTurntableGyroscopeCalibrator implements
-        GyroscopeNonLinearCalibrator, KnownBiasGyroscopeCalibrator {
+        GyroscopeNonLinearCalibrator, KnownBiasGyroscopeCalibrator,
+        OrderedStandardDeviationBodyKinematicsGyroscopeCalibrator,
+        QualityScoredGyroscopeCalibrator {
+
     /**
      * Indicates whether by default a common z-axis is assumed for both the accelerometer
      * and gyroscope.
@@ -4023,6 +4026,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator implements
      * @return collection of body kinematics measurements at a known position
      * with unknown orientations.
      */
+    @Override
     public List<StandardDeviationBodyKinematics> getMeasurements() {
         return mMeasurements;
     }
@@ -4036,6 +4040,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator implements
      *                     known position witn unknown orientations.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setMeasurements(
             final List<StandardDeviationBodyKinematics> measurements)
             throws LockedException {
@@ -4117,6 +4122,27 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator implements
         }
 
         mPosition = convertPosition(position);
+    }
+
+    /**
+     * Indicates the type of measurement or sequence used by this calibrator.
+     *
+     * @return type of measurement or sequence used by this calibrator.
+     */
+    @Override
+    public GyroscopeCalibratorMeasurementOrSequenceType getMeasurementOrSequenceType() {
+        return GyroscopeCalibratorMeasurementOrSequenceType.STANDARD_DEVIATION_BODY_KINEMATICS_MEASUREMENT;
+    }
+
+    /**
+     * Indicates whether this calibrator requires ordered measurements or sequences
+     * in a list or not.
+     *
+     * @return true if measurements or sequences must be ordered, false otherwise.
+     */
+    @Override
+    public boolean isOrderedMeasurementsOrSequencesRequired() {
+        return true;
     }
 
     /**
@@ -4213,7 +4239,8 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator implements
      *
      * @return minimum number of required measurements.
      */
-    public int getMinimumRequiredMeasurements() {
+    @Override
+    public int getMinimumRequiredMeasurementsOrSequences() {
         if (mCommonAxisUsed) {
             if (mEstimateGDependentCrossBiases) {
                 return KnownBiasTurntableGyroscopeCalibrator
@@ -4239,7 +4266,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator implements
     @Override
     public boolean isReady() {
         return mMeasurements != null
-                && mMeasurements.size() >= getMinimumRequiredMeasurements();
+                && mMeasurements.size() >= getMinimumRequiredMeasurementsOrSequences();
     }
 
     /**
@@ -4416,6 +4443,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator implements
      *
      * @return quality scores corresponding to each sample.
      */
+    @Override
     public double[] getQualityScores() {
         return null;
     }
@@ -4432,6 +4460,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator implements
      *                                  is smaller than minimum required samples.
      * @throws LockedException          if calibrator is currently running.
      */
+    @Override
     public void setQualityScores(final double[] qualityScores)
             throws LockedException {
     }
@@ -4650,7 +4679,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator implements
 
     /**
      * Gets size of subsets to be checked during robust estimation.
-     * This has to be at least {@link #getMinimumRequiredMeasurements()}.
+     * This has to be at least {@link #getMinimumRequiredMeasurementsOrSequences()}.
      *
      * @return size of subsets to be checked during robust estimation.
      */
@@ -4660,19 +4689,19 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator implements
 
     /**
      * Sets size of subsets to be checked during robust estimation.
-     * This has to be at least {@link #getMinimumRequiredMeasurements}.
+     * This has to be at least {@link #getMinimumRequiredMeasurementsOrSequences}.
      *
      * @param preliminarySubsetSize size of subsets to be checked during robust estimation.
      * @throws LockedException          if calibrator is currently running.
      * @throws IllegalArgumentException if provided value is less than
-     *                                  {@link #getMinimumRequiredMeasurements}.
+     *                                  {@link #getMinimumRequiredMeasurementsOrSequences}.
      */
     public void setPreliminarySubsetSize(final int preliminarySubsetSize)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
-        if (preliminarySubsetSize < getMinimumRequiredMeasurements()) {
+        if (preliminarySubsetSize < getMinimumRequiredMeasurementsOrSequences()) {
             throw new IllegalArgumentException();
         }
 

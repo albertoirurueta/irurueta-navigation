@@ -67,7 +67,7 @@ import java.util.Collection;
 public class KnownFrameGyroscopeLinearLeastSquaresCalibrator implements
         KnownFrameGyroscopeCalibrator<FrameBodyKinematics,
                 KnownFrameGyroscopeLinearLeastSquaresCalibratorListener>,
-        GyroscopeCalibrationSource {
+        GyroscopeCalibrationSource, UnorderedFrameBodyKinematicsGyroscopeCalibrator {
 
     /**
      * Indicates whether by default a common z-axis is assumed for both the accelerometer
@@ -329,6 +329,38 @@ public class KnownFrameGyroscopeLinearLeastSquaresCalibrator implements
     }
 
     /**
+     * Indicates the type of measurement or sequence used by this calibrator.
+     *
+     * @return type of measurement or sequence used by this calibrator.
+     */
+    @Override
+    public GyroscopeCalibratorMeasurementOrSequenceType getMeasurementOrSequenceType() {
+        return GyroscopeCalibratorMeasurementOrSequenceType.FRAME_BODY_KINEMATICS_MEASUREMENT;
+    }
+
+    /**
+     * Indicates whether this calibrator requires ordered measurements or sequences
+     * in a list or not.
+     *
+     * @return true if measurements or sequences must be ordered, false otherwise.
+     */
+    @Override
+    public boolean isOrderedMeasurementsOrSequencesRequired() {
+        return false;
+    }
+
+    /**
+     * Indicates whether this calibrator requires quality scores for each
+     * measurement/sequence or not.
+     *
+     * @return true if quality scores are required, false otherwise.
+     */
+    @Override
+    public boolean isQualityScoresRequired() {
+        return false;
+    }
+
+    /**
      * Indicates whether z-axis is assumed to be common for accelerometer and
      * gyroscope.
      * When enabled, this eliminates 3 variables from Mg matrix.
@@ -384,6 +416,16 @@ public class KnownFrameGyroscopeLinearLeastSquaresCalibrator implements
         }
 
         mListener = listener;
+    }
+
+    /**
+     * Gets minimum number of required measurements.
+     *
+     * @return minimum number of required measurements.
+     */
+    @Override
+    public int getMinimumRequiredMeasurementsOrSequences() {
+        return MINIMUM_MEASUREMENTS;
     }
 
     /**

@@ -109,8 +109,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), 0.0, 0.0);
         assertEquals(calibrator.getHardIronZ(), 0.0, 0.0);
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -172,8 +178,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), 0.0, 0.0);
         assertEquals(calibrator.getHardIronZ(), 0.0, 0.0);
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -237,8 +249,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), 0.0, 0.0);
         assertEquals(calibrator.getHardIronZ(), 0.0, 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -302,8 +320,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), 0.0, 0.0);
         assertEquals(calibrator.getHardIronZ(), 0.0, 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -365,8 +389,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), 0.0, 0.0);
         assertEquals(calibrator.getHardIronZ(), 0.0, 0.0);
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -428,8 +458,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), 0.0, 0.0);
         assertEquals(calibrator.getHardIronZ(), 0.0, 0.0);
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -493,8 +529,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), 0.0, 0.0);
         assertEquals(calibrator.getHardIronZ(), 0.0, 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -558,8 +600,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), 0.0, 0.0);
         assertEquals(calibrator.getHardIronZ(), 0.0, 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -622,8 +670,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), 0.0, 0.0);
         assertEquals(calibrator.getHardIronZ(), 0.0, 0.0);
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertSame(calibrator.getMagneticModel(), magneticModel);
@@ -686,8 +740,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), 0.0, 0.0);
         assertEquals(calibrator.getHardIronZ(), 0.0, 0.0);
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertSame(calibrator.getMagneticModel(), magneticModel);
@@ -752,8 +812,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), 0.0, 0.0);
         assertEquals(calibrator.getHardIronZ(), 0.0, 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertSame(calibrator.getMagneticModel(), magneticModel);
@@ -818,8 +884,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), 0.0, 0.0);
         assertEquals(calibrator.getHardIronZ(), 0.0, 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertSame(calibrator.getMagneticModel(), magneticModel);
@@ -882,8 +954,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), 0.0, 0.0);
         assertEquals(calibrator.getHardIronZ(), 0.0, 0.0);
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertSame(calibrator.getMagneticModel(), magneticModel);
@@ -946,8 +1024,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), 0.0, 0.0);
         assertEquals(calibrator.getHardIronZ(), 0.0, 0.0);
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertSame(calibrator.getMagneticModel(), magneticModel);
@@ -1012,8 +1096,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), 0.0, 0.0);
         assertEquals(calibrator.getHardIronZ(), 0.0, 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertSame(calibrator.getMagneticModel(), magneticModel);
@@ -1079,8 +1169,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), 0.0, 0.0);
         assertEquals(calibrator.getHardIronZ(), 0.0, 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertSame(calibrator.getMagneticModel(), magneticModel);
@@ -1149,8 +1245,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), hardIronY, 0.0);
         assertEquals(calibrator.getHardIronZ(), hardIronZ, 0.0);
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -1219,8 +1321,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), hardIronY, 0.0);
         assertEquals(calibrator.getHardIronZ(), hardIronZ, 0.0);
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -1292,8 +1400,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), hardIronY, 0.0);
         assertEquals(calibrator.getHardIronZ(), hardIronZ, 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -1366,8 +1480,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), hardIronY, 0.0);
         assertEquals(calibrator.getHardIronZ(), hardIronZ, 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -1436,8 +1556,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), hardIronY, 0.0);
         assertEquals(calibrator.getHardIronZ(), hardIronZ, 0.0);
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -1507,8 +1633,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), hardIronY, 0.0);
         assertEquals(calibrator.getHardIronZ(), hardIronZ, 0.0);
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -1581,8 +1713,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), hardIronY, 0.0);
         assertEquals(calibrator.getHardIronZ(), hardIronZ, 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -1655,8 +1793,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), hardIronY, 0.0);
         assertEquals(calibrator.getHardIronZ(), hardIronZ, 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -1727,8 +1871,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), hardIronY, 0.0);
         assertEquals(calibrator.getHardIronZ(), hardIronZ, 0.0);
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertSame(calibrator.getMagneticModel(), magneticModel);
@@ -1799,8 +1949,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), hardIronY, 0.0);
         assertEquals(calibrator.getHardIronZ(), hardIronZ, 0.0);
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertSame(calibrator.getMagneticModel(), magneticModel);
@@ -1872,8 +2028,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), hardIronY, 0.0);
         assertEquals(calibrator.getHardIronZ(), hardIronZ, 0.0);
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertSame(calibrator.getMagneticModel(), magneticModel);
@@ -1947,8 +2109,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), hardIronY, 0.0);
         assertEquals(calibrator.getHardIronZ(), hardIronZ, 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertSame(calibrator.getMagneticModel(), magneticModel);
@@ -2022,8 +2190,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), hardIronY, 0.0);
         assertEquals(calibrator.getHardIronZ(), hardIronZ, 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertSame(calibrator.getMagneticModel(), magneticModel);
@@ -2095,8 +2269,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), hardIronY, 0.0);
         assertEquals(calibrator.getHardIronZ(), hardIronZ, 0.0);
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertSame(calibrator.getMagneticModel(), magneticModel);
@@ -2168,8 +2348,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), hardIronY, 0.0);
         assertEquals(calibrator.getHardIronZ(), hardIronZ, 0.0);
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertSame(calibrator.getMagneticModel(), magneticModel);
@@ -2243,8 +2429,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), hardIronY, 0.0);
         assertEquals(calibrator.getHardIronZ(), hardIronZ, 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertSame(calibrator.getMagneticModel(), magneticModel);
@@ -2318,8 +2510,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), hardIronY, 0.0);
         assertEquals(calibrator.getHardIronZ(), hardIronZ, 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertSame(calibrator.getMagneticModel(), magneticModel);
@@ -2388,8 +2586,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), hardIronY, 0.0);
         assertEquals(calibrator.getHardIronZ(), hardIronZ, 0.0);
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -2468,8 +2672,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), hardIronY, 0.0);
         assertEquals(calibrator.getHardIronZ(), hardIronZ, 0.0);
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -2551,8 +2761,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), hardIronY, 0.0);
         assertEquals(calibrator.getHardIronZ(), hardIronZ, 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -2634,8 +2850,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), hardIronY, 0.0);
         assertEquals(calibrator.getHardIronZ(), hardIronZ, 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -2714,8 +2936,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), hardIronY, 0.0);
         assertEquals(calibrator.getHardIronZ(), hardIronZ, 0.0);
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -2794,8 +3022,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), hardIronY, 0.0);
         assertEquals(calibrator.getHardIronZ(), hardIronZ, 0.0);
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -2877,8 +3111,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), hardIronY, 0.0);
         assertEquals(calibrator.getHardIronZ(), hardIronZ, 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -2961,8 +3201,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), hardIronY, 0.0);
         assertEquals(calibrator.getHardIronZ(), hardIronZ, 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -3043,8 +3289,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), hardIronY, 0.0);
         assertEquals(calibrator.getHardIronZ(), hardIronZ, 0.0);
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertSame(calibrator.getMagneticModel(), magneticModel);
@@ -3125,8 +3377,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), hardIronY, 0.0);
         assertEquals(calibrator.getHardIronZ(), hardIronZ, 0.0);
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertSame(calibrator.getMagneticModel(), magneticModel);
@@ -3209,8 +3467,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), hardIronY, 0.0);
         assertEquals(calibrator.getHardIronZ(), hardIronZ, 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertSame(calibrator.getMagneticModel(), magneticModel);
@@ -3293,8 +3557,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), hardIronY, 0.0);
         assertEquals(calibrator.getHardIronZ(), hardIronZ, 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertSame(calibrator.getMagneticModel(), magneticModel);
@@ -3375,8 +3645,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), hardIronY, 0.0);
         assertEquals(calibrator.getHardIronZ(), hardIronZ, 0.0);
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertSame(calibrator.getMagneticModel(), magneticModel);
@@ -3458,8 +3734,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), hardIronY, 0.0);
         assertEquals(calibrator.getHardIronZ(), hardIronZ, 0.0);
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertSame(calibrator.getMagneticModel(), magneticModel);
@@ -3544,8 +3826,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), hardIronY, 0.0);
         assertEquals(calibrator.getHardIronZ(), hardIronZ, 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertSame(calibrator.getMagneticModel(), magneticModel);
@@ -3630,8 +3918,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), hardIronY, 0.0);
         assertEquals(calibrator.getHardIronZ(), hardIronZ, 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertSame(calibrator.getMagneticModel(), magneticModel);
@@ -3713,8 +4007,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), hardIronY, 0.0);
         assertEquals(calibrator.getHardIronZ(), hardIronZ, 0.0);
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -3801,8 +4101,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), hardIronY, 0.0);
         assertEquals(calibrator.getHardIronZ(), hardIronZ, 0.0);
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -3891,8 +4197,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), hardIronY, 0.0);
         assertEquals(calibrator.getHardIronZ(), hardIronZ, 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -3981,8 +4293,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), hardIronY, 0.0);
         assertEquals(calibrator.getHardIronZ(), hardIronZ, 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -4071,8 +4389,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), hardIronY, 0.0);
         assertEquals(calibrator.getHardIronZ(), hardIronZ, 0.0);
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -4159,8 +4483,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), hardIronY, 0.0);
         assertEquals(calibrator.getHardIronZ(), hardIronZ, 0.0);
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -4251,8 +4581,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), hardIronY, 0.0);
         assertEquals(calibrator.getHardIronZ(), hardIronZ, 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -4344,8 +4680,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), hardIronY, 0.0);
         assertEquals(calibrator.getHardIronZ(), hardIronZ, 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getMagneticModel());
@@ -4435,8 +4777,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), hardIronY, 0.0);
         assertEquals(calibrator.getHardIronZ(), hardIronZ, 0.0);
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertSame(calibrator.getMagneticModel(), magneticModel);
@@ -4524,8 +4872,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), hardIronY, 0.0);
         assertEquals(calibrator.getHardIronZ(), hardIronZ, 0.0);
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertSame(calibrator.getMagneticModel(), magneticModel);
@@ -4617,8 +4971,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), hardIronY, 0.0);
         assertEquals(calibrator.getHardIronZ(), hardIronZ, 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertSame(calibrator.getMagneticModel(), magneticModel);
@@ -4711,8 +5071,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), hardIronY, 0.0);
         assertEquals(calibrator.getHardIronZ(), hardIronZ, 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertSame(calibrator.getMagneticModel(), magneticModel);
@@ -4802,8 +5168,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), hardIronY, 0.0);
         assertEquals(calibrator.getHardIronZ(), hardIronZ, 0.0);
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertSame(calibrator.getMagneticModel(), magneticModel);
@@ -4894,8 +5266,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), hardIronY, 0.0);
         assertEquals(calibrator.getHardIronZ(), hardIronZ, 0.0);
         assertNull(calibrator.getMeasurements());
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertSame(calibrator.getMagneticModel(), magneticModel);
@@ -4988,8 +5366,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), hardIronY, 0.0);
         assertEquals(calibrator.getHardIronZ(), hardIronZ, 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertSame(calibrator.getMagneticModel(), magneticModel);
@@ -5082,8 +5466,14 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibratorTest i
         assertEquals(calibrator.getHardIronY(), hardIronY, 0.0);
         assertEquals(calibrator.getHardIronZ(), hardIronZ, 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
+        assertEquals(MagnetometerCalibratorMeasurementType.FRAME_BODY_MAGNETIC_FLUX_DENSITY,
+                calibrator.getMeasurementType());
+        assertFalse(calibrator.isOrderedMeasurementsRequired());
+        assertFalse(calibrator.isQualityScoresRequired());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
+        assertEquals(KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS,
+                calibrator.getMinimumRequiredMeasurements());
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertSame(calibrator.getMagneticModel(), magneticModel);

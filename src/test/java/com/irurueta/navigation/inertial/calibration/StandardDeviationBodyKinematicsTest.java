@@ -501,6 +501,7 @@ public class StandardDeviationBodyKinematicsTest {
 
         //noinspection SimplifiableJUnitAssertion,ConstantConditions
         assertTrue(stdKinematics1.equals((Object) stdKinematics1));
+        //noinspection EqualsWithItself
         assertTrue(stdKinematics1.equals(stdKinematics1));
         assertTrue(stdKinematics1.equals(stdKinematics2));
         assertFalse(stdKinematics1.equals(stdKinematics3));

@@ -1806,6 +1806,17 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator extends
     }
 
     /**
+     * Indicates whether this calibrator requires quality scores for each
+     * measurement or not.
+     *
+     * @return true if quality scores are required, false otherwise.
+     */
+    @Override
+    public boolean isQualityScoresRequired() {
+        return true;
+    }
+
+    /**
      * Sets quality scores corresponding to each provided sample.
      * This method is used internally and does not check whether instance is
      * locked or not.

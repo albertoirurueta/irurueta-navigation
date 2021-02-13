@@ -62,7 +62,7 @@ import java.util.Random;
 import static org.junit.Assert.*;
 
 public class GyroscopeMeasurementsGeneratorTest implements
-        GyroscopeMeasurementGeneratorListener {
+        GyroscopeMeasurementsGeneratorListener {
 
     private static final double TIME_INTERVAL_SECONDS = 0.02;
 

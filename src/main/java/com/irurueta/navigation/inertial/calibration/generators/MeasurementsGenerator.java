@@ -508,6 +508,8 @@ public abstract class MeasurementsGenerator<T, G extends MeasurementsGenerator<T
     /**
      * Gets accelerometer base noise level that has been detected during
      * initialization.
+     * This is equal to the standard deviation of the accelerometer measurements
+     * during initialization phase.
      *
      * @param result instance where result will be stored.
      */
