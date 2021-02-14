@@ -148,6 +148,7 @@ public class BracketedAccelerometerAndGyroscopeIntervalDetectorThresholdFactorOp
      */
     public BracketedAccelerometerAndGyroscopeIntervalDetectorThresholdFactorOptimizer(
             final BracketedSingleOptimizer mseOptimizer) {
+        super();
         initializeOptimizerListener();
         try {
             setMseOptimizer(mseOptimizer);
@@ -321,7 +322,7 @@ public class BracketedAccelerometerAndGyroscopeIntervalDetectorThresholdFactorOp
             }
 
             return mOptimalThresholdFactor;
-        } catch (NumericalException e) {
+        } catch (final NumericalException e) {
             throw new IntervalDetectorThresholdFactorOptimizerException(e);
         } finally {
             mRunning = false;

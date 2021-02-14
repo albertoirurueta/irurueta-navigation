@@ -969,7 +969,6 @@ public abstract class MagnetometerIntervalDetectorThresholdFactorOptimizer exten
             mEstimatedHardIron = ((KnownHardIronMagnetometerCalibrator) mCalibrator)
                     .getHardIron();
         }
-
     }
 
     /**

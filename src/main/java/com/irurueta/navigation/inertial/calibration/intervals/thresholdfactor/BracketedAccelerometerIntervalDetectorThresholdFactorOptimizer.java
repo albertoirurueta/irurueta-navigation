@@ -287,7 +287,7 @@ public class BracketedAccelerometerIntervalDetectorThresholdFactorOptimizer exte
             }
 
             return mOptimalThresholdFactor;
-        } catch (NumericalException e) {
+        } catch (final NumericalException e) {
             throw new IntervalDetectorThresholdFactorOptimizerException(e);
         } finally {
             mRunning = false;

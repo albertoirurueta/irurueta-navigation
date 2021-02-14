@@ -18,7 +18,14 @@ package com.irurueta.navigation.inertial.calibration.intervals.thresholdfactor;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NavigationException;
 import com.irurueta.navigation.NotReadyException;
+import com.irurueta.navigation.inertial.calibration.BodyKinematicsSequence;
+import com.irurueta.navigation.inertial.calibration.StandardDeviationBodyKinematics;
 import com.irurueta.navigation.inertial.calibration.StandardDeviationBodyMagneticFluxDensity;
+import com.irurueta.navigation.inertial.calibration.StandardDeviationTimedBodyKinematics;
+import com.irurueta.navigation.inertial.calibration.accelerometer.AccelerometerCalibratorMeasurementType;
+import com.irurueta.navigation.inertial.calibration.accelerometer.AccelerometerNonLinearCalibrator;
+import com.irurueta.navigation.inertial.calibration.gyroscope.GyroscopeCalibratorMeasurementOrSequenceType;
+import com.irurueta.navigation.inertial.calibration.gyroscope.GyroscopeNonLinearCalibrator;
 import com.irurueta.navigation.inertial.calibration.magnetometer.MagnetometerCalibratorMeasurementType;
 import com.irurueta.navigation.inertial.calibration.magnetometer.MagnetometerNonLinearCalibrator;
 import com.irurueta.numerical.EvaluationException;
@@ -29,16 +36,22 @@ import com.irurueta.numerical.optimization.BracketedSingleOptimizer;
 import com.irurueta.numerical.optimization.BrentSingleOptimizer;
 
 /**
- * Optimizes threshold factor for interval detection of magnetometer data based
- * on results of calibration.
+ * Optimizes threshold factor for interval detection of accelerometer + gyroscope
+ * data based on results of calibration.
+ * Only accelerometer calibrators based on unknown orientation are supported (in other terms,
+ * calibrators must be {@link AccelerometerNonLinearCalibrator} and must support
+ * {@link AccelerometerCalibratorMeasurementType#STANDARD_DEVIATION_BODY_KINEMATICS}).
+ * Only gyroscope calibrators based on unknown orientation are supported (in other terms,
+ * calibrators must be {@link GyroscopeNonLinearCalibrator} and must support
+ * {@link GyroscopeCalibratorMeasurementOrSequenceType#BODY_KINEMATICS_SEQUENCE}).
  * Only magnetometer calibrators based on unknown orientation are supported (in other terms,
  * calibrators must be {@link MagnetometerNonLinearCalibrator} and must support
  * {@link MagnetometerCalibratorMeasurementType#STANDARD_DEVIATION_BODY_MAGNETIC_FLUX_DENSITY}.
  * This implementation uses a {@link BracketedSingleOptimizer} to find the threshold
  * factor value that minimizes Mean Square Error (MSE) for calibration parameters.
  */
-public class BracketedMagnetometerIntervalDetectorThresholdFactorOptimizer extends
-        MagnetometerIntervalDetectorThresholdFactorOptimizer {
+public class BracketedAccelerometerGyroscopeAndMagnetometerIntervalDetectorThresholdFactorOptimizer extends
+        AccelerometerGyroscopeAndMagnetometerIntervalDetectorThresholdFactorOptimizer {
 
     /**
      * A bracketed single optimizer to find the threshold factor value that
@@ -54,7 +67,7 @@ public class BracketedMagnetometerIntervalDetectorThresholdFactorOptimizer exten
     /**
      * Constructor.
      */
-    public BracketedMagnetometerIntervalDetectorThresholdFactorOptimizer() {
+    public BracketedAccelerometerGyroscopeAndMagnetometerIntervalDetectorThresholdFactorOptimizer() {
         super();
         initializeOptimizerListener();
         try {
@@ -69,8 +82,8 @@ public class BracketedMagnetometerIntervalDetectorThresholdFactorOptimizer exten
      *
      * @param dataSource instance in charge of retrieving data for this optimizer.
      */
-    public BracketedMagnetometerIntervalDetectorThresholdFactorOptimizer(
-            final MagnetometerIntervalDetectorThresholdFactorOptimizerDataSource dataSource) {
+    public BracketedAccelerometerGyroscopeAndMagnetometerIntervalDetectorThresholdFactorOptimizer(
+            final AccelerometerGyroscopeAndMagnetometerIntervalDetectorThresholdFactorOptimizerDataSource dataSource) {
         super(dataSource);
         initializeOptimizerListener();
         try {
@@ -83,14 +96,25 @@ public class BracketedMagnetometerIntervalDetectorThresholdFactorOptimizer exten
     /**
      * Constructor.
      *
-     * @param calibrator a magnetometer calibrator to be used to optimize its
-     *                   Mean Square Error (MSE).
-     * @throws IllegalArgumentException if magnetometer calibrator does not use
+     * @param accelerometerCalibrator an accelerometer calibrator to be used to
+     *                                optimize its Mean Square Error (MSE).
+     * @param gyroscopeCalibrator     a gyroscope calibrator to be used to optimize
+     *                                its Mean Square Error (MSE).
+     * @param magnetometerCalibrator  a magnetometer calibrator to be used to
+     *                                optimize its Mean Square Error (MSE).
+     * @throws IllegalArgumentException if accelerometer calibrator does not use
+     *                                  {@link StandardDeviationBodyKinematics} measurements,
+     *                                  if gyroscope calibrator does not use
+     *                                  {@link BodyKinematicsSequence} sequences of
+     *                                  {@link StandardDeviationTimedBodyKinematics} or
+     *                                  if magnetometer calibrator does not use
      *                                  {@link StandardDeviationBodyMagneticFluxDensity} measurements.
      */
-    public BracketedMagnetometerIntervalDetectorThresholdFactorOptimizer(
-            final MagnetometerNonLinearCalibrator calibrator) {
-        super(calibrator);
+    public BracketedAccelerometerGyroscopeAndMagnetometerIntervalDetectorThresholdFactorOptimizer(
+            final AccelerometerNonLinearCalibrator accelerometerCalibrator,
+            final GyroscopeNonLinearCalibrator gyroscopeCalibrator,
+            final MagnetometerNonLinearCalibrator magnetometerCalibrator) {
+        super(accelerometerCalibrator, gyroscopeCalibrator, magnetometerCalibrator);
         initializeOptimizerListener();
         try {
             setMseOptimizer(new BrentSingleOptimizer());
@@ -102,16 +126,28 @@ public class BracketedMagnetometerIntervalDetectorThresholdFactorOptimizer exten
     /**
      * Constructor.
      *
-     * @param dataSource instance in charge of retrieving data for this optimizer.
-     * @param calibrator a magnetometer calibrator to be used to optimize its
-     *                   Mean Square Error (MSE).
-     * @throws IllegalArgumentException if magnetometer calibrator does not use
+     * @param dataSource              instance in charge of retrieving data for this optimizer.
+     * @param accelerometerCalibrator an accelerometer calibrator to be used to
+     *                                optimize its Mean Square Error (MSE).
+     * @param gyroscopeCalibrator     a gyroscope calibrator to be used to optimize
+     *                                its Mean Square Error (MSE).
+     * @param magnetometerCalibrator  a magnetometer calibrator to be used to
+     *                                optimize its Mean Square Error (MSE).
+     * @throws IllegalArgumentException if accelerometer calibrator does not use
+     *                                  {@link StandardDeviationBodyKinematics} measurements,
+     *                                  if gyroscope calibrator does not use
+     *                                  {@link BodyKinematicsSequence} sequences of
+     *                                  {@link StandardDeviationTimedBodyKinematics} or
+     *                                  if magnetometer calibrator does not use
      *                                  {@link StandardDeviationBodyMagneticFluxDensity} measurements.
      */
-    public BracketedMagnetometerIntervalDetectorThresholdFactorOptimizer(
-            final MagnetometerIntervalDetectorThresholdFactorOptimizerDataSource dataSource,
-            final MagnetometerNonLinearCalibrator calibrator) {
-        super(dataSource, calibrator);
+    public BracketedAccelerometerGyroscopeAndMagnetometerIntervalDetectorThresholdFactorOptimizer(
+            final AccelerometerGyroscopeAndMagnetometerIntervalDetectorThresholdFactorOptimizerDataSource dataSource,
+            final AccelerometerNonLinearCalibrator accelerometerCalibrator,
+            final GyroscopeNonLinearCalibrator gyroscopeCalibrator,
+            final MagnetometerNonLinearCalibrator magnetometerCalibrator) {
+        super(dataSource, accelerometerCalibrator, gyroscopeCalibrator,
+                magnetometerCalibrator);
         initializeOptimizerListener();
         try {
             setMseOptimizer(new BrentSingleOptimizer());
@@ -126,8 +162,9 @@ public class BracketedMagnetometerIntervalDetectorThresholdFactorOptimizer exten
      * @param mseOptimizer optimizer to find the threshold factor value that
      *                     minimizes MSE for calibration parameters.
      */
-    public BracketedMagnetometerIntervalDetectorThresholdFactorOptimizer(
+    public BracketedAccelerometerGyroscopeAndMagnetometerIntervalDetectorThresholdFactorOptimizer(
             final BracketedSingleOptimizer mseOptimizer) {
+        super();
         initializeOptimizerListener();
         try {
             setMseOptimizer(mseOptimizer);
@@ -143,8 +180,8 @@ public class BracketedMagnetometerIntervalDetectorThresholdFactorOptimizer exten
      * @param mseOptimizer optimizer to find the threshold value that minimizes
      *                     MSE for calibration parameters.
      */
-    public BracketedMagnetometerIntervalDetectorThresholdFactorOptimizer(
-            final MagnetometerIntervalDetectorThresholdFactorOptimizerDataSource dataSource,
+    public BracketedAccelerometerGyroscopeAndMagnetometerIntervalDetectorThresholdFactorOptimizer(
+            final AccelerometerGyroscopeAndMagnetometerIntervalDetectorThresholdFactorOptimizerDataSource dataSource,
             final BracketedSingleOptimizer mseOptimizer) {
         super(dataSource);
         initializeOptimizerListener();
@@ -158,17 +195,28 @@ public class BracketedMagnetometerIntervalDetectorThresholdFactorOptimizer exten
     /**
      * Constructor.
      *
-     * @param calibrator   a magnetometer calibrator to be used to optimize its
-     *                     Mean Square Error (MSE).
-     * @param mseOptimizer optimizer to find the threshold value that minimizes
-     *                     MSE for calibration parameters.
-     * @throws IllegalArgumentException if magnetometer calibrator does not use
+     * @param accelerometerCalibrator an accelerometer calibrator to be used to
+     *                                optimize its Mean Square Error (MSE).
+     * @param gyroscopeCalibrator     a gyroscope calibrator to be used to optimize
+     *                                its Mean Square Error (MSE).
+     * @param magnetometerCalibrator  a magnetometer calibrator to be used to
+     *                                optimize its Mean Square Error (MSE).
+     * @param mseOptimizer            optimizer to find the threshold value that
+     *                                minimizes MSE for calibration parameters.
+     * @throws IllegalArgumentException if accelerometer calibrator does not use
+     *                                  {@link StandardDeviationBodyKinematics} measurements,
+     *                                  if gyroscope calibrator does not use
+     *                                  {@link BodyKinematicsSequence} sequences of
+     *                                  {@link StandardDeviationTimedBodyKinematics} or
+     *                                  if magnetometer calibrator does not use
      *                                  {@link StandardDeviationBodyMagneticFluxDensity} measurements.
      */
-    public BracketedMagnetometerIntervalDetectorThresholdFactorOptimizer(
-            final MagnetometerNonLinearCalibrator calibrator,
+    public BracketedAccelerometerGyroscopeAndMagnetometerIntervalDetectorThresholdFactorOptimizer(
+            final AccelerometerNonLinearCalibrator accelerometerCalibrator,
+            final GyroscopeNonLinearCalibrator gyroscopeCalibrator,
+            final MagnetometerNonLinearCalibrator magnetometerCalibrator,
             final BracketedSingleOptimizer mseOptimizer) {
-        super(calibrator);
+        super(accelerometerCalibrator, gyroscopeCalibrator, magnetometerCalibrator);
         initializeOptimizerListener();
         try {
             setMseOptimizer(mseOptimizer);
@@ -180,19 +228,31 @@ public class BracketedMagnetometerIntervalDetectorThresholdFactorOptimizer exten
     /**
      * Constructor.
      *
-     * @param dataSource   instance in charge of retrieving data for this mseOptimizer.
-     * @param calibrator   a magnetometer calibrator to be used to optimize its
-     *                     Mean Square Error (MSE).
-     * @param mseOptimizer optimizer to find the threshold value that minimizes
-     *                     MSE for calibration parameters.
-     * @throws IllegalArgumentException if magnetometer calibrator does not use
+     * @param dataSource              instance in charge of retrieving data for this optimizer.
+     * @param accelerometerCalibrator an accelerometer calibrator to be used to
+     *                                optimize its Mean Square Error (MSE).
+     * @param gyroscopeCalibrator     a gyroscope calibrator to be used to optimize
+     *                                its Mean Square Error (MSE).
+     * @param magnetometerCalibrator  a magnetometer calibrator to be used to
+     *                                optimize its Mean Square Error (MSE).
+     * @param mseOptimizer            optimizer to find the threshold value that
+     *                                minimizes MSE for calibration parameters.
+     * @throws IllegalArgumentException if accelerometer calibrator does not use
+     *                                  {@link StandardDeviationBodyKinematics} measurements,
+     *                                  if gyroscope calibrator does not use
+     *                                  {@link BodyKinematicsSequence} sequences of
+     *                                  {@link StandardDeviationTimedBodyKinematics} or
+     *                                  if magnetometer calibrator does not use
      *                                  {@link StandardDeviationBodyMagneticFluxDensity} measurements.
      */
-    public BracketedMagnetometerIntervalDetectorThresholdFactorOptimizer(
-            final MagnetometerIntervalDetectorThresholdFactorOptimizerDataSource dataSource,
-            final MagnetometerNonLinearCalibrator calibrator,
+    public BracketedAccelerometerGyroscopeAndMagnetometerIntervalDetectorThresholdFactorOptimizer(
+            final AccelerometerGyroscopeAndMagnetometerIntervalDetectorThresholdFactorOptimizerDataSource dataSource,
+            final AccelerometerNonLinearCalibrator accelerometerCalibrator,
+            final GyroscopeNonLinearCalibrator gyroscopeCalibrator,
+            final MagnetometerNonLinearCalibrator magnetometerCalibrator,
             final BracketedSingleOptimizer mseOptimizer) {
-        super(dataSource, calibrator);
+        super(dataSource, accelerometerCalibrator, gyroscopeCalibrator,
+                magnetometerCalibrator);
         initializeOptimizerListener();
         try {
             setMseOptimizer(mseOptimizer);
