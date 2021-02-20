@@ -31,6 +31,8 @@ import com.irurueta.numerical.NumericalException;
 import com.irurueta.numerical.SingleDimensionFunctionEvaluatorListener;
 import com.irurueta.numerical.optimization.BracketedSingleOptimizer;
 import com.irurueta.numerical.optimization.BrentSingleOptimizer;
+import com.irurueta.numerical.optimization.OnIterationCompletedListener;
+import com.irurueta.numerical.optimization.Optimizer;
 
 /**
  * Optimizes threshold factor for interval detection of accelerometer + gyroscope data
@@ -59,11 +61,16 @@ public class BracketedAccelerometerAndGyroscopeIntervalDetectorThresholdFactorOp
     private SingleDimensionFunctionEvaluatorListener mOptimizerListener;
 
     /**
+     * Iteration listener for {@link BracketedSingleOptimizer}.
+     */
+    private OnIterationCompletedListener mIterationCompletedListener;
+
+    /**
      * Constructor.
      */
     public BracketedAccelerometerAndGyroscopeIntervalDetectorThresholdFactorOptimizer() {
         super();
-        initializeOptimizerListener();
+        initializeOptimizerListeners();
         try {
             setMseOptimizer(new BrentSingleOptimizer());
         } catch (final LockedException ignore) {
@@ -79,7 +86,7 @@ public class BracketedAccelerometerAndGyroscopeIntervalDetectorThresholdFactorOp
     public BracketedAccelerometerAndGyroscopeIntervalDetectorThresholdFactorOptimizer(
             final AccelerometerAndGyroscopeIntervalDetectorThresholdFactorOptimizerDataSource dataSource) {
         super(dataSource);
-        initializeOptimizerListener();
+        initializeOptimizerListeners();
         try {
             setMseOptimizer(new BrentSingleOptimizer());
         } catch (final LockedException ignore) {
@@ -104,7 +111,7 @@ public class BracketedAccelerometerAndGyroscopeIntervalDetectorThresholdFactorOp
             final AccelerometerNonLinearCalibrator accelerometerCalibrator,
             final GyroscopeNonLinearCalibrator gyroscopeCalibrator) {
         super(accelerometerCalibrator, gyroscopeCalibrator);
-        initializeOptimizerListener();
+        initializeOptimizerListeners();
         try {
             setMseOptimizer(new BrentSingleOptimizer());
         } catch (final LockedException ignore) {
@@ -132,7 +139,7 @@ public class BracketedAccelerometerAndGyroscopeIntervalDetectorThresholdFactorOp
             final AccelerometerNonLinearCalibrator accelerometerCalibrator,
             final GyroscopeNonLinearCalibrator gyroscopeCalibrator) {
         super(dataSource, accelerometerCalibrator, gyroscopeCalibrator);
-        initializeOptimizerListener();
+        initializeOptimizerListeners();
         try {
             setMseOptimizer(new BrentSingleOptimizer());
         } catch (final LockedException ignore) {
@@ -149,7 +156,7 @@ public class BracketedAccelerometerAndGyroscopeIntervalDetectorThresholdFactorOp
     public BracketedAccelerometerAndGyroscopeIntervalDetectorThresholdFactorOptimizer(
             final BracketedSingleOptimizer mseOptimizer) {
         super();
-        initializeOptimizerListener();
+        initializeOptimizerListeners();
         try {
             setMseOptimizer(mseOptimizer);
         } catch (final LockedException ignore) {
@@ -168,7 +175,7 @@ public class BracketedAccelerometerAndGyroscopeIntervalDetectorThresholdFactorOp
             final AccelerometerAndGyroscopeIntervalDetectorThresholdFactorOptimizerDataSource dataSource,
             final BracketedSingleOptimizer mseOptimizer) {
         super(dataSource);
-        initializeOptimizerListener();
+        initializeOptimizerListeners();
         try {
             setMseOptimizer(mseOptimizer);
         } catch (final LockedException ignore) {
@@ -196,7 +203,7 @@ public class BracketedAccelerometerAndGyroscopeIntervalDetectorThresholdFactorOp
             final GyroscopeNonLinearCalibrator gyroscopeCalibrator,
             final BracketedSingleOptimizer mseOptimizer) {
         super(accelerometerCalibrator, gyroscopeCalibrator);
-        initializeOptimizerListener();
+        initializeOptimizerListeners();
         try {
             setMseOptimizer(mseOptimizer);
         } catch (final LockedException ignore) {
@@ -227,7 +234,7 @@ public class BracketedAccelerometerAndGyroscopeIntervalDetectorThresholdFactorOp
             final GyroscopeNonLinearCalibrator gyroscopeCalibrator,
             final BracketedSingleOptimizer mseOptimizer) {
         super(dataSource, accelerometerCalibrator, gyroscopeCalibrator);
-        initializeOptimizerListener();
+        initializeOptimizerListeners();
         try {
             setMseOptimizer(mseOptimizer);
         } catch (final LockedException ignore) {
@@ -266,11 +273,12 @@ public class BracketedAccelerometerAndGyroscopeIntervalDetectorThresholdFactorOp
                 optimizer.setBracket(mMinThresholdFactor, mMinThresholdFactor,
                         mMaxThresholdFactor);
                 optimizer.setListener(mOptimizerListener);
+                optimizer.setOnIterationCompletedListener(mIterationCompletedListener);
             }
             mMseOptimizer = optimizer;
-        } catch (com.irurueta.numerical.LockedException e) {
+        } catch (final com.irurueta.numerical.LockedException e) {
             throw new LockedException(e);
-        } catch (InvalidBracketRangeException ignore) {
+        } catch (final InvalidBracketRangeException ignore) {
             // never happens
         }
     }
@@ -310,6 +318,8 @@ public class BracketedAccelerometerAndGyroscopeIntervalDetectorThresholdFactorOp
         try {
             mRunning = true;
 
+            initProgress();
+
             if (mListener != null) {
                 mListener.onOptimizeStart(this);
             }
@@ -330,17 +340,31 @@ public class BracketedAccelerometerAndGyroscopeIntervalDetectorThresholdFactorOp
     }
 
     /**
-     * Initializes optimizer listener.
+     * Initializes optimizer listeners.
      */
-    private void initializeOptimizerListener() {
+    private void initializeOptimizerListeners() {
         mOptimizerListener = new SingleDimensionFunctionEvaluatorListener() {
             @Override
-            public double evaluate(double point) throws EvaluationException {
+            public double evaluate(final double point) throws EvaluationException {
                 try {
                     return evaluateForThresholdFactor(point);
-                } catch (NavigationException e) {
+                } catch (final NavigationException e) {
                     throw new EvaluationException(e);
                 }
+            }
+        };
+
+        mIterationCompletedListener = new OnIterationCompletedListener() {
+            @Override
+            public void onIterationCompleted(final Optimizer optimizer,
+                                             final int iteration,
+                                             final Integer maxIterations) {
+                if (maxIterations == null) {
+                    return;
+                }
+
+                mProgress = (float) iteration / (float) maxIterations;
+                checkAndNotifyProgress();
             }
         };
     }

@@ -239,6 +239,8 @@ public class BracketedAccelerometerGyroscopeAndMagnetometerIntervalDetectorThres
 
     private int mEnd;
 
+    private float mProgress;
+
     @Test
     public void testConstructor1() {
         final BracketedAccelerometerGyroscopeAndMagnetometerIntervalDetectorThresholdFactorOptimizer optimizer =
@@ -343,6 +345,8 @@ public class BracketedAccelerometerGyroscopeAndMagnetometerIntervalDetectorThres
         assertEquals(0.0, optimizer.getMinMse(), 0.0);
         assertEquals(0.0, optimizer.getOptimalThresholdFactor(), 0.0);
         assertNull(optimizer.getListener());
+        assertEquals(IntervalDetectorThresholdFactorOptimizer.DEFAULT_PROGRESS_DELTA,
+                optimizer.getProgressDelta(), 0.0);
     }
 
     @Test
@@ -453,6 +457,8 @@ public class BracketedAccelerometerGyroscopeAndMagnetometerIntervalDetectorThres
         assertEquals(0.0, optimizer.getMinMse(), 0.0);
         assertEquals(0.0, optimizer.getOptimalThresholdFactor(), 0.0);
         assertNull(optimizer.getListener());
+        assertEquals(IntervalDetectorThresholdFactorOptimizer.DEFAULT_PROGRESS_DELTA,
+                optimizer.getProgressDelta(), 0.0);
     }
 
     @Test
@@ -567,6 +573,8 @@ public class BracketedAccelerometerGyroscopeAndMagnetometerIntervalDetectorThres
         assertEquals(0.0, optimizer.getMinMse(), 0.0);
         assertEquals(0.0, optimizer.getOptimalThresholdFactor(), 0.0);
         assertNull(optimizer.getListener());
+        assertEquals(IntervalDetectorThresholdFactorOptimizer.DEFAULT_PROGRESS_DELTA,
+                optimizer.getProgressDelta(), 0.0);
 
         // Force IllegalArgumentException
         optimizer = null;
@@ -710,6 +718,8 @@ public class BracketedAccelerometerGyroscopeAndMagnetometerIntervalDetectorThres
         assertEquals(0.0, optimizer.getMinMse(), 0.0);
         assertEquals(0.0, optimizer.getOptimalThresholdFactor(), 0.0);
         assertNull(optimizer.getListener());
+        assertEquals(IntervalDetectorThresholdFactorOptimizer.DEFAULT_PROGRESS_DELTA,
+                optimizer.getProgressDelta(), 0.0);
 
         // Force IllegalArgumentException
         optimizer = null;
@@ -845,6 +855,8 @@ public class BracketedAccelerometerGyroscopeAndMagnetometerIntervalDetectorThres
         assertEquals(0.0, optimizer.getMinMse(), 0.0);
         assertEquals(0.0, optimizer.getOptimalThresholdFactor(), 0.0);
         assertNull(optimizer.getListener());
+        assertEquals(IntervalDetectorThresholdFactorOptimizer.DEFAULT_PROGRESS_DELTA,
+                optimizer.getProgressDelta(), 0.0);
     }
 
     @Test
@@ -956,6 +968,8 @@ public class BracketedAccelerometerGyroscopeAndMagnetometerIntervalDetectorThres
         assertEquals(0.0, optimizer.getMinMse(), 0.0);
         assertEquals(0.0, optimizer.getOptimalThresholdFactor(), 0.0);
         assertNull(optimizer.getListener());
+        assertEquals(IntervalDetectorThresholdFactorOptimizer.DEFAULT_PROGRESS_DELTA,
+                optimizer.getProgressDelta(), 0.0);
     }
 
     @Test
@@ -1072,6 +1086,8 @@ public class BracketedAccelerometerGyroscopeAndMagnetometerIntervalDetectorThres
         assertEquals(0.0, optimizer.getMinMse(), 0.0);
         assertEquals(0.0, optimizer.getOptimalThresholdFactor(), 0.0);
         assertNull(optimizer.getListener());
+        assertEquals(IntervalDetectorThresholdFactorOptimizer.DEFAULT_PROGRESS_DELTA,
+                optimizer.getProgressDelta(), 0.0);
 
         // Force IllegalArgumentException
         optimizer = null;
@@ -1217,6 +1233,8 @@ public class BracketedAccelerometerGyroscopeAndMagnetometerIntervalDetectorThres
         assertEquals(0.0, optimizer.getMinMse(), 0.0);
         assertEquals(0.0, optimizer.getOptimalThresholdFactor(), 0.0);
         assertNull(optimizer.getListener());
+        assertEquals(IntervalDetectorThresholdFactorOptimizer.DEFAULT_PROGRESS_DELTA,
+                optimizer.getProgressDelta(), 0.0);
 
         // Force IllegalArgumentException
         optimizer = null;
@@ -1801,6 +1819,33 @@ public class BracketedAccelerometerGyroscopeAndMagnetometerIntervalDetectorThres
     }
 
     @Test
+    public void testGetSetProgressDelta() throws LockedException {
+        final BracketedAccelerometerGyroscopeAndMagnetometerIntervalDetectorThresholdFactorOptimizer optimizer =
+                new BracketedAccelerometerGyroscopeAndMagnetometerIntervalDetectorThresholdFactorOptimizer();
+
+        assertEquals(IntervalDetectorThresholdFactorOptimizer.DEFAULT_PROGRESS_DELTA,
+                optimizer.getProgressDelta(), 0.0);
+
+        // set new value
+        optimizer.setProgressDelta(0.5f);
+
+        // check
+        assertEquals(0.5f, optimizer.getProgressDelta(), 0.0f);
+
+        // Force IllegalArgumentException
+        try {
+            optimizer.setProgressDelta(-1.0f);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            optimizer.setProgressDelta(2.0f);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+    }
+
+    @Test
     public void testOptimizeMaCommonAxisWithNoise() throws WrongSizeException,
             InvalidSourceAndDestinationFrameTypeException, LockedException,
             NotReadyException, IntervalDetectorThresholdFactorOptimizerException,
@@ -1901,12 +1946,14 @@ public class BracketedAccelerometerGyroscopeAndMagnetometerIntervalDetectorThres
             reset();
             assertEquals(0, mStart);
             assertEquals(0, mEnd);
+            assertEquals(0.0f, mProgress, 0.0f);
 
             final double thresholdFactor = optimizer.optimize();
 
             // check optimization results
             assertEquals(1, mStart);
             assertEquals(1, mEnd);
+            assertTrue(mProgress > 0.0f);
             assertEquals(thresholdFactor, optimizer.getOptimalThresholdFactor(),
                     0.0);
             assertTrue(optimizer.getAccelerometerBaseNoiseLevel() > 0.0);
@@ -2180,12 +2227,14 @@ public class BracketedAccelerometerGyroscopeAndMagnetometerIntervalDetectorThres
             reset();
             assertEquals(0, mStart);
             assertEquals(0, mEnd);
+            assertEquals(0.0f, mProgress, 0.0f);
 
             final double thresholdFactor = optimizer.optimize();
 
             // check optimization results
             assertEquals(1, mStart);
             assertEquals(1, mEnd);
+            assertTrue(mProgress > 0.0f);
             assertEquals(thresholdFactor, optimizer.getOptimalThresholdFactor(),
                     0.0);
             assertTrue(optimizer.getAccelerometerBaseNoiseLevel() > 0.0);
@@ -2459,12 +2508,14 @@ public class BracketedAccelerometerGyroscopeAndMagnetometerIntervalDetectorThres
             reset();
             assertEquals(0, mStart);
             assertEquals(0, mEnd);
+            assertEquals(0.0f, mProgress, 0.0f);
 
             final double thresholdFactor = optimizer.optimize();
 
             // check optimization results
             assertEquals(1, mStart);
             assertEquals(1, mEnd);
+            assertTrue(mProgress > 0.0f);
             assertEquals(thresholdFactor, optimizer.getOptimalThresholdFactor(),
                     0.0);
             assertTrue(optimizer.getAccelerometerBaseNoiseLevel() > 0.0);
@@ -2738,12 +2789,14 @@ public class BracketedAccelerometerGyroscopeAndMagnetometerIntervalDetectorThres
             reset();
             assertEquals(0, mStart);
             assertEquals(0, mEnd);
+            assertEquals(0.0f, mProgress, 0.0f);
 
             final double thresholdFactor = optimizer.optimize();
 
             // check optimization results
             assertEquals(1, mStart);
             assertEquals(1, mEnd);
+            assertTrue(mProgress > 0.0f);
             assertEquals(thresholdFactor, optimizer.getOptimalThresholdFactor(),
                     0.0);
             assertTrue(optimizer.getAccelerometerBaseNoiseLevel() > 0.0);
@@ -3017,12 +3070,14 @@ public class BracketedAccelerometerGyroscopeAndMagnetometerIntervalDetectorThres
             reset();
             assertEquals(0, mStart);
             assertEquals(0, mEnd);
+            assertEquals(0.0f, mProgress, 0.0f);
 
             final double thresholdFactor = optimizer.optimize();
 
             // check optimization results
             assertEquals(1, mStart);
             assertEquals(1, mEnd);
+            assertTrue(mProgress > 0.0f);
             assertEquals(thresholdFactor, optimizer.getOptimalThresholdFactor(),
                     0.0);
             assertTrue(optimizer.getAccelerometerBaseNoiseLevel() > 0.0);
@@ -3297,12 +3352,14 @@ public class BracketedAccelerometerGyroscopeAndMagnetometerIntervalDetectorThres
             reset();
             assertEquals(0, mStart);
             assertEquals(0, mEnd);
+            assertEquals(0.0f, mProgress, 0.0f);
 
             final double thresholdFactor = optimizer.optimize();
 
             // check optimization results
             assertEquals(1, mStart);
             assertEquals(1, mEnd);
+            assertTrue(mProgress > 0.0f);
             assertEquals(thresholdFactor, optimizer.getOptimalThresholdFactor(),
                     0.0);
             assertTrue(optimizer.getAccelerometerBaseNoiseLevel() > 0.0);
@@ -3579,12 +3636,14 @@ public class BracketedAccelerometerGyroscopeAndMagnetometerIntervalDetectorThres
             reset();
             assertEquals(0, mStart);
             assertEquals(0, mEnd);
+            assertEquals(0.0f, mProgress, 0.0f);
 
             final double thresholdFactor = optimizer.optimize();
 
             // check optimization results
             assertEquals(1, mStart);
             assertEquals(1, mEnd);
+            assertTrue(mProgress > 0.0f);
             assertEquals(thresholdFactor, optimizer.getOptimalThresholdFactor(),
                     0.0);
             assertTrue(optimizer.getAccelerometerBaseNoiseLevel() > 0.0);
@@ -3772,6 +3831,20 @@ public class BracketedAccelerometerGyroscopeAndMagnetometerIntervalDetectorThres
                     AccelerometerGyroscopeAndMagnetometerIntervalDetectorThresholdFactorOptimizerDataSource> optimizer) {
         mEnd++;
         checkLocked((BracketedAccelerometerGyroscopeAndMagnetometerIntervalDetectorThresholdFactorOptimizer) optimizer);
+    }
+
+    @Override
+    public void onOptimizeProgressChange(
+            final IntervalDetectorThresholdFactorOptimizer<TimedBodyKinematicsAndMagneticFluxDensity,
+                    AccelerometerGyroscopeAndMagnetometerIntervalDetectorThresholdFactorOptimizerDataSource> optimizer,
+            final float progress) {
+        assertTrue(progress >= 0.0f);
+        assertTrue(progress <= 1.0f);
+        assertTrue(progress > mProgress);
+        if (mProgress == 0.0f) {
+            checkLocked((BracketedAccelerometerGyroscopeAndMagnetometerIntervalDetectorThresholdFactorOptimizer) optimizer);
+        }
+        mProgress = progress;
     }
 
     private void checkLocked(
@@ -4335,5 +4408,6 @@ public class BracketedAccelerometerGyroscopeAndMagnetometerIntervalDetectorThres
     private void reset() {
         mStart = 0;
         mEnd = 0;
+        mProgress = 0.0f;
     }
 }

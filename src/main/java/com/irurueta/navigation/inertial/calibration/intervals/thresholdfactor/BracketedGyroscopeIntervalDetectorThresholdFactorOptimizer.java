@@ -27,6 +27,8 @@ import com.irurueta.numerical.NumericalException;
 import com.irurueta.numerical.SingleDimensionFunctionEvaluatorListener;
 import com.irurueta.numerical.optimization.BracketedSingleOptimizer;
 import com.irurueta.numerical.optimization.BrentSingleOptimizer;
+import com.irurueta.numerical.optimization.OnIterationCompletedListener;
+import com.irurueta.numerical.optimization.Optimizer;
 
 /**
  * Optimizes threshold factor for interval detection of accelerometer + gyroscope
@@ -51,11 +53,16 @@ public class BracketedGyroscopeIntervalDetectorThresholdFactorOptimizer extends
     private SingleDimensionFunctionEvaluatorListener mOptimizerListener;
 
     /**
+     * Iteration listener for {@link BracketedSingleOptimizer}.
+     */
+    private OnIterationCompletedListener mIterationCompletedListener;
+
+    /**
      * Constructor.
      */
     public BracketedGyroscopeIntervalDetectorThresholdFactorOptimizer() {
         super();
-        initializeOptimizerListener();
+        initializeOptimizerListeners();
         try {
             setMseOptimizer(new BrentSingleOptimizer());
         } catch (final LockedException ignore) {
@@ -71,7 +78,7 @@ public class BracketedGyroscopeIntervalDetectorThresholdFactorOptimizer extends
     public BracketedGyroscopeIntervalDetectorThresholdFactorOptimizer(
             final GyroscopeIntervalDetectorThresholdFactorOptimizerDataSource dataSource) {
         super(dataSource);
-        initializeOptimizerListener();
+        initializeOptimizerListeners();
         try {
             setMseOptimizer(new BrentSingleOptimizer());
         } catch (final LockedException ignore) {
@@ -90,7 +97,7 @@ public class BracketedGyroscopeIntervalDetectorThresholdFactorOptimizer extends
     public BracketedGyroscopeIntervalDetectorThresholdFactorOptimizer(
             final GyroscopeNonLinearCalibrator calibrator) {
         super(calibrator);
-        initializeOptimizerListener();
+        initializeOptimizerListeners();
         try {
             setMseOptimizer(new BrentSingleOptimizer());
         } catch (final LockedException ignore) {
@@ -111,7 +118,7 @@ public class BracketedGyroscopeIntervalDetectorThresholdFactorOptimizer extends
             final GyroscopeIntervalDetectorThresholdFactorOptimizerDataSource dataSource,
             final GyroscopeNonLinearCalibrator calibrator) {
         super(dataSource, calibrator);
-        initializeOptimizerListener();
+        initializeOptimizerListeners();
         try {
             setMseOptimizer(new BrentSingleOptimizer());
         } catch (final LockedException ignore) {
@@ -127,7 +134,7 @@ public class BracketedGyroscopeIntervalDetectorThresholdFactorOptimizer extends
      */
     public BracketedGyroscopeIntervalDetectorThresholdFactorOptimizer(
             final BracketedSingleOptimizer mseOptimizer) {
-        initializeOptimizerListener();
+        initializeOptimizerListeners();
         try {
             setMseOptimizer(mseOptimizer);
         } catch (final LockedException ignore) {
@@ -146,7 +153,7 @@ public class BracketedGyroscopeIntervalDetectorThresholdFactorOptimizer extends
             final GyroscopeIntervalDetectorThresholdFactorOptimizerDataSource dataSource,
             final BracketedSingleOptimizer mseOptimizer) {
         super(dataSource);
-        initializeOptimizerListener();
+        initializeOptimizerListeners();
         try {
             setMseOptimizer(mseOptimizer);
         } catch (final LockedException ignore) {
@@ -168,7 +175,7 @@ public class BracketedGyroscopeIntervalDetectorThresholdFactorOptimizer extends
             final GyroscopeNonLinearCalibrator calibrator,
             final BracketedSingleOptimizer mseOptimizer) {
         super(calibrator);
-        initializeOptimizerListener();
+        initializeOptimizerListeners();
         try {
             setMseOptimizer(mseOptimizer);
         } catch (final LockedException ignore) {
@@ -192,7 +199,7 @@ public class BracketedGyroscopeIntervalDetectorThresholdFactorOptimizer extends
             final GyroscopeNonLinearCalibrator calibrator,
             final BracketedSingleOptimizer mseOptimizer) {
         super(dataSource, calibrator);
-        initializeOptimizerListener();
+        initializeOptimizerListeners();
         try {
             setMseOptimizer(mseOptimizer);
         } catch (final LockedException ignore) {
@@ -230,11 +237,12 @@ public class BracketedGyroscopeIntervalDetectorThresholdFactorOptimizer extends
                 optimizer.setBracket(mMinThresholdFactor, mMinThresholdFactor,
                         mMaxThresholdFactor);
                 optimizer.setListener(mOptimizerListener);
+                optimizer.setOnIterationCompletedListener(mIterationCompletedListener);
             }
             mMseOptimizer = optimizer;
-        } catch (com.irurueta.numerical.LockedException e) {
+        } catch (final com.irurueta.numerical.LockedException e) {
             throw new LockedException(e);
-        } catch (InvalidBracketRangeException ignore) {
+        } catch (final InvalidBracketRangeException ignore) {
             // never happens
         }
     }
@@ -274,6 +282,8 @@ public class BracketedGyroscopeIntervalDetectorThresholdFactorOptimizer extends
         try {
             mRunning = true;
 
+            initProgress();
+
             if (mListener != null) {
                 mListener.onOptimizeStart(this);
             }
@@ -296,15 +306,29 @@ public class BracketedGyroscopeIntervalDetectorThresholdFactorOptimizer extends
     /**
      * Initializes optimizer listener.
      */
-    private void initializeOptimizerListener() {
+    private void initializeOptimizerListeners() {
         mOptimizerListener = new SingleDimensionFunctionEvaluatorListener() {
             @Override
-            public double evaluate(double point) throws EvaluationException {
+            public double evaluate(final double point) throws EvaluationException {
                 try {
                     return evaluateForThresholdFactor(point);
-                } catch (NavigationException e) {
+                } catch (final NavigationException e) {
                     throw new EvaluationException(e);
                 }
+            }
+        };
+
+        mIterationCompletedListener = new OnIterationCompletedListener() {
+            @Override
+            public void onIterationCompleted(final Optimizer optimizer,
+                                             final int iteration,
+                                             final Integer maxIterations) {
+                if (maxIterations == null) {
+                    return;
+                }
+
+                mProgress = (float) iteration / (float) maxIterations;
+                checkAndNotifyProgress();
             }
         };
     }

@@ -205,6 +205,8 @@ public class ExhaustiveMagnetometerIntervalDetectorThresholdFactorOptimizerTest 
 
     private int mEnd;
 
+    private float mProgress;
+
     @Test
     public void testConstructor1() {
         final ExhaustiveMagnetometerIntervalDetectorThresholdFactorOptimizer optimizer =
@@ -281,6 +283,8 @@ public class ExhaustiveMagnetometerIntervalDetectorThresholdFactorOptimizerTest 
         assertEquals(0.0, optimizer.getMinMse(), 0.0);
         assertEquals(0.0, optimizer.getOptimalThresholdFactor(), 0.0);
         assertNull(optimizer.getListener());
+        assertEquals(IntervalDetectorThresholdFactorOptimizer.DEFAULT_PROGRESS_DELTA,
+                optimizer.getProgressDelta(), 0.0);
     }
 
     @Test
@@ -362,6 +366,8 @@ public class ExhaustiveMagnetometerIntervalDetectorThresholdFactorOptimizerTest 
         assertEquals(0.0, optimizer.getMinMse(), 0.0);
         assertEquals(0.0, optimizer.getOptimalThresholdFactor(), 0.0);
         assertNull(optimizer.getListener());
+        assertEquals(IntervalDetectorThresholdFactorOptimizer.DEFAULT_PROGRESS_DELTA,
+                optimizer.getProgressDelta(), 0.0);
     }
 
     @Test
@@ -444,6 +450,8 @@ public class ExhaustiveMagnetometerIntervalDetectorThresholdFactorOptimizerTest 
         assertEquals(0.0, optimizer.getMinMse(), 0.0);
         assertEquals(0.0, optimizer.getOptimalThresholdFactor(), 0.0);
         assertNull(optimizer.getListener());
+        assertEquals(IntervalDetectorThresholdFactorOptimizer.DEFAULT_PROGRESS_DELTA,
+                optimizer.getProgressDelta(), 0.0);
 
         // Force IllegalArgumentException
         optimizer = null;
@@ -538,6 +546,8 @@ public class ExhaustiveMagnetometerIntervalDetectorThresholdFactorOptimizerTest 
         assertEquals(0.0, optimizer.getMinMse(), 0.0);
         assertEquals(0.0, optimizer.getOptimalThresholdFactor(), 0.0);
         assertNull(optimizer.getListener());
+        assertEquals(IntervalDetectorThresholdFactorOptimizer.DEFAULT_PROGRESS_DELTA,
+                optimizer.getProgressDelta(), 0.0);
 
         // Force IllegalArgumentException
         optimizer = null;
@@ -952,6 +962,33 @@ public class ExhaustiveMagnetometerIntervalDetectorThresholdFactorOptimizerTest 
     }
 
     @Test
+    public void testGetSetProgressDelta() throws LockedException {
+        final ExhaustiveMagnetometerIntervalDetectorThresholdFactorOptimizer optimizer =
+                new ExhaustiveMagnetometerIntervalDetectorThresholdFactorOptimizer();
+
+        assertEquals(IntervalDetectorThresholdFactorOptimizer.DEFAULT_PROGRESS_DELTA,
+                optimizer.getProgressDelta(), 0.0);
+
+        // set new value
+        optimizer.setProgressDelta(0.5f);
+
+        // check
+        assertEquals(0.5f, optimizer.getProgressDelta(), 0.0f);
+
+        // Force IllegalArgumentException
+        try {
+            optimizer.setProgressDelta(-1.0f);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            optimizer.setProgressDelta(2.0f);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+    }
+
+    @Test
     public void testOptimizeGeneralWithNoise() throws WrongSizeException,
             InvalidSourceAndDestinationFrameTypeException, LockedException, NotReadyException,
             IntervalDetectorThresholdFactorOptimizerException, CalibrationException, IOException {
@@ -995,12 +1032,14 @@ public class ExhaustiveMagnetometerIntervalDetectorThresholdFactorOptimizerTest 
             reset();
             assertEquals(0, mStart);
             assertEquals(0, mEnd);
+            assertEquals(0.0f, mProgress, 0.0f);
 
             final double thresholdFactor = optimizer.optimize();
 
             // check optimization results
             assertEquals(1, mStart);
             assertEquals(1, mEnd);
+            assertTrue(mProgress > 0.0f);
             assertEquals(thresholdFactor, optimizer.getOptimalThresholdFactor(),
                     0.0);
             assertTrue(optimizer.getAccelerometerBaseNoiseLevel() > 0.0);
@@ -1131,12 +1170,14 @@ public class ExhaustiveMagnetometerIntervalDetectorThresholdFactorOptimizerTest 
             reset();
             assertEquals(0, mStart);
             assertEquals(0, mEnd);
+            assertEquals(0.0f, mProgress, 0.0f);
 
             final double thresholdFactor = optimizer.optimize();
 
             // check optimization results
             assertEquals(1, mStart);
             assertEquals(1, mEnd);
+            assertTrue(mProgress > 0.0f);
             assertEquals(thresholdFactor, optimizer.getOptimalThresholdFactor(),
                     0.0);
             assertTrue(optimizer.getAccelerometerBaseNoiseLevel() > 0.0);
@@ -1267,12 +1308,14 @@ public class ExhaustiveMagnetometerIntervalDetectorThresholdFactorOptimizerTest 
             reset();
             assertEquals(0, mStart);
             assertEquals(0, mEnd);
+            assertEquals(0.0f, mProgress, 0.0f);
 
             final double thresholdFactor = optimizer.optimize();
 
             // check optimization results
             assertEquals(1, mStart);
             assertEquals(1, mEnd);
+            assertTrue(mProgress > 0.0f);
             assertEquals(thresholdFactor, optimizer.getOptimalThresholdFactor(),
                     0.0);
             assertTrue(optimizer.getAccelerometerBaseNoiseLevel() > 0.0);
@@ -1403,12 +1446,14 @@ public class ExhaustiveMagnetometerIntervalDetectorThresholdFactorOptimizerTest 
             reset();
             assertEquals(0, mStart);
             assertEquals(0, mEnd);
+            assertEquals(0.0f, mProgress, 0.0f);
 
             final double thresholdFactor = optimizer.optimize();
 
             // check optimization results
             assertEquals(1, mStart);
             assertEquals(1, mEnd);
+            assertTrue(mProgress > 0.0f);
             assertEquals(thresholdFactor, optimizer.getOptimalThresholdFactor(),
                     0.0);
             assertTrue(optimizer.getAccelerometerBaseNoiseLevel() > 0.0);
@@ -1511,6 +1556,20 @@ public class ExhaustiveMagnetometerIntervalDetectorThresholdFactorOptimizerTest 
         checkLocked((ExhaustiveMagnetometerIntervalDetectorThresholdFactorOptimizer) optimizer);
     }
 
+    @Override
+    public void onOptimizeProgressChange(
+            final IntervalDetectorThresholdFactorOptimizer<BodyKinematicsAndMagneticFluxDensity,
+                    MagnetometerIntervalDetectorThresholdFactorOptimizerDataSource> optimizer,
+            final float progress) {
+        assertTrue(progress >= 0.0f);
+        assertTrue(progress <= 1.0f);
+        assertTrue(progress > mProgress);
+        if (mProgress == 0.0f) {
+            checkLocked((ExhaustiveMagnetometerIntervalDetectorThresholdFactorOptimizer) optimizer);
+        }
+        mProgress = progress;
+    }
+
     private void checkLocked(
             final ExhaustiveMagnetometerIntervalDetectorThresholdFactorOptimizer optimizer) {
         assertTrue(optimizer.isRunning());
@@ -1601,6 +1660,7 @@ public class ExhaustiveMagnetometerIntervalDetectorThresholdFactorOptimizerTest 
     private void reset() {
         mStart = 0;
         mEnd = 0;
+        mProgress = 0.0f;
     }
 
     private boolean generateBodyKinematicsAndMagneticFluxDensity(

@@ -64,6 +64,7 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
 
     private static final double ABSOLUTE_ERROR = 1e-8;
     private static final double LARGE_ABSOLUTE_ERROR = 1e-6;
+    private static final double VERY_LARGE_ABSOLUTE_ERROR = 1e-3;
 
     private int mStart;
     private int mBodyKinematicsAdded;
@@ -7149,37 +7150,37 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         final ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
         final CoordinateTransformation ecefC1 = ecefFrame1.getCoordinateTransformation();
 
-        assertTrue(ecefPosition1.equals(estimator.getEcefPosition(), LARGE_ABSOLUTE_ERROR));
+        assertTrue(ecefPosition1.equals(estimator.getEcefPosition(), VERY_LARGE_ABSOLUTE_ERROR));
         final ECEFPosition ecefPosition2 = new ECEFPosition();
         estimator.getEcefPosition(ecefPosition2);
-        assertTrue(ecefPosition1.equals(ecefPosition2, LARGE_ABSOLUTE_ERROR));
+        assertTrue(ecefPosition1.equals(ecefPosition2, VERY_LARGE_ABSOLUTE_ERROR));
 
         assertTrue(ecefFrame1.equals(estimator.getEcefFrame(),
-                LARGE_ABSOLUTE_ERROR));
+                VERY_LARGE_ABSOLUTE_ERROR));
         final ECEFFrame ecefFrame2 = new ECEFFrame();
         estimator.getEcefFrame(ecefFrame2);
-        assertTrue(ecefFrame1.equals(ecefFrame2, LARGE_ABSOLUTE_ERROR));
+        assertTrue(ecefFrame1.equals(ecefFrame2, VERY_LARGE_ABSOLUTE_ERROR));
 
-        assertTrue(nedFrame1.equals(estimator.getNedFrame(), ABSOLUTE_ERROR));
+        assertTrue(nedFrame1.equals(estimator.getNedFrame(), VERY_LARGE_ABSOLUTE_ERROR));
         final NEDFrame nedFrame2 = new NEDFrame();
         estimator.getNedFrame(nedFrame2);
-        assertTrue(nedFrame1.equals(nedFrame2, ABSOLUTE_ERROR));
+        assertTrue(nedFrame1.equals(nedFrame2, VERY_LARGE_ABSOLUTE_ERROR));
 
-        assertTrue(nedPosition.equals(estimator.getNedPosition(), ABSOLUTE_ERROR));
+        assertTrue(nedPosition.equals(estimator.getNedPosition(), VERY_LARGE_ABSOLUTE_ERROR));
         final NEDPosition nedPosition2 = new NEDPosition();
         estimator.getNedPosition(nedPosition2);
-        assertTrue(nedPosition.equals(nedPosition2, ABSOLUTE_ERROR));
-        assertTrue(ecefC1.equals(estimator.getEcefC(), ABSOLUTE_ERROR));
+        assertTrue(nedPosition.equals(nedPosition2, VERY_LARGE_ABSOLUTE_ERROR));
+        assertTrue(ecefC1.equals(estimator.getEcefC(), VERY_LARGE_ABSOLUTE_ERROR));
         final CoordinateTransformation ecefC2 = new CoordinateTransformation(
                 FrameType.BODY_FRAME, FrameType.BODY_FRAME);
         estimator.getEcefC(ecefC2);
-        assertTrue(ecefC1.equals(ecefC2, ABSOLUTE_ERROR));
+        assertTrue(ecefC1.equals(ecefC2, VERY_LARGE_ABSOLUTE_ERROR));
 
-        assertTrue(nedC.equals(estimator.getNedC(), ABSOLUTE_ERROR));
+        assertTrue(nedC.equals(estimator.getNedC(), VERY_LARGE_ABSOLUTE_ERROR));
         final CoordinateTransformation nedC2 = new CoordinateTransformation(
                 FrameType.BODY_FRAME, FrameType.BODY_FRAME);
         estimator.getNedC(nedC2);
-        assertTrue(nedC.equals(nedC2, ABSOLUTE_ERROR));
+        assertTrue(nedC.equals(nedC2, VERY_LARGE_ABSOLUTE_ERROR));
 
         assertEquals(0, estimator.getNumberOfProcessedSamples());
         assertTrue(estimator.isFixKinematicsEnabled());
@@ -14422,21 +14423,21 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         estimator.getEcefPosition(ecefPosition2);
         assertTrue(ecefPosition1.equals(ecefPosition2, LARGE_ABSOLUTE_ERROR));
 
-        assertTrue(ecefFrame1.equals(estimator.getEcefFrame(), ABSOLUTE_ERROR));
+        assertTrue(ecefFrame1.equals(estimator.getEcefFrame(), LARGE_ABSOLUTE_ERROR));
         final ECEFFrame ecefFrame2 = new ECEFFrame();
         estimator.getEcefFrame(ecefFrame2);
-        assertTrue(ecefFrame1.equals(ecefFrame2, ABSOLUTE_ERROR));
+        assertTrue(ecefFrame1.equals(ecefFrame2, LARGE_ABSOLUTE_ERROR));
 
-        assertTrue(nedFrame1.equals(estimator.getNedFrame(), ABSOLUTE_ERROR));
+        assertTrue(nedFrame1.equals(estimator.getNedFrame(), LARGE_ABSOLUTE_ERROR));
         final NEDFrame nedFrame2 = new NEDFrame();
         estimator.getNedFrame(nedFrame2);
-        assertTrue(nedFrame1.equals(nedFrame2, ABSOLUTE_ERROR));
+        assertTrue(nedFrame1.equals(nedFrame2, LARGE_ABSOLUTE_ERROR));
 
-        assertTrue(nedPosition.equals(estimator.getNedPosition(), ABSOLUTE_ERROR));
+        assertTrue(nedPosition.equals(estimator.getNedPosition(), LARGE_ABSOLUTE_ERROR));
         final NEDPosition nedPosition2 = new NEDPosition();
         estimator.getNedPosition(nedPosition2);
-        assertTrue(nedPosition.equals(nedPosition2, ABSOLUTE_ERROR));
-        assertTrue(ecefC1.equals(estimator.getEcefC(), ABSOLUTE_ERROR));
+        assertTrue(nedPosition.equals(nedPosition2, LARGE_ABSOLUTE_ERROR));
+        assertTrue(ecefC1.equals(estimator.getEcefC(), LARGE_ABSOLUTE_ERROR));
         final CoordinateTransformation ecefC2 = new CoordinateTransformation(
                 FrameType.BODY_FRAME, FrameType.BODY_FRAME);
         estimator.getEcefC(ecefC2);

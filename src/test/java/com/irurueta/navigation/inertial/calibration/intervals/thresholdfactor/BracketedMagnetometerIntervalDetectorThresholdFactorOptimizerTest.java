@@ -206,6 +206,8 @@ public class BracketedMagnetometerIntervalDetectorThresholdFactorOptimizerTest i
 
     private int mEnd;
 
+    private float mProgress;
+
     @Test
     public void testConstructor1() {
         final BracketedMagnetometerIntervalDetectorThresholdFactorOptimizer optimizer =
@@ -281,6 +283,8 @@ public class BracketedMagnetometerIntervalDetectorThresholdFactorOptimizerTest i
         assertEquals(0.0, optimizer.getMinMse(), 0.0);
         assertEquals(0.0, optimizer.getOptimalThresholdFactor(), 0.0);
         assertNull(optimizer.getListener());
+        assertEquals(IntervalDetectorThresholdFactorOptimizer.DEFAULT_PROGRESS_DELTA,
+                optimizer.getProgressDelta(), 0.0);
     }
 
     @Test
@@ -362,6 +366,8 @@ public class BracketedMagnetometerIntervalDetectorThresholdFactorOptimizerTest i
         assertEquals(0.0, optimizer.getMinMse(), 0.0);
         assertEquals(0.0, optimizer.getOptimalThresholdFactor(), 0.0);
         assertNull(optimizer.getListener());
+        assertEquals(IntervalDetectorThresholdFactorOptimizer.DEFAULT_PROGRESS_DELTA,
+                optimizer.getProgressDelta(), 0.0);
     }
 
     @Test
@@ -443,6 +449,8 @@ public class BracketedMagnetometerIntervalDetectorThresholdFactorOptimizerTest i
         assertEquals(0.0, optimizer.getMinMse(), 0.0);
         assertEquals(0.0, optimizer.getOptimalThresholdFactor(), 0.0);
         assertNull(optimizer.getListener());
+        assertEquals(IntervalDetectorThresholdFactorOptimizer.DEFAULT_PROGRESS_DELTA,
+                optimizer.getProgressDelta(), 0.0);
 
         // Force IllegalArgumentException
         optimizer = null;
@@ -537,6 +545,8 @@ public class BracketedMagnetometerIntervalDetectorThresholdFactorOptimizerTest i
         assertEquals(0.0, optimizer.getMinMse(), 0.0);
         assertEquals(0.0, optimizer.getOptimalThresholdFactor(), 0.0);
         assertNull(optimizer.getListener());
+        assertEquals(IntervalDetectorThresholdFactorOptimizer.DEFAULT_PROGRESS_DELTA,
+                optimizer.getProgressDelta(), 0.0);
 
         // Force IllegalArgumentException
         optimizer = null;
@@ -627,6 +637,8 @@ public class BracketedMagnetometerIntervalDetectorThresholdFactorOptimizerTest i
         assertEquals(0.0, optimizer.getMinMse(), 0.0);
         assertEquals(0.0, optimizer.getOptimalThresholdFactor(), 0.0);
         assertNull(optimizer.getListener());
+        assertEquals(IntervalDetectorThresholdFactorOptimizer.DEFAULT_PROGRESS_DELTA,
+                optimizer.getProgressDelta(), 0.0);
     }
 
     @Test
@@ -709,6 +721,8 @@ public class BracketedMagnetometerIntervalDetectorThresholdFactorOptimizerTest i
         assertEquals(0.0, optimizer.getMinMse(), 0.0);
         assertEquals(0.0, optimizer.getOptimalThresholdFactor(), 0.0);
         assertNull(optimizer.getListener());
+        assertEquals(IntervalDetectorThresholdFactorOptimizer.DEFAULT_PROGRESS_DELTA,
+                optimizer.getProgressDelta(), 0.0);
     }
 
     @Test
@@ -791,6 +805,8 @@ public class BracketedMagnetometerIntervalDetectorThresholdFactorOptimizerTest i
         assertEquals(0.0, optimizer.getMinMse(), 0.0);
         assertEquals(0.0, optimizer.getOptimalThresholdFactor(), 0.0);
         assertNull(optimizer.getListener());
+        assertEquals(IntervalDetectorThresholdFactorOptimizer.DEFAULT_PROGRESS_DELTA,
+                optimizer.getProgressDelta(), 0.0);
 
         // Force IllegalArgumentException
         optimizer = null;
@@ -887,6 +903,8 @@ public class BracketedMagnetometerIntervalDetectorThresholdFactorOptimizerTest i
         assertEquals(0.0, optimizer.getMinMse(), 0.0);
         assertEquals(0.0, optimizer.getOptimalThresholdFactor(), 0.0);
         assertNull(optimizer.getListener());
+        assertEquals(IntervalDetectorThresholdFactorOptimizer.DEFAULT_PROGRESS_DELTA,
+                optimizer.getProgressDelta(), 0.0);
 
         // Force IllegalArgumentException
         optimizer = null;
@@ -1313,6 +1331,33 @@ public class BracketedMagnetometerIntervalDetectorThresholdFactorOptimizerTest i
     }
 
     @Test
+    public void testGetSetProgressDelta() throws LockedException {
+        final BracketedMagnetometerIntervalDetectorThresholdFactorOptimizer optimizer =
+                new BracketedMagnetometerIntervalDetectorThresholdFactorOptimizer();
+
+        assertEquals(IntervalDetectorThresholdFactorOptimizer.DEFAULT_PROGRESS_DELTA,
+                optimizer.getProgressDelta(), 0.0);
+
+        // set new value
+        optimizer.setProgressDelta(0.5f);
+
+        // check
+        assertEquals(0.5f, optimizer.getProgressDelta(), 0.0f);
+
+        // Force IllegalArgumentException
+        try {
+            optimizer.setProgressDelta(-1.0f);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            optimizer.setProgressDelta(2.0f);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+    }
+
+    @Test
     public void testOptimizeGeneralWithNoise() throws WrongSizeException,
             InvalidSourceAndDestinationFrameTypeException, LockedException, NotReadyException,
             IntervalDetectorThresholdFactorOptimizerException, CalibrationException, IOException {
@@ -1356,12 +1401,14 @@ public class BracketedMagnetometerIntervalDetectorThresholdFactorOptimizerTest i
             reset();
             assertEquals(0, mStart);
             assertEquals(0, mEnd);
+            assertEquals(0.0f, mProgress, 0.0f);
 
             final double thresholdFactor = optimizer.optimize();
 
             // check optimization results
             assertEquals(1, mStart);
             assertEquals(1, mEnd);
+            assertTrue(mProgress > 0.0f);
             assertEquals(thresholdFactor, optimizer.getOptimalThresholdFactor(),
                     0.0);
             assertTrue(optimizer.getAccelerometerBaseNoiseLevel() > 0.0);
@@ -1492,12 +1539,14 @@ public class BracketedMagnetometerIntervalDetectorThresholdFactorOptimizerTest i
             reset();
             assertEquals(0, mStart);
             assertEquals(0, mEnd);
+            assertEquals(0.0f, mProgress, 0.0f);
 
             final double thresholdFactor = optimizer.optimize();
 
             // check optimization results
             assertEquals(1, mStart);
             assertEquals(1, mEnd);
+            assertTrue(mProgress > 0.0f);
             assertEquals(thresholdFactor, optimizer.getOptimalThresholdFactor(),
                     0.0);
             assertTrue(optimizer.getAccelerometerBaseNoiseLevel() > 0.0);
@@ -1587,7 +1636,7 @@ public class BracketedMagnetometerIntervalDetectorThresholdFactorOptimizerTest i
     @Test
     public void testOptimizeCommonAxisSmallNoiseWithRotationAndPositionChange() throws WrongSizeException,
             InvalidSourceAndDestinationFrameTypeException, LockedException, NotReadyException,
-            IntervalDetectorThresholdFactorOptimizerException, CalibrationException, IOException {
+            CalibrationException, IOException {
 
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
@@ -1628,12 +1677,19 @@ public class BracketedMagnetometerIntervalDetectorThresholdFactorOptimizerTest i
             reset();
             assertEquals(0, mStart);
             assertEquals(0, mEnd);
+            assertEquals(0.0f, mProgress, 0.0f);
 
-            final double thresholdFactor = optimizer.optimize();
+            final double thresholdFactor;
+            try {
+                thresholdFactor = optimizer.optimize();
+            } catch (final IntervalDetectorThresholdFactorOptimizerException e) {
+                continue;
+            }
 
             // check optimization results
             assertEquals(1, mStart);
             assertEquals(1, mEnd);
+            assertTrue(mProgress > 0.0f);
             assertEquals(thresholdFactor, optimizer.getOptimalThresholdFactor(),
                     0.0);
             assertTrue(optimizer.getAccelerometerBaseNoiseLevel() > 0.0);
@@ -1764,12 +1820,14 @@ public class BracketedMagnetometerIntervalDetectorThresholdFactorOptimizerTest i
             reset();
             assertEquals(0, mStart);
             assertEquals(0, mEnd);
+            assertEquals(0.0f, mProgress, 0.0f);
 
             final double thresholdFactor = optimizer.optimize();
 
             // check optimization results
             assertEquals(1, mStart);
             assertEquals(1, mEnd);
+            assertTrue(mProgress > 0.0f);
             assertEquals(thresholdFactor, optimizer.getOptimalThresholdFactor(),
                     0.0);
             assertTrue(optimizer.getAccelerometerBaseNoiseLevel() > 0.0);
@@ -1872,6 +1930,20 @@ public class BracketedMagnetometerIntervalDetectorThresholdFactorOptimizerTest i
         checkLocked((BracketedMagnetometerIntervalDetectorThresholdFactorOptimizer) optimizer);
     }
 
+    @Override
+    public void onOptimizeProgressChange(
+            final IntervalDetectorThresholdFactorOptimizer<BodyKinematicsAndMagneticFluxDensity,
+                    MagnetometerIntervalDetectorThresholdFactorOptimizerDataSource> optimizer,
+            final float progress) {
+        assertTrue(progress >= 0.0f);
+        assertTrue(progress <= 1.0f);
+        assertTrue(progress > mProgress);
+        if (mProgress == 0.0f) {
+            checkLocked((BracketedMagnetometerIntervalDetectorThresholdFactorOptimizer) optimizer);
+        }
+        mProgress = progress;
+    }
+
     private void checkLocked(
             final BracketedMagnetometerIntervalDetectorThresholdFactorOptimizer optimizer) {
         assertTrue(optimizer.isRunning());
@@ -1962,6 +2034,7 @@ public class BracketedMagnetometerIntervalDetectorThresholdFactorOptimizerTest i
     private void reset() {
         mStart = 0;
         mEnd = 0;
+        mProgress = 0.0f;
     }
 
     private boolean generateBodyKinematicsAndMagneticFluxDensity(

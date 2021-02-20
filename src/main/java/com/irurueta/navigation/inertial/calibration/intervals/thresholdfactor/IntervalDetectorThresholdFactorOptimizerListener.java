@@ -37,4 +37,14 @@ public interface IntervalDetectorThresholdFactorOptimizerListener<T,
      * @param optimizer optimizer that raised the event.
      */
     void onOptimizeEnd(final IntervalDetectorThresholdFactorOptimizer<T, S> optimizer);
+
+    /**
+     * Called when optimization progress changes significantly.
+     *
+     * @param optimizer optimizer that raised the event.
+     * @param progress  progress of optimization expressed as a value between 0.0
+     *                  and 1.0.
+     */
+    void onOptimizeProgressChange(
+            final IntervalDetectorThresholdFactorOptimizer<T, S> optimizer, float progress);
 }

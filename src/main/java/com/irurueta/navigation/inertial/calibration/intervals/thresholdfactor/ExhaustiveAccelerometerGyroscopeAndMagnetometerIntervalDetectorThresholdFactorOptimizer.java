@@ -183,6 +183,10 @@ public class ExhaustiveAccelerometerGyroscopeAndMagnetometerIntervalDetectorThre
         try {
             mRunning = true;
 
+            initProgress();
+            final float progressStep = (float) (mThresholdFactorStep
+                    / (mThresholdFactorStep + mMaxThresholdFactor - mMinThresholdFactor));
+
             if (mListener != null) {
                 mListener.onOptimizeStart(this);
             }
@@ -196,6 +200,9 @@ public class ExhaustiveAccelerometerGyroscopeAndMagnetometerIntervalDetectorThre
                 } catch (final Exception ignore) {
                     // when an error occurs, skip to next iteration
                 }
+
+                mProgress += progressStep;
+                checkAndNotifyProgress();
             }
 
             if (!hasResult) {
