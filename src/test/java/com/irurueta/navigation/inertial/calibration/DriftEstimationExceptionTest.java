@@ -19,20 +19,20 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;
 
-public class RandomWalkEstimationExceptionTest {
+public class DriftEstimationExceptionTest {
 
     @Test
     public void testConstructor() {
-        RandomWalkEstimationException ex = new RandomWalkEstimationException();
+        DriftEstimationException ex = new DriftEstimationException();
         assertNotNull(ex);
 
-        ex = new RandomWalkEstimationException("message");
+        ex = new DriftEstimationException("message");
         assertNotNull(ex);
 
-        ex = new RandomWalkEstimationException(new Exception());
+        ex = new DriftEstimationException(new Exception());
         assertNotNull(ex);
 
-        ex = new RandomWalkEstimationException("message", new Exception());
+        ex = new DriftEstimationException("message", new Exception());
         assertNotNull(ex);
     }
 }

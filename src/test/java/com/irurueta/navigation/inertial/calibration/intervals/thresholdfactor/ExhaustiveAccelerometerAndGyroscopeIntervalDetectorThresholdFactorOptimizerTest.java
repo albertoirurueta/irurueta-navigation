@@ -1249,8 +1249,6 @@ public class ExhaustiveAccelerometerAndGyroscopeIntervalDetectorThresholdFactorO
             gyroscopeCalibrator.setInitialBias(initialBg);
             gyroscopeCalibrator.setInitialMg(initialMg);
             gyroscopeCalibrator.setInitialGg(initialGg);
-            gyroscopeCalibrator.setAccelerometerBias(ba);
-            gyroscopeCalibrator.setAccelerometerMa(ma);
 
             // create optimizer
             final ExhaustiveAccelerometerAndGyroscopeIntervalDetectorThresholdFactorOptimizer optimizer =
@@ -1481,8 +1479,6 @@ public class ExhaustiveAccelerometerAndGyroscopeIntervalDetectorThresholdFactorO
             gyroscopeCalibrator.setInitialBias(initialBg);
             gyroscopeCalibrator.setInitialMg(initialMg);
             gyroscopeCalibrator.setInitialGg(initialGg);
-            gyroscopeCalibrator.setAccelerometerBias(ba);
-            gyroscopeCalibrator.setAccelerometerMa(ma);
 
             // create optimizer
             final ExhaustiveAccelerometerAndGyroscopeIntervalDetectorThresholdFactorOptimizer optimizer =
@@ -1713,8 +1709,6 @@ public class ExhaustiveAccelerometerAndGyroscopeIntervalDetectorThresholdFactorO
             gyroscopeCalibrator.setInitialBias(initialBg);
             gyroscopeCalibrator.setInitialMg(initialMg);
             gyroscopeCalibrator.setInitialGg(initialGg);
-            gyroscopeCalibrator.setAccelerometerBias(ba);
-            gyroscopeCalibrator.setAccelerometerMa(ma);
 
             // create optimizer
             final ExhaustiveAccelerometerAndGyroscopeIntervalDetectorThresholdFactorOptimizer optimizer =
@@ -1945,8 +1939,6 @@ public class ExhaustiveAccelerometerAndGyroscopeIntervalDetectorThresholdFactorO
             gyroscopeCalibrator.setInitialBias(initialBg);
             gyroscopeCalibrator.setInitialMg(initialMg);
             gyroscopeCalibrator.setInitialGg(initialGg);
-            gyroscopeCalibrator.setAccelerometerBias(ba);
-            gyroscopeCalibrator.setAccelerometerMa(ma);
 
             // create optimizer
             final ExhaustiveAccelerometerAndGyroscopeIntervalDetectorThresholdFactorOptimizer optimizer =
@@ -2177,8 +2169,6 @@ public class ExhaustiveAccelerometerAndGyroscopeIntervalDetectorThresholdFactorO
             gyroscopeCalibrator.setInitialBias(initialBg);
             gyroscopeCalibrator.setInitialMg(initialMg);
             gyroscopeCalibrator.setInitialGg(initialGg);
-            gyroscopeCalibrator.setAccelerometerBias(ba);
-            gyroscopeCalibrator.setAccelerometerMa(ma);
 
             // create optimizer
             final ExhaustiveAccelerometerAndGyroscopeIntervalDetectorThresholdFactorOptimizer optimizer =
@@ -2409,8 +2399,6 @@ public class ExhaustiveAccelerometerAndGyroscopeIntervalDetectorThresholdFactorO
             gyroscopeCalibrator.setInitialBias(initialBg);
             gyroscopeCalibrator.setInitialMg(initialMg);
             gyroscopeCalibrator.setInitialGg(initialGg);
-            gyroscopeCalibrator.setAccelerometerBias(ba);
-            gyroscopeCalibrator.setAccelerometerMa(ma);
 
             // create optimizer
             final ExhaustiveAccelerometerAndGyroscopeIntervalDetectorThresholdFactorOptimizer optimizer =
@@ -2645,8 +2633,6 @@ public class ExhaustiveAccelerometerAndGyroscopeIntervalDetectorThresholdFactorO
             gyroscopeCalibrator.setInitialBias(initialBg);
             gyroscopeCalibrator.setInitialMg(initialMg);
             gyroscopeCalibrator.setInitialGg(initialGg);
-            gyroscopeCalibrator.setAccelerometerBias(ba);
-            gyroscopeCalibrator.setAccelerometerMa(ma);
 
             // create optimizer
             final ExhaustiveAccelerometerAndGyroscopeIntervalDetectorThresholdFactorOptimizer optimizer =

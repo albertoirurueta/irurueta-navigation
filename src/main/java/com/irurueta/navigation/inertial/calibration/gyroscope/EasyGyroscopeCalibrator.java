@@ -97,7 +97,8 @@ import java.util.List;
 public class EasyGyroscopeCalibrator implements
         GyroscopeNonLinearCalibrator, UnknownBiasGyroscopeCalibrator,
         GyroscopeCalibrationSource, GyroscopeBiasUncertaintySource,
-        OrderedBodyKinematicsSequenceGyroscopeCalibrator {
+        OrderedBodyKinematicsSequenceGyroscopeCalibrator,
+        AccelerometerDependentGyroscopeCalibrator {
 
     /**
      * Indicates whether by default a common z-axis is assumed for both the accelerometer
@@ -1126,6 +1127,7 @@ public class EasyGyroscopeCalibrator implements
      *
      * @return known x-coordinate of accelerometer bias.
      */
+    @Override
     public double getAccelerometerBiasX() {
         return mAccelerometerBiasX;
     }
@@ -1139,6 +1141,7 @@ public class EasyGyroscopeCalibrator implements
      * @param accelerometerBiasX known x-coordinate of accelerometer bias.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setAccelerometerBiasX(final double accelerometerBiasX)
             throws LockedException {
         if (mRunning) {
@@ -1155,6 +1158,7 @@ public class EasyGyroscopeCalibrator implements
      *
      * @return known y-coordinate of accelerometer bias.
      */
+    @Override
     public double getAccelerometerBiasY() {
         return mAccelerometerBiasY;
     }
@@ -1168,6 +1172,7 @@ public class EasyGyroscopeCalibrator implements
      * @param accelerometerBiasY known y-coordinate of accelerometer bias.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setAccelerometerBiasY(final double accelerometerBiasY)
             throws LockedException {
         if (mRunning) {
@@ -1184,6 +1189,7 @@ public class EasyGyroscopeCalibrator implements
      *
      * @return known z-coordinate of accelerometer bias.
      */
+    @Override
     public double getAccelerometerBiasZ() {
         return mAccelerometerBiasZ;
     }
@@ -1197,6 +1203,7 @@ public class EasyGyroscopeCalibrator implements
      * @param accelerometerBiasZ known z-coordinate of accelerometer bias.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setAccelerometerBiasZ(final double accelerometerBiasZ)
             throws LockedException {
         if (mRunning) {
@@ -1212,6 +1219,7 @@ public class EasyGyroscopeCalibrator implements
      *
      * @return known x-coordinate of accelerometer bias.
      */
+    @Override
     public Acceleration getAccelerometerBiasXAsAcceleration() {
         return new Acceleration(mAccelerometerBiasX,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
@@ -1224,6 +1232,7 @@ public class EasyGyroscopeCalibrator implements
      *
      * @param result instance where result data will be stored.
      */
+    @Override
     public void getAccelerometerBiasXAsAcceleration(final Acceleration result) {
         result.setValue(mAccelerometerBiasX);
         result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);
@@ -1237,6 +1246,7 @@ public class EasyGyroscopeCalibrator implements
      * @param accelerometerBiasX x-coordinate of accelerometer bias.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setAccelerometerBiasX(final Acceleration accelerometerBiasX)
             throws LockedException {
         if (mRunning) {
@@ -1252,6 +1262,7 @@ public class EasyGyroscopeCalibrator implements
      *
      * @return known y-coordinate of accelerometer bias.
      */
+    @Override
     public Acceleration getAccelerometerBiasYAsAcceleration() {
         return new Acceleration(mAccelerometerBiasY,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
@@ -1264,6 +1275,7 @@ public class EasyGyroscopeCalibrator implements
      *
      * @param result instance where result data will be stored.
      */
+    @Override
     public void getAccelerometerBiasYAsAcceleration(final Acceleration result) {
         result.setValue(mAccelerometerBiasY);
         result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);
@@ -1277,6 +1289,7 @@ public class EasyGyroscopeCalibrator implements
      * @param accelerometerBiasY y-coordinate of accelerometer bias.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setAccelerometerBiasY(final Acceleration accelerometerBiasY)
             throws LockedException {
         if (mRunning) {
@@ -1292,6 +1305,7 @@ public class EasyGyroscopeCalibrator implements
      *
      * @return known z-coordinate of accelerometer bias.
      */
+    @Override
     public Acceleration getAccelerometerBiasZAsAcceleration() {
         return new Acceleration(mAccelerometerBiasZ,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
@@ -1304,6 +1318,7 @@ public class EasyGyroscopeCalibrator implements
      *
      * @param result instance where result data will be stored.
      */
+    @Override
     public void getAccelerometerBiasZAsAcceleration(final Acceleration result) {
         result.setValue(mAccelerometerBiasZ);
         result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);
@@ -1317,6 +1332,7 @@ public class EasyGyroscopeCalibrator implements
      * @param accelerometerBiasZ z-coordinate of accelerometer bias.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setAccelerometerBiasZ(final Acceleration accelerometerBiasZ)
             throws LockedException {
         if (mRunning) {
@@ -1335,6 +1351,7 @@ public class EasyGyroscopeCalibrator implements
      * @param accelerometerBiasZ z-coordinate of accelerometer bias.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setAccelerometerBias(
             final double accelerometerBiasX,
             final double accelerometerBiasY,
@@ -1357,6 +1374,7 @@ public class EasyGyroscopeCalibrator implements
      * @param accelerometerBiasZ z-coordinate of accelerometer bias.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setAccelerometerBias(
             final Acceleration accelerometerBiasX,
             final Acceleration accelerometerBiasY,
@@ -1377,6 +1395,7 @@ public class EasyGyroscopeCalibrator implements
      *
      * @return known accelerometer bias.
      */
+    @Override
     public double[] getAccelerometerBias() {
         final double[] result = new double[BodyKinematics.COMPONENTS];
         getAccelerometerBias(result);
@@ -1392,6 +1411,7 @@ public class EasyGyroscopeCalibrator implements
      * @throws IllegalArgumentException if provided array does not have
      *                                  length 3.
      */
+    @Override
     public void getAccelerometerBias(final double[] result) {
         if (result.length != BodyKinematics.COMPONENTS) {
             throw new IllegalArgumentException();
@@ -1412,6 +1432,7 @@ public class EasyGyroscopeCalibrator implements
      * @throws IllegalArgumentException if provided array does not have
      *                                  length 3.
      */
+    @Override
     public void setAccelerometerBias(final double[] accelerometerBias)
             throws LockedException {
         if (mRunning) {
@@ -1434,6 +1455,7 @@ public class EasyGyroscopeCalibrator implements
      *
      * @return known accelerometer bias.
      */
+    @Override
     public Matrix getAccelerometerBiasAsMatrix() {
         Matrix result;
         try {
@@ -1454,6 +1476,7 @@ public class EasyGyroscopeCalibrator implements
      * @param result instance where result data will be copied to.
      * @throws IllegalArgumentException if provided matrix is not 3x1.
      */
+    @Override
     public void getAccelerometerBiasAsMatrix(final Matrix result) {
         if (result.getRows() != BodyKinematics.COMPONENTS
                 || result.getColumns() != 1) {
@@ -1473,6 +1496,7 @@ public class EasyGyroscopeCalibrator implements
      * @throws LockedException          if calibrator is currently running.
      * @throws IllegalArgumentException if provided matrix is not 3x1.
      */
+    @Override
     public void setAccelerometerBias(final Matrix accelerometerBias)
             throws LockedException {
         if (mRunning) {
@@ -1494,6 +1518,7 @@ public class EasyGyroscopeCalibrator implements
      *
      * @return known accelerometer x scaling factor.
      */
+    @Override
     public double getAccelerometerSx() {
         return mAccelerometerSx;
     }
@@ -1505,6 +1530,7 @@ public class EasyGyroscopeCalibrator implements
      * @param accelerometerSx known accelerometer x scaling factor.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setAccelerometerSx(final double accelerometerSx)
             throws LockedException {
         if (mRunning) {
@@ -1519,6 +1545,7 @@ public class EasyGyroscopeCalibrator implements
      *
      * @return known accelerometer y scaling factor.
      */
+    @Override
     public double getAccelerometerSy() {
         return mAccelerometerSy;
     }
@@ -1530,6 +1557,7 @@ public class EasyGyroscopeCalibrator implements
      * @param accelerometerSy known accelerometer y scaling factor.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setAccelerometerSy(final double accelerometerSy)
             throws LockedException {
         if (mRunning) {
@@ -1544,6 +1572,7 @@ public class EasyGyroscopeCalibrator implements
      *
      * @return known accelerometer z scaling factor.
      */
+    @Override
     public double getAccelerometerSz() {
         return mAccelerometerSz;
     }
@@ -1555,6 +1584,7 @@ public class EasyGyroscopeCalibrator implements
      * @param accelerometerSz known accelerometer z scaling factor.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setAccelerometerSz(final double accelerometerSz)
             throws LockedException {
         if (mRunning) {
@@ -1570,6 +1600,7 @@ public class EasyGyroscopeCalibrator implements
      *
      * @return known accelerometer x-y cross coupling error.
      */
+    @Override
     public double getAccelerometerMxy() {
         return mAccelerometerMxy;
     }
@@ -1582,6 +1613,7 @@ public class EasyGyroscopeCalibrator implements
      * @param accelerometerMxy known accelerometer x-y cross coupling error.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setAccelerometerMxy(final double accelerometerMxy)
             throws LockedException {
         if (mRunning) {
@@ -1597,6 +1629,7 @@ public class EasyGyroscopeCalibrator implements
      *
      * @return known accelerometer x-z cross coupling error.
      */
+    @Override
     public double getAccelerometerMxz() {
         return mAccelerometerMxz;
     }
@@ -1609,6 +1642,7 @@ public class EasyGyroscopeCalibrator implements
      * @param accelerometerMxz known accelerometer x-z cross coupling error.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setAccelerometerMxz(final double accelerometerMxz)
             throws LockedException {
         if (mRunning) {
@@ -1624,6 +1658,7 @@ public class EasyGyroscopeCalibrator implements
      *
      * @return known accelerometer y-x cross coupling error.
      */
+    @Override
     public double getAccelerometerMyx() {
         return mAccelerometerMyx;
     }
@@ -1637,6 +1672,7 @@ public class EasyGyroscopeCalibrator implements
      *                         error.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setAccelerometerMyx(final double accelerometerMyx)
             throws LockedException {
         if (mRunning) {
@@ -1652,6 +1688,7 @@ public class EasyGyroscopeCalibrator implements
      *
      * @return known accelerometer y-z cross coupling error.
      */
+    @Override
     public double getAccelerometerMyz() {
         return mAccelerometerMyz;
     }
@@ -1665,6 +1702,7 @@ public class EasyGyroscopeCalibrator implements
      *                         error.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setAccelerometerMyz(final double accelerometerMyz)
             throws LockedException {
         if (mRunning) {
@@ -1680,6 +1718,7 @@ public class EasyGyroscopeCalibrator implements
      *
      * @return known accelerometer z-x cross coupling error.
      */
+    @Override
     public double getAccelerometerMzx() {
         return mAccelerometerMzx;
     }
@@ -1693,6 +1732,7 @@ public class EasyGyroscopeCalibrator implements
      *                         error.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setAccelerometerMzx(final double accelerometerMzx)
             throws LockedException {
         if (mRunning) {
@@ -1708,6 +1748,7 @@ public class EasyGyroscopeCalibrator implements
      *
      * @return known accelerometer z-y cross coupling error.
      */
+    @Override
     public double getAccelerometerMzy() {
         return mAccelerometerMzy;
     }
@@ -1721,6 +1762,7 @@ public class EasyGyroscopeCalibrator implements
      *                         error.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setAccelerometerMzy(final double accelerometerMzy)
             throws LockedException {
         if (mRunning) {
@@ -1739,6 +1781,7 @@ public class EasyGyroscopeCalibrator implements
      * @param accelerometerSz known accelerometer z scaling factor.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setAccelerometerScalingFactors(
             final double accelerometerSx, final double accelerometerSy,
             final double accelerometerSz) throws LockedException {
@@ -1769,6 +1812,7 @@ public class EasyGyroscopeCalibrator implements
      *                         error.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setAccelerometerCrossCouplingErrors(
             final double accelerometerMxy, final double accelerometerMxz,
             final double accelerometerMyx, final double accelerometerMyz,
@@ -1807,6 +1851,7 @@ public class EasyGyroscopeCalibrator implements
      *                         error.
      * @throws LockedException if calibrator is currently running.
      */
+    @Override
     public void setAccelerometerScalingFactorsAndCrossCouplingErrors(
             final double accelerometerSx, final double accelerometerSy,
             final double accelerometerSz, final double accelerometerMxy,
@@ -1831,6 +1876,7 @@ public class EasyGyroscopeCalibrator implements
      * @return known accelerometer scale factors and cross coupling
      * errors matrix.
      */
+    @Override
     public Matrix getAccelerometerMa() {
         Matrix result;
         try {
@@ -1851,6 +1897,7 @@ public class EasyGyroscopeCalibrator implements
      * @param result instance where data will be stored.
      * @throws IllegalArgumentException if provided matrix is not 3x3.
      */
+    @Override
     public void getAccelerometerMa(final Matrix result) {
         if (result.getRows() != BodyKinematics.COMPONENTS ||
                 result.getColumns() != BodyKinematics.COMPONENTS) {
@@ -1878,6 +1925,7 @@ public class EasyGyroscopeCalibrator implements
      * @throws LockedException          if calibrator is currently running.
      * @throws IllegalArgumentException if provided matrix is not 3x3.
      */
+    @Override
     public void setAccelerometerMa(final Matrix accelerometerMa)
             throws LockedException {
         if (mRunning) {

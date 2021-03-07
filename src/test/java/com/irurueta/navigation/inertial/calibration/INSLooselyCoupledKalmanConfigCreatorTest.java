@@ -40,6 +40,10 @@ import com.irurueta.navigation.inertial.calibration.generators.AccelerometerGyro
 import com.irurueta.navigation.inertial.calibration.gyroscope.EasyGyroscopeCalibrator;
 import com.irurueta.navigation.inertial.calibration.gyroscope.QuaternionIntegrator;
 import com.irurueta.navigation.inertial.calibration.intervals.TriadStaticIntervalDetector;
+import com.irurueta.navigation.inertial.calibration.intervals.thresholdfactor.AccelerometerAndGyroscopeIntervalDetectorThresholdFactorOptimizer;
+import com.irurueta.navigation.inertial.calibration.intervals.thresholdfactor.AccelerometerGyroscopeAndMagnetometerIntervalDetectorThresholdFactorOptimizer;
+import com.irurueta.navigation.inertial.calibration.intervals.thresholdfactor.BracketedAccelerometerAndGyroscopeIntervalDetectorThresholdFactorOptimizer;
+import com.irurueta.navigation.inertial.calibration.intervals.thresholdfactor.BracketedAccelerometerGyroscopeAndMagnetometerIntervalDetectorThresholdFactorOptimizer;
 import com.irurueta.navigation.inertial.estimators.ECEFGravityEstimator;
 import com.irurueta.navigation.inertial.estimators.ECEFKinematicsEstimator;
 import com.irurueta.statistics.UniformRandomizer;
@@ -151,6 +155,46 @@ public class INSLooselyCoupledKalmanConfigCreatorTest {
         // check default values
         assertSame(generator, creator.getAccelerometerNoiseRootPsdSource());
         assertSame(generator, creator.getGyroscopeNoiseRootPsdSource());
+        assertSame(randomWalkEstimator, creator.getAccelerometerBiasRandomWalkSource());
+        assertSame(randomWalkEstimator, creator.getGyroscopeBiasRandomWalkSource());
+        assertSame(randomWalkEstimator, creator.getPositionUncertaintySource());
+        assertSame(randomWalkEstimator, creator.getVelocityUncertaintySource());
+        assertTrue(creator.isReady());
+    }
+
+    @Test
+    public void testConstructor5() {
+        final AccelerometerAndGyroscopeIntervalDetectorThresholdFactorOptimizer optimizer =
+                new BracketedAccelerometerAndGyroscopeIntervalDetectorThresholdFactorOptimizer();
+        final RandomWalkEstimator randomWalkEstimator = new RandomWalkEstimator();
+
+        final INSLooselyCoupledKalmanConfigCreator creator =
+                new INSLooselyCoupledKalmanConfigCreator(optimizer,
+                        randomWalkEstimator);
+
+        // check default values
+        assertSame(optimizer, creator.getAccelerometerNoiseRootPsdSource());
+        assertSame(optimizer, creator.getGyroscopeNoiseRootPsdSource());
+        assertSame(randomWalkEstimator, creator.getAccelerometerBiasRandomWalkSource());
+        assertSame(randomWalkEstimator, creator.getGyroscopeBiasRandomWalkSource());
+        assertSame(randomWalkEstimator, creator.getPositionUncertaintySource());
+        assertSame(randomWalkEstimator, creator.getVelocityUncertaintySource());
+        assertTrue(creator.isReady());
+    }
+
+    @Test
+    public void testConstructor6() {
+        final AccelerometerGyroscopeAndMagnetometerIntervalDetectorThresholdFactorOptimizer optimizer =
+                new BracketedAccelerometerGyroscopeAndMagnetometerIntervalDetectorThresholdFactorOptimizer();
+        final RandomWalkEstimator randomWalkEstimator = new RandomWalkEstimator();
+
+        final INSLooselyCoupledKalmanConfigCreator creator =
+                new INSLooselyCoupledKalmanConfigCreator(optimizer,
+                        randomWalkEstimator);
+
+        // check default values
+        assertSame(optimizer, creator.getAccelerometerNoiseRootPsdSource());
+        assertSame(optimizer, creator.getGyroscopeNoiseRootPsdSource());
         assertSame(randomWalkEstimator, creator.getAccelerometerBiasRandomWalkSource());
         assertSame(randomWalkEstimator, creator.getGyroscopeBiasRandomWalkSource());
         assertSame(randomWalkEstimator, creator.getPositionUncertaintySource());

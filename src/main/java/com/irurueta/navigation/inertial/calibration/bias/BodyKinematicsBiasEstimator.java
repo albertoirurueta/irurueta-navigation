@@ -91,7 +91,7 @@ import com.irurueta.units.TimeUnit;
 public class BodyKinematicsBiasEstimator {
 
     /**
-     * Default time interval between accelerometer samples expressed in seconds (s).
+     * Default time interval between kinematics samples expressed in seconds (s).
      */
     public static final double DEFAULT_TIME_INTERVAL_SECONDS = 0.02;
 

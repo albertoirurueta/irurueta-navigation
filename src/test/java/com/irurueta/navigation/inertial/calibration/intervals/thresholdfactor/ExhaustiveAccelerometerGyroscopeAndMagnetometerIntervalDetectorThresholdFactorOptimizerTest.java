@@ -1415,8 +1415,6 @@ public class ExhaustiveAccelerometerGyroscopeAndMagnetometerIntervalDetectorThre
             gyroscopeCalibrator.setInitialBias(initialBg);
             gyroscopeCalibrator.setInitialMg(initialMg);
             gyroscopeCalibrator.setInitialGg(initialGg);
-            gyroscopeCalibrator.setAccelerometerBias(ba);
-            gyroscopeCalibrator.setAccelerometerMa(ma);
 
             KnownPositionAndInstantMagnetometerCalibrator magnetometerCalibrator =
                     new KnownPositionAndInstantMagnetometerCalibrator();
@@ -1696,8 +1694,6 @@ public class ExhaustiveAccelerometerGyroscopeAndMagnetometerIntervalDetectorThre
             gyroscopeCalibrator.setInitialBias(initialBg);
             gyroscopeCalibrator.setInitialMg(initialMg);
             gyroscopeCalibrator.setInitialGg(initialGg);
-            gyroscopeCalibrator.setAccelerometerBias(ba);
-            gyroscopeCalibrator.setAccelerometerMa(ma);
 
             KnownPositionAndInstantMagnetometerCalibrator magnetometerCalibrator =
                     new KnownPositionAndInstantMagnetometerCalibrator();
@@ -1977,8 +1973,6 @@ public class ExhaustiveAccelerometerGyroscopeAndMagnetometerIntervalDetectorThre
             gyroscopeCalibrator.setInitialBias(initialBg);
             gyroscopeCalibrator.setInitialMg(initialMg);
             gyroscopeCalibrator.setInitialGg(initialGg);
-            gyroscopeCalibrator.setAccelerometerBias(ba);
-            gyroscopeCalibrator.setAccelerometerMa(ma);
 
             KnownPositionAndInstantMagnetometerCalibrator magnetometerCalibrator =
                     new KnownPositionAndInstantMagnetometerCalibrator();
@@ -2258,8 +2252,6 @@ public class ExhaustiveAccelerometerGyroscopeAndMagnetometerIntervalDetectorThre
             gyroscopeCalibrator.setInitialBias(initialBg);
             gyroscopeCalibrator.setInitialMg(initialMg);
             gyroscopeCalibrator.setInitialGg(initialGg);
-            gyroscopeCalibrator.setAccelerometerBias(ba);
-            gyroscopeCalibrator.setAccelerometerMa(ma);
 
             KnownPositionAndInstantMagnetometerCalibrator magnetometerCalibrator =
                     new KnownPositionAndInstantMagnetometerCalibrator();
@@ -2539,8 +2531,6 @@ public class ExhaustiveAccelerometerGyroscopeAndMagnetometerIntervalDetectorThre
             gyroscopeCalibrator.setInitialBias(initialBg);
             gyroscopeCalibrator.setInitialMg(initialMg);
             gyroscopeCalibrator.setInitialGg(initialGg);
-            gyroscopeCalibrator.setAccelerometerBias(ba);
-            gyroscopeCalibrator.setAccelerometerMa(ma);
 
             KnownPositionAndInstantMagnetometerCalibrator magnetometerCalibrator =
                     new KnownPositionAndInstantMagnetometerCalibrator();
@@ -2820,8 +2810,6 @@ public class ExhaustiveAccelerometerGyroscopeAndMagnetometerIntervalDetectorThre
             gyroscopeCalibrator.setInitialBias(initialBg);
             gyroscopeCalibrator.setInitialMg(initialMg);
             gyroscopeCalibrator.setInitialGg(initialGg);
-            gyroscopeCalibrator.setAccelerometerBias(ba);
-            gyroscopeCalibrator.setAccelerometerMa(ma);
 
             KnownPositionAndInstantMagnetometerCalibrator magnetometerCalibrator =
                     new KnownPositionAndInstantMagnetometerCalibrator();
@@ -3109,8 +3097,6 @@ public class ExhaustiveAccelerometerGyroscopeAndMagnetometerIntervalDetectorThre
             gyroscopeCalibrator.setInitialBias(initialBg);
             gyroscopeCalibrator.setInitialMg(initialMg);
             gyroscopeCalibrator.setInitialGg(initialGg);
-            gyroscopeCalibrator.setAccelerometerBias(ba);
-            gyroscopeCalibrator.setAccelerometerMa(ma);
 
             PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator magnetometerCalibrator =
                     new PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator();

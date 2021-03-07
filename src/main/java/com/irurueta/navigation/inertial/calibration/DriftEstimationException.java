@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Alberto Irurueta Carro (alberto@irurueta.com)
+ * Copyright (C) 2021 Alberto Irurueta Carro (alberto@irurueta.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.irurueta.navigation.inertial;
+package com.irurueta.navigation.inertial.calibration;
 
 /**
- * Exception related to INS estimation when attempting to
- * estimate position, velocity and attitude using inertial data.
+ * Exception raised if drift estimation fails.
  */
-public class INSException extends InertialException {
+public class DriftEstimationException extends CalibrationException {
 
     /**
      * Constructor.
      */
-    public INSException() {
+    public DriftEstimationException() {
         super();
     }
 
@@ -33,7 +32,7 @@ public class INSException extends InertialException {
      *
      * @param message message indicating the cause of the exception.
      */
-    public INSException(final String message) {
+    public DriftEstimationException(final String message) {
         super(message);
     }
 
@@ -43,7 +42,7 @@ public class INSException extends InertialException {
      * @param message message describing the cause of the exception.
      * @param cause   instance containing the cause of the exception.
      */
-    public INSException(final String message, final Throwable cause) {
+    public DriftEstimationException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
@@ -52,7 +51,7 @@ public class INSException extends InertialException {
      *
      * @param cause instance containing the cause of the exception.
      */
-    public INSException(final Throwable cause) {
+    public DriftEstimationException(final Throwable cause) {
         super(cause);
     }
 }

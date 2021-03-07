@@ -19,6 +19,8 @@ import com.irurueta.navigation.NotReadyException;
 import com.irurueta.navigation.inertial.INSLooselyCoupledKalmanConfig;
 import com.irurueta.navigation.inertial.calibration.generators.AccelerometerAndGyroscopeMeasurementsGenerator;
 import com.irurueta.navigation.inertial.calibration.generators.AccelerometerGyroscopeAndMagnetometerMeasurementsGenerator;
+import com.irurueta.navigation.inertial.calibration.intervals.thresholdfactor.AccelerometerAndGyroscopeIntervalDetectorThresholdFactorOptimizer;
+import com.irurueta.navigation.inertial.calibration.intervals.thresholdfactor.AccelerometerGyroscopeAndMagnetometerIntervalDetectorThresholdFactorOptimizer;
 
 /**
  * Utility class to create {@link INSLooselyCoupledKalmanConfig} by combining
@@ -116,6 +118,34 @@ public class INSLooselyCoupledKalmanConfigCreator {
             final RandomWalkEstimator randomWalkEstimator) {
         this(generator, generator, randomWalkEstimator,
                 randomWalkEstimator, randomWalkEstimator, randomWalkEstimator);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param optimizer           an accelerometer + gyroscope threshold factor
+     *                            optimizer.
+     * @param randomWalkEstimator a random walk estimator.
+     */
+    public INSLooselyCoupledKalmanConfigCreator(
+            final AccelerometerAndGyroscopeIntervalDetectorThresholdFactorOptimizer optimizer,
+            final RandomWalkEstimator randomWalkEstimator) {
+        this(optimizer, optimizer, randomWalkEstimator, randomWalkEstimator,
+                randomWalkEstimator, randomWalkEstimator);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param optimizer           an accelerometer + gyroscope + magnetometer
+     *                            threshold factor optimizer.
+     * @param randomWalkEstimator a random walk estimator.
+     */
+    public INSLooselyCoupledKalmanConfigCreator(
+            final AccelerometerGyroscopeAndMagnetometerIntervalDetectorThresholdFactorOptimizer optimizer,
+            final RandomWalkEstimator randomWalkEstimator) {
+        this(optimizer, optimizer, randomWalkEstimator, randomWalkEstimator,
+                randomWalkEstimator, randomWalkEstimator);
     }
 
     /**

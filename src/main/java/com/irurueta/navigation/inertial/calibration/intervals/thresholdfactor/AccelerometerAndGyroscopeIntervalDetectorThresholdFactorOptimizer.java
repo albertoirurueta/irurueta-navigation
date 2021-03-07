@@ -36,6 +36,7 @@ import com.irurueta.navigation.inertial.calibration.accelerometer.UnknownBiasAcc
 import com.irurueta.navigation.inertial.calibration.accelerometer.UnorderedStandardDeviationBodyKinematicsAccelerometerCalibrator;
 import com.irurueta.navigation.inertial.calibration.generators.AccelerometerAndGyroscopeMeasurementsGenerator;
 import com.irurueta.navigation.inertial.calibration.generators.AccelerometerAndGyroscopeMeasurementsGeneratorListener;
+import com.irurueta.navigation.inertial.calibration.gyroscope.AccelerometerDependentGyroscopeCalibrator;
 import com.irurueta.navigation.inertial.calibration.gyroscope.GyroscopeCalibratorMeasurementOrSequenceType;
 import com.irurueta.navigation.inertial.calibration.gyroscope.GyroscopeNonLinearCalibrator;
 import com.irurueta.navigation.inertial.calibration.gyroscope.KnownBiasGyroscopeCalibrator;
@@ -1282,6 +1283,31 @@ public abstract class AccelerometerAndGyroscopeIntervalDetectorThresholdFactorOp
         }
 
         mAccelerometerCalibrator.calibrate();
+
+        // once we have accelerometer estimations, we can set known
+        // accelerometer bias and cross-coupling errors to gyroscope calibrator
+        if (mGyroscopeCalibrator instanceof AccelerometerDependentGyroscopeCalibrator) {
+            final AccelerometerDependentGyroscopeCalibrator accelGyroCalibrator =
+                    (AccelerometerDependentGyroscopeCalibrator) mGyroscopeCalibrator;
+
+            final double[] bias;
+            if (mAccelerometerCalibrator instanceof UnknownBiasAccelerometerCalibrator) {
+                bias = ((UnknownBiasAccelerometerCalibrator) mAccelerometerCalibrator)
+                        .getEstimatedBiases();
+
+            } else if (mAccelerometerCalibrator instanceof KnownBiasAccelerometerCalibrator) {
+                bias = ((KnownBiasAccelerometerCalibrator) mAccelerometerCalibrator)
+                        .getBias();
+            } else {
+                bias = null;
+            }
+
+            if (bias != null) {
+                accelGyroCalibrator.setAccelerometerBias(bias);
+                accelGyroCalibrator.setAccelerometerMa(mAccelerometerCalibrator.getEstimatedMa());
+            }
+        }
+
         mGyroscopeCalibrator.calibrate();
 
         final double accelerometerMse = mAccelerometerCalibrator.getEstimatedMse();
