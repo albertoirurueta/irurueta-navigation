@@ -70,6 +70,8 @@ public class INSLooselyCoupledKalmanFilteredEstimatorTest implements
 
     private static final int TIMES = 100;
 
+    private static final double ABSOLUTE_ERROR = 1e-8;
+
     private int mUpdateStart;
     private int mUpdateEnd;
     private int mPropagateStart;
@@ -2357,7 +2359,7 @@ public class INSLooselyCoupledKalmanFilteredEstimatorTest implements
 
             assertEquals(estimatedPosition1, ecefUserPosition);
             assertEquals(estimatedVelocity1, ecefUserVelocity);
-            assertEquals(estimatedC1, c);
+            assertTrue(estimatedC1.equals(c, ABSOLUTE_ERROR));
 
             // update again with same timestamp makes no action
             assertFalse(estimator.update(kinematics,
@@ -2525,7 +2527,7 @@ public class INSLooselyCoupledKalmanFilteredEstimatorTest implements
 
             assertEquals(estimatedPosition1, ecefUserPosition);
             assertEquals(estimatedVelocity1, ecefUserVelocity);
-            assertEquals(estimatedC1, c);
+            assertTrue(estimatedC1.equals(c, ABSOLUTE_ERROR));
 
             // update again with same timestamp makes no action
             assertFalse(estimator.update(kinematics,
@@ -2697,7 +2699,7 @@ public class INSLooselyCoupledKalmanFilteredEstimatorTest implements
 
             assertEquals(estimatedPosition1, ecefUserPosition);
             assertEquals(estimatedVelocity1, ecefUserVelocity);
-            assertEquals(estimatedC1, c);
+            assertTrue(estimatedC1.equals(c, ABSOLUTE_ERROR));
 
             // update again with same timestamp makes no action
             assertFalse(estimator.update(kinematics,
@@ -2873,7 +2875,7 @@ public class INSLooselyCoupledKalmanFilteredEstimatorTest implements
 
             assertEquals(estimatedPosition1, ecefUserPosition);
             assertEquals(estimatedVelocity1, ecefUserVelocity);
-            assertEquals(estimatedC1, c);
+            assertTrue(estimatedC1.equals(c, ABSOLUTE_ERROR));
 
             // update again with same timestamp makes no action
             assertFalse(estimator.update(kinematics,
@@ -3045,7 +3047,7 @@ public class INSLooselyCoupledKalmanFilteredEstimatorTest implements
 
         assertEquals(estimatedPosition1, ecefUserPosition);
         assertEquals(estimatedVelocity1, ecefUserVelocity);
-        assertEquals(estimatedC1, c);
+        assertTrue(estimatedC1.equals(c, ABSOLUTE_ERROR));
 
         // propagate
         assertTrue(estimator.propagate(2.0 * timeSeconds));
@@ -3065,7 +3067,7 @@ public class INSLooselyCoupledKalmanFilteredEstimatorTest implements
 
         assertEquals(estimatedPosition3, ecefUserPosition);
         assertEquals(estimatedVelocity3, ecefUserVelocity);
-        assertEquals(estimatedC3, c);
+        assertTrue(estimatedC3.equals(c, ABSOLUTE_ERROR));
         // state is not equals because covariance has changed
         assertNotEquals(state1, state3);
 
@@ -3087,7 +3089,7 @@ public class INSLooselyCoupledKalmanFilteredEstimatorTest implements
 
         assertEquals(estimatedPosition4, ecefUserPosition);
         assertEquals(estimatedVelocity4, ecefUserVelocity);
-        assertEquals(estimatedC4, c);
+        assertTrue(estimatedC4.equals(c, ABSOLUTE_ERROR));
         assertEquals(state3, state4);
 
         assertEquals(mUpdateStart, 1);
@@ -3198,7 +3200,7 @@ public class INSLooselyCoupledKalmanFilteredEstimatorTest implements
 
         assertEquals(estimatedPosition1, ecefUserPosition);
         assertEquals(estimatedVelocity1, ecefUserVelocity);
-        assertEquals(estimatedC1, c);
+        assertTrue(estimatedC1.equals(c, ABSOLUTE_ERROR));
 
         // reset
         assertEquals(mReset, 0);
@@ -3226,7 +3228,7 @@ public class INSLooselyCoupledKalmanFilteredEstimatorTest implements
         assertEquals(estimator.getLastStateTimestamp(), timeSeconds, 0.0);
         final INSLooselyCoupledKalmanState state2 = estimator.getState();
 
-        assertEquals(state1, state2);
+        assertTrue(state1.equals(state2, ABSOLUTE_ERROR));
 
         assertEquals(mUpdateStart, 2);
         assertEquals(mUpdateEnd, 2);

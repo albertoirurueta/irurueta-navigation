@@ -93,6 +93,8 @@ public class INSGNSSLooselyCoupledKalmanFilteredEstimatorTest implements
 
     private static final int TIMES = 100;
 
+    private static final double ABSOLUTE_ERROR = 1e-8;
+
     private int mUpdateGNSSMeasurementsStart;
     private int mUpdateGNSSMeasurementsEnd;
     private int mUpdateBodyKinematicsStart;
@@ -3263,12 +3265,13 @@ public class INSGNSSLooselyCoupledKalmanFilteredEstimatorTest implements
             assertEquals(timestamp, new Time(timeSeconds, TimeUnit.SECOND));
             assertNull(estimator.getKinematics());
             assertNull(estimator.getCorrectedKinematics());
-            assertEquals(estimator.getCoordinateTransformation(), c);
+            assertTrue(estimator.getCoordinateTransformation().equals(c,
+                    ABSOLUTE_ERROR));
             c2 = new CoordinateTransformation(
                     FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME,
                     FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
             assertTrue(estimator.getCoordinateTransformation(c2));
-            assertEquals(c, c2);
+            assertTrue(c.equals(c2, ABSOLUTE_ERROR));
 
             final GNSSEstimation estimation1 = estimator.getEstimation();
             assertNotNull(estimation1);
@@ -3440,12 +3443,13 @@ public class INSGNSSLooselyCoupledKalmanFilteredEstimatorTest implements
             assertEquals(kinematics, kinematics2);
             assertNotNull(estimator.getCorrectedKinematics());
             assertTrue(estimator.getCorrectedKinematics(new BodyKinematics()));
-            assertEquals(estimator.getCoordinateTransformation(), c);
+            assertTrue(estimator.getCoordinateTransformation().equals(c,
+                    ABSOLUTE_ERROR));
             CoordinateTransformation c2 = new CoordinateTransformation(
                     FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME,
                     FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
             assertTrue(estimator.getCoordinateTransformation(c2));
-            assertEquals(c2, c);
+            assertTrue(c2.equals(c, ABSOLUTE_ERROR));
 
             reset();
             assertEquals(mUpdateGNSSMeasurementsStart, 0);
@@ -3473,12 +3477,13 @@ public class INSGNSSLooselyCoupledKalmanFilteredEstimatorTest implements
             assertEquals(timestamp, new Time(2.0 * timeSeconds, TimeUnit.SECOND));
             assertEquals(kinematics, estimator.getKinematics());
             assertNotNull(estimator.getCorrectedKinematics());
-            assertEquals(estimator.getCoordinateTransformation(), c);
+            assertTrue(estimator.getCoordinateTransformation().equals(c,
+                    ABSOLUTE_ERROR));
             c2 = new CoordinateTransformation(
                     FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME,
                     FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
             assertTrue(estimator.getCoordinateTransformation(c2));
-            assertEquals(c, c2);
+            assertTrue(c.equals(c2, ABSOLUTE_ERROR));
 
             final GNSSEstimation estimation1 = estimator.getEstimation();
             assertNotNull(estimation1);

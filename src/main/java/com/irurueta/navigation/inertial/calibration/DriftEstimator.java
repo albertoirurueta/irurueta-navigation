@@ -51,32 +51,30 @@ public class DriftEstimator {
     public static final double DEFAULT_TIME_INTERVAL_SECONDS = 0.02;
 
     /**
-     * Listener to handle events raised by this estimator.
+     * Indicates whether this estimator is running.
      */
-    private DriftEstimatorListener mListener;
+    protected boolean mRunning;
 
     /**
-     * Initial frame containing body position, velocity and orientation expressed
-     * in ECEF coordinates before starting drift estimation.
+     * Number of processed body kinematics samples.
      */
-    private ECEFFrame mReferenceFrame;
+    protected int mNumberOfProcessedSamples;
 
     /**
-     * Contains current frame after one navigation step.
-     * This is reused for efficiency.
+     * Time interval expressed in seconds (s) between body kinematics samples.
      */
-    private final ECEFFrame mFrame = new ECEFFrame();
+    protected double mTimeInterval = DEFAULT_TIME_INTERVAL_SECONDS;
 
     /**
      * Fixes body kinematics measurements using accelerometer + gyroscope
      * calibration data to fix measurements.
      */
-    private final BodyKinematicsFixer mFixer = new BodyKinematicsFixer();
+    protected final BodyKinematicsFixer mFixer = new BodyKinematicsFixer();
 
     /**
      * Instance containing last fixed body kinematics to be reused.
      */
-    private final BodyKinematics mFixedKinematics = new BodyKinematics();
+    protected final BodyKinematics mFixedKinematics = new BodyKinematics();
 
     /**
      * Indicates whether measured kinematics must be fixed or not.
@@ -84,70 +82,72 @@ public class DriftEstimator {
      * ignored.
      * By default this is enabled.
      */
-    private boolean mFixKinematics = true;
+    protected boolean mFixKinematics = true;
 
     /**
-     * Time interval expressed in seconds (s) between body kinematics samples.
+     * Listener to handle events raised by this estimator.
      */
-    private double mTimeInterval = DEFAULT_TIME_INTERVAL_SECONDS;
+    protected DriftEstimatorListener mListener;
 
     /**
-     * Indicates whether this estimator is running.
+     * Initial frame containing body position, velocity and orientation expressed
+     * in ECEF coordinates before starting drift estimation.
      */
-    private boolean mRunning;
+    protected ECEFFrame mReferenceFrame;
+
+    /**
+     * Contains current frame after one navigation step.
+     * This is reused for efficiency.
+     */
+    protected final ECEFFrame mFrame = new ECEFFrame();
 
     /**
      * Contains orientation of reference frame.
      * This is reused for efficiency.
      */
-    private final Quaternion mRefQ = new Quaternion();
+    protected final Quaternion mRefQ = new Quaternion();
 
     /**
      * Contains inverse of orientation of reference frame.
      * This is reused for efficiency.
      */
-    private final Quaternion mInvRefQ = new Quaternion();
+    protected final Quaternion mInvRefQ = new Quaternion();
 
     /**
      * Contains current frame orientation drift.
      * This is reused for efficiency.
      */
-    private final Quaternion mQ = new Quaternion();
+    protected final Quaternion mQ = new Quaternion();
 
     /**
      * Contains current position drift.
      */
-    private final ECEFPosition mCurrentPositionDrift = new ECEFPosition();
+    protected final ECEFPosition mCurrentPositionDrift = new ECEFPosition();
 
     /**
      * Contains current velocity drift.
      */
-    private final ECEFVelocity mCurrentVelocityDrift = new ECEFVelocity();
+    protected final ECEFVelocity mCurrentVelocityDrift = new ECEFVelocity();
 
     /**
      * Contains current orientation expressed as a 3D rotation matrix.
      */
-    private Matrix mCurrentC;
-
-    /**
-     * Number of processed body kinematics samples.
-     */
-    private int mNumberOfProcessedSamples;
+    protected Matrix mCurrentC;
 
     /**
      * Current position drift expressed in meters (m).
      */
-    private double mCurrentPositionDriftMeters;
+    protected double mCurrentPositionDriftMeters;
 
     /**
      * Current velocity drift expressed in meters per second (m/s).
      */
-    private double mCurrentVelocityDriftMetersPerSecond;
+    protected double mCurrentVelocityDriftMetersPerSecond;
 
     /**
      * Current orientation drift expressed in radians (rad).
      */
-    private double mCurrentOrientationDriftRadians;
+    protected double mCurrentOrientationDriftRadians;
 
     /**
      * Constructor.
@@ -2771,7 +2771,7 @@ public class DriftEstimator {
             ECEFInertialNavigator.navigateECEF(mTimeInterval, mFrame,
                     mFixedKinematics, mFrame);
 
-            // estimate drift averages
+            // estimate drift values
             computeCurrentPositionDrift();
             computeCurrentVelocityDrift();
             computeCurrentOrientationDrift();

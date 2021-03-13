@@ -15,10 +15,13 @@
  */
 package com.irurueta.navigation.inertial;
 
+import com.irurueta.algebra.AlgebraException;
 import com.irurueta.algebra.Matrix;
+import com.irurueta.algebra.SingularValueDecomposer;
 import com.irurueta.geometry.InhomogeneousPoint3D;
 import com.irurueta.geometry.InvalidRotationMatrixException;
 import com.irurueta.geometry.Point3D;
+import com.irurueta.geometry.Rotation3D;
 import com.irurueta.navigation.frames.CoordinateTransformation;
 import com.irurueta.navigation.frames.ECEFFrame;
 import com.irurueta.navigation.frames.FrameType;
@@ -1253,9 +1256,19 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
      *                                        not valid (is not a 3x3 orthonormal matrix).
      */
     public CoordinateTransformation getC() throws InvalidRotationMatrixException {
-        return mBodyToEcefCoordinateTransformationMatrix != null ?
-                new CoordinateTransformation(mBodyToEcefCoordinateTransformationMatrix,
-                        FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME) : null;
+        if (mBodyToEcefCoordinateTransformationMatrix != null) {
+            try {
+                // Make sure that matrix is orthonormal
+                final Matrix fixed = fixRotationMatrix();
+                return new CoordinateTransformation(fixed, FrameType.BODY_FRAME,
+                        FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+            } catch (final AlgebraException ignore) {
+                return null;
+            }
+
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -2101,5 +2114,33 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
                 (INSLooselyCoupledKalmanState) super.clone();
         copyTo(result);
         return result;
+    }
+
+    /**
+     * Fixes current body to ECEF coordinate transformation matrix to ensure it
+     * remains orthonormal and valid to build a Coordinate transformation or
+     * a rotation.
+     *
+     * @return a fixed rotation matrix.
+     * @throws AlgebraException if there are numerical instabilities.
+     */
+    private Matrix fixRotationMatrix() throws AlgebraException{
+        final SingularValueDecomposer decomposer = new SingularValueDecomposer(
+                mBodyToEcefCoordinateTransformationMatrix);
+        decomposer.decompose();
+
+        // fixed = u * w * v'
+        final Matrix u = decomposer.getU();
+        // make sure all singular values are 1
+        final Matrix w = Matrix.identity(Rotation3D.INHOM_COORDS,
+                Rotation3D.INHOM_COORDS);
+        final Matrix v = decomposer.getV();
+
+        // fixed = u * w * v'
+        u.multiply(w);
+        v.transpose();
+        u.multiply(v);
+
+        return u;
     }
 }

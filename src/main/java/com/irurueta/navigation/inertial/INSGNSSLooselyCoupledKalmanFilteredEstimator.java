@@ -1898,7 +1898,7 @@ public class INSGNSSLooselyCoupledKalmanFilteredEstimator {
 
     /**
      * Initializes current ECEF frame containing user position, velocity and
-     * orientation expressed an resolved in ECEF coordinates.
+     * orientation expressed and resolved in ECEF coordinates.
      * This method makes no action if an initial frame already exists.
      *
      * @return true if frame was initialized, false otherwise.

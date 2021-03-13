@@ -1306,7 +1306,7 @@ public class INSLooselyCoupledKalmanStateTest {
                 FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
         state.setC(c5);
 
-        assertEquals(c5, state.getC());
+        assertTrue(c5.equals(state.getC(), THRESHOLD));
         assertEquals(c5.getMatrix(),
                 state.getBodyToEcefCoordinateTransformationMatrix());
 
@@ -1696,16 +1696,9 @@ public class INSLooselyCoupledKalmanStateTest {
         assertTrue(state.getFrame(frame2));
         final ECEFFrame frame3 = state.getFrame();
 
-        assertEquals(frame1, frame2);
-        assertEquals(frame1, frame3);
-
-        // set invalid transformation matrix with correct size
-        state.setBodyToEcefCoordinateTransformationMatrix(
-                new Matrix(CoordinateTransformation.ROWS, CoordinateTransformation.COLS));
-
-        // check again
-        assertFalse(state.getFrame(frame2));
-        assertNull(state.getFrame());
+        assertTrue(frame1.equals(frame2, THRESHOLD));
+        assertTrue(frame1.equals(frame3, THRESHOLD));
+        assertEquals(frame2, frame3);
 
         // set new frame
         final double roll2 = Math.toRadians(randomizer.nextDouble(
@@ -1730,7 +1723,7 @@ public class INSLooselyCoupledKalmanStateTest {
         final ECEFFrame frame4 = new ECEFFrame(x2, y2, z2, vx2, vy2, vz2, c2);
         state.setFrame(frame4);
 
-        assertEquals(frame4, state.getFrame());
+        assertTrue(frame4.equals(state.getFrame(), THRESHOLD));
     }
 
     @Test
@@ -2366,6 +2359,7 @@ public class INSLooselyCoupledKalmanStateTest {
 
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
         assertTrue(state1.equals((Object) state1));
+        //noinspection EqualsWithItself
         assertTrue(state1.equals(state1));
         assertTrue(state1.equals(state2));
         assertFalse(state1.equals(state3));

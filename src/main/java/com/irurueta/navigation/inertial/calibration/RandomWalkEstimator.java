@@ -44,6 +44,8 @@ import com.irurueta.units.Speed;
 import com.irurueta.units.SpeedUnit;
 import com.irurueta.units.Time;
 
+// TODO: must be redone using DriftEstimator or navigation preserving previous frames and then computing averages of drifts
+
 /**
  * Estimates random walk data by running this estimator while the body of IMU remains static
  * at a given position and orientation when IMU has already been calibrated.
