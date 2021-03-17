@@ -2986,6 +2986,35 @@ public class BodyKinematicsBiasEstimator {
     }
 
     /**
+     * Gets amount of total elapsed time since first processed measurement expressed
+     * in seconds (s).
+     *
+     * @return amount of total elapsed time.
+     */
+    public double getElapsedTimeSeconds() {
+        return mNumberOfProcessedSamples * mTimeInterval;
+    }
+
+    /**
+     * Gets amount of total elapsed time since first processed measurement.
+     *
+     * @return amount of total elapsed time.
+     */
+    public Time getElapsedTime() {
+        return new Time(getElapsedTimeSeconds(), TimeUnit.SECOND);
+    }
+
+    /**
+     * Gets amount of total elapsed time since first processed measurement.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getElapsedTime(final Time result) {
+        result.setValue(getElapsedTimeSeconds());
+        result.setUnit(TimeUnit.SECOND);
+    }
+
+    /**
      * Indicates whether estimator is currently running or not.
      *
      * @return true if estimator is running, false otherwise.

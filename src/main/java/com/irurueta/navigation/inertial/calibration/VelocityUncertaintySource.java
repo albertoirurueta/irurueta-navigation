@@ -24,15 +24,15 @@ import com.irurueta.navigation.inertial.INSLooselyCoupledKalmanInitializerConfig
 public interface VelocityUncertaintySource {
 
     /**
-     * Gets standard deviation of velocity noise or uncertainty expressed in
-     * meters per second (m/s).
-     * Velocity noise can be measured using a {@link RandomWalkEstimator}, which
-     * is appropriate to create a {@link INSLooselyCoupledKalmanConfig}.
+     * Gets velocity uncertainty expressed in meters per second (m/s).
+     * Velocity uncertainty can be measured using a {@link RandomWalkEstimator},
+     * which is appropriate to create a {@link INSLooselyCoupledKalmanConfig} or
+     * a {@link INSLooselyCoupledKalmanInitializerConfig}.
      * However, to create a {@link INSLooselyCoupledKalmanInitializerConfig},
      * typically position, velocity and attitude are externally measured by other
-     * means introducing a different amount of uncertainty.
+     * means introducing a different amount of uncertainty (e.g. GPS).
      *
-     * @return standard deviation of velocity expressed in meters per second (m/s).
+     * @return velocity uncertainty expressed in meters per second (m/s).
      */
-    double getVelocityStandardDeviation();
+    double getVelocityUncertainty();
 }

@@ -22,14 +22,14 @@ import com.irurueta.navigation.inertial.INSLooselyCoupledKalmanInitializerConfig
  */
 public interface AttitudeUncertaintySource {
     /**
-     * Gets standard deviation of attitude noise or uncertainty expressed in radians (rad).
-     * Attitude noise can be measured using a {@link RandomWalkEstimator}, although
-     * typically to create a {@link INSLooselyCoupledKalmanInitializerConfig},
+     * Gets attitude uncertainty expressed in radians (rad).
+     * Attitude uncertainty can be measured using a {@link RandomWalkEstimator},
+     * although typically to create a {@link INSLooselyCoupledKalmanInitializerConfig},
      * position, velocity and attitude are externally measured by other means
-     * introducing a different amount of uncertainty.
+     * introducing a different amount of uncertainty (e.g. GPS).
      *
-     * @return standard deviation of attitude expressed in radians (rad).
+     * @return attitude uncertainty expressed in radians (rad).
      */
-    double getAttitudeStandardDeviation();
+    double getAttitudeUncertainty();
 
 }

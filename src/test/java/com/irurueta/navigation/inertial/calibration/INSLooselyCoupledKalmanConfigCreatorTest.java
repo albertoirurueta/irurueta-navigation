@@ -91,8 +91,8 @@ public class INSLooselyCoupledKalmanConfigCreatorTest {
         assertNull(creator.getGyroscopeNoiseRootPsdSource());
         assertNull(creator.getAccelerometerBiasRandomWalkSource());
         assertNull(creator.getGyroscopeBiasRandomWalkSource());
-        assertNull(creator.getPositionUncertaintySource());
-        assertNull(creator.getVelocityUncertaintySource());
+        assertNull(creator.getPositionNoiseStandardDeviationSource());
+        assertNull(creator.getVelocityNoiseStandardDeviationSource());
         assertFalse(creator.isReady());
     }
 
@@ -117,8 +117,8 @@ public class INSLooselyCoupledKalmanConfigCreatorTest {
         assertSame(generator2, creator.getGyroscopeNoiseRootPsdSource());
         assertSame(randomWalkEstimator1, creator.getAccelerometerBiasRandomWalkSource());
         assertSame(randomWalkEstimator2, creator.getGyroscopeBiasRandomWalkSource());
-        assertSame(randomWalkEstimator3, creator.getPositionUncertaintySource());
-        assertSame(randomWalkEstimator4, creator.getVelocityUncertaintySource());
+        assertSame(randomWalkEstimator3, creator.getPositionNoiseStandardDeviationSource());
+        assertSame(randomWalkEstimator4, creator.getVelocityNoiseStandardDeviationSource());
         assertTrue(creator.isReady());
     }
 
@@ -137,8 +137,8 @@ public class INSLooselyCoupledKalmanConfigCreatorTest {
         assertSame(generator, creator.getGyroscopeNoiseRootPsdSource());
         assertSame(randomWalkEstimator, creator.getAccelerometerBiasRandomWalkSource());
         assertSame(randomWalkEstimator, creator.getGyroscopeBiasRandomWalkSource());
-        assertSame(randomWalkEstimator, creator.getPositionUncertaintySource());
-        assertSame(randomWalkEstimator, creator.getVelocityUncertaintySource());
+        assertSame(randomWalkEstimator, creator.getPositionNoiseStandardDeviationSource());
+        assertSame(randomWalkEstimator, creator.getVelocityNoiseStandardDeviationSource());
         assertTrue(creator.isReady());
     }
 
@@ -157,8 +157,8 @@ public class INSLooselyCoupledKalmanConfigCreatorTest {
         assertSame(generator, creator.getGyroscopeNoiseRootPsdSource());
         assertSame(randomWalkEstimator, creator.getAccelerometerBiasRandomWalkSource());
         assertSame(randomWalkEstimator, creator.getGyroscopeBiasRandomWalkSource());
-        assertSame(randomWalkEstimator, creator.getPositionUncertaintySource());
-        assertSame(randomWalkEstimator, creator.getVelocityUncertaintySource());
+        assertSame(randomWalkEstimator, creator.getPositionNoiseStandardDeviationSource());
+        assertSame(randomWalkEstimator, creator.getVelocityNoiseStandardDeviationSource());
         assertTrue(creator.isReady());
     }
 
@@ -177,8 +177,8 @@ public class INSLooselyCoupledKalmanConfigCreatorTest {
         assertSame(optimizer, creator.getGyroscopeNoiseRootPsdSource());
         assertSame(randomWalkEstimator, creator.getAccelerometerBiasRandomWalkSource());
         assertSame(randomWalkEstimator, creator.getGyroscopeBiasRandomWalkSource());
-        assertSame(randomWalkEstimator, creator.getPositionUncertaintySource());
-        assertSame(randomWalkEstimator, creator.getVelocityUncertaintySource());
+        assertSame(randomWalkEstimator, creator.getPositionNoiseStandardDeviationSource());
+        assertSame(randomWalkEstimator, creator.getVelocityNoiseStandardDeviationSource());
         assertTrue(creator.isReady());
     }
 
@@ -197,8 +197,8 @@ public class INSLooselyCoupledKalmanConfigCreatorTest {
         assertSame(optimizer, creator.getGyroscopeNoiseRootPsdSource());
         assertSame(randomWalkEstimator, creator.getAccelerometerBiasRandomWalkSource());
         assertSame(randomWalkEstimator, creator.getGyroscopeBiasRandomWalkSource());
-        assertSame(randomWalkEstimator, creator.getPositionUncertaintySource());
-        assertSame(randomWalkEstimator, creator.getVelocityUncertaintySource());
+        assertSame(randomWalkEstimator, creator.getPositionNoiseStandardDeviationSource());
+        assertSame(randomWalkEstimator, creator.getVelocityNoiseStandardDeviationSource());
         assertTrue(creator.isReady());
     }
 
@@ -269,35 +269,35 @@ public class INSLooselyCoupledKalmanConfigCreatorTest {
     }
 
     @Test
-    public void testGetSetPositionUncertaintySource() {
+    public void testGetSetPositionNoiseStandardDeviationSource() {
         final INSLooselyCoupledKalmanConfigCreator creator =
                 new INSLooselyCoupledKalmanConfigCreator();
 
         // check default value
-        assertNull(creator.getPositionUncertaintySource());
+        assertNull(creator.getPositionNoiseStandardDeviationSource());
 
         // set new value
         final RandomWalkEstimator estimator = new RandomWalkEstimator();
-        creator.setPositionUncertaintySource(estimator);
+        creator.setPositionNoiseStandardDeviationSource(estimator);
 
         // check
-        assertSame(estimator, creator.getPositionUncertaintySource());
+        assertSame(estimator, creator.getPositionNoiseStandardDeviationSource());
     }
 
     @Test
-    public void testGetSetVelocityUncertaintySource() {
+    public void testGetSetVelocityNoiseStandardDeviationSource() {
         final INSLooselyCoupledKalmanConfigCreator creator =
                 new INSLooselyCoupledKalmanConfigCreator();
 
         // check default value
-        assertNull(creator.getVelocityUncertaintySource());
+        assertNull(creator.getVelocityNoiseStandardDeviationSource());
 
         // set new value
         final RandomWalkEstimator estimator = new RandomWalkEstimator();
-        creator.setVelocityUncertaintySource(estimator);
+        creator.setVelocityNoiseStandardDeviationSource(estimator);
 
         // check
-        assertSame(estimator, creator.getVelocityUncertaintySource());
+        assertSame(estimator, creator.getVelocityNoiseStandardDeviationSource());
     }
 
     @Test
@@ -516,13 +516,19 @@ public class INSLooselyCoupledKalmanConfigCreatorTest {
 
             final double accelerometerBiasPsd = randomWalkEstimator.getAccelerometerBiasPSD();
             final double gyroBiasPsd = randomWalkEstimator.getGyroBiasPSD();
-            final double positionStd = randomWalkEstimator.getPositionStandardDeviation();
-            final double velocityStd = randomWalkEstimator.getVelocityStandardDeviation();
+            final double positionNoiseStd = randomWalkEstimator.getPositionNoiseStandardDeviation();
+            final double velocityNoiseStd = randomWalkEstimator.getVelocityNoiseStandardDeviation();
+            final double positionUncertainty = randomWalkEstimator.getPositionUncertainty();
+            final double velocityUncertainty = randomWalkEstimator.getVelocityUncertainty();
+            final double attitudeUncertainty = randomWalkEstimator.getAttitudeUncertainty();
 
             assertTrue(accelerometerBiasPsd > 0.0);
             assertTrue(gyroBiasPsd > 0.0);
-            assertTrue(positionStd > 0.0);
-            assertTrue(velocityStd > 0.0);
+            assertTrue(positionNoiseStd > 0.0);
+            assertTrue(velocityNoiseStd > 0.0);
+            assertTrue(positionUncertainty > 0.0);
+            assertTrue(velocityUncertainty > 0.0);
+            assertTrue(attitudeUncertainty > 0.0);
 
             final double gyroNoisePsd = generator.getGyroscopeBaseNoiseLevelPsd();
             final double accelNoisePsd = generator.getAccelerometerBaseNoiseLevelPsd();
@@ -538,8 +544,8 @@ public class INSLooselyCoupledKalmanConfigCreatorTest {
             assertEquals(accelerometerBiasPsd, config.getAccelerometerBiasPSD(),
                     0.0);
             assertEquals(gyroBiasPsd, config.getGyroBiasPSD(), 0.0);
-            assertEquals(positionStd, config.getPositionNoiseSD(), 0.0);
-            assertEquals(velocityStd, config.getVelocityNoiseSD(), 0.0);
+            assertEquals(positionNoiseStd, config.getPositionNoiseSD(), 0.0);
+            assertEquals(velocityNoiseStd, config.getVelocityNoiseSD(), 0.0);
 
             numValid++;
             break;
@@ -606,7 +612,8 @@ public class INSLooselyCoupledKalmanConfigCreatorTest {
             final BodyKinematics trueKinematics,
             final IMUErrors errors,
             final Random random)
-            throws LockedException, RandomWalkEstimationException {
+            throws LockedException, RandomWalkEstimationException,
+            NotReadyException {
 
         final BodyKinematics measuredKinematics = new BodyKinematics();
         for (int i = 0, j = 0; i < 5000; i++, j++) {

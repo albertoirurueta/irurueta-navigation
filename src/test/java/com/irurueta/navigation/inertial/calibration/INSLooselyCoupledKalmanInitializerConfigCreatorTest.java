@@ -439,9 +439,9 @@ public class INSLooselyCoupledKalmanInitializerConfigCreatorTest {
             generateStaticSamples(randomWalkEstimator,
                     trueKinematics, errors, random);
 
-            final double attitudeStd = randomWalkEstimator.getAttitudeStandardDeviation();
-            final double velocityStd = randomWalkEstimator.getVelocityStandardDeviation();
-            final double positionStd = randomWalkEstimator.getPositionStandardDeviation();
+            final double attitudeStd = randomWalkEstimator.getAttitudeUncertainty();
+            final double velocityStd = randomWalkEstimator.getVelocityUncertainty();
+            final double positionStd = randomWalkEstimator.getPositionUncertainty();
             final double accelerometerBiasStd = accelerometerCalibrator.getEstimatedBiasStandardDeviationNorm();
             final double gyroBiasStd = gyroCalibrator.getEstimatedBiasStandardDeviationNorm();
 
@@ -535,7 +535,8 @@ public class INSLooselyCoupledKalmanInitializerConfigCreatorTest {
             final BodyKinematics trueKinematics,
             final IMUErrors errors,
             final Random random)
-            throws LockedException, RandomWalkEstimationException {
+            throws LockedException, RandomWalkEstimationException,
+            NotReadyException {
 
         final BodyKinematics measuredKinematics = new BodyKinematics();
         for (int i = 0, j = 0; i < 5000; i++, j++) {

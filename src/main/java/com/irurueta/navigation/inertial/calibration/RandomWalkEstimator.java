@@ -17,42 +17,39 @@ package com.irurueta.navigation.inertial.calibration;
 
 import com.irurueta.algebra.AlgebraException;
 import com.irurueta.algebra.Matrix;
-import com.irurueta.geometry.InvalidRotationMatrixException;
 import com.irurueta.geometry.Point3D;
-import com.irurueta.geometry.Quaternion;
 import com.irurueta.navigation.LockedException;
+import com.irurueta.navigation.NotReadyException;
 import com.irurueta.navigation.frames.CoordinateTransformation;
 import com.irurueta.navigation.frames.ECEFFrame;
-import com.irurueta.navigation.frames.FrameType;
 import com.irurueta.navigation.frames.InvalidSourceAndDestinationFrameTypeException;
 import com.irurueta.navigation.frames.NEDFrame;
 import com.irurueta.navigation.inertial.BodyKinematics;
 import com.irurueta.navigation.inertial.ECEFPosition;
 import com.irurueta.navigation.inertial.INSLooselyCoupledKalmanConfig;
-import com.irurueta.navigation.inertial.INSLooselyCoupledKalmanInitializerConfig;
 import com.irurueta.navigation.inertial.NEDPosition;
 import com.irurueta.navigation.inertial.calibration.bias.BodyKinematicsBiasEstimator;
-import com.irurueta.navigation.inertial.navigators.ECEFInertialNavigator;
-import com.irurueta.navigation.inertial.navigators.InertialNavigatorException;
-import com.irurueta.units.Acceleration;
-import com.irurueta.units.Angle;
-import com.irurueta.units.AngleUnit;
-import com.irurueta.units.AngularSpeed;
-import com.irurueta.units.Distance;
-import com.irurueta.units.DistanceUnit;
-import com.irurueta.units.Speed;
-import com.irurueta.units.SpeedUnit;
-import com.irurueta.units.Time;
-
-// TODO: must be redone using DriftEstimator or navigation preserving previous frames and then computing averages of drifts
+import com.irurueta.units.*;
 
 /**
  * Estimates random walk data by running this estimator while the body of IMU remains static
  * at a given position and orientation when IMU has already been calibrated.
+ * Internally this estimator accumulates samples for a given "drift period" to
+ * estimate accumulated drift values of position, velocity and attitude, and then
+ * repeats the process several times to estimate mean and variance of such values.
+ * The duration of the drift period is application dependant and should be set
+ * to a value more or less similar to the amount of time the device won't be able
+ * to set a position by some other system (e.g. GPS, Wi-Fi, cameras, etc...)
  */
 public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
-        GyroscopeBiasRandomWalkSource, AttitudeUncertaintySource,
-        PositionUncertaintySource, VelocityUncertaintySource {
+        GyroscopeBiasRandomWalkSource, PositionUncertaintySource,
+        VelocityUncertaintySource, AttitudeUncertaintySource,
+        PositionNoiseStandardDeviationSource, VelocityNoiseStandardDeviationSource {
+
+    /**
+     * Number of samples to be used by default on each drift period.
+     */
+    public static final int DEFAULT_DRIFT_PERIOD_SAMPLES = 150;
 
     /**
      * Listener to handle events raised by this estimator.
@@ -72,6 +69,11 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
     private final BodyKinematicsBiasEstimator mBiasEstimator = new BodyKinematicsBiasEstimator();
 
     /**
+     * Estimates amount of position, velocity and orientation drift.
+     */
+    private final DriftEstimator mDriftEstimator = new DriftEstimator();
+
+    /**
      * Instance containing last fixed body kinematics to be reused.
      */
     private final BodyKinematics mFixedKinematics = new BodyKinematics();
@@ -85,9 +87,19 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
     private boolean mFixKinematics = true;
 
     /**
+     * Number of samples to be used on each drift period.
+     */
+    private int mDriftPeriodSamples = DEFAULT_DRIFT_PERIOD_SAMPLES;
+
+    /**
      * Indicates whether this estimator is running or not.
      */
     private boolean mRunning;
+
+    /**
+     * Number of drift periods that have been processed.
+     */
+    private int mNumberOfProcessedDriftPeriods;
 
     /**
      * Accelerometer bias random walk PSD (Power Spectral Density) expressed
@@ -101,57 +113,35 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
     private double mGyroBiasPSD;
 
     /**
+     * Average position drift expressed in meters (m).
+     * This gives an indication of position accuracy.
+     */
+    private double mAvgPositionDrift;
+
+    /**
+     * Average velocity drift expressed in meters per second (m/s).
+     */
+    private double mAvgVelocityDrift;
+
+    /**
+     * Average attitude drift expressed in radians (rad).
+     */
+    private double mAvgAttitudeDrift;
+
+    /**
      * Position variance expressed in squared meters (m^2).
      */
-    private double mPositionVariance;
+    private double mVarPositionDrift;
 
     /**
      * Velocity variance expressed in (m^2/s^2).
      */
-    private double mVelocityVariance;
+    private double mVarVelocityDrift;
 
     /**
-     * Attitude variance expressend in squared radians (rad^2).
+     * Attitude variance expressed in squared radians (rad^2).
      */
-    private double mAttitudeVariance;
-
-    /**
-     * Coordinate transformation to be reused for estimation of attitude
-     * variance.
-     * This is reused for efficiency.
-     */
-    private final CoordinateTransformation mC = new CoordinateTransformation(FrameType.BODY_FRAME,
-            FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
-
-    /**
-     * Contains orientation of reference frame.
-     * This is reused for efficiency.
-     */
-    private final Quaternion mRefQ = new Quaternion();
-
-    /**
-     * Contains inverse of orientation of reference frame.
-     * This is reused for efficiency.
-     */
-    private final Quaternion mInvRefQ = new Quaternion();
-
-    /**
-     * Contains current frame orientation.
-     * This is reused for efficiency.
-     */
-    private final Quaternion mQ = new Quaternion();
-
-    /**
-     * Contains frame provided initially for bias estimation.
-     * This is reused for efficiency.
-     */
-    private final ECEFFrame mReferenceFrame = new ECEFFrame();
-
-    /**
-     * Contains current frame after one navigation step.
-     * This is reused for efficiency.
-     */
-    private final ECEFFrame mFrame = new ECEFFrame();
+    private double mVarAttitudeDrift;
 
     /**
      * Contains acceleration triad to be reused for bias norm estimation.
@@ -1645,6 +1635,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mFixer.setAccelerationBias(bias);
+        mDriftEstimator.setAccelerationBias(bias);
     }
 
     /**
@@ -1680,6 +1671,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mFixer.setAccelerationBias(bias);
+        mDriftEstimator.setAccelerationBias(bias);
     }
 
     /**
@@ -1713,6 +1705,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mFixer.setAccelerationBias(bias);
+        mDriftEstimator.setAccelerationBias(bias);
     }
 
     /**
@@ -1739,6 +1732,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mFixer.setAccelerationBiasX(biasX);
+        mDriftEstimator.setAccelerationBiasX(biasX);
     }
 
     /**
@@ -1766,6 +1760,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mFixer.setAccelerationBiasY(biasY);
+        mDriftEstimator.setAccelerationBiasY(biasY);
     }
 
     /**
@@ -1792,6 +1787,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mFixer.setAccelerationBiasZ(biasZ);
+        mDriftEstimator.setAccelerationBiasZ(biasZ);
     }
 
     /**
@@ -1811,6 +1807,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mFixer.setAccelerationBias(biasX, biasY, biasZ);
+        mDriftEstimator.setAccelerationBias(biasX, biasY, biasZ);
     }
 
     /**
@@ -1843,6 +1840,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mFixer.setAccelerationBiasX(biasX);
+        mDriftEstimator.setAccelerationBiasX(biasX);
     }
 
     /**
@@ -1876,6 +1874,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mFixer.setAccelerationBiasY(biasY);
+        mDriftEstimator.setAccelerationBiasY(biasY);
     }
 
     /**
@@ -1909,6 +1908,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mFixer.setAccelerationBiasZ(biasZ);
+        mDriftEstimator.setAccelerationBiasZ(biasZ);
     }
 
     /**
@@ -1928,6 +1928,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mFixer.setAccelerationBias(biasX, biasY, biasZ);
+        mDriftEstimator.setAccelerationBias(biasX, biasY, biasZ);
     }
 
     /**
@@ -1965,6 +1966,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mFixer.setAccelerationCrossCouplingErrors(crossCouplingErrors);
+        mDriftEstimator.setAccelerationCrossCouplingErrors(crossCouplingErrors);
     }
 
     /**
@@ -1991,6 +1993,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mFixer.setAccelerationSx(sx);
+        mDriftEstimator.setAccelerationSx(sx);
     }
 
     /**
@@ -2017,6 +2020,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mFixer.setAccelerationSy(sy);
+        mDriftEstimator.setAccelerationSy(sy);
     }
 
     /**
@@ -2043,6 +2047,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mFixer.setAccelerationSz(sz);
+        mDriftEstimator.setAccelerationSz(sz);
     }
 
     /**
@@ -2069,6 +2074,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mFixer.setAccelerationMxy(mxy);
+        mDriftEstimator.setAccelerationMxy(mxy);
     }
 
     /**
@@ -2095,6 +2101,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mFixer.setAccelerationMxz(mxz);
+        mDriftEstimator.setAccelerationMxz(mxz);
     }
 
     /**
@@ -2121,6 +2128,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mFixer.setAccelerationMyx(myx);
+        mDriftEstimator.setAccelerationMyx(myx);
     }
 
     /**
@@ -2147,6 +2155,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mFixer.setAccelerationMyz(myz);
+        mDriftEstimator.setAccelerationMyz(myz);
     }
 
     /**
@@ -2173,6 +2182,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mFixer.setAccelerationMzx(mzx);
+        mDriftEstimator.setAccelerationMzx(mzx);
     }
 
     /**
@@ -2199,6 +2209,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mFixer.setAccelerationMzy(mzy);
+        mDriftEstimator.setAccelerationMzy(mzy);
     }
 
     /**
@@ -2219,6 +2230,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mFixer.setAccelerationScalingFactors(sx, sy, sz);
+        mDriftEstimator.setAccelerationScalingFactors(sx, sy, sz);
     }
 
     /**
@@ -2244,6 +2256,8 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mFixer.setAccelerationCrossCouplingErrors(mxy, mxz, myx, myz, mzx, mzy);
+        mDriftEstimator.setAccelerationCrossCouplingErrors(
+                mxy, mxz, myx, myz, mzx, mzy);
     }
 
     /**
@@ -2273,6 +2287,8 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mFixer.setAccelerationScalingFactorsAndCrossCouplingErrors(
+                sx, sy, sz, mxy, mxz, myx, myz, mzx, mzy);
+        mDriftEstimator.setAccelerationScalingFactorsAndCrossCouplingErrors(
                 sx, sy, sz, mxy, mxz, myx, myz, mzx, mzy);
     }
 
@@ -2307,6 +2323,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mFixer.setAngularSpeedBias(bias);
+        mDriftEstimator.setAngularSpeedBias(bias);
     }
 
     /**
@@ -2343,6 +2360,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mFixer.setAngularSpeedBias(bias);
+        mDriftEstimator.setAngularSpeedBias(bias);
     }
 
     /**
@@ -2376,6 +2394,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mFixer.setAngularSpeedBias(bias);
+        mDriftEstimator.setAngularSpeedBias(bias);
     }
 
     /**
@@ -2402,6 +2421,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mFixer.setAngularSpeedBiasX(biasX);
+        mDriftEstimator.setAngularSpeedBiasX(biasX);
     }
 
     /**
@@ -2428,6 +2448,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mFixer.setAngularSpeedBiasY(biasY);
+        mDriftEstimator.setAngularSpeedBiasY(biasY);
     }
 
     /**
@@ -2454,6 +2475,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mFixer.setAngularSpeedBiasZ(biasZ);
+        mDriftEstimator.setAngularSpeedBiasZ(biasZ);
     }
 
     /**
@@ -2473,6 +2495,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mFixer.setAngularSpeedBias(biasX, biasY, biasZ);
+        mDriftEstimator.setAngularSpeedBias(biasX, biasY, biasZ);
     }
 
     /**
@@ -2507,6 +2530,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mFixer.setAngularSpeedBiasX(biasX);
+        mDriftEstimator.setAngularSpeedBiasX(biasX);
     }
 
     /**
@@ -2540,6 +2564,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mFixer.setAngularSpeedBiasY(biasY);
+        mDriftEstimator.setAngularSpeedBiasY(biasY);
     }
 
     /**
@@ -2573,6 +2598,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mFixer.setAngularSpeedBiasZ(biasZ);
+        mDriftEstimator.setAngularSpeedBiasZ(biasZ);
     }
 
     /**
@@ -2592,6 +2618,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mFixer.setAngularSpeedBias(biasX, biasY, biasZ);
+        mDriftEstimator.setAngularSpeedBias(biasX, biasY, biasZ);
     }
 
     /**
@@ -2627,6 +2654,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mFixer.setAngularSpeedCrossCouplingErrors(crossCouplingErrors);
+        mDriftEstimator.setAngularSpeedCrossCouplingErrors(crossCouplingErrors);
     }
 
     /**
@@ -2653,6 +2681,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mFixer.setAngularSpeedSx(sx);
+        mDriftEstimator.setAngularSpeedSx(sx);
     }
 
     /**
@@ -2679,6 +2708,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mFixer.setAngularSpeedSy(sy);
+        mDriftEstimator.setAngularSpeedSy(sy);
     }
 
     /**
@@ -2705,6 +2735,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mFixer.setAngularSpeedSz(sz);
+        mDriftEstimator.setAngularSpeedSz(sz);
     }
 
     /**
@@ -2731,6 +2762,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mFixer.setAngularSpeedMxy(mxy);
+        mDriftEstimator.setAngularSpeedMxy(mxy);
     }
 
     /**
@@ -2757,6 +2789,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mFixer.setAngularSpeedMxz(mxz);
+        mDriftEstimator.setAngularSpeedMxz(mxz);
     }
 
     /**
@@ -2783,6 +2816,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mFixer.setAngularSpeedMyx(myx);
+        mDriftEstimator.setAngularSpeedMyx(myx);
     }
 
     /**
@@ -2809,6 +2843,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mFixer.setAngularSpeedMyz(myz);
+        mDriftEstimator.setAngularSpeedMyz(myz);
     }
 
     /**
@@ -2835,6 +2870,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mFixer.setAngularSpeedMzx(mzx);
+        mDriftEstimator.setAngularSpeedMzx(mzx);
     }
 
     /**
@@ -2861,6 +2897,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mFixer.setAngularSpeedMzy(mzy);
+        mDriftEstimator.setAngularSpeedMzy(mzy);
     }
 
     /**
@@ -2881,6 +2918,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mFixer.setAngularSpeedScalingFactors(sx, sy, sz);
+        mDriftEstimator.setAngularSpeedScalingFactors(sx, sy, sz);
     }
 
     /**
@@ -2906,6 +2944,8 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mFixer.setAngularSpeedCrossCouplingErrors(
+                mxy, mxz, myx, myz, mzx, mzy);
+        mDriftEstimator.setAngularSpeedCrossCouplingErrors(
                 mxy, mxz, myx, myz, mzx, mzy);
     }
 
@@ -2936,6 +2976,8 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mFixer.setAngularSpeedScalingFactorsAndCrossCouplingErrors(
+                sx, sy, sz, mxy, mxz, myx, myz, mzx, mzy);
+        mDriftEstimator.setAngularSpeedScalingFactorsAndCrossCouplingErrors(
                 sx, sy, sz, mxy, mxz, myx, myz, mzx, mzy);
     }
 
@@ -2971,6 +3013,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mFixer.setAngularSpeedGDependantCrossBias(gDependantCrossBias);
+        mDriftEstimator.setAngularSpeedGDependantCrossBias(gDependantCrossBias);
     }
 
     /**
@@ -2997,6 +3040,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mBiasEstimator.setTimeInterval(timeInterval);
+        mDriftEstimator.setTimeInterval(timeInterval);
     }
 
     /**
@@ -3033,6 +3077,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mBiasEstimator.setTimeInterval(timeInterval);
+        mDriftEstimator.setTimeInterval(timeInterval);
     }
 
     /**
@@ -3066,6 +3111,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mBiasEstimator.setEcefPosition(position);
+        mDriftEstimator.setReferenceEcefPosition(position);
     }
 
     /**
@@ -3083,6 +3129,8 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mBiasEstimator.setEcefPosition(x, y, z);
+        mDriftEstimator.setReferenceEcefPosition(
+                mBiasEstimator.getEcefPosition());
     }
 
     /**
@@ -3100,6 +3148,8 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mBiasEstimator.setEcefPosition(x, y, z);
+        mDriftEstimator.setReferenceEcefPosition(
+                mBiasEstimator.getEcefPosition());
     }
 
     /**
@@ -3115,6 +3165,8 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mBiasEstimator.setEcefPosition(position);
+        mDriftEstimator.setReferenceEcefPosition(
+                mBiasEstimator.getEcefPosition());
     }
 
     /**
@@ -3196,6 +3248,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mBiasEstimator.setNedPosition(position);
+        mDriftEstimator.setReferenceNedPosition(position);
     }
 
     /**
@@ -3214,6 +3267,8 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mBiasEstimator.setNedPosition(latitude, longitude, height);
+        mDriftEstimator.setReferenceEcefPosition(
+                mBiasEstimator.getEcefPosition());
     }
 
     /**
@@ -3232,6 +3287,8 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mBiasEstimator.setNedPosition(latitude, longitude, height);
+        mDriftEstimator.setReferenceEcefPosition(
+                mBiasEstimator.getEcefPosition());
     }
 
     /**
@@ -3250,6 +3307,8 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mBiasEstimator.setNedPosition(latitude, longitude, height);
+        mDriftEstimator.setReferenceEcefPosition(
+                mBiasEstimator.getEcefPosition());
     }
 
     /**
@@ -3310,6 +3369,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mBiasEstimator.setEcefC(ecefC);
+        mDriftEstimator.setReferenceEcefCoordinateTransformation(ecefC);
     }
 
     /**
@@ -3367,6 +3427,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mBiasEstimator.setNedC(nedC);
+        mDriftEstimator.setReferenceNedCoordinateTransformation(nedC);
     }
 
     /**
@@ -3392,6 +3453,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mBiasEstimator.setNedPositionAndNedOrientation(nedPosition, nedC);
+        mDriftEstimator.setReferenceFrame(mBiasEstimator.getEcefFrame());
     }
 
     /**
@@ -3421,6 +3483,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
 
         mBiasEstimator.setNedPositionAndNedOrientation(latitude, longitude,
                 height, nedC);
+        mDriftEstimator.setReferenceFrame(mBiasEstimator.getEcefFrame());
     }
 
     /**
@@ -3450,6 +3513,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
 
         mBiasEstimator.setNedPositionAndNedOrientation(latitude, longitude,
                 height, nedC);
+        mDriftEstimator.setReferenceFrame(mBiasEstimator.getEcefFrame());
     }
 
     /**
@@ -3479,6 +3543,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
 
         mBiasEstimator.setNedPositionAndNedOrientation(latitude, longitude,
                 height, nedC);
+        mDriftEstimator.setReferenceFrame(mBiasEstimator.getEcefFrame());
     }
 
     /**
@@ -3505,6 +3570,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mBiasEstimator.setEcefPositionAndEcefOrientation(ecefPosition, ecefC);
+        mDriftEstimator.setReferenceFrame(mBiasEstimator.getEcefFrame());
     }
 
     /**
@@ -3533,6 +3599,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mBiasEstimator.setEcefPositionAndEcefOrientation(x, y, z, ecefC);
+        mDriftEstimator.setReferenceFrame(mBiasEstimator.getEcefFrame());
     }
 
     /**
@@ -3561,6 +3628,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mBiasEstimator.setEcefPositionAndEcefOrientation(x, y, z, ecefC);
+        mDriftEstimator.setReferenceFrame(mBiasEstimator.getEcefFrame());
     }
 
     /**
@@ -3586,6 +3654,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mBiasEstimator.setEcefPositionAndEcefOrientation(position, ecefC);
+        mDriftEstimator.setReferenceFrame(mBiasEstimator.getEcefFrame());
     }
 
     /**
@@ -3613,6 +3682,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mBiasEstimator.setNedPositionAndEcefOrientation(position, ecefC);
+        mDriftEstimator.setReferenceFrame(mBiasEstimator.getEcefFrame());
     }
 
     /**
@@ -3643,6 +3713,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
 
         mBiasEstimator.setNedPositionAndEcefOrientation(latitude, longitude,
                 height, ecefC);
+        mDriftEstimator.setReferenceFrame(mBiasEstimator.getEcefFrame());
     }
 
     /**
@@ -3673,6 +3744,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
 
         mBiasEstimator.setNedPositionAndEcefOrientation(latitude, longitude,
                 height, ecefC);
+        mDriftEstimator.setReferenceFrame(mBiasEstimator.getEcefFrame());
     }
 
     /**
@@ -3703,6 +3775,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
 
         mBiasEstimator.setNedPositionAndEcefOrientation(latitude, longitude,
                 height, ecefC);
+        mDriftEstimator.setReferenceFrame(mBiasEstimator.getEcefFrame());
     }
 
     /**
@@ -3732,6 +3805,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mBiasEstimator.setEcefPositionAndNedOrientation(ecefPosition, nedC);
+        mDriftEstimator.setReferenceFrame(mBiasEstimator.getEcefFrame());
     }
 
     /**
@@ -3763,6 +3837,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mBiasEstimator.setEcefPositionAndNedOrientation(x, y, z, nedC);
+        mDriftEstimator.setReferenceFrame(mBiasEstimator.getEcefFrame());
     }
 
     /**
@@ -3794,6 +3869,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mBiasEstimator.setEcefPositionAndNedOrientation(x, y, z, nedC);
+        mDriftEstimator.setReferenceFrame(mBiasEstimator.getEcefFrame());
     }
 
     /**
@@ -3822,6 +3898,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         }
 
         mBiasEstimator.setEcefPositionAndNedOrientation(position, nedC);
+        mDriftEstimator.setReferenceFrame(mBiasEstimator.getEcefFrame());
     }
 
     /**
@@ -3831,6 +3908,43 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
      */
     public int getNumberOfProcessedSamples() {
         return mBiasEstimator.getNumberOfProcessedSamples();
+    }
+
+    /**
+     * Gets number of drift periods that have been processed.
+     *
+     * @return number of drift periods that have been processed.
+     */
+    public int getNumberOfProcessedDriftPeriods() {
+        return mNumberOfProcessedDriftPeriods;
+    }
+
+    /**
+     * Gets amount of total elapsed time since first processed measurement expressed
+     * in seconds (s).
+     *
+     * @return amount of total elapsed time.
+     */
+    public double getElapsedTimeSeconds() {
+        return mBiasEstimator.getElapsedTimeSeconds();
+    }
+
+    /**
+     * Gets amount of total elapsed time since first processed measurement.
+     *
+     * @return amount of total elapsed time.
+     */
+    public Time getElapsedTime() {
+        return mBiasEstimator.getElapsedTime();
+    }
+
+    /**
+     * Gets amount of total elapsed time since first processed measurement.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getElapsedTime(final Time result) {
+        mBiasEstimator.getElapsedTime(result);
     }
 
     /**
@@ -3859,6 +3973,63 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
             throw new LockedException();
         }
         mFixKinematics = fixKinematics;
+        mDriftEstimator.setFixKinematicsEnabled(fixKinematics);
+    }
+
+    /**
+     * Gets number of samples to be used on each drift period.
+     *
+     * @return number of samples to be used on each drift period.
+     */
+    public int getDriftPeriodSamples() {
+        return mDriftPeriodSamples;
+    }
+
+    /**
+     * Sets number of samples to be used on each drift period.
+     *
+     * @param driftPeriodSamples number of samples to be used on each drift period.
+     * @throws LockedException if estimator is currently running.
+     * @throws IllegalArgumentException if provided value is negative or zero.
+     */
+    public void setDriftPeriodSamples(int driftPeriodSamples)
+            throws LockedException {
+        if (mRunning) {
+            throw new LockedException();
+        }
+        if (driftPeriodSamples <= 0) {
+            throw new IllegalArgumentException();
+        }
+
+        mDriftPeriodSamples = driftPeriodSamples;
+    }
+
+    /**
+     * Gets duration of each drift period expressed in seconds (s).
+     *
+     * @return duration of each drift period.
+     */
+    public double getDriftPeriodSeconds() {
+        return mDriftPeriodSamples * getTimeInterval();
+    }
+
+    /**
+     * Gets duration of each drift period.
+     *
+     * @return duration of each drift period.
+     */
+    public Time getDriftPeriod() {
+        return new Time(getDriftPeriodSeconds(), TimeUnit.SECOND);
+    }
+
+    /**
+     * Gets duration of each drift period.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getDriftPeriod(final Time result) {
+        result.setValue(getDriftPeriodSeconds());
+        result.setUnit(TimeUnit.SECOND);
     }
 
     /**
@@ -3871,6 +4042,16 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
     }
 
     /**
+     * Indicates if estimator is ready to start processing additional kinematics
+     * measurements.
+     *
+     * @return true if ready, false otherwise.
+     */
+    public boolean isReady() {
+        return mDriftEstimator.isReady();
+    }
+
+    /**
      * Adds a sample of measured body kinematics (accelerometer + gyroscope readings)
      * obtained from an IMU, fixes their values and uses fixed values to estimate
      * any additional existing bias or position and velocity variation while the
@@ -3879,12 +4060,18 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
      * @param kinematics measured body kinematics.
      * @throws LockedException               if estimator is currently running.
      * @throws RandomWalkEstimationException if estimation fails for some reason.
+     * @throws NotReadyException             if estimator is not ready.
      */
     public void addBodyKinematics(final BodyKinematics kinematics)
-            throws LockedException, RandomWalkEstimationException {
+            throws LockedException, RandomWalkEstimationException,
+            NotReadyException {
 
         if (mRunning) {
             throw new LockedException();
+        }
+
+        if (!mDriftEstimator.isReady()) {
+            throw new NotReadyException();
         }
 
         try {
@@ -3896,13 +4083,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
                 if (mListener != null) {
                     mListener.onStart(this);
                 }
-
-                mBiasEstimator.getEcefFrame(mReferenceFrame);
-                mReferenceFrame.getCoordinateTransformation(mC);
-                mC.asRotation(mRefQ);
-                mRefQ.inverse(mInvRefQ);
             }
-
 
             if (mFixKinematics) {
                 mFixer.fix(kinematics, mFixedKinematics);
@@ -3918,7 +4099,7 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
 
             // obtain accumulated mean of bias values for all processed samples.
             // If calibration and sensor was perfect, this should be zero
-            final double elapsedTime = timeInterval * numberOfSamples;
+            final double elapsedTime = getElapsedTimeSeconds();
             mBiasEstimator.getBiasF(mAccelerationTriad);
             mBiasEstimator.getBiasAngularRate(mAngularSpeedTriad);
 
@@ -3932,64 +4113,49 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
             mGyroBiasPSD = Math.pow(angularSpeedBiasNorm / elapsedTime, 2.0)
                     * timeInterval;
 
-            // update attitude, velocity and position uncertainties
 
-            // estimate navigation variation respect to initial reference
-            ECEFInertialNavigator.navigateECEF(timeInterval, mReferenceFrame, mFixedKinematics, mFrame);
+            // internally drift estimator will fix kinematics if needed
+            mDriftEstimator.addBodyKinematics(kinematics);
 
-            final double n = numberOfSamples + 1;
-            final double tmp = (double) numberOfSamples / n;
+            if (numberOfSamples % mDriftPeriodSamples == 0) {
+                // for each drift period, update mean and variance values
+                // of drift and reset drift estimator
+                final double n = mNumberOfProcessedDriftPeriods + 1;
+                final double tmp = (double) mNumberOfProcessedDriftPeriods / n;
 
-            final double refX = mReferenceFrame.getX();
-            final double refY = mReferenceFrame.getY();
-            final double refZ = mReferenceFrame.getZ();
-            final double refVx = mReferenceFrame.getVx();
-            final double refVy = mReferenceFrame.getVy();
-            final double refVz = mReferenceFrame.getVz();
+                final double positionDrift = mDriftEstimator
+                        .getCurrentPositionDriftNormMeters();
+                final double velocityDrift = mDriftEstimator
+                        .getCurrentVelocityDriftNormMetersPerSecond();
+                final double attitudeDrift = mDriftEstimator
+                        .getCurrentOrientationDriftRadians();
 
-            final double x = mFrame.getX();
-            final double y = mFrame.getY();
-            final double z = mFrame.getZ();
-            final double vx = mFrame.getVx();
-            final double vy = mFrame.getVy();
-            final double vz = mFrame.getVz();
+                mAvgPositionDrift = mAvgPositionDrift * tmp + positionDrift / n;
+                mAvgVelocityDrift = mAvgVelocityDrift * tmp + velocityDrift / n;
+                mAvgAttitudeDrift = mAvgAttitudeDrift * tmp + attitudeDrift / n;
 
-            // obtain current attitude as rotation
-            mFrame.getCoordinateTransformation(mC);
-            mC.asRotation(mQ);
+                final double diffPositionDrift = positionDrift - mAvgPositionDrift;
+                final double diffVelocityDrift = velocityDrift - mAvgVelocityDrift;
+                final double diffAttitudeDrift = attitudeDrift - mAvgAttitudeDrift;
 
-            final double diffX = x - refX;
-            final double diffY = y - refY;
-            final double diffZ = z - refZ;
-            final double diffVx = vx - refVx;
-            final double diffVy = vy - refVy;
-            final double diffVz = vz - refVz;
+                final double diffPositionDrift2 = diffPositionDrift * diffAttitudeDrift;
+                final double diffVelocityDrift2 = diffVelocityDrift * diffVelocityDrift;
+                final double diffAttitudeDrift2 = diffAttitudeDrift * diffAttitudeDrift;
 
-            // get difference of rotation respect reference
-            mQ.combine(mInvRefQ);
-            final double diffAngle = mQ.getRotationAngle();
+                mVarPositionDrift = mVarPositionDrift * tmp + diffPositionDrift2 / n;
+                mVarVelocityDrift = mVarVelocityDrift * tmp + diffVelocityDrift2 / n;
+                mVarAttitudeDrift = mVarAttitudeDrift * tmp + diffAttitudeDrift2 / n;
 
-            final double diffX2 = diffX * diffX;
-            final double diffY2 = diffY * diffY;
-            final double diffZ2 = diffZ * diffZ;
-            final double diffVx2 = diffVx * diffVx;
-            final double diffVy2 = diffVy * diffVy;
-            final double diffVz2 = diffVz * diffVz;
-
-            final double diffPos2 = diffX2 + diffY2 + diffZ2;
-            final double diffV2 = diffVx2 + diffVy2 + diffVz2;
-            final double diffAngle2 = diffAngle * diffAngle;
-
-            mPositionVariance = mPositionVariance * tmp + diffPos2 / n;
-            mVelocityVariance = mVelocityVariance * tmp + diffV2 / n;
-            mAttitudeVariance = mAttitudeVariance * tmp + diffAngle2 / n;
-
-            if (mListener != null) {
-                mListener.onBodyKinematicsAdded(
-                        this, kinematics, mFixedKinematics);
+                mDriftEstimator.reset();
+                mNumberOfProcessedDriftPeriods++;
             }
 
-        } catch (final AlgebraException | InertialNavigatorException | InvalidRotationMatrixException e) {
+            if (mListener != null) {
+                mListener.onBodyKinematicsAdded(this, kinematics,
+                        mFixedKinematics);
+            }
+
+        } catch (AlgebraException | DriftEstimationException e) {
             throw new RandomWalkEstimationException(e);
         } finally {
             mRunning = false;
@@ -4011,9 +4177,13 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
         if (mBiasEstimator.reset()) {
             mAccelerometerBiasPSD = 0.0;
             mGyroBiasPSD = 0.0;
-            mPositionVariance = 0.0;
-            mVelocityVariance = 0.0;
-            mAttitudeVariance = 0.0;
+            mNumberOfProcessedDriftPeriods = 0;
+            mAvgPositionDrift = 0.0;
+            mAvgVelocityDrift = 0.0;
+            mAvgAttitudeDrift = 0.0;
+            mVarPositionDrift = 0.0;
+            mVarVelocityDrift = 0.0;
+            mVarAttitudeDrift = 0.0;
 
             if (mListener != null) {
                 mListener.onReset(this);
@@ -4052,138 +4222,214 @@ public class RandomWalkEstimator implements AccelerometerBiasRandomWalkSource,
     }
 
     /**
-     * Gets estimated position variance expressed in squared meters (m^2).
-     * This can be used by {@link INSLooselyCoupledKalmanConfig} and
-     * {@link INSLooselyCoupledKalmanInitializerConfig}.
+     * Gets estimated position noise variance expressed in squared meters (m^2).
+     * This can be used by {@link INSLooselyCoupledKalmanConfig}.
      *
      * @return position variance.
      */
-    public double getPositionVariance() {
-        return mPositionVariance;
+    public double getPositionNoiseVariance() {
+        return mVarPositionDrift;
     }
 
     /**
-     * Gets estimated velocity variance expressed in (m^2/s^2).
-     * This can be used by {@link INSLooselyCoupledKalmanConfig} and
-     * {@link INSLooselyCoupledKalmanInitializerConfig}.
+     * Gets estimated velocity noise variance expressed in (m^2/s^2).
+     * This can be used by {@link INSLooselyCoupledKalmanConfig}.
      *
      * @return velocity variance.
      */
-    public double getVelocityVariance() {
-        return mVelocityVariance;
+    public double getVelocityNoiseVariance() {
+        return mVarVelocityDrift;
     }
 
     /**
-     * Gets estimated attitude variance expressed in squared radians (rad^2).
-     * This can be used by {@link INSLooselyCoupledKalmanInitializerConfig}.
+     * Gets estimated attitude noise variance expressed in squared radians (rad^2).
      *
      * @return attitude variance.
      */
-    public double getAttitudeVariance() {
-        return mAttitudeVariance;
+    public double getAttitudeNoiseVariance() {
+        return mVarAttitudeDrift;
     }
 
     /**
      * Gets standard deviation of position noise expressed in meters (m).
-     * This can be used by {@link INSLooselyCoupledKalmanConfig} and
-     * {@link INSLooselyCoupledKalmanInitializerConfig}.
+     * This can be used by {@link INSLooselyCoupledKalmanConfig}.
      *
      * @return standard deviation of position noise.
      */
     @Override
-    public double getPositionStandardDeviation() {
-        return Math.sqrt(mPositionVariance);
+    public double getPositionNoiseStandardDeviation() {
+        return Math.sqrt(mVarPositionDrift);
     }
 
     /**
      * Gets standard deviation of position noise.
-     * This can be used by {@link INSLooselyCoupledKalmanConfig} and
-     * {@link INSLooselyCoupledKalmanInitializerConfig}.
+     * This can be used by {@link INSLooselyCoupledKalmanConfig}.
      *
      * @return standard deviation of position noise.
      */
-    public Distance getPositionStandardDeviationAsDistance() {
-        return new Distance(getPositionStandardDeviation(), DistanceUnit.METER);
+    public Distance getPositionNoiseStandardDeviationAsDistance() {
+        return new Distance(getPositionNoiseStandardDeviation(),
+                DistanceUnit.METER);
     }
 
     /**
      * Gets standard deviation of position noise.
-     * This can be used by {@link INSLooselyCoupledKalmanConfig} and
-     * {@link INSLooselyCoupledKalmanInitializerConfig}.
+     * This can be used by {@link INSLooselyCoupledKalmanConfig}.
      *
      * @param result instance where result will be stored.
      */
-    public void getPositionStandardDeviationAsDistance(final Distance result) {
-        result.setValue(getPositionStandardDeviation());
+    public void getPositionNoiseStandardDeviationAsDistance(
+            final Distance result) {
+        result.setValue(getPositionNoiseStandardDeviation());
         result.setUnit(DistanceUnit.METER);
     }
 
     /**
      * Gets standard deviation of velocity noise expressed in meters per second
      * (m/s).
-     * This can be used by {@link INSLooselyCoupledKalmanConfig} and
-     * {@link INSLooselyCoupledKalmanInitializerConfig}.
+     * This can be used by {@link INSLooselyCoupledKalmanConfig}.
      *
      * @return standard deviation of velocity noise.
      */
     @Override
-    public double getVelocityStandardDeviation() {
-        return Math.sqrt(mVelocityVariance);
+    public double getVelocityNoiseStandardDeviation() {
+        return Math.sqrt(mVarVelocityDrift);
     }
 
     /**
      * Gets standard deviation of velocity noise.
-     * This can be used by {@link INSLooselyCoupledKalmanConfig} and
-     * {@link INSLooselyCoupledKalmanInitializerConfig}.
+     * This can be used by {@link INSLooselyCoupledKalmanConfig}.
      *
      * @return standard deviation of velocity noise.
      */
-    public Speed getVelocityStandardDeviationAsSpeed() {
-        return new Speed(getVelocityStandardDeviation(),
+    public Speed getVelocityNoiseStandardDeviationAsSpeed() {
+        return new Speed(getVelocityNoiseStandardDeviation(),
                 SpeedUnit.METERS_PER_SECOND);
     }
 
     /**
      * Gets standard deviation of velocity noise.
-     * This can be used by {@link INSLooselyCoupledKalmanConfig} and
-     * {@link INSLooselyCoupledKalmanInitializerConfig}.
+     * This can be used by {@link INSLooselyCoupledKalmanConfig}.
      *
      * @param result instance where result will be stored.
      */
-    public void getVelocityStandardDeviationAsSpeed(final Speed result) {
-        result.setValue(getVelocityStandardDeviation());
+    public void getVelocityNoiseStandardDeviationAsSpeed(final Speed result) {
+        result.setValue(getVelocityNoiseStandardDeviation());
         result.setUnit(SpeedUnit.METERS_PER_SECOND);
     }
 
     /**
      * Gets standard deviation of attitude noise expressed in radians (rad).
-     * This can be used by {@link INSLooselyCoupledKalmanInitializerConfig}.
      *
      * @return standard deviation of attitude noise.
      */
-    @Override
-    public double getAttitudeStandardDeviation() {
-        return Math.sqrt(mAttitudeVariance);
+    public double getAttitudeNoiseStandardDeviation() {
+        return Math.sqrt(mVarAttitudeDrift);
     }
 
     /**
      * Gets standard deviation of attitude noise.
-     * This can be used by {@link INSLooselyCoupledKalmanInitializerConfig}.
      *
      * @return standard deviation of attitude noise.
      */
-    public Angle getAttitudeStandardDeviationAsAngle() {
-        return new Angle(getAttitudeStandardDeviation(), AngleUnit.RADIANS);
+    public Angle getAttitudeNoiseStandardDeviationAsAngle() {
+        return new Angle(getAttitudeNoiseStandardDeviation(), AngleUnit.RADIANS);
     }
 
     /**
      * Gets standard deviation of attitude noise.
-     * This can be used by {@link INSLooselyCoupledKalmanInitializerConfig}.
      *
      * @param result instance where result will be stored.
      */
-    public void getAttitudeStandardDeviationAsAngle(final Angle result) {
-        result.setValue(getAttitudeStandardDeviation());
+    public void getAttitudeNoiseStandardDeviationAsAngle(final Angle result) {
+        result.setValue(getAttitudeNoiseStandardDeviation());
+        result.setUnit(AngleUnit.RADIANS);
+    }
+
+    /**
+     * Gets position uncertainty expressed in meters (m).
+     *
+     * @return position uncertainty.
+     */
+    @Override
+    public double getPositionUncertainty() {
+        return mAvgPositionDrift;
+    }
+
+    /**
+     * Gets position uncertainty.
+     *
+     * @return position uncertainty.
+     */
+    public Distance getPositionUncertaintyAsDistance() {
+        return new Distance(getPositionUncertainty(), DistanceUnit.METER);
+    }
+
+    /**
+     * Gets position uncertainty.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getPositionUncertaintyAsDistance(final Distance result) {
+        result.setValue(getPositionUncertainty());
+        result.setUnit(DistanceUnit.METER);
+    }
+
+    /**
+     * Gets velocity uncertainty expressed in meters per second (m/s).
+     *
+     * @return velocity uncertainty.
+     */
+    @Override
+    public double getVelocityUncertainty() {
+        return mAvgVelocityDrift;
+    }
+
+    /**
+     * Gets velocity uncertainty.
+     *
+     * @return velocity uncertainty.
+     */
+    public Speed getVelocityUncertaintyAsSpeed() {
+        return new Speed(getVelocityUncertainty(), SpeedUnit.METERS_PER_SECOND);
+    }
+
+    /**
+     * Gets velocity uncertainty.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getVelocityUncertaintyAsSpeed(final Speed result) {
+        result.setValue(getVelocityUncertainty());
+        result.setUnit(SpeedUnit.METERS_PER_SECOND);
+    }
+
+    /**
+     * Gets attitude uncertainty expressed in radians (rad).
+     *
+     * @return attitude uncertainty.
+     */
+    @Override
+    public double getAttitudeUncertainty() {
+        return mAvgAttitudeDrift;
+    }
+
+    /**
+     * Gets attitude uncertainty.
+     *
+     * @return attitude uncertainty.
+     */
+    public Angle getAttitudeUncertaintyAsAngle() {
+        return new Angle(getAttitudeUncertainty(), AngleUnit.RADIANS);
+    }
+
+    /**
+     * Gets attitude uncertainty.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getAttitudeUncertaintyAsAngle(final Angle result) {
+        result.setValue(getAttitudeUncertainty());
         result.setUnit(AngleUnit.RADIANS);
     }
 

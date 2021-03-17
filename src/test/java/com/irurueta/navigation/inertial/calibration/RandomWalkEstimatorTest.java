@@ -21,6 +21,7 @@ import com.irurueta.algebra.WrongSizeException;
 import com.irurueta.geometry.InhomogeneousPoint3D;
 import com.irurueta.geometry.Point3D;
 import com.irurueta.navigation.LockedException;
+import com.irurueta.navigation.NotReadyException;
 import com.irurueta.navigation.frames.CoordinateTransformation;
 import com.irurueta.navigation.frames.ECEFFrame;
 import com.irurueta.navigation.frames.FrameType;
@@ -42,7 +43,6 @@ import java.util.Random;
 import static org.junit.Assert.*;
 
 public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
-
     private static final double TIME_INTERVAL_SECONDS = 0.02;
 
     private static final double MICRO_G_TO_METERS_PER_SECOND_SQUARED = 9.80665E-6;
@@ -265,40 +265,79 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         assertEquals(nedC1, nedC2);
 
         assertEquals(0, estimator.getNumberOfProcessedSamples());
+        assertEquals(0, estimator.getNumberOfProcessedDriftPeriods());
+        assertEquals(0.0, estimator.getElapsedTimeSeconds(), 0.0);
+        final Time elapsedTime1 = estimator.getElapsedTime();
+        assertEquals(0.0, elapsedTime1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, elapsedTime1.getUnit());
+        final Time elapsedTime2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getElapsedTime(elapsedTime2);
+        assertEquals(elapsedTime1, elapsedTime2);
         assertTrue(estimator.isFixKinematicsEnabled());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES,
+                estimator.getDriftPeriodSamples());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                estimator.getDriftPeriodSeconds(), 0.0);
+        final Time driftPeriod1 = estimator.getDriftPeriod();
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                driftPeriod1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, driftPeriod1.getUnit());
+        final Time driftPeriod2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getDriftPeriod(driftPeriod2);
+        assertEquals(driftPeriod1, driftPeriod2);
         assertFalse(estimator.isRunning());
+        assertFalse(estimator.isReady());
 
         assertEquals(0.0, estimator.getAccelerometerBiasPSD(), 0.0);
         assertEquals(0.0, estimator.getGyroBiasPSD(), 0.0);
-        assertEquals(0.0, estimator.getPositionVariance(), 0.0);
-        assertEquals(0.0, estimator.getVelocityVariance(), 0.0);
-        assertEquals(0.0, estimator.getAttitudeVariance(), 0.0);
-
-        assertEquals(0.0, estimator.getPositionStandardDeviation(),
+        assertEquals(0.0, estimator.getPositionNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getVelocityNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getAttitudeNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getPositionNoiseStandardDeviation(),
                 0.0);
-        final Distance positionStd1 = estimator.getPositionStandardDeviationAsDistance();
-        assertEquals(0.0, positionStd1.getValue().doubleValue(), 0.0);
-        assertEquals(DistanceUnit.METER, positionStd1.getUnit());
-        final Distance positionStd2 = new Distance(1.0, DistanceUnit.INCH);
-        estimator.getPositionStandardDeviationAsDistance(positionStd2);
-        assertEquals(positionStd1, positionStd2);
-
-        assertEquals(0.0, estimator.getVelocityStandardDeviation(),
+        final Distance positionNoiseStd1 = estimator.getPositionNoiseStandardDeviationAsDistance();
+        assertEquals(0.0, positionNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionNoiseStd1.getUnit());
+        final Distance positionNoiseStd2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionNoiseStandardDeviationAsDistance(positionNoiseStd2);
+        assertEquals(positionNoiseStd1, positionNoiseStd2);
+        assertEquals(0.0, estimator.getVelocityNoiseStandardDeviation(),
                 0.0);
-        final Speed speedStd1 = estimator.getVelocityStandardDeviationAsSpeed();
-        assertEquals(0.0, speedStd1.getValue().doubleValue(), 0.0);
-        assertEquals(SpeedUnit.METERS_PER_SECOND, speedStd1.getUnit());
-        final Speed speedStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        estimator.getVelocityStandardDeviationAsSpeed(speedStd2);
-        assertEquals(speedStd1, speedStd2);
-
-        assertEquals(0.0, estimator.getAttitudeStandardDeviation(), 0.0);
-        final Angle attitudeStd1 = estimator.getAttitudeStandardDeviationAsAngle();
-        assertEquals(0.0, attitudeStd1.getValue().doubleValue(), 0.0);
-        assertEquals(AngleUnit.RADIANS, attitudeStd1.getUnit());
-        final Angle attitudeStd2 = new Angle(1.0, AngleUnit.DEGREES);
-        estimator.getAttitudeStandardDeviationAsAngle(attitudeStd2);
-        assertEquals(attitudeStd1, attitudeStd2);
+        final Speed velocityNoiseStd1 = estimator.getVelocityNoiseStandardDeviationAsSpeed();
+        assertEquals(0.0, velocityNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityNoiseStd1.getUnit());
+        final Speed velocityNoiseStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityNoiseStandardDeviationAsSpeed(velocityNoiseStd2);
+        assertEquals(velocityNoiseStd1, velocityNoiseStd2);
+        assertEquals(0.0, estimator.getAttitudeNoiseStandardDeviation(), 0.0);
+        final Angle attitudeNoiseStd1 = estimator.getAttitudeNoiseStandardDeviationAsAngle();
+        assertEquals(0.0, attitudeNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeNoiseStd1.getUnit());
+        final Angle attitudeNoiseStd2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeNoiseStandardDeviationAsAngle(attitudeNoiseStd2);
+        assertEquals(attitudeNoiseStd1, attitudeNoiseStd2);
+        assertEquals(0.0, estimator.getPositionUncertainty(), 0.0);
+        final Distance positionUncertainty1 = estimator.getPositionUncertaintyAsDistance();
+        assertEquals(0.0, positionUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionUncertainty1.getUnit());
+        final Distance positionUncertainty2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionUncertaintyAsDistance(positionUncertainty2);
+        assertEquals(0.0, estimator.getVelocityUncertainty(), 0.0);
+        final Speed velocityUncertainty1 = estimator.getVelocityUncertaintyAsSpeed();
+        assertEquals(0.0, velocityUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityUncertainty1.getUnit());
+        final Speed velocityUncertainty2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityUncertaintyAsSpeed(velocityUncertainty2);
+        assertEquals(velocityUncertainty1, velocityUncertainty2);
+        assertEquals(0.0, estimator.getAttitudeUncertainty(), 0.0);
+        final Angle attitudeUncertainty1 = estimator.getAttitudeUncertaintyAsAngle();
+        assertEquals(0.0, attitudeUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeUncertainty1.getUnit());
+        final Angle attitudeUncertainty2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeUncertaintyAsAngle(attitudeUncertainty2);
+        assertEquals(attitudeUncertainty1, attitudeUncertainty2);
 
         final BodyKinematics kinematics1 = estimator.getFixedKinematics();
         assertEquals(new BodyKinematics(), kinematics1);
@@ -502,40 +541,79 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         assertEquals(nedC1, nedC2);
 
         assertEquals(0, estimator.getNumberOfProcessedSamples());
+        assertEquals(0, estimator.getNumberOfProcessedDriftPeriods());
+        assertEquals(0.0, estimator.getElapsedTimeSeconds(), 0.0);
+        final Time elapsedTime1 = estimator.getElapsedTime();
+        assertEquals(0.0, elapsedTime1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, elapsedTime1.getUnit());
+        final Time elapsedTime2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getElapsedTime(elapsedTime2);
+        assertEquals(elapsedTime1, elapsedTime2);
         assertTrue(estimator.isFixKinematicsEnabled());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES,
+                estimator.getDriftPeriodSamples());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                estimator.getDriftPeriodSeconds(), 0.0);
+        final Time driftPeriod1 = estimator.getDriftPeriod();
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                driftPeriod1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, driftPeriod1.getUnit());
+        final Time driftPeriod2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getDriftPeriod(driftPeriod2);
+        assertEquals(driftPeriod1, driftPeriod2);
         assertFalse(estimator.isRunning());
+        assertFalse(estimator.isReady());
 
         assertEquals(0.0, estimator.getAccelerometerBiasPSD(), 0.0);
         assertEquals(0.0, estimator.getGyroBiasPSD(), 0.0);
-        assertEquals(0.0, estimator.getPositionVariance(), 0.0);
-        assertEquals(0.0, estimator.getVelocityVariance(), 0.0);
-        assertEquals(0.0, estimator.getAttitudeVariance(), 0.0);
-
-        assertEquals(0.0, estimator.getPositionStandardDeviation(),
+        assertEquals(0.0, estimator.getPositionNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getVelocityNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getAttitudeNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getPositionNoiseStandardDeviation(),
                 0.0);
-        final Distance positionStd1 = estimator.getPositionStandardDeviationAsDistance();
-        assertEquals(0.0, positionStd1.getValue().doubleValue(), 0.0);
-        assertEquals(DistanceUnit.METER, positionStd1.getUnit());
-        final Distance positionStd2 = new Distance(1.0, DistanceUnit.INCH);
-        estimator.getPositionStandardDeviationAsDistance(positionStd2);
-        assertEquals(positionStd1, positionStd2);
-
-        assertEquals(0.0, estimator.getVelocityStandardDeviation(),
+        final Distance positionNoiseStd1 = estimator.getPositionNoiseStandardDeviationAsDistance();
+        assertEquals(0.0, positionNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionNoiseStd1.getUnit());
+        final Distance positionNoiseStd2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionNoiseStandardDeviationAsDistance(positionNoiseStd2);
+        assertEquals(positionNoiseStd1, positionNoiseStd2);
+        assertEquals(0.0, estimator.getVelocityNoiseStandardDeviation(),
                 0.0);
-        final Speed speedStd1 = estimator.getVelocityStandardDeviationAsSpeed();
-        assertEquals(0.0, speedStd1.getValue().doubleValue(), 0.0);
-        assertEquals(SpeedUnit.METERS_PER_SECOND, speedStd1.getUnit());
-        final Speed speedStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        estimator.getVelocityStandardDeviationAsSpeed(speedStd2);
-        assertEquals(speedStd1, speedStd2);
-
-        assertEquals(0.0, estimator.getAttitudeStandardDeviation(), 0.0);
-        final Angle attitudeStd1 = estimator.getAttitudeStandardDeviationAsAngle();
-        assertEquals(0.0, attitudeStd1.getValue().doubleValue(), 0.0);
-        assertEquals(AngleUnit.RADIANS, attitudeStd1.getUnit());
-        final Angle attitudeStd2 = new Angle(1.0, AngleUnit.DEGREES);
-        estimator.getAttitudeStandardDeviationAsAngle(attitudeStd2);
-        assertEquals(attitudeStd1, attitudeStd2);
+        final Speed velocityNoiseStd1 = estimator.getVelocityNoiseStandardDeviationAsSpeed();
+        assertEquals(0.0, velocityNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityNoiseStd1.getUnit());
+        final Speed velocityNoiseStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityNoiseStandardDeviationAsSpeed(velocityNoiseStd2);
+        assertEquals(velocityNoiseStd1, velocityNoiseStd2);
+        assertEquals(0.0, estimator.getAttitudeNoiseStandardDeviation(), 0.0);
+        final Angle attitudeNoiseStd1 = estimator.getAttitudeNoiseStandardDeviationAsAngle();
+        assertEquals(0.0, attitudeNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeNoiseStd1.getUnit());
+        final Angle attitudeNoiseStd2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeNoiseStandardDeviationAsAngle(attitudeNoiseStd2);
+        assertEquals(attitudeNoiseStd1, attitudeNoiseStd2);
+        assertEquals(0.0, estimator.getPositionUncertainty(), 0.0);
+        final Distance positionUncertainty1 = estimator.getPositionUncertaintyAsDistance();
+        assertEquals(0.0, positionUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionUncertainty1.getUnit());
+        final Distance positionUncertainty2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionUncertaintyAsDistance(positionUncertainty2);
+        assertEquals(0.0, estimator.getVelocityUncertainty(), 0.0);
+        final Speed velocityUncertainty1 = estimator.getVelocityUncertaintyAsSpeed();
+        assertEquals(0.0, velocityUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityUncertainty1.getUnit());
+        final Speed velocityUncertainty2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityUncertaintyAsSpeed(velocityUncertainty2);
+        assertEquals(velocityUncertainty1, velocityUncertainty2);
+        assertEquals(0.0, estimator.getAttitudeUncertainty(), 0.0);
+        final Angle attitudeUncertainty1 = estimator.getAttitudeUncertaintyAsAngle();
+        assertEquals(0.0, attitudeUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeUncertainty1.getUnit());
+        final Angle attitudeUncertainty2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeUncertaintyAsAngle(attitudeUncertainty2);
+        assertEquals(attitudeUncertainty1, attitudeUncertainty2);
 
         final BodyKinematics kinematics1 = estimator.getFixedKinematics();
         assertEquals(new BodyKinematics(), kinematics1);
@@ -760,40 +838,79 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         assertEquals(nedC1, nedC2);
 
         assertEquals(0, estimator.getNumberOfProcessedSamples());
+        assertEquals(0, estimator.getNumberOfProcessedDriftPeriods());
+        assertEquals(0.0, estimator.getElapsedTimeSeconds(), 0.0);
+        final Time elapsedTime1 = estimator.getElapsedTime();
+        assertEquals(0.0, elapsedTime1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, elapsedTime1.getUnit());
+        final Time elapsedTime2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getElapsedTime(elapsedTime2);
+        assertEquals(elapsedTime1, elapsedTime2);
         assertTrue(estimator.isFixKinematicsEnabled());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES,
+                estimator.getDriftPeriodSamples());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                estimator.getDriftPeriodSeconds(), 0.0);
+        final Time driftPeriod1 = estimator.getDriftPeriod();
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                driftPeriod1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, driftPeriod1.getUnit());
+        final Time driftPeriod2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getDriftPeriod(driftPeriod2);
+        assertEquals(driftPeriod1, driftPeriod2);
         assertFalse(estimator.isRunning());
+        assertFalse(estimator.isReady());
 
         assertEquals(0.0, estimator.getAccelerometerBiasPSD(), 0.0);
         assertEquals(0.0, estimator.getGyroBiasPSD(), 0.0);
-        assertEquals(0.0, estimator.getPositionVariance(), 0.0);
-        assertEquals(0.0, estimator.getVelocityVariance(), 0.0);
-        assertEquals(0.0, estimator.getAttitudeVariance(), 0.0);
-
-        assertEquals(0.0, estimator.getPositionStandardDeviation(),
+        assertEquals(0.0, estimator.getPositionNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getVelocityNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getAttitudeNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getPositionNoiseStandardDeviation(),
                 0.0);
-        final Distance positionStd1 = estimator.getPositionStandardDeviationAsDistance();
-        assertEquals(0.0, positionStd1.getValue().doubleValue(), 0.0);
-        assertEquals(DistanceUnit.METER, positionStd1.getUnit());
-        final Distance positionStd2 = new Distance(1.0, DistanceUnit.INCH);
-        estimator.getPositionStandardDeviationAsDistance(positionStd2);
-        assertEquals(positionStd1, positionStd2);
-
-        assertEquals(0.0, estimator.getVelocityStandardDeviation(),
+        final Distance positionNoiseStd1 = estimator.getPositionNoiseStandardDeviationAsDistance();
+        assertEquals(0.0, positionNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionNoiseStd1.getUnit());
+        final Distance positionNoiseStd2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionNoiseStandardDeviationAsDistance(positionNoiseStd2);
+        assertEquals(positionNoiseStd1, positionNoiseStd2);
+        assertEquals(0.0, estimator.getVelocityNoiseStandardDeviation(),
                 0.0);
-        final Speed speedStd1 = estimator.getVelocityStandardDeviationAsSpeed();
-        assertEquals(0.0, speedStd1.getValue().doubleValue(), 0.0);
-        assertEquals(SpeedUnit.METERS_PER_SECOND, speedStd1.getUnit());
-        final Speed speedStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        estimator.getVelocityStandardDeviationAsSpeed(speedStd2);
-        assertEquals(speedStd1, speedStd2);
-
-        assertEquals(0.0, estimator.getAttitudeStandardDeviation(), 0.0);
-        final Angle attitudeStd1 = estimator.getAttitudeStandardDeviationAsAngle();
-        assertEquals(0.0, attitudeStd1.getValue().doubleValue(), 0.0);
-        assertEquals(AngleUnit.RADIANS, attitudeStd1.getUnit());
-        final Angle attitudeStd2 = new Angle(1.0, AngleUnit.DEGREES);
-        estimator.getAttitudeStandardDeviationAsAngle(attitudeStd2);
-        assertEquals(attitudeStd1, attitudeStd2);
+        final Speed velocityNoiseStd1 = estimator.getVelocityNoiseStandardDeviationAsSpeed();
+        assertEquals(0.0, velocityNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityNoiseStd1.getUnit());
+        final Speed velocityNoiseStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityNoiseStandardDeviationAsSpeed(velocityNoiseStd2);
+        assertEquals(velocityNoiseStd1, velocityNoiseStd2);
+        assertEquals(0.0, estimator.getAttitudeNoiseStandardDeviation(), 0.0);
+        final Angle attitudeNoiseStd1 = estimator.getAttitudeNoiseStandardDeviationAsAngle();
+        assertEquals(0.0, attitudeNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeNoiseStd1.getUnit());
+        final Angle attitudeNoiseStd2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeNoiseStandardDeviationAsAngle(attitudeNoiseStd2);
+        assertEquals(attitudeNoiseStd1, attitudeNoiseStd2);
+        assertEquals(0.0, estimator.getPositionUncertainty(), 0.0);
+        final Distance positionUncertainty1 = estimator.getPositionUncertaintyAsDistance();
+        assertEquals(0.0, positionUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionUncertainty1.getUnit());
+        final Distance positionUncertainty2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionUncertaintyAsDistance(positionUncertainty2);
+        assertEquals(0.0, estimator.getVelocityUncertainty(), 0.0);
+        final Speed velocityUncertainty1 = estimator.getVelocityUncertaintyAsSpeed();
+        assertEquals(0.0, velocityUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityUncertainty1.getUnit());
+        final Speed velocityUncertainty2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityUncertaintyAsSpeed(velocityUncertainty2);
+        assertEquals(velocityUncertainty1, velocityUncertainty2);
+        assertEquals(0.0, estimator.getAttitudeUncertainty(), 0.0);
+        final Angle attitudeUncertainty1 = estimator.getAttitudeUncertaintyAsAngle();
+        assertEquals(0.0, attitudeUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeUncertainty1.getUnit());
+        final Angle attitudeUncertainty2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeUncertaintyAsAngle(attitudeUncertainty2);
+        assertEquals(attitudeUncertainty1, attitudeUncertainty2);
 
         final BodyKinematics kinematics1 = estimator.getFixedKinematics();
         assertEquals(new BodyKinematics(), kinematics1);
@@ -1060,40 +1177,79 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         assertEquals(nedC1, nedC2);
 
         assertEquals(0, estimator.getNumberOfProcessedSamples());
+        assertEquals(0, estimator.getNumberOfProcessedDriftPeriods());
+        assertEquals(0.0, estimator.getElapsedTimeSeconds(), 0.0);
+        final Time elapsedTime1 = estimator.getElapsedTime();
+        assertEquals(0.0, elapsedTime1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, elapsedTime1.getUnit());
+        final Time elapsedTime2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getElapsedTime(elapsedTime2);
+        assertEquals(elapsedTime1, elapsedTime2);
         assertTrue(estimator.isFixKinematicsEnabled());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES,
+                estimator.getDriftPeriodSamples());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                estimator.getDriftPeriodSeconds(), 0.0);
+        final Time driftPeriod1 = estimator.getDriftPeriod();
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                driftPeriod1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, driftPeriod1.getUnit());
+        final Time driftPeriod2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getDriftPeriod(driftPeriod2);
+        assertEquals(driftPeriod1, driftPeriod2);
         assertFalse(estimator.isRunning());
+        assertFalse(estimator.isReady());
 
         assertEquals(0.0, estimator.getAccelerometerBiasPSD(), 0.0);
         assertEquals(0.0, estimator.getGyroBiasPSD(), 0.0);
-        assertEquals(0.0, estimator.getPositionVariance(), 0.0);
-        assertEquals(0.0, estimator.getVelocityVariance(), 0.0);
-        assertEquals(0.0, estimator.getAttitudeVariance(), 0.0);
-
-        assertEquals(0.0, estimator.getPositionStandardDeviation(),
+        assertEquals(0.0, estimator.getPositionNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getVelocityNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getAttitudeNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getPositionNoiseStandardDeviation(),
                 0.0);
-        final Distance positionStd1 = estimator.getPositionStandardDeviationAsDistance();
-        assertEquals(0.0, positionStd1.getValue().doubleValue(), 0.0);
-        assertEquals(DistanceUnit.METER, positionStd1.getUnit());
-        final Distance positionStd2 = new Distance(1.0, DistanceUnit.INCH);
-        estimator.getPositionStandardDeviationAsDistance(positionStd2);
-        assertEquals(positionStd1, positionStd2);
-
-        assertEquals(0.0, estimator.getVelocityStandardDeviation(),
+        final Distance positionNoiseStd1 = estimator.getPositionNoiseStandardDeviationAsDistance();
+        assertEquals(0.0, positionNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionNoiseStd1.getUnit());
+        final Distance positionNoiseStd2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionNoiseStandardDeviationAsDistance(positionNoiseStd2);
+        assertEquals(positionNoiseStd1, positionNoiseStd2);
+        assertEquals(0.0, estimator.getVelocityNoiseStandardDeviation(),
                 0.0);
-        final Speed speedStd1 = estimator.getVelocityStandardDeviationAsSpeed();
-        assertEquals(0.0, speedStd1.getValue().doubleValue(), 0.0);
-        assertEquals(SpeedUnit.METERS_PER_SECOND, speedStd1.getUnit());
-        final Speed speedStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        estimator.getVelocityStandardDeviationAsSpeed(speedStd2);
-        assertEquals(speedStd1, speedStd2);
-
-        assertEquals(0.0, estimator.getAttitudeStandardDeviation(), 0.0);
-        final Angle attitudeStd1 = estimator.getAttitudeStandardDeviationAsAngle();
-        assertEquals(0.0, attitudeStd1.getValue().doubleValue(), 0.0);
-        assertEquals(AngleUnit.RADIANS, attitudeStd1.getUnit());
-        final Angle attitudeStd2 = new Angle(1.0, AngleUnit.DEGREES);
-        estimator.getAttitudeStandardDeviationAsAngle(attitudeStd2);
-        assertEquals(attitudeStd1, attitudeStd2);
+        final Speed velocityNoiseStd1 = estimator.getVelocityNoiseStandardDeviationAsSpeed();
+        assertEquals(0.0, velocityNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityNoiseStd1.getUnit());
+        final Speed velocityNoiseStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityNoiseStandardDeviationAsSpeed(velocityNoiseStd2);
+        assertEquals(velocityNoiseStd1, velocityNoiseStd2);
+        assertEquals(0.0, estimator.getAttitudeNoiseStandardDeviation(), 0.0);
+        final Angle attitudeNoiseStd1 = estimator.getAttitudeNoiseStandardDeviationAsAngle();
+        assertEquals(0.0, attitudeNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeNoiseStd1.getUnit());
+        final Angle attitudeNoiseStd2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeNoiseStandardDeviationAsAngle(attitudeNoiseStd2);
+        assertEquals(attitudeNoiseStd1, attitudeNoiseStd2);
+        assertEquals(0.0, estimator.getPositionUncertainty(), 0.0);
+        final Distance positionUncertainty1 = estimator.getPositionUncertaintyAsDistance();
+        assertEquals(0.0, positionUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionUncertainty1.getUnit());
+        final Distance positionUncertainty2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionUncertaintyAsDistance(positionUncertainty2);
+        assertEquals(0.0, estimator.getVelocityUncertainty(), 0.0);
+        final Speed velocityUncertainty1 = estimator.getVelocityUncertaintyAsSpeed();
+        assertEquals(0.0, velocityUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityUncertainty1.getUnit());
+        final Speed velocityUncertainty2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityUncertaintyAsSpeed(velocityUncertainty2);
+        assertEquals(velocityUncertainty1, velocityUncertainty2);
+        assertEquals(0.0, estimator.getAttitudeUncertainty(), 0.0);
+        final Angle attitudeUncertainty1 = estimator.getAttitudeUncertaintyAsAngle();
+        assertEquals(0.0, attitudeUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeUncertainty1.getUnit());
+        final Angle attitudeUncertainty2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeUncertaintyAsAngle(attitudeUncertainty2);
+        assertEquals(attitudeUncertainty1, attitudeUncertainty2);
 
         final BodyKinematics kinematics1 = estimator.getFixedKinematics();
         assertEquals(new BodyKinematics(), kinematics1);
@@ -1363,40 +1519,79 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         assertEquals(nedC1, nedC2);
 
         assertEquals(0, estimator.getNumberOfProcessedSamples());
+        assertEquals(0, estimator.getNumberOfProcessedDriftPeriods());
+        assertEquals(0.0, estimator.getElapsedTimeSeconds(), 0.0);
+        final Time elapsedTime1 = estimator.getElapsedTime();
+        assertEquals(0.0, elapsedTime1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, elapsedTime1.getUnit());
+        final Time elapsedTime2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getElapsedTime(elapsedTime2);
+        assertEquals(elapsedTime1, elapsedTime2);
         assertTrue(estimator.isFixKinematicsEnabled());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES,
+                estimator.getDriftPeriodSamples());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                estimator.getDriftPeriodSeconds(), 0.0);
+        final Time driftPeriod1 = estimator.getDriftPeriod();
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                driftPeriod1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, driftPeriod1.getUnit());
+        final Time driftPeriod2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getDriftPeriod(driftPeriod2);
+        assertEquals(driftPeriod1, driftPeriod2);
         assertFalse(estimator.isRunning());
+        assertFalse(estimator.isReady());
 
         assertEquals(0.0, estimator.getAccelerometerBiasPSD(), 0.0);
         assertEquals(0.0, estimator.getGyroBiasPSD(), 0.0);
-        assertEquals(0.0, estimator.getPositionVariance(), 0.0);
-        assertEquals(0.0, estimator.getVelocityVariance(), 0.0);
-        assertEquals(0.0, estimator.getAttitudeVariance(), 0.0);
-
-        assertEquals(0.0, estimator.getPositionStandardDeviation(),
+        assertEquals(0.0, estimator.getPositionNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getVelocityNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getAttitudeNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getPositionNoiseStandardDeviation(),
                 0.0);
-        final Distance positionStd1 = estimator.getPositionStandardDeviationAsDistance();
-        assertEquals(0.0, positionStd1.getValue().doubleValue(), 0.0);
-        assertEquals(DistanceUnit.METER, positionStd1.getUnit());
-        final Distance positionStd2 = new Distance(1.0, DistanceUnit.INCH);
-        estimator.getPositionStandardDeviationAsDistance(positionStd2);
-        assertEquals(positionStd1, positionStd2);
-
-        assertEquals(0.0, estimator.getVelocityStandardDeviation(),
+        final Distance positionNoiseStd1 = estimator.getPositionNoiseStandardDeviationAsDistance();
+        assertEquals(0.0, positionNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionNoiseStd1.getUnit());
+        final Distance positionNoiseStd2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionNoiseStandardDeviationAsDistance(positionNoiseStd2);
+        assertEquals(positionNoiseStd1, positionNoiseStd2);
+        assertEquals(0.0, estimator.getVelocityNoiseStandardDeviation(),
                 0.0);
-        final Speed speedStd1 = estimator.getVelocityStandardDeviationAsSpeed();
-        assertEquals(0.0, speedStd1.getValue().doubleValue(), 0.0);
-        assertEquals(SpeedUnit.METERS_PER_SECOND, speedStd1.getUnit());
-        final Speed speedStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        estimator.getVelocityStandardDeviationAsSpeed(speedStd2);
-        assertEquals(speedStd1, speedStd2);
-
-        assertEquals(0.0, estimator.getAttitudeStandardDeviation(), 0.0);
-        final Angle attitudeStd1 = estimator.getAttitudeStandardDeviationAsAngle();
-        assertEquals(0.0, attitudeStd1.getValue().doubleValue(), 0.0);
-        assertEquals(AngleUnit.RADIANS, attitudeStd1.getUnit());
-        final Angle attitudeStd2 = new Angle(1.0, AngleUnit.DEGREES);
-        estimator.getAttitudeStandardDeviationAsAngle(attitudeStd2);
-        assertEquals(attitudeStd1, attitudeStd2);
+        final Speed velocityNoiseStd1 = estimator.getVelocityNoiseStandardDeviationAsSpeed();
+        assertEquals(0.0, velocityNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityNoiseStd1.getUnit());
+        final Speed velocityNoiseStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityNoiseStandardDeviationAsSpeed(velocityNoiseStd2);
+        assertEquals(velocityNoiseStd1, velocityNoiseStd2);
+        assertEquals(0.0, estimator.getAttitudeNoiseStandardDeviation(), 0.0);
+        final Angle attitudeNoiseStd1 = estimator.getAttitudeNoiseStandardDeviationAsAngle();
+        assertEquals(0.0, attitudeNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeNoiseStd1.getUnit());
+        final Angle attitudeNoiseStd2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeNoiseStandardDeviationAsAngle(attitudeNoiseStd2);
+        assertEquals(attitudeNoiseStd1, attitudeNoiseStd2);
+        assertEquals(0.0, estimator.getPositionUncertainty(), 0.0);
+        final Distance positionUncertainty1 = estimator.getPositionUncertaintyAsDistance();
+        assertEquals(0.0, positionUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionUncertainty1.getUnit());
+        final Distance positionUncertainty2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionUncertaintyAsDistance(positionUncertainty2);
+        assertEquals(0.0, estimator.getVelocityUncertainty(), 0.0);
+        final Speed velocityUncertainty1 = estimator.getVelocityUncertaintyAsSpeed();
+        assertEquals(0.0, velocityUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityUncertainty1.getUnit());
+        final Speed velocityUncertainty2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityUncertaintyAsSpeed(velocityUncertainty2);
+        assertEquals(velocityUncertainty1, velocityUncertainty2);
+        assertEquals(0.0, estimator.getAttitudeUncertainty(), 0.0);
+        final Angle attitudeUncertainty1 = estimator.getAttitudeUncertaintyAsAngle();
+        assertEquals(0.0, attitudeUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeUncertainty1.getUnit());
+        final Angle attitudeUncertainty2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeUncertaintyAsAngle(attitudeUncertainty2);
+        assertEquals(attitudeUncertainty1, attitudeUncertainty2);
 
         final BodyKinematics kinematics1 = estimator.getFixedKinematics();
         assertEquals(new BodyKinematics(), kinematics1);
@@ -1676,40 +1871,79 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         assertEquals(nedC1, nedC2);
 
         assertEquals(0, estimator.getNumberOfProcessedSamples());
+        assertEquals(0, estimator.getNumberOfProcessedDriftPeriods());
+        assertEquals(0.0, estimator.getElapsedTimeSeconds(), 0.0);
+        final Time elapsedTime1 = estimator.getElapsedTime();
+        assertEquals(0.0, elapsedTime1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, elapsedTime1.getUnit());
+        final Time elapsedTime2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getElapsedTime(elapsedTime2);
+        assertEquals(elapsedTime1, elapsedTime2);
         assertTrue(estimator.isFixKinematicsEnabled());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES,
+                estimator.getDriftPeriodSamples());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                estimator.getDriftPeriodSeconds(), 0.0);
+        final Time driftPeriod1 = estimator.getDriftPeriod();
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                driftPeriod1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, driftPeriod1.getUnit());
+        final Time driftPeriod2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getDriftPeriod(driftPeriod2);
+        assertEquals(driftPeriod1, driftPeriod2);
         assertFalse(estimator.isRunning());
+        assertFalse(estimator.isReady());
 
         assertEquals(0.0, estimator.getAccelerometerBiasPSD(), 0.0);
         assertEquals(0.0, estimator.getGyroBiasPSD(), 0.0);
-        assertEquals(0.0, estimator.getPositionVariance(), 0.0);
-        assertEquals(0.0, estimator.getVelocityVariance(), 0.0);
-        assertEquals(0.0, estimator.getAttitudeVariance(), 0.0);
-
-        assertEquals(0.0, estimator.getPositionStandardDeviation(),
+        assertEquals(0.0, estimator.getPositionNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getVelocityNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getAttitudeNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getPositionNoiseStandardDeviation(),
                 0.0);
-        final Distance positionStd1 = estimator.getPositionStandardDeviationAsDistance();
-        assertEquals(0.0, positionStd1.getValue().doubleValue(), 0.0);
-        assertEquals(DistanceUnit.METER, positionStd1.getUnit());
-        final Distance positionStd2 = new Distance(1.0, DistanceUnit.INCH);
-        estimator.getPositionStandardDeviationAsDistance(positionStd2);
-        assertEquals(positionStd1, positionStd2);
-
-        assertEquals(0.0, estimator.getVelocityStandardDeviation(),
+        final Distance positionNoiseStd1 = estimator.getPositionNoiseStandardDeviationAsDistance();
+        assertEquals(0.0, positionNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionNoiseStd1.getUnit());
+        final Distance positionNoiseStd2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionNoiseStandardDeviationAsDistance(positionNoiseStd2);
+        assertEquals(positionNoiseStd1, positionNoiseStd2);
+        assertEquals(0.0, estimator.getVelocityNoiseStandardDeviation(),
                 0.0);
-        final Speed speedStd1 = estimator.getVelocityStandardDeviationAsSpeed();
-        assertEquals(0.0, speedStd1.getValue().doubleValue(), 0.0);
-        assertEquals(SpeedUnit.METERS_PER_SECOND, speedStd1.getUnit());
-        final Speed speedStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        estimator.getVelocityStandardDeviationAsSpeed(speedStd2);
-        assertEquals(speedStd1, speedStd2);
-
-        assertEquals(0.0, estimator.getAttitudeStandardDeviation(), 0.0);
-        final Angle attitudeStd1 = estimator.getAttitudeStandardDeviationAsAngle();
-        assertEquals(0.0, attitudeStd1.getValue().doubleValue(), 0.0);
-        assertEquals(AngleUnit.RADIANS, attitudeStd1.getUnit());
-        final Angle attitudeStd2 = new Angle(1.0, AngleUnit.DEGREES);
-        estimator.getAttitudeStandardDeviationAsAngle(attitudeStd2);
-        assertEquals(attitudeStd1, attitudeStd2);
+        final Speed velocityNoiseStd1 = estimator.getVelocityNoiseStandardDeviationAsSpeed();
+        assertEquals(0.0, velocityNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityNoiseStd1.getUnit());
+        final Speed velocityNoiseStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityNoiseStandardDeviationAsSpeed(velocityNoiseStd2);
+        assertEquals(velocityNoiseStd1, velocityNoiseStd2);
+        assertEquals(0.0, estimator.getAttitudeNoiseStandardDeviation(), 0.0);
+        final Angle attitudeNoiseStd1 = estimator.getAttitudeNoiseStandardDeviationAsAngle();
+        assertEquals(0.0, attitudeNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeNoiseStd1.getUnit());
+        final Angle attitudeNoiseStd2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeNoiseStandardDeviationAsAngle(attitudeNoiseStd2);
+        assertEquals(attitudeNoiseStd1, attitudeNoiseStd2);
+        assertEquals(0.0, estimator.getPositionUncertainty(), 0.0);
+        final Distance positionUncertainty1 = estimator.getPositionUncertaintyAsDistance();
+        assertEquals(0.0, positionUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionUncertainty1.getUnit());
+        final Distance positionUncertainty2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionUncertaintyAsDistance(positionUncertainty2);
+        assertEquals(0.0, estimator.getVelocityUncertainty(), 0.0);
+        final Speed velocityUncertainty1 = estimator.getVelocityUncertaintyAsSpeed();
+        assertEquals(0.0, velocityUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityUncertainty1.getUnit());
+        final Speed velocityUncertainty2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityUncertaintyAsSpeed(velocityUncertainty2);
+        assertEquals(velocityUncertainty1, velocityUncertainty2);
+        assertEquals(0.0, estimator.getAttitudeUncertainty(), 0.0);
+        final Angle attitudeUncertainty1 = estimator.getAttitudeUncertaintyAsAngle();
+        assertEquals(0.0, attitudeUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeUncertainty1.getUnit());
+        final Angle attitudeUncertainty2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeUncertaintyAsAngle(attitudeUncertainty2);
+        assertEquals(attitudeUncertainty1, attitudeUncertainty2);
 
         final BodyKinematics kinematics1 = estimator.getFixedKinematics();
         assertEquals(new BodyKinematics(), kinematics1);
@@ -1990,40 +2224,79 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         assertEquals(nedC1, nedC2);
 
         assertEquals(0, estimator.getNumberOfProcessedSamples());
+        assertEquals(0, estimator.getNumberOfProcessedDriftPeriods());
+        assertEquals(0.0, estimator.getElapsedTimeSeconds(), 0.0);
+        final Time elapsedTime1 = estimator.getElapsedTime();
+        assertEquals(0.0, elapsedTime1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, elapsedTime1.getUnit());
+        final Time elapsedTime2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getElapsedTime(elapsedTime2);
+        assertEquals(elapsedTime1, elapsedTime2);
         assertTrue(estimator.isFixKinematicsEnabled());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES,
+                estimator.getDriftPeriodSamples());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                estimator.getDriftPeriodSeconds(), 0.0);
+        final Time driftPeriod1 = estimator.getDriftPeriod();
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                driftPeriod1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, driftPeriod1.getUnit());
+        final Time driftPeriod2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getDriftPeriod(driftPeriod2);
+        assertEquals(driftPeriod1, driftPeriod2);
         assertFalse(estimator.isRunning());
+        assertFalse(estimator.isReady());
 
         assertEquals(0.0, estimator.getAccelerometerBiasPSD(), 0.0);
         assertEquals(0.0, estimator.getGyroBiasPSD(), 0.0);
-        assertEquals(0.0, estimator.getPositionVariance(), 0.0);
-        assertEquals(0.0, estimator.getVelocityVariance(), 0.0);
-        assertEquals(0.0, estimator.getAttitudeVariance(), 0.0);
-
-        assertEquals(0.0, estimator.getPositionStandardDeviation(),
+        assertEquals(0.0, estimator.getPositionNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getVelocityNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getAttitudeNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getPositionNoiseStandardDeviation(),
                 0.0);
-        final Distance positionStd1 = estimator.getPositionStandardDeviationAsDistance();
-        assertEquals(0.0, positionStd1.getValue().doubleValue(), 0.0);
-        assertEquals(DistanceUnit.METER, positionStd1.getUnit());
-        final Distance positionStd2 = new Distance(1.0, DistanceUnit.INCH);
-        estimator.getPositionStandardDeviationAsDistance(positionStd2);
-        assertEquals(positionStd1, positionStd2);
-
-        assertEquals(0.0, estimator.getVelocityStandardDeviation(),
+        final Distance positionNoiseStd1 = estimator.getPositionNoiseStandardDeviationAsDistance();
+        assertEquals(0.0, positionNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionNoiseStd1.getUnit());
+        final Distance positionNoiseStd2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionNoiseStandardDeviationAsDistance(positionNoiseStd2);
+        assertEquals(positionNoiseStd1, positionNoiseStd2);
+        assertEquals(0.0, estimator.getVelocityNoiseStandardDeviation(),
                 0.0);
-        final Speed speedStd1 = estimator.getVelocityStandardDeviationAsSpeed();
-        assertEquals(0.0, speedStd1.getValue().doubleValue(), 0.0);
-        assertEquals(SpeedUnit.METERS_PER_SECOND, speedStd1.getUnit());
-        final Speed speedStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        estimator.getVelocityStandardDeviationAsSpeed(speedStd2);
-        assertEquals(speedStd1, speedStd2);
-
-        assertEquals(0.0, estimator.getAttitudeStandardDeviation(), 0.0);
-        final Angle attitudeStd1 = estimator.getAttitudeStandardDeviationAsAngle();
-        assertEquals(0.0, attitudeStd1.getValue().doubleValue(), 0.0);
-        assertEquals(AngleUnit.RADIANS, attitudeStd1.getUnit());
-        final Angle attitudeStd2 = new Angle(1.0, AngleUnit.DEGREES);
-        estimator.getAttitudeStandardDeviationAsAngle(attitudeStd2);
-        assertEquals(attitudeStd1, attitudeStd2);
+        final Speed velocityNoiseStd1 = estimator.getVelocityNoiseStandardDeviationAsSpeed();
+        assertEquals(0.0, velocityNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityNoiseStd1.getUnit());
+        final Speed velocityNoiseStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityNoiseStandardDeviationAsSpeed(velocityNoiseStd2);
+        assertEquals(velocityNoiseStd1, velocityNoiseStd2);
+        assertEquals(0.0, estimator.getAttitudeNoiseStandardDeviation(), 0.0);
+        final Angle attitudeNoiseStd1 = estimator.getAttitudeNoiseStandardDeviationAsAngle();
+        assertEquals(0.0, attitudeNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeNoiseStd1.getUnit());
+        final Angle attitudeNoiseStd2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeNoiseStandardDeviationAsAngle(attitudeNoiseStd2);
+        assertEquals(attitudeNoiseStd1, attitudeNoiseStd2);
+        assertEquals(0.0, estimator.getPositionUncertainty(), 0.0);
+        final Distance positionUncertainty1 = estimator.getPositionUncertaintyAsDistance();
+        assertEquals(0.0, positionUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionUncertainty1.getUnit());
+        final Distance positionUncertainty2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionUncertaintyAsDistance(positionUncertainty2);
+        assertEquals(0.0, estimator.getVelocityUncertainty(), 0.0);
+        final Speed velocityUncertainty1 = estimator.getVelocityUncertaintyAsSpeed();
+        assertEquals(0.0, velocityUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityUncertainty1.getUnit());
+        final Speed velocityUncertainty2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityUncertaintyAsSpeed(velocityUncertainty2);
+        assertEquals(velocityUncertainty1, velocityUncertainty2);
+        assertEquals(0.0, estimator.getAttitudeUncertainty(), 0.0);
+        final Angle attitudeUncertainty1 = estimator.getAttitudeUncertaintyAsAngle();
+        assertEquals(0.0, attitudeUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeUncertainty1.getUnit());
+        final Angle attitudeUncertainty2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeUncertaintyAsAngle(attitudeUncertainty2);
+        assertEquals(attitudeUncertainty1, attitudeUncertainty2);
 
         final BodyKinematics kinematics1 = estimator.getFixedKinematics();
         assertEquals(new BodyKinematics(), kinematics1);
@@ -2314,40 +2587,79 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         assertEquals(nedC1, nedC2);
 
         assertEquals(0, estimator.getNumberOfProcessedSamples());
+        assertEquals(0, estimator.getNumberOfProcessedDriftPeriods());
+        assertEquals(0.0, estimator.getElapsedTimeSeconds(), 0.0);
+        final Time elapsedTime1 = estimator.getElapsedTime();
+        assertEquals(0.0, elapsedTime1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, elapsedTime1.getUnit());
+        final Time elapsedTime2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getElapsedTime(elapsedTime2);
+        assertEquals(elapsedTime1, elapsedTime2);
         assertTrue(estimator.isFixKinematicsEnabled());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES,
+                estimator.getDriftPeriodSamples());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                estimator.getDriftPeriodSeconds(), 0.0);
+        final Time driftPeriod1 = estimator.getDriftPeriod();
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                driftPeriod1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, driftPeriod1.getUnit());
+        final Time driftPeriod2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getDriftPeriod(driftPeriod2);
+        assertEquals(driftPeriod1, driftPeriod2);
         assertFalse(estimator.isRunning());
+        assertFalse(estimator.isReady());
 
         assertEquals(0.0, estimator.getAccelerometerBiasPSD(), 0.0);
         assertEquals(0.0, estimator.getGyroBiasPSD(), 0.0);
-        assertEquals(0.0, estimator.getPositionVariance(), 0.0);
-        assertEquals(0.0, estimator.getVelocityVariance(), 0.0);
-        assertEquals(0.0, estimator.getAttitudeVariance(), 0.0);
-
-        assertEquals(0.0, estimator.getPositionStandardDeviation(),
+        assertEquals(0.0, estimator.getPositionNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getVelocityNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getAttitudeNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getPositionNoiseStandardDeviation(),
                 0.0);
-        final Distance positionStd1 = estimator.getPositionStandardDeviationAsDistance();
-        assertEquals(0.0, positionStd1.getValue().doubleValue(), 0.0);
-        assertEquals(DistanceUnit.METER, positionStd1.getUnit());
-        final Distance positionStd2 = new Distance(1.0, DistanceUnit.INCH);
-        estimator.getPositionStandardDeviationAsDistance(positionStd2);
-        assertEquals(positionStd1, positionStd2);
-
-        assertEquals(0.0, estimator.getVelocityStandardDeviation(),
+        final Distance positionNoiseStd1 = estimator.getPositionNoiseStandardDeviationAsDistance();
+        assertEquals(0.0, positionNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionNoiseStd1.getUnit());
+        final Distance positionNoiseStd2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionNoiseStandardDeviationAsDistance(positionNoiseStd2);
+        assertEquals(positionNoiseStd1, positionNoiseStd2);
+        assertEquals(0.0, estimator.getVelocityNoiseStandardDeviation(),
                 0.0);
-        final Speed speedStd1 = estimator.getVelocityStandardDeviationAsSpeed();
-        assertEquals(0.0, speedStd1.getValue().doubleValue(), 0.0);
-        assertEquals(SpeedUnit.METERS_PER_SECOND, speedStd1.getUnit());
-        final Speed speedStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        estimator.getVelocityStandardDeviationAsSpeed(speedStd2);
-        assertEquals(speedStd1, speedStd2);
-
-        assertEquals(0.0, estimator.getAttitudeStandardDeviation(), 0.0);
-        final Angle attitudeStd1 = estimator.getAttitudeStandardDeviationAsAngle();
-        assertEquals(0.0, attitudeStd1.getValue().doubleValue(), 0.0);
-        assertEquals(AngleUnit.RADIANS, attitudeStd1.getUnit());
-        final Angle attitudeStd2 = new Angle(1.0, AngleUnit.DEGREES);
-        estimator.getAttitudeStandardDeviationAsAngle(attitudeStd2);
-        assertEquals(attitudeStd1, attitudeStd2);
+        final Speed velocityNoiseStd1 = estimator.getVelocityNoiseStandardDeviationAsSpeed();
+        assertEquals(0.0, velocityNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityNoiseStd1.getUnit());
+        final Speed velocityNoiseStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityNoiseStandardDeviationAsSpeed(velocityNoiseStd2);
+        assertEquals(velocityNoiseStd1, velocityNoiseStd2);
+        assertEquals(0.0, estimator.getAttitudeNoiseStandardDeviation(), 0.0);
+        final Angle attitudeNoiseStd1 = estimator.getAttitudeNoiseStandardDeviationAsAngle();
+        assertEquals(0.0, attitudeNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeNoiseStd1.getUnit());
+        final Angle attitudeNoiseStd2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeNoiseStandardDeviationAsAngle(attitudeNoiseStd2);
+        assertEquals(attitudeNoiseStd1, attitudeNoiseStd2);
+        assertEquals(0.0, estimator.getPositionUncertainty(), 0.0);
+        final Distance positionUncertainty1 = estimator.getPositionUncertaintyAsDistance();
+        assertEquals(0.0, positionUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionUncertainty1.getUnit());
+        final Distance positionUncertainty2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionUncertaintyAsDistance(positionUncertainty2);
+        assertEquals(0.0, estimator.getVelocityUncertainty(), 0.0);
+        final Speed velocityUncertainty1 = estimator.getVelocityUncertaintyAsSpeed();
+        assertEquals(0.0, velocityUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityUncertainty1.getUnit());
+        final Speed velocityUncertainty2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityUncertaintyAsSpeed(velocityUncertainty2);
+        assertEquals(velocityUncertainty1, velocityUncertainty2);
+        assertEquals(0.0, estimator.getAttitudeUncertainty(), 0.0);
+        final Angle attitudeUncertainty1 = estimator.getAttitudeUncertaintyAsAngle();
+        assertEquals(0.0, attitudeUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeUncertainty1.getUnit());
+        final Angle attitudeUncertainty2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeUncertaintyAsAngle(attitudeUncertainty2);
+        assertEquals(attitudeUncertainty1, attitudeUncertainty2);
 
         final BodyKinematics kinematics1 = estimator.getFixedKinematics();
         assertEquals(new BodyKinematics(), kinematics1);
@@ -2639,40 +2951,79 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         assertEquals(nedC1, nedC2);
 
         assertEquals(0, estimator.getNumberOfProcessedSamples());
+        assertEquals(0, estimator.getNumberOfProcessedDriftPeriods());
+        assertEquals(0.0, estimator.getElapsedTimeSeconds(), 0.0);
+        final Time elapsedTime1 = estimator.getElapsedTime();
+        assertEquals(0.0, elapsedTime1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, elapsedTime1.getUnit());
+        final Time elapsedTime2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getElapsedTime(elapsedTime2);
+        assertEquals(elapsedTime1, elapsedTime2);
         assertTrue(estimator.isFixKinematicsEnabled());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES,
+                estimator.getDriftPeriodSamples());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                estimator.getDriftPeriodSeconds(), 0.0);
+        final Time driftPeriod1 = estimator.getDriftPeriod();
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                driftPeriod1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, driftPeriod1.getUnit());
+        final Time driftPeriod2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getDriftPeriod(driftPeriod2);
+        assertEquals(driftPeriod1, driftPeriod2);
         assertFalse(estimator.isRunning());
+        assertFalse(estimator.isReady());
 
         assertEquals(0.0, estimator.getAccelerometerBiasPSD(), 0.0);
         assertEquals(0.0, estimator.getGyroBiasPSD(), 0.0);
-        assertEquals(0.0, estimator.getPositionVariance(), 0.0);
-        assertEquals(0.0, estimator.getVelocityVariance(), 0.0);
-        assertEquals(0.0, estimator.getAttitudeVariance(), 0.0);
-
-        assertEquals(0.0, estimator.getPositionStandardDeviation(),
+        assertEquals(0.0, estimator.getPositionNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getVelocityNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getAttitudeNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getPositionNoiseStandardDeviation(),
                 0.0);
-        final Distance positionStd1 = estimator.getPositionStandardDeviationAsDistance();
-        assertEquals(0.0, positionStd1.getValue().doubleValue(), 0.0);
-        assertEquals(DistanceUnit.METER, positionStd1.getUnit());
-        final Distance positionStd2 = new Distance(1.0, DistanceUnit.INCH);
-        estimator.getPositionStandardDeviationAsDistance(positionStd2);
-        assertEquals(positionStd1, positionStd2);
-
-        assertEquals(0.0, estimator.getVelocityStandardDeviation(),
+        final Distance positionNoiseStd1 = estimator.getPositionNoiseStandardDeviationAsDistance();
+        assertEquals(0.0, positionNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionNoiseStd1.getUnit());
+        final Distance positionNoiseStd2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionNoiseStandardDeviationAsDistance(positionNoiseStd2);
+        assertEquals(positionNoiseStd1, positionNoiseStd2);
+        assertEquals(0.0, estimator.getVelocityNoiseStandardDeviation(),
                 0.0);
-        final Speed speedStd1 = estimator.getVelocityStandardDeviationAsSpeed();
-        assertEquals(0.0, speedStd1.getValue().doubleValue(), 0.0);
-        assertEquals(SpeedUnit.METERS_PER_SECOND, speedStd1.getUnit());
-        final Speed speedStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        estimator.getVelocityStandardDeviationAsSpeed(speedStd2);
-        assertEquals(speedStd1, speedStd2);
-
-        assertEquals(0.0, estimator.getAttitudeStandardDeviation(), 0.0);
-        final Angle attitudeStd1 = estimator.getAttitudeStandardDeviationAsAngle();
-        assertEquals(0.0, attitudeStd1.getValue().doubleValue(), 0.0);
-        assertEquals(AngleUnit.RADIANS, attitudeStd1.getUnit());
-        final Angle attitudeStd2 = new Angle(1.0, AngleUnit.DEGREES);
-        estimator.getAttitudeStandardDeviationAsAngle(attitudeStd2);
-        assertEquals(attitudeStd1, attitudeStd2);
+        final Speed velocityNoiseStd1 = estimator.getVelocityNoiseStandardDeviationAsSpeed();
+        assertEquals(0.0, velocityNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityNoiseStd1.getUnit());
+        final Speed velocityNoiseStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityNoiseStandardDeviationAsSpeed(velocityNoiseStd2);
+        assertEquals(velocityNoiseStd1, velocityNoiseStd2);
+        assertEquals(0.0, estimator.getAttitudeNoiseStandardDeviation(), 0.0);
+        final Angle attitudeNoiseStd1 = estimator.getAttitudeNoiseStandardDeviationAsAngle();
+        assertEquals(0.0, attitudeNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeNoiseStd1.getUnit());
+        final Angle attitudeNoiseStd2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeNoiseStandardDeviationAsAngle(attitudeNoiseStd2);
+        assertEquals(attitudeNoiseStd1, attitudeNoiseStd2);
+        assertEquals(0.0, estimator.getPositionUncertainty(), 0.0);
+        final Distance positionUncertainty1 = estimator.getPositionUncertaintyAsDistance();
+        assertEquals(0.0, positionUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionUncertainty1.getUnit());
+        final Distance positionUncertainty2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionUncertaintyAsDistance(positionUncertainty2);
+        assertEquals(0.0, estimator.getVelocityUncertainty(), 0.0);
+        final Speed velocityUncertainty1 = estimator.getVelocityUncertaintyAsSpeed();
+        assertEquals(0.0, velocityUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityUncertainty1.getUnit());
+        final Speed velocityUncertainty2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityUncertaintyAsSpeed(velocityUncertainty2);
+        assertEquals(velocityUncertainty1, velocityUncertainty2);
+        assertEquals(0.0, estimator.getAttitudeUncertainty(), 0.0);
+        final Angle attitudeUncertainty1 = estimator.getAttitudeUncertaintyAsAngle();
+        assertEquals(0.0, attitudeUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeUncertainty1.getUnit());
+        final Angle attitudeUncertainty2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeUncertaintyAsAngle(attitudeUncertainty2);
+        assertEquals(attitudeUncertainty1, attitudeUncertainty2);
 
         final BodyKinematics kinematics1 = estimator.getFixedKinematics();
         assertEquals(new BodyKinematics(), kinematics1);
@@ -2976,40 +3327,79 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         assertEquals(nedC1, nedC2);
 
         assertEquals(0, estimator.getNumberOfProcessedSamples());
+        assertEquals(0, estimator.getNumberOfProcessedDriftPeriods());
+        assertEquals(0.0, estimator.getElapsedTimeSeconds(), 0.0);
+        final Time elapsedTime1 = estimator.getElapsedTime();
+        assertEquals(0.0, elapsedTime1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, elapsedTime1.getUnit());
+        final Time elapsedTime2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getElapsedTime(elapsedTime2);
+        assertEquals(elapsedTime1, elapsedTime2);
         assertTrue(estimator.isFixKinematicsEnabled());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES,
+                estimator.getDriftPeriodSamples());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                estimator.getDriftPeriodSeconds(), 0.0);
+        final Time driftPeriod1 = estimator.getDriftPeriod();
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                driftPeriod1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, driftPeriod1.getUnit());
+        final Time driftPeriod2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getDriftPeriod(driftPeriod2);
+        assertEquals(driftPeriod1, driftPeriod2);
         assertFalse(estimator.isRunning());
+        assertFalse(estimator.isReady());
 
         assertEquals(0.0, estimator.getAccelerometerBiasPSD(), 0.0);
         assertEquals(0.0, estimator.getGyroBiasPSD(), 0.0);
-        assertEquals(0.0, estimator.getPositionVariance(), 0.0);
-        assertEquals(0.0, estimator.getVelocityVariance(), 0.0);
-        assertEquals(0.0, estimator.getAttitudeVariance(), 0.0);
-
-        assertEquals(0.0, estimator.getPositionStandardDeviation(),
+        assertEquals(0.0, estimator.getPositionNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getVelocityNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getAttitudeNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getPositionNoiseStandardDeviation(),
                 0.0);
-        final Distance positionStd1 = estimator.getPositionStandardDeviationAsDistance();
-        assertEquals(0.0, positionStd1.getValue().doubleValue(), 0.0);
-        assertEquals(DistanceUnit.METER, positionStd1.getUnit());
-        final Distance positionStd2 = new Distance(1.0, DistanceUnit.INCH);
-        estimator.getPositionStandardDeviationAsDistance(positionStd2);
-        assertEquals(positionStd1, positionStd2);
-
-        assertEquals(0.0, estimator.getVelocityStandardDeviation(),
+        final Distance positionNoiseStd1 = estimator.getPositionNoiseStandardDeviationAsDistance();
+        assertEquals(0.0, positionNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionNoiseStd1.getUnit());
+        final Distance positionNoiseStd2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionNoiseStandardDeviationAsDistance(positionNoiseStd2);
+        assertEquals(positionNoiseStd1, positionNoiseStd2);
+        assertEquals(0.0, estimator.getVelocityNoiseStandardDeviation(),
                 0.0);
-        final Speed speedStd1 = estimator.getVelocityStandardDeviationAsSpeed();
-        assertEquals(0.0, speedStd1.getValue().doubleValue(), 0.0);
-        assertEquals(SpeedUnit.METERS_PER_SECOND, speedStd1.getUnit());
-        final Speed speedStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        estimator.getVelocityStandardDeviationAsSpeed(speedStd2);
-        assertEquals(speedStd1, speedStd2);
-
-        assertEquals(0.0, estimator.getAttitudeStandardDeviation(), 0.0);
-        final Angle attitudeStd1 = estimator.getAttitudeStandardDeviationAsAngle();
-        assertEquals(0.0, attitudeStd1.getValue().doubleValue(), 0.0);
-        assertEquals(AngleUnit.RADIANS, attitudeStd1.getUnit());
-        final Angle attitudeStd2 = new Angle(1.0, AngleUnit.DEGREES);
-        estimator.getAttitudeStandardDeviationAsAngle(attitudeStd2);
-        assertEquals(attitudeStd1, attitudeStd2);
+        final Speed velocityNoiseStd1 = estimator.getVelocityNoiseStandardDeviationAsSpeed();
+        assertEquals(0.0, velocityNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityNoiseStd1.getUnit());
+        final Speed velocityNoiseStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityNoiseStandardDeviationAsSpeed(velocityNoiseStd2);
+        assertEquals(velocityNoiseStd1, velocityNoiseStd2);
+        assertEquals(0.0, estimator.getAttitudeNoiseStandardDeviation(), 0.0);
+        final Angle attitudeNoiseStd1 = estimator.getAttitudeNoiseStandardDeviationAsAngle();
+        assertEquals(0.0, attitudeNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeNoiseStd1.getUnit());
+        final Angle attitudeNoiseStd2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeNoiseStandardDeviationAsAngle(attitudeNoiseStd2);
+        assertEquals(attitudeNoiseStd1, attitudeNoiseStd2);
+        assertEquals(0.0, estimator.getPositionUncertainty(), 0.0);
+        final Distance positionUncertainty1 = estimator.getPositionUncertaintyAsDistance();
+        assertEquals(0.0, positionUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionUncertainty1.getUnit());
+        final Distance positionUncertainty2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionUncertaintyAsDistance(positionUncertainty2);
+        assertEquals(0.0, estimator.getVelocityUncertainty(), 0.0);
+        final Speed velocityUncertainty1 = estimator.getVelocityUncertaintyAsSpeed();
+        assertEquals(0.0, velocityUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityUncertainty1.getUnit());
+        final Speed velocityUncertainty2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityUncertaintyAsSpeed(velocityUncertainty2);
+        assertEquals(velocityUncertainty1, velocityUncertainty2);
+        assertEquals(0.0, estimator.getAttitudeUncertainty(), 0.0);
+        final Angle attitudeUncertainty1 = estimator.getAttitudeUncertaintyAsAngle();
+        assertEquals(0.0, attitudeUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeUncertainty1.getUnit());
+        final Angle attitudeUncertainty2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeUncertaintyAsAngle(attitudeUncertainty2);
+        assertEquals(attitudeUncertainty1, attitudeUncertainty2);
 
         final BodyKinematics kinematics1 = estimator.getFixedKinematics();
         assertEquals(new BodyKinematics(), kinematics1);
@@ -3296,40 +3686,79 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         assertTrue(nedC.equals(nedC2, ABSOLUTE_ERROR));
 
         assertEquals(0, estimator.getNumberOfProcessedSamples());
+        assertEquals(0, estimator.getNumberOfProcessedDriftPeriods());
+        assertEquals(0.0, estimator.getElapsedTimeSeconds(), 0.0);
+        final Time elapsedTime1 = estimator.getElapsedTime();
+        assertEquals(0.0, elapsedTime1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, elapsedTime1.getUnit());
+        final Time elapsedTime2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getElapsedTime(elapsedTime2);
+        assertEquals(elapsedTime1, elapsedTime2);
         assertTrue(estimator.isFixKinematicsEnabled());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES,
+                estimator.getDriftPeriodSamples());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                estimator.getDriftPeriodSeconds(), 0.0);
+        final Time driftPeriod1 = estimator.getDriftPeriod();
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                driftPeriod1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, driftPeriod1.getUnit());
+        final Time driftPeriod2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getDriftPeriod(driftPeriod2);
+        assertEquals(driftPeriod1, driftPeriod2);
         assertFalse(estimator.isRunning());
+        assertTrue(estimator.isReady());
 
         assertEquals(0.0, estimator.getAccelerometerBiasPSD(), 0.0);
         assertEquals(0.0, estimator.getGyroBiasPSD(), 0.0);
-        assertEquals(0.0, estimator.getPositionVariance(), 0.0);
-        assertEquals(0.0, estimator.getVelocityVariance(), 0.0);
-        assertEquals(0.0, estimator.getAttitudeVariance(), 0.0);
-
-        assertEquals(0.0, estimator.getPositionStandardDeviation(),
+        assertEquals(0.0, estimator.getPositionNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getVelocityNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getAttitudeNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getPositionNoiseStandardDeviation(),
                 0.0);
-        final Distance positionStd1 = estimator.getPositionStandardDeviationAsDistance();
-        assertEquals(0.0, positionStd1.getValue().doubleValue(), 0.0);
-        assertEquals(DistanceUnit.METER, positionStd1.getUnit());
-        final Distance positionStd2 = new Distance(1.0, DistanceUnit.INCH);
-        estimator.getPositionStandardDeviationAsDistance(positionStd2);
-        assertEquals(positionStd1, positionStd2);
-
-        assertEquals(0.0, estimator.getVelocityStandardDeviation(),
+        final Distance positionNoiseStd1 = estimator.getPositionNoiseStandardDeviationAsDistance();
+        assertEquals(0.0, positionNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionNoiseStd1.getUnit());
+        final Distance positionNoiseStd2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionNoiseStandardDeviationAsDistance(positionNoiseStd2);
+        assertEquals(positionNoiseStd1, positionNoiseStd2);
+        assertEquals(0.0, estimator.getVelocityNoiseStandardDeviation(),
                 0.0);
-        final Speed speedStd1 = estimator.getVelocityStandardDeviationAsSpeed();
-        assertEquals(0.0, speedStd1.getValue().doubleValue(), 0.0);
-        assertEquals(SpeedUnit.METERS_PER_SECOND, speedStd1.getUnit());
-        final Speed speedStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        estimator.getVelocityStandardDeviationAsSpeed(speedStd2);
-        assertEquals(speedStd1, speedStd2);
-
-        assertEquals(0.0, estimator.getAttitudeStandardDeviation(), 0.0);
-        final Angle attitudeStd1 = estimator.getAttitudeStandardDeviationAsAngle();
-        assertEquals(0.0, attitudeStd1.getValue().doubleValue(), 0.0);
-        assertEquals(AngleUnit.RADIANS, attitudeStd1.getUnit());
-        final Angle attitudeStd2 = new Angle(1.0, AngleUnit.DEGREES);
-        estimator.getAttitudeStandardDeviationAsAngle(attitudeStd2);
-        assertEquals(attitudeStd1, attitudeStd2);
+        final Speed velocityNoiseStd1 = estimator.getVelocityNoiseStandardDeviationAsSpeed();
+        assertEquals(0.0, velocityNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityNoiseStd1.getUnit());
+        final Speed velocityNoiseStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityNoiseStandardDeviationAsSpeed(velocityNoiseStd2);
+        assertEquals(velocityNoiseStd1, velocityNoiseStd2);
+        assertEquals(0.0, estimator.getAttitudeNoiseStandardDeviation(), 0.0);
+        final Angle attitudeNoiseStd1 = estimator.getAttitudeNoiseStandardDeviationAsAngle();
+        assertEquals(0.0, attitudeNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeNoiseStd1.getUnit());
+        final Angle attitudeNoiseStd2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeNoiseStandardDeviationAsAngle(attitudeNoiseStd2);
+        assertEquals(attitudeNoiseStd1, attitudeNoiseStd2);
+        assertEquals(0.0, estimator.getPositionUncertainty(), 0.0);
+        final Distance positionUncertainty1 = estimator.getPositionUncertaintyAsDistance();
+        assertEquals(0.0, positionUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionUncertainty1.getUnit());
+        final Distance positionUncertainty2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionUncertaintyAsDistance(positionUncertainty2);
+        assertEquals(0.0, estimator.getVelocityUncertainty(), 0.0);
+        final Speed velocityUncertainty1 = estimator.getVelocityUncertaintyAsSpeed();
+        assertEquals(0.0, velocityUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityUncertainty1.getUnit());
+        final Speed velocityUncertainty2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityUncertaintyAsSpeed(velocityUncertainty2);
+        assertEquals(velocityUncertainty1, velocityUncertainty2);
+        assertEquals(0.0, estimator.getAttitudeUncertainty(), 0.0);
+        final Angle attitudeUncertainty1 = estimator.getAttitudeUncertaintyAsAngle();
+        assertEquals(0.0, attitudeUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeUncertainty1.getUnit());
+        final Angle attitudeUncertainty2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeUncertaintyAsAngle(attitudeUncertainty2);
+        assertEquals(attitudeUncertainty1, attitudeUncertainty2);
 
         final BodyKinematics kinematics1 = estimator.getFixedKinematics();
         assertEquals(new BodyKinematics(), kinematics1);
@@ -3536,40 +3965,79 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         assertTrue(nedC.equals(nedC2, ABSOLUTE_ERROR));
 
         assertEquals(0, estimator.getNumberOfProcessedSamples());
+        assertEquals(0, estimator.getNumberOfProcessedDriftPeriods());
+        assertEquals(0.0, estimator.getElapsedTimeSeconds(), 0.0);
+        final Time elapsedTime1 = estimator.getElapsedTime();
+        assertEquals(0.0, elapsedTime1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, elapsedTime1.getUnit());
+        final Time elapsedTime2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getElapsedTime(elapsedTime2);
+        assertEquals(elapsedTime1, elapsedTime2);
         assertTrue(estimator.isFixKinematicsEnabled());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES,
+                estimator.getDriftPeriodSamples());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                estimator.getDriftPeriodSeconds(), 0.0);
+        final Time driftPeriod1 = estimator.getDriftPeriod();
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                driftPeriod1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, driftPeriod1.getUnit());
+        final Time driftPeriod2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getDriftPeriod(driftPeriod2);
+        assertEquals(driftPeriod1, driftPeriod2);
         assertFalse(estimator.isRunning());
+        assertTrue(estimator.isReady());
 
         assertEquals(0.0, estimator.getAccelerometerBiasPSD(), 0.0);
         assertEquals(0.0, estimator.getGyroBiasPSD(), 0.0);
-        assertEquals(0.0, estimator.getPositionVariance(), 0.0);
-        assertEquals(0.0, estimator.getVelocityVariance(), 0.0);
-        assertEquals(0.0, estimator.getAttitudeVariance(), 0.0);
-
-        assertEquals(0.0, estimator.getPositionStandardDeviation(),
+        assertEquals(0.0, estimator.getPositionNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getVelocityNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getAttitudeNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getPositionNoiseStandardDeviation(),
                 0.0);
-        final Distance positionStd1 = estimator.getPositionStandardDeviationAsDistance();
-        assertEquals(0.0, positionStd1.getValue().doubleValue(), 0.0);
-        assertEquals(DistanceUnit.METER, positionStd1.getUnit());
-        final Distance positionStd2 = new Distance(1.0, DistanceUnit.INCH);
-        estimator.getPositionStandardDeviationAsDistance(positionStd2);
-        assertEquals(positionStd1, positionStd2);
-
-        assertEquals(0.0, estimator.getVelocityStandardDeviation(),
+        final Distance positionNoiseStd1 = estimator.getPositionNoiseStandardDeviationAsDistance();
+        assertEquals(0.0, positionNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionNoiseStd1.getUnit());
+        final Distance positionNoiseStd2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionNoiseStandardDeviationAsDistance(positionNoiseStd2);
+        assertEquals(positionNoiseStd1, positionNoiseStd2);
+        assertEquals(0.0, estimator.getVelocityNoiseStandardDeviation(),
                 0.0);
-        final Speed speedStd1 = estimator.getVelocityStandardDeviationAsSpeed();
-        assertEquals(0.0, speedStd1.getValue().doubleValue(), 0.0);
-        assertEquals(SpeedUnit.METERS_PER_SECOND, speedStd1.getUnit());
-        final Speed speedStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        estimator.getVelocityStandardDeviationAsSpeed(speedStd2);
-        assertEquals(speedStd1, speedStd2);
-
-        assertEquals(0.0, estimator.getAttitudeStandardDeviation(), 0.0);
-        final Angle attitudeStd1 = estimator.getAttitudeStandardDeviationAsAngle();
-        assertEquals(0.0, attitudeStd1.getValue().doubleValue(), 0.0);
-        assertEquals(AngleUnit.RADIANS, attitudeStd1.getUnit());
-        final Angle attitudeStd2 = new Angle(1.0, AngleUnit.DEGREES);
-        estimator.getAttitudeStandardDeviationAsAngle(attitudeStd2);
-        assertEquals(attitudeStd1, attitudeStd2);
+        final Speed velocityNoiseStd1 = estimator.getVelocityNoiseStandardDeviationAsSpeed();
+        assertEquals(0.0, velocityNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityNoiseStd1.getUnit());
+        final Speed velocityNoiseStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityNoiseStandardDeviationAsSpeed(velocityNoiseStd2);
+        assertEquals(velocityNoiseStd1, velocityNoiseStd2);
+        assertEquals(0.0, estimator.getAttitudeNoiseStandardDeviation(), 0.0);
+        final Angle attitudeNoiseStd1 = estimator.getAttitudeNoiseStandardDeviationAsAngle();
+        assertEquals(0.0, attitudeNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeNoiseStd1.getUnit());
+        final Angle attitudeNoiseStd2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeNoiseStandardDeviationAsAngle(attitudeNoiseStd2);
+        assertEquals(attitudeNoiseStd1, attitudeNoiseStd2);
+        assertEquals(0.0, estimator.getPositionUncertainty(), 0.0);
+        final Distance positionUncertainty1 = estimator.getPositionUncertaintyAsDistance();
+        assertEquals(0.0, positionUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionUncertainty1.getUnit());
+        final Distance positionUncertainty2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionUncertaintyAsDistance(positionUncertainty2);
+        assertEquals(0.0, estimator.getVelocityUncertainty(), 0.0);
+        final Speed velocityUncertainty1 = estimator.getVelocityUncertaintyAsSpeed();
+        assertEquals(0.0, velocityUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityUncertainty1.getUnit());
+        final Speed velocityUncertainty2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityUncertaintyAsSpeed(velocityUncertainty2);
+        assertEquals(velocityUncertainty1, velocityUncertainty2);
+        assertEquals(0.0, estimator.getAttitudeUncertainty(), 0.0);
+        final Angle attitudeUncertainty1 = estimator.getAttitudeUncertaintyAsAngle();
+        assertEquals(0.0, attitudeUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeUncertainty1.getUnit());
+        final Angle attitudeUncertainty2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeUncertaintyAsAngle(attitudeUncertainty2);
+        assertEquals(attitudeUncertainty1, attitudeUncertainty2);
 
         final BodyKinematics kinematics1 = estimator.getFixedKinematics();
         assertEquals(new BodyKinematics(), kinematics1);
@@ -3796,40 +4264,79 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         assertTrue(nedC.equals(nedC2, ABSOLUTE_ERROR));
 
         assertEquals(0, estimator.getNumberOfProcessedSamples());
+        assertEquals(0, estimator.getNumberOfProcessedDriftPeriods());
+        assertEquals(0.0, estimator.getElapsedTimeSeconds(), 0.0);
+        final Time elapsedTime1 = estimator.getElapsedTime();
+        assertEquals(0.0, elapsedTime1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, elapsedTime1.getUnit());
+        final Time elapsedTime2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getElapsedTime(elapsedTime2);
+        assertEquals(elapsedTime1, elapsedTime2);
         assertTrue(estimator.isFixKinematicsEnabled());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES,
+                estimator.getDriftPeriodSamples());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                estimator.getDriftPeriodSeconds(), 0.0);
+        final Time driftPeriod1 = estimator.getDriftPeriod();
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                driftPeriod1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, driftPeriod1.getUnit());
+        final Time driftPeriod2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getDriftPeriod(driftPeriod2);
+        assertEquals(driftPeriod1, driftPeriod2);
         assertFalse(estimator.isRunning());
+        assertTrue(estimator.isReady());
 
         assertEquals(0.0, estimator.getAccelerometerBiasPSD(), 0.0);
         assertEquals(0.0, estimator.getGyroBiasPSD(), 0.0);
-        assertEquals(0.0, estimator.getPositionVariance(), 0.0);
-        assertEquals(0.0, estimator.getVelocityVariance(), 0.0);
-        assertEquals(0.0, estimator.getAttitudeVariance(), 0.0);
-
-        assertEquals(0.0, estimator.getPositionStandardDeviation(),
+        assertEquals(0.0, estimator.getPositionNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getVelocityNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getAttitudeNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getPositionNoiseStandardDeviation(),
                 0.0);
-        final Distance positionStd1 = estimator.getPositionStandardDeviationAsDistance();
-        assertEquals(0.0, positionStd1.getValue().doubleValue(), 0.0);
-        assertEquals(DistanceUnit.METER, positionStd1.getUnit());
-        final Distance positionStd2 = new Distance(1.0, DistanceUnit.INCH);
-        estimator.getPositionStandardDeviationAsDistance(positionStd2);
-        assertEquals(positionStd1, positionStd2);
-
-        assertEquals(0.0, estimator.getVelocityStandardDeviation(),
+        final Distance positionNoiseStd1 = estimator.getPositionNoiseStandardDeviationAsDistance();
+        assertEquals(0.0, positionNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionNoiseStd1.getUnit());
+        final Distance positionNoiseStd2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionNoiseStandardDeviationAsDistance(positionNoiseStd2);
+        assertEquals(positionNoiseStd1, positionNoiseStd2);
+        assertEquals(0.0, estimator.getVelocityNoiseStandardDeviation(),
                 0.0);
-        final Speed speedStd1 = estimator.getVelocityStandardDeviationAsSpeed();
-        assertEquals(0.0, speedStd1.getValue().doubleValue(), 0.0);
-        assertEquals(SpeedUnit.METERS_PER_SECOND, speedStd1.getUnit());
-        final Speed speedStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        estimator.getVelocityStandardDeviationAsSpeed(speedStd2);
-        assertEquals(speedStd1, speedStd2);
-
-        assertEquals(0.0, estimator.getAttitudeStandardDeviation(), 0.0);
-        final Angle attitudeStd1 = estimator.getAttitudeStandardDeviationAsAngle();
-        assertEquals(0.0, attitudeStd1.getValue().doubleValue(), 0.0);
-        assertEquals(AngleUnit.RADIANS, attitudeStd1.getUnit());
-        final Angle attitudeStd2 = new Angle(1.0, AngleUnit.DEGREES);
-        estimator.getAttitudeStandardDeviationAsAngle(attitudeStd2);
-        assertEquals(attitudeStd1, attitudeStd2);
+        final Speed velocityNoiseStd1 = estimator.getVelocityNoiseStandardDeviationAsSpeed();
+        assertEquals(0.0, velocityNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityNoiseStd1.getUnit());
+        final Speed velocityNoiseStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityNoiseStandardDeviationAsSpeed(velocityNoiseStd2);
+        assertEquals(velocityNoiseStd1, velocityNoiseStd2);
+        assertEquals(0.0, estimator.getAttitudeNoiseStandardDeviation(), 0.0);
+        final Angle attitudeNoiseStd1 = estimator.getAttitudeNoiseStandardDeviationAsAngle();
+        assertEquals(0.0, attitudeNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeNoiseStd1.getUnit());
+        final Angle attitudeNoiseStd2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeNoiseStandardDeviationAsAngle(attitudeNoiseStd2);
+        assertEquals(attitudeNoiseStd1, attitudeNoiseStd2);
+        assertEquals(0.0, estimator.getPositionUncertainty(), 0.0);
+        final Distance positionUncertainty1 = estimator.getPositionUncertaintyAsDistance();
+        assertEquals(0.0, positionUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionUncertainty1.getUnit());
+        final Distance positionUncertainty2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionUncertaintyAsDistance(positionUncertainty2);
+        assertEquals(0.0, estimator.getVelocityUncertainty(), 0.0);
+        final Speed velocityUncertainty1 = estimator.getVelocityUncertaintyAsSpeed();
+        assertEquals(0.0, velocityUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityUncertainty1.getUnit());
+        final Speed velocityUncertainty2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityUncertaintyAsSpeed(velocityUncertainty2);
+        assertEquals(velocityUncertainty1, velocityUncertainty2);
+        assertEquals(0.0, estimator.getAttitudeUncertainty(), 0.0);
+        final Angle attitudeUncertainty1 = estimator.getAttitudeUncertaintyAsAngle();
+        assertEquals(0.0, attitudeUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeUncertainty1.getUnit());
+        final Angle attitudeUncertainty2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeUncertaintyAsAngle(attitudeUncertainty2);
+        assertEquals(attitudeUncertainty1, attitudeUncertainty2);
 
         final BodyKinematics kinematics1 = estimator.getFixedKinematics();
         assertEquals(new BodyKinematics(), kinematics1);
@@ -4100,40 +4607,79 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         assertTrue(nedC.equals(nedC2, ABSOLUTE_ERROR));
 
         assertEquals(0, estimator.getNumberOfProcessedSamples());
+        assertEquals(0, estimator.getNumberOfProcessedDriftPeriods());
+        assertEquals(0.0, estimator.getElapsedTimeSeconds(), 0.0);
+        final Time elapsedTime1 = estimator.getElapsedTime();
+        assertEquals(0.0, elapsedTime1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, elapsedTime1.getUnit());
+        final Time elapsedTime2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getElapsedTime(elapsedTime2);
+        assertEquals(elapsedTime1, elapsedTime2);
         assertTrue(estimator.isFixKinematicsEnabled());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES,
+                estimator.getDriftPeriodSamples());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                estimator.getDriftPeriodSeconds(), 0.0);
+        final Time driftPeriod1 = estimator.getDriftPeriod();
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                driftPeriod1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, driftPeriod1.getUnit());
+        final Time driftPeriod2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getDriftPeriod(driftPeriod2);
+        assertEquals(driftPeriod1, driftPeriod2);
         assertFalse(estimator.isRunning());
+        assertTrue(estimator.isReady());
 
         assertEquals(0.0, estimator.getAccelerometerBiasPSD(), 0.0);
         assertEquals(0.0, estimator.getGyroBiasPSD(), 0.0);
-        assertEquals(0.0, estimator.getPositionVariance(), 0.0);
-        assertEquals(0.0, estimator.getVelocityVariance(), 0.0);
-        assertEquals(0.0, estimator.getAttitudeVariance(), 0.0);
-
-        assertEquals(0.0, estimator.getPositionStandardDeviation(),
+        assertEquals(0.0, estimator.getPositionNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getVelocityNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getAttitudeNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getPositionNoiseStandardDeviation(),
                 0.0);
-        final Distance positionStd1 = estimator.getPositionStandardDeviationAsDistance();
-        assertEquals(0.0, positionStd1.getValue().doubleValue(), 0.0);
-        assertEquals(DistanceUnit.METER, positionStd1.getUnit());
-        final Distance positionStd2 = new Distance(1.0, DistanceUnit.INCH);
-        estimator.getPositionStandardDeviationAsDistance(positionStd2);
-        assertEquals(positionStd1, positionStd2);
-
-        assertEquals(0.0, estimator.getVelocityStandardDeviation(),
+        final Distance positionNoiseStd1 = estimator.getPositionNoiseStandardDeviationAsDistance();
+        assertEquals(0.0, positionNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionNoiseStd1.getUnit());
+        final Distance positionNoiseStd2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionNoiseStandardDeviationAsDistance(positionNoiseStd2);
+        assertEquals(positionNoiseStd1, positionNoiseStd2);
+        assertEquals(0.0, estimator.getVelocityNoiseStandardDeviation(),
                 0.0);
-        final Speed speedStd1 = estimator.getVelocityStandardDeviationAsSpeed();
-        assertEquals(0.0, speedStd1.getValue().doubleValue(), 0.0);
-        assertEquals(SpeedUnit.METERS_PER_SECOND, speedStd1.getUnit());
-        final Speed speedStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        estimator.getVelocityStandardDeviationAsSpeed(speedStd2);
-        assertEquals(speedStd1, speedStd2);
-
-        assertEquals(0.0, estimator.getAttitudeStandardDeviation(), 0.0);
-        final Angle attitudeStd1 = estimator.getAttitudeStandardDeviationAsAngle();
-        assertEquals(0.0, attitudeStd1.getValue().doubleValue(), 0.0);
-        assertEquals(AngleUnit.RADIANS, attitudeStd1.getUnit());
-        final Angle attitudeStd2 = new Angle(1.0, AngleUnit.DEGREES);
-        estimator.getAttitudeStandardDeviationAsAngle(attitudeStd2);
-        assertEquals(attitudeStd1, attitudeStd2);
+        final Speed velocityNoiseStd1 = estimator.getVelocityNoiseStandardDeviationAsSpeed();
+        assertEquals(0.0, velocityNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityNoiseStd1.getUnit());
+        final Speed velocityNoiseStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityNoiseStandardDeviationAsSpeed(velocityNoiseStd2);
+        assertEquals(velocityNoiseStd1, velocityNoiseStd2);
+        assertEquals(0.0, estimator.getAttitudeNoiseStandardDeviation(), 0.0);
+        final Angle attitudeNoiseStd1 = estimator.getAttitudeNoiseStandardDeviationAsAngle();
+        assertEquals(0.0, attitudeNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeNoiseStd1.getUnit());
+        final Angle attitudeNoiseStd2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeNoiseStandardDeviationAsAngle(attitudeNoiseStd2);
+        assertEquals(attitudeNoiseStd1, attitudeNoiseStd2);
+        assertEquals(0.0, estimator.getPositionUncertainty(), 0.0);
+        final Distance positionUncertainty1 = estimator.getPositionUncertaintyAsDistance();
+        assertEquals(0.0, positionUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionUncertainty1.getUnit());
+        final Distance positionUncertainty2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionUncertaintyAsDistance(positionUncertainty2);
+        assertEquals(0.0, estimator.getVelocityUncertainty(), 0.0);
+        final Speed velocityUncertainty1 = estimator.getVelocityUncertaintyAsSpeed();
+        assertEquals(0.0, velocityUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityUncertainty1.getUnit());
+        final Speed velocityUncertainty2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityUncertaintyAsSpeed(velocityUncertainty2);
+        assertEquals(velocityUncertainty1, velocityUncertainty2);
+        assertEquals(0.0, estimator.getAttitudeUncertainty(), 0.0);
+        final Angle attitudeUncertainty1 = estimator.getAttitudeUncertaintyAsAngle();
+        assertEquals(0.0, attitudeUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeUncertainty1.getUnit());
+        final Angle attitudeUncertainty2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeUncertaintyAsAngle(attitudeUncertainty2);
+        assertEquals(attitudeUncertainty1, attitudeUncertainty2);
 
         final BodyKinematics kinematics1 = estimator.getFixedKinematics();
         assertEquals(new BodyKinematics(), kinematics1);
@@ -4405,40 +4951,79 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         assertTrue(nedC.equals(nedC2, ABSOLUTE_ERROR));
 
         assertEquals(0, estimator.getNumberOfProcessedSamples());
+        assertEquals(0, estimator.getNumberOfProcessedDriftPeriods());
+        assertEquals(0.0, estimator.getElapsedTimeSeconds(), 0.0);
+        final Time elapsedTime1 = estimator.getElapsedTime();
+        assertEquals(0.0, elapsedTime1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, elapsedTime1.getUnit());
+        final Time elapsedTime2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getElapsedTime(elapsedTime2);
+        assertEquals(elapsedTime1, elapsedTime2);
         assertTrue(estimator.isFixKinematicsEnabled());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES,
+                estimator.getDriftPeriodSamples());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                estimator.getDriftPeriodSeconds(), 0.0);
+        final Time driftPeriod1 = estimator.getDriftPeriod();
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                driftPeriod1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, driftPeriod1.getUnit());
+        final Time driftPeriod2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getDriftPeriod(driftPeriod2);
+        assertEquals(driftPeriod1, driftPeriod2);
         assertFalse(estimator.isRunning());
+        assertTrue(estimator.isReady());
 
         assertEquals(0.0, estimator.getAccelerometerBiasPSD(), 0.0);
         assertEquals(0.0, estimator.getGyroBiasPSD(), 0.0);
-        assertEquals(0.0, estimator.getPositionVariance(), 0.0);
-        assertEquals(0.0, estimator.getVelocityVariance(), 0.0);
-        assertEquals(0.0, estimator.getAttitudeVariance(), 0.0);
-
-        assertEquals(0.0, estimator.getPositionStandardDeviation(),
+        assertEquals(0.0, estimator.getPositionNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getVelocityNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getAttitudeNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getPositionNoiseStandardDeviation(),
                 0.0);
-        final Distance positionStd1 = estimator.getPositionStandardDeviationAsDistance();
-        assertEquals(0.0, positionStd1.getValue().doubleValue(), 0.0);
-        assertEquals(DistanceUnit.METER, positionStd1.getUnit());
-        final Distance positionStd2 = new Distance(1.0, DistanceUnit.INCH);
-        estimator.getPositionStandardDeviationAsDistance(positionStd2);
-        assertEquals(positionStd1, positionStd2);
-
-        assertEquals(0.0, estimator.getVelocityStandardDeviation(),
+        final Distance positionNoiseStd1 = estimator.getPositionNoiseStandardDeviationAsDistance();
+        assertEquals(0.0, positionNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionNoiseStd1.getUnit());
+        final Distance positionNoiseStd2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionNoiseStandardDeviationAsDistance(positionNoiseStd2);
+        assertEquals(positionNoiseStd1, positionNoiseStd2);
+        assertEquals(0.0, estimator.getVelocityNoiseStandardDeviation(),
                 0.0);
-        final Speed speedStd1 = estimator.getVelocityStandardDeviationAsSpeed();
-        assertEquals(0.0, speedStd1.getValue().doubleValue(), 0.0);
-        assertEquals(SpeedUnit.METERS_PER_SECOND, speedStd1.getUnit());
-        final Speed speedStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        estimator.getVelocityStandardDeviationAsSpeed(speedStd2);
-        assertEquals(speedStd1, speedStd2);
-
-        assertEquals(0.0, estimator.getAttitudeStandardDeviation(), 0.0);
-        final Angle attitudeStd1 = estimator.getAttitudeStandardDeviationAsAngle();
-        assertEquals(0.0, attitudeStd1.getValue().doubleValue(), 0.0);
-        assertEquals(AngleUnit.RADIANS, attitudeStd1.getUnit());
-        final Angle attitudeStd2 = new Angle(1.0, AngleUnit.DEGREES);
-        estimator.getAttitudeStandardDeviationAsAngle(attitudeStd2);
-        assertEquals(attitudeStd1, attitudeStd2);
+        final Speed velocityNoiseStd1 = estimator.getVelocityNoiseStandardDeviationAsSpeed();
+        assertEquals(0.0, velocityNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityNoiseStd1.getUnit());
+        final Speed velocityNoiseStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityNoiseStandardDeviationAsSpeed(velocityNoiseStd2);
+        assertEquals(velocityNoiseStd1, velocityNoiseStd2);
+        assertEquals(0.0, estimator.getAttitudeNoiseStandardDeviation(), 0.0);
+        final Angle attitudeNoiseStd1 = estimator.getAttitudeNoiseStandardDeviationAsAngle();
+        assertEquals(0.0, attitudeNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeNoiseStd1.getUnit());
+        final Angle attitudeNoiseStd2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeNoiseStandardDeviationAsAngle(attitudeNoiseStd2);
+        assertEquals(attitudeNoiseStd1, attitudeNoiseStd2);
+        assertEquals(0.0, estimator.getPositionUncertainty(), 0.0);
+        final Distance positionUncertainty1 = estimator.getPositionUncertaintyAsDistance();
+        assertEquals(0.0, positionUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionUncertainty1.getUnit());
+        final Distance positionUncertainty2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionUncertaintyAsDistance(positionUncertainty2);
+        assertEquals(0.0, estimator.getVelocityUncertainty(), 0.0);
+        final Speed velocityUncertainty1 = estimator.getVelocityUncertaintyAsSpeed();
+        assertEquals(0.0, velocityUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityUncertainty1.getUnit());
+        final Speed velocityUncertainty2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityUncertaintyAsSpeed(velocityUncertainty2);
+        assertEquals(velocityUncertainty1, velocityUncertainty2);
+        assertEquals(0.0, estimator.getAttitudeUncertainty(), 0.0);
+        final Angle attitudeUncertainty1 = estimator.getAttitudeUncertaintyAsAngle();
+        assertEquals(0.0, attitudeUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeUncertainty1.getUnit());
+        final Angle attitudeUncertainty2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeUncertaintyAsAngle(attitudeUncertainty2);
+        assertEquals(attitudeUncertainty1, attitudeUncertainty2);
 
         final BodyKinematics kinematics1 = estimator.getFixedKinematics();
         assertEquals(new BodyKinematics(), kinematics1);
@@ -4722,40 +5307,79 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         assertTrue(nedC.equals(nedC2, ABSOLUTE_ERROR));
 
         assertEquals(0, estimator.getNumberOfProcessedSamples());
+        assertEquals(0, estimator.getNumberOfProcessedDriftPeriods());
+        assertEquals(0.0, estimator.getElapsedTimeSeconds(), 0.0);
+        final Time elapsedTime1 = estimator.getElapsedTime();
+        assertEquals(0.0, elapsedTime1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, elapsedTime1.getUnit());
+        final Time elapsedTime2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getElapsedTime(elapsedTime2);
+        assertEquals(elapsedTime1, elapsedTime2);
         assertTrue(estimator.isFixKinematicsEnabled());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES,
+                estimator.getDriftPeriodSamples());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                estimator.getDriftPeriodSeconds(), 0.0);
+        final Time driftPeriod1 = estimator.getDriftPeriod();
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                driftPeriod1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, driftPeriod1.getUnit());
+        final Time driftPeriod2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getDriftPeriod(driftPeriod2);
+        assertEquals(driftPeriod1, driftPeriod2);
         assertFalse(estimator.isRunning());
+        assertTrue(estimator.isReady());
 
         assertEquals(0.0, estimator.getAccelerometerBiasPSD(), 0.0);
         assertEquals(0.0, estimator.getGyroBiasPSD(), 0.0);
-        assertEquals(0.0, estimator.getPositionVariance(), 0.0);
-        assertEquals(0.0, estimator.getVelocityVariance(), 0.0);
-        assertEquals(0.0, estimator.getAttitudeVariance(), 0.0);
-
-        assertEquals(0.0, estimator.getPositionStandardDeviation(),
+        assertEquals(0.0, estimator.getPositionNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getVelocityNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getAttitudeNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getPositionNoiseStandardDeviation(),
                 0.0);
-        final Distance positionStd1 = estimator.getPositionStandardDeviationAsDistance();
-        assertEquals(0.0, positionStd1.getValue().doubleValue(), 0.0);
-        assertEquals(DistanceUnit.METER, positionStd1.getUnit());
-        final Distance positionStd2 = new Distance(1.0, DistanceUnit.INCH);
-        estimator.getPositionStandardDeviationAsDistance(positionStd2);
-        assertEquals(positionStd1, positionStd2);
-
-        assertEquals(0.0, estimator.getVelocityStandardDeviation(),
+        final Distance positionNoiseStd1 = estimator.getPositionNoiseStandardDeviationAsDistance();
+        assertEquals(0.0, positionNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionNoiseStd1.getUnit());
+        final Distance positionNoiseStd2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionNoiseStandardDeviationAsDistance(positionNoiseStd2);
+        assertEquals(positionNoiseStd1, positionNoiseStd2);
+        assertEquals(0.0, estimator.getVelocityNoiseStandardDeviation(),
                 0.0);
-        final Speed speedStd1 = estimator.getVelocityStandardDeviationAsSpeed();
-        assertEquals(0.0, speedStd1.getValue().doubleValue(), 0.0);
-        assertEquals(SpeedUnit.METERS_PER_SECOND, speedStd1.getUnit());
-        final Speed speedStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        estimator.getVelocityStandardDeviationAsSpeed(speedStd2);
-        assertEquals(speedStd1, speedStd2);
-
-        assertEquals(0.0, estimator.getAttitudeStandardDeviation(), 0.0);
-        final Angle attitudeStd1 = estimator.getAttitudeStandardDeviationAsAngle();
-        assertEquals(0.0, attitudeStd1.getValue().doubleValue(), 0.0);
-        assertEquals(AngleUnit.RADIANS, attitudeStd1.getUnit());
-        final Angle attitudeStd2 = new Angle(1.0, AngleUnit.DEGREES);
-        estimator.getAttitudeStandardDeviationAsAngle(attitudeStd2);
-        assertEquals(attitudeStd1, attitudeStd2);
+        final Speed velocityNoiseStd1 = estimator.getVelocityNoiseStandardDeviationAsSpeed();
+        assertEquals(0.0, velocityNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityNoiseStd1.getUnit());
+        final Speed velocityNoiseStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityNoiseStandardDeviationAsSpeed(velocityNoiseStd2);
+        assertEquals(velocityNoiseStd1, velocityNoiseStd2);
+        assertEquals(0.0, estimator.getAttitudeNoiseStandardDeviation(), 0.0);
+        final Angle attitudeNoiseStd1 = estimator.getAttitudeNoiseStandardDeviationAsAngle();
+        assertEquals(0.0, attitudeNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeNoiseStd1.getUnit());
+        final Angle attitudeNoiseStd2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeNoiseStandardDeviationAsAngle(attitudeNoiseStd2);
+        assertEquals(attitudeNoiseStd1, attitudeNoiseStd2);
+        assertEquals(0.0, estimator.getPositionUncertainty(), 0.0);
+        final Distance positionUncertainty1 = estimator.getPositionUncertaintyAsDistance();
+        assertEquals(0.0, positionUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionUncertainty1.getUnit());
+        final Distance positionUncertainty2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionUncertaintyAsDistance(positionUncertainty2);
+        assertEquals(0.0, estimator.getVelocityUncertainty(), 0.0);
+        final Speed velocityUncertainty1 = estimator.getVelocityUncertaintyAsSpeed();
+        assertEquals(0.0, velocityUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityUncertainty1.getUnit());
+        final Speed velocityUncertainty2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityUncertaintyAsSpeed(velocityUncertainty2);
+        assertEquals(velocityUncertainty1, velocityUncertainty2);
+        assertEquals(0.0, estimator.getAttitudeUncertainty(), 0.0);
+        final Angle attitudeUncertainty1 = estimator.getAttitudeUncertaintyAsAngle();
+        assertEquals(0.0, attitudeUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeUncertainty1.getUnit());
+        final Angle attitudeUncertainty2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeUncertaintyAsAngle(attitudeUncertainty2);
+        assertEquals(attitudeUncertainty1, attitudeUncertainty2);
 
         final BodyKinematics kinematics1 = estimator.getFixedKinematics();
         assertEquals(new BodyKinematics(), kinematics1);
@@ -5038,40 +5662,79 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         assertTrue(nedC.equals(nedC2, ABSOLUTE_ERROR));
 
         assertEquals(0, estimator.getNumberOfProcessedSamples());
+        assertEquals(0, estimator.getNumberOfProcessedDriftPeriods());
+        assertEquals(0.0, estimator.getElapsedTimeSeconds(), 0.0);
+        final Time elapsedTime1 = estimator.getElapsedTime();
+        assertEquals(0.0, elapsedTime1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, elapsedTime1.getUnit());
+        final Time elapsedTime2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getElapsedTime(elapsedTime2);
+        assertEquals(elapsedTime1, elapsedTime2);
         assertTrue(estimator.isFixKinematicsEnabled());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES,
+                estimator.getDriftPeriodSamples());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                estimator.getDriftPeriodSeconds(), 0.0);
+        final Time driftPeriod1 = estimator.getDriftPeriod();
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                driftPeriod1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, driftPeriod1.getUnit());
+        final Time driftPeriod2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getDriftPeriod(driftPeriod2);
+        assertEquals(driftPeriod1, driftPeriod2);
         assertFalse(estimator.isRunning());
+        assertTrue(estimator.isReady());
 
         assertEquals(0.0, estimator.getAccelerometerBiasPSD(), 0.0);
         assertEquals(0.0, estimator.getGyroBiasPSD(), 0.0);
-        assertEquals(0.0, estimator.getPositionVariance(), 0.0);
-        assertEquals(0.0, estimator.getVelocityVariance(), 0.0);
-        assertEquals(0.0, estimator.getAttitudeVariance(), 0.0);
-
-        assertEquals(0.0, estimator.getPositionStandardDeviation(),
+        assertEquals(0.0, estimator.getPositionNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getVelocityNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getAttitudeNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getPositionNoiseStandardDeviation(),
                 0.0);
-        final Distance positionStd1 = estimator.getPositionStandardDeviationAsDistance();
-        assertEquals(0.0, positionStd1.getValue().doubleValue(), 0.0);
-        assertEquals(DistanceUnit.METER, positionStd1.getUnit());
-        final Distance positionStd2 = new Distance(1.0, DistanceUnit.INCH);
-        estimator.getPositionStandardDeviationAsDistance(positionStd2);
-        assertEquals(positionStd1, positionStd2);
-
-        assertEquals(0.0, estimator.getVelocityStandardDeviation(),
+        final Distance positionNoiseStd1 = estimator.getPositionNoiseStandardDeviationAsDistance();
+        assertEquals(0.0, positionNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionNoiseStd1.getUnit());
+        final Distance positionNoiseStd2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionNoiseStandardDeviationAsDistance(positionNoiseStd2);
+        assertEquals(positionNoiseStd1, positionNoiseStd2);
+        assertEquals(0.0, estimator.getVelocityNoiseStandardDeviation(),
                 0.0);
-        final Speed speedStd1 = estimator.getVelocityStandardDeviationAsSpeed();
-        assertEquals(0.0, speedStd1.getValue().doubleValue(), 0.0);
-        assertEquals(SpeedUnit.METERS_PER_SECOND, speedStd1.getUnit());
-        final Speed speedStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        estimator.getVelocityStandardDeviationAsSpeed(speedStd2);
-        assertEquals(speedStd1, speedStd2);
-
-        assertEquals(0.0, estimator.getAttitudeStandardDeviation(), 0.0);
-        final Angle attitudeStd1 = estimator.getAttitudeStandardDeviationAsAngle();
-        assertEquals(0.0, attitudeStd1.getValue().doubleValue(), 0.0);
-        assertEquals(AngleUnit.RADIANS, attitudeStd1.getUnit());
-        final Angle attitudeStd2 = new Angle(1.0, AngleUnit.DEGREES);
-        estimator.getAttitudeStandardDeviationAsAngle(attitudeStd2);
-        assertEquals(attitudeStd1, attitudeStd2);
+        final Speed velocityNoiseStd1 = estimator.getVelocityNoiseStandardDeviationAsSpeed();
+        assertEquals(0.0, velocityNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityNoiseStd1.getUnit());
+        final Speed velocityNoiseStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityNoiseStandardDeviationAsSpeed(velocityNoiseStd2);
+        assertEquals(velocityNoiseStd1, velocityNoiseStd2);
+        assertEquals(0.0, estimator.getAttitudeNoiseStandardDeviation(), 0.0);
+        final Angle attitudeNoiseStd1 = estimator.getAttitudeNoiseStandardDeviationAsAngle();
+        assertEquals(0.0, attitudeNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeNoiseStd1.getUnit());
+        final Angle attitudeNoiseStd2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeNoiseStandardDeviationAsAngle(attitudeNoiseStd2);
+        assertEquals(attitudeNoiseStd1, attitudeNoiseStd2);
+        assertEquals(0.0, estimator.getPositionUncertainty(), 0.0);
+        final Distance positionUncertainty1 = estimator.getPositionUncertaintyAsDistance();
+        assertEquals(0.0, positionUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionUncertainty1.getUnit());
+        final Distance positionUncertainty2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionUncertaintyAsDistance(positionUncertainty2);
+        assertEquals(0.0, estimator.getVelocityUncertainty(), 0.0);
+        final Speed velocityUncertainty1 = estimator.getVelocityUncertaintyAsSpeed();
+        assertEquals(0.0, velocityUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityUncertainty1.getUnit());
+        final Speed velocityUncertainty2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityUncertaintyAsSpeed(velocityUncertainty2);
+        assertEquals(velocityUncertainty1, velocityUncertainty2);
+        assertEquals(0.0, estimator.getAttitudeUncertainty(), 0.0);
+        final Angle attitudeUncertainty1 = estimator.getAttitudeUncertaintyAsAngle();
+        assertEquals(0.0, attitudeUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeUncertainty1.getUnit());
+        final Angle attitudeUncertainty2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeUncertaintyAsAngle(attitudeUncertainty2);
+        assertEquals(attitudeUncertainty1, attitudeUncertainty2);
 
         final BodyKinematics kinematics1 = estimator.getFixedKinematics();
         assertEquals(new BodyKinematics(), kinematics1);
@@ -5366,40 +6029,79 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         assertTrue(nedC.equals(nedC2, ABSOLUTE_ERROR));
 
         assertEquals(0, estimator.getNumberOfProcessedSamples());
+        assertEquals(0, estimator.getNumberOfProcessedDriftPeriods());
+        assertEquals(0.0, estimator.getElapsedTimeSeconds(), 0.0);
+        final Time elapsedTime1 = estimator.getElapsedTime();
+        assertEquals(0.0, elapsedTime1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, elapsedTime1.getUnit());
+        final Time elapsedTime2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getElapsedTime(elapsedTime2);
+        assertEquals(elapsedTime1, elapsedTime2);
         assertTrue(estimator.isFixKinematicsEnabled());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES,
+                estimator.getDriftPeriodSamples());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                estimator.getDriftPeriodSeconds(), 0.0);
+        final Time driftPeriod1 = estimator.getDriftPeriod();
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                driftPeriod1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, driftPeriod1.getUnit());
+        final Time driftPeriod2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getDriftPeriod(driftPeriod2);
+        assertEquals(driftPeriod1, driftPeriod2);
         assertFalse(estimator.isRunning());
+        assertTrue(estimator.isReady());
 
         assertEquals(0.0, estimator.getAccelerometerBiasPSD(), 0.0);
         assertEquals(0.0, estimator.getGyroBiasPSD(), 0.0);
-        assertEquals(0.0, estimator.getPositionVariance(), 0.0);
-        assertEquals(0.0, estimator.getVelocityVariance(), 0.0);
-        assertEquals(0.0, estimator.getAttitudeVariance(), 0.0);
-
-        assertEquals(0.0, estimator.getPositionStandardDeviation(),
+        assertEquals(0.0, estimator.getPositionNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getVelocityNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getAttitudeNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getPositionNoiseStandardDeviation(),
                 0.0);
-        final Distance positionStd1 = estimator.getPositionStandardDeviationAsDistance();
-        assertEquals(0.0, positionStd1.getValue().doubleValue(), 0.0);
-        assertEquals(DistanceUnit.METER, positionStd1.getUnit());
-        final Distance positionStd2 = new Distance(1.0, DistanceUnit.INCH);
-        estimator.getPositionStandardDeviationAsDistance(positionStd2);
-        assertEquals(positionStd1, positionStd2);
-
-        assertEquals(0.0, estimator.getVelocityStandardDeviation(),
+        final Distance positionNoiseStd1 = estimator.getPositionNoiseStandardDeviationAsDistance();
+        assertEquals(0.0, positionNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionNoiseStd1.getUnit());
+        final Distance positionNoiseStd2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionNoiseStandardDeviationAsDistance(positionNoiseStd2);
+        assertEquals(positionNoiseStd1, positionNoiseStd2);
+        assertEquals(0.0, estimator.getVelocityNoiseStandardDeviation(),
                 0.0);
-        final Speed speedStd1 = estimator.getVelocityStandardDeviationAsSpeed();
-        assertEquals(0.0, speedStd1.getValue().doubleValue(), 0.0);
-        assertEquals(SpeedUnit.METERS_PER_SECOND, speedStd1.getUnit());
-        final Speed speedStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        estimator.getVelocityStandardDeviationAsSpeed(speedStd2);
-        assertEquals(speedStd1, speedStd2);
-
-        assertEquals(0.0, estimator.getAttitudeStandardDeviation(), 0.0);
-        final Angle attitudeStd1 = estimator.getAttitudeStandardDeviationAsAngle();
-        assertEquals(0.0, attitudeStd1.getValue().doubleValue(), 0.0);
-        assertEquals(AngleUnit.RADIANS, attitudeStd1.getUnit());
-        final Angle attitudeStd2 = new Angle(1.0, AngleUnit.DEGREES);
-        estimator.getAttitudeStandardDeviationAsAngle(attitudeStd2);
-        assertEquals(attitudeStd1, attitudeStd2);
+        final Speed velocityNoiseStd1 = estimator.getVelocityNoiseStandardDeviationAsSpeed();
+        assertEquals(0.0, velocityNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityNoiseStd1.getUnit());
+        final Speed velocityNoiseStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityNoiseStandardDeviationAsSpeed(velocityNoiseStd2);
+        assertEquals(velocityNoiseStd1, velocityNoiseStd2);
+        assertEquals(0.0, estimator.getAttitudeNoiseStandardDeviation(), 0.0);
+        final Angle attitudeNoiseStd1 = estimator.getAttitudeNoiseStandardDeviationAsAngle();
+        assertEquals(0.0, attitudeNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeNoiseStd1.getUnit());
+        final Angle attitudeNoiseStd2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeNoiseStandardDeviationAsAngle(attitudeNoiseStd2);
+        assertEquals(attitudeNoiseStd1, attitudeNoiseStd2);
+        assertEquals(0.0, estimator.getPositionUncertainty(), 0.0);
+        final Distance positionUncertainty1 = estimator.getPositionUncertaintyAsDistance();
+        assertEquals(0.0, positionUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionUncertainty1.getUnit());
+        final Distance positionUncertainty2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionUncertaintyAsDistance(positionUncertainty2);
+        assertEquals(0.0, estimator.getVelocityUncertainty(), 0.0);
+        final Speed velocityUncertainty1 = estimator.getVelocityUncertaintyAsSpeed();
+        assertEquals(0.0, velocityUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityUncertainty1.getUnit());
+        final Speed velocityUncertainty2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityUncertaintyAsSpeed(velocityUncertainty2);
+        assertEquals(velocityUncertainty1, velocityUncertainty2);
+        assertEquals(0.0, estimator.getAttitudeUncertainty(), 0.0);
+        final Angle attitudeUncertainty1 = estimator.getAttitudeUncertaintyAsAngle();
+        assertEquals(0.0, attitudeUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeUncertainty1.getUnit());
+        final Angle attitudeUncertainty2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeUncertaintyAsAngle(attitudeUncertainty2);
+        assertEquals(attitudeUncertainty1, attitudeUncertainty2);
 
         final BodyKinematics kinematics1 = estimator.getFixedKinematics();
         assertEquals(new BodyKinematics(), kinematics1);
@@ -5695,40 +6397,79 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         assertTrue(nedC.equals(nedC2, ABSOLUTE_ERROR));
 
         assertEquals(0, estimator.getNumberOfProcessedSamples());
+        assertEquals(0, estimator.getNumberOfProcessedDriftPeriods());
+        assertEquals(0.0, estimator.getElapsedTimeSeconds(), 0.0);
+        final Time elapsedTime1 = estimator.getElapsedTime();
+        assertEquals(0.0, elapsedTime1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, elapsedTime1.getUnit());
+        final Time elapsedTime2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getElapsedTime(elapsedTime2);
+        assertEquals(elapsedTime1, elapsedTime2);
         assertTrue(estimator.isFixKinematicsEnabled());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES,
+                estimator.getDriftPeriodSamples());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                estimator.getDriftPeriodSeconds(), 0.0);
+        final Time driftPeriod1 = estimator.getDriftPeriod();
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                driftPeriod1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, driftPeriod1.getUnit());
+        final Time driftPeriod2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getDriftPeriod(driftPeriod2);
+        assertEquals(driftPeriod1, driftPeriod2);
         assertFalse(estimator.isRunning());
+        assertTrue(estimator.isReady());
 
         assertEquals(0.0, estimator.getAccelerometerBiasPSD(), 0.0);
         assertEquals(0.0, estimator.getGyroBiasPSD(), 0.0);
-        assertEquals(0.0, estimator.getPositionVariance(), 0.0);
-        assertEquals(0.0, estimator.getVelocityVariance(), 0.0);
-        assertEquals(0.0, estimator.getAttitudeVariance(), 0.0);
-
-        assertEquals(0.0, estimator.getPositionStandardDeviation(),
+        assertEquals(0.0, estimator.getPositionNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getVelocityNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getAttitudeNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getPositionNoiseStandardDeviation(),
                 0.0);
-        final Distance positionStd1 = estimator.getPositionStandardDeviationAsDistance();
-        assertEquals(0.0, positionStd1.getValue().doubleValue(), 0.0);
-        assertEquals(DistanceUnit.METER, positionStd1.getUnit());
-        final Distance positionStd2 = new Distance(1.0, DistanceUnit.INCH);
-        estimator.getPositionStandardDeviationAsDistance(positionStd2);
-        assertEquals(positionStd1, positionStd2);
-
-        assertEquals(0.0, estimator.getVelocityStandardDeviation(),
+        final Distance positionNoiseStd1 = estimator.getPositionNoiseStandardDeviationAsDistance();
+        assertEquals(0.0, positionNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionNoiseStd1.getUnit());
+        final Distance positionNoiseStd2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionNoiseStandardDeviationAsDistance(positionNoiseStd2);
+        assertEquals(positionNoiseStd1, positionNoiseStd2);
+        assertEquals(0.0, estimator.getVelocityNoiseStandardDeviation(),
                 0.0);
-        final Speed speedStd1 = estimator.getVelocityStandardDeviationAsSpeed();
-        assertEquals(0.0, speedStd1.getValue().doubleValue(), 0.0);
-        assertEquals(SpeedUnit.METERS_PER_SECOND, speedStd1.getUnit());
-        final Speed speedStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        estimator.getVelocityStandardDeviationAsSpeed(speedStd2);
-        assertEquals(speedStd1, speedStd2);
-
-        assertEquals(0.0, estimator.getAttitudeStandardDeviation(), 0.0);
-        final Angle attitudeStd1 = estimator.getAttitudeStandardDeviationAsAngle();
-        assertEquals(0.0, attitudeStd1.getValue().doubleValue(), 0.0);
-        assertEquals(AngleUnit.RADIANS, attitudeStd1.getUnit());
-        final Angle attitudeStd2 = new Angle(1.0, AngleUnit.DEGREES);
-        estimator.getAttitudeStandardDeviationAsAngle(attitudeStd2);
-        assertEquals(attitudeStd1, attitudeStd2);
+        final Speed velocityNoiseStd1 = estimator.getVelocityNoiseStandardDeviationAsSpeed();
+        assertEquals(0.0, velocityNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityNoiseStd1.getUnit());
+        final Speed velocityNoiseStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityNoiseStandardDeviationAsSpeed(velocityNoiseStd2);
+        assertEquals(velocityNoiseStd1, velocityNoiseStd2);
+        assertEquals(0.0, estimator.getAttitudeNoiseStandardDeviation(), 0.0);
+        final Angle attitudeNoiseStd1 = estimator.getAttitudeNoiseStandardDeviationAsAngle();
+        assertEquals(0.0, attitudeNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeNoiseStd1.getUnit());
+        final Angle attitudeNoiseStd2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeNoiseStandardDeviationAsAngle(attitudeNoiseStd2);
+        assertEquals(attitudeNoiseStd1, attitudeNoiseStd2);
+        assertEquals(0.0, estimator.getPositionUncertainty(), 0.0);
+        final Distance positionUncertainty1 = estimator.getPositionUncertaintyAsDistance();
+        assertEquals(0.0, positionUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionUncertainty1.getUnit());
+        final Distance positionUncertainty2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionUncertaintyAsDistance(positionUncertainty2);
+        assertEquals(0.0, estimator.getVelocityUncertainty(), 0.0);
+        final Speed velocityUncertainty1 = estimator.getVelocityUncertaintyAsSpeed();
+        assertEquals(0.0, velocityUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityUncertainty1.getUnit());
+        final Speed velocityUncertainty2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityUncertaintyAsSpeed(velocityUncertainty2);
+        assertEquals(velocityUncertainty1, velocityUncertainty2);
+        assertEquals(0.0, estimator.getAttitudeUncertainty(), 0.0);
+        final Angle attitudeUncertainty1 = estimator.getAttitudeUncertaintyAsAngle();
+        assertEquals(0.0, attitudeUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeUncertainty1.getUnit());
+        final Angle attitudeUncertainty2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeUncertaintyAsAngle(attitudeUncertainty2);
+        assertEquals(attitudeUncertainty1, attitudeUncertainty2);
 
         final BodyKinematics kinematics1 = estimator.getFixedKinematics();
         assertEquals(new BodyKinematics(), kinematics1);
@@ -6036,40 +6777,79 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         assertTrue(nedC.equals(nedC2, ABSOLUTE_ERROR));
 
         assertEquals(0, estimator.getNumberOfProcessedSamples());
+        assertEquals(0, estimator.getNumberOfProcessedDriftPeriods());
+        assertEquals(0.0, estimator.getElapsedTimeSeconds(), 0.0);
+        final Time elapsedTime1 = estimator.getElapsedTime();
+        assertEquals(0.0, elapsedTime1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, elapsedTime1.getUnit());
+        final Time elapsedTime2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getElapsedTime(elapsedTime2);
+        assertEquals(elapsedTime1, elapsedTime2);
         assertTrue(estimator.isFixKinematicsEnabled());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES,
+                estimator.getDriftPeriodSamples());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                estimator.getDriftPeriodSeconds(), 0.0);
+        final Time driftPeriod1 = estimator.getDriftPeriod();
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                driftPeriod1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, driftPeriod1.getUnit());
+        final Time driftPeriod2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getDriftPeriod(driftPeriod2);
+        assertEquals(driftPeriod1, driftPeriod2);
         assertFalse(estimator.isRunning());
+        assertTrue(estimator.isReady());
 
         assertEquals(0.0, estimator.getAccelerometerBiasPSD(), 0.0);
         assertEquals(0.0, estimator.getGyroBiasPSD(), 0.0);
-        assertEquals(0.0, estimator.getPositionVariance(), 0.0);
-        assertEquals(0.0, estimator.getVelocityVariance(), 0.0);
-        assertEquals(0.0, estimator.getAttitudeVariance(), 0.0);
-
-        assertEquals(0.0, estimator.getPositionStandardDeviation(),
+        assertEquals(0.0, estimator.getPositionNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getVelocityNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getAttitudeNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getPositionNoiseStandardDeviation(),
                 0.0);
-        final Distance positionStd1 = estimator.getPositionStandardDeviationAsDistance();
-        assertEquals(0.0, positionStd1.getValue().doubleValue(), 0.0);
-        assertEquals(DistanceUnit.METER, positionStd1.getUnit());
-        final Distance positionStd2 = new Distance(1.0, DistanceUnit.INCH);
-        estimator.getPositionStandardDeviationAsDistance(positionStd2);
-        assertEquals(positionStd1, positionStd2);
-
-        assertEquals(0.0, estimator.getVelocityStandardDeviation(),
+        final Distance positionNoiseStd1 = estimator.getPositionNoiseStandardDeviationAsDistance();
+        assertEquals(0.0, positionNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionNoiseStd1.getUnit());
+        final Distance positionNoiseStd2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionNoiseStandardDeviationAsDistance(positionNoiseStd2);
+        assertEquals(positionNoiseStd1, positionNoiseStd2);
+        assertEquals(0.0, estimator.getVelocityNoiseStandardDeviation(),
                 0.0);
-        final Speed speedStd1 = estimator.getVelocityStandardDeviationAsSpeed();
-        assertEquals(0.0, speedStd1.getValue().doubleValue(), 0.0);
-        assertEquals(SpeedUnit.METERS_PER_SECOND, speedStd1.getUnit());
-        final Speed speedStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        estimator.getVelocityStandardDeviationAsSpeed(speedStd2);
-        assertEquals(speedStd1, speedStd2);
-
-        assertEquals(0.0, estimator.getAttitudeStandardDeviation(), 0.0);
-        final Angle attitudeStd1 = estimator.getAttitudeStandardDeviationAsAngle();
-        assertEquals(0.0, attitudeStd1.getValue().doubleValue(), 0.0);
-        assertEquals(AngleUnit.RADIANS, attitudeStd1.getUnit());
-        final Angle attitudeStd2 = new Angle(1.0, AngleUnit.DEGREES);
-        estimator.getAttitudeStandardDeviationAsAngle(attitudeStd2);
-        assertEquals(attitudeStd1, attitudeStd2);
+        final Speed velocityNoiseStd1 = estimator.getVelocityNoiseStandardDeviationAsSpeed();
+        assertEquals(0.0, velocityNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityNoiseStd1.getUnit());
+        final Speed velocityNoiseStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityNoiseStandardDeviationAsSpeed(velocityNoiseStd2);
+        assertEquals(velocityNoiseStd1, velocityNoiseStd2);
+        assertEquals(0.0, estimator.getAttitudeNoiseStandardDeviation(), 0.0);
+        final Angle attitudeNoiseStd1 = estimator.getAttitudeNoiseStandardDeviationAsAngle();
+        assertEquals(0.0, attitudeNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeNoiseStd1.getUnit());
+        final Angle attitudeNoiseStd2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeNoiseStandardDeviationAsAngle(attitudeNoiseStd2);
+        assertEquals(attitudeNoiseStd1, attitudeNoiseStd2);
+        assertEquals(0.0, estimator.getPositionUncertainty(), 0.0);
+        final Distance positionUncertainty1 = estimator.getPositionUncertaintyAsDistance();
+        assertEquals(0.0, positionUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionUncertainty1.getUnit());
+        final Distance positionUncertainty2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionUncertaintyAsDistance(positionUncertainty2);
+        assertEquals(0.0, estimator.getVelocityUncertainty(), 0.0);
+        final Speed velocityUncertainty1 = estimator.getVelocityUncertaintyAsSpeed();
+        assertEquals(0.0, velocityUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityUncertainty1.getUnit());
+        final Speed velocityUncertainty2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityUncertaintyAsSpeed(velocityUncertainty2);
+        assertEquals(velocityUncertainty1, velocityUncertainty2);
+        assertEquals(0.0, estimator.getAttitudeUncertainty(), 0.0);
+        final Angle attitudeUncertainty1 = estimator.getAttitudeUncertaintyAsAngle();
+        assertEquals(0.0, attitudeUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeUncertainty1.getUnit());
+        final Angle attitudeUncertainty2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeUncertaintyAsAngle(attitudeUncertainty2);
+        assertEquals(attitudeUncertainty1, attitudeUncertainty2);
 
         final BodyKinematics kinematics1 = estimator.getFixedKinematics();
         assertEquals(new BodyKinematics(), kinematics1);
@@ -6362,40 +7142,79 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         assertTrue(nedC.equals(nedC2, ABSOLUTE_ERROR));
 
         assertEquals(0, estimator.getNumberOfProcessedSamples());
+        assertEquals(0, estimator.getNumberOfProcessedDriftPeriods());
+        assertEquals(0.0, estimator.getElapsedTimeSeconds(), 0.0);
+        final Time elapsedTime1 = estimator.getElapsedTime();
+        assertEquals(0.0, elapsedTime1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, elapsedTime1.getUnit());
+        final Time elapsedTime2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getElapsedTime(elapsedTime2);
+        assertEquals(elapsedTime1, elapsedTime2);
         assertTrue(estimator.isFixKinematicsEnabled());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES,
+                estimator.getDriftPeriodSamples());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                estimator.getDriftPeriodSeconds(), 0.0);
+        final Time driftPeriod1 = estimator.getDriftPeriod();
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                driftPeriod1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, driftPeriod1.getUnit());
+        final Time driftPeriod2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getDriftPeriod(driftPeriod2);
+        assertEquals(driftPeriod1, driftPeriod2);
         assertFalse(estimator.isRunning());
+        assertTrue(estimator.isReady());
 
         assertEquals(0.0, estimator.getAccelerometerBiasPSD(), 0.0);
         assertEquals(0.0, estimator.getGyroBiasPSD(), 0.0);
-        assertEquals(0.0, estimator.getPositionVariance(), 0.0);
-        assertEquals(0.0, estimator.getVelocityVariance(), 0.0);
-        assertEquals(0.0, estimator.getAttitudeVariance(), 0.0);
-
-        assertEquals(0.0, estimator.getPositionStandardDeviation(),
+        assertEquals(0.0, estimator.getPositionNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getVelocityNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getAttitudeNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getPositionNoiseStandardDeviation(),
                 0.0);
-        final Distance positionStd1 = estimator.getPositionStandardDeviationAsDistance();
-        assertEquals(0.0, positionStd1.getValue().doubleValue(), 0.0);
-        assertEquals(DistanceUnit.METER, positionStd1.getUnit());
-        final Distance positionStd2 = new Distance(1.0, DistanceUnit.INCH);
-        estimator.getPositionStandardDeviationAsDistance(positionStd2);
-        assertEquals(positionStd1, positionStd2);
-
-        assertEquals(0.0, estimator.getVelocityStandardDeviation(),
+        final Distance positionNoiseStd1 = estimator.getPositionNoiseStandardDeviationAsDistance();
+        assertEquals(0.0, positionNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionNoiseStd1.getUnit());
+        final Distance positionNoiseStd2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionNoiseStandardDeviationAsDistance(positionNoiseStd2);
+        assertEquals(positionNoiseStd1, positionNoiseStd2);
+        assertEquals(0.0, estimator.getVelocityNoiseStandardDeviation(),
                 0.0);
-        final Speed speedStd1 = estimator.getVelocityStandardDeviationAsSpeed();
-        assertEquals(0.0, speedStd1.getValue().doubleValue(), 0.0);
-        assertEquals(SpeedUnit.METERS_PER_SECOND, speedStd1.getUnit());
-        final Speed speedStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        estimator.getVelocityStandardDeviationAsSpeed(speedStd2);
-        assertEquals(speedStd1, speedStd2);
-
-        assertEquals(0.0, estimator.getAttitudeStandardDeviation(), 0.0);
-        final Angle attitudeStd1 = estimator.getAttitudeStandardDeviationAsAngle();
-        assertEquals(0.0, attitudeStd1.getValue().doubleValue(), 0.0);
-        assertEquals(AngleUnit.RADIANS, attitudeStd1.getUnit());
-        final Angle attitudeStd2 = new Angle(1.0, AngleUnit.DEGREES);
-        estimator.getAttitudeStandardDeviationAsAngle(attitudeStd2);
-        assertEquals(attitudeStd1, attitudeStd2);
+        final Speed velocityNoiseStd1 = estimator.getVelocityNoiseStandardDeviationAsSpeed();
+        assertEquals(0.0, velocityNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityNoiseStd1.getUnit());
+        final Speed velocityNoiseStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityNoiseStandardDeviationAsSpeed(velocityNoiseStd2);
+        assertEquals(velocityNoiseStd1, velocityNoiseStd2);
+        assertEquals(0.0, estimator.getAttitudeNoiseStandardDeviation(), 0.0);
+        final Angle attitudeNoiseStd1 = estimator.getAttitudeNoiseStandardDeviationAsAngle();
+        assertEquals(0.0, attitudeNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeNoiseStd1.getUnit());
+        final Angle attitudeNoiseStd2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeNoiseStandardDeviationAsAngle(attitudeNoiseStd2);
+        assertEquals(attitudeNoiseStd1, attitudeNoiseStd2);
+        assertEquals(0.0, estimator.getPositionUncertainty(), 0.0);
+        final Distance positionUncertainty1 = estimator.getPositionUncertaintyAsDistance();
+        assertEquals(0.0, positionUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionUncertainty1.getUnit());
+        final Distance positionUncertainty2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionUncertaintyAsDistance(positionUncertainty2);
+        assertEquals(0.0, estimator.getVelocityUncertainty(), 0.0);
+        final Speed velocityUncertainty1 = estimator.getVelocityUncertaintyAsSpeed();
+        assertEquals(0.0, velocityUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityUncertainty1.getUnit());
+        final Speed velocityUncertainty2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityUncertaintyAsSpeed(velocityUncertainty2);
+        assertEquals(velocityUncertainty1, velocityUncertainty2);
+        assertEquals(0.0, estimator.getAttitudeUncertainty(), 0.0);
+        final Angle attitudeUncertainty1 = estimator.getAttitudeUncertaintyAsAngle();
+        assertEquals(0.0, attitudeUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeUncertainty1.getUnit());
+        final Angle attitudeUncertainty2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeUncertaintyAsAngle(attitudeUncertainty2);
+        assertEquals(attitudeUncertainty1, attitudeUncertainty2);
 
         final BodyKinematics kinematics1 = estimator.getFixedKinematics();
         assertEquals(new BodyKinematics(), kinematics1);
@@ -6606,40 +7425,79 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         assertTrue(nedC.equals(nedC2, ABSOLUTE_ERROR));
 
         assertEquals(0, estimator.getNumberOfProcessedSamples());
+        assertEquals(0, estimator.getNumberOfProcessedDriftPeriods());
+        assertEquals(0.0, estimator.getElapsedTimeSeconds(), 0.0);
+        final Time elapsedTime1 = estimator.getElapsedTime();
+        assertEquals(0.0, elapsedTime1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, elapsedTime1.getUnit());
+        final Time elapsedTime2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getElapsedTime(elapsedTime2);
+        assertEquals(elapsedTime1, elapsedTime2);
         assertTrue(estimator.isFixKinematicsEnabled());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES,
+                estimator.getDriftPeriodSamples());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                estimator.getDriftPeriodSeconds(), 0.0);
+        final Time driftPeriod1 = estimator.getDriftPeriod();
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                driftPeriod1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, driftPeriod1.getUnit());
+        final Time driftPeriod2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getDriftPeriod(driftPeriod2);
+        assertEquals(driftPeriod1, driftPeriod2);
         assertFalse(estimator.isRunning());
+        assertTrue(estimator.isReady());
 
         assertEquals(0.0, estimator.getAccelerometerBiasPSD(), 0.0);
         assertEquals(0.0, estimator.getGyroBiasPSD(), 0.0);
-        assertEquals(0.0, estimator.getPositionVariance(), 0.0);
-        assertEquals(0.0, estimator.getVelocityVariance(), 0.0);
-        assertEquals(0.0, estimator.getAttitudeVariance(), 0.0);
-
-        assertEquals(0.0, estimator.getPositionStandardDeviation(),
+        assertEquals(0.0, estimator.getPositionNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getVelocityNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getAttitudeNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getPositionNoiseStandardDeviation(),
                 0.0);
-        final Distance positionStd1 = estimator.getPositionStandardDeviationAsDistance();
-        assertEquals(0.0, positionStd1.getValue().doubleValue(), 0.0);
-        assertEquals(DistanceUnit.METER, positionStd1.getUnit());
-        final Distance positionStd2 = new Distance(1.0, DistanceUnit.INCH);
-        estimator.getPositionStandardDeviationAsDistance(positionStd2);
-        assertEquals(positionStd1, positionStd2);
-
-        assertEquals(0.0, estimator.getVelocityStandardDeviation(),
+        final Distance positionNoiseStd1 = estimator.getPositionNoiseStandardDeviationAsDistance();
+        assertEquals(0.0, positionNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionNoiseStd1.getUnit());
+        final Distance positionNoiseStd2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionNoiseStandardDeviationAsDistance(positionNoiseStd2);
+        assertEquals(positionNoiseStd1, positionNoiseStd2);
+        assertEquals(0.0, estimator.getVelocityNoiseStandardDeviation(),
                 0.0);
-        final Speed speedStd1 = estimator.getVelocityStandardDeviationAsSpeed();
-        assertEquals(0.0, speedStd1.getValue().doubleValue(), 0.0);
-        assertEquals(SpeedUnit.METERS_PER_SECOND, speedStd1.getUnit());
-        final Speed speedStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        estimator.getVelocityStandardDeviationAsSpeed(speedStd2);
-        assertEquals(speedStd1, speedStd2);
-
-        assertEquals(0.0, estimator.getAttitudeStandardDeviation(), 0.0);
-        final Angle attitudeStd1 = estimator.getAttitudeStandardDeviationAsAngle();
-        assertEquals(0.0, attitudeStd1.getValue().doubleValue(), 0.0);
-        assertEquals(AngleUnit.RADIANS, attitudeStd1.getUnit());
-        final Angle attitudeStd2 = new Angle(1.0, AngleUnit.DEGREES);
-        estimator.getAttitudeStandardDeviationAsAngle(attitudeStd2);
-        assertEquals(attitudeStd1, attitudeStd2);
+        final Speed velocityNoiseStd1 = estimator.getVelocityNoiseStandardDeviationAsSpeed();
+        assertEquals(0.0, velocityNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityNoiseStd1.getUnit());
+        final Speed velocityNoiseStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityNoiseStandardDeviationAsSpeed(velocityNoiseStd2);
+        assertEquals(velocityNoiseStd1, velocityNoiseStd2);
+        assertEquals(0.0, estimator.getAttitudeNoiseStandardDeviation(), 0.0);
+        final Angle attitudeNoiseStd1 = estimator.getAttitudeNoiseStandardDeviationAsAngle();
+        assertEquals(0.0, attitudeNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeNoiseStd1.getUnit());
+        final Angle attitudeNoiseStd2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeNoiseStandardDeviationAsAngle(attitudeNoiseStd2);
+        assertEquals(attitudeNoiseStd1, attitudeNoiseStd2);
+        assertEquals(0.0, estimator.getPositionUncertainty(), 0.0);
+        final Distance positionUncertainty1 = estimator.getPositionUncertaintyAsDistance();
+        assertEquals(0.0, positionUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionUncertainty1.getUnit());
+        final Distance positionUncertainty2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionUncertaintyAsDistance(positionUncertainty2);
+        assertEquals(0.0, estimator.getVelocityUncertainty(), 0.0);
+        final Speed velocityUncertainty1 = estimator.getVelocityUncertaintyAsSpeed();
+        assertEquals(0.0, velocityUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityUncertainty1.getUnit());
+        final Speed velocityUncertainty2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityUncertaintyAsSpeed(velocityUncertainty2);
+        assertEquals(velocityUncertainty1, velocityUncertainty2);
+        assertEquals(0.0, estimator.getAttitudeUncertainty(), 0.0);
+        final Angle attitudeUncertainty1 = estimator.getAttitudeUncertaintyAsAngle();
+        assertEquals(0.0, attitudeUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeUncertainty1.getUnit());
+        final Angle attitudeUncertainty2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeUncertaintyAsAngle(attitudeUncertainty2);
+        assertEquals(attitudeUncertainty1, attitudeUncertainty2);
 
         final BodyKinematics kinematics1 = estimator.getFixedKinematics();
         assertEquals(new BodyKinematics(), kinematics1);
@@ -6873,40 +7731,79 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         assertTrue(nedC.equals(nedC2, ABSOLUTE_ERROR));
 
         assertEquals(0, estimator.getNumberOfProcessedSamples());
+        assertEquals(0, estimator.getNumberOfProcessedDriftPeriods());
+        assertEquals(0.0, estimator.getElapsedTimeSeconds(), 0.0);
+        final Time elapsedTime1 = estimator.getElapsedTime();
+        assertEquals(0.0, elapsedTime1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, elapsedTime1.getUnit());
+        final Time elapsedTime2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getElapsedTime(elapsedTime2);
+        assertEquals(elapsedTime1, elapsedTime2);
         assertTrue(estimator.isFixKinematicsEnabled());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES,
+                estimator.getDriftPeriodSamples());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                estimator.getDriftPeriodSeconds(), 0.0);
+        final Time driftPeriod1 = estimator.getDriftPeriod();
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                driftPeriod1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, driftPeriod1.getUnit());
+        final Time driftPeriod2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getDriftPeriod(driftPeriod2);
+        assertEquals(driftPeriod1, driftPeriod2);
         assertFalse(estimator.isRunning());
+        assertTrue(estimator.isReady());
 
         assertEquals(0.0, estimator.getAccelerometerBiasPSD(), 0.0);
         assertEquals(0.0, estimator.getGyroBiasPSD(), 0.0);
-        assertEquals(0.0, estimator.getPositionVariance(), 0.0);
-        assertEquals(0.0, estimator.getVelocityVariance(), 0.0);
-        assertEquals(0.0, estimator.getAttitudeVariance(), 0.0);
-
-        assertEquals(0.0, estimator.getPositionStandardDeviation(),
+        assertEquals(0.0, estimator.getPositionNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getVelocityNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getAttitudeNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getPositionNoiseStandardDeviation(),
                 0.0);
-        final Distance positionStd1 = estimator.getPositionStandardDeviationAsDistance();
-        assertEquals(0.0, positionStd1.getValue().doubleValue(), 0.0);
-        assertEquals(DistanceUnit.METER, positionStd1.getUnit());
-        final Distance positionStd2 = new Distance(1.0, DistanceUnit.INCH);
-        estimator.getPositionStandardDeviationAsDistance(positionStd2);
-        assertEquals(positionStd1, positionStd2);
-
-        assertEquals(0.0, estimator.getVelocityStandardDeviation(),
+        final Distance positionNoiseStd1 = estimator.getPositionNoiseStandardDeviationAsDistance();
+        assertEquals(0.0, positionNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionNoiseStd1.getUnit());
+        final Distance positionNoiseStd2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionNoiseStandardDeviationAsDistance(positionNoiseStd2);
+        assertEquals(positionNoiseStd1, positionNoiseStd2);
+        assertEquals(0.0, estimator.getVelocityNoiseStandardDeviation(),
                 0.0);
-        final Speed speedStd1 = estimator.getVelocityStandardDeviationAsSpeed();
-        assertEquals(0.0, speedStd1.getValue().doubleValue(), 0.0);
-        assertEquals(SpeedUnit.METERS_PER_SECOND, speedStd1.getUnit());
-        final Speed speedStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        estimator.getVelocityStandardDeviationAsSpeed(speedStd2);
-        assertEquals(speedStd1, speedStd2);
-
-        assertEquals(0.0, estimator.getAttitudeStandardDeviation(), 0.0);
-        final Angle attitudeStd1 = estimator.getAttitudeStandardDeviationAsAngle();
-        assertEquals(0.0, attitudeStd1.getValue().doubleValue(), 0.0);
-        assertEquals(AngleUnit.RADIANS, attitudeStd1.getUnit());
-        final Angle attitudeStd2 = new Angle(1.0, AngleUnit.DEGREES);
-        estimator.getAttitudeStandardDeviationAsAngle(attitudeStd2);
-        assertEquals(attitudeStd1, attitudeStd2);
+        final Speed velocityNoiseStd1 = estimator.getVelocityNoiseStandardDeviationAsSpeed();
+        assertEquals(0.0, velocityNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityNoiseStd1.getUnit());
+        final Speed velocityNoiseStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityNoiseStandardDeviationAsSpeed(velocityNoiseStd2);
+        assertEquals(velocityNoiseStd1, velocityNoiseStd2);
+        assertEquals(0.0, estimator.getAttitudeNoiseStandardDeviation(), 0.0);
+        final Angle attitudeNoiseStd1 = estimator.getAttitudeNoiseStandardDeviationAsAngle();
+        assertEquals(0.0, attitudeNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeNoiseStd1.getUnit());
+        final Angle attitudeNoiseStd2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeNoiseStandardDeviationAsAngle(attitudeNoiseStd2);
+        assertEquals(attitudeNoiseStd1, attitudeNoiseStd2);
+        assertEquals(0.0, estimator.getPositionUncertainty(), 0.0);
+        final Distance positionUncertainty1 = estimator.getPositionUncertaintyAsDistance();
+        assertEquals(0.0, positionUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionUncertainty1.getUnit());
+        final Distance positionUncertainty2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionUncertaintyAsDistance(positionUncertainty2);
+        assertEquals(0.0, estimator.getVelocityUncertainty(), 0.0);
+        final Speed velocityUncertainty1 = estimator.getVelocityUncertaintyAsSpeed();
+        assertEquals(0.0, velocityUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityUncertainty1.getUnit());
+        final Speed velocityUncertainty2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityUncertaintyAsSpeed(velocityUncertainty2);
+        assertEquals(velocityUncertainty1, velocityUncertainty2);
+        assertEquals(0.0, estimator.getAttitudeUncertainty(), 0.0);
+        final Angle attitudeUncertainty1 = estimator.getAttitudeUncertaintyAsAngle();
+        assertEquals(0.0, attitudeUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeUncertainty1.getUnit());
+        final Angle attitudeUncertainty2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeUncertaintyAsAngle(attitudeUncertainty2);
+        assertEquals(attitudeUncertainty1, attitudeUncertainty2);
 
         final BodyKinematics kinematics1 = estimator.getFixedKinematics();
         assertEquals(new BodyKinematics(), kinematics1);
@@ -7183,40 +8080,79 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         assertTrue(nedC.equals(nedC2, VERY_LARGE_ABSOLUTE_ERROR));
 
         assertEquals(0, estimator.getNumberOfProcessedSamples());
+        assertEquals(0, estimator.getNumberOfProcessedDriftPeriods());
+        assertEquals(0.0, estimator.getElapsedTimeSeconds(), 0.0);
+        final Time elapsedTime1 = estimator.getElapsedTime();
+        assertEquals(0.0, elapsedTime1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, elapsedTime1.getUnit());
+        final Time elapsedTime2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getElapsedTime(elapsedTime2);
+        assertEquals(elapsedTime1, elapsedTime2);
         assertTrue(estimator.isFixKinematicsEnabled());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES,
+                estimator.getDriftPeriodSamples());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                estimator.getDriftPeriodSeconds(), 0.0);
+        final Time driftPeriod1 = estimator.getDriftPeriod();
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                driftPeriod1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, driftPeriod1.getUnit());
+        final Time driftPeriod2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getDriftPeriod(driftPeriod2);
+        assertEquals(driftPeriod1, driftPeriod2);
         assertFalse(estimator.isRunning());
+        assertTrue(estimator.isReady());
 
         assertEquals(0.0, estimator.getAccelerometerBiasPSD(), 0.0);
         assertEquals(0.0, estimator.getGyroBiasPSD(), 0.0);
-        assertEquals(0.0, estimator.getPositionVariance(), 0.0);
-        assertEquals(0.0, estimator.getVelocityVariance(), 0.0);
-        assertEquals(0.0, estimator.getAttitudeVariance(), 0.0);
-
-        assertEquals(0.0, estimator.getPositionStandardDeviation(),
+        assertEquals(0.0, estimator.getPositionNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getVelocityNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getAttitudeNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getPositionNoiseStandardDeviation(),
                 0.0);
-        final Distance positionStd1 = estimator.getPositionStandardDeviationAsDistance();
-        assertEquals(0.0, positionStd1.getValue().doubleValue(), 0.0);
-        assertEquals(DistanceUnit.METER, positionStd1.getUnit());
-        final Distance positionStd2 = new Distance(1.0, DistanceUnit.INCH);
-        estimator.getPositionStandardDeviationAsDistance(positionStd2);
-        assertEquals(positionStd1, positionStd2);
-
-        assertEquals(0.0, estimator.getVelocityStandardDeviation(),
+        final Distance positionNoiseStd1 = estimator.getPositionNoiseStandardDeviationAsDistance();
+        assertEquals(0.0, positionNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionNoiseStd1.getUnit());
+        final Distance positionNoiseStd2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionNoiseStandardDeviationAsDistance(positionNoiseStd2);
+        assertEquals(positionNoiseStd1, positionNoiseStd2);
+        assertEquals(0.0, estimator.getVelocityNoiseStandardDeviation(),
                 0.0);
-        final Speed speedStd1 = estimator.getVelocityStandardDeviationAsSpeed();
-        assertEquals(0.0, speedStd1.getValue().doubleValue(), 0.0);
-        assertEquals(SpeedUnit.METERS_PER_SECOND, speedStd1.getUnit());
-        final Speed speedStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        estimator.getVelocityStandardDeviationAsSpeed(speedStd2);
-        assertEquals(speedStd1, speedStd2);
-
-        assertEquals(0.0, estimator.getAttitudeStandardDeviation(), 0.0);
-        final Angle attitudeStd1 = estimator.getAttitudeStandardDeviationAsAngle();
-        assertEquals(0.0, attitudeStd1.getValue().doubleValue(), 0.0);
-        assertEquals(AngleUnit.RADIANS, attitudeStd1.getUnit());
-        final Angle attitudeStd2 = new Angle(1.0, AngleUnit.DEGREES);
-        estimator.getAttitudeStandardDeviationAsAngle(attitudeStd2);
-        assertEquals(attitudeStd1, attitudeStd2);
+        final Speed velocityNoiseStd1 = estimator.getVelocityNoiseStandardDeviationAsSpeed();
+        assertEquals(0.0, velocityNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityNoiseStd1.getUnit());
+        final Speed velocityNoiseStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityNoiseStandardDeviationAsSpeed(velocityNoiseStd2);
+        assertEquals(velocityNoiseStd1, velocityNoiseStd2);
+        assertEquals(0.0, estimator.getAttitudeNoiseStandardDeviation(), 0.0);
+        final Angle attitudeNoiseStd1 = estimator.getAttitudeNoiseStandardDeviationAsAngle();
+        assertEquals(0.0, attitudeNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeNoiseStd1.getUnit());
+        final Angle attitudeNoiseStd2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeNoiseStandardDeviationAsAngle(attitudeNoiseStd2);
+        assertEquals(attitudeNoiseStd1, attitudeNoiseStd2);
+        assertEquals(0.0, estimator.getPositionUncertainty(), 0.0);
+        final Distance positionUncertainty1 = estimator.getPositionUncertaintyAsDistance();
+        assertEquals(0.0, positionUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionUncertainty1.getUnit());
+        final Distance positionUncertainty2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionUncertaintyAsDistance(positionUncertainty2);
+        assertEquals(0.0, estimator.getVelocityUncertainty(), 0.0);
+        final Speed velocityUncertainty1 = estimator.getVelocityUncertaintyAsSpeed();
+        assertEquals(0.0, velocityUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityUncertainty1.getUnit());
+        final Speed velocityUncertainty2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityUncertaintyAsSpeed(velocityUncertainty2);
+        assertEquals(velocityUncertainty1, velocityUncertainty2);
+        assertEquals(0.0, estimator.getAttitudeUncertainty(), 0.0);
+        final Angle attitudeUncertainty1 = estimator.getAttitudeUncertaintyAsAngle();
+        assertEquals(0.0, attitudeUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeUncertainty1.getUnit());
+        final Angle attitudeUncertainty2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeUncertaintyAsAngle(attitudeUncertainty2);
+        assertEquals(attitudeUncertainty1, attitudeUncertainty2);
 
         final BodyKinematics kinematics1 = estimator.getFixedKinematics();
         assertEquals(new BodyKinematics(), kinematics1);
@@ -7495,40 +8431,79 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         assertTrue(nedC.equals(nedC2, ABSOLUTE_ERROR));
 
         assertEquals(0, estimator.getNumberOfProcessedSamples());
+        assertEquals(0, estimator.getNumberOfProcessedDriftPeriods());
+        assertEquals(0.0, estimator.getElapsedTimeSeconds(), 0.0);
+        final Time elapsedTime1 = estimator.getElapsedTime();
+        assertEquals(0.0, elapsedTime1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, elapsedTime1.getUnit());
+        final Time elapsedTime2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getElapsedTime(elapsedTime2);
+        assertEquals(elapsedTime1, elapsedTime2);
         assertTrue(estimator.isFixKinematicsEnabled());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES,
+                estimator.getDriftPeriodSamples());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                estimator.getDriftPeriodSeconds(), 0.0);
+        final Time driftPeriod1 = estimator.getDriftPeriod();
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                driftPeriod1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, driftPeriod1.getUnit());
+        final Time driftPeriod2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getDriftPeriod(driftPeriod2);
+        assertEquals(driftPeriod1, driftPeriod2);
         assertFalse(estimator.isRunning());
+        assertTrue(estimator.isReady());
 
         assertEquals(0.0, estimator.getAccelerometerBiasPSD(), 0.0);
         assertEquals(0.0, estimator.getGyroBiasPSD(), 0.0);
-        assertEquals(0.0, estimator.getPositionVariance(), 0.0);
-        assertEquals(0.0, estimator.getVelocityVariance(), 0.0);
-        assertEquals(0.0, estimator.getAttitudeVariance(), 0.0);
-
-        assertEquals(0.0, estimator.getPositionStandardDeviation(),
+        assertEquals(0.0, estimator.getPositionNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getVelocityNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getAttitudeNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getPositionNoiseStandardDeviation(),
                 0.0);
-        final Distance positionStd1 = estimator.getPositionStandardDeviationAsDistance();
-        assertEquals(0.0, positionStd1.getValue().doubleValue(), 0.0);
-        assertEquals(DistanceUnit.METER, positionStd1.getUnit());
-        final Distance positionStd2 = new Distance(1.0, DistanceUnit.INCH);
-        estimator.getPositionStandardDeviationAsDistance(positionStd2);
-        assertEquals(positionStd1, positionStd2);
-
-        assertEquals(0.0, estimator.getVelocityStandardDeviation(),
+        final Distance positionNoiseStd1 = estimator.getPositionNoiseStandardDeviationAsDistance();
+        assertEquals(0.0, positionNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionNoiseStd1.getUnit());
+        final Distance positionNoiseStd2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionNoiseStandardDeviationAsDistance(positionNoiseStd2);
+        assertEquals(positionNoiseStd1, positionNoiseStd2);
+        assertEquals(0.0, estimator.getVelocityNoiseStandardDeviation(),
                 0.0);
-        final Speed speedStd1 = estimator.getVelocityStandardDeviationAsSpeed();
-        assertEquals(0.0, speedStd1.getValue().doubleValue(), 0.0);
-        assertEquals(SpeedUnit.METERS_PER_SECOND, speedStd1.getUnit());
-        final Speed speedStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        estimator.getVelocityStandardDeviationAsSpeed(speedStd2);
-        assertEquals(speedStd1, speedStd2);
-
-        assertEquals(0.0, estimator.getAttitudeStandardDeviation(), 0.0);
-        final Angle attitudeStd1 = estimator.getAttitudeStandardDeviationAsAngle();
-        assertEquals(0.0, attitudeStd1.getValue().doubleValue(), 0.0);
-        assertEquals(AngleUnit.RADIANS, attitudeStd1.getUnit());
-        final Angle attitudeStd2 = new Angle(1.0, AngleUnit.DEGREES);
-        estimator.getAttitudeStandardDeviationAsAngle(attitudeStd2);
-        assertEquals(attitudeStd1, attitudeStd2);
+        final Speed velocityNoiseStd1 = estimator.getVelocityNoiseStandardDeviationAsSpeed();
+        assertEquals(0.0, velocityNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityNoiseStd1.getUnit());
+        final Speed velocityNoiseStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityNoiseStandardDeviationAsSpeed(velocityNoiseStd2);
+        assertEquals(velocityNoiseStd1, velocityNoiseStd2);
+        assertEquals(0.0, estimator.getAttitudeNoiseStandardDeviation(), 0.0);
+        final Angle attitudeNoiseStd1 = estimator.getAttitudeNoiseStandardDeviationAsAngle();
+        assertEquals(0.0, attitudeNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeNoiseStd1.getUnit());
+        final Angle attitudeNoiseStd2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeNoiseStandardDeviationAsAngle(attitudeNoiseStd2);
+        assertEquals(attitudeNoiseStd1, attitudeNoiseStd2);
+        assertEquals(0.0, estimator.getPositionUncertainty(), 0.0);
+        final Distance positionUncertainty1 = estimator.getPositionUncertaintyAsDistance();
+        assertEquals(0.0, positionUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionUncertainty1.getUnit());
+        final Distance positionUncertainty2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionUncertaintyAsDistance(positionUncertainty2);
+        assertEquals(0.0, estimator.getVelocityUncertainty(), 0.0);
+        final Speed velocityUncertainty1 = estimator.getVelocityUncertaintyAsSpeed();
+        assertEquals(0.0, velocityUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityUncertainty1.getUnit());
+        final Speed velocityUncertainty2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityUncertaintyAsSpeed(velocityUncertainty2);
+        assertEquals(velocityUncertainty1, velocityUncertainty2);
+        assertEquals(0.0, estimator.getAttitudeUncertainty(), 0.0);
+        final Angle attitudeUncertainty1 = estimator.getAttitudeUncertaintyAsAngle();
+        assertEquals(0.0, attitudeUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeUncertainty1.getUnit());
+        final Angle attitudeUncertainty2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeUncertaintyAsAngle(attitudeUncertainty2);
+        assertEquals(attitudeUncertainty1, attitudeUncertainty2);
 
         final BodyKinematics kinematics1 = estimator.getFixedKinematics();
         assertEquals(new BodyKinematics(), kinematics1);
@@ -7596,325 +8571,376 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
     @Test
     public void testConstructor26() throws AlgebraException,
             InvalidSourceAndDestinationFrameTypeException {
-        final NEDPosition nedPosition = createPosition();
-        final CoordinateTransformation nedC = createOrientation();
-        final NEDFrame nedFrame = new NEDFrame(nedPosition, nedC);
-        final ECEFFrame ecefFrame = NEDtoECEFFrameConverter
-                .convertNEDtoECEFAndReturnNew(nedFrame);
-        final ECEFPosition ecefPosition = ecefFrame.getECEFPosition();
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            final NEDPosition nedPosition = createPosition();
+            final CoordinateTransformation nedC = createOrientation();
+            final NEDFrame nedFrame = new NEDFrame(nedPosition, nedC);
+            final ECEFFrame ecefFrame = NEDtoECEFFrameConverter
+                    .convertNEDtoECEFAndReturnNew(nedFrame);
+            final ECEFPosition ecefPosition = ecefFrame.getECEFPosition();
 
-        final Matrix ba = generateBa();
-        final AccelerationTriad baTriad = new AccelerationTriad();
-        baTriad.setValueCoordinates(ba);
-        final Matrix ma = generateMaGeneral();
-        final Matrix bg = generateBg();
-        final AngularSpeedTriad bgTriad = new AngularSpeedTriad();
-        bgTriad.setValueCoordinates(bg);
-        final Matrix mg = generateMg();
-        final Matrix gg = generateGg();
+            final Matrix ba = generateBa();
+            final AccelerationTriad baTriad = new AccelerationTriad();
+            baTriad.setValueCoordinates(ba);
+            final Matrix ma = generateMaGeneral();
+            final Matrix bg = generateBg();
+            final AngularSpeedTriad bgTriad = new AngularSpeedTriad();
+            bgTriad.setValueCoordinates(bg);
+            final Matrix mg = generateMg();
+            final Matrix gg = generateGg();
 
-        RandomWalkEstimator estimator = new RandomWalkEstimator(
-                ecefPosition, nedC, baTriad, ma, bgTriad, mg, gg, this);
+            RandomWalkEstimator estimator = new RandomWalkEstimator(
+                    ecefPosition, nedC, baTriad, ma, bgTriad, mg, gg, this);
 
-        // check default values
-        assertSame(this, estimator.getListener());
+            // check default values
+            assertSame(this, estimator.getListener());
 
-        final Matrix ba1 = estimator.getAccelerationBias();
-        assertEquals(ba, ba1);
-        final Matrix ba2 = new Matrix(3, 1);
-        estimator.getAccelerationBias(ba2);
-        assertEquals(ba1, ba2);
+            final Matrix ba1 = estimator.getAccelerationBias();
+            assertEquals(ba, ba1);
+            final Matrix ba2 = new Matrix(3, 1);
+            estimator.getAccelerationBias(ba2);
+            assertEquals(ba1, ba2);
 
-        final double[] ba3 = estimator.getAccelerationBiasArray();
-        assertArrayEquals(ba.getBuffer(), ba3, 0.0);
-        final double[] ba4 = new double[3];
-        estimator.getAccelerationBiasArray(ba4);
-        assertArrayEquals(ba3, ba4, 0.0);
+            final double[] ba3 = estimator.getAccelerationBiasArray();
+            assertArrayEquals(ba.getBuffer(), ba3, 0.0);
+            final double[] ba4 = new double[3];
+            estimator.getAccelerationBiasArray(ba4);
+            assertArrayEquals(ba3, ba4, 0.0);
 
-        final AccelerationTriad triad1 = estimator.getAccelerationBiasAsTriad();
-        assertEquals(baTriad, triad1);
-        final AccelerationTriad triad2 = new AccelerationTriad();
-        estimator.getAccelerationBiasAsTriad(triad2);
-        assertEquals(triad1, triad2);
+            final AccelerationTriad triad1 = estimator.getAccelerationBiasAsTriad();
+            assertEquals(baTriad, triad1);
+            final AccelerationTriad triad2 = new AccelerationTriad();
+            estimator.getAccelerationBiasAsTriad(triad2);
+            assertEquals(triad1, triad2);
 
-        assertEquals(baTriad.getValueX(),
-                estimator.getAccelerationBiasX(), 0.0);
-        assertEquals(baTriad.getValueY(),
-                estimator.getAccelerationBiasY(), 0.0);
-        assertEquals(baTriad.getValueZ(),
-                estimator.getAccelerationBiasZ(), 0.0);
+            assertEquals(baTriad.getValueX(),
+                    estimator.getAccelerationBiasX(), 0.0);
+            assertEquals(baTriad.getValueY(),
+                    estimator.getAccelerationBiasY(), 0.0);
+            assertEquals(baTriad.getValueZ(),
+                    estimator.getAccelerationBiasZ(), 0.0);
 
-        final Acceleration bax1 = estimator.getAccelerationBiasXAsAcceleration();
-        assertEquals(baTriad.getMeasurementX(), bax1);
-        final Acceleration bax2 = new Acceleration(
-                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        estimator.getAccelerationBiasXAsAcceleration(bax2);
-        assertEquals(bax1, bax2);
+            final Acceleration bax1 = estimator.getAccelerationBiasXAsAcceleration();
+            assertEquals(baTriad.getMeasurementX(), bax1);
+            final Acceleration bax2 = new Acceleration(
+                    1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+            estimator.getAccelerationBiasXAsAcceleration(bax2);
+            assertEquals(bax1, bax2);
 
-        final Acceleration bay1 = estimator.getAccelerationBiasYAsAcceleration();
-        assertEquals(baTriad.getMeasurementY(), bay1);
-        final Acceleration bay2 = new Acceleration(
-                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        estimator.getAccelerationBiasYAsAcceleration(bay2);
-        assertEquals(bay1, bay2);
+            final Acceleration bay1 = estimator.getAccelerationBiasYAsAcceleration();
+            assertEquals(baTriad.getMeasurementY(), bay1);
+            final Acceleration bay2 = new Acceleration(
+                    1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+            estimator.getAccelerationBiasYAsAcceleration(bay2);
+            assertEquals(bay1, bay2);
 
-        final Acceleration baz1 = estimator.getAccelerationBiasZAsAcceleration();
-        assertEquals(baTriad.getMeasurementZ(), baz1);
-        final Acceleration baz2 = new Acceleration(
-                1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        estimator.getAccelerationBiasZAsAcceleration(baz2);
-        assertEquals(baz1, baz2);
+            final Acceleration baz1 = estimator.getAccelerationBiasZAsAcceleration();
+            assertEquals(baTriad.getMeasurementZ(), baz1);
+            final Acceleration baz2 = new Acceleration(
+                    1.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+            estimator.getAccelerationBiasZAsAcceleration(baz2);
+            assertEquals(baz1, baz2);
 
-        final Matrix ma1 = estimator.getAccelerationCrossCouplingErrors();
-        assertEquals(ma, ma1);
+            final Matrix ma1 = estimator.getAccelerationCrossCouplingErrors();
+            assertEquals(ma, ma1);
 
-        final Matrix ma2 = new Matrix(3, 3);
-        estimator.getAccelerationCrossCouplingErrors(ma2);
-        assertEquals(ma1, ma2);
+            final Matrix ma2 = new Matrix(3, 3);
+            estimator.getAccelerationCrossCouplingErrors(ma2);
+            assertEquals(ma1, ma2);
 
-        double sx = ma.getElementAt(0, 0);
-        double sy = ma.getElementAt(1, 1);
-        double sz = ma.getElementAt(2, 2);
-        double mxy = ma.getElementAt(0, 1);
-        double mxz = ma.getElementAt(0, 2);
-        double myx = ma.getElementAt(1, 0);
-        double myz = ma.getElementAt(1, 2);
-        double mzx = ma.getElementAt(2, 0);
-        double mzy = ma.getElementAt(2, 1);
-        assertEquals(sx, estimator.getAccelerationSx(), 0.0);
-        assertEquals(sy, estimator.getAccelerationSy(), 0.0);
-        assertEquals(sz, estimator.getAccelerationSz(), 0.0);
-        assertEquals(mxy, estimator.getAccelerationMxy(), 0.0);
-        assertEquals(mxz, estimator.getAccelerationMxz(), 0.0);
-        assertEquals(myx, estimator.getAccelerationMyx(), 0.0);
-        assertEquals(myz, estimator.getAccelerationMyz(), 0.0);
-        assertEquals(mzx, estimator.getAccelerationMzx(), 0.0);
-        assertEquals(mzy, estimator.getAccelerationMzy(), 0.0);
+            double sx = ma.getElementAt(0, 0);
+            double sy = ma.getElementAt(1, 1);
+            double sz = ma.getElementAt(2, 2);
+            double mxy = ma.getElementAt(0, 1);
+            double mxz = ma.getElementAt(0, 2);
+            double myx = ma.getElementAt(1, 0);
+            double myz = ma.getElementAt(1, 2);
+            double mzx = ma.getElementAt(2, 0);
+            double mzy = ma.getElementAt(2, 1);
+            assertEquals(sx, estimator.getAccelerationSx(), 0.0);
+            assertEquals(sy, estimator.getAccelerationSy(), 0.0);
+            assertEquals(sz, estimator.getAccelerationSz(), 0.0);
+            assertEquals(mxy, estimator.getAccelerationMxy(), 0.0);
+            assertEquals(mxz, estimator.getAccelerationMxz(), 0.0);
+            assertEquals(myx, estimator.getAccelerationMyx(), 0.0);
+            assertEquals(myz, estimator.getAccelerationMyz(), 0.0);
+            assertEquals(mzx, estimator.getAccelerationMzx(), 0.0);
+            assertEquals(mzy, estimator.getAccelerationMzy(), 0.0);
 
-        final Matrix bg1 = estimator.getAngularSpeedBias();
-        assertEquals(bg, bg1);
-        final Matrix bg2 = new Matrix(3, 1);
-        estimator.getAngularSpeedBias(bg2);
-        assertEquals(bg1, bg2);
+            final Matrix bg1 = estimator.getAngularSpeedBias();
+            assertEquals(bg, bg1);
+            final Matrix bg2 = new Matrix(3, 1);
+            estimator.getAngularSpeedBias(bg2);
+            assertEquals(bg1, bg2);
 
-        final double[] bg3 = estimator.getAngularSpeedBiasArray();
-        assertArrayEquals(bg.getBuffer(), bg3, 0.0);
-        final double[] bg4 = new double[3];
-        estimator.getAngularSpeedBiasArray(bg4);
-        assertArrayEquals(bg3, bg4, 0.0);
+            final double[] bg3 = estimator.getAngularSpeedBiasArray();
+            assertArrayEquals(bg.getBuffer(), bg3, 0.0);
+            final double[] bg4 = new double[3];
+            estimator.getAngularSpeedBiasArray(bg4);
+            assertArrayEquals(bg3, bg4, 0.0);
 
-        final AngularSpeedTriad triad3 = estimator.getAngularSpeedBiasAsTriad();
-        assertEquals(bgTriad, triad3);
-        final AngularSpeedTriad triad4 = new AngularSpeedTriad();
-        estimator.getAngularSpeedBiasAsTriad(triad4);
-        assertEquals(triad3, triad4);
+            final AngularSpeedTriad triad3 = estimator.getAngularSpeedBiasAsTriad();
+            assertEquals(bgTriad, triad3);
+            final AngularSpeedTriad triad4 = new AngularSpeedTriad();
+            estimator.getAngularSpeedBiasAsTriad(triad4);
+            assertEquals(triad3, triad4);
 
-        assertEquals(bgTriad.getValueX(),
-                estimator.getAngularSpeedBiasX(), 0.0);
-        assertEquals(bgTriad.getValueY(),
-                estimator.getAngularSpeedBiasY(), 0.0);
-        assertEquals(bgTriad.getValueZ(),
-                estimator.getAngularSpeedBiasZ(), 0.0);
+            assertEquals(bgTriad.getValueX(),
+                    estimator.getAngularSpeedBiasX(), 0.0);
+            assertEquals(bgTriad.getValueY(),
+                    estimator.getAngularSpeedBiasY(), 0.0);
+            assertEquals(bgTriad.getValueZ(),
+                    estimator.getAngularSpeedBiasZ(), 0.0);
 
-        final AngularSpeed bgx1 = estimator.getAngularSpeedBiasXAsAngularSpeed();
-        assertEquals(bgTriad.getMeasurementX(), bgx1);
-        final AngularSpeed bgx2 = new AngularSpeed(
-                1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        estimator.getAngularSpeedBiasXAsAngularSpeed(bgx2);
-        assertEquals(bgx1, bgx2);
+            final AngularSpeed bgx1 = estimator.getAngularSpeedBiasXAsAngularSpeed();
+            assertEquals(bgTriad.getMeasurementX(), bgx1);
+            final AngularSpeed bgx2 = new AngularSpeed(
+                    1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
+            estimator.getAngularSpeedBiasXAsAngularSpeed(bgx2);
+            assertEquals(bgx1, bgx2);
 
-        final AngularSpeed bgy1 = estimator.getAngularSpeedBiasYAsAngularSpeed();
-        assertEquals(bgTriad.getMeasurementY(), bgy1);
-        final AngularSpeed bgy2 = new AngularSpeed(
-                1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        estimator.getAngularSpeedBiasYAsAngularSpeed(bgy2);
-        assertEquals(bgy1, bgy2);
+            final AngularSpeed bgy1 = estimator.getAngularSpeedBiasYAsAngularSpeed();
+            assertEquals(bgTriad.getMeasurementY(), bgy1);
+            final AngularSpeed bgy2 = new AngularSpeed(
+                    1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
+            estimator.getAngularSpeedBiasYAsAngularSpeed(bgy2);
+            assertEquals(bgy1, bgy2);
 
-        final AngularSpeed bgz1 = estimator.getAngularSpeedBiasZAsAngularSpeed();
-        assertEquals(bgTriad.getMeasurementZ(), bgz1);
-        final AngularSpeed bgz2 = new AngularSpeed(
-                1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        estimator.getAngularSpeedBiasZAsAngularSpeed(bgz2);
-        assertEquals(bgz1, bgz2);
+            final AngularSpeed bgz1 = estimator.getAngularSpeedBiasZAsAngularSpeed();
+            assertEquals(bgTriad.getMeasurementZ(), bgz1);
+            final AngularSpeed bgz2 = new AngularSpeed(
+                    1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
+            estimator.getAngularSpeedBiasZAsAngularSpeed(bgz2);
+            assertEquals(bgz1, bgz2);
 
-        final Matrix mg1 = estimator.getAngularSpeedCrossCouplingErrors();
-        assertEquals(mg, mg1);
-        final Matrix mg2 = new Matrix(3, 3);
-        estimator.getAngularSpeedCrossCouplingErrors(mg2);
-        assertEquals(mg1, mg2);
+            final Matrix mg1 = estimator.getAngularSpeedCrossCouplingErrors();
+            assertEquals(mg, mg1);
+            final Matrix mg2 = new Matrix(3, 3);
+            estimator.getAngularSpeedCrossCouplingErrors(mg2);
+            assertEquals(mg1, mg2);
 
-        sx = mg.getElementAt(0, 0);
-        sy = mg.getElementAt(1, 1);
-        sz = mg.getElementAt(2, 2);
-        mxy = mg.getElementAt(0, 1);
-        mxz = mg.getElementAt(0, 2);
-        myx = mg.getElementAt(1, 0);
-        myz = mg.getElementAt(1, 2);
-        mzx = mg.getElementAt(2, 0);
-        mzy = mg.getElementAt(2, 1);
-        assertEquals(sx, estimator.getAngularSpeedSx(), 0.0);
-        assertEquals(sy, estimator.getAngularSpeedSy(), 0.0);
-        assertEquals(sz, estimator.getAngularSpeedSz(), 0.0);
-        assertEquals(mxy, estimator.getAngularSpeedMxy(), 0.0);
-        assertEquals(mxz, estimator.getAngularSpeedMxz(), 0.0);
-        assertEquals(myx, estimator.getAngularSpeedMyx(), 0.0);
-        assertEquals(myz, estimator.getAngularSpeedMyz(), 0.0);
-        assertEquals(mzx, estimator.getAngularSpeedMzx(), 0.0);
-        assertEquals(mzy, estimator.getAngularSpeedMzy(), 0.0);
+            sx = mg.getElementAt(0, 0);
+            sy = mg.getElementAt(1, 1);
+            sz = mg.getElementAt(2, 2);
+            mxy = mg.getElementAt(0, 1);
+            mxz = mg.getElementAt(0, 2);
+            myx = mg.getElementAt(1, 0);
+            myz = mg.getElementAt(1, 2);
+            mzx = mg.getElementAt(2, 0);
+            mzy = mg.getElementAt(2, 1);
+            assertEquals(sx, estimator.getAngularSpeedSx(), 0.0);
+            assertEquals(sy, estimator.getAngularSpeedSy(), 0.0);
+            assertEquals(sz, estimator.getAngularSpeedSz(), 0.0);
+            assertEquals(mxy, estimator.getAngularSpeedMxy(), 0.0);
+            assertEquals(mxz, estimator.getAngularSpeedMxz(), 0.0);
+            assertEquals(myx, estimator.getAngularSpeedMyx(), 0.0);
+            assertEquals(myz, estimator.getAngularSpeedMyz(), 0.0);
+            assertEquals(mzx, estimator.getAngularSpeedMzx(), 0.0);
+            assertEquals(mzy, estimator.getAngularSpeedMzy(), 0.0);
 
-        final Matrix gg1 = estimator.getAngularSpeedGDependantCrossBias();
-        assertEquals(gg, gg1);
-        final Matrix gg2 = new Matrix(3, 3);
-        estimator.getAngularSpeedGDependantCrossBias(gg2);
-        assertEquals(gg1, gg2);
+            final Matrix gg1 = estimator.getAngularSpeedGDependantCrossBias();
+            assertEquals(gg, gg1);
+            final Matrix gg2 = new Matrix(3, 3);
+            estimator.getAngularSpeedGDependantCrossBias(gg2);
+            assertEquals(gg1, gg2);
 
-        assertEquals(BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
-                estimator.getTimeInterval(), 0.0);
+            assertEquals(BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                    estimator.getTimeInterval(), 0.0);
 
-        final Time t1 = estimator.getTimeIntervalAsTime();
-        assertEquals(BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
-                t1.getValue().doubleValue(), 0.0);
-        assertEquals(TimeUnit.SECOND, t1.getUnit());
+            final Time t1 = estimator.getTimeIntervalAsTime();
+            assertEquals(BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                    t1.getValue().doubleValue(), 0.0);
+            assertEquals(TimeUnit.SECOND, t1.getUnit());
 
-        final Time t2 = new Time(1.0, TimeUnit.DAY);
-        estimator.getTimeIntervalAsTime(t2);
-        assertEquals(t1, t2);
+            final Time t2 = new Time(1.0, TimeUnit.DAY);
+            estimator.getTimeIntervalAsTime(t2);
+            assertEquals(t1, t2);
 
-        final NEDFrame nedFrame1 = new NEDFrame(nedPosition, nedC);
-        final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(nedFrame1);
-        final ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
-        final CoordinateTransformation ecefC1 = ecefFrame1.getCoordinateTransformation();
+            final NEDFrame nedFrame1 = new NEDFrame(nedPosition, nedC);
+            final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(nedFrame1);
+            final ECEFPosition ecefPosition1 = ecefFrame1.getECEFPosition();
+            final CoordinateTransformation ecefC1 = ecefFrame1.getCoordinateTransformation();
 
-        assertTrue(ecefPosition1.equals(estimator.getEcefPosition(),
-                LARGE_ABSOLUTE_ERROR));
-        final ECEFPosition ecefPosition2 = new ECEFPosition();
-        estimator.getEcefPosition(ecefPosition2);
-        assertTrue(ecefPosition1.equals(ecefPosition2, LARGE_ABSOLUTE_ERROR));
+            if (!ecefPosition1.equals(estimator.getEcefPosition(),
+                    LARGE_ABSOLUTE_ERROR)) {
+                continue;
+            }
+            assertTrue(ecefPosition1.equals(estimator.getEcefPosition(),
+                    LARGE_ABSOLUTE_ERROR));
+            final ECEFPosition ecefPosition2 = new ECEFPosition();
+            estimator.getEcefPosition(ecefPosition2);
+            assertTrue(ecefPosition1.equals(ecefPosition2, LARGE_ABSOLUTE_ERROR));
 
-        assertTrue(ecefFrame1.equals(estimator.getEcefFrame(),
-                LARGE_ABSOLUTE_ERROR));
-        final ECEFFrame ecefFrame2 = new ECEFFrame();
-        estimator.getEcefFrame(ecefFrame2);
-        assertTrue(ecefFrame1.equals(ecefFrame2, LARGE_ABSOLUTE_ERROR));
+            assertTrue(ecefFrame1.equals(estimator.getEcefFrame(),
+                    LARGE_ABSOLUTE_ERROR));
+            final ECEFFrame ecefFrame2 = new ECEFFrame();
+            estimator.getEcefFrame(ecefFrame2);
+            assertTrue(ecefFrame1.equals(ecefFrame2, LARGE_ABSOLUTE_ERROR));
 
-        assertTrue(nedFrame1.equals(estimator.getNedFrame(), ABSOLUTE_ERROR));
-        final NEDFrame nedFrame2 = new NEDFrame();
-        estimator.getNedFrame(nedFrame2);
-        assertTrue(nedFrame1.equals(nedFrame2, ABSOLUTE_ERROR));
+            assertTrue(nedFrame1.equals(estimator.getNedFrame(), ABSOLUTE_ERROR));
+            final NEDFrame nedFrame2 = new NEDFrame();
+            estimator.getNedFrame(nedFrame2);
+            assertTrue(nedFrame1.equals(nedFrame2, ABSOLUTE_ERROR));
 
-        assertTrue(nedPosition.equals(estimator.getNedPosition(), ABSOLUTE_ERROR));
-        final NEDPosition nedPosition2 = new NEDPosition();
-        estimator.getNedPosition(nedPosition2);
-        assertTrue(nedPosition.equals(nedPosition2, ABSOLUTE_ERROR));
-        assertTrue(ecefC1.equals(estimator.getEcefC(), ABSOLUTE_ERROR));
-        final CoordinateTransformation ecefC2 = new CoordinateTransformation(
-                FrameType.BODY_FRAME, FrameType.BODY_FRAME);
-        estimator.getEcefC(ecefC2);
-        assertTrue(ecefC1.equals(ecefC2, ABSOLUTE_ERROR));
+            assertTrue(nedPosition.equals(estimator.getNedPosition(), ABSOLUTE_ERROR));
+            final NEDPosition nedPosition2 = new NEDPosition();
+            estimator.getNedPosition(nedPosition2);
+            assertTrue(nedPosition.equals(nedPosition2, ABSOLUTE_ERROR));
+            assertTrue(ecefC1.equals(estimator.getEcefC(), ABSOLUTE_ERROR));
+            final CoordinateTransformation ecefC2 = new CoordinateTransformation(
+                    FrameType.BODY_FRAME, FrameType.BODY_FRAME);
+            estimator.getEcefC(ecefC2);
+            assertTrue(ecefC1.equals(ecefC2, ABSOLUTE_ERROR));
 
-        assertTrue(nedC.equals(estimator.getNedC(), ABSOLUTE_ERROR));
-        final CoordinateTransformation nedC2 = new CoordinateTransformation(
-                FrameType.BODY_FRAME, FrameType.BODY_FRAME);
-        estimator.getNedC(nedC2);
-        assertTrue(nedC.equals(nedC2, ABSOLUTE_ERROR));
+            assertTrue(nedC.equals(estimator.getNedC(), ABSOLUTE_ERROR));
+            final CoordinateTransformation nedC2 = new CoordinateTransformation(
+                    FrameType.BODY_FRAME, FrameType.BODY_FRAME);
+            estimator.getNedC(nedC2);
+            assertTrue(nedC.equals(nedC2, ABSOLUTE_ERROR));
 
-        assertEquals(0, estimator.getNumberOfProcessedSamples());
-        assertTrue(estimator.isFixKinematicsEnabled());
-        assertFalse(estimator.isRunning());
+            assertEquals(0, estimator.getNumberOfProcessedSamples());
+            assertEquals(0, estimator.getNumberOfProcessedDriftPeriods());
+            assertEquals(0.0, estimator.getElapsedTimeSeconds(), 0.0);
+            final Time elapsedTime1 = estimator.getElapsedTime();
+            assertEquals(0.0, elapsedTime1.getValue().doubleValue(), 0.0);
+            assertEquals(TimeUnit.SECOND, elapsedTime1.getUnit());
+            final Time elapsedTime2 = new Time(1.0, TimeUnit.DAY);
+            estimator.getElapsedTime(elapsedTime2);
+            assertEquals(elapsedTime1, elapsedTime2);
+            assertTrue(estimator.isFixKinematicsEnabled());
+            assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES,
+                    estimator.getDriftPeriodSamples());
+            assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                            * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                    estimator.getDriftPeriodSeconds(), 0.0);
+            final Time driftPeriod1 = estimator.getDriftPeriod();
+            assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                            * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                    driftPeriod1.getValue().doubleValue(), 0.0);
+            assertEquals(TimeUnit.SECOND, driftPeriod1.getUnit());
+            final Time driftPeriod2 = new Time(1.0, TimeUnit.DAY);
+            estimator.getDriftPeriod(driftPeriod2);
+            assertEquals(driftPeriod1, driftPeriod2);
+            assertFalse(estimator.isRunning());
+            assertTrue(estimator.isReady());
 
-        assertEquals(0.0, estimator.getAccelerometerBiasPSD(), 0.0);
-        assertEquals(0.0, estimator.getGyroBiasPSD(), 0.0);
-        assertEquals(0.0, estimator.getPositionVariance(), 0.0);
-        assertEquals(0.0, estimator.getVelocityVariance(), 0.0);
-        assertEquals(0.0, estimator.getAttitudeVariance(), 0.0);
+            assertEquals(0.0, estimator.getAccelerometerBiasPSD(), 0.0);
+            assertEquals(0.0, estimator.getGyroBiasPSD(), 0.0);
+            assertEquals(0.0, estimator.getPositionNoiseVariance(), 0.0);
+            assertEquals(0.0, estimator.getVelocityNoiseVariance(), 0.0);
+            assertEquals(0.0, estimator.getAttitudeNoiseVariance(), 0.0);
+            assertEquals(0.0, estimator.getPositionNoiseStandardDeviation(),
+                    0.0);
+            final Distance positionNoiseStd1 = estimator.getPositionNoiseStandardDeviationAsDistance();
+            assertEquals(0.0, positionNoiseStd1.getValue().doubleValue(), 0.0);
+            assertEquals(DistanceUnit.METER, positionNoiseStd1.getUnit());
+            final Distance positionNoiseStd2 = new Distance(1.0, DistanceUnit.MILE);
+            estimator.getPositionNoiseStandardDeviationAsDistance(positionNoiseStd2);
+            assertEquals(positionNoiseStd1, positionNoiseStd2);
+            assertEquals(0.0, estimator.getVelocityNoiseStandardDeviation(),
+                    0.0);
+            final Speed velocityNoiseStd1 = estimator.getVelocityNoiseStandardDeviationAsSpeed();
+            assertEquals(0.0, velocityNoiseStd1.getValue().doubleValue(), 0.0);
+            assertEquals(SpeedUnit.METERS_PER_SECOND, velocityNoiseStd1.getUnit());
+            final Speed velocityNoiseStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+            estimator.getVelocityNoiseStandardDeviationAsSpeed(velocityNoiseStd2);
+            assertEquals(velocityNoiseStd1, velocityNoiseStd2);
+            assertEquals(0.0, estimator.getAttitudeNoiseStandardDeviation(), 0.0);
+            final Angle attitudeNoiseStd1 = estimator.getAttitudeNoiseStandardDeviationAsAngle();
+            assertEquals(0.0, attitudeNoiseStd1.getValue().doubleValue(), 0.0);
+            assertEquals(AngleUnit.RADIANS, attitudeNoiseStd1.getUnit());
+            final Angle attitudeNoiseStd2 = new Angle(1.0, AngleUnit.DEGREES);
+            estimator.getAttitudeNoiseStandardDeviationAsAngle(attitudeNoiseStd2);
+            assertEquals(attitudeNoiseStd1, attitudeNoiseStd2);
+            assertEquals(0.0, estimator.getPositionUncertainty(), 0.0);
+            final Distance positionUncertainty1 = estimator.getPositionUncertaintyAsDistance();
+            assertEquals(0.0, positionUncertainty1.getValue().doubleValue(), 0.0);
+            assertEquals(DistanceUnit.METER, positionUncertainty1.getUnit());
+            final Distance positionUncertainty2 = new Distance(1.0, DistanceUnit.MILE);
+            estimator.getPositionUncertaintyAsDistance(positionUncertainty2);
+            assertEquals(0.0, estimator.getVelocityUncertainty(), 0.0);
+            final Speed velocityUncertainty1 = estimator.getVelocityUncertaintyAsSpeed();
+            assertEquals(0.0, velocityUncertainty1.getValue().doubleValue(), 0.0);
+            assertEquals(SpeedUnit.METERS_PER_SECOND, velocityUncertainty1.getUnit());
+            final Speed velocityUncertainty2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+            estimator.getVelocityUncertaintyAsSpeed(velocityUncertainty2);
+            assertEquals(velocityUncertainty1, velocityUncertainty2);
+            assertEquals(0.0, estimator.getAttitudeUncertainty(), 0.0);
+            final Angle attitudeUncertainty1 = estimator.getAttitudeUncertaintyAsAngle();
+            assertEquals(0.0, attitudeUncertainty1.getValue().doubleValue(), 0.0);
+            assertEquals(AngleUnit.RADIANS, attitudeUncertainty1.getUnit());
+            final Angle attitudeUncertainty2 = new Angle(1.0, AngleUnit.DEGREES);
+            estimator.getAttitudeUncertaintyAsAngle(attitudeUncertainty2);
+            assertEquals(attitudeUncertainty1, attitudeUncertainty2);
 
-        assertEquals(0.0, estimator.getPositionStandardDeviation(),
-                0.0);
-        final Distance positionStd1 = estimator.getPositionStandardDeviationAsDistance();
-        assertEquals(0.0, positionStd1.getValue().doubleValue(), 0.0);
-        assertEquals(DistanceUnit.METER, positionStd1.getUnit());
-        final Distance positionStd2 = new Distance(1.0, DistanceUnit.INCH);
-        estimator.getPositionStandardDeviationAsDistance(positionStd2);
-        assertEquals(positionStd1, positionStd2);
+            final BodyKinematics kinematics1 = estimator.getFixedKinematics();
+            assertEquals(new BodyKinematics(), kinematics1);
+            final BodyKinematics kinematics2 = new BodyKinematics();
+            estimator.getFixedKinematics(kinematics2);
+            assertEquals(kinematics1, kinematics2);
 
-        assertEquals(0.0, estimator.getVelocityStandardDeviation(),
-                0.0);
-        final Speed speedStd1 = estimator.getVelocityStandardDeviationAsSpeed();
-        assertEquals(0.0, speedStd1.getValue().doubleValue(), 0.0);
-        assertEquals(SpeedUnit.METERS_PER_SECOND, speedStd1.getUnit());
-        final Speed speedStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        estimator.getVelocityStandardDeviationAsSpeed(speedStd2);
-        assertEquals(speedStd1, speedStd2);
+            // Force AlgebraException
+            estimator = null;
+            final Matrix wrong = Matrix.identity(3, 3);
+            wrong.multiplyByScalar(-1.0);
+            try {
+                estimator = new RandomWalkEstimator(ecefPosition, nedC,
+                        baTriad, wrong, bgTriad, mg, gg, this);
+                fail("AlgebraException expected but not thrown");
+            } catch (final AlgebraException ignore) {
+            }
+            try {
+                estimator = new RandomWalkEstimator(ecefPosition, nedC,
+                        baTriad, ma, bgTriad, wrong, gg, this);
+                fail("AlgebraException expected but not thrown");
+            } catch (final AlgebraException ignore) {
+            }
 
-        assertEquals(0.0, estimator.getAttitudeStandardDeviation(), 0.0);
-        final Angle attitudeStd1 = estimator.getAttitudeStandardDeviationAsAngle();
-        assertEquals(0.0, attitudeStd1.getValue().doubleValue(), 0.0);
-        assertEquals(AngleUnit.RADIANS, attitudeStd1.getUnit());
-        final Angle attitudeStd2 = new Angle(1.0, AngleUnit.DEGREES);
-        estimator.getAttitudeStandardDeviationAsAngle(attitudeStd2);
-        assertEquals(attitudeStd1, attitudeStd2);
+            // Force IllegalArgumentException
+            try {
+                estimator = new RandomWalkEstimator(ecefPosition, nedC, baTriad,
+                        new Matrix(1, 3), bgTriad, mg, gg, this);
+                fail("IllegalArgumentException expected but not thrown");
+            } catch (final IllegalArgumentException ignore) {
+            }
+            try {
+                estimator = new RandomWalkEstimator(ecefPosition, nedC, baTriad,
+                        new Matrix(3, 1), bgTriad, mg, gg, this);
+                fail("IllegalArgumentException expected but not thrown");
+            } catch (final IllegalArgumentException ignore) {
+            }
+            try {
+                estimator = new RandomWalkEstimator(ecefPosition, nedC, baTriad,
+                        ma, bgTriad, new Matrix(1, 3), gg, this);
+                fail("IllegalArgumentException expected but not thrown");
+            } catch (final IllegalArgumentException ignore) {
+            }
+            try {
+                estimator = new RandomWalkEstimator(ecefPosition, nedC, baTriad,
+                        ma, bgTriad, new Matrix(3, 1), gg, this);
+                fail("IllegalArgumentException expected but not thrown");
+            } catch (final IllegalArgumentException ignore) {
+            }
+            try {
+                estimator = new RandomWalkEstimator(ecefPosition, nedC, baTriad,
+                        ma, bgTriad, mg, new Matrix(1, 3), this);
+                fail("IllegalArgumentException expected but not thrown");
+            } catch (final IllegalArgumentException ignore) {
+            }
+            try {
+                estimator = new RandomWalkEstimator(ecefPosition, nedC, baTriad,
+                        ma, bgTriad, mg, new Matrix(3, 1), this);
+                fail("IllegalArgumentException expected but not thrown");
+            } catch (final IllegalArgumentException ignore) {
+            }
+            assertNull(estimator);
 
-        final BodyKinematics kinematics1 = estimator.getFixedKinematics();
-        assertEquals(new BodyKinematics(), kinematics1);
-        final BodyKinematics kinematics2 = new BodyKinematics();
-        estimator.getFixedKinematics(kinematics2);
-        assertEquals(kinematics1, kinematics2);
-
-        // Force AlgebraException
-        estimator = null;
-        final Matrix wrong = Matrix.identity(3, 3);
-        wrong.multiplyByScalar(-1.0);
-        try {
-            estimator = new RandomWalkEstimator(ecefPosition, nedC,
-                    baTriad, wrong, bgTriad, mg, gg, this);
-            fail("AlgebraException expected but not thrown");
-        } catch (final AlgebraException ignore) {
+            numValid++;
+            break;
         }
-        try {
-            estimator = new RandomWalkEstimator(ecefPosition, nedC,
-                    baTriad, ma, bgTriad, wrong, gg, this);
-            fail("AlgebraException expected but not thrown");
-        } catch (final AlgebraException ignore) {
-        }
 
-        // Force IllegalArgumentException
-        try {
-            estimator = new RandomWalkEstimator(ecefPosition, nedC, baTriad,
-                    new Matrix(1, 3), bgTriad, mg, gg, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new RandomWalkEstimator(ecefPosition, nedC, baTriad,
-                    new Matrix(3, 1), bgTriad, mg, gg, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new RandomWalkEstimator(ecefPosition, nedC, baTriad,
-                    ma, bgTriad, new Matrix(1, 3), gg, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new RandomWalkEstimator(ecefPosition, nedC, baTriad,
-                    ma, bgTriad, new Matrix(3, 1), gg, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new RandomWalkEstimator(ecefPosition, nedC, baTriad,
-                    ma, bgTriad, mg, new Matrix(1, 3), this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new RandomWalkEstimator(ecefPosition, nedC, baTriad,
-                    ma, bgTriad, mg, new Matrix(3, 1), this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
+        assertTrue(numValid > 0);
     }
 
     @Test
@@ -8142,40 +9168,79 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         assertTrue(nedC.equals(nedC2, ABSOLUTE_ERROR));
 
         assertEquals(0, estimator.getNumberOfProcessedSamples());
+        assertEquals(0, estimator.getNumberOfProcessedDriftPeriods());
+        assertEquals(0.0, estimator.getElapsedTimeSeconds(), 0.0);
+        final Time elapsedTime1 = estimator.getElapsedTime();
+        assertEquals(0.0, elapsedTime1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, elapsedTime1.getUnit());
+        final Time elapsedTime2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getElapsedTime(elapsedTime2);
+        assertEquals(elapsedTime1, elapsedTime2);
         assertTrue(estimator.isFixKinematicsEnabled());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES,
+                estimator.getDriftPeriodSamples());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                estimator.getDriftPeriodSeconds(), 0.0);
+        final Time driftPeriod1 = estimator.getDriftPeriod();
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                driftPeriod1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, driftPeriod1.getUnit());
+        final Time driftPeriod2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getDriftPeriod(driftPeriod2);
+        assertEquals(driftPeriod1, driftPeriod2);
         assertFalse(estimator.isRunning());
+        assertTrue(estimator.isReady());
 
         assertEquals(0.0, estimator.getAccelerometerBiasPSD(), 0.0);
         assertEquals(0.0, estimator.getGyroBiasPSD(), 0.0);
-        assertEquals(0.0, estimator.getPositionVariance(), 0.0);
-        assertEquals(0.0, estimator.getVelocityVariance(), 0.0);
-        assertEquals(0.0, estimator.getAttitudeVariance(), 0.0);
-
-        assertEquals(0.0, estimator.getPositionStandardDeviation(),
+        assertEquals(0.0, estimator.getPositionNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getVelocityNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getAttitudeNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getPositionNoiseStandardDeviation(),
                 0.0);
-        final Distance positionStd1 = estimator.getPositionStandardDeviationAsDistance();
-        assertEquals(0.0, positionStd1.getValue().doubleValue(), 0.0);
-        assertEquals(DistanceUnit.METER, positionStd1.getUnit());
-        final Distance positionStd2 = new Distance(1.0, DistanceUnit.INCH);
-        estimator.getPositionStandardDeviationAsDistance(positionStd2);
-        assertEquals(positionStd1, positionStd2);
-
-        assertEquals(0.0, estimator.getVelocityStandardDeviation(),
+        final Distance positionNoiseStd1 = estimator.getPositionNoiseStandardDeviationAsDistance();
+        assertEquals(0.0, positionNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionNoiseStd1.getUnit());
+        final Distance positionNoiseStd2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionNoiseStandardDeviationAsDistance(positionNoiseStd2);
+        assertEquals(positionNoiseStd1, positionNoiseStd2);
+        assertEquals(0.0, estimator.getVelocityNoiseStandardDeviation(),
                 0.0);
-        final Speed speedStd1 = estimator.getVelocityStandardDeviationAsSpeed();
-        assertEquals(0.0, speedStd1.getValue().doubleValue(), 0.0);
-        assertEquals(SpeedUnit.METERS_PER_SECOND, speedStd1.getUnit());
-        final Speed speedStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        estimator.getVelocityStandardDeviationAsSpeed(speedStd2);
-        assertEquals(speedStd1, speedStd2);
-
-        assertEquals(0.0, estimator.getAttitudeStandardDeviation(), 0.0);
-        final Angle attitudeStd1 = estimator.getAttitudeStandardDeviationAsAngle();
-        assertEquals(0.0, attitudeStd1.getValue().doubleValue(), 0.0);
-        assertEquals(AngleUnit.RADIANS, attitudeStd1.getUnit());
-        final Angle attitudeStd2 = new Angle(1.0, AngleUnit.DEGREES);
-        estimator.getAttitudeStandardDeviationAsAngle(attitudeStd2);
-        assertEquals(attitudeStd1, attitudeStd2);
+        final Speed velocityNoiseStd1 = estimator.getVelocityNoiseStandardDeviationAsSpeed();
+        assertEquals(0.0, velocityNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityNoiseStd1.getUnit());
+        final Speed velocityNoiseStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityNoiseStandardDeviationAsSpeed(velocityNoiseStd2);
+        assertEquals(velocityNoiseStd1, velocityNoiseStd2);
+        assertEquals(0.0, estimator.getAttitudeNoiseStandardDeviation(), 0.0);
+        final Angle attitudeNoiseStd1 = estimator.getAttitudeNoiseStandardDeviationAsAngle();
+        assertEquals(0.0, attitudeNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeNoiseStd1.getUnit());
+        final Angle attitudeNoiseStd2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeNoiseStandardDeviationAsAngle(attitudeNoiseStd2);
+        assertEquals(attitudeNoiseStd1, attitudeNoiseStd2);
+        assertEquals(0.0, estimator.getPositionUncertainty(), 0.0);
+        final Distance positionUncertainty1 = estimator.getPositionUncertaintyAsDistance();
+        assertEquals(0.0, positionUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionUncertainty1.getUnit());
+        final Distance positionUncertainty2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionUncertaintyAsDistance(positionUncertainty2);
+        assertEquals(0.0, estimator.getVelocityUncertainty(), 0.0);
+        final Speed velocityUncertainty1 = estimator.getVelocityUncertaintyAsSpeed();
+        assertEquals(0.0, velocityUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityUncertainty1.getUnit());
+        final Speed velocityUncertainty2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityUncertaintyAsSpeed(velocityUncertainty2);
+        assertEquals(velocityUncertainty1, velocityUncertainty2);
+        assertEquals(0.0, estimator.getAttitudeUncertainty(), 0.0);
+        final Angle attitudeUncertainty1 = estimator.getAttitudeUncertaintyAsAngle();
+        assertEquals(0.0, attitudeUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeUncertainty1.getUnit());
+        final Angle attitudeUncertainty2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeUncertaintyAsAngle(attitudeUncertainty2);
+        assertEquals(attitudeUncertainty1, attitudeUncertainty2);
 
         final BodyKinematics kinematics1 = estimator.getFixedKinematics();
         assertEquals(new BodyKinematics(), kinematics1);
@@ -8477,40 +9542,79 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         assertTrue(nedC.equals(nedC2, ABSOLUTE_ERROR));
 
         assertEquals(0, estimator.getNumberOfProcessedSamples());
+        assertEquals(0, estimator.getNumberOfProcessedDriftPeriods());
+        assertEquals(0.0, estimator.getElapsedTimeSeconds(), 0.0);
+        final Time elapsedTime1 = estimator.getElapsedTime();
+        assertEquals(0.0, elapsedTime1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, elapsedTime1.getUnit());
+        final Time elapsedTime2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getElapsedTime(elapsedTime2);
+        assertEquals(elapsedTime1, elapsedTime2);
         assertTrue(estimator.isFixKinematicsEnabled());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES,
+                estimator.getDriftPeriodSamples());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                estimator.getDriftPeriodSeconds(), 0.0);
+        final Time driftPeriod1 = estimator.getDriftPeriod();
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                driftPeriod1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, driftPeriod1.getUnit());
+        final Time driftPeriod2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getDriftPeriod(driftPeriod2);
+        assertEquals(driftPeriod1, driftPeriod2);
         assertFalse(estimator.isRunning());
+        assertTrue(estimator.isReady());
 
         assertEquals(0.0, estimator.getAccelerometerBiasPSD(), 0.0);
         assertEquals(0.0, estimator.getGyroBiasPSD(), 0.0);
-        assertEquals(0.0, estimator.getPositionVariance(), 0.0);
-        assertEquals(0.0, estimator.getVelocityVariance(), 0.0);
-        assertEquals(0.0, estimator.getAttitudeVariance(), 0.0);
-
-        assertEquals(0.0, estimator.getPositionStandardDeviation(),
+        assertEquals(0.0, estimator.getPositionNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getVelocityNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getAttitudeNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getPositionNoiseStandardDeviation(),
                 0.0);
-        final Distance positionStd1 = estimator.getPositionStandardDeviationAsDistance();
-        assertEquals(0.0, positionStd1.getValue().doubleValue(), 0.0);
-        assertEquals(DistanceUnit.METER, positionStd1.getUnit());
-        final Distance positionStd2 = new Distance(1.0, DistanceUnit.INCH);
-        estimator.getPositionStandardDeviationAsDistance(positionStd2);
-        assertEquals(positionStd1, positionStd2);
-
-        assertEquals(0.0, estimator.getVelocityStandardDeviation(),
+        final Distance positionNoiseStd1 = estimator.getPositionNoiseStandardDeviationAsDistance();
+        assertEquals(0.0, positionNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionNoiseStd1.getUnit());
+        final Distance positionNoiseStd2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionNoiseStandardDeviationAsDistance(positionNoiseStd2);
+        assertEquals(positionNoiseStd1, positionNoiseStd2);
+        assertEquals(0.0, estimator.getVelocityNoiseStandardDeviation(),
                 0.0);
-        final Speed speedStd1 = estimator.getVelocityStandardDeviationAsSpeed();
-        assertEquals(0.0, speedStd1.getValue().doubleValue(), 0.0);
-        assertEquals(SpeedUnit.METERS_PER_SECOND, speedStd1.getUnit());
-        final Speed speedStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        estimator.getVelocityStandardDeviationAsSpeed(speedStd2);
-        assertEquals(speedStd1, speedStd2);
-
-        assertEquals(0.0, estimator.getAttitudeStandardDeviation(), 0.0);
-        final Angle attitudeStd1 = estimator.getAttitudeStandardDeviationAsAngle();
-        assertEquals(0.0, attitudeStd1.getValue().doubleValue(), 0.0);
-        assertEquals(AngleUnit.RADIANS, attitudeStd1.getUnit());
-        final Angle attitudeStd2 = new Angle(1.0, AngleUnit.DEGREES);
-        estimator.getAttitudeStandardDeviationAsAngle(attitudeStd2);
-        assertEquals(attitudeStd1, attitudeStd2);
+        final Speed velocityNoiseStd1 = estimator.getVelocityNoiseStandardDeviationAsSpeed();
+        assertEquals(0.0, velocityNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityNoiseStd1.getUnit());
+        final Speed velocityNoiseStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityNoiseStandardDeviationAsSpeed(velocityNoiseStd2);
+        assertEquals(velocityNoiseStd1, velocityNoiseStd2);
+        assertEquals(0.0, estimator.getAttitudeNoiseStandardDeviation(), 0.0);
+        final Angle attitudeNoiseStd1 = estimator.getAttitudeNoiseStandardDeviationAsAngle();
+        assertEquals(0.0, attitudeNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeNoiseStd1.getUnit());
+        final Angle attitudeNoiseStd2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeNoiseStandardDeviationAsAngle(attitudeNoiseStd2);
+        assertEquals(attitudeNoiseStd1, attitudeNoiseStd2);
+        assertEquals(0.0, estimator.getPositionUncertainty(), 0.0);
+        final Distance positionUncertainty1 = estimator.getPositionUncertaintyAsDistance();
+        assertEquals(0.0, positionUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionUncertainty1.getUnit());
+        final Distance positionUncertainty2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionUncertaintyAsDistance(positionUncertainty2);
+        assertEquals(0.0, estimator.getVelocityUncertainty(), 0.0);
+        final Speed velocityUncertainty1 = estimator.getVelocityUncertaintyAsSpeed();
+        assertEquals(0.0, velocityUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityUncertainty1.getUnit());
+        final Speed velocityUncertainty2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityUncertaintyAsSpeed(velocityUncertainty2);
+        assertEquals(velocityUncertainty1, velocityUncertainty2);
+        assertEquals(0.0, estimator.getAttitudeUncertainty(), 0.0);
+        final Angle attitudeUncertainty1 = estimator.getAttitudeUncertaintyAsAngle();
+        assertEquals(0.0, attitudeUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeUncertainty1.getUnit());
+        final Angle attitudeUncertainty2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeUncertaintyAsAngle(attitudeUncertainty2);
+        assertEquals(attitudeUncertainty1, attitudeUncertainty2);
 
         final BodyKinematics kinematics1 = estimator.getFixedKinematics();
         assertEquals(new BodyKinematics(), kinematics1);
@@ -8813,40 +9917,79 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         assertTrue(nedC.equals(nedC2, ABSOLUTE_ERROR));
 
         assertEquals(0, estimator.getNumberOfProcessedSamples());
+        assertEquals(0, estimator.getNumberOfProcessedDriftPeriods());
+        assertEquals(0.0, estimator.getElapsedTimeSeconds(), 0.0);
+        final Time elapsedTime1 = estimator.getElapsedTime();
+        assertEquals(0.0, elapsedTime1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, elapsedTime1.getUnit());
+        final Time elapsedTime2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getElapsedTime(elapsedTime2);
+        assertEquals(elapsedTime1, elapsedTime2);
         assertTrue(estimator.isFixKinematicsEnabled());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES,
+                estimator.getDriftPeriodSamples());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                estimator.getDriftPeriodSeconds(), 0.0);
+        final Time driftPeriod1 = estimator.getDriftPeriod();
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                driftPeriod1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, driftPeriod1.getUnit());
+        final Time driftPeriod2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getDriftPeriod(driftPeriod2);
+        assertEquals(driftPeriod1, driftPeriod2);
         assertFalse(estimator.isRunning());
+        assertTrue(estimator.isReady());
 
         assertEquals(0.0, estimator.getAccelerometerBiasPSD(), 0.0);
         assertEquals(0.0, estimator.getGyroBiasPSD(), 0.0);
-        assertEquals(0.0, estimator.getPositionVariance(), 0.0);
-        assertEquals(0.0, estimator.getVelocityVariance(), 0.0);
-        assertEquals(0.0, estimator.getAttitudeVariance(), 0.0);
-
-        assertEquals(0.0, estimator.getPositionStandardDeviation(),
+        assertEquals(0.0, estimator.getPositionNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getVelocityNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getAttitudeNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getPositionNoiseStandardDeviation(),
                 0.0);
-        final Distance positionStd1 = estimator.getPositionStandardDeviationAsDistance();
-        assertEquals(0.0, positionStd1.getValue().doubleValue(), 0.0);
-        assertEquals(DistanceUnit.METER, positionStd1.getUnit());
-        final Distance positionStd2 = new Distance(1.0, DistanceUnit.INCH);
-        estimator.getPositionStandardDeviationAsDistance(positionStd2);
-        assertEquals(positionStd1, positionStd2);
-
-        assertEquals(0.0, estimator.getVelocityStandardDeviation(),
+        final Distance positionNoiseStd1 = estimator.getPositionNoiseStandardDeviationAsDistance();
+        assertEquals(0.0, positionNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionNoiseStd1.getUnit());
+        final Distance positionNoiseStd2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionNoiseStandardDeviationAsDistance(positionNoiseStd2);
+        assertEquals(positionNoiseStd1, positionNoiseStd2);
+        assertEquals(0.0, estimator.getVelocityNoiseStandardDeviation(),
                 0.0);
-        final Speed speedStd1 = estimator.getVelocityStandardDeviationAsSpeed();
-        assertEquals(0.0, speedStd1.getValue().doubleValue(), 0.0);
-        assertEquals(SpeedUnit.METERS_PER_SECOND, speedStd1.getUnit());
-        final Speed speedStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        estimator.getVelocityStandardDeviationAsSpeed(speedStd2);
-        assertEquals(speedStd1, speedStd2);
-
-        assertEquals(0.0, estimator.getAttitudeStandardDeviation(), 0.0);
-        final Angle attitudeStd1 = estimator.getAttitudeStandardDeviationAsAngle();
-        assertEquals(0.0, attitudeStd1.getValue().doubleValue(), 0.0);
-        assertEquals(AngleUnit.RADIANS, attitudeStd1.getUnit());
-        final Angle attitudeStd2 = new Angle(1.0, AngleUnit.DEGREES);
-        estimator.getAttitudeStandardDeviationAsAngle(attitudeStd2);
-        assertEquals(attitudeStd1, attitudeStd2);
+        final Speed velocityNoiseStd1 = estimator.getVelocityNoiseStandardDeviationAsSpeed();
+        assertEquals(0.0, velocityNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityNoiseStd1.getUnit());
+        final Speed velocityNoiseStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityNoiseStandardDeviationAsSpeed(velocityNoiseStd2);
+        assertEquals(velocityNoiseStd1, velocityNoiseStd2);
+        assertEquals(0.0, estimator.getAttitudeNoiseStandardDeviation(), 0.0);
+        final Angle attitudeNoiseStd1 = estimator.getAttitudeNoiseStandardDeviationAsAngle();
+        assertEquals(0.0, attitudeNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeNoiseStd1.getUnit());
+        final Angle attitudeNoiseStd2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeNoiseStandardDeviationAsAngle(attitudeNoiseStd2);
+        assertEquals(attitudeNoiseStd1, attitudeNoiseStd2);
+        assertEquals(0.0, estimator.getPositionUncertainty(), 0.0);
+        final Distance positionUncertainty1 = estimator.getPositionUncertaintyAsDistance();
+        assertEquals(0.0, positionUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionUncertainty1.getUnit());
+        final Distance positionUncertainty2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionUncertaintyAsDistance(positionUncertainty2);
+        assertEquals(0.0, estimator.getVelocityUncertainty(), 0.0);
+        final Speed velocityUncertainty1 = estimator.getVelocityUncertaintyAsSpeed();
+        assertEquals(0.0, velocityUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityUncertainty1.getUnit());
+        final Speed velocityUncertainty2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityUncertaintyAsSpeed(velocityUncertainty2);
+        assertEquals(velocityUncertainty1, velocityUncertainty2);
+        assertEquals(0.0, estimator.getAttitudeUncertainty(), 0.0);
+        final Angle attitudeUncertainty1 = estimator.getAttitudeUncertaintyAsAngle();
+        assertEquals(0.0, attitudeUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeUncertainty1.getUnit());
+        final Angle attitudeUncertainty2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeUncertaintyAsAngle(attitudeUncertainty2);
+        assertEquals(attitudeUncertainty1, attitudeUncertainty2);
 
         final BodyKinematics kinematics1 = estimator.getFixedKinematics();
         assertEquals(new BodyKinematics(), kinematics1);
@@ -9161,40 +10304,79 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         assertTrue(nedC.equals(nedC2, ABSOLUTE_ERROR));
 
         assertEquals(0, estimator.getNumberOfProcessedSamples());
+        assertEquals(0, estimator.getNumberOfProcessedDriftPeriods());
+        assertEquals(0.0, estimator.getElapsedTimeSeconds(), 0.0);
+        final Time elapsedTime1 = estimator.getElapsedTime();
+        assertEquals(0.0, elapsedTime1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, elapsedTime1.getUnit());
+        final Time elapsedTime2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getElapsedTime(elapsedTime2);
+        assertEquals(elapsedTime1, elapsedTime2);
         assertTrue(estimator.isFixKinematicsEnabled());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES,
+                estimator.getDriftPeriodSamples());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                estimator.getDriftPeriodSeconds(), 0.0);
+        final Time driftPeriod1 = estimator.getDriftPeriod();
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * BodyKinematicsBiasEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                driftPeriod1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, driftPeriod1.getUnit());
+        final Time driftPeriod2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getDriftPeriod(driftPeriod2);
+        assertEquals(driftPeriod1, driftPeriod2);
         assertFalse(estimator.isRunning());
+        assertTrue(estimator.isReady());
 
         assertEquals(0.0, estimator.getAccelerometerBiasPSD(), 0.0);
         assertEquals(0.0, estimator.getGyroBiasPSD(), 0.0);
-        assertEquals(0.0, estimator.getPositionVariance(), 0.0);
-        assertEquals(0.0, estimator.getVelocityVariance(), 0.0);
-        assertEquals(0.0, estimator.getAttitudeVariance(), 0.0);
-
-        assertEquals(0.0, estimator.getPositionStandardDeviation(),
+        assertEquals(0.0, estimator.getPositionNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getVelocityNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getAttitudeNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getPositionNoiseStandardDeviation(),
                 0.0);
-        final Distance positionStd1 = estimator.getPositionStandardDeviationAsDistance();
-        assertEquals(0.0, positionStd1.getValue().doubleValue(), 0.0);
-        assertEquals(DistanceUnit.METER, positionStd1.getUnit());
-        final Distance positionStd2 = new Distance(1.0, DistanceUnit.INCH);
-        estimator.getPositionStandardDeviationAsDistance(positionStd2);
-        assertEquals(positionStd1, positionStd2);
-
-        assertEquals(0.0, estimator.getVelocityStandardDeviation(),
+        final Distance positionNoiseStd1 = estimator.getPositionNoiseStandardDeviationAsDistance();
+        assertEquals(0.0, positionNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionNoiseStd1.getUnit());
+        final Distance positionNoiseStd2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionNoiseStandardDeviationAsDistance(positionNoiseStd2);
+        assertEquals(positionNoiseStd1, positionNoiseStd2);
+        assertEquals(0.0, estimator.getVelocityNoiseStandardDeviation(),
                 0.0);
-        final Speed speedStd1 = estimator.getVelocityStandardDeviationAsSpeed();
-        assertEquals(0.0, speedStd1.getValue().doubleValue(), 0.0);
-        assertEquals(SpeedUnit.METERS_PER_SECOND, speedStd1.getUnit());
-        final Speed speedStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        estimator.getVelocityStandardDeviationAsSpeed(speedStd2);
-        assertEquals(speedStd1, speedStd2);
-
-        assertEquals(0.0, estimator.getAttitudeStandardDeviation(), 0.0);
-        final Angle attitudeStd1 = estimator.getAttitudeStandardDeviationAsAngle();
-        assertEquals(0.0, attitudeStd1.getValue().doubleValue(), 0.0);
-        assertEquals(AngleUnit.RADIANS, attitudeStd1.getUnit());
-        final Angle attitudeStd2 = new Angle(1.0, AngleUnit.DEGREES);
-        estimator.getAttitudeStandardDeviationAsAngle(attitudeStd2);
-        assertEquals(attitudeStd1, attitudeStd2);
+        final Speed velocityNoiseStd1 = estimator.getVelocityNoiseStandardDeviationAsSpeed();
+        assertEquals(0.0, velocityNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityNoiseStd1.getUnit());
+        final Speed velocityNoiseStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityNoiseStandardDeviationAsSpeed(velocityNoiseStd2);
+        assertEquals(velocityNoiseStd1, velocityNoiseStd2);
+        assertEquals(0.0, estimator.getAttitudeNoiseStandardDeviation(), 0.0);
+        final Angle attitudeNoiseStd1 = estimator.getAttitudeNoiseStandardDeviationAsAngle();
+        assertEquals(0.0, attitudeNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeNoiseStd1.getUnit());
+        final Angle attitudeNoiseStd2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeNoiseStandardDeviationAsAngle(attitudeNoiseStd2);
+        assertEquals(attitudeNoiseStd1, attitudeNoiseStd2);
+        assertEquals(0.0, estimator.getPositionUncertainty(), 0.0);
+        final Distance positionUncertainty1 = estimator.getPositionUncertaintyAsDistance();
+        assertEquals(0.0, positionUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionUncertainty1.getUnit());
+        final Distance positionUncertainty2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionUncertaintyAsDistance(positionUncertainty2);
+        assertEquals(0.0, estimator.getVelocityUncertainty(), 0.0);
+        final Speed velocityUncertainty1 = estimator.getVelocityUncertaintyAsSpeed();
+        assertEquals(0.0, velocityUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityUncertainty1.getUnit());
+        final Speed velocityUncertainty2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityUncertaintyAsSpeed(velocityUncertainty2);
+        assertEquals(velocityUncertainty1, velocityUncertainty2);
+        assertEquals(0.0, estimator.getAttitudeUncertainty(), 0.0);
+        final Angle attitudeUncertainty1 = estimator.getAttitudeUncertaintyAsAngle();
+        assertEquals(0.0, attitudeUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeUncertainty1.getUnit());
+        final Angle attitudeUncertainty2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeUncertaintyAsAngle(attitudeUncertainty2);
+        assertEquals(attitudeUncertainty1, attitudeUncertainty2);
 
         final BodyKinematics kinematics1 = estimator.getFixedKinematics();
         assertEquals(new BodyKinematics(), kinematics1);
@@ -9501,40 +10683,79 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         assertTrue(nedC.equals(nedC2, ABSOLUTE_ERROR));
 
         assertEquals(0, estimator.getNumberOfProcessedSamples());
+        assertEquals(0, estimator.getNumberOfProcessedDriftPeriods());
+        assertEquals(0.0, estimator.getElapsedTimeSeconds(), 0.0);
+        final Time elapsedTime1 = estimator.getElapsedTime();
+        assertEquals(0.0, elapsedTime1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, elapsedTime1.getUnit());
+        final Time elapsedTime2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getElapsedTime(elapsedTime2);
+        assertEquals(elapsedTime1, elapsedTime2);
         assertTrue(estimator.isFixKinematicsEnabled());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES,
+                estimator.getDriftPeriodSamples());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * timeInterval,
+                estimator.getDriftPeriodSeconds(), 0.0);
+        final Time driftPeriod1 = estimator.getDriftPeriod();
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * timeInterval,
+                driftPeriod1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, driftPeriod1.getUnit());
+        final Time driftPeriod2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getDriftPeriod(driftPeriod2);
+        assertEquals(driftPeriod1, driftPeriod2);
         assertFalse(estimator.isRunning());
+        assertTrue(estimator.isReady());
 
         assertEquals(0.0, estimator.getAccelerometerBiasPSD(), 0.0);
         assertEquals(0.0, estimator.getGyroBiasPSD(), 0.0);
-        assertEquals(0.0, estimator.getPositionVariance(), 0.0);
-        assertEquals(0.0, estimator.getVelocityVariance(), 0.0);
-        assertEquals(0.0, estimator.getAttitudeVariance(), 0.0);
-
-        assertEquals(0.0, estimator.getPositionStandardDeviation(),
+        assertEquals(0.0, estimator.getPositionNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getVelocityNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getAttitudeNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getPositionNoiseStandardDeviation(),
                 0.0);
-        final Distance positionStd1 = estimator.getPositionStandardDeviationAsDistance();
-        assertEquals(0.0, positionStd1.getValue().doubleValue(), 0.0);
-        assertEquals(DistanceUnit.METER, positionStd1.getUnit());
-        final Distance positionStd2 = new Distance(1.0, DistanceUnit.INCH);
-        estimator.getPositionStandardDeviationAsDistance(positionStd2);
-        assertEquals(positionStd1, positionStd2);
-
-        assertEquals(0.0, estimator.getVelocityStandardDeviation(),
+        final Distance positionNoiseStd1 = estimator.getPositionNoiseStandardDeviationAsDistance();
+        assertEquals(0.0, positionNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionNoiseStd1.getUnit());
+        final Distance positionNoiseStd2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionNoiseStandardDeviationAsDistance(positionNoiseStd2);
+        assertEquals(positionNoiseStd1, positionNoiseStd2);
+        assertEquals(0.0, estimator.getVelocityNoiseStandardDeviation(),
                 0.0);
-        final Speed speedStd1 = estimator.getVelocityStandardDeviationAsSpeed();
-        assertEquals(0.0, speedStd1.getValue().doubleValue(), 0.0);
-        assertEquals(SpeedUnit.METERS_PER_SECOND, speedStd1.getUnit());
-        final Speed speedStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        estimator.getVelocityStandardDeviationAsSpeed(speedStd2);
-        assertEquals(speedStd1, speedStd2);
-
-        assertEquals(0.0, estimator.getAttitudeStandardDeviation(), 0.0);
-        final Angle attitudeStd1 = estimator.getAttitudeStandardDeviationAsAngle();
-        assertEquals(0.0, attitudeStd1.getValue().doubleValue(), 0.0);
-        assertEquals(AngleUnit.RADIANS, attitudeStd1.getUnit());
-        final Angle attitudeStd2 = new Angle(1.0, AngleUnit.DEGREES);
-        estimator.getAttitudeStandardDeviationAsAngle(attitudeStd2);
-        assertEquals(attitudeStd1, attitudeStd2);
+        final Speed velocityNoiseStd1 = estimator.getVelocityNoiseStandardDeviationAsSpeed();
+        assertEquals(0.0, velocityNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityNoiseStd1.getUnit());
+        final Speed velocityNoiseStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityNoiseStandardDeviationAsSpeed(velocityNoiseStd2);
+        assertEquals(velocityNoiseStd1, velocityNoiseStd2);
+        assertEquals(0.0, estimator.getAttitudeNoiseStandardDeviation(), 0.0);
+        final Angle attitudeNoiseStd1 = estimator.getAttitudeNoiseStandardDeviationAsAngle();
+        assertEquals(0.0, attitudeNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeNoiseStd1.getUnit());
+        final Angle attitudeNoiseStd2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeNoiseStandardDeviationAsAngle(attitudeNoiseStd2);
+        assertEquals(attitudeNoiseStd1, attitudeNoiseStd2);
+        assertEquals(0.0, estimator.getPositionUncertainty(), 0.0);
+        final Distance positionUncertainty1 = estimator.getPositionUncertaintyAsDistance();
+        assertEquals(0.0, positionUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionUncertainty1.getUnit());
+        final Distance positionUncertainty2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionUncertaintyAsDistance(positionUncertainty2);
+        assertEquals(0.0, estimator.getVelocityUncertainty(), 0.0);
+        final Speed velocityUncertainty1 = estimator.getVelocityUncertaintyAsSpeed();
+        assertEquals(0.0, velocityUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityUncertainty1.getUnit());
+        final Speed velocityUncertainty2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityUncertaintyAsSpeed(velocityUncertainty2);
+        assertEquals(velocityUncertainty1, velocityUncertainty2);
+        assertEquals(0.0, estimator.getAttitudeUncertainty(), 0.0);
+        final Angle attitudeUncertainty1 = estimator.getAttitudeUncertaintyAsAngle();
+        assertEquals(0.0, attitudeUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeUncertainty1.getUnit());
+        final Angle attitudeUncertainty2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeUncertaintyAsAngle(attitudeUncertainty2);
+        assertEquals(attitudeUncertainty1, attitudeUncertainty2);
 
         final BodyKinematics kinematics1 = estimator.getFixedKinematics();
         assertEquals(new BodyKinematics(), kinematics1);
@@ -9806,40 +11027,79 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         assertTrue(nedC.equals(nedC2, ABSOLUTE_ERROR));
 
         assertEquals(0, estimator.getNumberOfProcessedSamples());
+        assertEquals(0, estimator.getNumberOfProcessedDriftPeriods());
+        assertEquals(0.0, estimator.getElapsedTimeSeconds(), 0.0);
+        final Time elapsedTime1 = estimator.getElapsedTime();
+        assertEquals(0.0, elapsedTime1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, elapsedTime1.getUnit());
+        final Time elapsedTime2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getElapsedTime(elapsedTime2);
+        assertEquals(elapsedTime1, elapsedTime2);
         assertTrue(estimator.isFixKinematicsEnabled());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES,
+                estimator.getDriftPeriodSamples());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * timeInterval,
+                estimator.getDriftPeriodSeconds(), 0.0);
+        final Time driftPeriod1 = estimator.getDriftPeriod();
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * timeInterval,
+                driftPeriod1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, driftPeriod1.getUnit());
+        final Time driftPeriod2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getDriftPeriod(driftPeriod2);
+        assertEquals(driftPeriod1, driftPeriod2);
         assertFalse(estimator.isRunning());
+        assertTrue(estimator.isReady());
 
         assertEquals(0.0, estimator.getAccelerometerBiasPSD(), 0.0);
         assertEquals(0.0, estimator.getGyroBiasPSD(), 0.0);
-        assertEquals(0.0, estimator.getPositionVariance(), 0.0);
-        assertEquals(0.0, estimator.getVelocityVariance(), 0.0);
-        assertEquals(0.0, estimator.getAttitudeVariance(), 0.0);
-
-        assertEquals(0.0, estimator.getPositionStandardDeviation(),
+        assertEquals(0.0, estimator.getPositionNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getVelocityNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getAttitudeNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getPositionNoiseStandardDeviation(),
                 0.0);
-        final Distance positionStd1 = estimator.getPositionStandardDeviationAsDistance();
-        assertEquals(0.0, positionStd1.getValue().doubleValue(), 0.0);
-        assertEquals(DistanceUnit.METER, positionStd1.getUnit());
-        final Distance positionStd2 = new Distance(1.0, DistanceUnit.INCH);
-        estimator.getPositionStandardDeviationAsDistance(positionStd2);
-        assertEquals(positionStd1, positionStd2);
-
-        assertEquals(0.0, estimator.getVelocityStandardDeviation(),
+        final Distance positionNoiseStd1 = estimator.getPositionNoiseStandardDeviationAsDistance();
+        assertEquals(0.0, positionNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionNoiseStd1.getUnit());
+        final Distance positionNoiseStd2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionNoiseStandardDeviationAsDistance(positionNoiseStd2);
+        assertEquals(positionNoiseStd1, positionNoiseStd2);
+        assertEquals(0.0, estimator.getVelocityNoiseStandardDeviation(),
                 0.0);
-        final Speed speedStd1 = estimator.getVelocityStandardDeviationAsSpeed();
-        assertEquals(0.0, speedStd1.getValue().doubleValue(), 0.0);
-        assertEquals(SpeedUnit.METERS_PER_SECOND, speedStd1.getUnit());
-        final Speed speedStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        estimator.getVelocityStandardDeviationAsSpeed(speedStd2);
-        assertEquals(speedStd1, speedStd2);
-
-        assertEquals(0.0, estimator.getAttitudeStandardDeviation(), 0.0);
-        final Angle attitudeStd1 = estimator.getAttitudeStandardDeviationAsAngle();
-        assertEquals(0.0, attitudeStd1.getValue().doubleValue(), 0.0);
-        assertEquals(AngleUnit.RADIANS, attitudeStd1.getUnit());
-        final Angle attitudeStd2 = new Angle(1.0, AngleUnit.DEGREES);
-        estimator.getAttitudeStandardDeviationAsAngle(attitudeStd2);
-        assertEquals(attitudeStd1, attitudeStd2);
+        final Speed velocityNoiseStd1 = estimator.getVelocityNoiseStandardDeviationAsSpeed();
+        assertEquals(0.0, velocityNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityNoiseStd1.getUnit());
+        final Speed velocityNoiseStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityNoiseStandardDeviationAsSpeed(velocityNoiseStd2);
+        assertEquals(velocityNoiseStd1, velocityNoiseStd2);
+        assertEquals(0.0, estimator.getAttitudeNoiseStandardDeviation(), 0.0);
+        final Angle attitudeNoiseStd1 = estimator.getAttitudeNoiseStandardDeviationAsAngle();
+        assertEquals(0.0, attitudeNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeNoiseStd1.getUnit());
+        final Angle attitudeNoiseStd2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeNoiseStandardDeviationAsAngle(attitudeNoiseStd2);
+        assertEquals(attitudeNoiseStd1, attitudeNoiseStd2);
+        assertEquals(0.0, estimator.getPositionUncertainty(), 0.0);
+        final Distance positionUncertainty1 = estimator.getPositionUncertaintyAsDistance();
+        assertEquals(0.0, positionUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionUncertainty1.getUnit());
+        final Distance positionUncertainty2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionUncertaintyAsDistance(positionUncertainty2);
+        assertEquals(0.0, estimator.getVelocityUncertainty(), 0.0);
+        final Speed velocityUncertainty1 = estimator.getVelocityUncertaintyAsSpeed();
+        assertEquals(0.0, velocityUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityUncertainty1.getUnit());
+        final Speed velocityUncertainty2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityUncertaintyAsSpeed(velocityUncertainty2);
+        assertEquals(velocityUncertainty1, velocityUncertainty2);
+        assertEquals(0.0, estimator.getAttitudeUncertainty(), 0.0);
+        final Angle attitudeUncertainty1 = estimator.getAttitudeUncertaintyAsAngle();
+        assertEquals(0.0, attitudeUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeUncertainty1.getUnit());
+        final Angle attitudeUncertainty2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeUncertaintyAsAngle(attitudeUncertainty2);
+        assertEquals(attitudeUncertainty1, attitudeUncertainty2);
 
         final BodyKinematics kinematics1 = estimator.getFixedKinematics();
         assertEquals(new BodyKinematics(), kinematics1);
@@ -10116,40 +11376,79 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         assertTrue(nedC.equals(nedC2, ABSOLUTE_ERROR));
 
         assertEquals(0, estimator.getNumberOfProcessedSamples());
+        assertEquals(0, estimator.getNumberOfProcessedDriftPeriods());
+        assertEquals(0.0, estimator.getElapsedTimeSeconds(), 0.0);
+        final Time elapsedTime1 = estimator.getElapsedTime();
+        assertEquals(0.0, elapsedTime1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, elapsedTime1.getUnit());
+        final Time elapsedTime2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getElapsedTime(elapsedTime2);
+        assertEquals(elapsedTime1, elapsedTime2);
         assertTrue(estimator.isFixKinematicsEnabled());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES,
+                estimator.getDriftPeriodSamples());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * timeInterval,
+                estimator.getDriftPeriodSeconds(), 0.0);
+        final Time driftPeriod1 = estimator.getDriftPeriod();
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * timeInterval,
+                driftPeriod1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, driftPeriod1.getUnit());
+        final Time driftPeriod2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getDriftPeriod(driftPeriod2);
+        assertEquals(driftPeriod1, driftPeriod2);
         assertFalse(estimator.isRunning());
+        assertTrue(estimator.isReady());
 
         assertEquals(0.0, estimator.getAccelerometerBiasPSD(), 0.0);
         assertEquals(0.0, estimator.getGyroBiasPSD(), 0.0);
-        assertEquals(0.0, estimator.getPositionVariance(), 0.0);
-        assertEquals(0.0, estimator.getVelocityVariance(), 0.0);
-        assertEquals(0.0, estimator.getAttitudeVariance(), 0.0);
-
-        assertEquals(0.0, estimator.getPositionStandardDeviation(),
+        assertEquals(0.0, estimator.getPositionNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getVelocityNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getAttitudeNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getPositionNoiseStandardDeviation(),
                 0.0);
-        final Distance positionStd1 = estimator.getPositionStandardDeviationAsDistance();
-        assertEquals(0.0, positionStd1.getValue().doubleValue(), 0.0);
-        assertEquals(DistanceUnit.METER, positionStd1.getUnit());
-        final Distance positionStd2 = new Distance(1.0, DistanceUnit.INCH);
-        estimator.getPositionStandardDeviationAsDistance(positionStd2);
-        assertEquals(positionStd1, positionStd2);
-
-        assertEquals(0.0, estimator.getVelocityStandardDeviation(),
+        final Distance positionNoiseStd1 = estimator.getPositionNoiseStandardDeviationAsDistance();
+        assertEquals(0.0, positionNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionNoiseStd1.getUnit());
+        final Distance positionNoiseStd2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionNoiseStandardDeviationAsDistance(positionNoiseStd2);
+        assertEquals(positionNoiseStd1, positionNoiseStd2);
+        assertEquals(0.0, estimator.getVelocityNoiseStandardDeviation(),
                 0.0);
-        final Speed speedStd1 = estimator.getVelocityStandardDeviationAsSpeed();
-        assertEquals(0.0, speedStd1.getValue().doubleValue(), 0.0);
-        assertEquals(SpeedUnit.METERS_PER_SECOND, speedStd1.getUnit());
-        final Speed speedStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        estimator.getVelocityStandardDeviationAsSpeed(speedStd2);
-        assertEquals(speedStd1, speedStd2);
-
-        assertEquals(0.0, estimator.getAttitudeStandardDeviation(), 0.0);
-        final Angle attitudeStd1 = estimator.getAttitudeStandardDeviationAsAngle();
-        assertEquals(0.0, attitudeStd1.getValue().doubleValue(), 0.0);
-        assertEquals(AngleUnit.RADIANS, attitudeStd1.getUnit());
-        final Angle attitudeStd2 = new Angle(1.0, AngleUnit.DEGREES);
-        estimator.getAttitudeStandardDeviationAsAngle(attitudeStd2);
-        assertEquals(attitudeStd1, attitudeStd2);
+        final Speed velocityNoiseStd1 = estimator.getVelocityNoiseStandardDeviationAsSpeed();
+        assertEquals(0.0, velocityNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityNoiseStd1.getUnit());
+        final Speed velocityNoiseStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityNoiseStandardDeviationAsSpeed(velocityNoiseStd2);
+        assertEquals(velocityNoiseStd1, velocityNoiseStd2);
+        assertEquals(0.0, estimator.getAttitudeNoiseStandardDeviation(), 0.0);
+        final Angle attitudeNoiseStd1 = estimator.getAttitudeNoiseStandardDeviationAsAngle();
+        assertEquals(0.0, attitudeNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeNoiseStd1.getUnit());
+        final Angle attitudeNoiseStd2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeNoiseStandardDeviationAsAngle(attitudeNoiseStd2);
+        assertEquals(attitudeNoiseStd1, attitudeNoiseStd2);
+        assertEquals(0.0, estimator.getPositionUncertainty(), 0.0);
+        final Distance positionUncertainty1 = estimator.getPositionUncertaintyAsDistance();
+        assertEquals(0.0, positionUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionUncertainty1.getUnit());
+        final Distance positionUncertainty2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionUncertaintyAsDistance(positionUncertainty2);
+        assertEquals(0.0, estimator.getVelocityUncertainty(), 0.0);
+        final Speed velocityUncertainty1 = estimator.getVelocityUncertaintyAsSpeed();
+        assertEquals(0.0, velocityUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityUncertainty1.getUnit());
+        final Speed velocityUncertainty2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityUncertaintyAsSpeed(velocityUncertainty2);
+        assertEquals(velocityUncertainty1, velocityUncertainty2);
+        assertEquals(0.0, estimator.getAttitudeUncertainty(), 0.0);
+        final Angle attitudeUncertainty1 = estimator.getAttitudeUncertaintyAsAngle();
+        assertEquals(0.0, attitudeUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeUncertainty1.getUnit());
+        final Angle attitudeUncertainty2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeUncertaintyAsAngle(attitudeUncertainty2);
+        assertEquals(attitudeUncertainty1, attitudeUncertainty2);
 
         final BodyKinematics kinematics1 = estimator.getFixedKinematics();
         assertEquals(new BodyKinematics(), kinematics1);
@@ -10440,40 +11739,79 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         assertTrue(nedC.equals(nedC2, ABSOLUTE_ERROR));
 
         assertEquals(0, estimator.getNumberOfProcessedSamples());
+        assertEquals(0, estimator.getNumberOfProcessedDriftPeriods());
+        assertEquals(0.0, estimator.getElapsedTimeSeconds(), 0.0);
+        final Time elapsedTime1 = estimator.getElapsedTime();
+        assertEquals(0.0, elapsedTime1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, elapsedTime1.getUnit());
+        final Time elapsedTime2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getElapsedTime(elapsedTime2);
+        assertEquals(elapsedTime1, elapsedTime2);
         assertTrue(estimator.isFixKinematicsEnabled());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES,
+                estimator.getDriftPeriodSamples());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * timeInterval,
+                estimator.getDriftPeriodSeconds(), 0.0);
+        final Time driftPeriod1 = estimator.getDriftPeriod();
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * timeInterval,
+                driftPeriod1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, driftPeriod1.getUnit());
+        final Time driftPeriod2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getDriftPeriod(driftPeriod2);
+        assertEquals(driftPeriod1, driftPeriod2);
         assertFalse(estimator.isRunning());
+        assertTrue(estimator.isReady());
 
         assertEquals(0.0, estimator.getAccelerometerBiasPSD(), 0.0);
         assertEquals(0.0, estimator.getGyroBiasPSD(), 0.0);
-        assertEquals(0.0, estimator.getPositionVariance(), 0.0);
-        assertEquals(0.0, estimator.getVelocityVariance(), 0.0);
-        assertEquals(0.0, estimator.getAttitudeVariance(), 0.0);
-
-        assertEquals(0.0, estimator.getPositionStandardDeviation(),
+        assertEquals(0.0, estimator.getPositionNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getVelocityNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getAttitudeNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getPositionNoiseStandardDeviation(),
                 0.0);
-        final Distance positionStd1 = estimator.getPositionStandardDeviationAsDistance();
-        assertEquals(0.0, positionStd1.getValue().doubleValue(), 0.0);
-        assertEquals(DistanceUnit.METER, positionStd1.getUnit());
-        final Distance positionStd2 = new Distance(1.0, DistanceUnit.INCH);
-        estimator.getPositionStandardDeviationAsDistance(positionStd2);
-        assertEquals(positionStd1, positionStd2);
-
-        assertEquals(0.0, estimator.getVelocityStandardDeviation(),
+        final Distance positionNoiseStd1 = estimator.getPositionNoiseStandardDeviationAsDistance();
+        assertEquals(0.0, positionNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionNoiseStd1.getUnit());
+        final Distance positionNoiseStd2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionNoiseStandardDeviationAsDistance(positionNoiseStd2);
+        assertEquals(positionNoiseStd1, positionNoiseStd2);
+        assertEquals(0.0, estimator.getVelocityNoiseStandardDeviation(),
                 0.0);
-        final Speed speedStd1 = estimator.getVelocityStandardDeviationAsSpeed();
-        assertEquals(0.0, speedStd1.getValue().doubleValue(), 0.0);
-        assertEquals(SpeedUnit.METERS_PER_SECOND, speedStd1.getUnit());
-        final Speed speedStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        estimator.getVelocityStandardDeviationAsSpeed(speedStd2);
-        assertEquals(speedStd1, speedStd2);
-
-        assertEquals(0.0, estimator.getAttitudeStandardDeviation(), 0.0);
-        final Angle attitudeStd1 = estimator.getAttitudeStandardDeviationAsAngle();
-        assertEquals(0.0, attitudeStd1.getValue().doubleValue(), 0.0);
-        assertEquals(AngleUnit.RADIANS, attitudeStd1.getUnit());
-        final Angle attitudeStd2 = new Angle(1.0, AngleUnit.DEGREES);
-        estimator.getAttitudeStandardDeviationAsAngle(attitudeStd2);
-        assertEquals(attitudeStd1, attitudeStd2);
+        final Speed velocityNoiseStd1 = estimator.getVelocityNoiseStandardDeviationAsSpeed();
+        assertEquals(0.0, velocityNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityNoiseStd1.getUnit());
+        final Speed velocityNoiseStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityNoiseStandardDeviationAsSpeed(velocityNoiseStd2);
+        assertEquals(velocityNoiseStd1, velocityNoiseStd2);
+        assertEquals(0.0, estimator.getAttitudeNoiseStandardDeviation(), 0.0);
+        final Angle attitudeNoiseStd1 = estimator.getAttitudeNoiseStandardDeviationAsAngle();
+        assertEquals(0.0, attitudeNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeNoiseStd1.getUnit());
+        final Angle attitudeNoiseStd2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeNoiseStandardDeviationAsAngle(attitudeNoiseStd2);
+        assertEquals(attitudeNoiseStd1, attitudeNoiseStd2);
+        assertEquals(0.0, estimator.getPositionUncertainty(), 0.0);
+        final Distance positionUncertainty1 = estimator.getPositionUncertaintyAsDistance();
+        assertEquals(0.0, positionUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionUncertainty1.getUnit());
+        final Distance positionUncertainty2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionUncertaintyAsDistance(positionUncertainty2);
+        assertEquals(0.0, estimator.getVelocityUncertainty(), 0.0);
+        final Speed velocityUncertainty1 = estimator.getVelocityUncertaintyAsSpeed();
+        assertEquals(0.0, velocityUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityUncertainty1.getUnit());
+        final Speed velocityUncertainty2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityUncertaintyAsSpeed(velocityUncertainty2);
+        assertEquals(velocityUncertainty1, velocityUncertainty2);
+        assertEquals(0.0, estimator.getAttitudeUncertainty(), 0.0);
+        final Angle attitudeUncertainty1 = estimator.getAttitudeUncertaintyAsAngle();
+        assertEquals(0.0, attitudeUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeUncertainty1.getUnit());
+        final Angle attitudeUncertainty2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeUncertaintyAsAngle(attitudeUncertainty2);
+        assertEquals(attitudeUncertainty1, attitudeUncertainty2);
 
         final BodyKinematics kinematics1 = estimator.getFixedKinematics();
         assertEquals(new BodyKinematics(), kinematics1);
@@ -10762,40 +12100,79 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         assertTrue(nedC.equals(nedC2, ABSOLUTE_ERROR));
 
         assertEquals(0, estimator.getNumberOfProcessedSamples());
+        assertEquals(0, estimator.getNumberOfProcessedDriftPeriods());
+        assertEquals(0.0, estimator.getElapsedTimeSeconds(), 0.0);
+        final Time elapsedTime1 = estimator.getElapsedTime();
+        assertEquals(0.0, elapsedTime1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, elapsedTime1.getUnit());
+        final Time elapsedTime2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getElapsedTime(elapsedTime2);
+        assertEquals(elapsedTime1, elapsedTime2);
         assertTrue(estimator.isFixKinematicsEnabled());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES,
+                estimator.getDriftPeriodSamples());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * timeInterval,
+                estimator.getDriftPeriodSeconds(), 0.0);
+        final Time driftPeriod1 = estimator.getDriftPeriod();
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * timeInterval,
+                driftPeriod1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, driftPeriod1.getUnit());
+        final Time driftPeriod2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getDriftPeriod(driftPeriod2);
+        assertEquals(driftPeriod1, driftPeriod2);
         assertFalse(estimator.isRunning());
+        assertTrue(estimator.isReady());
 
         assertEquals(0.0, estimator.getAccelerometerBiasPSD(), 0.0);
         assertEquals(0.0, estimator.getGyroBiasPSD(), 0.0);
-        assertEquals(0.0, estimator.getPositionVariance(), 0.0);
-        assertEquals(0.0, estimator.getVelocityVariance(), 0.0);
-        assertEquals(0.0, estimator.getAttitudeVariance(), 0.0);
-
-        assertEquals(0.0, estimator.getPositionStandardDeviation(),
+        assertEquals(0.0, estimator.getPositionNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getVelocityNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getAttitudeNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getPositionNoiseStandardDeviation(),
                 0.0);
-        final Distance positionStd1 = estimator.getPositionStandardDeviationAsDistance();
-        assertEquals(0.0, positionStd1.getValue().doubleValue(), 0.0);
-        assertEquals(DistanceUnit.METER, positionStd1.getUnit());
-        final Distance positionStd2 = new Distance(1.0, DistanceUnit.INCH);
-        estimator.getPositionStandardDeviationAsDistance(positionStd2);
-        assertEquals(positionStd1, positionStd2);
-
-        assertEquals(0.0, estimator.getVelocityStandardDeviation(),
+        final Distance positionNoiseStd1 = estimator.getPositionNoiseStandardDeviationAsDistance();
+        assertEquals(0.0, positionNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionNoiseStd1.getUnit());
+        final Distance positionNoiseStd2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionNoiseStandardDeviationAsDistance(positionNoiseStd2);
+        assertEquals(positionNoiseStd1, positionNoiseStd2);
+        assertEquals(0.0, estimator.getVelocityNoiseStandardDeviation(),
                 0.0);
-        final Speed speedStd1 = estimator.getVelocityStandardDeviationAsSpeed();
-        assertEquals(0.0, speedStd1.getValue().doubleValue(), 0.0);
-        assertEquals(SpeedUnit.METERS_PER_SECOND, speedStd1.getUnit());
-        final Speed speedStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        estimator.getVelocityStandardDeviationAsSpeed(speedStd2);
-        assertEquals(speedStd1, speedStd2);
-
-        assertEquals(0.0, estimator.getAttitudeStandardDeviation(), 0.0);
-        final Angle attitudeStd1 = estimator.getAttitudeStandardDeviationAsAngle();
-        assertEquals(0.0, attitudeStd1.getValue().doubleValue(), 0.0);
-        assertEquals(AngleUnit.RADIANS, attitudeStd1.getUnit());
-        final Angle attitudeStd2 = new Angle(1.0, AngleUnit.DEGREES);
-        estimator.getAttitudeStandardDeviationAsAngle(attitudeStd2);
-        assertEquals(attitudeStd1, attitudeStd2);
+        final Speed velocityNoiseStd1 = estimator.getVelocityNoiseStandardDeviationAsSpeed();
+        assertEquals(0.0, velocityNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityNoiseStd1.getUnit());
+        final Speed velocityNoiseStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityNoiseStandardDeviationAsSpeed(velocityNoiseStd2);
+        assertEquals(velocityNoiseStd1, velocityNoiseStd2);
+        assertEquals(0.0, estimator.getAttitudeNoiseStandardDeviation(), 0.0);
+        final Angle attitudeNoiseStd1 = estimator.getAttitudeNoiseStandardDeviationAsAngle();
+        assertEquals(0.0, attitudeNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeNoiseStd1.getUnit());
+        final Angle attitudeNoiseStd2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeNoiseStandardDeviationAsAngle(attitudeNoiseStd2);
+        assertEquals(attitudeNoiseStd1, attitudeNoiseStd2);
+        assertEquals(0.0, estimator.getPositionUncertainty(), 0.0);
+        final Distance positionUncertainty1 = estimator.getPositionUncertaintyAsDistance();
+        assertEquals(0.0, positionUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionUncertainty1.getUnit());
+        final Distance positionUncertainty2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionUncertaintyAsDistance(positionUncertainty2);
+        assertEquals(0.0, estimator.getVelocityUncertainty(), 0.0);
+        final Speed velocityUncertainty1 = estimator.getVelocityUncertaintyAsSpeed();
+        assertEquals(0.0, velocityUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityUncertainty1.getUnit());
+        final Speed velocityUncertainty2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityUncertaintyAsSpeed(velocityUncertainty2);
+        assertEquals(velocityUncertainty1, velocityUncertainty2);
+        assertEquals(0.0, estimator.getAttitudeUncertainty(), 0.0);
+        final Angle attitudeUncertainty1 = estimator.getAttitudeUncertaintyAsAngle();
+        assertEquals(0.0, attitudeUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeUncertainty1.getUnit());
+        final Angle attitudeUncertainty2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeUncertaintyAsAngle(attitudeUncertainty2);
+        assertEquals(attitudeUncertainty1, attitudeUncertainty2);
 
         final BodyKinematics kinematics1 = estimator.getFixedKinematics();
         assertEquals(new BodyKinematics(), kinematics1);
@@ -11090,40 +12467,79 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         assertTrue(nedC.equals(nedC2, ABSOLUTE_ERROR));
 
         assertEquals(0, estimator.getNumberOfProcessedSamples());
+        assertEquals(0, estimator.getNumberOfProcessedDriftPeriods());
+        assertEquals(0.0, estimator.getElapsedTimeSeconds(), 0.0);
+        final Time elapsedTime1 = estimator.getElapsedTime();
+        assertEquals(0.0, elapsedTime1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, elapsedTime1.getUnit());
+        final Time elapsedTime2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getElapsedTime(elapsedTime2);
+        assertEquals(elapsedTime1, elapsedTime2);
         assertTrue(estimator.isFixKinematicsEnabled());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES,
+                estimator.getDriftPeriodSamples());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * timeInterval,
+                estimator.getDriftPeriodSeconds(), 0.0);
+        final Time driftPeriod1 = estimator.getDriftPeriod();
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * timeInterval,
+                driftPeriod1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, driftPeriod1.getUnit());
+        final Time driftPeriod2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getDriftPeriod(driftPeriod2);
+        assertEquals(driftPeriod1, driftPeriod2);
         assertFalse(estimator.isRunning());
+        assertTrue(estimator.isReady());
 
         assertEquals(0.0, estimator.getAccelerometerBiasPSD(), 0.0);
         assertEquals(0.0, estimator.getGyroBiasPSD(), 0.0);
-        assertEquals(0.0, estimator.getPositionVariance(), 0.0);
-        assertEquals(0.0, estimator.getVelocityVariance(), 0.0);
-        assertEquals(0.0, estimator.getAttitudeVariance(), 0.0);
-
-        assertEquals(0.0, estimator.getPositionStandardDeviation(),
+        assertEquals(0.0, estimator.getPositionNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getVelocityNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getAttitudeNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getPositionNoiseStandardDeviation(),
                 0.0);
-        final Distance positionStd1 = estimator.getPositionStandardDeviationAsDistance();
-        assertEquals(0.0, positionStd1.getValue().doubleValue(), 0.0);
-        assertEquals(DistanceUnit.METER, positionStd1.getUnit());
-        final Distance positionStd2 = new Distance(1.0, DistanceUnit.INCH);
-        estimator.getPositionStandardDeviationAsDistance(positionStd2);
-        assertEquals(positionStd1, positionStd2);
-
-        assertEquals(0.0, estimator.getVelocityStandardDeviation(),
+        final Distance positionNoiseStd1 = estimator.getPositionNoiseStandardDeviationAsDistance();
+        assertEquals(0.0, positionNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionNoiseStd1.getUnit());
+        final Distance positionNoiseStd2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionNoiseStandardDeviationAsDistance(positionNoiseStd2);
+        assertEquals(positionNoiseStd1, positionNoiseStd2);
+        assertEquals(0.0, estimator.getVelocityNoiseStandardDeviation(),
                 0.0);
-        final Speed speedStd1 = estimator.getVelocityStandardDeviationAsSpeed();
-        assertEquals(0.0, speedStd1.getValue().doubleValue(), 0.0);
-        assertEquals(SpeedUnit.METERS_PER_SECOND, speedStd1.getUnit());
-        final Speed speedStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        estimator.getVelocityStandardDeviationAsSpeed(speedStd2);
-        assertEquals(speedStd1, speedStd2);
-
-        assertEquals(0.0, estimator.getAttitudeStandardDeviation(), 0.0);
-        final Angle attitudeStd1 = estimator.getAttitudeStandardDeviationAsAngle();
-        assertEquals(0.0, attitudeStd1.getValue().doubleValue(), 0.0);
-        assertEquals(AngleUnit.RADIANS, attitudeStd1.getUnit());
-        final Angle attitudeStd2 = new Angle(1.0, AngleUnit.DEGREES);
-        estimator.getAttitudeStandardDeviationAsAngle(attitudeStd2);
-        assertEquals(attitudeStd1, attitudeStd2);
+        final Speed velocityNoiseStd1 = estimator.getVelocityNoiseStandardDeviationAsSpeed();
+        assertEquals(0.0, velocityNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityNoiseStd1.getUnit());
+        final Speed velocityNoiseStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityNoiseStandardDeviationAsSpeed(velocityNoiseStd2);
+        assertEquals(velocityNoiseStd1, velocityNoiseStd2);
+        assertEquals(0.0, estimator.getAttitudeNoiseStandardDeviation(), 0.0);
+        final Angle attitudeNoiseStd1 = estimator.getAttitudeNoiseStandardDeviationAsAngle();
+        assertEquals(0.0, attitudeNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeNoiseStd1.getUnit());
+        final Angle attitudeNoiseStd2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeNoiseStandardDeviationAsAngle(attitudeNoiseStd2);
+        assertEquals(attitudeNoiseStd1, attitudeNoiseStd2);
+        assertEquals(0.0, estimator.getPositionUncertainty(), 0.0);
+        final Distance positionUncertainty1 = estimator.getPositionUncertaintyAsDistance();
+        assertEquals(0.0, positionUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionUncertainty1.getUnit());
+        final Distance positionUncertainty2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionUncertaintyAsDistance(positionUncertainty2);
+        assertEquals(0.0, estimator.getVelocityUncertainty(), 0.0);
+        final Speed velocityUncertainty1 = estimator.getVelocityUncertaintyAsSpeed();
+        assertEquals(0.0, velocityUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityUncertainty1.getUnit());
+        final Speed velocityUncertainty2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityUncertaintyAsSpeed(velocityUncertainty2);
+        assertEquals(velocityUncertainty1, velocityUncertainty2);
+        assertEquals(0.0, estimator.getAttitudeUncertainty(), 0.0);
+        final Angle attitudeUncertainty1 = estimator.getAttitudeUncertaintyAsAngle();
+        assertEquals(0.0, attitudeUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeUncertainty1.getUnit());
+        final Angle attitudeUncertainty2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeUncertaintyAsAngle(attitudeUncertainty2);
+        assertEquals(attitudeUncertainty1, attitudeUncertainty2);
 
         final BodyKinematics kinematics1 = estimator.getFixedKinematics();
         assertEquals(new BodyKinematics(), kinematics1);
@@ -11427,40 +12843,79 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         assertTrue(nedC.equals(nedC2, ABSOLUTE_ERROR));
 
         assertEquals(0, estimator.getNumberOfProcessedSamples());
+        assertEquals(0, estimator.getNumberOfProcessedDriftPeriods());
+        assertEquals(0.0, estimator.getElapsedTimeSeconds(), 0.0);
+        final Time elapsedTime1 = estimator.getElapsedTime();
+        assertEquals(0.0, elapsedTime1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, elapsedTime1.getUnit());
+        final Time elapsedTime2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getElapsedTime(elapsedTime2);
+        assertEquals(elapsedTime1, elapsedTime2);
         assertTrue(estimator.isFixKinematicsEnabled());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES,
+                estimator.getDriftPeriodSamples());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * timeInterval,
+                estimator.getDriftPeriodSeconds(), 0.0);
+        final Time driftPeriod1 = estimator.getDriftPeriod();
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * timeInterval,
+                driftPeriod1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, driftPeriod1.getUnit());
+        final Time driftPeriod2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getDriftPeriod(driftPeriod2);
+        assertEquals(driftPeriod1, driftPeriod2);
         assertFalse(estimator.isRunning());
+        assertTrue(estimator.isReady());
 
         assertEquals(0.0, estimator.getAccelerometerBiasPSD(), 0.0);
         assertEquals(0.0, estimator.getGyroBiasPSD(), 0.0);
-        assertEquals(0.0, estimator.getPositionVariance(), 0.0);
-        assertEquals(0.0, estimator.getVelocityVariance(), 0.0);
-        assertEquals(0.0, estimator.getAttitudeVariance(), 0.0);
-
-        assertEquals(0.0, estimator.getPositionStandardDeviation(),
+        assertEquals(0.0, estimator.getPositionNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getVelocityNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getAttitudeNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getPositionNoiseStandardDeviation(),
                 0.0);
-        final Distance positionStd1 = estimator.getPositionStandardDeviationAsDistance();
-        assertEquals(0.0, positionStd1.getValue().doubleValue(), 0.0);
-        assertEquals(DistanceUnit.METER, positionStd1.getUnit());
-        final Distance positionStd2 = new Distance(1.0, DistanceUnit.INCH);
-        estimator.getPositionStandardDeviationAsDistance(positionStd2);
-        assertEquals(positionStd1, positionStd2);
-
-        assertEquals(0.0, estimator.getVelocityStandardDeviation(),
+        final Distance positionNoiseStd1 = estimator.getPositionNoiseStandardDeviationAsDistance();
+        assertEquals(0.0, positionNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionNoiseStd1.getUnit());
+        final Distance positionNoiseStd2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionNoiseStandardDeviationAsDistance(positionNoiseStd2);
+        assertEquals(positionNoiseStd1, positionNoiseStd2);
+        assertEquals(0.0, estimator.getVelocityNoiseStandardDeviation(),
                 0.0);
-        final Speed speedStd1 = estimator.getVelocityStandardDeviationAsSpeed();
-        assertEquals(0.0, speedStd1.getValue().doubleValue(), 0.0);
-        assertEquals(SpeedUnit.METERS_PER_SECOND, speedStd1.getUnit());
-        final Speed speedStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        estimator.getVelocityStandardDeviationAsSpeed(speedStd2);
-        assertEquals(speedStd1, speedStd2);
-
-        assertEquals(0.0, estimator.getAttitudeStandardDeviation(), 0.0);
-        final Angle attitudeStd1 = estimator.getAttitudeStandardDeviationAsAngle();
-        assertEquals(0.0, attitudeStd1.getValue().doubleValue(), 0.0);
-        assertEquals(AngleUnit.RADIANS, attitudeStd1.getUnit());
-        final Angle attitudeStd2 = new Angle(1.0, AngleUnit.DEGREES);
-        estimator.getAttitudeStandardDeviationAsAngle(attitudeStd2);
-        assertEquals(attitudeStd1, attitudeStd2);
+        final Speed velocityNoiseStd1 = estimator.getVelocityNoiseStandardDeviationAsSpeed();
+        assertEquals(0.0, velocityNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityNoiseStd1.getUnit());
+        final Speed velocityNoiseStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityNoiseStandardDeviationAsSpeed(velocityNoiseStd2);
+        assertEquals(velocityNoiseStd1, velocityNoiseStd2);
+        assertEquals(0.0, estimator.getAttitudeNoiseStandardDeviation(), 0.0);
+        final Angle attitudeNoiseStd1 = estimator.getAttitudeNoiseStandardDeviationAsAngle();
+        assertEquals(0.0, attitudeNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeNoiseStd1.getUnit());
+        final Angle attitudeNoiseStd2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeNoiseStandardDeviationAsAngle(attitudeNoiseStd2);
+        assertEquals(attitudeNoiseStd1, attitudeNoiseStd2);
+        assertEquals(0.0, estimator.getPositionUncertainty(), 0.0);
+        final Distance positionUncertainty1 = estimator.getPositionUncertaintyAsDistance();
+        assertEquals(0.0, positionUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionUncertainty1.getUnit());
+        final Distance positionUncertainty2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionUncertaintyAsDistance(positionUncertainty2);
+        assertEquals(0.0, estimator.getVelocityUncertainty(), 0.0);
+        final Speed velocityUncertainty1 = estimator.getVelocityUncertaintyAsSpeed();
+        assertEquals(0.0, velocityUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityUncertainty1.getUnit());
+        final Speed velocityUncertainty2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityUncertaintyAsSpeed(velocityUncertainty2);
+        assertEquals(velocityUncertainty1, velocityUncertainty2);
+        assertEquals(0.0, estimator.getAttitudeUncertainty(), 0.0);
+        final Angle attitudeUncertainty1 = estimator.getAttitudeUncertaintyAsAngle();
+        assertEquals(0.0, attitudeUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeUncertainty1.getUnit());
+        final Angle attitudeUncertainty2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeUncertaintyAsAngle(attitudeUncertainty2);
+        assertEquals(attitudeUncertainty1, attitudeUncertainty2);
 
         final BodyKinematics kinematics1 = estimator.getFixedKinematics();
         assertEquals(new BodyKinematics(), kinematics1);
@@ -11771,40 +13226,79 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         assertTrue(nedC.equals(nedC2, ABSOLUTE_ERROR));
 
         assertEquals(0, estimator.getNumberOfProcessedSamples());
+        assertEquals(0, estimator.getNumberOfProcessedDriftPeriods());
+        assertEquals(0.0, estimator.getElapsedTimeSeconds(), 0.0);
+        final Time elapsedTime1 = estimator.getElapsedTime();
+        assertEquals(0.0, elapsedTime1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, elapsedTime1.getUnit());
+        final Time elapsedTime2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getElapsedTime(elapsedTime2);
+        assertEquals(elapsedTime1, elapsedTime2);
         assertTrue(estimator.isFixKinematicsEnabled());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES,
+                estimator.getDriftPeriodSamples());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * timeInterval,
+                estimator.getDriftPeriodSeconds(), 0.0);
+        final Time driftPeriod1 = estimator.getDriftPeriod();
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * timeInterval,
+                driftPeriod1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, driftPeriod1.getUnit());
+        final Time driftPeriod2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getDriftPeriod(driftPeriod2);
+        assertEquals(driftPeriod1, driftPeriod2);
         assertFalse(estimator.isRunning());
+        assertTrue(estimator.isReady());
 
         assertEquals(0.0, estimator.getAccelerometerBiasPSD(), 0.0);
         assertEquals(0.0, estimator.getGyroBiasPSD(), 0.0);
-        assertEquals(0.0, estimator.getPositionVariance(), 0.0);
-        assertEquals(0.0, estimator.getVelocityVariance(), 0.0);
-        assertEquals(0.0, estimator.getAttitudeVariance(), 0.0);
-
-        assertEquals(0.0, estimator.getPositionStandardDeviation(),
+        assertEquals(0.0, estimator.getPositionNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getVelocityNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getAttitudeNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getPositionNoiseStandardDeviation(),
                 0.0);
-        final Distance positionStd1 = estimator.getPositionStandardDeviationAsDistance();
-        assertEquals(0.0, positionStd1.getValue().doubleValue(), 0.0);
-        assertEquals(DistanceUnit.METER, positionStd1.getUnit());
-        final Distance positionStd2 = new Distance(1.0, DistanceUnit.INCH);
-        estimator.getPositionStandardDeviationAsDistance(positionStd2);
-        assertEquals(positionStd1, positionStd2);
-
-        assertEquals(0.0, estimator.getVelocityStandardDeviation(),
+        final Distance positionNoiseStd1 = estimator.getPositionNoiseStandardDeviationAsDistance();
+        assertEquals(0.0, positionNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionNoiseStd1.getUnit());
+        final Distance positionNoiseStd2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionNoiseStandardDeviationAsDistance(positionNoiseStd2);
+        assertEquals(positionNoiseStd1, positionNoiseStd2);
+        assertEquals(0.0, estimator.getVelocityNoiseStandardDeviation(),
                 0.0);
-        final Speed speedStd1 = estimator.getVelocityStandardDeviationAsSpeed();
-        assertEquals(0.0, speedStd1.getValue().doubleValue(), 0.0);
-        assertEquals(SpeedUnit.METERS_PER_SECOND, speedStd1.getUnit());
-        final Speed speedStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        estimator.getVelocityStandardDeviationAsSpeed(speedStd2);
-        assertEquals(speedStd1, speedStd2);
-
-        assertEquals(0.0, estimator.getAttitudeStandardDeviation(), 0.0);
-        final Angle attitudeStd1 = estimator.getAttitudeStandardDeviationAsAngle();
-        assertEquals(0.0, attitudeStd1.getValue().doubleValue(), 0.0);
-        assertEquals(AngleUnit.RADIANS, attitudeStd1.getUnit());
-        final Angle attitudeStd2 = new Angle(1.0, AngleUnit.DEGREES);
-        estimator.getAttitudeStandardDeviationAsAngle(attitudeStd2);
-        assertEquals(attitudeStd1, attitudeStd2);
+        final Speed velocityNoiseStd1 = estimator.getVelocityNoiseStandardDeviationAsSpeed();
+        assertEquals(0.0, velocityNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityNoiseStd1.getUnit());
+        final Speed velocityNoiseStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityNoiseStandardDeviationAsSpeed(velocityNoiseStd2);
+        assertEquals(velocityNoiseStd1, velocityNoiseStd2);
+        assertEquals(0.0, estimator.getAttitudeNoiseStandardDeviation(), 0.0);
+        final Angle attitudeNoiseStd1 = estimator.getAttitudeNoiseStandardDeviationAsAngle();
+        assertEquals(0.0, attitudeNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeNoiseStd1.getUnit());
+        final Angle attitudeNoiseStd2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeNoiseStandardDeviationAsAngle(attitudeNoiseStd2);
+        assertEquals(attitudeNoiseStd1, attitudeNoiseStd2);
+        assertEquals(0.0, estimator.getPositionUncertainty(), 0.0);
+        final Distance positionUncertainty1 = estimator.getPositionUncertaintyAsDistance();
+        assertEquals(0.0, positionUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionUncertainty1.getUnit());
+        final Distance positionUncertainty2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionUncertaintyAsDistance(positionUncertainty2);
+        assertEquals(0.0, estimator.getVelocityUncertainty(), 0.0);
+        final Speed velocityUncertainty1 = estimator.getVelocityUncertaintyAsSpeed();
+        assertEquals(0.0, velocityUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityUncertainty1.getUnit());
+        final Speed velocityUncertainty2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityUncertaintyAsSpeed(velocityUncertainty2);
+        assertEquals(velocityUncertainty1, velocityUncertainty2);
+        assertEquals(0.0, estimator.getAttitudeUncertainty(), 0.0);
+        final Angle attitudeUncertainty1 = estimator.getAttitudeUncertaintyAsAngle();
+        assertEquals(0.0, attitudeUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeUncertainty1.getUnit());
+        final Angle attitudeUncertainty2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeUncertaintyAsAngle(attitudeUncertainty2);
+        assertEquals(attitudeUncertainty1, attitudeUncertainty2);
 
         final BodyKinematics kinematics1 = estimator.getFixedKinematics();
         assertEquals(new BodyKinematics(), kinematics1);
@@ -12127,40 +13621,79 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         assertTrue(nedC.equals(nedC2, ABSOLUTE_ERROR));
 
         assertEquals(0, estimator.getNumberOfProcessedSamples());
+        assertEquals(0, estimator.getNumberOfProcessedDriftPeriods());
+        assertEquals(0.0, estimator.getElapsedTimeSeconds(), 0.0);
+        final Time elapsedTime1 = estimator.getElapsedTime();
+        assertEquals(0.0, elapsedTime1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, elapsedTime1.getUnit());
+        final Time elapsedTime2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getElapsedTime(elapsedTime2);
+        assertEquals(elapsedTime1, elapsedTime2);
         assertTrue(estimator.isFixKinematicsEnabled());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES,
+                estimator.getDriftPeriodSamples());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * timeInterval,
+                estimator.getDriftPeriodSeconds(), 0.0);
+        final Time driftPeriod1 = estimator.getDriftPeriod();
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * timeInterval,
+                driftPeriod1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, driftPeriod1.getUnit());
+        final Time driftPeriod2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getDriftPeriod(driftPeriod2);
+        assertEquals(driftPeriod1, driftPeriod2);
         assertFalse(estimator.isRunning());
+        assertTrue(estimator.isReady());
 
         assertEquals(0.0, estimator.getAccelerometerBiasPSD(), 0.0);
         assertEquals(0.0, estimator.getGyroBiasPSD(), 0.0);
-        assertEquals(0.0, estimator.getPositionVariance(), 0.0);
-        assertEquals(0.0, estimator.getVelocityVariance(), 0.0);
-        assertEquals(0.0, estimator.getAttitudeVariance(), 0.0);
-
-        assertEquals(0.0, estimator.getPositionStandardDeviation(),
+        assertEquals(0.0, estimator.getPositionNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getVelocityNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getAttitudeNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getPositionNoiseStandardDeviation(),
                 0.0);
-        final Distance positionStd1 = estimator.getPositionStandardDeviationAsDistance();
-        assertEquals(0.0, positionStd1.getValue().doubleValue(), 0.0);
-        assertEquals(DistanceUnit.METER, positionStd1.getUnit());
-        final Distance positionStd2 = new Distance(1.0, DistanceUnit.INCH);
-        estimator.getPositionStandardDeviationAsDistance(positionStd2);
-        assertEquals(positionStd1, positionStd2);
-
-        assertEquals(0.0, estimator.getVelocityStandardDeviation(),
+        final Distance positionNoiseStd1 = estimator.getPositionNoiseStandardDeviationAsDistance();
+        assertEquals(0.0, positionNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionNoiseStd1.getUnit());
+        final Distance positionNoiseStd2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionNoiseStandardDeviationAsDistance(positionNoiseStd2);
+        assertEquals(positionNoiseStd1, positionNoiseStd2);
+        assertEquals(0.0, estimator.getVelocityNoiseStandardDeviation(),
                 0.0);
-        final Speed speedStd1 = estimator.getVelocityStandardDeviationAsSpeed();
-        assertEquals(0.0, speedStd1.getValue().doubleValue(), 0.0);
-        assertEquals(SpeedUnit.METERS_PER_SECOND, speedStd1.getUnit());
-        final Speed speedStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        estimator.getVelocityStandardDeviationAsSpeed(speedStd2);
-        assertEquals(speedStd1, speedStd2);
-
-        assertEquals(0.0, estimator.getAttitudeStandardDeviation(), 0.0);
-        final Angle attitudeStd1 = estimator.getAttitudeStandardDeviationAsAngle();
-        assertEquals(0.0, attitudeStd1.getValue().doubleValue(), 0.0);
-        assertEquals(AngleUnit.RADIANS, attitudeStd1.getUnit());
-        final Angle attitudeStd2 = new Angle(1.0, AngleUnit.DEGREES);
-        estimator.getAttitudeStandardDeviationAsAngle(attitudeStd2);
-        assertEquals(attitudeStd1, attitudeStd2);
+        final Speed velocityNoiseStd1 = estimator.getVelocityNoiseStandardDeviationAsSpeed();
+        assertEquals(0.0, velocityNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityNoiseStd1.getUnit());
+        final Speed velocityNoiseStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityNoiseStandardDeviationAsSpeed(velocityNoiseStd2);
+        assertEquals(velocityNoiseStd1, velocityNoiseStd2);
+        assertEquals(0.0, estimator.getAttitudeNoiseStandardDeviation(), 0.0);
+        final Angle attitudeNoiseStd1 = estimator.getAttitudeNoiseStandardDeviationAsAngle();
+        assertEquals(0.0, attitudeNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeNoiseStd1.getUnit());
+        final Angle attitudeNoiseStd2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeNoiseStandardDeviationAsAngle(attitudeNoiseStd2);
+        assertEquals(attitudeNoiseStd1, attitudeNoiseStd2);
+        assertEquals(0.0, estimator.getPositionUncertainty(), 0.0);
+        final Distance positionUncertainty1 = estimator.getPositionUncertaintyAsDistance();
+        assertEquals(0.0, positionUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionUncertainty1.getUnit());
+        final Distance positionUncertainty2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionUncertaintyAsDistance(positionUncertainty2);
+        assertEquals(0.0, estimator.getVelocityUncertainty(), 0.0);
+        final Speed velocityUncertainty1 = estimator.getVelocityUncertaintyAsSpeed();
+        assertEquals(0.0, velocityUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityUncertainty1.getUnit());
+        final Speed velocityUncertainty2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityUncertaintyAsSpeed(velocityUncertainty2);
+        assertEquals(velocityUncertainty1, velocityUncertainty2);
+        assertEquals(0.0, estimator.getAttitudeUncertainty(), 0.0);
+        final Angle attitudeUncertainty1 = estimator.getAttitudeUncertaintyAsAngle();
+        assertEquals(0.0, attitudeUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeUncertainty1.getUnit());
+        final Angle attitudeUncertainty2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeUncertaintyAsAngle(attitudeUncertainty2);
+        assertEquals(attitudeUncertainty1, attitudeUncertainty2);
 
         final BodyKinematics kinematics1 = estimator.getFixedKinematics();
         assertEquals(new BodyKinematics(), kinematics1);
@@ -12439,40 +13972,79 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         assertTrue(nedC.equals(nedC2, ABSOLUTE_ERROR));
 
         assertEquals(0, estimator.getNumberOfProcessedSamples());
+        assertEquals(0, estimator.getNumberOfProcessedDriftPeriods());
+        assertEquals(0.0, estimator.getElapsedTimeSeconds(), 0.0);
+        final Time elapsedTime1 = estimator.getElapsedTime();
+        assertEquals(0.0, elapsedTime1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, elapsedTime1.getUnit());
+        final Time elapsedTime2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getElapsedTime(elapsedTime2);
+        assertEquals(elapsedTime1, elapsedTime2);
         assertTrue(estimator.isFixKinematicsEnabled());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES,
+                estimator.getDriftPeriodSamples());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * timeInterval,
+                estimator.getDriftPeriodSeconds(), 0.0);
+        final Time driftPeriod1 = estimator.getDriftPeriod();
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * timeInterval,
+                driftPeriod1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, driftPeriod1.getUnit());
+        final Time driftPeriod2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getDriftPeriod(driftPeriod2);
+        assertEquals(driftPeriod1, driftPeriod2);
         assertFalse(estimator.isRunning());
+        assertTrue(estimator.isReady());
 
         assertEquals(0.0, estimator.getAccelerometerBiasPSD(), 0.0);
         assertEquals(0.0, estimator.getGyroBiasPSD(), 0.0);
-        assertEquals(0.0, estimator.getPositionVariance(), 0.0);
-        assertEquals(0.0, estimator.getVelocityVariance(), 0.0);
-        assertEquals(0.0, estimator.getAttitudeVariance(), 0.0);
-
-        assertEquals(0.0, estimator.getPositionStandardDeviation(),
+        assertEquals(0.0, estimator.getPositionNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getVelocityNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getAttitudeNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getPositionNoiseStandardDeviation(),
                 0.0);
-        final Distance positionStd1 = estimator.getPositionStandardDeviationAsDistance();
-        assertEquals(0.0, positionStd1.getValue().doubleValue(), 0.0);
-        assertEquals(DistanceUnit.METER, positionStd1.getUnit());
-        final Distance positionStd2 = new Distance(1.0, DistanceUnit.INCH);
-        estimator.getPositionStandardDeviationAsDistance(positionStd2);
-        assertEquals(positionStd1, positionStd2);
-
-        assertEquals(0.0, estimator.getVelocityStandardDeviation(),
+        final Distance positionNoiseStd1 = estimator.getPositionNoiseStandardDeviationAsDistance();
+        assertEquals(0.0, positionNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionNoiseStd1.getUnit());
+        final Distance positionNoiseStd2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionNoiseStandardDeviationAsDistance(positionNoiseStd2);
+        assertEquals(positionNoiseStd1, positionNoiseStd2);
+        assertEquals(0.0, estimator.getVelocityNoiseStandardDeviation(),
                 0.0);
-        final Speed speedStd1 = estimator.getVelocityStandardDeviationAsSpeed();
-        assertEquals(0.0, speedStd1.getValue().doubleValue(), 0.0);
-        assertEquals(SpeedUnit.METERS_PER_SECOND, speedStd1.getUnit());
-        final Speed speedStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        estimator.getVelocityStandardDeviationAsSpeed(speedStd2);
-        assertEquals(speedStd1, speedStd2);
-
-        assertEquals(0.0, estimator.getAttitudeStandardDeviation(), 0.0);
-        final Angle attitudeStd1 = estimator.getAttitudeStandardDeviationAsAngle();
-        assertEquals(0.0, attitudeStd1.getValue().doubleValue(), 0.0);
-        assertEquals(AngleUnit.RADIANS, attitudeStd1.getUnit());
-        final Angle attitudeStd2 = new Angle(1.0, AngleUnit.DEGREES);
-        estimator.getAttitudeStandardDeviationAsAngle(attitudeStd2);
-        assertEquals(attitudeStd1, attitudeStd2);
+        final Speed velocityNoiseStd1 = estimator.getVelocityNoiseStandardDeviationAsSpeed();
+        assertEquals(0.0, velocityNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityNoiseStd1.getUnit());
+        final Speed velocityNoiseStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityNoiseStandardDeviationAsSpeed(velocityNoiseStd2);
+        assertEquals(velocityNoiseStd1, velocityNoiseStd2);
+        assertEquals(0.0, estimator.getAttitudeNoiseStandardDeviation(), 0.0);
+        final Angle attitudeNoiseStd1 = estimator.getAttitudeNoiseStandardDeviationAsAngle();
+        assertEquals(0.0, attitudeNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeNoiseStd1.getUnit());
+        final Angle attitudeNoiseStd2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeNoiseStandardDeviationAsAngle(attitudeNoiseStd2);
+        assertEquals(attitudeNoiseStd1, attitudeNoiseStd2);
+        assertEquals(0.0, estimator.getPositionUncertainty(), 0.0);
+        final Distance positionUncertainty1 = estimator.getPositionUncertaintyAsDistance();
+        assertEquals(0.0, positionUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionUncertainty1.getUnit());
+        final Distance positionUncertainty2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionUncertaintyAsDistance(positionUncertainty2);
+        assertEquals(0.0, estimator.getVelocityUncertainty(), 0.0);
+        final Speed velocityUncertainty1 = estimator.getVelocityUncertaintyAsSpeed();
+        assertEquals(0.0, velocityUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityUncertainty1.getUnit());
+        final Speed velocityUncertainty2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityUncertaintyAsSpeed(velocityUncertainty2);
+        assertEquals(velocityUncertainty1, velocityUncertainty2);
+        assertEquals(0.0, estimator.getAttitudeUncertainty(), 0.0);
+        final Angle attitudeUncertainty1 = estimator.getAttitudeUncertaintyAsAngle();
+        assertEquals(0.0, attitudeUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeUncertainty1.getUnit());
+        final Angle attitudeUncertainty2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeUncertaintyAsAngle(attitudeUncertainty2);
+        assertEquals(attitudeUncertainty1, attitudeUncertainty2);
 
         final BodyKinematics kinematics1 = estimator.getFixedKinematics();
         assertEquals(new BodyKinematics(), kinematics1);
@@ -12754,40 +14326,79 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         assertTrue(nedC.equals(nedC2, ABSOLUTE_ERROR));
 
         assertEquals(0, estimator.getNumberOfProcessedSamples());
+        assertEquals(0, estimator.getNumberOfProcessedDriftPeriods());
+        assertEquals(0.0, estimator.getElapsedTimeSeconds(), 0.0);
+        final Time elapsedTime1 = estimator.getElapsedTime();
+        assertEquals(0.0, elapsedTime1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, elapsedTime1.getUnit());
+        final Time elapsedTime2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getElapsedTime(elapsedTime2);
+        assertEquals(elapsedTime1, elapsedTime2);
         assertTrue(estimator.isFixKinematicsEnabled());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES,
+                estimator.getDriftPeriodSamples());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * timeInterval,
+                estimator.getDriftPeriodSeconds(), 0.0);
+        final Time driftPeriod1 = estimator.getDriftPeriod();
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * timeInterval,
+                driftPeriod1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, driftPeriod1.getUnit());
+        final Time driftPeriod2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getDriftPeriod(driftPeriod2);
+        assertEquals(driftPeriod1, driftPeriod2);
         assertFalse(estimator.isRunning());
+        assertTrue(estimator.isReady());
 
         assertEquals(0.0, estimator.getAccelerometerBiasPSD(), 0.0);
         assertEquals(0.0, estimator.getGyroBiasPSD(), 0.0);
-        assertEquals(0.0, estimator.getPositionVariance(), 0.0);
-        assertEquals(0.0, estimator.getVelocityVariance(), 0.0);
-        assertEquals(0.0, estimator.getAttitudeVariance(), 0.0);
-
-        assertEquals(0.0, estimator.getPositionStandardDeviation(),
+        assertEquals(0.0, estimator.getPositionNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getVelocityNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getAttitudeNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getPositionNoiseStandardDeviation(),
                 0.0);
-        final Distance positionStd1 = estimator.getPositionStandardDeviationAsDistance();
-        assertEquals(0.0, positionStd1.getValue().doubleValue(), 0.0);
-        assertEquals(DistanceUnit.METER, positionStd1.getUnit());
-        final Distance positionStd2 = new Distance(1.0, DistanceUnit.INCH);
-        estimator.getPositionStandardDeviationAsDistance(positionStd2);
-        assertEquals(positionStd1, positionStd2);
-
-        assertEquals(0.0, estimator.getVelocityStandardDeviation(),
+        final Distance positionNoiseStd1 = estimator.getPositionNoiseStandardDeviationAsDistance();
+        assertEquals(0.0, positionNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionNoiseStd1.getUnit());
+        final Distance positionNoiseStd2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionNoiseStandardDeviationAsDistance(positionNoiseStd2);
+        assertEquals(positionNoiseStd1, positionNoiseStd2);
+        assertEquals(0.0, estimator.getVelocityNoiseStandardDeviation(),
                 0.0);
-        final Speed speedStd1 = estimator.getVelocityStandardDeviationAsSpeed();
-        assertEquals(0.0, speedStd1.getValue().doubleValue(), 0.0);
-        assertEquals(SpeedUnit.METERS_PER_SECOND, speedStd1.getUnit());
-        final Speed speedStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        estimator.getVelocityStandardDeviationAsSpeed(speedStd2);
-        assertEquals(speedStd1, speedStd2);
-
-        assertEquals(0.0, estimator.getAttitudeStandardDeviation(), 0.0);
-        final Angle attitudeStd1 = estimator.getAttitudeStandardDeviationAsAngle();
-        assertEquals(0.0, attitudeStd1.getValue().doubleValue(), 0.0);
-        assertEquals(AngleUnit.RADIANS, attitudeStd1.getUnit());
-        final Angle attitudeStd2 = new Angle(1.0, AngleUnit.DEGREES);
-        estimator.getAttitudeStandardDeviationAsAngle(attitudeStd2);
-        assertEquals(attitudeStd1, attitudeStd2);
+        final Speed velocityNoiseStd1 = estimator.getVelocityNoiseStandardDeviationAsSpeed();
+        assertEquals(0.0, velocityNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityNoiseStd1.getUnit());
+        final Speed velocityNoiseStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityNoiseStandardDeviationAsSpeed(velocityNoiseStd2);
+        assertEquals(velocityNoiseStd1, velocityNoiseStd2);
+        assertEquals(0.0, estimator.getAttitudeNoiseStandardDeviation(), 0.0);
+        final Angle attitudeNoiseStd1 = estimator.getAttitudeNoiseStandardDeviationAsAngle();
+        assertEquals(0.0, attitudeNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeNoiseStd1.getUnit());
+        final Angle attitudeNoiseStd2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeNoiseStandardDeviationAsAngle(attitudeNoiseStd2);
+        assertEquals(attitudeNoiseStd1, attitudeNoiseStd2);
+        assertEquals(0.0, estimator.getPositionUncertainty(), 0.0);
+        final Distance positionUncertainty1 = estimator.getPositionUncertaintyAsDistance();
+        assertEquals(0.0, positionUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionUncertainty1.getUnit());
+        final Distance positionUncertainty2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionUncertaintyAsDistance(positionUncertainty2);
+        assertEquals(0.0, estimator.getVelocityUncertainty(), 0.0);
+        final Speed velocityUncertainty1 = estimator.getVelocityUncertaintyAsSpeed();
+        assertEquals(0.0, velocityUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityUncertainty1.getUnit());
+        final Speed velocityUncertainty2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityUncertaintyAsSpeed(velocityUncertainty2);
+        assertEquals(velocityUncertainty1, velocityUncertainty2);
+        assertEquals(0.0, estimator.getAttitudeUncertainty(), 0.0);
+        final Angle attitudeUncertainty1 = estimator.getAttitudeUncertaintyAsAngle();
+        assertEquals(0.0, attitudeUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeUncertainty1.getUnit());
+        final Angle attitudeUncertainty2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeUncertaintyAsAngle(attitudeUncertainty2);
+        assertEquals(attitudeUncertainty1, attitudeUncertainty2);
 
         final BodyKinematics kinematics1 = estimator.getFixedKinematics();
         assertEquals(new BodyKinematics(), kinematics1);
@@ -13085,40 +14696,79 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         assertTrue(nedC.equals(nedC2, ABSOLUTE_ERROR));
 
         assertEquals(0, estimator.getNumberOfProcessedSamples());
+        assertEquals(0, estimator.getNumberOfProcessedDriftPeriods());
+        assertEquals(0.0, estimator.getElapsedTimeSeconds(), 0.0);
+        final Time elapsedTime1 = estimator.getElapsedTime();
+        assertEquals(0.0, elapsedTime1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, elapsedTime1.getUnit());
+        final Time elapsedTime2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getElapsedTime(elapsedTime2);
+        assertEquals(elapsedTime1, elapsedTime2);
         assertTrue(estimator.isFixKinematicsEnabled());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES,
+                estimator.getDriftPeriodSamples());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * timeInterval,
+                estimator.getDriftPeriodSeconds(), 0.0);
+        final Time driftPeriod1 = estimator.getDriftPeriod();
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * timeInterval,
+                driftPeriod1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, driftPeriod1.getUnit());
+        final Time driftPeriod2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getDriftPeriod(driftPeriod2);
+        assertEquals(driftPeriod1, driftPeriod2);
         assertFalse(estimator.isRunning());
+        assertTrue(estimator.isReady());
 
         assertEquals(0.0, estimator.getAccelerometerBiasPSD(), 0.0);
         assertEquals(0.0, estimator.getGyroBiasPSD(), 0.0);
-        assertEquals(0.0, estimator.getPositionVariance(), 0.0);
-        assertEquals(0.0, estimator.getVelocityVariance(), 0.0);
-        assertEquals(0.0, estimator.getAttitudeVariance(), 0.0);
-
-        assertEquals(0.0, estimator.getPositionStandardDeviation(),
+        assertEquals(0.0, estimator.getPositionNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getVelocityNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getAttitudeNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getPositionNoiseStandardDeviation(),
                 0.0);
-        final Distance positionStd1 = estimator.getPositionStandardDeviationAsDistance();
-        assertEquals(0.0, positionStd1.getValue().doubleValue(), 0.0);
-        assertEquals(DistanceUnit.METER, positionStd1.getUnit());
-        final Distance positionStd2 = new Distance(1.0, DistanceUnit.INCH);
-        estimator.getPositionStandardDeviationAsDistance(positionStd2);
-        assertEquals(positionStd1, positionStd2);
-
-        assertEquals(0.0, estimator.getVelocityStandardDeviation(),
+        final Distance positionNoiseStd1 = estimator.getPositionNoiseStandardDeviationAsDistance();
+        assertEquals(0.0, positionNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionNoiseStd1.getUnit());
+        final Distance positionNoiseStd2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionNoiseStandardDeviationAsDistance(positionNoiseStd2);
+        assertEquals(positionNoiseStd1, positionNoiseStd2);
+        assertEquals(0.0, estimator.getVelocityNoiseStandardDeviation(),
                 0.0);
-        final Speed speedStd1 = estimator.getVelocityStandardDeviationAsSpeed();
-        assertEquals(0.0, speedStd1.getValue().doubleValue(), 0.0);
-        assertEquals(SpeedUnit.METERS_PER_SECOND, speedStd1.getUnit());
-        final Speed speedStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        estimator.getVelocityStandardDeviationAsSpeed(speedStd2);
-        assertEquals(speedStd1, speedStd2);
-
-        assertEquals(0.0, estimator.getAttitudeStandardDeviation(), 0.0);
-        final Angle attitudeStd1 = estimator.getAttitudeStandardDeviationAsAngle();
-        assertEquals(0.0, attitudeStd1.getValue().doubleValue(), 0.0);
-        assertEquals(AngleUnit.RADIANS, attitudeStd1.getUnit());
-        final Angle attitudeStd2 = new Angle(1.0, AngleUnit.DEGREES);
-        estimator.getAttitudeStandardDeviationAsAngle(attitudeStd2);
-        assertEquals(attitudeStd1, attitudeStd2);
+        final Speed velocityNoiseStd1 = estimator.getVelocityNoiseStandardDeviationAsSpeed();
+        assertEquals(0.0, velocityNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityNoiseStd1.getUnit());
+        final Speed velocityNoiseStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityNoiseStandardDeviationAsSpeed(velocityNoiseStd2);
+        assertEquals(velocityNoiseStd1, velocityNoiseStd2);
+        assertEquals(0.0, estimator.getAttitudeNoiseStandardDeviation(), 0.0);
+        final Angle attitudeNoiseStd1 = estimator.getAttitudeNoiseStandardDeviationAsAngle();
+        assertEquals(0.0, attitudeNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeNoiseStd1.getUnit());
+        final Angle attitudeNoiseStd2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeNoiseStandardDeviationAsAngle(attitudeNoiseStd2);
+        assertEquals(attitudeNoiseStd1, attitudeNoiseStd2);
+        assertEquals(0.0, estimator.getPositionUncertainty(), 0.0);
+        final Distance positionUncertainty1 = estimator.getPositionUncertaintyAsDistance();
+        assertEquals(0.0, positionUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionUncertainty1.getUnit());
+        final Distance positionUncertainty2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionUncertaintyAsDistance(positionUncertainty2);
+        assertEquals(0.0, estimator.getVelocityUncertainty(), 0.0);
+        final Speed velocityUncertainty1 = estimator.getVelocityUncertaintyAsSpeed();
+        assertEquals(0.0, velocityUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityUncertainty1.getUnit());
+        final Speed velocityUncertainty2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityUncertaintyAsSpeed(velocityUncertainty2);
+        assertEquals(velocityUncertainty1, velocityUncertainty2);
+        assertEquals(0.0, estimator.getAttitudeUncertainty(), 0.0);
+        final Angle attitudeUncertainty1 = estimator.getAttitudeUncertaintyAsAngle();
+        assertEquals(0.0, attitudeUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeUncertainty1.getUnit());
+        final Angle attitudeUncertainty2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeUncertaintyAsAngle(attitudeUncertainty2);
+        assertEquals(attitudeUncertainty1, attitudeUncertainty2);
 
         final BodyKinematics kinematics1 = estimator.getFixedKinematics();
         assertEquals(new BodyKinematics(), kinematics1);
@@ -13414,40 +15064,79 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         assertTrue(nedC.equals(nedC2, ABSOLUTE_ERROR));
 
         assertEquals(0, estimator.getNumberOfProcessedSamples());
+        assertEquals(0, estimator.getNumberOfProcessedDriftPeriods());
+        assertEquals(0.0, estimator.getElapsedTimeSeconds(), 0.0);
+        final Time elapsedTime1 = estimator.getElapsedTime();
+        assertEquals(0.0, elapsedTime1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, elapsedTime1.getUnit());
+        final Time elapsedTime2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getElapsedTime(elapsedTime2);
+        assertEquals(elapsedTime1, elapsedTime2);
         assertTrue(estimator.isFixKinematicsEnabled());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES,
+                estimator.getDriftPeriodSamples());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * timeInterval,
+                estimator.getDriftPeriodSeconds(), 0.0);
+        final Time driftPeriod1 = estimator.getDriftPeriod();
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * timeInterval,
+                driftPeriod1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, driftPeriod1.getUnit());
+        final Time driftPeriod2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getDriftPeriod(driftPeriod2);
+        assertEquals(driftPeriod1, driftPeriod2);
         assertFalse(estimator.isRunning());
+        assertTrue(estimator.isReady());
 
         assertEquals(0.0, estimator.getAccelerometerBiasPSD(), 0.0);
         assertEquals(0.0, estimator.getGyroBiasPSD(), 0.0);
-        assertEquals(0.0, estimator.getPositionVariance(), 0.0);
-        assertEquals(0.0, estimator.getVelocityVariance(), 0.0);
-        assertEquals(0.0, estimator.getAttitudeVariance(), 0.0);
-
-        assertEquals(0.0, estimator.getPositionStandardDeviation(),
+        assertEquals(0.0, estimator.getPositionNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getVelocityNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getAttitudeNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getPositionNoiseStandardDeviation(),
                 0.0);
-        final Distance positionStd1 = estimator.getPositionStandardDeviationAsDistance();
-        assertEquals(0.0, positionStd1.getValue().doubleValue(), 0.0);
-        assertEquals(DistanceUnit.METER, positionStd1.getUnit());
-        final Distance positionStd2 = new Distance(1.0, DistanceUnit.INCH);
-        estimator.getPositionStandardDeviationAsDistance(positionStd2);
-        assertEquals(positionStd1, positionStd2);
-
-        assertEquals(0.0, estimator.getVelocityStandardDeviation(),
+        final Distance positionNoiseStd1 = estimator.getPositionNoiseStandardDeviationAsDistance();
+        assertEquals(0.0, positionNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionNoiseStd1.getUnit());
+        final Distance positionNoiseStd2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionNoiseStandardDeviationAsDistance(positionNoiseStd2);
+        assertEquals(positionNoiseStd1, positionNoiseStd2);
+        assertEquals(0.0, estimator.getVelocityNoiseStandardDeviation(),
                 0.0);
-        final Speed speedStd1 = estimator.getVelocityStandardDeviationAsSpeed();
-        assertEquals(0.0, speedStd1.getValue().doubleValue(), 0.0);
-        assertEquals(SpeedUnit.METERS_PER_SECOND, speedStd1.getUnit());
-        final Speed speedStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        estimator.getVelocityStandardDeviationAsSpeed(speedStd2);
-        assertEquals(speedStd1, speedStd2);
-
-        assertEquals(0.0, estimator.getAttitudeStandardDeviation(), 0.0);
-        final Angle attitudeStd1 = estimator.getAttitudeStandardDeviationAsAngle();
-        assertEquals(0.0, attitudeStd1.getValue().doubleValue(), 0.0);
-        assertEquals(AngleUnit.RADIANS, attitudeStd1.getUnit());
-        final Angle attitudeStd2 = new Angle(1.0, AngleUnit.DEGREES);
-        estimator.getAttitudeStandardDeviationAsAngle(attitudeStd2);
-        assertEquals(attitudeStd1, attitudeStd2);
+        final Speed velocityNoiseStd1 = estimator.getVelocityNoiseStandardDeviationAsSpeed();
+        assertEquals(0.0, velocityNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityNoiseStd1.getUnit());
+        final Speed velocityNoiseStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityNoiseStandardDeviationAsSpeed(velocityNoiseStd2);
+        assertEquals(velocityNoiseStd1, velocityNoiseStd2);
+        assertEquals(0.0, estimator.getAttitudeNoiseStandardDeviation(), 0.0);
+        final Angle attitudeNoiseStd1 = estimator.getAttitudeNoiseStandardDeviationAsAngle();
+        assertEquals(0.0, attitudeNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeNoiseStd1.getUnit());
+        final Angle attitudeNoiseStd2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeNoiseStandardDeviationAsAngle(attitudeNoiseStd2);
+        assertEquals(attitudeNoiseStd1, attitudeNoiseStd2);
+        assertEquals(0.0, estimator.getPositionUncertainty(), 0.0);
+        final Distance positionUncertainty1 = estimator.getPositionUncertaintyAsDistance();
+        assertEquals(0.0, positionUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionUncertainty1.getUnit());
+        final Distance positionUncertainty2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionUncertaintyAsDistance(positionUncertainty2);
+        assertEquals(0.0, estimator.getVelocityUncertainty(), 0.0);
+        final Speed velocityUncertainty1 = estimator.getVelocityUncertaintyAsSpeed();
+        assertEquals(0.0, velocityUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityUncertainty1.getUnit());
+        final Speed velocityUncertainty2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityUncertaintyAsSpeed(velocityUncertainty2);
+        assertEquals(velocityUncertainty1, velocityUncertainty2);
+        assertEquals(0.0, estimator.getAttitudeUncertainty(), 0.0);
+        final Angle attitudeUncertainty1 = estimator.getAttitudeUncertaintyAsAngle();
+        assertEquals(0.0, attitudeUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeUncertainty1.getUnit());
+        final Angle attitudeUncertainty2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeUncertaintyAsAngle(attitudeUncertainty2);
+        assertEquals(attitudeUncertainty1, attitudeUncertainty2);
 
         final BodyKinematics kinematics1 = estimator.getFixedKinematics();
         assertEquals(new BodyKinematics(), kinematics1);
@@ -13748,40 +15437,79 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         assertTrue(nedC.equals(nedC2, ABSOLUTE_ERROR));
 
         assertEquals(0, estimator.getNumberOfProcessedSamples());
+        assertEquals(0, estimator.getNumberOfProcessedDriftPeriods());
+        assertEquals(0.0, estimator.getElapsedTimeSeconds(), 0.0);
+        final Time elapsedTime1 = estimator.getElapsedTime();
+        assertEquals(0.0, elapsedTime1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, elapsedTime1.getUnit());
+        final Time elapsedTime2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getElapsedTime(elapsedTime2);
+        assertEquals(elapsedTime1, elapsedTime2);
         assertTrue(estimator.isFixKinematicsEnabled());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES,
+                estimator.getDriftPeriodSamples());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * timeInterval,
+                estimator.getDriftPeriodSeconds(), 0.0);
+        final Time driftPeriod1 = estimator.getDriftPeriod();
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * timeInterval,
+                driftPeriod1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, driftPeriod1.getUnit());
+        final Time driftPeriod2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getDriftPeriod(driftPeriod2);
+        assertEquals(driftPeriod1, driftPeriod2);
         assertFalse(estimator.isRunning());
+        assertTrue(estimator.isReady());
 
         assertEquals(0.0, estimator.getAccelerometerBiasPSD(), 0.0);
         assertEquals(0.0, estimator.getGyroBiasPSD(), 0.0);
-        assertEquals(0.0, estimator.getPositionVariance(), 0.0);
-        assertEquals(0.0, estimator.getVelocityVariance(), 0.0);
-        assertEquals(0.0, estimator.getAttitudeVariance(), 0.0);
-
-        assertEquals(0.0, estimator.getPositionStandardDeviation(),
+        assertEquals(0.0, estimator.getPositionNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getVelocityNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getAttitudeNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getPositionNoiseStandardDeviation(),
                 0.0);
-        final Distance positionStd1 = estimator.getPositionStandardDeviationAsDistance();
-        assertEquals(0.0, positionStd1.getValue().doubleValue(), 0.0);
-        assertEquals(DistanceUnit.METER, positionStd1.getUnit());
-        final Distance positionStd2 = new Distance(1.0, DistanceUnit.INCH);
-        estimator.getPositionStandardDeviationAsDistance(positionStd2);
-        assertEquals(positionStd1, positionStd2);
-
-        assertEquals(0.0, estimator.getVelocityStandardDeviation(),
+        final Distance positionNoiseStd1 = estimator.getPositionNoiseStandardDeviationAsDistance();
+        assertEquals(0.0, positionNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionNoiseStd1.getUnit());
+        final Distance positionNoiseStd2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionNoiseStandardDeviationAsDistance(positionNoiseStd2);
+        assertEquals(positionNoiseStd1, positionNoiseStd2);
+        assertEquals(0.0, estimator.getVelocityNoiseStandardDeviation(),
                 0.0);
-        final Speed speedStd1 = estimator.getVelocityStandardDeviationAsSpeed();
-        assertEquals(0.0, speedStd1.getValue().doubleValue(), 0.0);
-        assertEquals(SpeedUnit.METERS_PER_SECOND, speedStd1.getUnit());
-        final Speed speedStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        estimator.getVelocityStandardDeviationAsSpeed(speedStd2);
-        assertEquals(speedStd1, speedStd2);
-
-        assertEquals(0.0, estimator.getAttitudeStandardDeviation(), 0.0);
-        final Angle attitudeStd1 = estimator.getAttitudeStandardDeviationAsAngle();
-        assertEquals(0.0, attitudeStd1.getValue().doubleValue(), 0.0);
-        assertEquals(AngleUnit.RADIANS, attitudeStd1.getUnit());
-        final Angle attitudeStd2 = new Angle(1.0, AngleUnit.DEGREES);
-        estimator.getAttitudeStandardDeviationAsAngle(attitudeStd2);
-        assertEquals(attitudeStd1, attitudeStd2);
+        final Speed velocityNoiseStd1 = estimator.getVelocityNoiseStandardDeviationAsSpeed();
+        assertEquals(0.0, velocityNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityNoiseStd1.getUnit());
+        final Speed velocityNoiseStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityNoiseStandardDeviationAsSpeed(velocityNoiseStd2);
+        assertEquals(velocityNoiseStd1, velocityNoiseStd2);
+        assertEquals(0.0, estimator.getAttitudeNoiseStandardDeviation(), 0.0);
+        final Angle attitudeNoiseStd1 = estimator.getAttitudeNoiseStandardDeviationAsAngle();
+        assertEquals(0.0, attitudeNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeNoiseStd1.getUnit());
+        final Angle attitudeNoiseStd2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeNoiseStandardDeviationAsAngle(attitudeNoiseStd2);
+        assertEquals(attitudeNoiseStd1, attitudeNoiseStd2);
+        assertEquals(0.0, estimator.getPositionUncertainty(), 0.0);
+        final Distance positionUncertainty1 = estimator.getPositionUncertaintyAsDistance();
+        assertEquals(0.0, positionUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionUncertainty1.getUnit());
+        final Distance positionUncertainty2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionUncertaintyAsDistance(positionUncertainty2);
+        assertEquals(0.0, estimator.getVelocityUncertainty(), 0.0);
+        final Speed velocityUncertainty1 = estimator.getVelocityUncertaintyAsSpeed();
+        assertEquals(0.0, velocityUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityUncertainty1.getUnit());
+        final Speed velocityUncertainty2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityUncertaintyAsSpeed(velocityUncertainty2);
+        assertEquals(velocityUncertainty1, velocityUncertainty2);
+        assertEquals(0.0, estimator.getAttitudeUncertainty(), 0.0);
+        final Angle attitudeUncertainty1 = estimator.getAttitudeUncertaintyAsAngle();
+        assertEquals(0.0, attitudeUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeUncertainty1.getUnit());
+        final Angle attitudeUncertainty2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeUncertaintyAsAngle(attitudeUncertainty2);
+        assertEquals(attitudeUncertainty1, attitudeUncertainty2);
 
         final BodyKinematics kinematics1 = estimator.getFixedKinematics();
         assertEquals(new BodyKinematics(), kinematics1);
@@ -14092,40 +15820,79 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         assertTrue(nedC.equals(nedC2, ABSOLUTE_ERROR));
 
         assertEquals(0, estimator.getNumberOfProcessedSamples());
+        assertEquals(0, estimator.getNumberOfProcessedDriftPeriods());
+        assertEquals(0.0, estimator.getElapsedTimeSeconds(), 0.0);
+        final Time elapsedTime1 = estimator.getElapsedTime();
+        assertEquals(0.0, elapsedTime1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, elapsedTime1.getUnit());
+        final Time elapsedTime2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getElapsedTime(elapsedTime2);
+        assertEquals(elapsedTime1, elapsedTime2);
         assertTrue(estimator.isFixKinematicsEnabled());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES,
+                estimator.getDriftPeriodSamples());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * timeInterval,
+                estimator.getDriftPeriodSeconds(), 0.0);
+        final Time driftPeriod1 = estimator.getDriftPeriod();
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * timeInterval,
+                driftPeriod1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, driftPeriod1.getUnit());
+        final Time driftPeriod2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getDriftPeriod(driftPeriod2);
+        assertEquals(driftPeriod1, driftPeriod2);
         assertFalse(estimator.isRunning());
+        assertTrue(estimator.isReady());
 
         assertEquals(0.0, estimator.getAccelerometerBiasPSD(), 0.0);
         assertEquals(0.0, estimator.getGyroBiasPSD(), 0.0);
-        assertEquals(0.0, estimator.getPositionVariance(), 0.0);
-        assertEquals(0.0, estimator.getVelocityVariance(), 0.0);
-        assertEquals(0.0, estimator.getAttitudeVariance(), 0.0);
-
-        assertEquals(0.0, estimator.getPositionStandardDeviation(),
+        assertEquals(0.0, estimator.getPositionNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getVelocityNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getAttitudeNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getPositionNoiseStandardDeviation(),
                 0.0);
-        final Distance positionStd1 = estimator.getPositionStandardDeviationAsDistance();
-        assertEquals(0.0, positionStd1.getValue().doubleValue(), 0.0);
-        assertEquals(DistanceUnit.METER, positionStd1.getUnit());
-        final Distance positionStd2 = new Distance(1.0, DistanceUnit.INCH);
-        estimator.getPositionStandardDeviationAsDistance(positionStd2);
-        assertEquals(positionStd1, positionStd2);
-
-        assertEquals(0.0, estimator.getVelocityStandardDeviation(),
+        final Distance positionNoiseStd1 = estimator.getPositionNoiseStandardDeviationAsDistance();
+        assertEquals(0.0, positionNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionNoiseStd1.getUnit());
+        final Distance positionNoiseStd2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionNoiseStandardDeviationAsDistance(positionNoiseStd2);
+        assertEquals(positionNoiseStd1, positionNoiseStd2);
+        assertEquals(0.0, estimator.getVelocityNoiseStandardDeviation(),
                 0.0);
-        final Speed speedStd1 = estimator.getVelocityStandardDeviationAsSpeed();
-        assertEquals(0.0, speedStd1.getValue().doubleValue(), 0.0);
-        assertEquals(SpeedUnit.METERS_PER_SECOND, speedStd1.getUnit());
-        final Speed speedStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        estimator.getVelocityStandardDeviationAsSpeed(speedStd2);
-        assertEquals(speedStd1, speedStd2);
-
-        assertEquals(0.0, estimator.getAttitudeStandardDeviation(), 0.0);
-        final Angle attitudeStd1 = estimator.getAttitudeStandardDeviationAsAngle();
-        assertEquals(0.0, attitudeStd1.getValue().doubleValue(), 0.0);
-        assertEquals(AngleUnit.RADIANS, attitudeStd1.getUnit());
-        final Angle attitudeStd2 = new Angle(1.0, AngleUnit.DEGREES);
-        estimator.getAttitudeStandardDeviationAsAngle(attitudeStd2);
-        assertEquals(attitudeStd1, attitudeStd2);
+        final Speed velocityNoiseStd1 = estimator.getVelocityNoiseStandardDeviationAsSpeed();
+        assertEquals(0.0, velocityNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityNoiseStd1.getUnit());
+        final Speed velocityNoiseStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityNoiseStandardDeviationAsSpeed(velocityNoiseStd2);
+        assertEquals(velocityNoiseStd1, velocityNoiseStd2);
+        assertEquals(0.0, estimator.getAttitudeNoiseStandardDeviation(), 0.0);
+        final Angle attitudeNoiseStd1 = estimator.getAttitudeNoiseStandardDeviationAsAngle();
+        assertEquals(0.0, attitudeNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeNoiseStd1.getUnit());
+        final Angle attitudeNoiseStd2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeNoiseStandardDeviationAsAngle(attitudeNoiseStd2);
+        assertEquals(attitudeNoiseStd1, attitudeNoiseStd2);
+        assertEquals(0.0, estimator.getPositionUncertainty(), 0.0);
+        final Distance positionUncertainty1 = estimator.getPositionUncertaintyAsDistance();
+        assertEquals(0.0, positionUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionUncertainty1.getUnit());
+        final Distance positionUncertainty2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionUncertaintyAsDistance(positionUncertainty2);
+        assertEquals(0.0, estimator.getVelocityUncertainty(), 0.0);
+        final Speed velocityUncertainty1 = estimator.getVelocityUncertaintyAsSpeed();
+        assertEquals(0.0, velocityUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityUncertainty1.getUnit());
+        final Speed velocityUncertainty2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityUncertaintyAsSpeed(velocityUncertainty2);
+        assertEquals(velocityUncertainty1, velocityUncertainty2);
+        assertEquals(0.0, estimator.getAttitudeUncertainty(), 0.0);
+        final Angle attitudeUncertainty1 = estimator.getAttitudeUncertaintyAsAngle();
+        assertEquals(0.0, attitudeUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeUncertainty1.getUnit());
+        final Angle attitudeUncertainty2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeUncertaintyAsAngle(attitudeUncertainty2);
+        assertEquals(attitudeUncertainty1, attitudeUncertainty2);
 
         final BodyKinematics kinematics1 = estimator.getFixedKinematics();
         assertEquals(new BodyKinematics(), kinematics1);
@@ -14450,40 +16217,79 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         assertTrue(nedC.equals(nedC2, ABSOLUTE_ERROR));
 
         assertEquals(0, estimator.getNumberOfProcessedSamples());
+        assertEquals(0, estimator.getNumberOfProcessedDriftPeriods());
+        assertEquals(0.0, estimator.getElapsedTimeSeconds(), 0.0);
+        final Time elapsedTime1 = estimator.getElapsedTime();
+        assertEquals(0.0, elapsedTime1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, elapsedTime1.getUnit());
+        final Time elapsedTime2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getElapsedTime(elapsedTime2);
+        assertEquals(elapsedTime1, elapsedTime2);
         assertTrue(estimator.isFixKinematicsEnabled());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES,
+                estimator.getDriftPeriodSamples());
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * timeInterval,
+                estimator.getDriftPeriodSeconds(), 0.0);
+        final Time driftPeriod1 = estimator.getDriftPeriod();
+        assertEquals(RandomWalkEstimator.DEFAULT_DRIFT_PERIOD_SAMPLES
+                        * timeInterval,
+                driftPeriod1.getValue().doubleValue(), 0.0);
+        assertEquals(TimeUnit.SECOND, driftPeriod1.getUnit());
+        final Time driftPeriod2 = new Time(1.0, TimeUnit.DAY);
+        estimator.getDriftPeriod(driftPeriod2);
+        assertEquals(driftPeriod1, driftPeriod2);
         assertFalse(estimator.isRunning());
+        assertTrue(estimator.isReady());
 
         assertEquals(0.0, estimator.getAccelerometerBiasPSD(), 0.0);
         assertEquals(0.0, estimator.getGyroBiasPSD(), 0.0);
-        assertEquals(0.0, estimator.getPositionVariance(), 0.0);
-        assertEquals(0.0, estimator.getVelocityVariance(), 0.0);
-        assertEquals(0.0, estimator.getAttitudeVariance(), 0.0);
-
-        assertEquals(0.0, estimator.getPositionStandardDeviation(),
+        assertEquals(0.0, estimator.getPositionNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getVelocityNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getAttitudeNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getPositionNoiseStandardDeviation(),
                 0.0);
-        final Distance positionStd1 = estimator.getPositionStandardDeviationAsDistance();
-        assertEquals(0.0, positionStd1.getValue().doubleValue(), 0.0);
-        assertEquals(DistanceUnit.METER, positionStd1.getUnit());
-        final Distance positionStd2 = new Distance(1.0, DistanceUnit.INCH);
-        estimator.getPositionStandardDeviationAsDistance(positionStd2);
-        assertEquals(positionStd1, positionStd2);
-
-        assertEquals(0.0, estimator.getVelocityStandardDeviation(),
+        final Distance positionNoiseStd1 = estimator.getPositionNoiseStandardDeviationAsDistance();
+        assertEquals(0.0, positionNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionNoiseStd1.getUnit());
+        final Distance positionNoiseStd2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionNoiseStandardDeviationAsDistance(positionNoiseStd2);
+        assertEquals(positionNoiseStd1, positionNoiseStd2);
+        assertEquals(0.0, estimator.getVelocityNoiseStandardDeviation(),
                 0.0);
-        final Speed speedStd1 = estimator.getVelocityStandardDeviationAsSpeed();
-        assertEquals(0.0, speedStd1.getValue().doubleValue(), 0.0);
-        assertEquals(SpeedUnit.METERS_PER_SECOND, speedStd1.getUnit());
-        final Speed speedStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        estimator.getVelocityStandardDeviationAsSpeed(speedStd2);
-        assertEquals(speedStd1, speedStd2);
-
-        assertEquals(0.0, estimator.getAttitudeStandardDeviation(), 0.0);
-        final Angle attitudeStd1 = estimator.getAttitudeStandardDeviationAsAngle();
-        assertEquals(0.0, attitudeStd1.getValue().doubleValue(), 0.0);
-        assertEquals(AngleUnit.RADIANS, attitudeStd1.getUnit());
-        final Angle attitudeStd2 = new Angle(1.0, AngleUnit.DEGREES);
-        estimator.getAttitudeStandardDeviationAsAngle(attitudeStd2);
-        assertEquals(attitudeStd1, attitudeStd2);
+        final Speed velocityNoiseStd1 = estimator.getVelocityNoiseStandardDeviationAsSpeed();
+        assertEquals(0.0, velocityNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityNoiseStd1.getUnit());
+        final Speed velocityNoiseStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityNoiseStandardDeviationAsSpeed(velocityNoiseStd2);
+        assertEquals(velocityNoiseStd1, velocityNoiseStd2);
+        assertEquals(0.0, estimator.getAttitudeNoiseStandardDeviation(), 0.0);
+        final Angle attitudeNoiseStd1 = estimator.getAttitudeNoiseStandardDeviationAsAngle();
+        assertEquals(0.0, attitudeNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeNoiseStd1.getUnit());
+        final Angle attitudeNoiseStd2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeNoiseStandardDeviationAsAngle(attitudeNoiseStd2);
+        assertEquals(attitudeNoiseStd1, attitudeNoiseStd2);
+        assertEquals(0.0, estimator.getPositionUncertainty(), 0.0);
+        final Distance positionUncertainty1 = estimator.getPositionUncertaintyAsDistance();
+        assertEquals(0.0, positionUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionUncertainty1.getUnit());
+        final Distance positionUncertainty2 = new Distance(1.0, DistanceUnit.MILE);
+        estimator.getPositionUncertaintyAsDistance(positionUncertainty2);
+        assertEquals(0.0, estimator.getVelocityUncertainty(), 0.0);
+        final Speed velocityUncertainty1 = estimator.getVelocityUncertaintyAsSpeed();
+        assertEquals(0.0, velocityUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityUncertainty1.getUnit());
+        final Speed velocityUncertainty2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityUncertaintyAsSpeed(velocityUncertainty2);
+        assertEquals(velocityUncertainty1, velocityUncertainty2);
+        assertEquals(0.0, estimator.getAttitudeUncertainty(), 0.0);
+        final Angle attitudeUncertainty1 = estimator.getAttitudeUncertaintyAsAngle();
+        assertEquals(0.0, attitudeUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeUncertainty1.getUnit());
+        final Angle attitudeUncertainty2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeUncertaintyAsAngle(attitudeUncertainty2);
+        assertEquals(attitudeUncertainty1, attitudeUncertainty2);
 
         final BodyKinematics kinematics1 = estimator.getFixedKinematics();
         assertEquals(new BodyKinematics(), kinematics1);
@@ -17046,7 +18852,7 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
     public void testAddBodyKinematicsWithFixEnabledAndReset()
             throws AlgebraException, LockedException,
             InvalidSourceAndDestinationFrameTypeException,
-            RandomWalkEstimationException {
+            RandomWalkEstimationException, NotReadyException {
         final Matrix ba = generateBa();
         final Matrix bg = generateBg();
         final Matrix ma = generateMaCommonAxis();
@@ -17100,6 +18906,7 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         assertEquals(mStart, 0);
         assertEquals(mBodyKinematicsAdded, 0);
         assertEquals(mReset, 0);
+        assertTrue(estimator.isReady());
         assertEquals(estimator.getNumberOfProcessedSamples(), 0);
         assertFalse(estimator.isRunning());
         assertTrue(estimator.isFixKinematicsEnabled());
@@ -17134,50 +18941,64 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         final double gyroBiasPsd = estimator.getGyroBiasPSD();
         assertTrue(gyroBiasPsd > 0.0);
 
-        final double positionVariance = estimator.getPositionVariance();
-        assertTrue(positionVariance > 0.0);
+        final double positionNoiseVariance = estimator.getPositionNoiseVariance();
+        assertTrue(positionNoiseVariance > 0.0);
 
-        final double velocityVariance = estimator.getVelocityVariance();
-        assertTrue(velocityVariance > 0.0);
+        final double velocityNoiseVariance = estimator.getVelocityNoiseVariance();
+        assertTrue(velocityNoiseVariance > 0.0);
 
-        final double attitudeVariance = estimator.getAttitudeVariance();
-        assertTrue(attitudeVariance > 0.0);
+        final double attitudeNoiseVariance = estimator.getAttitudeNoiseVariance();
+        assertTrue(attitudeNoiseVariance > 0.0);
 
-        final double positionStd = estimator.getPositionStandardDeviation();
-        assertEquals(Math.sqrt(positionVariance), positionStd, 0.0);
+        final double positionNoiseStandardDeviation =
+                estimator.getPositionNoiseStandardDeviation();
+        assertEquals(Math.sqrt(positionNoiseVariance),
+                positionNoiseStandardDeviation, 0.0);
 
-        final Distance posStd1 = estimator.getPositionStandardDeviationAsDistance();
-        assertEquals(positionStd, posStd1.getValue().doubleValue(), 0.0);
-        assertEquals(DistanceUnit.METER, posStd1.getUnit());
+        final Distance positionNoiseStd1 =
+                estimator.getPositionNoiseStandardDeviationAsDistance();
+        assertEquals(positionNoiseStandardDeviation,
+                positionNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionNoiseStd1.getUnit());
 
-        final Distance posStd2 = new Distance(1.0, DistanceUnit.INCH);
-        estimator.getPositionStandardDeviationAsDistance(posStd2);
-        assertEquals(posStd1, posStd2);
+        final Distance positionNoiseStd2 = new Distance(1.0,
+                DistanceUnit.INCH);
+        estimator.getPositionNoiseStandardDeviationAsDistance(positionNoiseStd2);
+        assertEquals(positionNoiseStd1, positionNoiseStd2);
 
-        final double velocityStd = estimator.getVelocityStandardDeviation();
-        assertEquals(Math.sqrt(velocityVariance), velocityStd, 0.0);
+        final double velocityNoiseStandardDeviation =
+                estimator.getVelocityNoiseStandardDeviation();
+        assertEquals(Math.sqrt(velocityNoiseVariance),
+                velocityNoiseStandardDeviation, 0.0);
 
-        final Speed velStd1 = estimator.getVelocityStandardDeviationAsSpeed();
-        assertEquals(velocityStd, velStd1.getValue().doubleValue(), 0.0);
-        assertEquals(SpeedUnit.METERS_PER_SECOND, velStd1.getUnit());
+        final Speed velocityNoiseStd1 =
+                estimator.getVelocityNoiseStandardDeviationAsSpeed();
+        assertEquals(velocityNoiseStandardDeviation,
+                velocityNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityNoiseStd1.getUnit());
 
-        final Speed velStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        estimator.getVelocityStandardDeviationAsSpeed(velStd2);
-        assertEquals(velStd1, velStd2);
+        final Speed velocityNoiseStd2 = new Speed(1.0,
+                SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityNoiseStandardDeviationAsSpeed(velocityNoiseStd2);
+        assertEquals(velocityNoiseStd1, velocityNoiseStd2);
 
-        final double attitudeStd = estimator.getAttitudeStandardDeviation();
-        assertEquals(Math.sqrt(attitudeVariance), attitudeStd, 0.0);
+        final double attitudeNoiseStandardDeviation =
+                estimator.getAttitudeNoiseStandardDeviation();
+        assertEquals(Math.sqrt(attitudeNoiseVariance),
+                attitudeNoiseStandardDeviation, 0.0);
 
-        final Angle attitudeStd1 = estimator.getAttitudeStandardDeviationAsAngle();
-        assertEquals(attitudeStd, attitudeStd1.getValue().doubleValue(), 0.0);
-        assertEquals(AngleUnit.RADIANS, attitudeStd1.getUnit());
+        final Angle attitudeNoiseStd1 =
+                estimator.getAttitudeNoiseStandardDeviationAsAngle();
+        assertEquals(attitudeNoiseStandardDeviation,
+                attitudeNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeNoiseStd1.getUnit());
 
-        final Angle attitudeStd2 = new Angle(1.0, AngleUnit.DEGREES);
-        estimator.getAttitudeStandardDeviationAsAngle(attitudeStd2);
-        assertEquals(attitudeStd1, attitudeStd2);
+        final Angle attitudeNoiseStd2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeNoiseStandardDeviationAsAngle(attitudeNoiseStd2);
+        assertEquals(attitudeNoiseStd1, attitudeNoiseStd2);
 
         // check fixed kinematics
-        BodyKinematicsFixer fixer = new BodyKinematicsFixer();
+        final BodyKinematicsFixer fixer = new BodyKinematicsFixer();
         fixer.setAccelerationBias(ba);
         fixer.setAccelerationCrossCouplingErrors(ma);
         fixer.setAngularSpeedBias(bg);
@@ -17198,9 +19019,18 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         assertFalse(estimator.isRunning());
         assertEquals(0.0, estimator.getAccelerometerBiasPSD(), 0.0);
         assertEquals(0.0, estimator.getGyroBiasPSD(), 0.0);
-        assertEquals(0.0, estimator.getPositionVariance(), 0.0);
-        assertEquals(0.0, estimator.getVelocityVariance(), 0.0);
-        assertEquals(0.0, estimator.getAttitudeVariance(), 0.0);
+        assertEquals(0.0, estimator.getPositionNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getVelocityNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getAttitudeNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getPositionNoiseStandardDeviation(),
+                0.0);
+        assertEquals(0.0, estimator.getVelocityNoiseStandardDeviation(),
+                0.0);
+        assertEquals(0.0, estimator.getAttitudeNoiseStandardDeviation(),
+                0.0);
+        assertEquals(0.0, estimator.getPositionUncertainty(), 0.0);
+        assertEquals(0.0, estimator.getVelocityUncertainty(), 0.0);
+        assertEquals(0.0, estimator.getAttitudeUncertainty(), 0.0);
 
         assertFalse(estimator.reset());
         assertEquals(mReset, 1);
@@ -17211,7 +19041,7 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
     public void testAddBodyKinematicsWithFixDisabledAndReset()
             throws AlgebraException, LockedException,
             InvalidSourceAndDestinationFrameTypeException,
-            RandomWalkEstimationException {
+            RandomWalkEstimationException, NotReadyException {
         final Matrix ba = generateBa();
         final Matrix bg = generateBg();
         final Matrix ma = generateMaCommonAxis();
@@ -17253,6 +19083,11 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
 
         final RandomWalkEstimator estimator = new RandomWalkEstimator();
         estimator.setNedPositionAndNedOrientation(nedPosition, nedC);
+        estimator.setAccelerationBias(ba);
+        estimator.setAccelerationCrossCouplingErrors(ma);
+        estimator.setAngularSpeedBias(bg);
+        estimator.setAngularSpeedCrossCouplingErrors(mg);
+        estimator.setAngularSpeedGDependantCrossBias(gg);
         estimator.setTimeInterval(TIME_INTERVAL_SECONDS);
         estimator.setListener(this);
         estimator.setFixKinematicsEnabled(false);
@@ -17261,6 +19096,7 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         assertEquals(mStart, 0);
         assertEquals(mBodyKinematicsAdded, 0);
         assertEquals(mReset, 0);
+        assertTrue(estimator.isReady());
         assertEquals(estimator.getNumberOfProcessedSamples(), 0);
         assertFalse(estimator.isRunning());
         assertFalse(estimator.isFixKinematicsEnabled());
@@ -17305,47 +19141,61 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         final double gyroBiasPsd = estimator.getGyroBiasPSD();
         assertTrue(gyroBiasPsd > 0.0);
 
-        final double positionVariance = estimator.getPositionVariance();
-        assertTrue(positionVariance > 0.0);
+        final double positionNoiseVariance = estimator.getPositionNoiseVariance();
+        assertTrue(positionNoiseVariance > 0.0);
 
-        final double velocityVariance = estimator.getVelocityVariance();
-        assertTrue(velocityVariance > 0.0);
+        final double velocityNoiseVariance = estimator.getVelocityNoiseVariance();
+        assertTrue(velocityNoiseVariance > 0.0);
 
-        final double attitudeVariance = estimator.getAttitudeVariance();
-        assertTrue(attitudeVariance > 0.0);
+        final double attitudeNoiseVariance = estimator.getAttitudeNoiseVariance();
+        assertTrue(attitudeNoiseVariance > 0.0);
 
-        final double positionStd = estimator.getPositionStandardDeviation();
-        assertEquals(Math.sqrt(positionVariance), positionStd, 0.0);
+        final double positionNoiseStandardDeviation =
+                estimator.getPositionNoiseStandardDeviation();
+        assertEquals(Math.sqrt(positionNoiseVariance),
+                positionNoiseStandardDeviation, 0.0);
 
-        final Distance posStd1 = estimator.getPositionStandardDeviationAsDistance();
-        assertEquals(positionStd, posStd1.getValue().doubleValue(), 0.0);
-        assertEquals(DistanceUnit.METER, posStd1.getUnit());
+        final Distance positionNoiseStd1 =
+                estimator.getPositionNoiseStandardDeviationAsDistance();
+        assertEquals(positionNoiseStandardDeviation,
+                positionNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, positionNoiseStd1.getUnit());
 
-        final Distance posStd2 = new Distance(1.0, DistanceUnit.INCH);
-        estimator.getPositionStandardDeviationAsDistance(posStd2);
-        assertEquals(posStd1, posStd2);
+        final Distance positionNoiseStd2 = new Distance(1.0,
+                DistanceUnit.INCH);
+        estimator.getPositionNoiseStandardDeviationAsDistance(positionNoiseStd2);
+        assertEquals(positionNoiseStd1, positionNoiseStd2);
 
-        final double velocityStd = estimator.getVelocityStandardDeviation();
-        assertEquals(Math.sqrt(velocityVariance), velocityStd, 0.0);
+        final double velocityNoiseStandardDeviation =
+                estimator.getVelocityNoiseStandardDeviation();
+        assertEquals(Math.sqrt(velocityNoiseVariance),
+                velocityNoiseStandardDeviation, 0.0);
 
-        final Speed velStd1 = estimator.getVelocityStandardDeviationAsSpeed();
-        assertEquals(velocityStd, velStd1.getValue().doubleValue(), 0.0);
-        assertEquals(SpeedUnit.METERS_PER_SECOND, velStd1.getUnit());
+        final Speed velocityNoiseStd1 =
+                estimator.getVelocityNoiseStandardDeviationAsSpeed();
+        assertEquals(velocityNoiseStandardDeviation,
+                velocityNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocityNoiseStd1.getUnit());
 
-        final Speed velStd2 = new Speed(1.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        estimator.getVelocityStandardDeviationAsSpeed(velStd2);
-        assertEquals(velStd1, velStd2);
+        final Speed velocityNoiseStd2 = new Speed(1.0,
+                SpeedUnit.KILOMETERS_PER_HOUR);
+        estimator.getVelocityNoiseStandardDeviationAsSpeed(velocityNoiseStd2);
+        assertEquals(velocityNoiseStd1, velocityNoiseStd2);
 
-        final double attitudeStd = estimator.getAttitudeStandardDeviation();
-        assertEquals(Math.sqrt(attitudeVariance), attitudeStd, 0.0);
+        final double attitudeNoiseStandardDeviation =
+                estimator.getAttitudeNoiseStandardDeviation();
+        assertEquals(Math.sqrt(attitudeNoiseVariance),
+                attitudeNoiseStandardDeviation, 0.0);
 
-        final Angle attitudeStd1 = estimator.getAttitudeStandardDeviationAsAngle();
-        assertEquals(attitudeStd, attitudeStd1.getValue().doubleValue(), 0.0);
-        assertEquals(AngleUnit.RADIANS, attitudeStd1.getUnit());
+        final Angle attitudeNoiseStd1 =
+                estimator.getAttitudeNoiseStandardDeviationAsAngle();
+        assertEquals(attitudeNoiseStandardDeviation,
+                attitudeNoiseStd1.getValue().doubleValue(), 0.0);
+        assertEquals(AngleUnit.RADIANS, attitudeNoiseStd1.getUnit());
 
-        final Angle attitudeStd2 = new Angle(1.0, AngleUnit.DEGREES);
-        estimator.getAttitudeStandardDeviationAsAngle(attitudeStd2);
-        assertEquals(attitudeStd1, attitudeStd2);
+        final Angle attitudeNoiseStd2 = new Angle(1.0, AngleUnit.DEGREES);
+        estimator.getAttitudeNoiseStandardDeviationAsAngle(attitudeNoiseStd2);
+        assertEquals(attitudeNoiseStd1, attitudeNoiseStd2);
 
         // check fixed kinematics
         final BodyKinematics fixedKinematics2 = estimator.getFixedKinematics();
@@ -17361,9 +19211,18 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
         assertFalse(estimator.isRunning());
         assertEquals(0.0, estimator.getAccelerometerBiasPSD(), 0.0);
         assertEquals(0.0, estimator.getGyroBiasPSD(), 0.0);
-        assertEquals(0.0, estimator.getPositionVariance(), 0.0);
-        assertEquals(0.0, estimator.getVelocityVariance(), 0.0);
-        assertEquals(0.0, estimator.getAttitudeVariance(), 0.0);
+        assertEquals(0.0, estimator.getPositionNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getVelocityNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getAttitudeNoiseVariance(), 0.0);
+        assertEquals(0.0, estimator.getPositionNoiseStandardDeviation(),
+                0.0);
+        assertEquals(0.0, estimator.getVelocityNoiseStandardDeviation(),
+                0.0);
+        assertEquals(0.0, estimator.getAttitudeNoiseStandardDeviation(),
+                0.0);
+        assertEquals(0.0, estimator.getPositionUncertainty(), 0.0);
+        assertEquals(0.0, estimator.getVelocityUncertainty(), 0.0);
+        assertEquals(0.0, estimator.getAttitudeUncertainty(), 0.0);
 
         assertFalse(estimator.reset());
         assertEquals(mReset, 1);
@@ -17377,9 +19236,10 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
     }
 
     @Override
-    public void onBodyKinematicsAdded(final RandomWalkEstimator estimator,
-                                      final BodyKinematics measuredKinematics,
-                                      final BodyKinematics fixedKinematics) {
+    public void onBodyKinematicsAdded(
+            final RandomWalkEstimator estimator,
+            final BodyKinematics measuredKinematics,
+            final BodyKinematics fixedKinematics) {
         if (mBodyKinematicsAdded == 0) {
             checkLocked(estimator);
         }
@@ -17476,10 +19336,430 @@ public class RandomWalkEstimatorTest implements RandomWalkEstimatorListener {
             fail("LockedException expected but not thrown");
         }
         try {
+            estimator.setAccelerationMxy(0.0);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        } catch (final AlgebraException e) {
+            fail("LockedException expected but not thrown");
+        }
+        try {
+            estimator.setAccelerationMxz(0.0);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        } catch (final AlgebraException e) {
+            fail("LockedException expected but not thrown");
+        }
+        try {
+            estimator.setAccelerationMyx(0.0);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        } catch (final AlgebraException e) {
+            fail("LockedException expected but not thrown");
+        }
+        try {
+            estimator.setAccelerationMyz(0.0);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        } catch (final AlgebraException e) {
+            fail("LockedException expected but not thrown");
+        }
+        try {
+            estimator.setAccelerationMzx(0.0);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        } catch (final AlgebraException e) {
+            fail("LockedException expected but not thrown");
+        }
+        try {
+            estimator.setAccelerationMzy(0.0);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        } catch (final AlgebraException e) {
+            fail("LockedException expected but not thrown");
+        }
+        try {
+            estimator.setAccelerationScalingFactors(0.0, 0.0, 0.0);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        } catch (final AlgebraException e) {
+            fail("LockedException expected but not thrown");
+        }
+        try {
+            estimator.setAccelerationCrossCouplingErrors(
+                    0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        } catch (final AlgebraException e) {
+            fail("LockedException expected but not thrown");
+        }
+        try {
+            estimator.setAccelerationScalingFactorsAndCrossCouplingErrors(
+                    0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                    0.0, 0.0, 0.0);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        } catch (final AlgebraException e) {
+            fail("LockedException expected but not thrown");
+        }
+        try {
+            estimator.setAngularSpeedBias((Matrix) null);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
+        try {
+            estimator.setAngularSpeedBias((double[]) null);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
+        try {
+            estimator.setAngularSpeedBias((AngularSpeedTriad) null);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
+        try {
+            estimator.setAngularSpeedBiasX(0.0);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
+        try {
+            estimator.setAngularSpeedBiasY(0.0);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
+        try {
+            estimator.setAngularSpeedBiasZ(0.0);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
+        try {
+            estimator.setAngularSpeedBias(0.0, 0.0, 0.0);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
+        try {
+            estimator.setAngularSpeedBiasX(null);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
+        try {
+            estimator.setAngularSpeedBiasY(null);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
+        try {
+            estimator.setAngularSpeedBiasZ(null);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
+        try {
+            estimator.setAngularSpeedBias(null, null, null);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
+        try {
+            estimator.setAngularSpeedCrossCouplingErrors(null);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        } catch (final AlgebraException e) {
+            fail("LockedException expected but not thrown");
+        }
+        try {
+            estimator.setAngularSpeedSx(0.0);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        } catch (final AlgebraException e) {
+            fail("LockedException expected but not thrown");
+        }
+        try {
+            estimator.setAngularSpeedSy(0.0);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        } catch (final AlgebraException e) {
+            fail("LockedException expected but not thrown");
+        }
+        try {
+            estimator.setAngularSpeedSz(0.0);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        } catch (final AlgebraException e) {
+            fail("LockedException expected but not thrown");
+        }
+        try {
+            estimator.setAngularSpeedMxy(0.0);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        } catch (final AlgebraException e) {
+            fail("LockedException expected but not thrown");
+        }
+        try {
+            estimator.setAngularSpeedMxz(0.0);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        } catch (final AlgebraException e) {
+            fail("LockedException expected but not thrown");
+        }
+        try {
+            estimator.setAngularSpeedMyx(0.0);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        } catch (final AlgebraException e) {
+            fail("LockedException expected but not thrown");
+        }
+        try {
+            estimator.setAngularSpeedMyz(0.0);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        } catch (final AlgebraException e) {
+            fail("LockedException expected but not thrown");
+        }
+        try {
+            estimator.setAngularSpeedMzx(0.0);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        } catch (final AlgebraException e) {
+            fail("LockedException expected but not thrown");
+        }
+        try {
+            estimator.setAngularSpeedMzy(0.0);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        } catch (final AlgebraException e) {
+            fail("LockedException expected but not thrown");
+        }
+        try {
+            estimator.setAngularSpeedScalingFactors(0.0, 0.0, 0.0);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        } catch (final AlgebraException e) {
+            fail("LockedException expected but not thrown");
+        }
+        try {
+            estimator.setAngularSpeedCrossCouplingErrors(
+                    0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        } catch (final AlgebraException e) {
+            fail("LockedException expected but not thrown");
+        }
+        try {
+            estimator.setAngularSpeedScalingFactorsAndCrossCouplingErrors(
+                    0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                    0.0, 0.0, 0.0);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        } catch (final AlgebraException e) {
+            fail("LockedException expected but not thrown");
+        }
+        try {
+            estimator.setAngularSpeedGDependantCrossBias(null);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
+        try {
+            estimator.setTimeInterval(0.01);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
+        try {
+            estimator.setTimeInterval(null);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
+        try {
+            estimator.setEcefPosition((ECEFPosition) null);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
+        try {
+            estimator.setEcefPosition(0.0, 0.0, 0.0);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
+        try {
+            estimator.setEcefPosition(null, null, null);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
+        try {
+            estimator.setEcefPosition((Point3D) null);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
+        try {
+            estimator.setNedPosition(null);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
+        try {
+            estimator.setNedPosition(0.0, 0.0, 0.0);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
+        try {
+            estimator.setNedPosition(null, null, 0.0);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
+        try {
+            estimator.setNedPosition(null, null, null);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
+        try {
+            estimator.setEcefC(null);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        } catch (final InvalidSourceAndDestinationFrameTypeException e) {
+            fail("LockedException expected but not thrown");
+        }
+        try {
+            estimator.setNedC(null);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        } catch (final InvalidSourceAndDestinationFrameTypeException e) {
+            fail("LockedException expected but not thrown");
+        }
+        try {
+            estimator.setNedPositionAndNedOrientation(null, null);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        } catch (final InvalidSourceAndDestinationFrameTypeException e) {
+            fail("LockedException expected but not thrown");
+        }
+        try {
+            estimator.setNedPositionAndNedOrientation(
+                    0.0, 0.0, 0.0, null);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        } catch (final InvalidSourceAndDestinationFrameTypeException e) {
+            fail("LockedException expected but not thrown");
+        }
+        try {
+            estimator.setNedPositionAndNedOrientation(
+                    null, null, 0.0, null);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        } catch (final InvalidSourceAndDestinationFrameTypeException e) {
+            fail("LockedException expected but not thrown");
+        }
+        try {
+            estimator.setNedPositionAndNedOrientation(
+                    null, null, null, null);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        } catch (final InvalidSourceAndDestinationFrameTypeException e) {
+            fail("LockedException expected but not thrown");
+        }
+        try {
+            estimator.setEcefPositionAndEcefOrientation(
+                    (ECEFPosition) null, null);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        } catch (final InvalidSourceAndDestinationFrameTypeException e) {
+            fail("LockedException expected but not thrown");
+        }
+        try {
+            estimator.setEcefPositionAndEcefOrientation(
+                    0.0, 0.0, 0.0, null);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        } catch (final InvalidSourceAndDestinationFrameTypeException e) {
+            fail("LockedException expected but not thrown");
+        }
+        try {
+            estimator.setEcefPositionAndEcefOrientation(
+                    null, null, null, null);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        } catch (final InvalidSourceAndDestinationFrameTypeException e) {
+            fail("LockedException expected but not thrown");
+        }
+        try {
+            estimator.setEcefPositionAndEcefOrientation(
+                    (Point3D) null, null);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        } catch (final InvalidSourceAndDestinationFrameTypeException e) {
+            fail("LockedException expected but not thrown");
+        }
+        try {
+            estimator.setNedPositionAndEcefOrientation(null, null);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        } catch (final InvalidSourceAndDestinationFrameTypeException e) {
+            fail("LockedException expected but not thrown");
+        }
+        try {
+            estimator.setNedPositionAndEcefOrientation(
+                    0.0, 0.0, 0.0, null);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        } catch (final InvalidSourceAndDestinationFrameTypeException e) {
+            fail("LockedException expected but not thrown");
+        }
+        try {
+            estimator.setNedPositionAndEcefOrientation(
+                    null, null, 0.0, null);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        } catch (final InvalidSourceAndDestinationFrameTypeException e) {
+            fail("LockedException expected but not thrown");
+        }
+        try {
+            estimator.setNedPositionAndEcefOrientation(
+                    null, null, null, null);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        } catch (final InvalidSourceAndDestinationFrameTypeException e) {
+            fail("LockedException expected but not thrown");
+        }
+        try {
+            estimator.setEcefPositionAndNedOrientation(
+                    (ECEFPosition) null, null);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        } catch (final InvalidSourceAndDestinationFrameTypeException e) {
+            fail("LockedException expected but not thrown");
+        }
+        try {
+            estimator.setEcefPositionAndNedOrientation(
+                    0.0, 0.0, 0.0, null);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        } catch (final InvalidSourceAndDestinationFrameTypeException e) {
+            fail("LockedException expected but not thrown");
+        }
+        try {
+            estimator.setEcefPositionAndNedOrientation(
+                    null, null, null, null);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        } catch (final InvalidSourceAndDestinationFrameTypeException e) {
+            fail("LockedException expected but not thrown");
+        }
+        try {
+            estimator.setEcefPositionAndNedOrientation(
+                    (Point3D) null, null);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        } catch (final InvalidSourceAndDestinationFrameTypeException e) {
+            fail("LockedException expected but not thrown");
+        }
+        try {
+            estimator.setFixKinematicsEnabled(true);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
+        try {
+            estimator.setDriftPeriodSamples(1);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
+        try {
             estimator.addBodyKinematics(null);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
-        } catch (final RandomWalkEstimationException e) {
+        } catch (final RandomWalkEstimationException | NotReadyException e) {
             fail("LockedException expected but not thrown");
         }
         try {

@@ -219,11 +219,11 @@ public class INSLooselyCoupledKalmanInitializerConfigCreator {
         }
 
         final double attitudeUncertainty =
-                mAttitudeUncertaintySource.getAttitudeStandardDeviation();
+                mAttitudeUncertaintySource.getAttitudeUncertainty();
         final double velocityUncertainty =
-                mVelocityUncertaintySource.getVelocityStandardDeviation();
+                mVelocityUncertaintySource.getVelocityUncertainty();
         final double positionUncertainty =
-                mPositionUncertaintySource.getPositionStandardDeviation();
+                mPositionUncertaintySource.getPositionUncertainty();
         final double accelerationBiasUncertainty =
                 mAccelerometerBiasUncertaintySource.getEstimatedBiasStandardDeviationNorm();
         final double gyroBiasUncertainty =

@@ -54,12 +54,12 @@ public class INSLooselyCoupledKalmanConfigCreator {
     /**
      * A source of position noise standard deviation.
      */
-    private PositionUncertaintySource mPositionUncertaintySource;
+    private PositionNoiseStandardDeviationSource mPositionNoiseStandardDeviationSource;
 
     /**
      * A source of velocity noise standard deviation.
      */
-    private VelocityUncertaintySource mVelocityUncertaintySource;
+    private VelocityNoiseStandardDeviationSource mVelocityNoiseStandardDeviationSource;
 
     /**
      * Constructor.
@@ -70,26 +70,26 @@ public class INSLooselyCoupledKalmanConfigCreator {
     /**
      * Constructor.
      *
-     * @param accelerometerNoiseRootPsdSource   a source of estimated accelerometer noise root PSD.
-     * @param gyroscopeNoiseRootPsdSource       a source of estimated gyroscope noise root PSD.
-     * @param accelerometerBiasRandomWalkSource a source of estimated accelerometer bias random walk PSD.
-     * @param gyroscopeBiasRandomWalkSource     a source of estimated gyroscope bias random walk PSD.
-     * @param positionUncertaintySource         a source of position noise standard deviation.
-     * @param velocityUncertaintySource         a source of velocity noise standard deviation.
+     * @param accelerometerNoiseRootPsdSource      a source of estimated accelerometer noise root PSD.
+     * @param gyroscopeNoiseRootPsdSource          a source of estimated gyroscope noise root PSD.
+     * @param accelerometerBiasRandomWalkSource    a source of estimated accelerometer bias random walk PSD.
+     * @param gyroscopeBiasRandomWalkSource        a source of estimated gyroscope bias random walk PSD.
+     * @param positionNoiseStandardDeviationSource a source of position noise standard deviation.
+     * @param velocityNoiseStandardDeviationSource a source of velocity noise standard deviation.
      */
     public INSLooselyCoupledKalmanConfigCreator(
             final AccelerometerNoiseRootPsdSource accelerometerNoiseRootPsdSource,
             final GyroscopeNoiseRootPsdSource gyroscopeNoiseRootPsdSource,
             final AccelerometerBiasRandomWalkSource accelerometerBiasRandomWalkSource,
             final GyroscopeBiasRandomWalkSource gyroscopeBiasRandomWalkSource,
-            final PositionUncertaintySource positionUncertaintySource,
-            final VelocityUncertaintySource velocityUncertaintySource) {
+            final PositionNoiseStandardDeviationSource positionNoiseStandardDeviationSource,
+            final VelocityNoiseStandardDeviationSource velocityNoiseStandardDeviationSource) {
         mAccelerometerNoiseRootPsdSource = accelerometerNoiseRootPsdSource;
         mGyroscopeNoiseRootPsdSource = gyroscopeNoiseRootPsdSource;
         mAccelerometerBiasRandomWalkSource = accelerometerBiasRandomWalkSource;
         mGyroscopeBiasRandomWalkSource = gyroscopeBiasRandomWalkSource;
-        mPositionUncertaintySource = positionUncertaintySource;
-        mVelocityUncertaintySource = velocityUncertaintySource;
+        mPositionNoiseStandardDeviationSource = positionNoiseStandardDeviationSource;
+        mVelocityNoiseStandardDeviationSource = velocityNoiseStandardDeviationSource;
     }
 
     /**
@@ -233,8 +233,8 @@ public class INSLooselyCoupledKalmanConfigCreator {
      *
      * @return source of position noise standard deviation.
      */
-    public PositionUncertaintySource getPositionUncertaintySource() {
-        return mPositionUncertaintySource;
+    public PositionNoiseStandardDeviationSource getPositionNoiseStandardDeviationSource() {
+        return mPositionNoiseStandardDeviationSource;
     }
 
     /**
@@ -243,9 +243,9 @@ public class INSLooselyCoupledKalmanConfigCreator {
      * @param positionUncertaintySource source of position noise standard
      *                                  deviation.
      */
-    public void setPositionUncertaintySource(
-            final PositionUncertaintySource positionUncertaintySource) {
-        mPositionUncertaintySource = positionUncertaintySource;
+    public void setPositionNoiseStandardDeviationSource(
+            final PositionNoiseStandardDeviationSource positionUncertaintySource) {
+        mPositionNoiseStandardDeviationSource = positionUncertaintySource;
     }
 
     /**
@@ -253,8 +253,8 @@ public class INSLooselyCoupledKalmanConfigCreator {
      *
      * @return source of velocity noise standard deviation.
      */
-    public VelocityUncertaintySource getVelocityUncertaintySource() {
-        return mVelocityUncertaintySource;
+    public VelocityNoiseStandardDeviationSource getVelocityNoiseStandardDeviationSource() {
+        return mVelocityNoiseStandardDeviationSource;
     }
 
     /**
@@ -263,9 +263,9 @@ public class INSLooselyCoupledKalmanConfigCreator {
      * @param velocityUncertaintySource source of velocity noise standard
      *                                  deviation.
      */
-    public void setVelocityUncertaintySource(
-            final VelocityUncertaintySource velocityUncertaintySource) {
-        mVelocityUncertaintySource = velocityUncertaintySource;
+    public void setVelocityNoiseStandardDeviationSource(
+            final VelocityNoiseStandardDeviationSource velocityUncertaintySource) {
+        mVelocityNoiseStandardDeviationSource = velocityUncertaintySource;
     }
 
     /**
@@ -279,8 +279,8 @@ public class INSLooselyCoupledKalmanConfigCreator {
                 && mGyroscopeNoiseRootPsdSource != null
                 && mAccelerometerBiasRandomWalkSource != null
                 && mGyroscopeBiasRandomWalkSource != null
-                && mPositionUncertaintySource != null
-                && mVelocityUncertaintySource != null;
+                && mPositionNoiseStandardDeviationSource != null
+                && mVelocityNoiseStandardDeviationSource != null;
     }
 
     /**
@@ -301,8 +301,8 @@ public class INSLooselyCoupledKalmanConfigCreator {
                 mAccelerometerNoiseRootPsdSource.getAccelerometerBaseNoiseLevelRootPsd(), 2.0);
         final double accelRandomWalkBiasPsd = mAccelerometerBiasRandomWalkSource.getAccelerometerBiasPSD();
         final double gyroRandomWalkBiasPsd = mGyroscopeBiasRandomWalkSource.getGyroBiasPSD();
-        final double positionNoiseSd = mPositionUncertaintySource.getPositionStandardDeviation();
-        final double velocityNoiseSd = mVelocityUncertaintySource.getVelocityStandardDeviation();
+        final double positionNoiseSd = mPositionNoiseStandardDeviationSource.getPositionNoiseStandardDeviation();
+        final double velocityNoiseSd = mVelocityNoiseStandardDeviationSource.getVelocityNoiseStandardDeviation();
         return new INSLooselyCoupledKalmanConfig(gyroNoisePsd, accelNoisePsd,
                 accelRandomWalkBiasPsd, gyroRandomWalkBiasPsd,
                 positionNoiseSd, velocityNoiseSd);
