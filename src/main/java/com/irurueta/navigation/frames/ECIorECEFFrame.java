@@ -33,7 +33,7 @@ import java.util.Objects;
  * Base class for ECI or ECEF frames containing common logic and data for such frames.
  */
 @SuppressWarnings("WeakerAccess")
-public abstract class ECIorECEFFrame<T extends ECIorECEFFrame> implements Frame, Serializable, Cloneable {
+public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Frame, Serializable, Cloneable {
 
     /**
      * Number of coordinates representing position.
