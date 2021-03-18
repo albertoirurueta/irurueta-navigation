@@ -11985,7 +11985,7 @@ public class KalmanDriftEstimatorTest implements DriftEstimatorListener {
             final Matrix ma = generateMaCommonAxis();
             final Matrix bg = generateBg();
             final Matrix mg = generateMg();
-            final Matrix gg = generateGg();
+            final Matrix gg =  new Matrix(3, 3);
             final double accelNoiseRootPSD = getAccelNoiseRootPSD();
             final double gyroNoiseRootPSD = getGyroNoiseRootPSD();
             final double accelQuantLevel = 0.0;
@@ -12071,6 +12071,428 @@ public class KalmanDriftEstimatorTest implements DriftEstimatorListener {
             final BodyKinematics fixedKinematics = new BodyKinematics();
 
             final BodyKinematics measuredKinematics = new BodyKinematics();
+            for (int i = 0; i < N_SAMPLES; i++) {
+                BodyKinematicsGenerator.generate(TIME_INTERVAL_SECONDS,
+                        trueKinematics, errors, random, measuredKinematics);
+
+                kalmanDriftEstimator.addBodyKinematics(measuredKinematics);
+                driftEstimator.addBodyKinematics(measuredKinematics);
+
+                assertEquals(kalmanDriftEstimator.getNumberOfProcessedSamples(), i + 1);
+                assertFalse(kalmanDriftEstimator.isRunning());
+
+                fixer.fix(measuredKinematics, fixedKinematics);
+                ECEFInertialNavigator.navigateECEF(TIME_INTERVAL_SECONDS,
+                        navigationFrame, fixedKinematics, navigationFrame);
+
+                kalmanEstimator.update(fixedKinematics, i * TIME_INTERVAL_SECONDS);
+            }
+
+            assertEquals(kalmanDriftEstimator.getNumberOfProcessedSamples(), N_SAMPLES);
+            assertFalse(kalmanDriftEstimator.isRunning());
+            assertEquals(mStart, 1);
+            assertEquals(mBodyKinematicsAdded, N_SAMPLES);
+            assertEquals(mReset, 0);
+
+            final INSLooselyCoupledKalmanState kalmanState = kalmanEstimator.getState();
+
+            final double navigationPositionDrift = positionDrift(
+                    ecefFrame, navigationFrame);
+            final double navigationVelocityDrift = velocityDrift(
+                    ecefFrame, navigationFrame);
+            final double navigationOrientationDrift = orientationDrift(
+                    ecefFrame, navigationFrame);
+
+            final double kalmanPositionDrift = positionDrift(
+                    ecefFrame, kalmanState);
+            final double kalmanVelocityDrift = velocityDrift(
+                    ecefFrame, kalmanState);
+            final double kalmanOrientationDrift = orientationDrift(
+                    ecefFrame, kalmanState);
+
+            final ECEFPosition currentPositionDrift1 = kalmanDriftEstimator
+                    .getCurrentPositionDrift();
+            final ECEFPosition currentPositionDrift2 = new ECEFPosition();
+            assertTrue(kalmanDriftEstimator.getCurrentPositionDrift(currentPositionDrift2));
+            assertEquals(currentPositionDrift1, currentPositionDrift2);
+
+            final ECEFVelocity currentVelocityDrift1 = kalmanDriftEstimator
+                    .getCurrentVelocityDrift();
+            final ECEFVelocity currentVelocityDrift2 = new ECEFVelocity();
+            assertTrue(kalmanDriftEstimator.getCurrentVelocityDrift(currentVelocityDrift2));
+            assertEquals(currentVelocityDrift1, currentVelocityDrift2);
+
+            final Rotation3D currentOrientationDrift1 = kalmanDriftEstimator
+                    .getCurrentOrientationDrift();
+            final Quaternion currentOrientationDrift2 = new Quaternion();
+            assertTrue(kalmanDriftEstimator.getCurrentOrientationDrift(currentOrientationDrift2));
+            assertEquals(currentOrientationDrift1, currentOrientationDrift2);
+
+            final DistanceFormatter distanceFormatter = new DistanceFormatter();
+            final SpeedFormatter speedFormatter = new SpeedFormatter();
+            final AngleFormatter angleFormatter = new AngleFormatter();
+            final AccelerationFormatter accelerationFormatter =
+                    new AccelerationFormatter();
+            final AngularSpeedFormatter angularSpeedFormatter =
+                    new AngularSpeedFormatter();
+
+            final Double currentPositionDriftNorm = kalmanDriftEstimator
+                    .getCurrentPositionDriftNormMeters();
+            assertNotNull(currentPositionDriftNorm);
+            assertEquals(currentPositionDriftNorm, currentPositionDrift1.getNorm(),
+                    0.0);
+            LOGGER.log(Level.INFO, "Current position drift: " +
+                    distanceFormatter.format(currentPositionDriftNorm,
+                            DistanceUnit.METER));
+            if (currentPositionDriftNorm >= 92.0) {
+                continue;
+            }
+            assertTrue(currentPositionDriftNorm < 92.0);
+            // Check that kalman corrected drift is smaller than normal navigation drift
+            assertTrue(currentPositionDriftNorm < navigationPositionDrift);
+            assertEquals(currentPositionDriftNorm, kalmanPositionDrift,
+                    ABSOLUTE_ERROR);
+
+            final Distance currentPositionDriftNorm1 = kalmanDriftEstimator
+                    .getCurrentPositionDriftNorm();
+            assertEquals(currentPositionDriftNorm,
+                    currentPositionDriftNorm1.getValue().doubleValue(), 0.0);
+            assertEquals(DistanceUnit.METER, currentPositionDriftNorm1.getUnit());
+            final Distance currentPositionDriftNorm2 = new Distance(1.0,
+                    DistanceUnit.FOOT);
+            assertTrue(kalmanDriftEstimator.getCurrentPositionDriftNorm(
+                    currentPositionDriftNorm2));
+            assertEquals(currentPositionDriftNorm1, currentPositionDriftNorm2);
+
+            final Double currentVelocityDriftNorm = kalmanDriftEstimator
+                    .getCurrentVelocityDriftNormMetersPerSecond();
+            assertNotNull(currentVelocityDriftNorm);
+            assertEquals(currentVelocityDriftNorm, currentVelocityDrift1.getNorm(),
+                    0.0);
+            LOGGER.log(Level.INFO, "Current velocity drift: " +
+                    speedFormatter.format(currentVelocityDriftNorm,
+                            SpeedUnit.METERS_PER_SECOND));
+            if (currentVelocityDriftNorm >= 6.0) {
+                continue;
+            }
+            assertTrue(currentVelocityDriftNorm < 6.0);
+            // Check that kalman corrected drift is smaller than normal navigation drift
+            assertTrue(currentVelocityDriftNorm < navigationVelocityDrift);
+            assertEquals(currentVelocityDriftNorm, kalmanVelocityDrift,
+                    ABSOLUTE_ERROR);
+
+            final Speed currentVelocityDriftNorm1 = kalmanDriftEstimator
+                    .getCurrentVelocityDriftNorm();
+            assertEquals(currentVelocityDriftNorm,
+                    currentVelocityDriftNorm1.getValue().doubleValue(), 0.0);
+            assertEquals(SpeedUnit.METERS_PER_SECOND,
+                    currentVelocityDriftNorm1.getUnit());
+            final Speed currentVelocityDriftNorm2 = new Speed(1.0,
+                    SpeedUnit.KILOMETERS_PER_HOUR);
+            assertTrue(kalmanDriftEstimator.getCurrentVelocityDriftNorm(
+                    currentVelocityDriftNorm2));
+            assertEquals(currentVelocityDriftNorm1, currentVelocityDriftNorm2);
+
+            final Double currentOrientationDriftNorm = kalmanDriftEstimator
+                    .getCurrentOrientationDriftRadians();
+            assertNotNull(currentOrientationDriftNorm);
+            assertEquals(currentOrientationDriftNorm,
+                    currentOrientationDrift1.getRotationAngle(), 0.0);
+            LOGGER.log(Level.INFO, "Current orientation drift: " +
+                    angleFormatter.format(AngleConverter.convert(
+                            currentOrientationDriftNorm, AngleUnit.RADIANS,
+                            AngleUnit.DEGREES), AngleUnit.DEGREES));
+            if (currentOrientationDriftNorm >= 0.06) {
+                continue;
+            }
+            assertTrue(currentOrientationDriftNorm < 0.06);
+            // Check that kalman corrected drift is smaller than normal navigation drift
+            assertTrue(currentOrientationDriftNorm < navigationOrientationDrift);
+            assertEquals(currentOrientationDriftNorm, kalmanOrientationDrift,
+                    ABSOLUTE_ERROR);
+
+            final Angle currentOrientationDriftNorm1 = kalmanDriftEstimator
+                    .getCurrentOrientationDriftAngle();
+            assertEquals(currentOrientationDriftNorm,
+                    currentOrientationDriftNorm1.getValue().doubleValue(), 0.0);
+            assertEquals(AngleUnit.RADIANS, currentOrientationDriftNorm1.getUnit());
+            final Angle currentOrientationDriftNorm2 = new Angle(1.0,
+                    AngleUnit.DEGREES);
+            assertTrue(kalmanDriftEstimator.getCurrentOrientationDriftAngle(
+                    currentOrientationDriftNorm2));
+            assertEquals(currentOrientationDriftNorm1, currentOrientationDriftNorm2);
+
+            final Double currentPositionDriftPerTimeUnit =
+                    kalmanDriftEstimator.getCurrentPositionDriftPerTimeUnit();
+            assertNotNull(currentPositionDriftPerTimeUnit);
+            LOGGER.log(Level.INFO, "Current position drift per time unit: " +
+                    speedFormatter.format(currentPositionDriftPerTimeUnit,
+                            SpeedUnit.METERS_PER_SECOND));
+            if (currentPositionDriftPerTimeUnit >= 1.75) {
+                continue;
+            }
+            assertTrue(currentPositionDriftPerTimeUnit < 1.75);
+            assertEquals(currentPositionDriftPerTimeUnit,
+                    currentPositionDriftNorm / (N_SAMPLES * TIME_INTERVAL_SECONDS),
+                    ABSOLUTE_ERROR);
+
+            final Speed currentPositionDriftPerTimeUnit1 =
+                    kalmanDriftEstimator.getCurrentPositionDriftPerTimeUnitAsSpeed();
+            assertEquals(currentPositionDriftPerTimeUnit,
+                    currentPositionDriftPerTimeUnit1.getValue().doubleValue(),
+                    0.0);
+            assertEquals(SpeedUnit.METERS_PER_SECOND,
+                    currentPositionDriftPerTimeUnit1.getUnit());
+            final Speed currentPositionDriftPerTimeUnit2 = new Speed(1.0,
+                    SpeedUnit.KILOMETERS_PER_HOUR);
+            assertTrue(kalmanDriftEstimator.getCurrentPositionDriftPerTimeUnitAsSpeed(
+                    currentPositionDriftPerTimeUnit2));
+            assertEquals(currentPositionDriftPerTimeUnit1,
+                    currentPositionDriftPerTimeUnit2);
+
+            final Double currentVelocityDriftPerTimeUnit =
+                    kalmanDriftEstimator.getCurrentVelocityDriftPerTimeUnit();
+            assertNotNull(currentVelocityDriftPerTimeUnit);
+            LOGGER.log(Level.INFO, "Current velocity drift per time unit: " +
+                    accelerationFormatter.format(currentVelocityDriftPerTimeUnit,
+                            AccelerationUnit.METERS_PER_SQUARED_SECOND));
+            if (currentVelocityDriftPerTimeUnit >= 0.14) {
+                continue;
+            }
+            assertTrue(currentVelocityDriftPerTimeUnit < 0.14);
+            assertEquals(currentVelocityDriftPerTimeUnit,
+                    currentVelocityDriftNorm / (N_SAMPLES * TIME_INTERVAL_SECONDS),
+                    ABSOLUTE_ERROR);
+
+            final Acceleration currentVelocityDriftPerTimeUnit1 =
+                    kalmanDriftEstimator.getCurrentVelocityDriftPerTimeUnitAsAcceleration();
+            assertEquals(currentVelocityDriftPerTimeUnit,
+                    currentVelocityDriftPerTimeUnit1.getValue().doubleValue(),
+                    0.0);
+            assertEquals(AccelerationUnit.METERS_PER_SQUARED_SECOND,
+                    currentVelocityDriftPerTimeUnit1.getUnit());
+            final Acceleration currentVelocityDriftPerTimeUnit2 =
+                    new Acceleration(1.0,
+                            AccelerationUnit.FEET_PER_SQUARED_SECOND);
+            assertTrue(kalmanDriftEstimator.getCurrentVelocityDriftPerTimeUnitAsAcceleration(
+                    currentVelocityDriftPerTimeUnit2));
+            assertEquals(currentVelocityDriftPerTimeUnit1,
+                    currentVelocityDriftPerTimeUnit2);
+
+            final Double currentOrientationDriftPerTimeUnit =
+                    kalmanDriftEstimator.getCurrentOrientationDriftPerTimeUnit();
+            assertNotNull(currentOrientationDriftPerTimeUnit);
+            LOGGER.log(Level.INFO, "Current orientation drift per time unit: " +
+                    angularSpeedFormatter.format(AngularSpeedConverter.convert(
+                            currentOrientationDriftPerTimeUnit,
+                            AngularSpeedUnit.RADIANS_PER_SECOND,
+                            AngularSpeedUnit.DEGREES_PER_SECOND),
+                            AngularSpeedUnit.DEGREES_PER_SECOND));
+            if (currentOrientationDriftPerTimeUnit >= 1.7e-3) {
+                continue;
+            }
+            assertTrue(currentOrientationDriftPerTimeUnit < 1.7e-3);
+            assertEquals(currentOrientationDriftPerTimeUnit,
+                    currentOrientationDriftNorm / (N_SAMPLES * TIME_INTERVAL_SECONDS),
+                    ABSOLUTE_ERROR);
+
+            final AngularSpeed currentOrientationDriftPerTimeUnit1 =
+                    kalmanDriftEstimator.getCurrentOrientationDriftPerTimeUnitAsAngularSpeed();
+            assertEquals(currentOrientationDriftPerTimeUnit,
+                    currentOrientationDriftPerTimeUnit1.getValue().doubleValue(),
+                    0.0);
+            assertEquals(AngularSpeedUnit.RADIANS_PER_SECOND,
+                    currentOrientationDriftPerTimeUnit1.getUnit());
+            final AngularSpeed currentOrientationDriftPerTimeUnit2 =
+                    new AngularSpeed(1.0, AngularSpeedUnit.DEGREES_PER_SECOND);
+            assertTrue(kalmanDriftEstimator.getCurrentOrientationDriftPerTimeUnitAsAngularSpeed(
+                    currentOrientationDriftPerTimeUnit2));
+            assertEquals(currentOrientationDriftPerTimeUnit1,
+                    currentOrientationDriftPerTimeUnit2);
+
+            // reset
+            kalmanDriftEstimator.reset();
+
+            assertEquals(mReset, 1);
+            assertEquals(0, kalmanDriftEstimator.getNumberOfProcessedSamples());
+            assertNull(kalmanDriftEstimator.getCurrentPositionDrift());
+            assertFalse(kalmanDriftEstimator.getCurrentPositionDrift(null));
+            assertNull(kalmanDriftEstimator.getCurrentVelocityDrift());
+            assertFalse(kalmanDriftEstimator.getCurrentVelocityDrift(null));
+            assertNull(kalmanDriftEstimator.getCurrentOrientationDrift());
+            assertFalse(kalmanDriftEstimator.getCurrentOrientationDrift(null));
+            assertNull(kalmanDriftEstimator.getCurrentPositionDriftNormMeters());
+            assertNull(kalmanDriftEstimator.getCurrentPositionDriftNorm());
+            assertFalse(kalmanDriftEstimator.getCurrentPositionDriftNorm(null));
+            assertNull(kalmanDriftEstimator.getCurrentVelocityDriftNormMetersPerSecond());
+            assertNull(kalmanDriftEstimator.getCurrentVelocityDriftNorm());
+            assertFalse(kalmanDriftEstimator.getCurrentVelocityDriftNorm(null));
+            assertNull(kalmanDriftEstimator.getCurrentOrientationDriftRadians());
+            assertNull(kalmanDriftEstimator.getCurrentOrientationDriftAngle());
+            assertFalse(kalmanDriftEstimator.getCurrentOrientationDriftAngle(null));
+            assertNull(kalmanDriftEstimator.getCurrentPositionDriftPerTimeUnit());
+            assertNull(kalmanDriftEstimator.getCurrentPositionDriftPerTimeUnitAsSpeed());
+            assertFalse(kalmanDriftEstimator.getCurrentPositionDriftPerTimeUnitAsSpeed(
+                    null));
+            assertNull(kalmanDriftEstimator.getCurrentVelocityDriftPerTimeUnit());
+            assertNull(kalmanDriftEstimator.getCurrentVelocityDriftPerTimeUnitAsAcceleration());
+            assertFalse(kalmanDriftEstimator.getCurrentVelocityDriftPerTimeUnitAsAcceleration(
+                    null));
+            assertNull(kalmanDriftEstimator.getCurrentOrientationDriftPerTimeUnit());
+            assertNull(kalmanDriftEstimator.getCurrentOrientationDriftPerTimeUnitAsAngularSpeed());
+            assertFalse(kalmanDriftEstimator.getCurrentOrientationDriftPerTimeUnitAsAngularSpeed(
+                    null));
+
+            numValid++;
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
+
+    @Test
+    public void testAddBodyKinematicsAndResetApproximateCalibrationAndEstimatedKalmanConfig()
+            throws AlgebraException,
+            InvalidSourceAndDestinationFrameTypeException, LockedException,
+            InertialNavigatorException, DriftEstimationException,
+            NotReadyException, InvalidRotationMatrixException,
+            RotationException, INSException,
+            IntervalDetectorThresholdFactorOptimizerException,
+            RandomWalkEstimationException {
+
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            final Matrix ba = generateBa();
+            final Matrix ma = generateMaCommonAxis();
+            final Matrix bg = generateBg();
+            final Matrix mg = generateMg();
+            final Matrix gg =  new Matrix(3, 3);
+
+            final double accelNoiseRootPSD = getAccelNoiseRootPSD();
+            final double gyroNoiseRootPSD = getGyroNoiseRootPSD();
+            final double accelQuantLevel = 0.0;
+            final double gyroQuantLevel = 0.0;
+
+            final NEDFrame nedFrame = generateFrame();
+            final ECEFFrame ecefFrame = NEDtoECEFFrameConverter
+                    .convertNEDtoECEFAndReturnNew(nedFrame);
+
+            final NEDPosition nedPosition = nedFrame.getPosition();
+            final CoordinateTransformation nedC = nedFrame.getCoordinateTransformation();
+
+            final ECEFPosition ecefPosition = ecefFrame.getECEFPosition();
+            final CoordinateTransformation ecefC = ecefFrame.getCoordinateTransformation();
+
+            final KnownGravityNormAccelerometerCalibrator accelerometerCalibrator =
+                    new KnownGravityNormAccelerometerCalibrator();
+            final EasyGyroscopeCalibrator gyroscopeCalibrator =
+                    new EasyGyroscopeCalibrator();
+
+            final AccelerometerAndGyroscopeMeasurementsGenerator generator =
+                    new AccelerometerAndGyroscopeMeasurementsGenerator();
+
+            // initialize a threshold optimizer to attempt calibration by generating
+            // timed body kinematics with noise, and attempting to find the best
+            // threshold to find optimal calibration
+            final BracketedAccelerometerAndGyroscopeIntervalDetectorThresholdFactorOptimizer optimizer =
+                    buildOptimizer(ba, ma, accelNoiseRootPSD, gyroNoiseRootPSD,
+                            accelerometerCalibrator, gyroscopeCalibrator, new NEDFrame(nedFrame),
+                            new ECEFFrame(ecefFrame),
+                            generator);
+            final double thresholdFactor = optimizer.optimize();
+
+            assertEquals(thresholdFactor, optimizer.getOptimalThresholdFactor(),
+                    0.0);
+
+            final Matrix estimatedBa = Matrix.newFromArray(
+                    optimizer.getEstimatedAccelerometerBiases());
+            final Matrix estimatedMa = optimizer.getEstimatedAccelerometerMa();
+
+            final Matrix estimatedBg = Matrix.newFromArray(
+                    optimizer.getEstimatedGyroscopeBiases());
+            final Matrix estimatedMg = optimizer.getEstimatedGyroscopeMg();
+            final Matrix estimatedGg = optimizer.getEstimatedGyroscopeGg();
+
+            // clear all previously generated data
+            mTimedBodyKinematics.clear();
+
+            final RandomWalkEstimator randomWalkEstimator = new RandomWalkEstimator();
+            randomWalkEstimator.setNedPositionAndNedOrientation(nedPosition, nedC);
+            randomWalkEstimator.setAccelerationBias(estimatedBa);
+            randomWalkEstimator.setAccelerationCrossCouplingErrors(estimatedMa);
+            randomWalkEstimator.setAngularSpeedBias(estimatedBg);
+            randomWalkEstimator.setAngularSpeedCrossCouplingErrors(estimatedMg);
+            randomWalkEstimator.setAngularSpeedGDependantCrossBias(estimatedGg);
+            randomWalkEstimator.setTimeInterval(TIME_INTERVAL_SECONDS);
+
+            final IMUErrors errors = new IMUErrors(ba, bg, ma, mg, gg, accelNoiseRootPSD,
+                    gyroNoiseRootPSD, accelQuantLevel, gyroQuantLevel);
+            final Random random = new Random();
+
+            // this is the true body kinematics that should be measured on a perfect
+            // sensor if there were no noise or calibration errors at current position
+            // and orientations
+            final BodyKinematics trueKinematics = ECEFKinematicsEstimator
+                    .estimateKinematicsAndReturnNew(TIME_INTERVAL_SECONDS,
+                            ecefC, ecefC, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, ecefPosition);
+
+            final BodyKinematics measuredKinematics = new BodyKinematics();
+            for (int i = 0; i < N_SAMPLES; i++) {
+                BodyKinematicsGenerator.generate(TIME_INTERVAL_SECONDS,
+                        trueKinematics, errors, random, measuredKinematics);
+
+                randomWalkEstimator.addBodyKinematics(measuredKinematics);
+
+                assertEquals(randomWalkEstimator.getNumberOfProcessedSamples(), i + 1);
+                assertFalse(randomWalkEstimator.isRunning());
+            }
+
+
+            final INSLooselyCoupledKalmanConfigCreator kalmanConfigCreator =
+                    new INSLooselyCoupledKalmanConfigCreator(generator,
+                            randomWalkEstimator);
+            final INSLooselyCoupledKalmanConfig kalmanConfig = kalmanConfigCreator.create();
+
+            final INSLooselyCoupledKalmanInitializerConfigCreator initConfigCreator =
+                    new INSLooselyCoupledKalmanInitializerConfigCreator(
+                            accelerometerCalibrator, gyroscopeCalibrator,
+                            randomWalkEstimator);
+            final INSLooselyCoupledKalmanInitializerConfig initConfig = initConfigCreator.create();
+
+            // use real calibration values to generate measurements with errors
+            final ECEFFrame navigationFrame = new ECEFFrame(ecefFrame);
+            final BodyKinematicsFixer fixer = new BodyKinematicsFixer();
+            // use estimated calibration data to fix measurements
+            fixer.setAccelerationBias(estimatedBa);
+            fixer.setAccelerationCrossCouplingErrors(estimatedMa);
+            fixer.setAngularSpeedBias(estimatedBg);
+            fixer.setAngularSpeedCrossCouplingErrors(estimatedMg);
+            fixer.setAngularSpeedGDependantCrossBias(estimatedGg);
+
+            final KalmanDriftEstimator kalmanDriftEstimator = new KalmanDriftEstimator(
+                    nedFrame, estimatedBa, estimatedMa, estimatedBg,
+                    estimatedMg, estimatedGg, kalmanConfig, initConfig,
+                    this);
+            kalmanDriftEstimator.setTimeInterval(TIME_INTERVAL_SECONDS);
+
+            final DriftEstimator driftEstimator = new DriftEstimator(nedFrame,
+                    estimatedBa, estimatedMa, estimatedBg, estimatedMg,
+                    estimatedGg);
+            driftEstimator.setTimeInterval(TIME_INTERVAL_SECONDS);
+
+            final INSLooselyCoupledKalmanFilteredEstimator kalmanEstimator =
+                    new INSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
+                            initConfig, new ECEFFrame(ecefFrame));
+
+            reset();
+            assertEquals(mStart, 0);
+            assertEquals(mBodyKinematicsAdded, 0);
+            assertEquals(mReset, 0);
+            assertEquals(kalmanDriftEstimator.getNumberOfProcessedSamples(), 0);
+            assertFalse(kalmanDriftEstimator.isRunning());
+            assertTrue(kalmanDriftEstimator.isFixKinematicsEnabled());
+
+            final BodyKinematics fixedKinematics = new BodyKinematics();
             for (int i = 0; i < N_SAMPLES; i++) {
                 BodyKinematicsGenerator.generate(TIME_INTERVAL_SECONDS,
                         trueKinematics, errors, random, measuredKinematics);
@@ -12770,12 +13192,32 @@ public class KalmanDriftEstimatorTest implements DriftEstimatorListener {
             throws InvalidSourceAndDestinationFrameTypeException,
             InvalidRotationMatrixException, WrongSizeException, LockedException {
 
-        mTimedBodyKinematics.clear();
-
-        // generate measurements
         final NEDFrame nedFrame = generateFrame();
         final ECEFFrame ecefFrame = NEDtoECEFFrameConverter
                 .convertNEDtoECEFAndReturnNew(nedFrame);
+
+        final AccelerometerAndGyroscopeMeasurementsGenerator generator =
+                new AccelerometerAndGyroscopeMeasurementsGenerator();
+
+        return buildOptimizer(ba, ma, accelNoiseRootPSD, gyroNoiseRootPSD,
+                accelerometerCalibrator, gyroscopeCalibrator, nedFrame, ecefFrame,
+                generator);
+    }
+
+    private BracketedAccelerometerAndGyroscopeIntervalDetectorThresholdFactorOptimizer buildOptimizer(
+            final Matrix ba, final Matrix ma,
+            final double accelNoiseRootPSD,
+            final double gyroNoiseRootPSD,
+            final KnownGravityNormAccelerometerCalibrator accelerometerCalibrator,
+            final EasyGyroscopeCalibrator gyroscopeCalibrator,
+            final NEDFrame nedFrame, final ECEFFrame ecefFrame,
+            AccelerometerAndGyroscopeMeasurementsGenerator generator)
+            throws InvalidSourceAndDestinationFrameTypeException,
+            InvalidRotationMatrixException, WrongSizeException, LockedException {
+
+        mTimedBodyKinematics.clear();
+
+        // generate measurements
 
         final int numSequences = EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_COMMON_Z_AXIS;
         final int numMeasurements = KnownGravityNormAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL;
@@ -12786,8 +13228,6 @@ public class KalmanDriftEstimatorTest implements DriftEstimatorListener {
         // we only use the generator at this point to get an estimated average of
         // initial gyroscope bias (but we could skip this as well and probably get
         // a similar gyroscope calibration accuracy).
-        final AccelerometerAndGyroscopeMeasurementsGenerator generator =
-                new AccelerometerAndGyroscopeMeasurementsGenerator();
 
         for (TimedBodyKinematics timedBodyKinematics : mTimedBodyKinematics) {
             assertTrue(generator.process(timedBodyKinematics));
