@@ -19,7 +19,11 @@ import com.irurueta.geometry.Point3D;
 import com.irurueta.geometry.Sphere;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
-import com.irurueta.numerical.robust.*;
+import com.irurueta.numerical.robust.LMedSRobustEstimator;
+import com.irurueta.numerical.robust.LMedSRobustEstimatorListener;
+import com.irurueta.numerical.robust.RobustEstimator;
+import com.irurueta.numerical.robust.RobustEstimatorException;
+import com.irurueta.numerical.robust.RobustEstimatorMethod;
 
 import java.util.List;
 
@@ -71,14 +75,14 @@ public class LMedSRobustLateration3DSolver extends RobustLateration3DSolver {
      * lower than the one typically used in RANSAC, and yet the algorithm could
      * still produce even smaller thresholds in estimated results.
      */
-<span class="fc" id="L74">    private double mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
+<span class="fc" id="L78">    private double mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
 
     /**
      * Constructor.
      */
     public LMedSRobustLateration3DSolver() {
-<span class="fc" id="L80">        super();</span>
-<span class="fc" id="L81">    }</span>
+<span class="fc" id="L84">        super();</span>
+<span class="fc" id="L85">    }</span>
 
     /**
      * Constructor.
@@ -88,8 +92,8 @@ public class LMedSRobustLateration3DSolver extends RobustLateration3DSolver {
      */
     public LMedSRobustLateration3DSolver(
             final RobustLaterationSolverListener&lt;Point3D&gt; listener) {
-<span class="fc" id="L91">        super(listener);</span>
-<span class="fc" id="L92">    }</span>
+<span class="fc" id="L95">        super(listener);</span>
+<span class="fc" id="L96">    }</span>
 
     /**
      * Constructor.
@@ -100,8 +104,8 @@ public class LMedSRobustLateration3DSolver extends RobustLateration3DSolver {
      *                                  don't have the same length or their length is smaller than required (4 points).
      */
     public LMedSRobustLateration3DSolver(final Point3D[] positions, final double[] distances) {
-<span class="fc" id="L103">        super(positions, distances);</span>
-<span class="fc" id="L104">    }</span>
+<span class="fc" id="L107">        super(positions, distances);</span>
+<span class="fc" id="L108">    }</span>
 
     /**
      * Constructor.
@@ -115,8 +119,8 @@ public class LMedSRobustLateration3DSolver extends RobustLateration3DSolver {
      */
     public LMedSRobustLateration3DSolver(final Point3D[] positions, final double[] distances,
                                          final double[] distanceStandardDeviations) {
-<span class="fc" id="L118">        super(positions, distances, distanceStandardDeviations);</span>
-<span class="fc" id="L119">    }</span>
+<span class="fc" id="L122">        super(positions, distances, distanceStandardDeviations);</span>
+<span class="fc" id="L123">    }</span>
 
     /**
      * Constructor.
@@ -134,8 +138,8 @@ public class LMedSRobustLateration3DSolver extends RobustLateration3DSolver {
             final Point3D[] positions, final double[] distances,
             final double[] distanceStandardDeviations,
             final RobustLaterationSolverListener&lt;Point3D&gt; listener) {
-<span class="fc" id="L137">        super(positions, distances, distanceStandardDeviations, listener);</span>
-<span class="fc" id="L138">    }</span>
+<span class="fc" id="L141">        super(positions, distances, distanceStandardDeviations, listener);</span>
+<span class="fc" id="L142">    }</span>
 
     /**
      * Constructor.
@@ -150,8 +154,8 @@ public class LMedSRobustLateration3DSolver extends RobustLateration3DSolver {
     public LMedSRobustLateration3DSolver(
             final Point3D[] positions, final double[] distances,
             final RobustLaterationSolverListener&lt;Point3D&gt; listener) {
-<span class="fc" id="L153">        super(positions, distances, listener);</span>
-<span class="fc" id="L154">    }</span>
+<span class="fc" id="L157">        super(positions, distances, listener);</span>
+<span class="fc" id="L158">    }</span>
 
     /**
      * Constructor.
@@ -161,8 +165,8 @@ public class LMedSRobustLateration3DSolver extends RobustLateration3DSolver {
      *                                  is less than required (4 points).
      */
     public LMedSRobustLateration3DSolver(final Sphere[] spheres) {
-<span class="fc" id="L164">        super(spheres);</span>
-<span class="fc" id="L165">    }</span>
+<span class="fc" id="L168">        super(spheres);</span>
+<span class="fc" id="L169">    }</span>
 
     /**
      * Constructor.
@@ -174,8 +178,8 @@ public class LMedSRobustLateration3DSolver extends RobustLateration3DSolver {
      */
     public LMedSRobustLateration3DSolver(final Sphere[] spheres,
                                          final double[] distanceStandardDeviations) {
-<span class="fc" id="L177">        super(spheres, distanceStandardDeviations);</span>
-<span class="fc" id="L178">    }</span>
+<span class="fc" id="L181">        super(spheres, distanceStandardDeviations);</span>
+<span class="fc" id="L182">    }</span>
 
     /**
      * Constructor.
@@ -188,8 +192,8 @@ public class LMedSRobustLateration3DSolver extends RobustLateration3DSolver {
      */
     public LMedSRobustLateration3DSolver(
             final Sphere[] spheres, final RobustLaterationSolverListener&lt;Point3D&gt; listener) {
-<span class="fc" id="L191">        super(spheres, listener);</span>
-<span class="fc" id="L192">    }</span>
+<span class="fc" id="L195">        super(spheres, listener);</span>
+<span class="fc" id="L196">    }</span>
 
     /**
      * Constructor.
@@ -204,8 +208,8 @@ public class LMedSRobustLateration3DSolver extends RobustLateration3DSolver {
     public LMedSRobustLateration3DSolver(
             final Sphere[] spheres, final double[] distanceStandardDeviations,
             final RobustLaterationSolverListener&lt;Point3D&gt; listener) {
-<span class="fc" id="L207">        super(spheres, distanceStandardDeviations, listener);</span>
-<span class="fc" id="L208">    }</span>
+<span class="fc" id="L211">        super(spheres, distanceStandardDeviations, listener);</span>
+<span class="fc" id="L212">    }</span>
 
     /**
      * Returns threshold to be used to keep the algorithm iterating in case that
@@ -227,7 +231,7 @@ public class LMedSRobustLateration3DSolver extends RobustLateration3DSolver {
      * accuracy has been reached.
      */
     public double getStopThreshold() {
-<span class="fc" id="L230">        return mStopThreshold;</span>
+<span class="fc" id="L234">        return mStopThreshold;</span>
     }
 
     /**
@@ -252,15 +256,15 @@ public class LMedSRobustLateration3DSolver extends RobustLateration3DSolver {
      * @throws LockedException          if this solver is locked.
      */
     public void setStopThreshold(final double stopThreshold) throws LockedException {
-<span class="fc bfc" id="L255" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L256">            throw new LockedException();</span>
+<span class="fc bfc" id="L259" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L260">            throw new LockedException();</span>
         }
-<span class="fc bfc" id="L258" title="All 2 branches covered.">        if (stopThreshold &lt;= MIN_STOP_THRESHOLD) {</span>
-<span class="fc" id="L259">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L262" title="All 2 branches covered.">        if (stopThreshold &lt;= MIN_STOP_THRESHOLD) {</span>
+<span class="fc" id="L263">            throw new IllegalArgumentException();</span>
         }
 
-<span class="fc" id="L262">        mStopThreshold = stopThreshold;</span>
-<span class="fc" id="L263">    }</span>
+<span class="fc" id="L266">        mStopThreshold = stopThreshold;</span>
+<span class="fc" id="L267">    }</span>
 
     /**
      * Solves the lateration problem.
@@ -273,96 +277,96 @@ public class LMedSRobustLateration3DSolver extends RobustLateration3DSolver {
      */
     @Override
     public Point3D solve() throws LockedException, NotReadyException, RobustEstimatorException {
-<span class="fc bfc" id="L276" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L277">            throw new LockedException();</span>
+<span class="fc bfc" id="L280" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L281">            throw new LockedException();</span>
         }
-<span class="fc bfc" id="L279" title="All 2 branches covered.">        if (!isReady()) {</span>
-<span class="fc" id="L280">            throw new NotReadyException();</span>
+<span class="fc bfc" id="L283" title="All 2 branches covered.">        if (!isReady()) {</span>
+<span class="fc" id="L284">            throw new NotReadyException();</span>
         }
 
-<span class="fc" id="L283">        final LMedSRobustEstimator&lt;Point3D&gt; innerEstimator =</span>
-<span class="fc" id="L284">                new LMedSRobustEstimator&lt;&gt;(new LMedSRobustEstimatorListener&lt;Point3D&gt;() {</span>
+<span class="fc" id="L287">        final LMedSRobustEstimator&lt;Point3D&gt; innerEstimator =</span>
+<span class="fc" id="L288">                new LMedSRobustEstimator&lt;&gt;(new LMedSRobustEstimatorListener&lt;Point3D&gt;() {</span>
                     @Override
                     public int getTotalSamples() {
-<span class="fc" id="L287">                        return mDistances.length;</span>
+<span class="fc" id="L291">                        return mDistances.length;</span>
                     }
 
                     @Override
                     public int getSubsetSize() {
-<span class="fc" id="L292">                        return mPreliminarySubsetSize;</span>
+<span class="fc" id="L296">                        return mPreliminarySubsetSize;</span>
                     }
 
                     @Override
                     public void estimatePreliminarSolutions(
                             final int[] samplesIndices, final List&lt;Point3D&gt; solutions) {
-<span class="fc" id="L298">                        solvePreliminarSolutions(samplesIndices, solutions);</span>
-<span class="fc" id="L299">                    }</span>
+<span class="fc" id="L302">                        solvePreliminarSolutions(samplesIndices, solutions);</span>
+<span class="fc" id="L303">                    }</span>
 
                     @Override
                     public double computeResidual(
                             final Point3D currentEstimation, final int i) {
-<span class="fc" id="L304">                        return Math.abs(currentEstimation.distanceTo(mPositions[i]) - mDistances[i]);</span>
+<span class="fc" id="L308">                        return Math.abs(currentEstimation.distanceTo(mPositions[i]) - mDistances[i]);</span>
                     }
 
                     @Override
                     public boolean isReady() {
-<span class="fc" id="L309">                        return LMedSRobustLateration3DSolver.this.isReady();</span>
+<span class="fc" id="L313">                        return LMedSRobustLateration3DSolver.this.isReady();</span>
                     }
 
                     @Override
                     public void onEstimateStart(final RobustEstimator&lt;Point3D&gt; estimator) {
-<span class="fc" id="L314">                    }</span>
+<span class="fc" id="L318">                    }</span>
 
                     @Override
                     public void onEstimateEnd(final RobustEstimator&lt;Point3D&gt; estimator) {
-<span class="fc" id="L318">                    }</span>
+<span class="fc" id="L322">                    }</span>
 
                     @Override
                     public void onEstimateNextIteration(
                             final RobustEstimator&lt;Point3D&gt; estimator, final int iteration) {
-<span class="pc bpc" id="L323" title="1 of 2 branches missed.">                        if (mListener != null) {</span>
-<span class="fc" id="L324">                            mListener.onSolveNextIteration(</span>
+<span class="pc bpc" id="L327" title="1 of 2 branches missed.">                        if (mListener != null) {</span>
+<span class="fc" id="L328">                            mListener.onSolveNextIteration(</span>
                                     LMedSRobustLateration3DSolver.this, iteration);
                         }
-<span class="fc" id="L327">                    }</span>
+<span class="fc" id="L331">                    }</span>
 
                     @Override
                     public void onEstimateProgressChange(
                             final RobustEstimator&lt;Point3D&gt; estimator, final float progress) {
-<span class="pc bpc" id="L332" title="1 of 2 branches missed.">                        if (mListener != null) {</span>
-<span class="fc" id="L333">                            mListener.onSolveProgressChange(</span>
+<span class="pc bpc" id="L336" title="1 of 2 branches missed.">                        if (mListener != null) {</span>
+<span class="fc" id="L337">                            mListener.onSolveProgressChange(</span>
                                     LMedSRobustLateration3DSolver.this, progress);
                         }
-<span class="fc" id="L336">                    }</span>
+<span class="fc" id="L340">                    }</span>
                 });
 
         try {
-<span class="fc" id="L340">            mLocked = true;</span>
+<span class="fc" id="L344">            mLocked = true;</span>
 
-<span class="pc bpc" id="L342" title="1 of 2 branches missed.">            if (mListener != null) {</span>
-<span class="fc" id="L343">                mListener.onSolveStart(this);</span>
+<span class="pc bpc" id="L346" title="1 of 2 branches missed.">            if (mListener != null) {</span>
+<span class="fc" id="L347">                mListener.onSolveStart(this);</span>
             }
 
-<span class="fc" id="L346">            mInliersData = null;</span>
-<span class="fc" id="L347">            innerEstimator.setConfidence(mConfidence);</span>
-<span class="fc" id="L348">            innerEstimator.setMaxIterations(mMaxIterations);</span>
-<span class="fc" id="L349">            innerEstimator.setProgressDelta(mProgressDelta);</span>
-<span class="fc" id="L350">            Point3D result = innerEstimator.estimate();</span>
-<span class="fc" id="L351">            mInliersData = innerEstimator.getInliersData();</span>
-<span class="fc" id="L352">            result = attemptRefine(result);</span>
+<span class="fc" id="L350">            mInliersData = null;</span>
+<span class="fc" id="L351">            innerEstimator.setConfidence(mConfidence);</span>
+<span class="fc" id="L352">            innerEstimator.setMaxIterations(mMaxIterations);</span>
+<span class="fc" id="L353">            innerEstimator.setProgressDelta(mProgressDelta);</span>
+<span class="fc" id="L354">            Point3D result = innerEstimator.estimate();</span>
+<span class="fc" id="L355">            mInliersData = innerEstimator.getInliersData();</span>
+<span class="fc" id="L356">            result = attemptRefine(result);</span>
 
-<span class="pc bpc" id="L354" title="1 of 2 branches missed.">            if (mListener != null) {</span>
-<span class="fc" id="L355">                mListener.onSolveEnd(this);</span>
+<span class="pc bpc" id="L358" title="1 of 2 branches missed.">            if (mListener != null) {</span>
+<span class="fc" id="L359">                mListener.onSolveEnd(this);</span>
             }
 
-<span class="fc" id="L358">            return result;</span>
+<span class="fc" id="L362">            return result;</span>
 
-<span class="nc" id="L360">        } catch (final com.irurueta.numerical.LockedException e) {</span>
-<span class="nc" id="L361">            throw new LockedException(e);</span>
-<span class="nc" id="L362">        } catch (final com.irurueta.numerical.NotReadyException e) {</span>
-<span class="nc" id="L363">            throw new NotReadyException(e);</span>
+<span class="nc" id="L364">        } catch (final com.irurueta.numerical.LockedException e) {</span>
+<span class="nc" id="L365">            throw new LockedException(e);</span>
+<span class="nc" id="L366">        } catch (final com.irurueta.numerical.NotReadyException e) {</span>
+<span class="nc" id="L367">            throw new NotReadyException(e);</span>
         } finally {
-<span class="fc" id="L365">            mLocked = false;</span>
+<span class="fc" id="L369">            mLocked = false;</span>
         }
     }
 
@@ -373,7 +377,7 @@ public class LMedSRobustLateration3DSolver extends RobustLateration3DSolver {
      */
     @Override
     public RobustEstimatorMethod getMethod() {
-<span class="fc" id="L376">        return RobustEstimatorMethod.LMedS;</span>
+<span class="fc" id="L380">        return RobustEstimatorMethod.LMedS;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

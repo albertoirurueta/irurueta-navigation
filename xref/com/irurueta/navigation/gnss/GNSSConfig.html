@@ -25,7 +25,7 @@
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>  
 <a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> com.irurueta.geometry.InhomogeneousPoint3D;
 <a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> com.irurueta.geometry.Point3D;
-<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> com.irurueta.navigation.inertial.ECEFPosition;
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> com.irurueta.navigation.frames.ECEFPosition;
 <a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> com.irurueta.units.*;
 <a class="jxr_linenumber" name="L22" href="#L22">22</a>  
 <a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> java.io.Serializable;
@@ -328,7 +328,7 @@
 <a class="jxr_linenumber" name="L320" href="#L320">320</a> <em class="jxr_javadoccomment">     *                                  SD is negative.</em>
 <a class="jxr_linenumber" name="L321" href="#L321">321</a> <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="L322" href="#L322">322</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../com/irurueta/navigation/gnss/GNSSConfig.html">GNSSConfig</a>(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> epochInterval,
-<a class="jxr_linenumber" name="L323" href="#L323">323</a>                       <strong class="jxr_keyword">final</strong> <a href="../../../../com/irurueta/navigation/inertial/ECEFPosition.html">ECEFPosition</a> initialEstimatedEcefPosition,
+<a class="jxr_linenumber" name="L323" href="#L323">323</a>                       <strong class="jxr_keyword">final</strong> <a href="../../../../com/irurueta/navigation/frames/ECEFPosition.html">ECEFPosition</a> initialEstimatedEcefPosition,
 <a class="jxr_linenumber" name="L324" href="#L324">324</a>                       <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> numberOfSatellites,
 <a class="jxr_linenumber" name="L325" href="#L325">325</a>                       <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> orbitalRadiusOfSatellites,
 <a class="jxr_linenumber" name="L326" href="#L326">326</a>                       <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> satellitesInclinationDegrees,
@@ -386,7 +386,7 @@
 <a class="jxr_linenumber" name="L378" href="#L378">378</a> <em class="jxr_javadoccomment">     *                                  SD is negative.</em>
 <a class="jxr_linenumber" name="L379" href="#L379">379</a> <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="L380" href="#L380">380</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../com/irurueta/navigation/gnss/GNSSConfig.html">GNSSConfig</a>(<strong class="jxr_keyword">final</strong> Time epochInterval,
-<a class="jxr_linenumber" name="L381" href="#L381">381</a>                       <strong class="jxr_keyword">final</strong> <a href="../../../../com/irurueta/navigation/inertial/ECEFPosition.html">ECEFPosition</a> initialEstimatedEcefPosition,
+<a class="jxr_linenumber" name="L381" href="#L381">381</a>                       <strong class="jxr_keyword">final</strong> <a href="../../../../com/irurueta/navigation/frames/ECEFPosition.html">ECEFPosition</a> initialEstimatedEcefPosition,
 <a class="jxr_linenumber" name="L382" href="#L382">382</a>                       <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> numberOfSatellites,
 <a class="jxr_linenumber" name="L383" href="#L383">383</a>                       <strong class="jxr_keyword">final</strong> Distance orbitalRadiusOfSatellites,
 <a class="jxr_linenumber" name="L384" href="#L384">384</a>                       <strong class="jxr_keyword">final</strong> Angle satellitesInclination,
@@ -778,7 +778,7 @@
 <a class="jxr_linenumber" name="L770" href="#L770">770</a> <em class="jxr_javadoccomment">     *</em>
 <a class="jxr_linenumber" name="L771" href="#L771">771</a> <em class="jxr_javadoccomment">     * @param result instance where initial estimated position will be stored.</em>
 <a class="jxr_linenumber" name="L772" href="#L772">772</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L773" href="#L773">773</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> getInitialEstimatedEcefPosition(<strong class="jxr_keyword">final</strong> <a href="../../../../com/irurueta/navigation/inertial/ECEFPosition.html">ECEFPosition</a> result) {
+<a class="jxr_linenumber" name="L773" href="#L773">773</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> getInitialEstimatedEcefPosition(<strong class="jxr_keyword">final</strong> <a href="../../../../com/irurueta/navigation/frames/ECEFPosition.html">ECEFPosition</a> result) {
 <a class="jxr_linenumber" name="L774" href="#L774">774</a>         result.setCoordinates(mInitialEstimatedEcefPositionX,
 <a class="jxr_linenumber" name="L775" href="#L775">775</a>                 mInitialEstimatedEcefPositionY,
 <a class="jxr_linenumber" name="L776" href="#L776">776</a>                 mInitialEstimatedEcefPositionZ);
@@ -789,8 +789,8 @@
 <a class="jxr_linenumber" name="L781" href="#L781">781</a> <em class="jxr_javadoccomment">     *</em>
 <a class="jxr_linenumber" name="L782" href="#L782">782</a> <em class="jxr_javadoccomment">     * @return initial estimated position.</em>
 <a class="jxr_linenumber" name="L783" href="#L783">783</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L784" href="#L784">784</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../com/irurueta/navigation/inertial/ECEFPosition.html">ECEFPosition</a> getInitialEstimatedEcefPosition() {
-<a class="jxr_linenumber" name="L785" href="#L785">785</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../com/irurueta/navigation/inertial/ECEFPosition.html">ECEFPosition</a>(mInitialEstimatedEcefPositionX,
+<a class="jxr_linenumber" name="L784" href="#L784">784</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../com/irurueta/navigation/frames/ECEFPosition.html">ECEFPosition</a> getInitialEstimatedEcefPosition() {
+<a class="jxr_linenumber" name="L785" href="#L785">785</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../com/irurueta/navigation/frames/ECEFPosition.html">ECEFPosition</a>(mInitialEstimatedEcefPositionX,
 <a class="jxr_linenumber" name="L786" href="#L786">786</a>                 mInitialEstimatedEcefPositionY,
 <a class="jxr_linenumber" name="L787" href="#L787">787</a>                 mInitialEstimatedEcefPositionZ);
 <a class="jxr_linenumber" name="L788" href="#L788">788</a>     }
@@ -802,7 +802,7 @@
 <a class="jxr_linenumber" name="L794" href="#L794">794</a> <em class="jxr_javadoccomment">     *                                     along ECEF axes.</em>
 <a class="jxr_linenumber" name="L795" href="#L795">795</a> <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="L796" href="#L796">796</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setInitialEstimatedEcefPosition(
-<a class="jxr_linenumber" name="L797" href="#L797">797</a>             <strong class="jxr_keyword">final</strong> <a href="../../../../com/irurueta/navigation/inertial/ECEFPosition.html">ECEFPosition</a> initialEstimatedEcefPosition) {
+<a class="jxr_linenumber" name="L797" href="#L797">797</a>             <strong class="jxr_keyword">final</strong> <a href="../../../../com/irurueta/navigation/frames/ECEFPosition.html">ECEFPosition</a> initialEstimatedEcefPosition) {
 <a class="jxr_linenumber" name="L798" href="#L798">798</a>         mInitialEstimatedEcefPositionX = initialEstimatedEcefPosition.getX();
 <a class="jxr_linenumber" name="L799" href="#L799">799</a>         mInitialEstimatedEcefPositionY = initialEstimatedEcefPosition.getY();
 <a class="jxr_linenumber" name="L800" href="#L800">800</a>         mInitialEstimatedEcefPositionZ = initialEstimatedEcefPosition.getZ();
@@ -1718,7 +1718,7 @@
 <a class="jxr_linenumber" name="L1710" href="#L1710">1710</a> <em class="jxr_javadoccomment">     *                                  SD is negative.</em>
 <a class="jxr_linenumber" name="L1711" href="#L1711">1711</a> <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="L1712" href="#L1712">1712</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setValues(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> epochInterval,
-<a class="jxr_linenumber" name="L1713" href="#L1713">1713</a>                           <strong class="jxr_keyword">final</strong> <a href="../../../../com/irurueta/navigation/inertial/ECEFPosition.html">ECEFPosition</a> initialEstimatedEcefPosition,
+<a class="jxr_linenumber" name="L1713" href="#L1713">1713</a>                           <strong class="jxr_keyword">final</strong> <a href="../../../../com/irurueta/navigation/frames/ECEFPosition.html">ECEFPosition</a> initialEstimatedEcefPosition,
 <a class="jxr_linenumber" name="L1714" href="#L1714">1714</a>                           <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> numberOfSatellites,
 <a class="jxr_linenumber" name="L1715" href="#L1715">1715</a>                           <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> orbitalRadiusOfSatellites,
 <a class="jxr_linenumber" name="L1716" href="#L1716">1716</a>                           <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> satellitesInclinationDegrees,
@@ -1783,7 +1783,7 @@
 <a class="jxr_linenumber" name="L1775" href="#L1775">1775</a> <em class="jxr_javadoccomment">     *                                  SD is negative.</em>
 <a class="jxr_linenumber" name="L1776" href="#L1776">1776</a> <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="L1777" href="#L1777">1777</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setValues(<strong class="jxr_keyword">final</strong> Time epochInterval,
-<a class="jxr_linenumber" name="L1778" href="#L1778">1778</a>                           <strong class="jxr_keyword">final</strong> <a href="../../../../com/irurueta/navigation/inertial/ECEFPosition.html">ECEFPosition</a> initialEstimatedEcefPosition,
+<a class="jxr_linenumber" name="L1778" href="#L1778">1778</a>                           <strong class="jxr_keyword">final</strong> <a href="../../../../com/irurueta/navigation/frames/ECEFPosition.html">ECEFPosition</a> initialEstimatedEcefPosition,
 <a class="jxr_linenumber" name="L1779" href="#L1779">1779</a>                           <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> numberOfSatellites,
 <a class="jxr_linenumber" name="L1780" href="#L1780">1780</a>                           <strong class="jxr_keyword">final</strong> Distance orbitalRadiusOfSatellites,
 <a class="jxr_linenumber" name="L1781" href="#L1781">1781</a>                           <strong class="jxr_keyword">final</strong> Angle satellitesInclination,

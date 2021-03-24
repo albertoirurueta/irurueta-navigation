@@ -25,9 +25,9 @@
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>  
 <a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> com.irurueta.geometry.InhomogeneousPoint3D;
 <a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> com.irurueta.geometry.Point3D;
-<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> com.irurueta.navigation.geodesic.Constants;
-<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> com.irurueta.navigation.inertial.ECEFPosition;
-<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> com.irurueta.navigation.inertial.ECEFVelocity;
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> com.irurueta.navigation.frames.ECEFPosition;
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> com.irurueta.navigation.frames.ECEFVelocity;
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> com.irurueta.navigation.geodesic.Constants;
 <a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> com.irurueta.statistics.UniformRandomizer;
 <a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">import</strong> com.irurueta.units.Distance;
 <a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> com.irurueta.units.DistanceUnit;
@@ -924,67 +924,68 @@
 <a class="jxr_linenumber" name="L916" href="#L916">916</a> 
 <a class="jxr_linenumber" name="L917" href="#L917">917</a>         <em class="jxr_comment">//noinspection ConstantConditions,SimplifiableJUnitAssertion</em>
 <a class="jxr_linenumber" name="L918" href="#L918">918</a>         assertTrue(positionAndVelocity1.equals((Object)positionAndVelocity1));
-<a class="jxr_linenumber" name="L919" href="#L919">919</a>         assertTrue(positionAndVelocity1.equals(positionAndVelocity1));
-<a class="jxr_linenumber" name="L920" href="#L920">920</a>         assertTrue(positionAndVelocity1.equals(positionAndVelocity2));
-<a class="jxr_linenumber" name="L921" href="#L921">921</a>         assertFalse(positionAndVelocity1.equals(positionAndVelocity3));
-<a class="jxr_linenumber" name="L922" href="#L922">922</a>         <em class="jxr_comment">//noinspection SimplifiableJUnitAssertion,ConstantConditions</em>
-<a class="jxr_linenumber" name="L923" href="#L923">923</a>         assertFalse(positionAndVelocity1.equals((Object)<strong class="jxr_keyword">null</strong>));
-<a class="jxr_linenumber" name="L924" href="#L924">924</a>         assertFalse(positionAndVelocity1.equals(<strong class="jxr_keyword">null</strong>));
-<a class="jxr_linenumber" name="L925" href="#L925">925</a>         <em class="jxr_comment">//noinspection SimplifiableJUnitAssertion</em>
-<a class="jxr_linenumber" name="L926" href="#L926">926</a>         assertFalse(positionAndVelocity1.equals(<strong class="jxr_keyword">new</strong> Object()));
-<a class="jxr_linenumber" name="L927" href="#L927">927</a>     }
-<a class="jxr_linenumber" name="L928" href="#L928">928</a> 
-<a class="jxr_linenumber" name="L929" href="#L929">929</a>     @Test
-<a class="jxr_linenumber" name="L930" href="#L930">930</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testEqualsWithThreshold() {
-<a class="jxr_linenumber" name="L931" href="#L931">931</a>         <strong class="jxr_keyword">final</strong> UniformRandomizer randomizer = <strong class="jxr_keyword">new</strong> UniformRandomizer(<strong class="jxr_keyword">new</strong> Random());
-<a class="jxr_linenumber" name="L932" href="#L932">932</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> x = randomizer.nextDouble(MIN_POSITION_VALUE,
-<a class="jxr_linenumber" name="L933" href="#L933">933</a>                 MAX_POSITION_VALUE);
-<a class="jxr_linenumber" name="L934" href="#L934">934</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> y = randomizer.nextDouble(MIN_POSITION_VALUE,
-<a class="jxr_linenumber" name="L935" href="#L935">935</a>                 MAX_POSITION_VALUE);
-<a class="jxr_linenumber" name="L936" href="#L936">936</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> z = randomizer.nextDouble(MIN_POSITION_VALUE,
-<a class="jxr_linenumber" name="L937" href="#L937">937</a>                 MAX_POSITION_VALUE);
-<a class="jxr_linenumber" name="L938" href="#L938">938</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-<a class="jxr_linenumber" name="L939" href="#L939">939</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-<a class="jxr_linenumber" name="L940" href="#L940">940</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-<a class="jxr_linenumber" name="L941" href="#L941">941</a> 
-<a class="jxr_linenumber" name="L942" href="#L942">942</a>         <strong class="jxr_keyword">final</strong> ECEFPositionAndVelocity positionAndVelocity1 =
-<a class="jxr_linenumber" name="L943" href="#L943">943</a>                 <strong class="jxr_keyword">new</strong> ECEFPositionAndVelocity(x, y, z, vx, vy, vz);
-<a class="jxr_linenumber" name="L944" href="#L944">944</a>         <strong class="jxr_keyword">final</strong> ECEFPositionAndVelocity positionAndVelocity2 =
-<a class="jxr_linenumber" name="L945" href="#L945">945</a>                 <strong class="jxr_keyword">new</strong> ECEFPositionAndVelocity(x, y, z, vx, vy, vz);
-<a class="jxr_linenumber" name="L946" href="#L946">946</a>         <strong class="jxr_keyword">final</strong> ECEFPositionAndVelocity positionAndVelocity3 =
-<a class="jxr_linenumber" name="L947" href="#L947">947</a>                 <strong class="jxr_keyword">new</strong> ECEFPositionAndVelocity();
-<a class="jxr_linenumber" name="L948" href="#L948">948</a> 
-<a class="jxr_linenumber" name="L949" href="#L949">949</a>         assertTrue(positionAndVelocity1.equals(positionAndVelocity1,
-<a class="jxr_linenumber" name="L950" href="#L950">950</a>                 THRESHOLD));
-<a class="jxr_linenumber" name="L951" href="#L951">951</a>         assertTrue(positionAndVelocity1.equals(positionAndVelocity2,
-<a class="jxr_linenumber" name="L952" href="#L952">952</a>                 THRESHOLD));
-<a class="jxr_linenumber" name="L953" href="#L953">953</a>         assertFalse(positionAndVelocity1.equals(positionAndVelocity3,
-<a class="jxr_linenumber" name="L954" href="#L954">954</a>                 THRESHOLD));
-<a class="jxr_linenumber" name="L955" href="#L955">955</a>         assertFalse(positionAndVelocity1.equals(<strong class="jxr_keyword">null</strong>, THRESHOLD));
-<a class="jxr_linenumber" name="L956" href="#L956">956</a>     }
-<a class="jxr_linenumber" name="L957" href="#L957">957</a> 
-<a class="jxr_linenumber" name="L958" href="#L958">958</a>     @Test
-<a class="jxr_linenumber" name="L959" href="#L959">959</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testClone() <strong class="jxr_keyword">throws</strong> CloneNotSupportedException {
-<a class="jxr_linenumber" name="L960" href="#L960">960</a>         <strong class="jxr_keyword">final</strong> UniformRandomizer randomizer = <strong class="jxr_keyword">new</strong> UniformRandomizer(<strong class="jxr_keyword">new</strong> Random());
-<a class="jxr_linenumber" name="L961" href="#L961">961</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> x = randomizer.nextDouble(MIN_POSITION_VALUE,
-<a class="jxr_linenumber" name="L962" href="#L962">962</a>                 MAX_POSITION_VALUE);
-<a class="jxr_linenumber" name="L963" href="#L963">963</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> y = randomizer.nextDouble(MIN_POSITION_VALUE,
-<a class="jxr_linenumber" name="L964" href="#L964">964</a>                 MAX_POSITION_VALUE);
-<a class="jxr_linenumber" name="L965" href="#L965">965</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> z = randomizer.nextDouble(MIN_POSITION_VALUE,
-<a class="jxr_linenumber" name="L966" href="#L966">966</a>                 MAX_POSITION_VALUE);
-<a class="jxr_linenumber" name="L967" href="#L967">967</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-<a class="jxr_linenumber" name="L968" href="#L968">968</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-<a class="jxr_linenumber" name="L969" href="#L969">969</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-<a class="jxr_linenumber" name="L970" href="#L970">970</a> 
-<a class="jxr_linenumber" name="L971" href="#L971">971</a>         <strong class="jxr_keyword">final</strong> ECEFPositionAndVelocity positionAndVelocity1 =
-<a class="jxr_linenumber" name="L972" href="#L972">972</a>                 <strong class="jxr_keyword">new</strong> ECEFPositionAndVelocity(x, y, z, vx, vy, vz);
-<a class="jxr_linenumber" name="L973" href="#L973">973</a> 
-<a class="jxr_linenumber" name="L974" href="#L974">974</a>         <strong class="jxr_keyword">final</strong> Object positionAndVelocity2 = positionAndVelocity1
-<a class="jxr_linenumber" name="L975" href="#L975">975</a>                 .clone();
-<a class="jxr_linenumber" name="L976" href="#L976">976</a> 
-<a class="jxr_linenumber" name="L977" href="#L977">977</a>         assertEquals(positionAndVelocity1, positionAndVelocity2);
-<a class="jxr_linenumber" name="L978" href="#L978">978</a>     }
-<a class="jxr_linenumber" name="L979" href="#L979">979</a> }
+<a class="jxr_linenumber" name="L919" href="#L919">919</a>         <em class="jxr_comment">//noinspection EqualsWithItself</em>
+<a class="jxr_linenumber" name="L920" href="#L920">920</a>         assertTrue(positionAndVelocity1.equals(positionAndVelocity1));
+<a class="jxr_linenumber" name="L921" href="#L921">921</a>         assertTrue(positionAndVelocity1.equals(positionAndVelocity2));
+<a class="jxr_linenumber" name="L922" href="#L922">922</a>         assertFalse(positionAndVelocity1.equals(positionAndVelocity3));
+<a class="jxr_linenumber" name="L923" href="#L923">923</a>         <em class="jxr_comment">//noinspection SimplifiableJUnitAssertion,ConstantConditions</em>
+<a class="jxr_linenumber" name="L924" href="#L924">924</a>         assertFalse(positionAndVelocity1.equals((Object)<strong class="jxr_keyword">null</strong>));
+<a class="jxr_linenumber" name="L925" href="#L925">925</a>         assertFalse(positionAndVelocity1.equals(<strong class="jxr_keyword">null</strong>));
+<a class="jxr_linenumber" name="L926" href="#L926">926</a>         <em class="jxr_comment">//noinspection SimplifiableJUnitAssertion</em>
+<a class="jxr_linenumber" name="L927" href="#L927">927</a>         assertFalse(positionAndVelocity1.equals(<strong class="jxr_keyword">new</strong> Object()));
+<a class="jxr_linenumber" name="L928" href="#L928">928</a>     }
+<a class="jxr_linenumber" name="L929" href="#L929">929</a> 
+<a class="jxr_linenumber" name="L930" href="#L930">930</a>     @Test
+<a class="jxr_linenumber" name="L931" href="#L931">931</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testEqualsWithThreshold() {
+<a class="jxr_linenumber" name="L932" href="#L932">932</a>         <strong class="jxr_keyword">final</strong> UniformRandomizer randomizer = <strong class="jxr_keyword">new</strong> UniformRandomizer(<strong class="jxr_keyword">new</strong> Random());
+<a class="jxr_linenumber" name="L933" href="#L933">933</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> x = randomizer.nextDouble(MIN_POSITION_VALUE,
+<a class="jxr_linenumber" name="L934" href="#L934">934</a>                 MAX_POSITION_VALUE);
+<a class="jxr_linenumber" name="L935" href="#L935">935</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> y = randomizer.nextDouble(MIN_POSITION_VALUE,
+<a class="jxr_linenumber" name="L936" href="#L936">936</a>                 MAX_POSITION_VALUE);
+<a class="jxr_linenumber" name="L937" href="#L937">937</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> z = randomizer.nextDouble(MIN_POSITION_VALUE,
+<a class="jxr_linenumber" name="L938" href="#L938">938</a>                 MAX_POSITION_VALUE);
+<a class="jxr_linenumber" name="L939" href="#L939">939</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+<a class="jxr_linenumber" name="L940" href="#L940">940</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+<a class="jxr_linenumber" name="L941" href="#L941">941</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+<a class="jxr_linenumber" name="L942" href="#L942">942</a> 
+<a class="jxr_linenumber" name="L943" href="#L943">943</a>         <strong class="jxr_keyword">final</strong> ECEFPositionAndVelocity positionAndVelocity1 =
+<a class="jxr_linenumber" name="L944" href="#L944">944</a>                 <strong class="jxr_keyword">new</strong> ECEFPositionAndVelocity(x, y, z, vx, vy, vz);
+<a class="jxr_linenumber" name="L945" href="#L945">945</a>         <strong class="jxr_keyword">final</strong> ECEFPositionAndVelocity positionAndVelocity2 =
+<a class="jxr_linenumber" name="L946" href="#L946">946</a>                 <strong class="jxr_keyword">new</strong> ECEFPositionAndVelocity(x, y, z, vx, vy, vz);
+<a class="jxr_linenumber" name="L947" href="#L947">947</a>         <strong class="jxr_keyword">final</strong> ECEFPositionAndVelocity positionAndVelocity3 =
+<a class="jxr_linenumber" name="L948" href="#L948">948</a>                 <strong class="jxr_keyword">new</strong> ECEFPositionAndVelocity();
+<a class="jxr_linenumber" name="L949" href="#L949">949</a> 
+<a class="jxr_linenumber" name="L950" href="#L950">950</a>         assertTrue(positionAndVelocity1.equals(positionAndVelocity1,
+<a class="jxr_linenumber" name="L951" href="#L951">951</a>                 THRESHOLD));
+<a class="jxr_linenumber" name="L952" href="#L952">952</a>         assertTrue(positionAndVelocity1.equals(positionAndVelocity2,
+<a class="jxr_linenumber" name="L953" href="#L953">953</a>                 THRESHOLD));
+<a class="jxr_linenumber" name="L954" href="#L954">954</a>         assertFalse(positionAndVelocity1.equals(positionAndVelocity3,
+<a class="jxr_linenumber" name="L955" href="#L955">955</a>                 THRESHOLD));
+<a class="jxr_linenumber" name="L956" href="#L956">956</a>         assertFalse(positionAndVelocity1.equals(<strong class="jxr_keyword">null</strong>, THRESHOLD));
+<a class="jxr_linenumber" name="L957" href="#L957">957</a>     }
+<a class="jxr_linenumber" name="L958" href="#L958">958</a> 
+<a class="jxr_linenumber" name="L959" href="#L959">959</a>     @Test
+<a class="jxr_linenumber" name="L960" href="#L960">960</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testClone() <strong class="jxr_keyword">throws</strong> CloneNotSupportedException {
+<a class="jxr_linenumber" name="L961" href="#L961">961</a>         <strong class="jxr_keyword">final</strong> UniformRandomizer randomizer = <strong class="jxr_keyword">new</strong> UniformRandomizer(<strong class="jxr_keyword">new</strong> Random());
+<a class="jxr_linenumber" name="L962" href="#L962">962</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> x = randomizer.nextDouble(MIN_POSITION_VALUE,
+<a class="jxr_linenumber" name="L963" href="#L963">963</a>                 MAX_POSITION_VALUE);
+<a class="jxr_linenumber" name="L964" href="#L964">964</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> y = randomizer.nextDouble(MIN_POSITION_VALUE,
+<a class="jxr_linenumber" name="L965" href="#L965">965</a>                 MAX_POSITION_VALUE);
+<a class="jxr_linenumber" name="L966" href="#L966">966</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> z = randomizer.nextDouble(MIN_POSITION_VALUE,
+<a class="jxr_linenumber" name="L967" href="#L967">967</a>                 MAX_POSITION_VALUE);
+<a class="jxr_linenumber" name="L968" href="#L968">968</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+<a class="jxr_linenumber" name="L969" href="#L969">969</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+<a class="jxr_linenumber" name="L970" href="#L970">970</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+<a class="jxr_linenumber" name="L971" href="#L971">971</a> 
+<a class="jxr_linenumber" name="L972" href="#L972">972</a>         <strong class="jxr_keyword">final</strong> ECEFPositionAndVelocity positionAndVelocity1 =
+<a class="jxr_linenumber" name="L973" href="#L973">973</a>                 <strong class="jxr_keyword">new</strong> ECEFPositionAndVelocity(x, y, z, vx, vy, vz);
+<a class="jxr_linenumber" name="L974" href="#L974">974</a> 
+<a class="jxr_linenumber" name="L975" href="#L975">975</a>         <strong class="jxr_keyword">final</strong> Object positionAndVelocity2 = positionAndVelocity1
+<a class="jxr_linenumber" name="L976" href="#L976">976</a>                 .clone();
+<a class="jxr_linenumber" name="L977" href="#L977">977</a> 
+<a class="jxr_linenumber" name="L978" href="#L978">978</a>         assertEquals(positionAndVelocity1, positionAndVelocity2);
+<a class="jxr_linenumber" name="L979" href="#L979">979</a>     }
+<a class="jxr_linenumber" name="L980" href="#L980">980</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2018&#x2013;2021. All rights reserved.</div>

@@ -1310,7 +1310,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver&lt
      * estimated position if not requested or refinement failed.
      */
     protected Point2D attemptRefine(final Point2D position) {
-<span class="fc bfc" id="L1313" title="All 4 branches covered.">        if (mRefineResult &amp;&amp; mInliersData != null) {</span>
+<span class="pc bpc" id="L1313" title="1 of 4 branches missed.">        if (mRefineResult &amp;&amp; mInliersData != null) {</span>
 <span class="fc" id="L1314">            final BitSet inliers = mInliersData.getInliers();</span>
 <span class="fc" id="L1315">            final int nSamples = mDistances.length;</span>
 <span class="fc" id="L1316">            final int nInliers = mInliersData.getNumInliers();</span>
@@ -1352,10 +1352,10 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver&lt
                 }
 
 <span class="fc" id="L1354">                mEstimatedPosition = mNonLinearSolver.getEstimatedPosition();</span>
-<span class="fc" id="L1355">            } catch (Exception e) {</span>
+<span class="nc" id="L1355">            } catch (Exception e) {</span>
                 //refinement failed, so we return input value
-<span class="fc" id="L1357">                mCovariance = null;</span>
-<span class="fc" id="L1358">                mEstimatedPosition = position;</span>
+<span class="nc" id="L1357">                mCovariance = null;</span>
+<span class="nc" id="L1358">                mEstimatedPosition = position;</span>
 <span class="fc" id="L1359">            }</span>
 <span class="fc" id="L1360">        } else {</span>
 <span class="fc" id="L1361">            mCovariance = null;</span>
@@ -1411,7 +1411,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver&lt
             }
 
 <span class="fc" id="L1413">            solutions.add(estimatedPosition);</span>
-<span class="fc" id="L1414">        } catch (final NavigationException ignore) {</span>
+<span class="nc" id="L1414">        } catch (final NavigationException ignore) {</span>
             //if anything fails, no solution is added
 <span class="fc" id="L1416">        }</span>
 <span class="fc" id="L1417">    }</span>

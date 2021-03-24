@@ -27,8 +27,8 @@
 <a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> com.irurueta.algebra.WrongSizeException;
 <a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> com.irurueta.geometry.InhomogeneousPoint3D;
 <a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> com.irurueta.geometry.Point3D;
-<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> com.irurueta.navigation.inertial.ECEFPosition;
-<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> com.irurueta.navigation.inertial.ECEFVelocity;
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> com.irurueta.navigation.frames.ECEFPosition;
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> com.irurueta.navigation.frames.ECEFVelocity;
 <a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">import</strong> com.irurueta.units.Distance;
 <a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> com.irurueta.units.DistanceConverter;
 <a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">import</strong> com.irurueta.units.DistanceUnit;
@@ -194,8 +194,8 @@
 <a class="jxr_linenumber" name="L186" href="#L186">186</a> <em class="jxr_javadoccomment">     *                    second (m/s).</em>
 <a class="jxr_linenumber" name="L187" href="#L187">187</a> <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="L188" href="#L188">188</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../com/irurueta/navigation/gnss/GNSSEstimation.html">GNSSEstimation</a>(
-<a class="jxr_linenumber" name="L189" href="#L189">189</a>             <strong class="jxr_keyword">final</strong> <a href="../../../../com/irurueta/navigation/inertial/ECEFPosition.html">ECEFPosition</a> position,
-<a class="jxr_linenumber" name="L190" href="#L190">190</a>             <strong class="jxr_keyword">final</strong> <a href="../../../../com/irurueta/navigation/inertial/ECEFVelocity.html">ECEFVelocity</a> velocity,
+<a class="jxr_linenumber" name="L189" href="#L189">189</a>             <strong class="jxr_keyword">final</strong> <a href="../../../../com/irurueta/navigation/frames/ECEFPosition.html">ECEFPosition</a> position,
+<a class="jxr_linenumber" name="L190" href="#L190">190</a>             <strong class="jxr_keyword">final</strong> <a href="../../../../com/irurueta/navigation/frames/ECEFVelocity.html">ECEFVelocity</a> velocity,
 <a class="jxr_linenumber" name="L191" href="#L191">191</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> clockOffset, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> clockDrift) {
 <a class="jxr_linenumber" name="L192" href="#L192">192</a>         setEcefPosition(position);
 <a class="jxr_linenumber" name="L193" href="#L193">193</a>         setEcefVelocity(velocity);
@@ -212,8 +212,8 @@
 <a class="jxr_linenumber" name="L204" href="#L204">204</a> <em class="jxr_javadoccomment">     * @param clockDrift  estimated receiver clock drift.</em>
 <a class="jxr_linenumber" name="L205" href="#L205">205</a> <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="L206" href="#L206">206</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../com/irurueta/navigation/gnss/GNSSEstimation.html">GNSSEstimation</a>(
-<a class="jxr_linenumber" name="L207" href="#L207">207</a>             <strong class="jxr_keyword">final</strong> <a href="../../../../com/irurueta/navigation/inertial/ECEFPosition.html">ECEFPosition</a> position,
-<a class="jxr_linenumber" name="L208" href="#L208">208</a>             <strong class="jxr_keyword">final</strong> <a href="../../../../com/irurueta/navigation/inertial/ECEFVelocity.html">ECEFVelocity</a> velocity,
+<a class="jxr_linenumber" name="L207" href="#L207">207</a>             <strong class="jxr_keyword">final</strong> <a href="../../../../com/irurueta/navigation/frames/ECEFPosition.html">ECEFPosition</a> position,
+<a class="jxr_linenumber" name="L208" href="#L208">208</a>             <strong class="jxr_keyword">final</strong> <a href="../../../../com/irurueta/navigation/frames/ECEFVelocity.html">ECEFVelocity</a> velocity,
 <a class="jxr_linenumber" name="L209" href="#L209">209</a>             <strong class="jxr_keyword">final</strong> Distance clockOffset,
 <a class="jxr_linenumber" name="L210" href="#L210">210</a>             <strong class="jxr_keyword">final</strong> Speed clockDrift) {
 <a class="jxr_linenumber" name="L211" href="#L211">211</a>         setEcefPosition(position);
@@ -749,7 +749,7 @@
 <a class="jxr_linenumber" name="L741" href="#L741">741</a> <em class="jxr_javadoccomment">     *</em>
 <a class="jxr_linenumber" name="L742" href="#L742">742</a> <em class="jxr_javadoccomment">     * @param result instance where result will be stored.</em>
 <a class="jxr_linenumber" name="L743" href="#L743">743</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L744" href="#L744">744</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> getEcefPosition(<strong class="jxr_keyword">final</strong> <a href="../../../../com/irurueta/navigation/inertial/ECEFPosition.html">ECEFPosition</a> result) {
+<a class="jxr_linenumber" name="L744" href="#L744">744</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> getEcefPosition(<strong class="jxr_keyword">final</strong> <a href="../../../../com/irurueta/navigation/frames/ECEFPosition.html">ECEFPosition</a> result) {
 <a class="jxr_linenumber" name="L745" href="#L745">745</a>         result.setCoordinates(mX, mY, mZ);
 <a class="jxr_linenumber" name="L746" href="#L746">746</a>     }
 <a class="jxr_linenumber" name="L747" href="#L747">747</a> 
@@ -758,8 +758,8 @@
 <a class="jxr_linenumber" name="L750" href="#L750">750</a> <em class="jxr_javadoccomment">     *</em>
 <a class="jxr_linenumber" name="L751" href="#L751">751</a> <em class="jxr_javadoccomment">     * @return estimated ECEF user position.</em>
 <a class="jxr_linenumber" name="L752" href="#L752">752</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L753" href="#L753">753</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../com/irurueta/navigation/inertial/ECEFPosition.html">ECEFPosition</a> getEcefPosition() {
-<a class="jxr_linenumber" name="L754" href="#L754">754</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../com/irurueta/navigation/inertial/ECEFPosition.html">ECEFPosition</a>(mX, mY, mZ);
+<a class="jxr_linenumber" name="L753" href="#L753">753</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../com/irurueta/navigation/frames/ECEFPosition.html">ECEFPosition</a> getEcefPosition() {
+<a class="jxr_linenumber" name="L754" href="#L754">754</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../com/irurueta/navigation/frames/ECEFPosition.html">ECEFPosition</a>(mX, mY, mZ);
 <a class="jxr_linenumber" name="L755" href="#L755">755</a>     }
 <a class="jxr_linenumber" name="L756" href="#L756">756</a> 
 <a class="jxr_linenumber" name="L757" href="#L757">757</a>     <em class="jxr_javadoccomment">/**</em>
@@ -767,7 +767,7 @@
 <a class="jxr_linenumber" name="L759" href="#L759">759</a> <em class="jxr_javadoccomment">     *</em>
 <a class="jxr_linenumber" name="L760" href="#L760">760</a> <em class="jxr_javadoccomment">     * @param ecefPosition estimated ECEF user position.</em>
 <a class="jxr_linenumber" name="L761" href="#L761">761</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L762" href="#L762">762</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setEcefPosition(<strong class="jxr_keyword">final</strong> <a href="../../../../com/irurueta/navigation/inertial/ECEFPosition.html">ECEFPosition</a> ecefPosition) {
+<a class="jxr_linenumber" name="L762" href="#L762">762</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setEcefPosition(<strong class="jxr_keyword">final</strong> <a href="../../../../com/irurueta/navigation/frames/ECEFPosition.html">ECEFPosition</a> ecefPosition) {
 <a class="jxr_linenumber" name="L763" href="#L763">763</a>         mX = ecefPosition.getX();
 <a class="jxr_linenumber" name="L764" href="#L764">764</a>         mY = ecefPosition.getY();
 <a class="jxr_linenumber" name="L765" href="#L765">765</a>         mZ = ecefPosition.getZ();
@@ -778,7 +778,7 @@
 <a class="jxr_linenumber" name="L770" href="#L770">770</a> <em class="jxr_javadoccomment">     *</em>
 <a class="jxr_linenumber" name="L771" href="#L771">771</a> <em class="jxr_javadoccomment">     * @param result instance where result will be stored.</em>
 <a class="jxr_linenumber" name="L772" href="#L772">772</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L773" href="#L773">773</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> getEcefVelocity(<strong class="jxr_keyword">final</strong> <a href="../../../../com/irurueta/navigation/inertial/ECEFVelocity.html">ECEFVelocity</a> result) {
+<a class="jxr_linenumber" name="L773" href="#L773">773</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> getEcefVelocity(<strong class="jxr_keyword">final</strong> <a href="../../../../com/irurueta/navigation/frames/ECEFVelocity.html">ECEFVelocity</a> result) {
 <a class="jxr_linenumber" name="L774" href="#L774">774</a>         result.setCoordinates(mVx, mVy, mVz);
 <a class="jxr_linenumber" name="L775" href="#L775">775</a>     }
 <a class="jxr_linenumber" name="L776" href="#L776">776</a> 
@@ -787,8 +787,8 @@
 <a class="jxr_linenumber" name="L779" href="#L779">779</a> <em class="jxr_javadoccomment">     *</em>
 <a class="jxr_linenumber" name="L780" href="#L780">780</a> <em class="jxr_javadoccomment">     * @return estimated ECEF user velocity.</em>
 <a class="jxr_linenumber" name="L781" href="#L781">781</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L782" href="#L782">782</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../com/irurueta/navigation/inertial/ECEFVelocity.html">ECEFVelocity</a> getEcefVelocity() {
-<a class="jxr_linenumber" name="L783" href="#L783">783</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../com/irurueta/navigation/inertial/ECEFVelocity.html">ECEFVelocity</a>(mVx, mVy, mVz);
+<a class="jxr_linenumber" name="L782" href="#L782">782</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../com/irurueta/navigation/frames/ECEFVelocity.html">ECEFVelocity</a> getEcefVelocity() {
+<a class="jxr_linenumber" name="L783" href="#L783">783</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../com/irurueta/navigation/frames/ECEFVelocity.html">ECEFVelocity</a>(mVx, mVy, mVz);
 <a class="jxr_linenumber" name="L784" href="#L784">784</a>     }
 <a class="jxr_linenumber" name="L785" href="#L785">785</a> 
 <a class="jxr_linenumber" name="L786" href="#L786">786</a>     <em class="jxr_javadoccomment">/**</em>
@@ -796,7 +796,7 @@
 <a class="jxr_linenumber" name="L788" href="#L788">788</a> <em class="jxr_javadoccomment">     *</em>
 <a class="jxr_linenumber" name="L789" href="#L789">789</a> <em class="jxr_javadoccomment">     * @param ecefVelocity estimated ECEF user velocity.</em>
 <a class="jxr_linenumber" name="L790" href="#L790">790</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L791" href="#L791">791</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setEcefVelocity(<strong class="jxr_keyword">final</strong> <a href="../../../../com/irurueta/navigation/inertial/ECEFVelocity.html">ECEFVelocity</a> ecefVelocity) {
+<a class="jxr_linenumber" name="L791" href="#L791">791</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setEcefVelocity(<strong class="jxr_keyword">final</strong> <a href="../../../../com/irurueta/navigation/frames/ECEFVelocity.html">ECEFVelocity</a> ecefVelocity) {
 <a class="jxr_linenumber" name="L792" href="#L792">792</a>         mVx = ecefVelocity.getVx();
 <a class="jxr_linenumber" name="L793" href="#L793">793</a>         mVy = ecefVelocity.getVy();
 <a class="jxr_linenumber" name="L794" href="#L794">794</a>         mVz = ecefVelocity.getVz();

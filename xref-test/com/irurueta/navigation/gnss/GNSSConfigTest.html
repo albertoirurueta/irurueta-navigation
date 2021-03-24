@@ -10,7 +10,7 @@
 <a class="jxr_linenumber" name="L2" href="#L2">2</a>   
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <strong class="jxr_keyword">import</strong> com.irurueta.geometry.InhomogeneousPoint3D;
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <strong class="jxr_keyword">import</strong> com.irurueta.geometry.Point3D;
-<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <strong class="jxr_keyword">import</strong> com.irurueta.navigation.inertial.ECEFPosition;
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <strong class="jxr_keyword">import</strong> com.irurueta.navigation.frames.ECEFPosition;
 <a class="jxr_linenumber" name="L6" href="#L6">6</a>   <strong class="jxr_keyword">import</strong> com.irurueta.statistics.UniformRandomizer;
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   <strong class="jxr_keyword">import</strong> com.irurueta.units.Angle;
 <a class="jxr_linenumber" name="L8" href="#L8">8</a>   <strong class="jxr_keyword">import</strong> com.irurueta.units.AngleUnit;
@@ -3380,127 +3380,128 @@
 <a class="jxr_linenumber" name="L3372" href="#L3372">3372</a> 
 <a class="jxr_linenumber" name="L3373" href="#L3373">3373</a>         <em class="jxr_comment">//noinspection ConstantConditions,SimplifiableJUnitAssertion</em>
 <a class="jxr_linenumber" name="L3374" href="#L3374">3374</a>         assertTrue(config1.equals((Object)config1));
-<a class="jxr_linenumber" name="L3375" href="#L3375">3375</a>         assertTrue(config1.equals(config1));
-<a class="jxr_linenumber" name="L3376" href="#L3376">3376</a>         assertTrue(config1.equals(config2));
-<a class="jxr_linenumber" name="L3377" href="#L3377">3377</a>         assertFalse(config1.equals(config3));
-<a class="jxr_linenumber" name="L3378" href="#L3378">3378</a>         <em class="jxr_comment">//noinspection SimplifiableJUnitAssertion,ConstantConditions</em>
-<a class="jxr_linenumber" name="L3379" href="#L3379">3379</a>         assertFalse(config1.equals((Object)<strong class="jxr_keyword">null</strong>));
-<a class="jxr_linenumber" name="L3380" href="#L3380">3380</a>         assertFalse(config1.equals(<strong class="jxr_keyword">null</strong>));
-<a class="jxr_linenumber" name="L3381" href="#L3381">3381</a>         <em class="jxr_comment">//noinspection SimplifiableJUnitAssertion</em>
-<a class="jxr_linenumber" name="L3382" href="#L3382">3382</a>         assertFalse(config1.equals(<strong class="jxr_keyword">new</strong> Object()));
-<a class="jxr_linenumber" name="L3383" href="#L3383">3383</a>     }
-<a class="jxr_linenumber" name="L3384" href="#L3384">3384</a> 
-<a class="jxr_linenumber" name="L3385" href="#L3385">3385</a>     @Test
-<a class="jxr_linenumber" name="L3386" href="#L3386">3386</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testEqualsWithThreshold() {
-<a class="jxr_linenumber" name="L3387" href="#L3387">3387</a>         <strong class="jxr_keyword">final</strong> UniformRandomizer randomizer = <strong class="jxr_keyword">new</strong> UniformRandomizer(<strong class="jxr_keyword">new</strong> Random());
-<a class="jxr_linenumber" name="L3388" href="#L3388">3388</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> epochInterval = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-<a class="jxr_linenumber" name="L3389" href="#L3389">3389</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> initialEstimatedEcefPositionX = randomizer.nextDouble(MIN_VALUE,
-<a class="jxr_linenumber" name="L3390" href="#L3390">3390</a>                 MAX_VALUE);
-<a class="jxr_linenumber" name="L3391" href="#L3391">3391</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> initialEstimatedEcefPositionY = randomizer.nextDouble(MIN_VALUE,
-<a class="jxr_linenumber" name="L3392" href="#L3392">3392</a>                 MAX_VALUE);
-<a class="jxr_linenumber" name="L3393" href="#L3393">3393</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> initialEstimatedEcefPositionZ = randomizer.nextDouble(MIN_VALUE,
-<a class="jxr_linenumber" name="L3394" href="#L3394">3394</a>                 MAX_VALUE);
-<a class="jxr_linenumber" name="L3395" href="#L3395">3395</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> numberOfSatellites = randomizer.nextInt(MIN_SATELLITES,
-<a class="jxr_linenumber" name="L3396" href="#L3396">3396</a>                 MAX_SATELLITES);
-<a class="jxr_linenumber" name="L3397" href="#L3397">3397</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> orbitalRadiusOfSatellites = randomizer.nextDouble(MIN_VALUE,
-<a class="jxr_linenumber" name="L3398" href="#L3398">3398</a>                 MAX_VALUE);
-<a class="jxr_linenumber" name="L3399" href="#L3399">3399</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> satellitesInclinationDegrees = randomizer.nextDouble(MIN_VALUE,
-<a class="jxr_linenumber" name="L3400" href="#L3400">3400</a>                 MAX_VALUE);
-<a class="jxr_linenumber" name="L3401" href="#L3401">3401</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> constellationLongitudeOffsetDegrees = randomizer.nextDouble(
-<a class="jxr_linenumber" name="L3402" href="#L3402">3402</a>                 MIN_VALUE, MAX_VALUE);
-<a class="jxr_linenumber" name="L3403" href="#L3403">3403</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> constellationTimingOffset = randomizer.nextDouble(MIN_VALUE,
-<a class="jxr_linenumber" name="L3404" href="#L3404">3404</a>                 MAX_VALUE);
-<a class="jxr_linenumber" name="L3405" href="#L3405">3405</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> maskAngleDegrees = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-<a class="jxr_linenumber" name="L3406" href="#L3406">3406</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> sisErrorSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-<a class="jxr_linenumber" name="L3407" href="#L3407">3407</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> zenithIonosphereErrorSD = randomizer.nextDouble(
-<a class="jxr_linenumber" name="L3408" href="#L3408">3408</a>                 MIN_VALUE, MAX_VALUE);
-<a class="jxr_linenumber" name="L3409" href="#L3409">3409</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> zenithTroposphereErrorSD = randomizer.nextDouble(MIN_VALUE,
-<a class="jxr_linenumber" name="L3410" href="#L3410">3410</a>                 MAX_VALUE);
-<a class="jxr_linenumber" name="L3411" href="#L3411">3411</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> codeTrackingErrorSD = randomizer.nextDouble(MIN_VALUE,
-<a class="jxr_linenumber" name="L3412" href="#L3412">3412</a>                 MAX_VALUE);
-<a class="jxr_linenumber" name="L3413" href="#L3413">3413</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> rangeRateTrackingErrorSD = randomizer.nextDouble(MIN_VALUE,
-<a class="jxr_linenumber" name="L3414" href="#L3414">3414</a>                 MAX_VALUE);
-<a class="jxr_linenumber" name="L3415" href="#L3415">3415</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> initialReceiverClockOffset = randomizer.nextDouble(MIN_VALUE,
-<a class="jxr_linenumber" name="L3416" href="#L3416">3416</a>                 MAX_VALUE);
-<a class="jxr_linenumber" name="L3417" href="#L3417">3417</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> initialReceiverClockDrift = randomizer.nextDouble(MIN_VALUE,
-<a class="jxr_linenumber" name="L3418" href="#L3418">3418</a>                 MAX_VALUE);
-<a class="jxr_linenumber" name="L3419" href="#L3419">3419</a> 
-<a class="jxr_linenumber" name="L3420" href="#L3420">3420</a>         <strong class="jxr_keyword">final</strong> GNSSConfig config1 = <strong class="jxr_keyword">new</strong> GNSSConfig(epochInterval,
-<a class="jxr_linenumber" name="L3421" href="#L3421">3421</a>                 initialEstimatedEcefPositionX, initialEstimatedEcefPositionY,
-<a class="jxr_linenumber" name="L3422" href="#L3422">3422</a>                 initialEstimatedEcefPositionZ, numberOfSatellites,
-<a class="jxr_linenumber" name="L3423" href="#L3423">3423</a>                 orbitalRadiusOfSatellites, satellitesInclinationDegrees,
-<a class="jxr_linenumber" name="L3424" href="#L3424">3424</a>                 constellationLongitudeOffsetDegrees, constellationTimingOffset,
-<a class="jxr_linenumber" name="L3425" href="#L3425">3425</a>                 maskAngleDegrees, sisErrorSD, zenithIonosphereErrorSD,
-<a class="jxr_linenumber" name="L3426" href="#L3426">3426</a>                 zenithTroposphereErrorSD, codeTrackingErrorSD,
-<a class="jxr_linenumber" name="L3427" href="#L3427">3427</a>                 rangeRateTrackingErrorSD, initialReceiverClockOffset,
-<a class="jxr_linenumber" name="L3428" href="#L3428">3428</a>                 initialReceiverClockDrift);
-<a class="jxr_linenumber" name="L3429" href="#L3429">3429</a>         <strong class="jxr_keyword">final</strong> GNSSConfig config2 = <strong class="jxr_keyword">new</strong> GNSSConfig(epochInterval,
-<a class="jxr_linenumber" name="L3430" href="#L3430">3430</a>                 initialEstimatedEcefPositionX, initialEstimatedEcefPositionY,
-<a class="jxr_linenumber" name="L3431" href="#L3431">3431</a>                 initialEstimatedEcefPositionZ, numberOfSatellites,
-<a class="jxr_linenumber" name="L3432" href="#L3432">3432</a>                 orbitalRadiusOfSatellites, satellitesInclinationDegrees,
-<a class="jxr_linenumber" name="L3433" href="#L3433">3433</a>                 constellationLongitudeOffsetDegrees, constellationTimingOffset,
-<a class="jxr_linenumber" name="L3434" href="#L3434">3434</a>                 maskAngleDegrees, sisErrorSD, zenithIonosphereErrorSD,
-<a class="jxr_linenumber" name="L3435" href="#L3435">3435</a>                 zenithTroposphereErrorSD, codeTrackingErrorSD,
-<a class="jxr_linenumber" name="L3436" href="#L3436">3436</a>                 rangeRateTrackingErrorSD, initialReceiverClockOffset,
-<a class="jxr_linenumber" name="L3437" href="#L3437">3437</a>                 initialReceiverClockDrift);
-<a class="jxr_linenumber" name="L3438" href="#L3438">3438</a>         <strong class="jxr_keyword">final</strong> GNSSConfig config3 = <strong class="jxr_keyword">new</strong> GNSSConfig();
-<a class="jxr_linenumber" name="L3439" href="#L3439">3439</a> 
-<a class="jxr_linenumber" name="L3440" href="#L3440">3440</a>         assertTrue(config1.equals(config1, THRESHOLD));
-<a class="jxr_linenumber" name="L3441" href="#L3441">3441</a>         assertTrue(config1.equals(config2, THRESHOLD));
-<a class="jxr_linenumber" name="L3442" href="#L3442">3442</a>         assertFalse(config1.equals(config3, THRESHOLD));
-<a class="jxr_linenumber" name="L3443" href="#L3443">3443</a>         assertFalse(config1.equals(<strong class="jxr_keyword">null</strong>, THRESHOLD));
-<a class="jxr_linenumber" name="L3444" href="#L3444">3444</a>     }
-<a class="jxr_linenumber" name="L3445" href="#L3445">3445</a> 
-<a class="jxr_linenumber" name="L3446" href="#L3446">3446</a>     @Test
-<a class="jxr_linenumber" name="L3447" href="#L3447">3447</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testClone() <strong class="jxr_keyword">throws</strong> CloneNotSupportedException {
-<a class="jxr_linenumber" name="L3448" href="#L3448">3448</a>         <strong class="jxr_keyword">final</strong> UniformRandomizer randomizer = <strong class="jxr_keyword">new</strong> UniformRandomizer(<strong class="jxr_keyword">new</strong> Random());
-<a class="jxr_linenumber" name="L3449" href="#L3449">3449</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> epochInterval = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-<a class="jxr_linenumber" name="L3450" href="#L3450">3450</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> initialEstimatedEcefPositionX = randomizer.nextDouble(MIN_VALUE,
-<a class="jxr_linenumber" name="L3451" href="#L3451">3451</a>                 MAX_VALUE);
-<a class="jxr_linenumber" name="L3452" href="#L3452">3452</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> initialEstimatedEcefPositionY = randomizer.nextDouble(MIN_VALUE,
-<a class="jxr_linenumber" name="L3453" href="#L3453">3453</a>                 MAX_VALUE);
-<a class="jxr_linenumber" name="L3454" href="#L3454">3454</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> initialEstimatedEcefPositionZ = randomizer.nextDouble(MIN_VALUE,
-<a class="jxr_linenumber" name="L3455" href="#L3455">3455</a>                 MAX_VALUE);
-<a class="jxr_linenumber" name="L3456" href="#L3456">3456</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> numberOfSatellites = randomizer.nextInt(MIN_SATELLITES,
-<a class="jxr_linenumber" name="L3457" href="#L3457">3457</a>                 MAX_SATELLITES);
-<a class="jxr_linenumber" name="L3458" href="#L3458">3458</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> orbitalRadiusOfSatellites = randomizer.nextDouble(MIN_VALUE,
-<a class="jxr_linenumber" name="L3459" href="#L3459">3459</a>                 MAX_VALUE);
-<a class="jxr_linenumber" name="L3460" href="#L3460">3460</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> satellitesInclinationDegrees = randomizer.nextDouble(MIN_VALUE,
-<a class="jxr_linenumber" name="L3461" href="#L3461">3461</a>                 MAX_VALUE);
-<a class="jxr_linenumber" name="L3462" href="#L3462">3462</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> constellationLongitudeOffsetDegrees = randomizer.nextDouble(
-<a class="jxr_linenumber" name="L3463" href="#L3463">3463</a>                 MIN_VALUE, MAX_VALUE);
-<a class="jxr_linenumber" name="L3464" href="#L3464">3464</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> constellationTimingOffset = randomizer.nextDouble(MIN_VALUE,
-<a class="jxr_linenumber" name="L3465" href="#L3465">3465</a>                 MAX_VALUE);
-<a class="jxr_linenumber" name="L3466" href="#L3466">3466</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> maskAngleDegrees = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-<a class="jxr_linenumber" name="L3467" href="#L3467">3467</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> sisErrorSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-<a class="jxr_linenumber" name="L3468" href="#L3468">3468</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> zenithIonosphereErrorSD = randomizer.nextDouble(
-<a class="jxr_linenumber" name="L3469" href="#L3469">3469</a>                 MIN_VALUE, MAX_VALUE);
-<a class="jxr_linenumber" name="L3470" href="#L3470">3470</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> zenithTroposphereErrorSD = randomizer.nextDouble(MIN_VALUE,
-<a class="jxr_linenumber" name="L3471" href="#L3471">3471</a>                 MAX_VALUE);
-<a class="jxr_linenumber" name="L3472" href="#L3472">3472</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> codeTrackingErrorSD = randomizer.nextDouble(MIN_VALUE,
-<a class="jxr_linenumber" name="L3473" href="#L3473">3473</a>                 MAX_VALUE);
-<a class="jxr_linenumber" name="L3474" href="#L3474">3474</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> rangeRateTrackingErrorSD = randomizer.nextDouble(MIN_VALUE,
-<a class="jxr_linenumber" name="L3475" href="#L3475">3475</a>                 MAX_VALUE);
-<a class="jxr_linenumber" name="L3476" href="#L3476">3476</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> initialReceiverClockOffset = randomizer.nextDouble(MIN_VALUE,
-<a class="jxr_linenumber" name="L3477" href="#L3477">3477</a>                 MAX_VALUE);
-<a class="jxr_linenumber" name="L3478" href="#L3478">3478</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> initialReceiverClockDrift = randomizer.nextDouble(MIN_VALUE,
-<a class="jxr_linenumber" name="L3479" href="#L3479">3479</a>                 MAX_VALUE);
-<a class="jxr_linenumber" name="L3480" href="#L3480">3480</a> 
-<a class="jxr_linenumber" name="L3481" href="#L3481">3481</a>         <strong class="jxr_keyword">final</strong> GNSSConfig config1 = <strong class="jxr_keyword">new</strong> GNSSConfig(epochInterval,
-<a class="jxr_linenumber" name="L3482" href="#L3482">3482</a>                 initialEstimatedEcefPositionX, initialEstimatedEcefPositionY,
-<a class="jxr_linenumber" name="L3483" href="#L3483">3483</a>                 initialEstimatedEcefPositionZ, numberOfSatellites,
-<a class="jxr_linenumber" name="L3484" href="#L3484">3484</a>                 orbitalRadiusOfSatellites, satellitesInclinationDegrees,
-<a class="jxr_linenumber" name="L3485" href="#L3485">3485</a>                 constellationLongitudeOffsetDegrees, constellationTimingOffset,
-<a class="jxr_linenumber" name="L3486" href="#L3486">3486</a>                 maskAngleDegrees, sisErrorSD, zenithIonosphereErrorSD,
-<a class="jxr_linenumber" name="L3487" href="#L3487">3487</a>                 zenithTroposphereErrorSD, codeTrackingErrorSD,
-<a class="jxr_linenumber" name="L3488" href="#L3488">3488</a>                 rangeRateTrackingErrorSD, initialReceiverClockOffset,
-<a class="jxr_linenumber" name="L3489" href="#L3489">3489</a>                 initialReceiverClockDrift);
-<a class="jxr_linenumber" name="L3490" href="#L3490">3490</a> 
-<a class="jxr_linenumber" name="L3491" href="#L3491">3491</a>         <strong class="jxr_keyword">final</strong> Object config2 = config1.clone();
-<a class="jxr_linenumber" name="L3492" href="#L3492">3492</a> 
-<a class="jxr_linenumber" name="L3493" href="#L3493">3493</a>         assertEquals(config1, config2);
-<a class="jxr_linenumber" name="L3494" href="#L3494">3494</a>     }
-<a class="jxr_linenumber" name="L3495" href="#L3495">3495</a> }
+<a class="jxr_linenumber" name="L3375" href="#L3375">3375</a>         <em class="jxr_comment">//noinspection EqualsWithItself</em>
+<a class="jxr_linenumber" name="L3376" href="#L3376">3376</a>         assertTrue(config1.equals(config1));
+<a class="jxr_linenumber" name="L3377" href="#L3377">3377</a>         assertTrue(config1.equals(config2));
+<a class="jxr_linenumber" name="L3378" href="#L3378">3378</a>         assertFalse(config1.equals(config3));
+<a class="jxr_linenumber" name="L3379" href="#L3379">3379</a>         <em class="jxr_comment">//noinspection SimplifiableJUnitAssertion,ConstantConditions</em>
+<a class="jxr_linenumber" name="L3380" href="#L3380">3380</a>         assertFalse(config1.equals((Object)<strong class="jxr_keyword">null</strong>));
+<a class="jxr_linenumber" name="L3381" href="#L3381">3381</a>         assertFalse(config1.equals(<strong class="jxr_keyword">null</strong>));
+<a class="jxr_linenumber" name="L3382" href="#L3382">3382</a>         <em class="jxr_comment">//noinspection SimplifiableJUnitAssertion</em>
+<a class="jxr_linenumber" name="L3383" href="#L3383">3383</a>         assertFalse(config1.equals(<strong class="jxr_keyword">new</strong> Object()));
+<a class="jxr_linenumber" name="L3384" href="#L3384">3384</a>     }
+<a class="jxr_linenumber" name="L3385" href="#L3385">3385</a> 
+<a class="jxr_linenumber" name="L3386" href="#L3386">3386</a>     @Test
+<a class="jxr_linenumber" name="L3387" href="#L3387">3387</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testEqualsWithThreshold() {
+<a class="jxr_linenumber" name="L3388" href="#L3388">3388</a>         <strong class="jxr_keyword">final</strong> UniformRandomizer randomizer = <strong class="jxr_keyword">new</strong> UniformRandomizer(<strong class="jxr_keyword">new</strong> Random());
+<a class="jxr_linenumber" name="L3389" href="#L3389">3389</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> epochInterval = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+<a class="jxr_linenumber" name="L3390" href="#L3390">3390</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> initialEstimatedEcefPositionX = randomizer.nextDouble(MIN_VALUE,
+<a class="jxr_linenumber" name="L3391" href="#L3391">3391</a>                 MAX_VALUE);
+<a class="jxr_linenumber" name="L3392" href="#L3392">3392</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> initialEstimatedEcefPositionY = randomizer.nextDouble(MIN_VALUE,
+<a class="jxr_linenumber" name="L3393" href="#L3393">3393</a>                 MAX_VALUE);
+<a class="jxr_linenumber" name="L3394" href="#L3394">3394</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> initialEstimatedEcefPositionZ = randomizer.nextDouble(MIN_VALUE,
+<a class="jxr_linenumber" name="L3395" href="#L3395">3395</a>                 MAX_VALUE);
+<a class="jxr_linenumber" name="L3396" href="#L3396">3396</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> numberOfSatellites = randomizer.nextInt(MIN_SATELLITES,
+<a class="jxr_linenumber" name="L3397" href="#L3397">3397</a>                 MAX_SATELLITES);
+<a class="jxr_linenumber" name="L3398" href="#L3398">3398</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> orbitalRadiusOfSatellites = randomizer.nextDouble(MIN_VALUE,
+<a class="jxr_linenumber" name="L3399" href="#L3399">3399</a>                 MAX_VALUE);
+<a class="jxr_linenumber" name="L3400" href="#L3400">3400</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> satellitesInclinationDegrees = randomizer.nextDouble(MIN_VALUE,
+<a class="jxr_linenumber" name="L3401" href="#L3401">3401</a>                 MAX_VALUE);
+<a class="jxr_linenumber" name="L3402" href="#L3402">3402</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> constellationLongitudeOffsetDegrees = randomizer.nextDouble(
+<a class="jxr_linenumber" name="L3403" href="#L3403">3403</a>                 MIN_VALUE, MAX_VALUE);
+<a class="jxr_linenumber" name="L3404" href="#L3404">3404</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> constellationTimingOffset = randomizer.nextDouble(MIN_VALUE,
+<a class="jxr_linenumber" name="L3405" href="#L3405">3405</a>                 MAX_VALUE);
+<a class="jxr_linenumber" name="L3406" href="#L3406">3406</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> maskAngleDegrees = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+<a class="jxr_linenumber" name="L3407" href="#L3407">3407</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> sisErrorSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+<a class="jxr_linenumber" name="L3408" href="#L3408">3408</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> zenithIonosphereErrorSD = randomizer.nextDouble(
+<a class="jxr_linenumber" name="L3409" href="#L3409">3409</a>                 MIN_VALUE, MAX_VALUE);
+<a class="jxr_linenumber" name="L3410" href="#L3410">3410</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> zenithTroposphereErrorSD = randomizer.nextDouble(MIN_VALUE,
+<a class="jxr_linenumber" name="L3411" href="#L3411">3411</a>                 MAX_VALUE);
+<a class="jxr_linenumber" name="L3412" href="#L3412">3412</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> codeTrackingErrorSD = randomizer.nextDouble(MIN_VALUE,
+<a class="jxr_linenumber" name="L3413" href="#L3413">3413</a>                 MAX_VALUE);
+<a class="jxr_linenumber" name="L3414" href="#L3414">3414</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> rangeRateTrackingErrorSD = randomizer.nextDouble(MIN_VALUE,
+<a class="jxr_linenumber" name="L3415" href="#L3415">3415</a>                 MAX_VALUE);
+<a class="jxr_linenumber" name="L3416" href="#L3416">3416</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> initialReceiverClockOffset = randomizer.nextDouble(MIN_VALUE,
+<a class="jxr_linenumber" name="L3417" href="#L3417">3417</a>                 MAX_VALUE);
+<a class="jxr_linenumber" name="L3418" href="#L3418">3418</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> initialReceiverClockDrift = randomizer.nextDouble(MIN_VALUE,
+<a class="jxr_linenumber" name="L3419" href="#L3419">3419</a>                 MAX_VALUE);
+<a class="jxr_linenumber" name="L3420" href="#L3420">3420</a> 
+<a class="jxr_linenumber" name="L3421" href="#L3421">3421</a>         <strong class="jxr_keyword">final</strong> GNSSConfig config1 = <strong class="jxr_keyword">new</strong> GNSSConfig(epochInterval,
+<a class="jxr_linenumber" name="L3422" href="#L3422">3422</a>                 initialEstimatedEcefPositionX, initialEstimatedEcefPositionY,
+<a class="jxr_linenumber" name="L3423" href="#L3423">3423</a>                 initialEstimatedEcefPositionZ, numberOfSatellites,
+<a class="jxr_linenumber" name="L3424" href="#L3424">3424</a>                 orbitalRadiusOfSatellites, satellitesInclinationDegrees,
+<a class="jxr_linenumber" name="L3425" href="#L3425">3425</a>                 constellationLongitudeOffsetDegrees, constellationTimingOffset,
+<a class="jxr_linenumber" name="L3426" href="#L3426">3426</a>                 maskAngleDegrees, sisErrorSD, zenithIonosphereErrorSD,
+<a class="jxr_linenumber" name="L3427" href="#L3427">3427</a>                 zenithTroposphereErrorSD, codeTrackingErrorSD,
+<a class="jxr_linenumber" name="L3428" href="#L3428">3428</a>                 rangeRateTrackingErrorSD, initialReceiverClockOffset,
+<a class="jxr_linenumber" name="L3429" href="#L3429">3429</a>                 initialReceiverClockDrift);
+<a class="jxr_linenumber" name="L3430" href="#L3430">3430</a>         <strong class="jxr_keyword">final</strong> GNSSConfig config2 = <strong class="jxr_keyword">new</strong> GNSSConfig(epochInterval,
+<a class="jxr_linenumber" name="L3431" href="#L3431">3431</a>                 initialEstimatedEcefPositionX, initialEstimatedEcefPositionY,
+<a class="jxr_linenumber" name="L3432" href="#L3432">3432</a>                 initialEstimatedEcefPositionZ, numberOfSatellites,
+<a class="jxr_linenumber" name="L3433" href="#L3433">3433</a>                 orbitalRadiusOfSatellites, satellitesInclinationDegrees,
+<a class="jxr_linenumber" name="L3434" href="#L3434">3434</a>                 constellationLongitudeOffsetDegrees, constellationTimingOffset,
+<a class="jxr_linenumber" name="L3435" href="#L3435">3435</a>                 maskAngleDegrees, sisErrorSD, zenithIonosphereErrorSD,
+<a class="jxr_linenumber" name="L3436" href="#L3436">3436</a>                 zenithTroposphereErrorSD, codeTrackingErrorSD,
+<a class="jxr_linenumber" name="L3437" href="#L3437">3437</a>                 rangeRateTrackingErrorSD, initialReceiverClockOffset,
+<a class="jxr_linenumber" name="L3438" href="#L3438">3438</a>                 initialReceiverClockDrift);
+<a class="jxr_linenumber" name="L3439" href="#L3439">3439</a>         <strong class="jxr_keyword">final</strong> GNSSConfig config3 = <strong class="jxr_keyword">new</strong> GNSSConfig();
+<a class="jxr_linenumber" name="L3440" href="#L3440">3440</a> 
+<a class="jxr_linenumber" name="L3441" href="#L3441">3441</a>         assertTrue(config1.equals(config1, THRESHOLD));
+<a class="jxr_linenumber" name="L3442" href="#L3442">3442</a>         assertTrue(config1.equals(config2, THRESHOLD));
+<a class="jxr_linenumber" name="L3443" href="#L3443">3443</a>         assertFalse(config1.equals(config3, THRESHOLD));
+<a class="jxr_linenumber" name="L3444" href="#L3444">3444</a>         assertFalse(config1.equals(<strong class="jxr_keyword">null</strong>, THRESHOLD));
+<a class="jxr_linenumber" name="L3445" href="#L3445">3445</a>     }
+<a class="jxr_linenumber" name="L3446" href="#L3446">3446</a> 
+<a class="jxr_linenumber" name="L3447" href="#L3447">3447</a>     @Test
+<a class="jxr_linenumber" name="L3448" href="#L3448">3448</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testClone() <strong class="jxr_keyword">throws</strong> CloneNotSupportedException {
+<a class="jxr_linenumber" name="L3449" href="#L3449">3449</a>         <strong class="jxr_keyword">final</strong> UniformRandomizer randomizer = <strong class="jxr_keyword">new</strong> UniformRandomizer(<strong class="jxr_keyword">new</strong> Random());
+<a class="jxr_linenumber" name="L3450" href="#L3450">3450</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> epochInterval = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+<a class="jxr_linenumber" name="L3451" href="#L3451">3451</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> initialEstimatedEcefPositionX = randomizer.nextDouble(MIN_VALUE,
+<a class="jxr_linenumber" name="L3452" href="#L3452">3452</a>                 MAX_VALUE);
+<a class="jxr_linenumber" name="L3453" href="#L3453">3453</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> initialEstimatedEcefPositionY = randomizer.nextDouble(MIN_VALUE,
+<a class="jxr_linenumber" name="L3454" href="#L3454">3454</a>                 MAX_VALUE);
+<a class="jxr_linenumber" name="L3455" href="#L3455">3455</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> initialEstimatedEcefPositionZ = randomizer.nextDouble(MIN_VALUE,
+<a class="jxr_linenumber" name="L3456" href="#L3456">3456</a>                 MAX_VALUE);
+<a class="jxr_linenumber" name="L3457" href="#L3457">3457</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> numberOfSatellites = randomizer.nextInt(MIN_SATELLITES,
+<a class="jxr_linenumber" name="L3458" href="#L3458">3458</a>                 MAX_SATELLITES);
+<a class="jxr_linenumber" name="L3459" href="#L3459">3459</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> orbitalRadiusOfSatellites = randomizer.nextDouble(MIN_VALUE,
+<a class="jxr_linenumber" name="L3460" href="#L3460">3460</a>                 MAX_VALUE);
+<a class="jxr_linenumber" name="L3461" href="#L3461">3461</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> satellitesInclinationDegrees = randomizer.nextDouble(MIN_VALUE,
+<a class="jxr_linenumber" name="L3462" href="#L3462">3462</a>                 MAX_VALUE);
+<a class="jxr_linenumber" name="L3463" href="#L3463">3463</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> constellationLongitudeOffsetDegrees = randomizer.nextDouble(
+<a class="jxr_linenumber" name="L3464" href="#L3464">3464</a>                 MIN_VALUE, MAX_VALUE);
+<a class="jxr_linenumber" name="L3465" href="#L3465">3465</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> constellationTimingOffset = randomizer.nextDouble(MIN_VALUE,
+<a class="jxr_linenumber" name="L3466" href="#L3466">3466</a>                 MAX_VALUE);
+<a class="jxr_linenumber" name="L3467" href="#L3467">3467</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> maskAngleDegrees = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+<a class="jxr_linenumber" name="L3468" href="#L3468">3468</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> sisErrorSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+<a class="jxr_linenumber" name="L3469" href="#L3469">3469</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> zenithIonosphereErrorSD = randomizer.nextDouble(
+<a class="jxr_linenumber" name="L3470" href="#L3470">3470</a>                 MIN_VALUE, MAX_VALUE);
+<a class="jxr_linenumber" name="L3471" href="#L3471">3471</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> zenithTroposphereErrorSD = randomizer.nextDouble(MIN_VALUE,
+<a class="jxr_linenumber" name="L3472" href="#L3472">3472</a>                 MAX_VALUE);
+<a class="jxr_linenumber" name="L3473" href="#L3473">3473</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> codeTrackingErrorSD = randomizer.nextDouble(MIN_VALUE,
+<a class="jxr_linenumber" name="L3474" href="#L3474">3474</a>                 MAX_VALUE);
+<a class="jxr_linenumber" name="L3475" href="#L3475">3475</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> rangeRateTrackingErrorSD = randomizer.nextDouble(MIN_VALUE,
+<a class="jxr_linenumber" name="L3476" href="#L3476">3476</a>                 MAX_VALUE);
+<a class="jxr_linenumber" name="L3477" href="#L3477">3477</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> initialReceiverClockOffset = randomizer.nextDouble(MIN_VALUE,
+<a class="jxr_linenumber" name="L3478" href="#L3478">3478</a>                 MAX_VALUE);
+<a class="jxr_linenumber" name="L3479" href="#L3479">3479</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> initialReceiverClockDrift = randomizer.nextDouble(MIN_VALUE,
+<a class="jxr_linenumber" name="L3480" href="#L3480">3480</a>                 MAX_VALUE);
+<a class="jxr_linenumber" name="L3481" href="#L3481">3481</a> 
+<a class="jxr_linenumber" name="L3482" href="#L3482">3482</a>         <strong class="jxr_keyword">final</strong> GNSSConfig config1 = <strong class="jxr_keyword">new</strong> GNSSConfig(epochInterval,
+<a class="jxr_linenumber" name="L3483" href="#L3483">3483</a>                 initialEstimatedEcefPositionX, initialEstimatedEcefPositionY,
+<a class="jxr_linenumber" name="L3484" href="#L3484">3484</a>                 initialEstimatedEcefPositionZ, numberOfSatellites,
+<a class="jxr_linenumber" name="L3485" href="#L3485">3485</a>                 orbitalRadiusOfSatellites, satellitesInclinationDegrees,
+<a class="jxr_linenumber" name="L3486" href="#L3486">3486</a>                 constellationLongitudeOffsetDegrees, constellationTimingOffset,
+<a class="jxr_linenumber" name="L3487" href="#L3487">3487</a>                 maskAngleDegrees, sisErrorSD, zenithIonosphereErrorSD,
+<a class="jxr_linenumber" name="L3488" href="#L3488">3488</a>                 zenithTroposphereErrorSD, codeTrackingErrorSD,
+<a class="jxr_linenumber" name="L3489" href="#L3489">3489</a>                 rangeRateTrackingErrorSD, initialReceiverClockOffset,
+<a class="jxr_linenumber" name="L3490" href="#L3490">3490</a>                 initialReceiverClockDrift);
+<a class="jxr_linenumber" name="L3491" href="#L3491">3491</a> 
+<a class="jxr_linenumber" name="L3492" href="#L3492">3492</a>         <strong class="jxr_keyword">final</strong> Object config2 = config1.clone();
+<a class="jxr_linenumber" name="L3493" href="#L3493">3493</a> 
+<a class="jxr_linenumber" name="L3494" href="#L3494">3494</a>         assertEquals(config1, config2);
+<a class="jxr_linenumber" name="L3495" href="#L3495">3495</a>     }
+<a class="jxr_linenumber" name="L3496" href="#L3496">3496</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2018&#x2013;2021. All rights reserved.</div>

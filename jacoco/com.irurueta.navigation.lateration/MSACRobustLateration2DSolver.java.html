@@ -19,7 +19,11 @@ import com.irurueta.geometry.Circle;
 import com.irurueta.geometry.Point2D;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
-import com.irurueta.numerical.robust.*;
+import com.irurueta.numerical.robust.MSACRobustEstimator;
+import com.irurueta.numerical.robust.MSACRobustEstimatorListener;
+import com.irurueta.numerical.robust.RobustEstimator;
+import com.irurueta.numerical.robust.RobustEstimatorException;
+import com.irurueta.numerical.robust.RobustEstimatorMethod;
 
 import java.util.List;
 
@@ -47,14 +51,14 @@ public class MSACRobustLateration2DSolver extends RobustLateration2DSolver {
      * Threshold to determine whether samples are inliers or not when
      * testing possible estimation solutions.
      */
-<span class="fc" id="L50">    private double mThreshold = DEFAULT_THRESHOLD;</span>
+<span class="fc" id="L54">    private double mThreshold = DEFAULT_THRESHOLD;</span>
 
     /**
      * Constructor.
      */
     public MSACRobustLateration2DSolver() {
-<span class="fc" id="L56">        super();</span>
-<span class="fc" id="L57">    }</span>
+<span class="fc" id="L60">        super();</span>
+<span class="fc" id="L61">    }</span>
 
     /**
      * Constructor.
@@ -64,8 +68,8 @@ public class MSACRobustLateration2DSolver extends RobustLateration2DSolver {
      */
     public MSACRobustLateration2DSolver(
             final RobustLaterationSolverListener&lt;Point2D&gt; listener) {
-<span class="fc" id="L67">        super(listener);</span>
-<span class="fc" id="L68">    }</span>
+<span class="fc" id="L71">        super(listener);</span>
+<span class="fc" id="L72">    }</span>
 
     /**
      * Constructor.
@@ -77,8 +81,8 @@ public class MSACRobustLateration2DSolver extends RobustLateration2DSolver {
      *                                  don't have the same length or their length is smaller than required (3 points).
      */
     public MSACRobustLateration2DSolver(final Point2D[] positions, final double[] distances) {
-<span class="fc" id="L80">        super(positions, distances);</span>
-<span class="fc" id="L81">    }</span>
+<span class="fc" id="L84">        super(positions, distances);</span>
+<span class="fc" id="L85">    }</span>
 
     /**
      * Constructor.
@@ -92,8 +96,8 @@ public class MSACRobustLateration2DSolver extends RobustLateration2DSolver {
      */
     public MSACRobustLateration2DSolver(final Point2D[] positions, final double[] distances,
                                         final double[] distanceStandardDeviations) {
-<span class="fc" id="L95">        super(positions, distances, distanceStandardDeviations);</span>
-<span class="fc" id="L96">    }</span>
+<span class="fc" id="L99">        super(positions, distances, distanceStandardDeviations);</span>
+<span class="fc" id="L100">    }</span>
 
     /**
      * Constructor.
@@ -110,8 +114,8 @@ public class MSACRobustLateration2DSolver extends RobustLateration2DSolver {
     public MSACRobustLateration2DSolver(final Point2D[] positions, final double[] distances,
                                         final double[] distanceStandardDeviations,
                                         final RobustLaterationSolverListener&lt;Point2D&gt; listener) {
-<span class="fc" id="L113">        super(positions, distances, distanceStandardDeviations, listener);</span>
-<span class="fc" id="L114">    }</span>
+<span class="fc" id="L117">        super(positions, distances, distanceStandardDeviations, listener);</span>
+<span class="fc" id="L118">    }</span>
 
     /**
      * Constructor.
@@ -125,8 +129,8 @@ public class MSACRobustLateration2DSolver extends RobustLateration2DSolver {
      */
     public MSACRobustLateration2DSolver(final Point2D[] positions, final double[] distances,
                                         final RobustLaterationSolverListener&lt;Point2D&gt; listener) {
-<span class="fc" id="L128">        super(positions, distances, listener);</span>
-<span class="fc" id="L129">    }</span>
+<span class="fc" id="L132">        super(positions, distances, listener);</span>
+<span class="fc" id="L133">    }</span>
 
     /**
      * Constructor.
@@ -136,8 +140,8 @@ public class MSACRobustLateration2DSolver extends RobustLateration2DSolver {
      *                                  is less than required (3 points).
      */
     public MSACRobustLateration2DSolver(final Circle[] circles) {
-<span class="fc" id="L139">        super(circles);</span>
-<span class="fc" id="L140">    }</span>
+<span class="fc" id="L143">        super(circles);</span>
+<span class="fc" id="L144">    }</span>
 
     /**
      * Constructor.
@@ -149,8 +153,8 @@ public class MSACRobustLateration2DSolver extends RobustLateration2DSolver {
      */
     public MSACRobustLateration2DSolver(
             final Circle[] circles, final double[] distanceStandardDeviations) {
-<span class="fc" id="L152">        super(circles, distanceStandardDeviations);</span>
-<span class="fc" id="L153">    }</span>
+<span class="fc" id="L156">        super(circles, distanceStandardDeviations);</span>
+<span class="fc" id="L157">    }</span>
 
     /**
      * Constructor.
@@ -163,8 +167,8 @@ public class MSACRobustLateration2DSolver extends RobustLateration2DSolver {
      */
     public MSACRobustLateration2DSolver(
             final Circle[] circles, final RobustLaterationSolverListener&lt;Point2D&gt; listener) {
-<span class="fc" id="L166">        super(circles, listener);</span>
-<span class="fc" id="L167">    }</span>
+<span class="fc" id="L170">        super(circles, listener);</span>
+<span class="fc" id="L171">    }</span>
 
     /**
      * Constructor.
@@ -179,8 +183,8 @@ public class MSACRobustLateration2DSolver extends RobustLateration2DSolver {
     public MSACRobustLateration2DSolver(
             final Circle[] circles, final double[] distanceStandardDeviations,
             final RobustLaterationSolverListener&lt;Point2D&gt; listener) {
-<span class="fc" id="L182">        super(circles, distanceStandardDeviations, listener);</span>
-<span class="fc" id="L183">    }</span>
+<span class="fc" id="L186">        super(circles, distanceStandardDeviations, listener);</span>
+<span class="fc" id="L187">    }</span>
 
     /**
      * Returns threshold to determine whether samples are inliers or not.
@@ -188,7 +192,7 @@ public class MSACRobustLateration2DSolver extends RobustLateration2DSolver {
      * @return threshold to determine whether samples are inliers or not.
      */
     public double getThreshold() {
-<span class="fc" id="L191">        return mThreshold;</span>
+<span class="fc" id="L195">        return mThreshold;</span>
     }
 
     /**
@@ -201,14 +205,14 @@ public class MSACRobustLateration2DSolver extends RobustLateration2DSolver {
      *                                  estimation is already in progress.
      */
     public void setThreshold(final double threshold) throws LockedException {
-<span class="fc bfc" id="L204" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L205">            throw new LockedException();</span>
+<span class="fc bfc" id="L208" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L209">            throw new LockedException();</span>
         }
-<span class="fc bfc" id="L207" title="All 2 branches covered.">        if (threshold &lt;= MIN_THRESHOLD) {</span>
-<span class="fc" id="L208">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L211" title="All 2 branches covered.">        if (threshold &lt;= MIN_THRESHOLD) {</span>
+<span class="fc" id="L212">            throw new IllegalArgumentException();</span>
         }
-<span class="fc" id="L210">        mThreshold = threshold;</span>
-<span class="fc" id="L211">    }</span>
+<span class="fc" id="L214">        mThreshold = threshold;</span>
+<span class="fc" id="L215">    }</span>
 
     /**
      * Solves the lateration problem.
@@ -221,101 +225,101 @@ public class MSACRobustLateration2DSolver extends RobustLateration2DSolver {
      */
     @Override
     public Point2D solve() throws LockedException, NotReadyException, RobustEstimatorException {
-<span class="fc bfc" id="L224" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L225">            throw new LockedException();</span>
+<span class="fc bfc" id="L228" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L229">            throw new LockedException();</span>
         }
-<span class="fc bfc" id="L227" title="All 2 branches covered.">        if (!isReady()) {</span>
-<span class="fc" id="L228">            throw new NotReadyException();</span>
+<span class="fc bfc" id="L231" title="All 2 branches covered.">        if (!isReady()) {</span>
+<span class="fc" id="L232">            throw new NotReadyException();</span>
         }
 
-<span class="fc" id="L231">        final MSACRobustEstimator&lt;Point2D&gt; innerEstimator =</span>
-<span class="fc" id="L232">                new MSACRobustEstimator&lt;&gt;(new MSACRobustEstimatorListener&lt;Point2D&gt;() {</span>
+<span class="fc" id="L235">        final MSACRobustEstimator&lt;Point2D&gt; innerEstimator =</span>
+<span class="fc" id="L236">                new MSACRobustEstimator&lt;&gt;(new MSACRobustEstimatorListener&lt;Point2D&gt;() {</span>
                     @Override
                     public double getThreshold() {
-<span class="fc" id="L235">                        return mThreshold;</span>
+<span class="fc" id="L239">                        return mThreshold;</span>
                     }
 
                     @Override
                     public int getTotalSamples() {
-<span class="fc" id="L240">                        return mDistances.length;</span>
+<span class="fc" id="L244">                        return mDistances.length;</span>
                     }
 
                     @Override
                     public int getSubsetSize() {
-<span class="fc" id="L245">                        return mPreliminarySubsetSize;</span>
+<span class="fc" id="L249">                        return mPreliminarySubsetSize;</span>
                     }
 
                     @Override
                     public void estimatePreliminarSolutions(
                             final int[] samplesIndices, final List&lt;Point2D&gt; solutions) {
-<span class="fc" id="L251">                        solvePreliminarSolutions(samplesIndices, solutions);</span>
-<span class="fc" id="L252">                    }</span>
+<span class="fc" id="L255">                        solvePreliminarSolutions(samplesIndices, solutions);</span>
+<span class="fc" id="L256">                    }</span>
 
                     @Override
                     public double computeResidual(
                             final Point2D currentEstimation, final int i) {
-<span class="fc" id="L257">                        return Math.abs(currentEstimation.distanceTo(mPositions[i]) - mDistances[i]);</span>
+<span class="fc" id="L261">                        return Math.abs(currentEstimation.distanceTo(mPositions[i]) - mDistances[i]);</span>
                     }
 
                     @Override
                     public boolean isReady() {
-<span class="fc" id="L262">                        return MSACRobustLateration2DSolver.this.isReady();</span>
+<span class="fc" id="L266">                        return MSACRobustLateration2DSolver.this.isReady();</span>
                     }
 
                     @Override
                     public void onEstimateStart(final RobustEstimator&lt;Point2D&gt; estimator) {
-<span class="fc" id="L267">                    }</span>
+<span class="fc" id="L271">                    }</span>
 
                     @Override
                     public void onEstimateEnd(final RobustEstimator&lt;Point2D&gt; estimator) {
-<span class="fc" id="L271">                    }</span>
+<span class="fc" id="L275">                    }</span>
 
                     @Override
                     public void onEstimateNextIteration(
                             final RobustEstimator&lt;Point2D&gt; estimator, final int iteration) {
-<span class="pc bpc" id="L276" title="1 of 2 branches missed.">                        if (mListener != null) {</span>
-<span class="fc" id="L277">                            mListener.onSolveNextIteration(</span>
+<span class="pc bpc" id="L280" title="1 of 2 branches missed.">                        if (mListener != null) {</span>
+<span class="fc" id="L281">                            mListener.onSolveNextIteration(</span>
                                     MSACRobustLateration2DSolver.this, iteration);
                         }
-<span class="fc" id="L280">                    }</span>
+<span class="fc" id="L284">                    }</span>
 
                     @Override
                     public void onEstimateProgressChange(
                             final RobustEstimator&lt;Point2D&gt; estimator, final float progress) {
-<span class="pc bpc" id="L285" title="1 of 2 branches missed.">                        if (mListener != null) {</span>
-<span class="fc" id="L286">                            mListener.onSolveProgressChange(</span>
+<span class="pc bpc" id="L289" title="1 of 2 branches missed.">                        if (mListener != null) {</span>
+<span class="fc" id="L290">                            mListener.onSolveProgressChange(</span>
                                     MSACRobustLateration2DSolver.this, progress);
                         }
-<span class="fc" id="L289">                    }</span>
+<span class="fc" id="L293">                    }</span>
                 });
 
         try {
-<span class="fc" id="L293">            mLocked = true;</span>
+<span class="fc" id="L297">            mLocked = true;</span>
 
-<span class="pc bpc" id="L295" title="1 of 2 branches missed.">            if (mListener != null) {</span>
-<span class="fc" id="L296">                mListener.onSolveStart(this);</span>
+<span class="pc bpc" id="L299" title="1 of 2 branches missed.">            if (mListener != null) {</span>
+<span class="fc" id="L300">                mListener.onSolveStart(this);</span>
             }
 
-<span class="fc" id="L299">            mInliersData = null;</span>
-<span class="fc" id="L300">            innerEstimator.setConfidence(mConfidence);</span>
-<span class="fc" id="L301">            innerEstimator.setMaxIterations(mMaxIterations);</span>
-<span class="fc" id="L302">            innerEstimator.setProgressDelta(mProgressDelta);</span>
-<span class="fc" id="L303">            Point2D result = innerEstimator.estimate();</span>
-<span class="fc" id="L304">            mInliersData = innerEstimator.getInliersData();</span>
-<span class="fc" id="L305">            result = attemptRefine(result);</span>
+<span class="fc" id="L303">            mInliersData = null;</span>
+<span class="fc" id="L304">            innerEstimator.setConfidence(mConfidence);</span>
+<span class="fc" id="L305">            innerEstimator.setMaxIterations(mMaxIterations);</span>
+<span class="fc" id="L306">            innerEstimator.setProgressDelta(mProgressDelta);</span>
+<span class="fc" id="L307">            Point2D result = innerEstimator.estimate();</span>
+<span class="fc" id="L308">            mInliersData = innerEstimator.getInliersData();</span>
+<span class="fc" id="L309">            result = attemptRefine(result);</span>
 
-<span class="pc bpc" id="L307" title="1 of 2 branches missed.">            if (mListener != null) {</span>
-<span class="fc" id="L308">                mListener.onSolveEnd(this);</span>
+<span class="pc bpc" id="L311" title="1 of 2 branches missed.">            if (mListener != null) {</span>
+<span class="fc" id="L312">                mListener.onSolveEnd(this);</span>
             }
 
-<span class="fc" id="L311">            return result;</span>
+<span class="fc" id="L315">            return result;</span>
 
-<span class="nc" id="L313">        } catch (final com.irurueta.numerical.LockedException e) {</span>
-<span class="nc" id="L314">            throw new LockedException(e);</span>
-<span class="nc" id="L315">        } catch (final com.irurueta.numerical.NotReadyException e) {</span>
-<span class="nc" id="L316">            throw new NotReadyException(e);</span>
+<span class="nc" id="L317">        } catch (final com.irurueta.numerical.LockedException e) {</span>
+<span class="nc" id="L318">            throw new LockedException(e);</span>
+<span class="nc" id="L319">        } catch (final com.irurueta.numerical.NotReadyException e) {</span>
+<span class="nc" id="L320">            throw new NotReadyException(e);</span>
         } finally {
-<span class="fc" id="L318">            mLocked = false;</span>
+<span class="fc" id="L322">            mLocked = false;</span>
         }
     }
 
@@ -326,7 +330,7 @@ public class MSACRobustLateration2DSolver extends RobustLateration2DSolver {
      */
     @Override
     public RobustEstimatorMethod getMethod() {
-<span class="fc" id="L329">        return RobustEstimatorMethod.MSAC;</span>
+<span class="fc" id="L333">        return RobustEstimatorMethod.MSAC;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

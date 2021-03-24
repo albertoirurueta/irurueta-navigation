@@ -19,7 +19,11 @@ import com.irurueta.geometry.Point3D;
 import com.irurueta.geometry.Sphere;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
-import com.irurueta.numerical.robust.*;
+import com.irurueta.numerical.robust.PROSACRobustEstimator;
+import com.irurueta.numerical.robust.PROSACRobustEstimatorListener;
+import com.irurueta.numerical.robust.RobustEstimator;
+import com.irurueta.numerical.robust.RobustEstimatorException;
+import com.irurueta.numerical.robust.RobustEstimatorMethod;
 
 import java.util.List;
 
@@ -57,17 +61,17 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
      * The threshold refers to the amount of error on distance between estimated position and
      * distances provided for each sample.
      */
-<span class="fc" id="L60">    private double mThreshold = DEFAULT_THRESHOLD;</span>
+<span class="fc" id="L64">    private double mThreshold = DEFAULT_THRESHOLD;</span>
 
     /**
      * Indicates whether inliers must be computed and kept.
      */
-<span class="fc" id="L65">    private boolean mComputeAndKeepInliers = DEFAULT_COMPUTE_AND_KEEP_INLIERS;</span>
+<span class="fc" id="L69">    private boolean mComputeAndKeepInliers = DEFAULT_COMPUTE_AND_KEEP_INLIERS;</span>
 
     /**
      * Indicates whether residuals must be computed and kept.
      */
-<span class="fc" id="L70">    private boolean mComputeAndKeepResiduals = DEFAULT_COMPUTE_AND_KEEP_RESIDUALS;</span>
+<span class="fc" id="L74">    private boolean mComputeAndKeepResiduals = DEFAULT_COMPUTE_AND_KEEP_RESIDUALS;</span>
 
     /**
      * Quality scores corresponding to each provided sample.
@@ -79,8 +83,8 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
      * Constructor.
      */
     public PROSACRobustLateration3DSolver() {
-<span class="fc" id="L82">        super();</span>
-<span class="fc" id="L83">    }</span>
+<span class="fc" id="L86">        super();</span>
+<span class="fc" id="L87">    }</span>
 
     /**
      * Constructor.
@@ -90,8 +94,8 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
      */
     public PROSACRobustLateration3DSolver(
             final RobustLaterationSolverListener&lt;Point3D&gt; listener) {
-<span class="fc" id="L93">        super(listener);</span>
-<span class="fc" id="L94">    }</span>
+<span class="fc" id="L97">        super(listener);</span>
+<span class="fc" id="L98">    }</span>
 
     /**
      * Constructor.
@@ -104,8 +108,8 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
      */
     public PROSACRobustLateration3DSolver(
             final Point3D[] positions, final double[] distances) {
-<span class="fc" id="L107">        super(positions, distances);</span>
-<span class="fc" id="L108">    }</span>
+<span class="fc" id="L111">        super(positions, distances);</span>
+<span class="fc" id="L112">    }</span>
 
     /**
      * Constructor.
@@ -120,8 +124,8 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
     public PROSACRobustLateration3DSolver(
             final Point3D[] positions, final double[] distances,
             final double[] distanceStandardDeviations) {
-<span class="fc" id="L123">        super(positions, distances, distanceStandardDeviations);</span>
-<span class="fc" id="L124">    }</span>
+<span class="fc" id="L127">        super(positions, distances, distanceStandardDeviations);</span>
+<span class="fc" id="L128">    }</span>
 
     /**
      * Constructor.
@@ -139,8 +143,8 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
             final Point3D[] positions, final double[] distances,
             final double[] distanceStandardDeviations,
             final RobustLaterationSolverListener&lt;Point3D&gt; listener) {
-<span class="fc" id="L142">        super(positions, distances, distanceStandardDeviations, listener);</span>
-<span class="fc" id="L143">    }</span>
+<span class="fc" id="L146">        super(positions, distances, distanceStandardDeviations, listener);</span>
+<span class="fc" id="L147">    }</span>
 
     /**
      * Constructor.
@@ -155,8 +159,8 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
     public PROSACRobustLateration3DSolver(
             final Point3D[] positions, final double[] distances,
             final RobustLaterationSolverListener&lt;Point3D&gt; listener) {
-<span class="fc" id="L158">        super(positions, distances, listener);</span>
-<span class="fc" id="L159">    }</span>
+<span class="fc" id="L162">        super(positions, distances, listener);</span>
+<span class="fc" id="L163">    }</span>
 
     /**
      * Constructor.
@@ -166,8 +170,8 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
      *                                  is less than required (4 points).
      */
     public PROSACRobustLateration3DSolver(final Sphere[] spheres) {
-<span class="fc" id="L169">        super(spheres);</span>
-<span class="fc" id="L170">    }</span>
+<span class="fc" id="L173">        super(spheres);</span>
+<span class="fc" id="L174">    }</span>
 
     /**
      * Constructor.
@@ -179,8 +183,8 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
      */
     public PROSACRobustLateration3DSolver(
             final Sphere[] spheres, final double[] distanceStandardDeviations) {
-<span class="fc" id="L182">        super(spheres, distanceStandardDeviations);</span>
-<span class="fc" id="L183">    }</span>
+<span class="fc" id="L186">        super(spheres, distanceStandardDeviations);</span>
+<span class="fc" id="L187">    }</span>
 
     /**
      * Constructor.
@@ -193,8 +197,8 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
      */
     public PROSACRobustLateration3DSolver(
             final Sphere[] spheres, final RobustLaterationSolverListener&lt;Point3D&gt; listener) {
-<span class="fc" id="L196">        super(spheres, listener);</span>
-<span class="fc" id="L197">    }</span>
+<span class="fc" id="L200">        super(spheres, listener);</span>
+<span class="fc" id="L201">    }</span>
 
     /**
      * Constructor.
@@ -209,8 +213,8 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
     public PROSACRobustLateration3DSolver(
             final Sphere[] spheres, final double[] distanceStandardDeviations,
             final RobustLaterationSolverListener&lt;Point3D&gt; listener) {
-<span class="fc" id="L212">        super(spheres, distanceStandardDeviations, listener);</span>
-<span class="fc" id="L213">    }</span>
+<span class="fc" id="L216">        super(spheres, distanceStandardDeviations, listener);</span>
+<span class="fc" id="L217">    }</span>
 
     /**
      * Constructor.
@@ -222,9 +226,9 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
      *                                  of quality scores is less than required minimum (4 samples).
      */
     public PROSACRobustLateration3DSolver(final double[] qualityScores) {
-<span class="fc" id="L225">        super();</span>
-<span class="fc" id="L226">        internalSetQualityScores(qualityScores);</span>
-<span class="fc" id="L227">    }</span>
+<span class="fc" id="L229">        super();</span>
+<span class="fc" id="L230">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L231">    }</span>
 
     /**
      * Constructor.
@@ -240,9 +244,9 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
     public PROSACRobustLateration3DSolver(
             final double[] qualityScores,
             final RobustLaterationSolverListener&lt;Point3D&gt; listener) {
-<span class="fc" id="L243">        super(listener);</span>
-<span class="fc" id="L244">        internalSetQualityScores(qualityScores);</span>
-<span class="fc" id="L245">    }</span>
+<span class="fc" id="L247">        super(listener);</span>
+<span class="fc" id="L248">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L249">    }</span>
 
     /**
      * Constructor.
@@ -260,9 +264,9 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
     public PROSACRobustLateration3DSolver(
             final double[] qualityScores, final Point3D[] positions,
             final double[] distances) {
-<span class="fc" id="L263">        super(positions, distances);</span>
-<span class="fc" id="L264">        internalSetQualityScores(qualityScores);</span>
-<span class="fc" id="L265">    }</span>
+<span class="fc" id="L267">        super(positions, distances);</span>
+<span class="fc" id="L268">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L269">    }</span>
 
     /**
      * Constructor.
@@ -281,9 +285,9 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
     public PROSACRobustLateration3DSolver(
             final double[] qualityScores, final Point3D[] positions,
             final double[] distances, final double[] distanceStandardDeviations) {
-<span class="fc" id="L284">        super(positions, distances, distanceStandardDeviations);</span>
-<span class="fc" id="L285">        internalSetQualityScores(qualityScores);</span>
-<span class="fc" id="L286">    }</span>
+<span class="fc" id="L288">        super(positions, distances, distanceStandardDeviations);</span>
+<span class="fc" id="L289">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L290">    }</span>
 
     /**
      * Constructor.
@@ -304,9 +308,9 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
             final double[] qualityScores, final Point3D[] positions,
             final double[] distances, final double[] distanceStandardDeviations,
             final RobustLaterationSolverListener&lt;Point3D&gt; listener) {
-<span class="fc" id="L307">        super(positions, distances, distanceStandardDeviations, listener);</span>
-<span class="fc" id="L308">        internalSetQualityScores(qualityScores);</span>
-<span class="fc" id="L309">    }</span>
+<span class="fc" id="L311">        super(positions, distances, distanceStandardDeviations, listener);</span>
+<span class="fc" id="L312">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L313">    }</span>
 
     /**
      * Constructor.
@@ -325,9 +329,9 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
     public PROSACRobustLateration3DSolver(
             final double[] qualityScores, final Point3D[] positions,
             final double[] distances, final RobustLaterationSolverListener&lt;Point3D&gt; listener) {
-<span class="fc" id="L328">        super(positions, distances, listener);</span>
-<span class="fc" id="L329">        internalSetQualityScores(qualityScores);</span>
-<span class="fc" id="L330">    }</span>
+<span class="fc" id="L332">        super(positions, distances, listener);</span>
+<span class="fc" id="L333">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L334">    }</span>
 
     /**
      * Constructor.
@@ -342,9 +346,9 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
      */
     public PROSACRobustLateration3DSolver(
             final double[] qualityScores, final Sphere[] spheres) {
-<span class="fc" id="L345">        super(spheres);</span>
-<span class="fc" id="L346">        internalSetQualityScores(qualityScores);</span>
-<span class="fc" id="L347">    }</span>
+<span class="fc" id="L349">        super(spheres);</span>
+<span class="fc" id="L350">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L351">    }</span>
 
     /**
      * Constructor.
@@ -361,9 +365,9 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
     public PROSACRobustLateration3DSolver(
             final double[] qualityScores, final Sphere[] spheres,
             final double[] distanceStandardDeviations) {
-<span class="fc" id="L364">        super(spheres, distanceStandardDeviations);</span>
-<span class="fc" id="L365">        internalSetQualityScores(qualityScores);</span>
-<span class="fc" id="L366">    }</span>
+<span class="fc" id="L368">        super(spheres, distanceStandardDeviations);</span>
+<span class="fc" id="L369">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L370">    }</span>
 
     /**
      * Constructor.
@@ -381,9 +385,9 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
     public PROSACRobustLateration3DSolver(
             final double[] qualityScores, final Sphere[] spheres,
             final RobustLaterationSolverListener&lt;Point3D&gt; listener) {
-<span class="fc" id="L384">        super(spheres, listener);</span>
-<span class="fc" id="L385">        internalSetQualityScores(qualityScores);</span>
-<span class="fc" id="L386">    }</span>
+<span class="fc" id="L388">        super(spheres, listener);</span>
+<span class="fc" id="L389">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L390">    }</span>
 
     /**
      * Constructor.
@@ -403,9 +407,9 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
             final double[] qualityScores, final Sphere[] spheres,
             final double[] distanceStandardDeviations,
             final RobustLaterationSolverListener&lt;Point3D&gt; listener) {
-<span class="fc" id="L406">        super(spheres, distanceStandardDeviations, listener);</span>
-<span class="fc" id="L407">        internalSetQualityScores(qualityScores);</span>
-<span class="fc" id="L408">    }</span>
+<span class="fc" id="L410">        super(spheres, distanceStandardDeviations, listener);</span>
+<span class="fc" id="L411">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L412">    }</span>
 
     /**
      * Gets threshold to determine whether samples are inliers or not when testing possible solutions.
@@ -415,7 +419,7 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
      * @return threshold to determine whether samples are inliers or not.
      */
     public double getThreshold() {
-<span class="fc" id="L418">        return mThreshold;</span>
+<span class="fc" id="L422">        return mThreshold;</span>
     }
 
     /**
@@ -428,14 +432,14 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
      * @throws LockedException          if this solver is locked.
      */
     public void setThreshold(final double threshold) throws LockedException {
-<span class="fc bfc" id="L431" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L432">            throw new LockedException();</span>
+<span class="fc bfc" id="L435" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L436">            throw new LockedException();</span>
         }
-<span class="fc bfc" id="L434" title="All 2 branches covered.">        if (threshold &lt;= MIN_THRESHOLD) {</span>
-<span class="fc" id="L435">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L438" title="All 2 branches covered.">        if (threshold &lt;= MIN_THRESHOLD) {</span>
+<span class="fc" id="L439">            throw new IllegalArgumentException();</span>
         }
-<span class="fc" id="L437">        mThreshold = threshold;</span>
-<span class="fc" id="L438">    }</span>
+<span class="fc" id="L441">        mThreshold = threshold;</span>
+<span class="fc" id="L442">    }</span>
 
     /**
      * Returns quality scores corresponding to each pair of
@@ -446,7 +450,7 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
      */
     @Override
     public double[] getQualityScores() {
-<span class="fc" id="L449">        return mQualityScores;</span>
+<span class="fc" id="L453">        return mQualityScores;</span>
     }
 
     /**
@@ -464,11 +468,11 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
     @Override
     public void setQualityScores(final double[] qualityScores)
             throws LockedException {
-<span class="fc bfc" id="L467" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L468">            throw new LockedException();</span>
+<span class="fc bfc" id="L471" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L472">            throw new LockedException();</span>
         }
-<span class="fc" id="L470">        internalSetQualityScores(qualityScores);</span>
-<span class="fc" id="L471">    }</span>
+<span class="fc" id="L474">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L475">    }</span>
 
     /**
      * Indicates whether solver is ready to find a solution.
@@ -477,7 +481,7 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
      */
     @Override
     public boolean isReady() {
-<span class="pc bpc" id="L480" title="1 of 6 branches missed.">        return super.isReady() &amp;&amp; mQualityScores != null &amp;&amp;</span>
+<span class="pc bpc" id="L484" title="1 of 6 branches missed.">        return super.isReady() &amp;&amp; mQualityScores != null &amp;&amp;</span>
                 mQualityScores.length == mDistances.length;
     }
 
@@ -488,7 +492,7 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
      * only need to be computed but not kept.
      */
     public boolean isComputeAndKeepInliersEnabled() {
-<span class="fc" id="L491">        return mComputeAndKeepInliers;</span>
+<span class="fc" id="L495">        return mComputeAndKeepInliers;</span>
     }
 
     /**
@@ -500,11 +504,11 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
      */
     public void setComputeAndKeepInliersEnabled(final boolean computeAndKeepInliers)
             throws LockedException {
-<span class="fc bfc" id="L503" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L504">            throw new LockedException();</span>
+<span class="fc bfc" id="L507" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L508">            throw new LockedException();</span>
         }
-<span class="fc" id="L506">        mComputeAndKeepInliers = computeAndKeepInliers;</span>
-<span class="fc" id="L507">    }</span>
+<span class="fc" id="L510">        mComputeAndKeepInliers = computeAndKeepInliers;</span>
+<span class="fc" id="L511">    }</span>
 
     /**
      * Indicates whether residuals must be computed and kept.
@@ -513,7 +517,7 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
      * only need to be computed but not kept.
      */
     public boolean isComputeAndKeepResiduals() {
-<span class="fc" id="L516">        return mComputeAndKeepResiduals;</span>
+<span class="fc" id="L520">        return mComputeAndKeepResiduals;</span>
     }
 
     /**
@@ -525,11 +529,11 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
      */
     public void setComputeAndKeepResidualsEnabled(final boolean computeAndKeepResiduals)
             throws LockedException {
-<span class="fc bfc" id="L528" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L529">            throw new LockedException();</span>
+<span class="fc bfc" id="L532" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L533">            throw new LockedException();</span>
         }
-<span class="fc" id="L531">        mComputeAndKeepResiduals = computeAndKeepResiduals;</span>
-<span class="fc" id="L532">    }</span>
+<span class="fc" id="L535">        mComputeAndKeepResiduals = computeAndKeepResiduals;</span>
+<span class="fc" id="L536">    }</span>
 
     /**
      * Solves the lateration problem.
@@ -543,109 +547,109 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
     @Override
     public Point3D solve() throws LockedException, NotReadyException,
             RobustEstimatorException {
-<span class="fc bfc" id="L546" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L547">            throw new LockedException();</span>
+<span class="fc bfc" id="L550" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L551">            throw new LockedException();</span>
         }
-<span class="fc bfc" id="L549" title="All 2 branches covered.">        if (!isReady()) {</span>
-<span class="fc" id="L550">            throw new NotReadyException();</span>
+<span class="fc bfc" id="L553" title="All 2 branches covered.">        if (!isReady()) {</span>
+<span class="fc" id="L554">            throw new NotReadyException();</span>
         }
 
-<span class="fc" id="L553">        final PROSACRobustEstimator&lt;Point3D&gt; innerEstimator =</span>
-<span class="fc" id="L554">                new PROSACRobustEstimator&lt;&gt;(new PROSACRobustEstimatorListener&lt;Point3D&gt;() {</span>
+<span class="fc" id="L557">        final PROSACRobustEstimator&lt;Point3D&gt; innerEstimator =</span>
+<span class="fc" id="L558">                new PROSACRobustEstimator&lt;&gt;(new PROSACRobustEstimatorListener&lt;Point3D&gt;() {</span>
                     @Override
                     public double[] getQualityScores() {
-<span class="fc" id="L557">                        return mQualityScores;</span>
+<span class="fc" id="L561">                        return mQualityScores;</span>
                     }
 
                     @Override
                     public double getThreshold() {
-<span class="fc" id="L562">                        return mThreshold;</span>
+<span class="fc" id="L566">                        return mThreshold;</span>
                     }
 
                     @Override
                     public int getTotalSamples() {
-<span class="fc" id="L567">                        return mDistances.length;</span>
+<span class="fc" id="L571">                        return mDistances.length;</span>
                     }
 
                     @Override
                     public int getSubsetSize() {
-<span class="fc" id="L572">                        return mPreliminarySubsetSize;</span>
+<span class="fc" id="L576">                        return mPreliminarySubsetSize;</span>
                     }
 
                     @Override
                     public void estimatePreliminarSolutions(
                             final int[] samplesIndices, final List&lt;Point3D&gt; solutions) {
-<span class="fc" id="L578">                        solvePreliminarSolutions(samplesIndices, solutions);</span>
-<span class="fc" id="L579">                    }</span>
+<span class="fc" id="L582">                        solvePreliminarSolutions(samplesIndices, solutions);</span>
+<span class="fc" id="L583">                    }</span>
 
                     @Override
                     public double computeResidual(final Point3D currentEstimation, int i) {
-<span class="fc" id="L583">                        return Math.abs(currentEstimation.distanceTo(mPositions[i]) - mDistances[i]);</span>
+<span class="fc" id="L587">                        return Math.abs(currentEstimation.distanceTo(mPositions[i]) - mDistances[i]);</span>
                     }
 
                     @Override
                     public boolean isReady() {
-<span class="fc" id="L588">                        return PROSACRobustLateration3DSolver.this.isReady();</span>
+<span class="fc" id="L592">                        return PROSACRobustLateration3DSolver.this.isReady();</span>
                     }
 
                     @Override
                     public void onEstimateStart(final RobustEstimator&lt;Point3D&gt; estimator) {
-<span class="fc" id="L593">                    }</span>
+<span class="fc" id="L597">                    }</span>
 
                     @Override
                     public void onEstimateEnd(final RobustEstimator&lt;Point3D&gt; estimator) {
-<span class="fc" id="L597">                    }</span>
+<span class="fc" id="L601">                    }</span>
 
                     @Override
                     public void onEstimateNextIteration(
                             final RobustEstimator&lt;Point3D&gt; estimator, final int iteration) {
-<span class="pc bpc" id="L602" title="1 of 2 branches missed.">                        if (mListener != null) {</span>
-<span class="fc" id="L603">                            mListener.onSolveNextIteration(</span>
+<span class="pc bpc" id="L606" title="1 of 2 branches missed.">                        if (mListener != null) {</span>
+<span class="fc" id="L607">                            mListener.onSolveNextIteration(</span>
                                     PROSACRobustLateration3DSolver.this, iteration);
                         }
-<span class="fc" id="L606">                    }</span>
+<span class="fc" id="L610">                    }</span>
 
                     @Override
                     public void onEstimateProgressChange(
                             final RobustEstimator&lt;Point3D&gt; estimator, final float progress) {
-<span class="pc bpc" id="L611" title="1 of 2 branches missed.">                        if (mListener != null) {</span>
-<span class="fc" id="L612">                            mListener.onSolveProgressChange(</span>
+<span class="pc bpc" id="L615" title="1 of 2 branches missed.">                        if (mListener != null) {</span>
+<span class="fc" id="L616">                            mListener.onSolveProgressChange(</span>
                                     PROSACRobustLateration3DSolver.this, progress);
                         }
-<span class="fc" id="L615">                    }</span>
+<span class="fc" id="L619">                    }</span>
                 });
 
         try {
-<span class="fc" id="L619">            mLocked = true;</span>
+<span class="fc" id="L623">            mLocked = true;</span>
 
-<span class="pc bpc" id="L621" title="1 of 2 branches missed.">            if (mListener != null) {</span>
-<span class="fc" id="L622">                mListener.onSolveStart(this);</span>
+<span class="pc bpc" id="L625" title="1 of 2 branches missed.">            if (mListener != null) {</span>
+<span class="fc" id="L626">                mListener.onSolveStart(this);</span>
             }
 
-<span class="fc" id="L625">            mInliersData = null;</span>
-<span class="fc bfc" id="L626" title="All 4 branches covered.">            innerEstimator.setComputeAndKeepInliersEnabled(</span>
+<span class="fc" id="L629">            mInliersData = null;</span>
+<span class="fc bfc" id="L630" title="All 4 branches covered.">            innerEstimator.setComputeAndKeepInliersEnabled(</span>
                     mComputeAndKeepInliers || mRefineResult);
-<span class="fc bfc" id="L628" title="All 4 branches covered.">            innerEstimator.setComputeAndKeepResidualsEnabled(</span>
+<span class="fc bfc" id="L632" title="All 4 branches covered.">            innerEstimator.setComputeAndKeepResidualsEnabled(</span>
                     mComputeAndKeepResiduals || mRefineResult);
-<span class="fc" id="L630">            innerEstimator.setConfidence(mConfidence);</span>
-<span class="fc" id="L631">            innerEstimator.setMaxIterations(mMaxIterations);</span>
-<span class="fc" id="L632">            innerEstimator.setProgressDelta(mProgressDelta);</span>
-<span class="fc" id="L633">            Point3D result = innerEstimator.estimate();</span>
-<span class="fc" id="L634">            mInliersData = innerEstimator.getInliersData();</span>
-<span class="fc" id="L635">            result = attemptRefine(result);</span>
+<span class="fc" id="L634">            innerEstimator.setConfidence(mConfidence);</span>
+<span class="fc" id="L635">            innerEstimator.setMaxIterations(mMaxIterations);</span>
+<span class="fc" id="L636">            innerEstimator.setProgressDelta(mProgressDelta);</span>
+<span class="fc" id="L637">            Point3D result = innerEstimator.estimate();</span>
+<span class="fc" id="L638">            mInliersData = innerEstimator.getInliersData();</span>
+<span class="fc" id="L639">            result = attemptRefine(result);</span>
 
-<span class="pc bpc" id="L637" title="1 of 2 branches missed.">            if (mListener != null) {</span>
-<span class="fc" id="L638">                mListener.onSolveEnd(this);</span>
+<span class="pc bpc" id="L641" title="1 of 2 branches missed.">            if (mListener != null) {</span>
+<span class="fc" id="L642">                mListener.onSolveEnd(this);</span>
             }
 
-<span class="fc" id="L641">            return result;</span>
+<span class="fc" id="L645">            return result;</span>
 
-<span class="nc" id="L643">        } catch (final com.irurueta.numerical.LockedException e) {</span>
-<span class="nc" id="L644">            throw new LockedException(e);</span>
-<span class="nc" id="L645">        } catch (final com.irurueta.numerical.NotReadyException e) {</span>
-<span class="nc" id="L646">            throw new NotReadyException(e);</span>
+<span class="nc" id="L647">        } catch (final com.irurueta.numerical.LockedException e) {</span>
+<span class="nc" id="L648">            throw new LockedException(e);</span>
+<span class="nc" id="L649">        } catch (final com.irurueta.numerical.NotReadyException e) {</span>
+<span class="nc" id="L650">            throw new NotReadyException(e);</span>
         } finally {
-<span class="fc" id="L648">            mLocked = false;</span>
+<span class="fc" id="L652">            mLocked = false;</span>
         }
     }
 
@@ -656,7 +660,7 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
      */
     @Override
     public RobustEstimatorMethod getMethod() {
-<span class="fc" id="L659">        return RobustEstimatorMethod.PROSAC;</span>
+<span class="fc" id="L663">        return RobustEstimatorMethod.PROSAC;</span>
     }
 
     /**
@@ -669,12 +673,12 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
      *                                  is smaller than 3 samples.
      */
     private void internalSetQualityScores(final double[] qualityScores) {
-<span class="fc bfc" id="L672" title="All 2 branches covered.">        if (qualityScores == null ||</span>
-<span class="fc bfc" id="L673" title="All 2 branches covered.">                qualityScores.length &lt; getMinRequiredPositionsAndDistances()) {</span>
-<span class="fc" id="L674">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L676" title="All 2 branches covered.">        if (qualityScores == null ||</span>
+<span class="fc bfc" id="L677" title="All 2 branches covered.">                qualityScores.length &lt; getMinRequiredPositionsAndDistances()) {</span>
+<span class="fc" id="L678">            throw new IllegalArgumentException();</span>
         }
 
-<span class="fc" id="L677">        mQualityScores = qualityScores;</span>
-<span class="fc" id="L678">    }</span>
+<span class="fc" id="L681">        mQualityScores = qualityScores;</span>
+<span class="fc" id="L682">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>
