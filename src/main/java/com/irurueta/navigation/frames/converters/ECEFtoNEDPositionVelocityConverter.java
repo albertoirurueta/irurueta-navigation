@@ -19,11 +19,11 @@ import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.WrongSizeException;
 import com.irurueta.navigation.frames.CoordinateTransformation;
 import com.irurueta.navigation.frames.ECEFFrame;
+import com.irurueta.navigation.frames.ECEFPosition;
+import com.irurueta.navigation.frames.ECEFVelocity;
+import com.irurueta.navigation.frames.NEDPosition;
+import com.irurueta.navigation.frames.NEDVelocity;
 import com.irurueta.navigation.geodesic.Constants;
-import com.irurueta.navigation.inertial.ECEFPosition;
-import com.irurueta.navigation.inertial.ECEFVelocity;
-import com.irurueta.navigation.inertial.NEDPosition;
-import com.irurueta.navigation.inertial.NEDVelocity;
 
 /**
  * Converts cartesian to curvilinear position and velocity resolving axes

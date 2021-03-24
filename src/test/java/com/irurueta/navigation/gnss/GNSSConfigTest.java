@@ -2,7 +2,7 @@ package com.irurueta.navigation.gnss;
 
 import com.irurueta.geometry.InhomogeneousPoint3D;
 import com.irurueta.geometry.Point3D;
-import com.irurueta.navigation.inertial.ECEFPosition;
+import com.irurueta.navigation.frames.ECEFPosition;
 import com.irurueta.statistics.UniformRandomizer;
 import com.irurueta.units.Angle;
 import com.irurueta.units.AngleUnit;
@@ -3372,6 +3372,7 @@ public class GNSSConfigTest {
 
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
         assertTrue(config1.equals((Object)config1));
+        //noinspection EqualsWithItself
         assertTrue(config1.equals(config1));
         assertTrue(config1.equals(config2));
         assertFalse(config1.equals(config3));

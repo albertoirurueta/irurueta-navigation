@@ -20,14 +20,14 @@ import com.irurueta.geometry.InvalidRotationMatrixException;
 import com.irurueta.geometry.Quaternion;
 import com.irurueta.navigation.frames.CoordinateTransformation;
 import com.irurueta.navigation.frames.ECEFFrame;
+import com.irurueta.navigation.frames.ECEFPosition;
+import com.irurueta.navigation.frames.ECEFVelocity;
 import com.irurueta.navigation.frames.FrameType;
 import com.irurueta.navigation.frames.InvalidSourceAndDestinationFrameTypeException;
 import com.irurueta.navigation.frames.NEDFrame;
+import com.irurueta.navigation.frames.NEDPosition;
+import com.irurueta.navigation.frames.NEDVelocity;
 import com.irurueta.navigation.geodesic.Constants;
-import com.irurueta.navigation.inertial.ECEFPosition;
-import com.irurueta.navigation.inertial.ECEFVelocity;
-import com.irurueta.navigation.inertial.NEDPosition;
-import com.irurueta.navigation.inertial.NEDVelocity;
 import com.irurueta.statistics.UniformRandomizer;
 import org.junit.Test;
 

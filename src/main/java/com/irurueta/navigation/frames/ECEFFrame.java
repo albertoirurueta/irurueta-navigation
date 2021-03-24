@@ -17,8 +17,6 @@ package com.irurueta.navigation.frames;
 
 import com.irurueta.geometry.Point3D;
 import com.irurueta.navigation.gnss.ECEFPositionAndVelocity;
-import com.irurueta.navigation.inertial.ECEFPosition;
-import com.irurueta.navigation.inertial.ECEFVelocity;
 import com.irurueta.units.Distance;
 import com.irurueta.units.Speed;
 

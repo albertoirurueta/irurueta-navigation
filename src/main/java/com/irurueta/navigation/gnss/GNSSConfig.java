@@ -17,7 +17,7 @@ package com.irurueta.navigation.gnss;
 
 import com.irurueta.geometry.InhomogeneousPoint3D;
 import com.irurueta.geometry.Point3D;
-import com.irurueta.navigation.inertial.ECEFPosition;
+import com.irurueta.navigation.frames.ECEFPosition;
 import com.irurueta.units.*;
 
 import java.io.Serializable;

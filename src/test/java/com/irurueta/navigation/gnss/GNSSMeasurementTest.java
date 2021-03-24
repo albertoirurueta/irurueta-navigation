@@ -17,9 +17,9 @@ package com.irurueta.navigation.gnss;
 
 import com.irurueta.geometry.InhomogeneousPoint3D;
 import com.irurueta.geometry.Point3D;
+import com.irurueta.navigation.frames.ECEFPosition;
+import com.irurueta.navigation.frames.ECEFVelocity;
 import com.irurueta.navigation.geodesic.Constants;
-import com.irurueta.navigation.inertial.ECEFPosition;
-import com.irurueta.navigation.inertial.ECEFVelocity;
 import com.irurueta.statistics.UniformRandomizer;
 import com.irurueta.units.Distance;
 import com.irurueta.units.DistanceUnit;
@@ -892,6 +892,7 @@ public class GNSSMeasurementTest {
 
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
         assertTrue(measurement1.equals((Object)measurement1));
+        //noinspection EqualsWithItself
         assertTrue(measurement1.equals(measurement1));
         assertTrue(measurement1.equals(measurement2));
         assertFalse(measurement1.equals(measurement3));

@@ -23,8 +23,6 @@ import com.irurueta.geometry.Point3D;
 import com.irurueta.geometry.Quaternion;
 import com.irurueta.navigation.geodesic.Constants;
 import com.irurueta.navigation.gnss.ECEFPositionAndVelocity;
-import com.irurueta.navigation.inertial.ECEFPosition;
-import com.irurueta.navigation.inertial.ECEFVelocity;
 import com.irurueta.statistics.UniformRandomizer;
 import com.irurueta.units.Distance;
 import com.irurueta.units.DistanceUnit;
@@ -2002,6 +2000,7 @@ public class ECEFFrameTest {
 
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
         assertTrue(frame1.equals((Object) frame1));
+        //noinspection EqualsWithItself
         assertTrue(frame1.equals(frame1));
         assertTrue(frame1.equals(frame2));
         assertFalse(frame1.equals(frame3));

@@ -26,7 +26,7 @@ import com.irurueta.navigation.frames.ECEFFrame;
 import com.irurueta.navigation.frames.FrameType;
 import com.irurueta.navigation.frames.InvalidSourceAndDestinationFrameTypeException;
 import com.irurueta.navigation.frames.NEDFrame;
-import com.irurueta.navigation.inertial.NEDPosition;
+import com.irurueta.navigation.frames.NEDPosition;
 import com.irurueta.statistics.UniformRandomizer;
 import org.junit.Test;
 
@@ -56,6 +56,8 @@ public class FrameToLocalTangentPlaneTransformationConverterTest {
     private static final double MAX_ANGLE_CHANGE_DEGREES = 5.0;
 
     private static final double ABSOLUTE_ERROR = 1e-6;
+
+    private static final int TIMES = 10;
 
     @Test
     public void convert1() throws InvalidSourceAndDestinationFrameTypeException,
@@ -87,26 +89,38 @@ public class FrameToLocalTangentPlaneTransformationConverterTest {
     @Test
     public void convert2() throws InvalidSourceAndDestinationFrameTypeException,
             InvalidRotationMatrixException, RotationException {
-        final FrameToLocalTangentPlaneTransformationConverter converter =
-                new FrameToLocalTangentPlaneTransformationConverter();
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            final FrameToLocalTangentPlaneTransformationConverter converter =
+                    new FrameToLocalTangentPlaneTransformationConverter();
 
-        // create reference and current frame
-        final NEDFrame referenceNedFrame = createFrame();
-        final ECEFFrame referenceEcefFrame = convertFrame(referenceNedFrame);
+            // create reference and current frame
+            final NEDFrame referenceNedFrame = createFrame();
+            final ECEFFrame referenceEcefFrame = convertFrame(referenceNedFrame);
 
-        final double[] translation = createTranslationChange();
-        final Rotation3D rotation = createRotationChange();
+            final double[] translation = createTranslationChange();
+            final Rotation3D rotation = createRotationChange();
 
-        final ECEFFrame currentEcefFrame = transformFrame(
-                referenceEcefFrame, translation, rotation);
+            final ECEFFrame currentEcefFrame = transformFrame(
+                    referenceEcefFrame, translation, rotation);
 
-        // convert
-        final EuclideanTransformation3D result = new EuclideanTransformation3D();
-        converter.convert(currentEcefFrame, referenceEcefFrame, result);
+            // convert
+            final EuclideanTransformation3D result = new EuclideanTransformation3D();
+            try {
+                converter.convert(currentEcefFrame, referenceEcefFrame, result);
+            } catch (final InvalidRotationMatrixException e) {
+                continue;
+            }
 
-        // check
-        assertArrayEquals(translation, result.getTranslation(), ABSOLUTE_ERROR);
-        assertTrue(result.getRotation().equals(rotation, ABSOLUTE_ERROR));
+            // check
+            assertArrayEquals(translation, result.getTranslation(), ABSOLUTE_ERROR);
+            assertTrue(result.getRotation().equals(rotation, ABSOLUTE_ERROR));
+
+            numValid++;
+            break;
+        }
+
+        assertTrue(numValid > 0);
     }
 
     @Test
@@ -218,29 +232,43 @@ public class FrameToLocalTangentPlaneTransformationConverterTest {
     @Test
     public void convert7() throws InvalidSourceAndDestinationFrameTypeException,
             InvalidRotationMatrixException, RotationException {
-        final FrameToLocalTangentPlaneTransformationConverter converter =
-                new FrameToLocalTangentPlaneTransformationConverter();
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            final FrameToLocalTangentPlaneTransformationConverter converter =
+                    new FrameToLocalTangentPlaneTransformationConverter();
 
-        // create reference and current frame
-        final NEDFrame referenceNedFrame = createFrame();
-        final ECEFFrame referenceEcefFrame = convertFrame(referenceNedFrame);
+            // create reference and current frame
+            final NEDFrame referenceNedFrame = createFrame();
+            final ECEFFrame referenceEcefFrame = convertFrame(referenceNedFrame);
 
-        final double[] translation = createTranslationChange();
-        final Rotation3D rotation = createRotationChange();
+            final double[] translation = createTranslationChange();
+            final Rotation3D rotation = createRotationChange();
 
-        final ECEFFrame currentEcefFrame = transformFrame(
-                referenceEcefFrame, translation, rotation);
-        final NEDFrame currentNedFrame = convertFrame(currentEcefFrame);
+            final ECEFFrame currentEcefFrame;
+            try {
+                currentEcefFrame = transformFrame(
+                        referenceEcefFrame, translation, rotation);
+            } catch (final InvalidRotationMatrixException e) {
+                continue;
+            }
 
-        // convert
-        final double[] translationResult = new double[3];
-        final Quaternion rotationResult = new Quaternion();
-        converter.convert(currentNedFrame, referenceNedFrame,
-                translationResult, rotationResult);
+            final NEDFrame currentNedFrame = convertFrame(currentEcefFrame);
 
-        // check
-        assertArrayEquals(translation, translationResult, ABSOLUTE_ERROR);
-        assertTrue(rotationResult.equals(rotation, ABSOLUTE_ERROR));
+            // convert
+            final double[] translationResult = new double[3];
+            final Quaternion rotationResult = new Quaternion();
+            converter.convert(currentNedFrame, referenceNedFrame,
+                    translationResult, rotationResult);
+
+            // check
+            assertArrayEquals(translation, translationResult, ABSOLUTE_ERROR);
+            assertTrue(rotationResult.equals(rotation, ABSOLUTE_ERROR));
+
+            numValid++;
+            break;
+        }
+
+        assertTrue(numValid > 0);
     }
 
     @Test
@@ -350,27 +378,40 @@ public class FrameToLocalTangentPlaneTransformationConverterTest {
     @Test
     public void convertAndReturn4() throws InvalidSourceAndDestinationFrameTypeException,
             InvalidRotationMatrixException, RotationException {
-        final FrameToLocalTangentPlaneTransformationConverter converter =
-                new FrameToLocalTangentPlaneTransformationConverter();
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            final FrameToLocalTangentPlaneTransformationConverter converter =
+                    new FrameToLocalTangentPlaneTransformationConverter();
 
-        // create reference and current frame
-        final NEDFrame referenceNedFrame = createFrame();
-        final ECEFFrame referenceEcefFrame = convertFrame(referenceNedFrame);
+            // create reference and current frame
+            final NEDFrame referenceNedFrame = createFrame();
+            final ECEFFrame referenceEcefFrame = convertFrame(referenceNedFrame);
 
-        final double[] translation = createTranslationChange();
-        final Rotation3D rotation = createRotationChange();
+            final double[] translation = createTranslationChange();
+            final Rotation3D rotation = createRotationChange();
 
-        final ECEFFrame currentEcefFrame = transformFrame(
-                referenceEcefFrame, translation, rotation);
-        final NEDFrame currentNedFrame = convertFrame(currentEcefFrame);
+            final ECEFFrame currentEcefFrame = transformFrame(
+                    referenceEcefFrame, translation, rotation);
+            final NEDFrame currentNedFrame = convertFrame(currentEcefFrame);
 
-        // convert
-        final EuclideanTransformation3D result = converter.convertAndReturn(
-                currentNedFrame, referenceNedFrame);
+            // convert
+            final EuclideanTransformation3D result;
+            try {
+                result = converter.convertAndReturn(
+                        currentNedFrame, referenceNedFrame);
+            } catch (final InvalidRotationMatrixException e) {
+                continue;
+            }
 
-        // check
-        assertArrayEquals(translation, result.getTranslation(), ABSOLUTE_ERROR);
-        assertTrue(result.getRotation().equals(rotation, ABSOLUTE_ERROR));
+            // check
+            assertArrayEquals(translation, result.getTranslation(), ABSOLUTE_ERROR);
+            assertTrue(result.getRotation().equals(rotation, ABSOLUTE_ERROR));
+
+            numValid++;
+            break;
+        }
+
+        assertTrue(numValid > 0);
     }
 
     private NEDFrame createFrame() throws InvalidSourceAndDestinationFrameTypeException {

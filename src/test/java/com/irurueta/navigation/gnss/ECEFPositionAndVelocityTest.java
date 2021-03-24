@@ -17,9 +17,9 @@ package com.irurueta.navigation.gnss;
 
 import com.irurueta.geometry.InhomogeneousPoint3D;
 import com.irurueta.geometry.Point3D;
+import com.irurueta.navigation.frames.ECEFPosition;
+import com.irurueta.navigation.frames.ECEFVelocity;
 import com.irurueta.navigation.geodesic.Constants;
-import com.irurueta.navigation.inertial.ECEFPosition;
-import com.irurueta.navigation.inertial.ECEFVelocity;
 import com.irurueta.statistics.UniformRandomizer;
 import com.irurueta.units.Distance;
 import com.irurueta.units.DistanceUnit;
@@ -916,6 +916,7 @@ public class ECEFPositionAndVelocityTest {
 
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
         assertTrue(positionAndVelocity1.equals((Object)positionAndVelocity1));
+        //noinspection EqualsWithItself
         assertTrue(positionAndVelocity1.equals(positionAndVelocity1));
         assertTrue(positionAndVelocity1.equals(positionAndVelocity2));
         assertFalse(positionAndVelocity1.equals(positionAndVelocity3));

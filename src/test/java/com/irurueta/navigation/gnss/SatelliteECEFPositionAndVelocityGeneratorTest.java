@@ -15,9 +15,9 @@
  */
 package com.irurueta.navigation.gnss;
 
+import com.irurueta.navigation.frames.ECEFPosition;
+import com.irurueta.navigation.frames.ECEFVelocity;
 import com.irurueta.navigation.geodesic.Constants;
-import com.irurueta.navigation.inertial.ECEFPosition;
-import com.irurueta.navigation.inertial.ECEFVelocity;
 import com.irurueta.statistics.UniformRandomizer;
 import org.junit.Test;
 

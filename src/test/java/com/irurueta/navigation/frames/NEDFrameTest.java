@@ -19,8 +19,6 @@ import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.WrongSizeException;
 import com.irurueta.geometry.InvalidRotationMatrixException;
 import com.irurueta.geometry.Quaternion;
-import com.irurueta.navigation.inertial.NEDPosition;
-import com.irurueta.navigation.inertial.NEDVelocity;
 import com.irurueta.statistics.UniformRandomizer;
 import com.irurueta.units.Angle;
 import com.irurueta.units.AngleUnit;
@@ -1776,6 +1774,7 @@ public class NEDFrameTest {
 
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
         assertTrue(frame1.equals((Object) frame1));
+        //noinspection EqualsWithItself
         assertTrue(frame1.equals(frame1));
         assertTrue(frame1.equals(frame2));
         assertFalse(frame1.equals(frame3));

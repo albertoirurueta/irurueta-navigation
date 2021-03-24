@@ -17,8 +17,6 @@ package com.irurueta.navigation.frames;
 
 import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.WrongSizeException;
-import com.irurueta.navigation.inertial.NEDPosition;
-import com.irurueta.navigation.inertial.NEDVelocity;
 import com.irurueta.units.Angle;
 import com.irurueta.units.AngleConverter;
 import com.irurueta.units.AngleUnit;

@@ -17,11 +17,11 @@ package com.irurueta.navigation.gnss;
 
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
+import com.irurueta.navigation.frames.ECEFPosition;
+import com.irurueta.navigation.frames.ECEFVelocity;
+import com.irurueta.navigation.frames.NEDPosition;
+import com.irurueta.navigation.frames.NEDVelocity;
 import com.irurueta.navigation.frames.converters.NEDtoECEFPositionVelocityConverter;
-import com.irurueta.navigation.inertial.ECEFPosition;
-import com.irurueta.navigation.inertial.ECEFVelocity;
-import com.irurueta.navigation.inertial.NEDPosition;
-import com.irurueta.navigation.inertial.NEDVelocity;
 import com.irurueta.statistics.UniformRandomizer;
 import org.junit.Before;
 import org.junit.Test;

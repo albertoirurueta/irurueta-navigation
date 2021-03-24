@@ -15,9 +15,13 @@
  */
 package com.irurueta.navigation.geodesic;
 
-import static org.junit.Assert.assertNotNull;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
-import org.junit.*;
+import static org.junit.Assert.assertNotNull;
 
 public class GeodesicExceptionTest {
 
