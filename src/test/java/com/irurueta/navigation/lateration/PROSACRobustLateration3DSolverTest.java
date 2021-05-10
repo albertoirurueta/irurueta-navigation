@@ -23,17 +23,12 @@ import com.irurueta.navigation.NotReadyException;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
 import com.irurueta.statistics.GaussianRandomizer;
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.Random;
 
 import static org.junit.Assert.*;
 
-@SuppressWarnings("Duplicates")
 public class PROSACRobustLateration3DSolverTest implements
         RobustLaterationSolverListener<Point3D> {
 
@@ -59,25 +54,6 @@ public class PROSACRobustLateration3DSolverTest implements
     private int solveEnd;
     private int solveNextIteration;
     private int solveProgressChange;
-
-    public PROSACRobustLateration3DSolverTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
 
     @Test
     public void testConstructor() {
@@ -733,8 +709,8 @@ public class PROSACRobustLateration3DSolverTest implements
 
 
         // constructor with quality scores
-        final double[] qualityscores = new double[4];
-        solver = new PROSACRobustLateration3DSolver(qualityscores);
+        final double[] qualityScores = new double[4];
+        solver = new PROSACRobustLateration3DSolver(qualityScores);
 
         // check correctness
         assertEquals(solver.getThreshold(),
@@ -769,7 +745,7 @@ public class PROSACRobustLateration3DSolverTest implements
         assertNull(solver.getDistances());
         assertNull(solver.getDistanceStandardDeviations());
         assertFalse(solver.isReady());
-        assertSame(solver.getQualityScores(), qualityscores);
+        assertSame(solver.getQualityScores(), qualityScores);
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
@@ -789,7 +765,7 @@ public class PROSACRobustLateration3DSolverTest implements
 
 
         // constructor with quality scores and listener
-        solver = new PROSACRobustLateration3DSolver(qualityscores, this);
+        solver = new PROSACRobustLateration3DSolver(qualityScores, this);
 
         // check correctness
         assertEquals(solver.getThreshold(),
@@ -824,7 +800,7 @@ public class PROSACRobustLateration3DSolverTest implements
         assertNull(solver.getDistances());
         assertNull(solver.getDistanceStandardDeviations());
         assertFalse(solver.isReady());
-        assertSame(solver.getQualityScores(), qualityscores);
+        assertSame(solver.getQualityScores(), qualityScores);
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
@@ -844,7 +820,7 @@ public class PROSACRobustLateration3DSolverTest implements
 
 
         // constructor with quality scores, positions and distances
-        solver = new PROSACRobustLateration3DSolver(qualityscores,
+        solver = new PROSACRobustLateration3DSolver(qualityScores,
                 positions, distances);
 
         // check correctness
@@ -880,7 +856,7 @@ public class PROSACRobustLateration3DSolverTest implements
         assertSame(solver.getDistances(), distances);
         assertNull(solver.getDistanceStandardDeviations());
         assertTrue(solver.isReady());
-        assertSame(solver.getQualityScores(), qualityscores);
+        assertSame(solver.getQualityScores(), qualityScores);
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
@@ -895,19 +871,19 @@ public class PROSACRobustLateration3DSolverTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROSACRobustLateration3DSolver(qualityscores,
+            solver = new PROSACRobustLateration3DSolver(qualityScores,
                     (Point3D[]) null, distances);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROSACRobustLateration3DSolver(qualityscores,
+            solver = new PROSACRobustLateration3DSolver(qualityScores,
                     positions, null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROSACRobustLateration3DSolver(qualityscores,
+            solver = new PROSACRobustLateration3DSolver(qualityScores,
                     positions, wrong);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -919,7 +895,7 @@ public class PROSACRobustLateration3DSolverTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROSACRobustLateration3DSolver(qualityscores,
+            solver = new PROSACRobustLateration3DSolver(qualityScores,
                     shortPositions, shortDistances);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -928,7 +904,7 @@ public class PROSACRobustLateration3DSolverTest implements
 
 
         // constructor with quality scores, positions and distances
-        solver = new PROSACRobustLateration3DSolver(qualityscores,
+        solver = new PROSACRobustLateration3DSolver(qualityScores,
                 positions, distances, standardDeviations);
 
         // check correctness
@@ -965,7 +941,7 @@ public class PROSACRobustLateration3DSolverTest implements
         assertSame(solver.getDistanceStandardDeviations(),
                 standardDeviations);
         assertTrue(solver.isReady());
-        assertSame(solver.getQualityScores(), qualityscores);
+        assertSame(solver.getQualityScores(), qualityScores);
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
@@ -978,31 +954,31 @@ public class PROSACRobustLateration3DSolverTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROSACRobustLateration3DSolver(qualityscores,
+            solver = new PROSACRobustLateration3DSolver(qualityScores,
                     null, distances, standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROSACRobustLateration3DSolver(qualityscores,
+            solver = new PROSACRobustLateration3DSolver(qualityScores,
                     positions, null, standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROSACRobustLateration3DSolver(qualityscores,
+            solver = new PROSACRobustLateration3DSolver(qualityScores,
                     positions, distances, (double[]) null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROSACRobustLateration3DSolver(qualityscores,
+            solver = new PROSACRobustLateration3DSolver(qualityScores,
                     positions, wrong, standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROSACRobustLateration3DSolver(qualityscores,
+            solver = new PROSACRobustLateration3DSolver(qualityScores,
                     positions, distances, wrong);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -1015,7 +991,7 @@ public class PROSACRobustLateration3DSolverTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROSACRobustLateration3DSolver(qualityscores,
+            solver = new PROSACRobustLateration3DSolver(qualityScores,
                     shortPositions, shortDistances, standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -1025,7 +1001,7 @@ public class PROSACRobustLateration3DSolverTest implements
 
         // constructor with quality scores, positions, distances,
         // standard deviations and listener
-        solver = new PROSACRobustLateration3DSolver(qualityscores,
+        solver = new PROSACRobustLateration3DSolver(qualityScores,
                 positions, distances, standardDeviations, this);
 
         // check correctness
@@ -1062,7 +1038,7 @@ public class PROSACRobustLateration3DSolverTest implements
         assertSame(solver.getDistanceStandardDeviations(),
                 standardDeviations);
         assertTrue(solver.isReady());
-        assertSame(solver.getQualityScores(), qualityscores);
+        assertSame(solver.getQualityScores(), qualityScores);
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
@@ -1075,35 +1051,35 @@ public class PROSACRobustLateration3DSolverTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROSACRobustLateration3DSolver(qualityscores,
+            solver = new PROSACRobustLateration3DSolver(qualityScores,
                     null, distances, standardDeviations,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROSACRobustLateration3DSolver(qualityscores,
+            solver = new PROSACRobustLateration3DSolver(qualityScores,
                     positions, null, standardDeviations,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROSACRobustLateration3DSolver(qualityscores,
+            solver = new PROSACRobustLateration3DSolver(qualityScores,
                     positions, distances, null,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROSACRobustLateration3DSolver(qualityscores,
+            solver = new PROSACRobustLateration3DSolver(qualityScores,
                     positions, wrong, standardDeviations,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROSACRobustLateration3DSolver(qualityscores,
+            solver = new PROSACRobustLateration3DSolver(qualityScores,
                     positions, distances, wrong, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -1116,7 +1092,7 @@ public class PROSACRobustLateration3DSolverTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROSACRobustLateration3DSolver(qualityscores,
+            solver = new PROSACRobustLateration3DSolver(qualityScores,
                     shortPositions, shortDistances, standardDeviations,
                     this);
             fail("IllegalArgumentException expected but not thrown");
@@ -1127,7 +1103,7 @@ public class PROSACRobustLateration3DSolverTest implements
 
         // constructor with quality scores, positions, distances
         // and listener
-        solver = new PROSACRobustLateration3DSolver(qualityscores,
+        solver = new PROSACRobustLateration3DSolver(qualityScores,
                 positions, distances, this);
 
         // check correctness
@@ -1163,7 +1139,7 @@ public class PROSACRobustLateration3DSolverTest implements
         assertSame(solver.getDistances(), distances);
         assertNull(solver.getDistanceStandardDeviations());
         assertTrue(solver.isReady());
-        assertSame(solver.getQualityScores(), qualityscores);
+        assertSame(solver.getQualityScores(), qualityScores);
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
@@ -1176,19 +1152,19 @@ public class PROSACRobustLateration3DSolverTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROSACRobustLateration3DSolver(qualityscores,
+            solver = new PROSACRobustLateration3DSolver(qualityScores,
                     (Point3D[]) null, distances, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROSACRobustLateration3DSolver(qualityscores,
+            solver = new PROSACRobustLateration3DSolver(qualityScores,
                     positions, null, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROSACRobustLateration3DSolver(qualityscores,
+            solver = new PROSACRobustLateration3DSolver(qualityScores,
                     positions, wrong, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -1201,7 +1177,7 @@ public class PROSACRobustLateration3DSolverTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROSACRobustLateration3DSolver(qualityscores,
+            solver = new PROSACRobustLateration3DSolver(qualityScores,
                     shortPositions, shortDistances, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -1210,7 +1186,7 @@ public class PROSACRobustLateration3DSolverTest implements
 
 
         // constructor with quality scores and spheres
-        solver = new PROSACRobustLateration3DSolver(qualityscores,
+        solver = new PROSACRobustLateration3DSolver(qualityScores,
                 spheres);
 
         // check correctness
@@ -1246,7 +1222,7 @@ public class PROSACRobustLateration3DSolverTest implements
         assertNotNull(solver.getDistances());
         assertNull(solver.getDistanceStandardDeviations());
         assertTrue(solver.isReady());
-        assertSame(solver.getQualityScores(), qualityscores);
+        assertSame(solver.getQualityScores(), qualityScores);
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
@@ -1259,7 +1235,7 @@ public class PROSACRobustLateration3DSolverTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROSACRobustLateration3DSolver(qualityscores,
+            solver = new PROSACRobustLateration3DSolver(qualityScores,
                     (Sphere[]) null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -1271,7 +1247,7 @@ public class PROSACRobustLateration3DSolverTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROSACRobustLateration3DSolver(qualityscores,
+            solver = new PROSACRobustLateration3DSolver(qualityScores,
                     shortSpheres);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -1280,7 +1256,7 @@ public class PROSACRobustLateration3DSolverTest implements
 
 
         // constructor with quality scores, circles and standard deviations
-        solver = new PROSACRobustLateration3DSolver(qualityscores,
+        solver = new PROSACRobustLateration3DSolver(qualityScores,
                 spheres, standardDeviations);
 
         // check correctness
@@ -1317,7 +1293,7 @@ public class PROSACRobustLateration3DSolverTest implements
         assertSame(solver.getDistanceStandardDeviations(),
                 standardDeviations);
         assertTrue(solver.isReady());
-        assertSame(solver.getQualityScores(), qualityscores);
+        assertSame(solver.getQualityScores(), qualityScores);
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
@@ -1330,13 +1306,13 @@ public class PROSACRobustLateration3DSolverTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROSACRobustLateration3DSolver(qualityscores,
+            solver = new PROSACRobustLateration3DSolver(qualityScores,
                     (Sphere[]) null, standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROSACRobustLateration3DSolver(qualityscores,
+            solver = new PROSACRobustLateration3DSolver(qualityScores,
                     spheres, (double[]) null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -1348,13 +1324,13 @@ public class PROSACRobustLateration3DSolverTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROSACRobustLateration3DSolver(qualityscores,
+            solver = new PROSACRobustLateration3DSolver(qualityScores,
                     shortSpheres, standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROSACRobustLateration3DSolver(qualityscores,
+            solver = new PROSACRobustLateration3DSolver(qualityScores,
                     spheres, wrong);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -1363,7 +1339,7 @@ public class PROSACRobustLateration3DSolverTest implements
 
 
         // constructor with quality scores, circles and listener
-        solver = new PROSACRobustLateration3DSolver(qualityscores,
+        solver = new PROSACRobustLateration3DSolver(qualityScores,
                 spheres, this);
 
         // check correctness
@@ -1399,7 +1375,7 @@ public class PROSACRobustLateration3DSolverTest implements
         assertNotNull(solver.getDistances());
         assertNull(solver.getDistanceStandardDeviations());
         assertTrue(solver.isReady());
-        assertSame(solver.getQualityScores(), qualityscores);
+        assertSame(solver.getQualityScores(), qualityScores);
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
@@ -1412,7 +1388,7 @@ public class PROSACRobustLateration3DSolverTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROSACRobustLateration3DSolver(qualityscores,
+            solver = new PROSACRobustLateration3DSolver(qualityScores,
                     null, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -1424,7 +1400,7 @@ public class PROSACRobustLateration3DSolverTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROSACRobustLateration3DSolver(qualityscores,
+            solver = new PROSACRobustLateration3DSolver(qualityScores,
                     shortSpheres, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -1434,7 +1410,7 @@ public class PROSACRobustLateration3DSolverTest implements
 
         // constructor with quality scores, spheres, standard deviations
         // and listener
-        solver = new PROSACRobustLateration3DSolver(qualityscores,
+        solver = new PROSACRobustLateration3DSolver(qualityScores,
                 spheres, standardDeviations, this);
 
         // check correctness
@@ -1471,7 +1447,7 @@ public class PROSACRobustLateration3DSolverTest implements
         assertSame(solver.getDistanceStandardDeviations(),
                 standardDeviations);
         assertTrue(solver.isReady());
-        assertSame(solver.getQualityScores(), qualityscores);
+        assertSame(solver.getQualityScores(), qualityScores);
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
@@ -1484,13 +1460,13 @@ public class PROSACRobustLateration3DSolverTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROSACRobustLateration3DSolver(qualityscores,
+            solver = new PROSACRobustLateration3DSolver(qualityScores,
                     (Sphere[]) null, standardDeviations, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROSACRobustLateration3DSolver(qualityscores,
+            solver = new PROSACRobustLateration3DSolver(qualityScores,
                     spheres, null, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -1502,13 +1478,13 @@ public class PROSACRobustLateration3DSolverTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROSACRobustLateration3DSolver(qualityscores,
+            solver = new PROSACRobustLateration3DSolver(qualityScores,
                     shortSpheres, standardDeviations, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROSACRobustLateration3DSolver(qualityscores,
+            solver = new PROSACRobustLateration3DSolver(qualityScores,
                     spheres, wrong, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {

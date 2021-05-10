@@ -354,7 +354,7 @@ public class GNSSEstimationTest {
 
         estimation.setVz(vz);
 
-        // chekc
+        // check
         assertEquals(estimation.getVz(), vz, 0.0);
     }
 
@@ -601,8 +601,8 @@ public class GNSSEstimationTest {
         assertEquals(speedZ1.getUnit(), SpeedUnit.METERS_PER_SECOND);
 
         // set new value
-        final UniformRandomizer randomizser = new UniformRandomizer(new Random());
-        final double vz = randomizser.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
         final Speed speedZ2 = new Speed(vz, SpeedUnit.METERS_PER_SECOND);
 
@@ -693,7 +693,7 @@ public class GNSSEstimationTest {
         assertEquals(clockDrift1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(clockDrift1.getUnit(), SpeedUnit.METERS_PER_SECOND);
 
-        // set new vlaue
+        // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT,
                 MAX_CLOCK_DRIFT);
@@ -1110,6 +1110,7 @@ public class GNSSEstimationTest {
 
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
         assertTrue(estimation1.equals((Object) estimation1));
+        //noinspection EqualsWithItself
         assertTrue(estimation1.equals(estimation1));
         assertTrue(estimation1.equals(estimation2));
         assertFalse(estimation1.equals(estimation3));

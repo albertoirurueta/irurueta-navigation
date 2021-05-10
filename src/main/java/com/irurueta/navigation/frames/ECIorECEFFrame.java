@@ -32,7 +32,6 @@ import java.util.Objects;
 /**
  * Base class for ECI or ECEF frames containing common logic and data for such frames.
  */
-@SuppressWarnings("WeakerAccess")
 public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Frame, Serializable, Cloneable {
 
     /**
@@ -52,7 +51,7 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
     double mX;
 
     /**
-     * Catesian y coordinate of body position expressed in meters (m) with respect ECI or ECEF frame, resolved along
+     * Cartesian y coordinate of body position expressed in meters (m) with respect ECI or ECEF frame, resolved along
      * the corresponding frame axes.
      */
     double mY;
@@ -89,7 +88,8 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
     /**
      * Constructor.
      */
-    ECIorECEFFrame() { }
+    ECIorECEFFrame() {
+    }
 
     /**
      * Constructor.

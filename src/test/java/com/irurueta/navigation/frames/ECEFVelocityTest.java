@@ -410,6 +410,7 @@ public class ECEFVelocityTest {
 
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
         assertTrue(velocity1.equals((Object) velocity1));
+        //noinspection EqualsWithItself
         assertTrue(velocity1.equals(velocity1));
         assertTrue(velocity1.equals(velocity2));
         assertFalse(velocity1.equals(velocity3));

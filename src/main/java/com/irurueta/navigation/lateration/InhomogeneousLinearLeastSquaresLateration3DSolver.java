@@ -23,7 +23,7 @@ import com.irurueta.navigation.LockedException;
 /**
  * Linearly solves the lateration problem.
  */
-@SuppressWarnings({"WeakerAccess", "Duplicates"})
+@SuppressWarnings("DuplicatedCode")
 public class InhomogeneousLinearLeastSquaresLateration3DSolver extends
         InhomogeneousLinearLeastSquaresLaterationSolver<Point3D> {
 

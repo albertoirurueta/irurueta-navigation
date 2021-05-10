@@ -25,7 +25,6 @@ import com.irurueta.navigation.NotReadyException;
 /**
  * Linearly solves the lateration problem using an homogeneous LMSE solution.
  */
-@SuppressWarnings("WeakerAccess")
 public abstract class HomogeneousLinearLeastSquaresLaterationSolver<P extends Point<?>> extends
         LaterationSolver<P> {
 
@@ -82,7 +81,6 @@ public abstract class HomogeneousLinearLeastSquaresLaterationSolver<P extends Po
      * @throws LockedException     if instance is busy solving the lateration problem.
      */
     @Override
-    @SuppressWarnings("Duplicates")
     public void solve() throws LaterationException, NotReadyException,
             LockedException {
         // The implementation on this method follows the algorithm  bellow.
@@ -125,7 +123,7 @@ public abstract class HomogeneousLinearLeastSquaresLaterationSolver<P extends Po
         // 2*(c1x - c2x)*x'/w' + 2*(c1y - c2y)*y'/w' = r2^2 - r1^2 + c1x^2 + c1y^2 - c2x^2 - c2y^2
         // 2*(c1x - c3x)*x'/w' + 2*(c1y - c3y)*y'/w' = r3^2 - r1^2 + c1x^2 + c1y^2 - c3x^2 - c3y^2
 
-        // Multiplitying by w' at both sides...
+        // Multiplying by w' at both sides...
         // 2*(c1x - c2x)*x' + 2*(c1y - c2y)*y' = (r2^2 - r1^2 + c1x^2 + c1y^2 - c2x^2 - c2y^2)*w'
         // 2*(c1x - c3x)*x' + 2*(c1y - c3y)*y' = (r3^2 - r1^2 + c1x^2 + c1y^2 - c3x^2 - c3y^2)*w'
 
@@ -198,7 +196,7 @@ public abstract class HomogeneousLinearLeastSquaresLaterationSolver<P extends Po
         // 2*(c1x - c3x)*x'/w' + 2*(c1y - c3y)*y'/w' + 2*(c1z - c3z)*z'/w' = r3^2 - r1^2 + c1x^2 + c1y^2 + c1z^2 - c3x^2 - c3y^3 - c3z^2
         // 2*(c1x - c4x)*x'/w' + 2*(c1y - c4y)*y'/w' + 2*(c1z - c4z)*z'/w' = r4^2 - r1^2 + c1x^2 + c1y^2 + c1z^2 - c4x^2 - c4y^2 - c4z^2
 
-        // Multipliying by w' at both sides...
+        // Multiplying by w' at both sides...
         // 2*(c1x - c2x)*x' + 2*(c1y - c2y)*y' + 2*(c1z - c2z)*z' = (r2^2 - r1^2 + c1x^2 + c1y^2 + c1z^2 - c2x^2 - c2y^2 - c2z^2)*w'
         // 2*(c1x - c3x)*x' + 2*(c1y - c3y)*y' + 2*(c1z - c3z)*z' = (r3^2 - r1^2 + c1x^2 + c1y^2 + c1z^2 - c3x^2 - c3y^3 - c3z^2)*w'
         // 2*(c1x - c4x)*x' + 2*(c1y - c4y)*y' + 2*(c1z - c4z)*z' = (r4^2 - r1^2 + c1x^2 + c1y^2 + c1z^2 - c4x^2 - c4y^2 - c4z^2)*w'
@@ -213,7 +211,7 @@ public abstract class HomogeneousLinearLeastSquaresLaterationSolver<P extends Po
         // 2*(c1x - c3x)*x' + 2*(c1y - c3y)*y' + 2*(c1z - c3z)*z' + (r1^2 - r3^2 + c3x^2 + c3y^3 + c3z^2 - c1x^2 - c1y^2 - c1z^2)*w' = 0
         // 2*(c1x - c4x)*x' + 2*(c1y - c4y)*y' + 2*(c1z - c4z)*z' + (r1^2 - r4^2 + c4x^2 + c4y^2 + c4z^2 - c1x^2 - c1y^2 - c1z^2)*w' = 0
 
-        // The homogeneous equastions can be expressed as a linear system of homogeneous equations
+        // The homogeneous equations can be expressed as a linear system of homogeneous equations
         // where the unknowns to be solved are (x', y', z', w') up to scale.
 
         // [2*(c1x - c2x)   2*(c1y - c2y)   2*(c1z - c2z)   r1^2 - r2^2 + c2x^2 + c2y^2 + c2z^2 - c1x^2 - c1y^2 - c1z^2][x'] = 0
@@ -272,10 +270,10 @@ public abstract class HomogeneousLinearLeastSquaresLaterationSolver<P extends Po
                         sqrNorm - sqrRefNorm);
             }
 
-            final SingularValueDecomposer decomponer = new SingularValueDecomposer(a);
-            decomponer.decompose();
+            final SingularValueDecomposer decomposer = new SingularValueDecomposer(a);
+            decomposer.decompose();
 
-            final int nullity = decomponer.getNullity();
+            final int nullity = decomposer.getNullity();
             if (nullity > 1) {
                 // linear system of equations is degenerate (does not have enough rank),
                 // probably because there are dependencies or repeated data between
@@ -283,7 +281,7 @@ public abstract class HomogeneousLinearLeastSquaresLaterationSolver<P extends Po
                 throw new LaterationException();
             }
 
-            final Matrix v = decomponer.getV();
+            final Matrix v = decomposer.getV();
             final double[] homogeneousEstimatedPositionCoordinates = v.getSubmatrixAsArray(
                     0, dims, dims, dims);
 

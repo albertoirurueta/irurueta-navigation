@@ -24,7 +24,6 @@ import com.irurueta.geometry.InvalidRotationMatrixException;
  * Contains methods to convert covariance matrices into ellipses representing accuracy with
  * requested confidence.
  */
-@SuppressWarnings("WeakerAccess")
 public class Accuracy2D extends Accuracy<com.irurueta.geometry.Accuracy2D> {
 
     /**
@@ -55,7 +54,7 @@ public class Accuracy2D extends Accuracy<com.irurueta.geometry.Accuracy2D> {
      * @param confidence confidence of provided accuracy of an estimated position.
      * @throws IllegalArgumentException if provided value is not within 0 and 1.
      */
-    public Accuracy2D(double confidence) {
+    public Accuracy2D(final double confidence) {
         mInternalAccuracy = new com.irurueta.geometry.Accuracy2D(confidence);
     }
 

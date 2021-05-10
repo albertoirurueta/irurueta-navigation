@@ -18,7 +18,6 @@ package com.irurueta.navigation.geodesic;
 /**
  * A container for the results from PolygonArea.
  */
-@SuppressWarnings("WeakerAccess")
 public class PolygonResult {
 
     /**
@@ -43,7 +42,6 @@ public class PolygonResult {
      * @param perimeter the perimeter of the polygon or the length of the polyline (meters).
      * @param area      the area of the polygon (meters<sup>2</sup>).
      */
-    @SuppressWarnings("WeakerAccess")
     public PolygonResult(final int num, final double perimeter, final double area) {
         this.num = num;
         this.perimeter = perimeter;

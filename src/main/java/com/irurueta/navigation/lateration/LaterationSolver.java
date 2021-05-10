@@ -69,7 +69,7 @@ public abstract class LaterationSolver<P extends Point<?>> {
      * Constructor.
      * Sets known positions and euclidean distances.
      *
-     * @param positions known positios of static nodes.
+     * @param positions known positions of static nodes.
      * @param distances euclidean distances from static nodes to mobile node.
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      *                                  length is smaller than required (3 for 2D points or 4 for 3D points).
@@ -91,7 +91,7 @@ public abstract class LaterationSolver<P extends Point<?>> {
      * Constructor.
      * Sets known positions and euclidean distances.
      *
-     * @param positions known positios of static nodes.
+     * @param positions known positions of static nodes.
      * @param distances euclidean distances from static nodes to mobile node.
      * @param listener  listener to be notified of events raised by this instance.
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
@@ -169,7 +169,7 @@ public abstract class LaterationSolver<P extends Point<?>> {
      * Sets known positions and euclidean distances.
      * If any distance value is zero or negative, it will be fixed assuming an EPSILON value.
      *
-     * @param positions known positios of static nodes.
+     * @param positions known positions of static nodes.
      * @param distances euclidean distances from static nodes to mobile node.
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      *                                  length is smaller than required (2 points).
@@ -249,7 +249,7 @@ public abstract class LaterationSolver<P extends Point<?>> {
      * Internally sets known positions and euclidean distances.
      * If any distance value is zero or negative, it will be fixed assuming an EPSILON value.
      *
-     * @param positions known positios of static nodes.
+     * @param positions known positions of static nodes.
      * @param distances euclidean distances from static nodes to mobile node.
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      *                                  length is smaller than required (2 points).
@@ -271,7 +271,7 @@ public abstract class LaterationSolver<P extends Point<?>> {
         mPositions = positions;
         mDistances = distances;
 
-        //fix distances if needed
+        // fix distances if needed
         for (int i = 0; i < mDistances.length; i++) {
             if (mDistances[i] < EPSILON) {
                 mDistances[i] = EPSILON;

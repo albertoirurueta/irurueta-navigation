@@ -29,7 +29,6 @@ import java.util.Objects;
  * Contains GNSS Kalman filter configuration parameters (usually obtained through calibration) to
  * determine the system noise covariance matrix.
  */
-@SuppressWarnings("WeakerAccess")
 public class GNSSKalmanConfig implements Serializable, Cloneable {
 
     /**
@@ -640,7 +639,7 @@ public class GNSSKalmanConfig implements Serializable, Cloneable {
      * @return true if both objects are considered to be equal, false otherwise.
      */
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (obj == this) {
             return true;
         }

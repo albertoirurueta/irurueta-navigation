@@ -29,7 +29,7 @@ import java.util.Random;
 /**
  * Generates the GNSS range errors due to signal in space, ionosphere and troposphere
  * errors based on the elevation angles.
- * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multisensor
+ * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multi-sensor
  * Integrated Navigation Systems, Second Edition" and on the companion software available at:
  * https://github.com/ymjdz/MATLAB-Codes/blob/master/Initialize_GNSS_biases.m
  */
@@ -152,6 +152,7 @@ public class GNSSBiasesGenerator {
      * @param random            random number generator.
      * @return generated bias provided satellite position.
      */
+    @SuppressWarnings("DuplicatedCode")
     private static double generate(final ECEFPosition satellitePosition, final ECEFPosition userPosition,
                                    final GNSSConfig config, final Matrix cen, final Random random) {
 

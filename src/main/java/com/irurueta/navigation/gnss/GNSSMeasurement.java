@@ -32,7 +32,6 @@ import java.util.Objects;
 /**
  * Contains GNSS measurement data of a satellite.
  */
-@SuppressWarnings("WeakerAccess")
 public class GNSSMeasurement implements Serializable, Cloneable {
 
     /**
@@ -255,7 +254,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      *
      * @param pseudoRange pseudo-range measurement.
      */
-    public void setPseudoRangeDistance(Distance pseudoRange) {
+    public void setPseudoRangeDistance(final Distance pseudoRange) {
         mPseudoRange = DistanceConverter.convert(pseudoRange.getValue().doubleValue(),
                 pseudoRange.getUnit(), DistanceUnit.METER);
     }
@@ -482,7 +481,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      *
      * @param result instance where satellite ECEF position will be stored.
      */
-    public void getPosition(Point3D result) {
+    public void getPosition(final Point3D result) {
         result.setInhomogeneousCoordinates(mX, mY, mZ);
     }
 
@@ -772,7 +771,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      *
      * @param output destination instance where data will be copied to.
      */
-    public void copyTo(GNSSMeasurement output) {
+    public void copyTo(final GNSSMeasurement output) {
         output.mPseudoRange = mPseudoRange;
         output.mPseudoRate = mPseudoRate;
 

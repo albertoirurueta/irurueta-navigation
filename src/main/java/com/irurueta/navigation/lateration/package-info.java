@@ -15,6 +15,6 @@
  */
 
 /**
- * Contains classes to estimate positions when intersecting cirles or spheres by using the lateration algorithm.
+ * Contains classes to estimate positions when intersecting circles or spheres by using the lateration algorithm.
  */
 package com.irurueta.navigation.lateration;

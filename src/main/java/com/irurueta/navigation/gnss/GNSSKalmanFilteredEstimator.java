@@ -30,7 +30,7 @@ import java.util.List;
  * Calculates position, velocity, clock offset and clock drift using an
  * unweighted iterated least squares estimator along with a Kalman filter
  * to smooth results.
- * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multisensor
+ * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multi-sensor
  * Integrated Navigation Systems, Second Edition" and on the companion software available at:
  * https://github.com/ymjdz/MATLAB-Codes/blob/master/GNSS_Kalman_Filter.m
  */
@@ -402,7 +402,7 @@ public class GNSSKalmanFilteredEstimator {
         }
 
         final List<GNSSMeasurement> result = new ArrayList<>();
-        for (GNSSMeasurement measurement : mMeasurements) {
+        for (final GNSSMeasurement measurement : mMeasurements) {
             result.add(new GNSSMeasurement(measurement));
         }
         return result;
@@ -476,7 +476,7 @@ public class GNSSKalmanFilteredEstimator {
     }
 
     /**
-     * Gets timestamp since epoch time when Kalman filter state was last propageted.
+     * Gets timestamp since epoch time when Kalman filter state was last propagated.
      *
      * @param result instance where timestamp since epoch time when Kalman filter
      *               state was last propagated will be stored.

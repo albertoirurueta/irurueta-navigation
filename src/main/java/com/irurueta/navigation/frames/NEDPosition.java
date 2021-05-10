@@ -28,7 +28,6 @@ import java.util.Objects;
 /**
  * Contains body curvilinear position with respect Earth, expressed in latitude, longitude and height.
  */
-@SuppressWarnings("WeakerAccess")
 public class NEDPosition implements Serializable, Cloneable {
 
     /**

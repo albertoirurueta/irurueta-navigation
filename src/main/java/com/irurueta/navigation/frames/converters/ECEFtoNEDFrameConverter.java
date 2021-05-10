@@ -27,11 +27,10 @@ import com.irurueta.navigation.geodesic.Constants;
 
 /**
  * Converts from ECEF frame to NED frame.
- * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multisensor
+ * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multi-sensor
  * Integrated Navigation Systems, Second Edition" and on the companion software available at:
  * https://github.com/ymjdz/MATLAB-Codes/blob/master/ECEF_to_NED.m
  */
-@SuppressWarnings("WeakerAccess")
 public class ECEFtoNEDFrameConverter implements FrameConverter<ECEFFrame, NEDFrame> {
 
     /**
@@ -106,6 +105,7 @@ public class ECEFtoNEDFrameConverter implements FrameConverter<ECEFFrame, NEDFra
      * @param source      source frame to convert from.
      * @param destination destination frame instance to convert to.
      */
+    @SuppressWarnings("DuplicatedCode")
     public static void convertECEFtoNED(final ECEFFrame source, final NEDFrame destination) {
         final double x = source.getX();
         final double y = source.getY();
@@ -140,9 +140,9 @@ public class ECEFtoNEDFrameConverter implements FrameConverter<ECEFFrame, NEDFra
         final double d = p3 + q2;
 
         // From (C.34)
-        final double srqtD = Math.sqrt(d);
+        final double sqrtD = Math.sqrt(d);
         final double exp = 1.0 / 3.0;
-        final double v = Math.pow(srqtD - q, exp) - Math.pow(srqtD + q, exp);
+        final double v = Math.pow(sqrtD - q, exp) - Math.pow(sqrtD + q, exp);
 
         // From (C.35)
         final double g = 0.5 * (Math.sqrt(e2 + v) + e);
@@ -196,7 +196,7 @@ public class ECEFtoNEDFrameConverter implements FrameConverter<ECEFFrame, NEDFra
 
             destination.setCoordinateTransformation(c);
 
-        } catch (WrongSizeException | InvalidRotationMatrixException
+        } catch (final WrongSizeException | InvalidRotationMatrixException
                 | InvalidSourceAndDestinationFrameTypeException ignore) {
             // never happens
         }

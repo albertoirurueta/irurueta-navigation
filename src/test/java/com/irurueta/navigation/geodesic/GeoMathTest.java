@@ -18,10 +18,6 @@ package com.irurueta.navigation.geodesic;
 import com.irurueta.algebra.ArrayUtils;
 import com.irurueta.numerical.polynomials.Polynomial;
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.Random;
@@ -37,25 +33,6 @@ public class GeoMathTest {
     private static final double MAX_DEGREES = 360.0;
 
     private static final double ABSOLUTE_ERROR = 1e-9;
-
-    public GeoMathTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
 
     @Test
     public void testSq() {

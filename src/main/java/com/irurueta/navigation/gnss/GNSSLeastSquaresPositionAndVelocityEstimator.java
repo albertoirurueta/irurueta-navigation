@@ -36,14 +36,14 @@ import java.util.Collection;
  * unweighted iterated least squares.
  * Separate calculations are implemented for position and clock offset and
  * for velocity and clock drift.
- * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multisensor
+ * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multi-sensor
  * Integrated Navigation Systems, Second Edition" and on the companion software available at:
  * https://github.com/ymjdz/MATLAB-Codes/blob/master/GNSS_LS_position_velocity.m
  */
 public class GNSSLeastSquaresPositionAndVelocityEstimator {
 
     /**
-     * Minimum nuber of measurements required to obtain a solution.
+     * Minimum number of measurements required to obtain a solution.
      */
     public static final int MIN_MEASUREMENTS = 4;
 
@@ -567,6 +567,7 @@ public class GNSSLeastSquaresPositionAndVelocityEstimator {
      * @throws LockedException   if estimator is already running.
      * @throws GNSSException     if estimation fails due to numerical instabilities.
      */
+    @SuppressWarnings("DuplicatedCode")
     public void estimate(final GNSSEstimation result)
             throws NotReadyException, LockedException, GNSSException {
         if (!isReady()) {
@@ -845,7 +846,7 @@ public class GNSSLeastSquaresPositionAndVelocityEstimator {
 
     /**
      * Initializes prior position and velocity if not set, assuming that
-     * user is located at the average latitude,longitud of all provided
+     * user is located at the average latitude, longitude of all provided
      * satellite measurements, at Earth's surface (height = 0) and with zero velocity.
      */
     private void initializePriorPositionAndVelocityIfNeeded() {

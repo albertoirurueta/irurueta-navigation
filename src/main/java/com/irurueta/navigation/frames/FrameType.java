@@ -71,7 +71,7 @@ public enum FrameType {
      * Has a fixed origin with respect to the Earth, usually a point on the surface.
      * Like the local navigation frame, its z-axis is aligned with the vertical (pointing either up or
      * down). Its x- and y-axes may also be aligned with the topographic directions (i.e., north and east),
-     * in which case it may be kown as a local geodecit frame or topocentric frame. However,
+     * in which case it may be known as a local geodecit frame or topocentric frame. However,
      * the x- and y-axes may be also aligned with an environmental feature, such as a road or building.
      * As with the other frames, the axes form a right-handed orthogonal set.
      * This frame is Earth-fixed, but not Earth-centered.

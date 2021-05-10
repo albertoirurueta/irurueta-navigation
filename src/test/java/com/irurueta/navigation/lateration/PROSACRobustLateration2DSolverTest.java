@@ -23,17 +23,12 @@ import com.irurueta.navigation.NotReadyException;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
 import com.irurueta.statistics.GaussianRandomizer;
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.Random;
 
 import static org.junit.Assert.*;
 
-@SuppressWarnings("Duplicates")
 public class PROSACRobustLateration2DSolverTest implements
         RobustLaterationSolverListener<Point2D> {
 
@@ -60,27 +55,7 @@ public class PROSACRobustLateration2DSolverTest implements
     private int solveNextIteration;
     private int solveProgressChange;
 
-    public PROSACRobustLateration2DSolverTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
-
     @Test
-    @SuppressWarnings("all")
     public void testConstructor() {
         // empty constructor
         PROSACRobustLateration2DSolver solver = new PROSACRobustLateration2DSolver();

@@ -23,17 +23,12 @@ import com.irurueta.navigation.NotReadyException;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
 import com.irurueta.statistics.GaussianRandomizer;
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.Random;
 
 import static org.junit.Assert.*;
 
-@SuppressWarnings("Duplicates")
 public class PROMedSRobustLateration2DSolverTest implements
         RobustLaterationSolverListener<Point2D> {
 
@@ -59,25 +54,6 @@ public class PROMedSRobustLateration2DSolverTest implements
     private int solveEnd;
     private int solveNextIteration;
     private int solveProgressChange;
-
-    public PROMedSRobustLateration2DSolverTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
 
     @Test
     public void testConstructor() {
@@ -691,8 +667,8 @@ public class PROMedSRobustLateration2DSolverTest implements
 
 
         // constructor with quality scores
-        final double[] qualityscores = new double[3];
-        solver = new PROMedSRobustLateration2DSolver(qualityscores);
+        final double[] qualityScores = new double[3];
+        solver = new PROMedSRobustLateration2DSolver(qualityScores);
 
         // check correctness
         assertEquals(solver.getStopThreshold(),
@@ -723,7 +699,7 @@ public class PROMedSRobustLateration2DSolverTest implements
         assertNull(solver.getDistances());
         assertNull(solver.getDistanceStandardDeviations());
         assertFalse(solver.isReady());
-        assertSame(solver.getQualityScores(), qualityscores);
+        assertSame(solver.getQualityScores(), qualityScores);
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
@@ -743,7 +719,7 @@ public class PROMedSRobustLateration2DSolverTest implements
 
 
         // constructor with quality scores and listener
-        solver = new PROMedSRobustLateration2DSolver(qualityscores, this);
+        solver = new PROMedSRobustLateration2DSolver(qualityScores, this);
 
         // check correctness
         assertEquals(solver.getStopThreshold(),
@@ -774,7 +750,7 @@ public class PROMedSRobustLateration2DSolverTest implements
         assertNull(solver.getDistances());
         assertNull(solver.getDistanceStandardDeviations());
         assertFalse(solver.isReady());
-        assertSame(solver.getQualityScores(), qualityscores);
+        assertSame(solver.getQualityScores(), qualityScores);
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
@@ -794,7 +770,7 @@ public class PROMedSRobustLateration2DSolverTest implements
 
 
         // constructor with quality scores, positions and distances
-        solver = new PROMedSRobustLateration2DSolver(qualityscores,
+        solver = new PROMedSRobustLateration2DSolver(qualityScores,
                 positions, distances);
 
         // check correctness
@@ -826,7 +802,7 @@ public class PROMedSRobustLateration2DSolverTest implements
         assertSame(solver.getDistances(), distances);
         assertNull(solver.getDistanceStandardDeviations());
         assertTrue(solver.isReady());
-        assertSame(solver.getQualityScores(), qualityscores);
+        assertSame(solver.getQualityScores(), qualityScores);
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
@@ -841,19 +817,19 @@ public class PROMedSRobustLateration2DSolverTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(qualityscores,
+            solver = new PROMedSRobustLateration2DSolver(qualityScores,
                     (Point2D[]) null, distances);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(qualityscores,
+            solver = new PROMedSRobustLateration2DSolver(qualityScores,
                     positions, null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(qualityscores,
+            solver = new PROMedSRobustLateration2DSolver(qualityScores,
                     positions, wrong);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -865,7 +841,7 @@ public class PROMedSRobustLateration2DSolverTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(qualityscores,
+            solver = new PROMedSRobustLateration2DSolver(qualityScores,
                     shortPositions, shortDistances);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -874,7 +850,7 @@ public class PROMedSRobustLateration2DSolverTest implements
 
 
         // constructor with quality scores, positions and distances
-        solver = new PROMedSRobustLateration2DSolver(qualityscores,
+        solver = new PROMedSRobustLateration2DSolver(qualityScores,
                 positions, distances, standardDeviations);
 
         // check correctness
@@ -907,7 +883,7 @@ public class PROMedSRobustLateration2DSolverTest implements
         assertSame(solver.getDistanceStandardDeviations(),
                 standardDeviations);
         assertTrue(solver.isReady());
-        assertSame(solver.getQualityScores(), qualityscores);
+        assertSame(solver.getQualityScores(), qualityScores);
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
@@ -920,31 +896,31 @@ public class PROMedSRobustLateration2DSolverTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(qualityscores,
+            solver = new PROMedSRobustLateration2DSolver(qualityScores,
                     null, distances, standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(qualityscores,
+            solver = new PROMedSRobustLateration2DSolver(qualityScores,
                     positions, null, standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(qualityscores,
+            solver = new PROMedSRobustLateration2DSolver(qualityScores,
                     positions, distances, (double[]) null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(qualityscores,
+            solver = new PROMedSRobustLateration2DSolver(qualityScores,
                     positions, wrong, standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(qualityscores,
+            solver = new PROMedSRobustLateration2DSolver(qualityScores,
                     positions, distances, wrong);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -957,7 +933,7 @@ public class PROMedSRobustLateration2DSolverTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(qualityscores,
+            solver = new PROMedSRobustLateration2DSolver(qualityScores,
                     shortPositions, shortDistances, standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -967,7 +943,7 @@ public class PROMedSRobustLateration2DSolverTest implements
 
         // constructor with quality scores, positions, distances,
         // standard deviations and listener
-        solver = new PROMedSRobustLateration2DSolver(qualityscores,
+        solver = new PROMedSRobustLateration2DSolver(qualityScores,
                 positions, distances, standardDeviations, this);
 
         // check correctness
@@ -1000,7 +976,7 @@ public class PROMedSRobustLateration2DSolverTest implements
         assertSame(solver.getDistanceStandardDeviations(),
                 standardDeviations);
         assertTrue(solver.isReady());
-        assertSame(solver.getQualityScores(), qualityscores);
+        assertSame(solver.getQualityScores(), qualityScores);
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
@@ -1013,35 +989,35 @@ public class PROMedSRobustLateration2DSolverTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(qualityscores,
+            solver = new PROMedSRobustLateration2DSolver(qualityScores,
                     null, distances, standardDeviations,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(qualityscores,
+            solver = new PROMedSRobustLateration2DSolver(qualityScores,
                     positions, null, standardDeviations,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(qualityscores,
+            solver = new PROMedSRobustLateration2DSolver(qualityScores,
                     positions, distances, null,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(qualityscores,
+            solver = new PROMedSRobustLateration2DSolver(qualityScores,
                     positions, wrong, standardDeviations,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(qualityscores,
+            solver = new PROMedSRobustLateration2DSolver(qualityScores,
                     positions, distances, wrong, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -1054,7 +1030,7 @@ public class PROMedSRobustLateration2DSolverTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(qualityscores,
+            solver = new PROMedSRobustLateration2DSolver(qualityScores,
                     shortPositions, shortDistances, standardDeviations,
                     this);
             fail("IllegalArgumentException expected but not thrown");
@@ -1065,7 +1041,7 @@ public class PROMedSRobustLateration2DSolverTest implements
 
         // constructor with quality scores, positions, distances
         // and listener
-        solver = new PROMedSRobustLateration2DSolver(qualityscores,
+        solver = new PROMedSRobustLateration2DSolver(qualityScores,
                 positions, distances, this);
 
         // check correctness
@@ -1097,7 +1073,7 @@ public class PROMedSRobustLateration2DSolverTest implements
         assertSame(solver.getDistances(), distances);
         assertNull(solver.getDistanceStandardDeviations());
         assertTrue(solver.isReady());
-        assertSame(solver.getQualityScores(), qualityscores);
+        assertSame(solver.getQualityScores(), qualityScores);
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
@@ -1110,19 +1086,19 @@ public class PROMedSRobustLateration2DSolverTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(qualityscores,
+            solver = new PROMedSRobustLateration2DSolver(qualityScores,
                     (Point2D[]) null, distances, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(qualityscores,
+            solver = new PROMedSRobustLateration2DSolver(qualityScores,
                     positions, null, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(qualityscores,
+            solver = new PROMedSRobustLateration2DSolver(qualityScores,
                     positions, wrong, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -1135,7 +1111,7 @@ public class PROMedSRobustLateration2DSolverTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(qualityscores,
+            solver = new PROMedSRobustLateration2DSolver(qualityScores,
                     shortPositions, shortDistances, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -1144,7 +1120,7 @@ public class PROMedSRobustLateration2DSolverTest implements
 
 
         // constructor with quality scores and circles
-        solver = new PROMedSRobustLateration2DSolver(qualityscores,
+        solver = new PROMedSRobustLateration2DSolver(qualityScores,
                 circles);
 
         // check correctness
@@ -1176,7 +1152,7 @@ public class PROMedSRobustLateration2DSolverTest implements
         assertNotNull(solver.getDistances());
         assertNull(solver.getDistanceStandardDeviations());
         assertTrue(solver.isReady());
-        assertSame(solver.getQualityScores(), qualityscores);
+        assertSame(solver.getQualityScores(), qualityScores);
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
@@ -1189,7 +1165,7 @@ public class PROMedSRobustLateration2DSolverTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(qualityscores,
+            solver = new PROMedSRobustLateration2DSolver(qualityScores,
                     (Circle[]) null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -1201,7 +1177,7 @@ public class PROMedSRobustLateration2DSolverTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(qualityscores,
+            solver = new PROMedSRobustLateration2DSolver(qualityScores,
                     shortCircles);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -1210,7 +1186,7 @@ public class PROMedSRobustLateration2DSolverTest implements
 
 
         // constructor with quality scores, circles and standard deviations
-        solver = new PROMedSRobustLateration2DSolver(qualityscores,
+        solver = new PROMedSRobustLateration2DSolver(qualityScores,
                 circles, standardDeviations);
 
         // check correctness
@@ -1243,7 +1219,7 @@ public class PROMedSRobustLateration2DSolverTest implements
         assertSame(solver.getDistanceStandardDeviations(),
                 standardDeviations);
         assertTrue(solver.isReady());
-        assertSame(solver.getQualityScores(), qualityscores);
+        assertSame(solver.getQualityScores(), qualityScores);
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
@@ -1256,13 +1232,13 @@ public class PROMedSRobustLateration2DSolverTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(qualityscores,
+            solver = new PROMedSRobustLateration2DSolver(qualityScores,
                     (Circle[]) null, standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(qualityscores,
+            solver = new PROMedSRobustLateration2DSolver(qualityScores,
                     circles, (double[]) null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -1274,13 +1250,13 @@ public class PROMedSRobustLateration2DSolverTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(qualityscores,
+            solver = new PROMedSRobustLateration2DSolver(qualityScores,
                     shortCircles, standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(qualityscores,
+            solver = new PROMedSRobustLateration2DSolver(qualityScores,
                     circles, wrong);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -1289,7 +1265,7 @@ public class PROMedSRobustLateration2DSolverTest implements
 
 
         // constructor with quality scores, circles and listener
-        solver = new PROMedSRobustLateration2DSolver(qualityscores,
+        solver = new PROMedSRobustLateration2DSolver(qualityScores,
                 circles, this);
 
         // check correctness
@@ -1321,7 +1297,7 @@ public class PROMedSRobustLateration2DSolverTest implements
         assertNotNull(solver.getDistances());
         assertNull(solver.getDistanceStandardDeviations());
         assertTrue(solver.isReady());
-        assertSame(solver.getQualityScores(), qualityscores);
+        assertSame(solver.getQualityScores(), qualityScores);
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
@@ -1334,7 +1310,7 @@ public class PROMedSRobustLateration2DSolverTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(qualityscores,
+            solver = new PROMedSRobustLateration2DSolver(qualityScores,
                     null, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -1346,7 +1322,7 @@ public class PROMedSRobustLateration2DSolverTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(qualityscores,
+            solver = new PROMedSRobustLateration2DSolver(qualityScores,
                     shortCircles, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -1356,7 +1332,7 @@ public class PROMedSRobustLateration2DSolverTest implements
 
         // constructor with quality scores, circles, standard deviations
         // and listener
-        solver = new PROMedSRobustLateration2DSolver(qualityscores,
+        solver = new PROMedSRobustLateration2DSolver(qualityScores,
                 circles, standardDeviations, this);
 
         // check correctness
@@ -1389,7 +1365,7 @@ public class PROMedSRobustLateration2DSolverTest implements
         assertSame(solver.getDistanceStandardDeviations(),
                 standardDeviations);
         assertTrue(solver.isReady());
-        assertSame(solver.getQualityScores(), qualityscores);
+        assertSame(solver.getQualityScores(), qualityScores);
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
@@ -1402,13 +1378,13 @@ public class PROMedSRobustLateration2DSolverTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(qualityscores,
+            solver = new PROMedSRobustLateration2DSolver(qualityScores,
                     (Circle[]) null, standardDeviations, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(qualityscores,
+            solver = new PROMedSRobustLateration2DSolver(qualityScores,
                     circles, null, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -1420,13 +1396,13 @@ public class PROMedSRobustLateration2DSolverTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(qualityscores,
+            solver = new PROMedSRobustLateration2DSolver(qualityScores,
                     shortCircles, standardDeviations, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(qualityscores,
+            solver = new PROMedSRobustLateration2DSolver(qualityScores,
                     circles, wrong, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -2190,7 +2166,7 @@ public class PROMedSRobustLateration2DSolverTest implements
     }
 
     @Test
-    public void testSolveWithInlierErrorWithRefinementAndStandardDeviatons() throws Exception {
+    public void testSolveWithInlierErrorWithRefinementAndStandardDeviations() throws Exception {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, STD_OUTLIER_ERROR);

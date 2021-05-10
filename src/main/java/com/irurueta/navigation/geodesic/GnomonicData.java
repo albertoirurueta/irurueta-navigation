@@ -26,7 +26,6 @@ package com.irurueta.navigation.geodesic;
  * and it always includes the fields <i>x</i>, <i>y</i>, <i>azi</i>, and
  * <i>rk</i>.
  */
-@SuppressWarnings("WeakerAccess")
 public class GnomonicData {
 
     /**
@@ -91,7 +90,6 @@ public class GnomonicData {
      * @param azi  azimuth of geodesic at point (degrees).
      * @param rk   reciprocal of azimuthal scale at point.
      */
-    @SuppressWarnings("WeakerAccess")
     public GnomonicData(
             final double lat0, final double lon0, final double lat, final double lon,
             final double x, final double y, final double azi, final double rk) {

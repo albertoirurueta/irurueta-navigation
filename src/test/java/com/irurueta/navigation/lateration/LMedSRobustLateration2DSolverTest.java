@@ -23,17 +23,12 @@ import com.irurueta.navigation.NotReadyException;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
 import com.irurueta.statistics.GaussianRandomizer;
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.Random;
 
 import static org.junit.Assert.*;
 
-@SuppressWarnings("Duplicates")
 public class LMedSRobustLateration2DSolverTest implements
         RobustLaterationSolverListener<Point2D> {
 
@@ -59,25 +54,6 @@ public class LMedSRobustLateration2DSolverTest implements
     private int solveEnd;
     private int solveNextIteration;
     private int solveProgressChange;
-
-    public LMedSRobustLateration2DSolverTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
 
     @Test
     public void testConstructor() {
@@ -1432,7 +1408,7 @@ public class LMedSRobustLateration2DSolverTest implements
     }
 
     @Test
-    public void testSolveWithInlierErrorWithRefinementAndStandardDeviatons()
+    public void testSolveWithInlierErrorWithRefinementAndStandardDeviations()
             throws Exception {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final GaussianRandomizer errorRandomizer = new GaussianRandomizer(

@@ -37,7 +37,6 @@ import java.util.Arrays;
  *
  * @param <P> a {@link Point} type.
  */
-@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> extends LaterationSolver<P> {
 
     /**
@@ -252,7 +251,7 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
      * Sets known positions and euclidean distances.
      * If any distance value is zero or negative, it will be fixed assuming an EPSILON value.
      *
-     * @param positions known positios of static nodes.
+     * @param positions known positions of static nodes.
      * @param distances euclidean distances from static nodes to mobile node.
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      *                                  length is smaller than required (2 points).
@@ -272,12 +271,13 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
      * measured distances.
      * If any distance value is zero or negative, it will be fixed assuming an EPSILON value.
      *
-     * @param positions                  known positios of static nodes.
+     * @param positions                  known positions of static nodes.
      * @param distances                  euclidean distances from static nodes to mobile node.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
      * @throws IllegalArgumentException if either positions, distances or standard deviations
-     *                                  are null, don't have the same length of their length is smaller than required (2 points).
-     * @throws LockedException          if instance is busy solving the trialteration problem.
+     *                                  are null, don't have the same length of their length is smaller than required
+     *                                  (2 points).
+     * @throws LockedException          if instance is busy solving the trilateration problem.
      */
     public void setPositionsDistancesAndStandardDeviations(
             final P[] positions, final double[] distances,
@@ -368,7 +368,7 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
 
             mFitter.fit();
 
-            //estimated position
+            // estimated position
             mEstimatedPositionCoordinates = mFitter.getA();
             mCovariance = mFitter.getCovar();
             mChiSq = mFitter.getChisq();
@@ -397,7 +397,7 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
      * Internally sets known positions and euclidean distances.
      * If any distance value is zero or negative, it will be fixed assuming an EPSILON value.
      *
-     * @param positions known positios of static nodes.
+     * @param positions known positions of static nodes.
      * @param distances euclidean distances from static nodes to mobile node.
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      *                                  length is smaller than required (2 points).
@@ -407,7 +407,7 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
             final P[] positions, final double[] distances) {
         super.internalSetPositionsAndDistances(positions, distances);
 
-        //initialize distances standard deviations to default values
+        // initialize distances standard deviations to default values
         mDistanceStandardDeviations = new double[distances.length];
         Arrays.fill(mDistanceStandardDeviations, DEFAULT_DISTANCE_STANDARD_DEVIATION);
     }
@@ -417,7 +417,7 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
      * measured distances.
      * If any distance value is zero or negative, it will be fixed assuming an EPSILON value.
      *
-     * @param positions                  known positios of static nodes.
+     * @param positions                  known positions of static nodes.
      * @param distances                  euclidean distances from static nodes to mobile node.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
      * @throws IllegalArgumentException if either positions, distances or standard deviations
@@ -456,7 +456,7 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
                         final double[] initial = new double[dims];
 
                         if (mInitialPosition == null) {
-                            //use centroid of positions as initial value
+                            // use centroid of positions as initial value
                             final int numSamples = mPositions.length;
 
                             for (int i = 0; i < dims; i++) {
@@ -466,7 +466,7 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
                                 }
                             }
                         } else {
-                            //use provided initial position
+                            // use provided initial position
                             for (int i = 0; i < dims; i++) {
                                 initial[i] = mInitialPosition.getInhomogeneousCoordinate(i);
                             }
@@ -479,11 +479,11 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
                     public double evaluate(
                             final int i, final double[] point, final double[] params,
                             final double[] derivatives) {
-                        //we want to estimate the position contained as inhomogeneous coordinates in params array.
-                        //the function evaluates the distance to provided point respect to current parameter
+                        // we want to estimate the position contained as inhomogeneous coordinates in params array.
+                        // the function evaluates the distance to provided point respect to current parameter
                         // (estimated position)
-                        //sqrDist = (x - px)^2 + (y - py)^2
-                        //grad = [2*(x - px), 2*(y - py)]
+                        // sqrDist = (x - px)^2 + (y - py)^2
+                        // grad = [2*(x - px), 2*(y - py)]
                         final int dims = getNumberOfDimensions();
                         double result = 0.0;
                         double diff;
@@ -516,7 +516,7 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
 
             mFitter.setInputData(x, y, mDistanceStandardDeviations);
         } catch (final AlgebraException ignore) {
-            //never happens
+            // never happens
         }
     }
 }

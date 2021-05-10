@@ -20,7 +20,6 @@ import com.irurueta.navigation.NavigationException;
 /**
  * Exception raised for a geodesic operation.
  */
-@SuppressWarnings("WeakerAccess")
 public class GeodesicException extends NavigationException {
 
     /**

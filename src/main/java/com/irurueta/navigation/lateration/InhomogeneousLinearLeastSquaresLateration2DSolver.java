@@ -23,7 +23,7 @@ import com.irurueta.navigation.LockedException;
 /**
  * Linearly solves the lateration problem using an inhomogeneous solution.
  */
-@SuppressWarnings({"WeakerAccess", "Duplicates"})
+@SuppressWarnings("DuplicatedCode")
 public class InhomogeneousLinearLeastSquaresLateration2DSolver extends
         InhomogeneousLinearLeastSquaresLaterationSolver<Point2D> {
 
@@ -179,10 +179,10 @@ public class InhomogeneousLinearLeastSquaresLateration2DSolver extends
             throw new IllegalArgumentException();
         }
 
-        Point2D[] positions = new Point2D[circles.length];
-        double[] distances = new double[circles.length];
+        final Point2D[] positions = new Point2D[circles.length];
+        final double[] distances = new double[circles.length];
         for (int i = 0; i < circles.length; i++) {
-            Circle circle = circles[i];
+            final Circle circle = circles[i];
             positions[i] = circle.getCenter();
             distances[i] = circle.getRadius();
         }

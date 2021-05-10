@@ -29,7 +29,7 @@ import java.util.Collection;
 
 /**
  * Implements one cycle of the GNSS extended Kalman filter.
- * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multisensor
+ * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multi-sensor
  * Integrated Navigation Systems, Second Edition" and on the companion software available at:
  * https://github.com/ymjdz/MATLAB-Codes/blob/master/GNSS_KF_Epoch.m
  */
@@ -196,6 +196,7 @@ public class GNSSKalmanEpochEstimator {
      *                                  8x8.
      * @throws AlgebraException         if there are numerical instabilities.
      */
+    @SuppressWarnings("DuplicatedCode")
     public static void estimate(final Collection<GNSSMeasurement> measurements,
                                 final double propagationInterval,
                                 final GNSSEstimation previousEstimation,

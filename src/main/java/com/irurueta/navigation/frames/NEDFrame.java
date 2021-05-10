@@ -36,7 +36,6 @@ import java.util.Objects;
  * Velocity of body frame is expressed with respect ECEF frame and resolved along north, east and down axes,
  * as defined in {@link FrameType#LOCAL_NAVIGATION_FRAME}.
  */
-@SuppressWarnings("WeakerAccess")
 public class NEDFrame implements Frame, Serializable, Cloneable {
 
     /**
@@ -606,7 +605,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      *
      * @param height height expressed in meters to be set.
      */
-    public void setHeight(double height) {
+    public void setHeight(final double height) {
         mHeight = height;
     }
 
@@ -1028,7 +1027,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      */
     @Override
     public CoordinateTransformation getCoordinateTransformation() {
-        CoordinateTransformation result = new CoordinateTransformation(FrameType.BODY_FRAME,
+        final CoordinateTransformation result = new CoordinateTransformation(FrameType.BODY_FRAME,
                 FrameType.LOCAL_NAVIGATION_FRAME);
         getCoordinateTransformation(result);
         return result;

@@ -107,7 +107,6 @@ package com.irurueta.navigation.geodesic;
  * }
  * </pre>
  */
-@SuppressWarnings("WeakerAccess")
 public class Gnomonic {
     private static final double EPS = 0.01 * Math.sqrt(GeoMath.EPSILON);
     private static final int NUMIT = 10;
@@ -132,7 +131,6 @@ public class Gnomonic {
      *
      * @param earth the {@link Geodesic} object to use for geodesic calculations.
      */
-    @SuppressWarnings("WeakerAccess")
     public Gnomonic(final Geodesic earth) {
         mEarth = earth;
         mA = mEarth.getMajorRadius();
@@ -183,8 +181,8 @@ public class Gnomonic {
      * direction perpendicular to this. Even though all inputs should return a valid <i>lat</i>
      * and <i>lon</i>, it's possible that the procedure fails to converge for very large <i>x</i>
      * or <i>y</i>; in this case NaNs are returned for very large <i>x</i> or <i>y</i>; in this
-     * case NaNs are returned for all the output arguments. A call to rverse followed by a call
-     * to forward will return the original (<i>x</i>, <i>y</i>) (to roundoff).
+     * case NaNs are returned for all the output arguments. A call to reverse followed by a call
+     * to forward will return the original (<i>x</i>, <i>y</i>) (to round-off).
      *
      * @param lat0 latitude of center point of projection (degrees). <i>lat0</i> should be in the
      *             range [&minus;90&deg;, 90&deg;]

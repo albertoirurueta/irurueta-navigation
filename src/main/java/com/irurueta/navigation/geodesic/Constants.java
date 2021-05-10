@@ -18,7 +18,6 @@ package com.irurueta.navigation.geodesic;
 /**
  * Constants used for GNSS/INS navigation.
  */
-@SuppressWarnings("WeakerAccess")
 public class Constants {
 
     /**

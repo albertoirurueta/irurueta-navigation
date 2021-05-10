@@ -26,7 +26,6 @@ import java.util.StringTokenizer;
 /**
  * Location utility class based on Android's SDK Location class.
  */
-@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public class LocationUtils {
     /**
      * Constant used to specify formatting of a latitude or longitude

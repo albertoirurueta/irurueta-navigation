@@ -579,7 +579,7 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
                     @Override
                     public void estimatePreliminarSolutions(
                             final int[] samplesIndices, final List<Point3D> solutions) {
-                        solvePreliminarSolutions(samplesIndices, solutions);
+                        solvePreliminarySolutions(samplesIndices, solutions);
                     }
 
                     @Override

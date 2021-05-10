@@ -15,38 +15,21 @@
  */
 package com.irurueta.navigation.geodesic;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
 public class ConstantsTest {
 
-    public ConstantsTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
-
     @Test
     public void testConstants() {
         assertEquals(Constants.EARTH_EQUATORIAL_RADIUS_WGS84, 6378137, 0.0);
+        assertEquals(Constants.EARTH_POLAR_RADIUS_WGS84, 6356752.31425, 0.0);
         assertEquals(Constants.EARTH_FLATTENING_WGS84, 1 / 298.257223563, 0.0);
+        assertEquals(Constants.EARTH_ECCENTRICITY, 0.0818191908425, 0.0);
+        assertEquals(Constants.EARTH_GRAVITATIONAL_CONSTANT, 3.986004418E14, 0.0);
+        assertEquals(Constants.EARTH_SECOND_GRAVITATIONAL_CONSTANT, 1.082627E-3, 0.0);
+        assertEquals(Constants.EARTH_ROTATION_RATE, 7.292115E-5, 0.0);
+        assertEquals(Constants.SPEED_OF_LIGHT, 299792458.0, 0.0);
     }
 }

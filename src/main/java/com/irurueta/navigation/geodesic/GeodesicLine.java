@@ -85,7 +85,6 @@ package com.irurueta.navigation.geodesic;
  *   }
  * }}</pre>
  */
-@SuppressWarnings("WeakerAccess")
 public class GeodesicLine {
 
     private static final int NC1 = Geodesic.NC1;
@@ -127,8 +126,8 @@ public class GeodesicLine {
     private double mA13;
     private double mS13;
 
-    //index zero elements of mC1a, mC1pa, mC2a, mC3a are unused
-    //all the elements of mC4a are used.
+    // index zero elements of mC1a, mC1pa, mC2a, mC3a are unused
+    // all the elements of mC4a are used.
     private double[] mC1a;
     private double[] mC1pa;
     private double[] mC2a;
@@ -150,7 +149,6 @@ public class GeodesicLine {
      * @param lon1 longitude of point 1 (degrees).
      * @param azi1 azimuth at point 1 (degrees).
      */
-    @SuppressWarnings("WeakerAccess")
     public GeodesicLine(
             final Geodesic g, final double lat1, final double lon1, final double azi1) {
         this(g, lat1, lon1, azi1, GeodesicMask.ALL);
@@ -204,7 +202,6 @@ public class GeodesicLine {
      *             the GeodesicLine object should possess, i.e., which quantities can be returned in
      *             calls to {@link #position}.
      */
-    @SuppressWarnings("WeakerAccess")
     public GeodesicLine(final Geodesic g, final double lat1, final double lon1, double azi1,
                         final int caps) {
         azi1 = GeoMath.angNormalize(azi1);
@@ -219,7 +216,6 @@ public class GeodesicLine {
         lineInit(g, lat1, lon1, azi1, salp1, calp1, caps);
     }
 
-    @SuppressWarnings("WeakerAccess")
     protected GeodesicLine(
             final Geodesic g, final double lat1, final double lon1, final double azi1,
             final double salp1, final double calp1, final int caps, final boolean arcmode,
@@ -346,7 +342,7 @@ public class GeodesicLine {
         outmask &= mCaps & GeodesicMask.OUT_MASK;
         final GeodesicData r = new GeodesicData();
         if (!(init() && (arcmode || (mCaps & (GeodesicMask.OUT_MASK & GeodesicMask.DISTANCE_IN)) != 0))) {
-            //uninitialized or impossible distance calculation requested
+            // uninitialized or impossible distance calculation requested
             return r;
         }
 
@@ -354,14 +350,14 @@ public class GeodesicLine {
         r.setAzi1(mAzi1);
         r.setLon1(((outmask & GeodesicMask.LONG_UNROLL) != 0) ? mLon1 : GeoMath.angNormalize(mLon1));
 
-        //avoid warning about uninitialized b12
+        // avoid warning about uninitialized b12
         double sig12;
         double ssig12;
         double csig12;
         double b12 = 0.0;
         double ab1 = 0.0;
         if (arcmode) {
-            //interpret s12A12 as spherical arc length
+            // interpret s12A12 as spherical arc length
             r.setA12(s12A12);
             sig12 = Math.toRadians(s12A12);
 
@@ -369,14 +365,14 @@ public class GeodesicLine {
             ssig12 = p.getFirst();
             csig12 = p.getSecond();
         } else {
-            //interpret s12A12 as distance
+            // interpret s12A12 as distance
             r.setS12(s12A12);
 
             final double tau12 = s12A12 / (mB * (1 + mA1m1));
             final double s = Math.sin(tau12);
             final double c = Math.cos(tau12);
 
-            //tau2 = tau1 + tau12
+            // tau2 = tau1 + tau12
             b12 = -Geodesic.sinCosSeries(true, mStau1 * c + mCtau1 * s,
                     mCtau1 * c - mStau1 * s, mC1pa);
             sig12 = tau12 - (b12 - mB11);
@@ -384,12 +380,12 @@ public class GeodesicLine {
             csig12 = Math.cos(sig12);
 
             if (Math.abs(mF) > 0.01) {
-                //reverted distance series is inaccurate for |f| > 1/100, so correct sig12 with 1
-                //Newton iteration. The following table shows the approximate maximum error for
-                //a = WGSa() and various f relative to GeodesicExact.
-                //erri = the error in the inverse solution (nm)
-                //errd = the error in the direct solution (series only) (nm)
-                //errda = the error in the direct solution (series + 1 Newton) (nm)
+                // reverted distance series is inaccurate for |f| > 1/100, so correct sig12 with 1
+                // Newton iteration. The following table shows the approximate maximum error for
+                // a = WGSa() and various f relative to GeodesicExact.
+                // erri = the error in the inverse solution (nm)
+                // errd = the error in the direct solution (series only) (nm)
+                // errda = the error in the direct solution (series + 1 Newton) (nm)
 
                 //  f       erri        errd        errda
                 //  -1/5    12e6        1.2e9       69e6
@@ -413,7 +409,7 @@ public class GeodesicLine {
                 sig12 = sig12 - serr / Math.sqrt(1 + mK2 * GeoMath.sq(ssig2));
                 ssig12 = Math.sin(sig12);
                 csig12 = Math.cos(sig12);
-                //update b12 below
+                // update b12 below
             }
             r.setA12(Math.toDegrees(sig12));
         }
@@ -424,7 +420,7 @@ public class GeodesicLine {
         double cbet2;
         final double salp2;
         final double calp2;
-        //sig2 = sig1 + sig12
+        // sig2 = sig1 + sig12
 
 
         final double dn2 = Math.sqrt(1 + mK2 * GeoMath.sq(ssig2));
@@ -436,18 +432,18 @@ public class GeodesicLine {
             ab1 = (1 + mA1m1) * (b12 - mB11);
         }
 
-        //sin(bet2) = cos(alp0) * sin(sig2)
+        // sin(bet2) = cos(alp0) * sin(sig2)
         sbet2 = mCalp0 * ssig2;
-        //alt: cbet2 = hypot(csig2, salp0 * ssig2)
+        // alt: cbet2 = hypot(csig2, salp0 * ssig2)
         cbet2 = GeoMath.hypot(mSalp0, mCalp0 * csig2);
         if (cbet2 == 0) {
-            //i.e., salp0 = 0, csig2 = 0. Break the degeneracy in this case
+            // i.e., salp0 = 0, csig2 = 0. Break the degeneracy in this case
             cbet2 = csig2 = Geodesic.TINY;
         }
 
-        //tan(alp0) = cos(sig2) * tan(alp2)
+        // tan(alp0) = cos(sig2) * tan(alp2)
         salp2 = mSalp0;
-        //no need to normalize
+        // no need to normalize
         calp2 = mCalp0 * csig2;
 
         if ((outmask & GeodesicMask.DISTANCE) != 0 && arcmode) {
@@ -455,14 +451,14 @@ public class GeodesicLine {
         }
 
         if ((outmask & GeodesicMask.LONGITUDE) != 0) {
-            //tan(omg2) = sin(alp0) * tan(sig2)
+            // tan(omg2) = sin(alp0) * tan(sig2)
 
-            //no need to normalize east or west going?
+            // no need to normalize east or west going?
             //noinspection all
             final double somg2 = mSalp0 * ssig2;
             final double e = GeoMath.copysign(1, mSalp0);
 
-            //omg12 = omg2 - omg1
+            // omg12 = omg2 - omg1
             final double omg12 = ((outmask & GeodesicMask.LONG_UNROLL) != 0) ?
                     e * (sig12 - (Math.atan2(ssig2, csig2) - Math.atan2(mSsig1, mCsig1)) +
                             (Math.atan2(e * somg2, csig2) - Math.atan2(e * mSomg1, mComg1))) :
@@ -489,8 +485,8 @@ public class GeodesicLine {
             final double ab2 = (1 + mA2m1) * (b22 - mB21);
             final double j12 = (mA1m1 - mA2m1) * sig12 + (ab1 - ab2);
             if ((outmask & GeodesicMask.REDUCED_LENGTH) != 0) {
-                //add parens around (mCsig1 * ssig2) and (mSsig1 * csig2) to ensure
-                //accurate cancellation in the case of coincident points
+                // add parens around (mCsig1 * ssig2) and (mSsig1 * csig2) to ensure
+                // accurate cancellation in the case of coincident points
                 r.setM12(mB * ((dn2 * (mCsig1 * ssig2) - mDn1 * (mSsig1 * csig2)) -
                         mCsig1 * csig2 * j12));
             }
@@ -510,14 +506,14 @@ public class GeodesicLine {
                 salp12 = salp2 * mCalp1 - calp2 * mSalp1;
                 calp12 = calp2 * mCalp1 + salp2 * mSalp1;
             } else {
-                //tan(alp) = tan(alp0) * sec(sig)
-                //tan(alp2-alp1) = (tan(alp2) -tan(alp1)) / (tan(alp2)*tan(alp1)+1)
-                //= calp0 * salp0 * (csig1-csig2) / (salp0^2 + calp0^2 * csig1*csig2)
-                //if csig12 > 0, write
-                //  csig1 - csig2 = ssig12 * (csig1 * ssig12 / (1 + csig12) + ssig1)
-                //else
-                //  csig1 - csig2 = csig1 * (1 - csig12) + ssig12 * ssig1
-                //no need to normalize
+                // tan(alp) = tan(alp0) * sec(sig)
+                // tan(alp2-alp1) = (tan(alp2) -tan(alp1)) / (tan(alp2)*tan(alp1)+1)
+                // = calp0 * salp0 * (csig1-csig2) / (salp0^2 + calp0^2 * csig1*csig2)
+                // if csig12 > 0, write
+                //   csig1 - csig2 = ssig12 * (csig1 * ssig12 / (1 + csig12) + ssig1)
+                // else
+                //   csig1 - csig2 = csig1 * (1 - csig12) + ssig12 * ssig1
+                // no need to normalize
                 salp12 = mCalp0 * mSalp0 *
                         (csig12 <= 0 ? mCsig1 * (1 - csig12) + ssig12 * mSsig1 :
                                 ssig12 * (mCsig1 * ssig12 / (1 + csig12) + mSsig1));
@@ -729,7 +725,7 @@ public class GeodesicLine {
         mC2 = g.mC2;
         mF1 = g.mF1;
 
-        //always allow latitude and azimuth and unrolling the longitude
+        // always allow latitude and azimuth and unrolling the longitude
         mCaps = caps | GeodesicMask.LATITUDE | GeodesicMask.AZIMUTH |
                 GeodesicMask.LONG_UNROLL;
 
@@ -746,41 +742,41 @@ public class GeodesicLine {
         sbet1 = mF1 * p.getFirst();
         cbet1 = p.getSecond();
 
-        //ensure cbet1 = +epsilon at poles
+        // ensure cbet1 = +epsilon at poles
         p = GeoMath.norm(sbet1, cbet1);
         sbet1 = p.getFirst();
         cbet1 = Math.max(Geodesic.TINY, p.getSecond());
 
         mDn1 = Math.sqrt(1 + g.mEp2 * GeoMath.sq(sbet1));
 
-        //evaluate alp0 from sin(alp1) * cos(bet1) = sin(alp0),
+        // evaluate alp0 from sin(alp1) * cos(bet1) = sin(alp0),
 
-        //alp0 in [0, pi/2 - |bet1|]
+        // alp0 in [0, pi/2 - |bet1|]
         mSalp0 = mSalp1 * cbet1;
 
-        //alt: calp0 = hypot(sbet1, calp1 * cbet1). The following is slightly
-        //better (consider the case salp1 = 0).
+        // alt: calp0 = hypot(sbet1, calp1 * cbet1). The following is slightly
+        // better (consider the case salp1 = 0).
         mCalp0 = GeoMath.hypot(mCalp1, mSalp1 * sbet1);
 
-        //Evaluate sig with tan(bet1) = tan(sig1) * cos(alp1).
-        //sig = 0 is nearest northward crossing of equator.
-        //With bet1 = 0, alp1 = pi/2, we have sig1 = 0 (equatorial line).
-        //With bet1 = pi/2, alp1 = -pi, sig1 = pi/2
-        //With bet1 = -pi/2, alp1 = 0, sig1 = -pi/2
-        //Evaluate omg1 with tan(omg1) = sin(alp0) * tan(sig1).
-        //With alp0 in (0, pi/2], quadrants for sig and omg coincide.
-        //No atan2(0,0) ambiguity at poles since cbet1 = +epsilon
-        //With alp0 = 0, omg1 = 0 for alp1 = 0, omg1 = pi for alp1 = pi.
+        // Evaluate sig with tan(bet1) = tan(sig1) * cos(alp1).
+        // sig = 0 is nearest northward crossing of equator.
+        // With bet1 = 0, alp1 = pi/2, we have sig1 = 0 (equatorial line).
+        // With bet1 = pi/2, alp1 = -pi, sig1 = pi/2
+        // With bet1 = -pi/2, alp1 = 0, sig1 = -pi/2
+        // Evaluate omg1 with tan(omg1) = sin(alp0) * tan(sig1).
+        // With alp0 in (0, pi/2], quadrants for sig and omg coincide.
+        // No atan2(0,0) ambiguity at poles since cbet1 = +epsilon
+        // With alp0 = 0, omg1 = 0 for alp1 = 0, omg1 = pi for alp1 = pi.
         mSsig1 = sbet1;
         mSomg1 = mSalp0 * sbet1;
         mCsig1 = mComg1 = sbet1 != 0 || mCalp1 != 0 ? cbet1 * mCalp1 : 1;
 
         p = GeoMath.norm(mSsig1, mCsig1);
         mSsig1 = p.getFirst();
-        //sig 1 in (-pi, pi]
+        // sig 1 in (-pi, pi]
         mCsig1 = p.getSecond();
 
-        //GeoMath.norm(mSomg1, mComg1); -- don't need to normalize!
+        // GeoMath.norm(mSomg1, mComg1); -- don't need to normalize!
 
         mK2 = GeoMath.sq(mCalp0) * g.mEp2;
         final double eps = mK2 / (2 * (1 + Math.sqrt(1 + mK2)) + mK2);
@@ -792,11 +788,11 @@ public class GeodesicLine {
             mB11 = Geodesic.sinCosSeries(true, mSsig1, mCsig1, mC1a);
             final double s = Math.sin(mB11);
             final double c = Math.cos(mB11);
-            //tau1 = sig1 + b11
+            // tau1 = sig1 + b11
             mStau1 = mSsig1 * c + mCsig1 * s;
             mCtau1 = mCsig1 * c - mSsig1 * s;
-            //not necessary because c1pa rverts c1a
-            //mB11 = -sinCosSeries(true, mStau1, mCtau1, mC1pa, NC1P)
+            // not necessary because c1pa rverts c1a
+            // mB11 = -sinCosSeries(true, mStau1, mCtau1, mC1pa, NC1P)
         }
 
         if ((mCaps & GeodesicMask.CAP_C1P) != 0) {
@@ -821,7 +817,7 @@ public class GeodesicLine {
         if ((mCaps & GeodesicMask.CAP_C4) != 0) {
             mC4a = new double[NC4];
             g.c4f(eps, mC4a);
-            //multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0)
+            // multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0)
             mA4 = GeoMath.sq(mA) * mCalp0 * mSalp0 * g.mE2;
             mB41 = Geodesic.sinCosSeries(false, mSsig1, mCsig1, mC4a);
         }

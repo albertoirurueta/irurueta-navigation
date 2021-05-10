@@ -26,7 +26,6 @@ import com.irurueta.geometry.InvalidRotationMatrixException;
  * Contains methods to convert covariance matrices into ellipsoids representing accuracy with
  * requested confidence.
  */
-@SuppressWarnings("WeakerAccess")
 public class Accuracy3D extends Accuracy<com.irurueta.geometry.Accuracy3D> {
 
     /**

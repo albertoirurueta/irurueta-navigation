@@ -1389,6 +1389,7 @@ public class ECIFrameTest {
 
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
         assertTrue(frame1.equals((Object) frame1));
+        //noinspection EqualsWithItself
         assertTrue(frame1.equals(frame1));
         assertTrue(frame1.equals(frame2));
         assertFalse(frame1.equals(frame3));

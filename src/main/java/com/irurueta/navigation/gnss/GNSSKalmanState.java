@@ -196,14 +196,14 @@ public class GNSSKalmanState implements Serializable, Cloneable {
      * @return true if both objects are considered to be equal, false otherwise.
      */
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        GNSSKalmanState other = (GNSSKalmanState) obj;
+        final GNSSKalmanState other = (GNSSKalmanState) obj;
         return equals(other);
     }
 

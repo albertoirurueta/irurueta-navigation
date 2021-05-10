@@ -914,7 +914,7 @@ public class ECEFFrameTest {
         assertNull(frame);
 
 
-        // test constructor with ECEF position and velocity and coordinate transformaiton matrix
+        // test constructor with ECEF position and velocity and coordinate transformation matrix
         frame = new ECEFFrame(positionAndVelocity, c1);
 
         // check

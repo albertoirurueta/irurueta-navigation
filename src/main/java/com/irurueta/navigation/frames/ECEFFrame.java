@@ -25,7 +25,6 @@ import com.irurueta.units.Speed;
  * Position and velocity of this frame is expressed along ECEF axes as described here:
  * {@link FrameType#EARTH_CENTERED_EARTH_FIXED_FRAME}.
  */
-@SuppressWarnings("WeakerAccess")
 public class ECEFFrame extends ECIorECEFFrame<ECEFFrame> {
 
     /**
@@ -134,7 +133,7 @@ public class ECEFFrame extends ECIorECEFFrame<ECEFFrame> {
     /**
      * Constructor.
      *
-     * @param position body position expresed in meters (m) and resolved along ECEF-frame axes.
+     * @param position body position expressed in meters (m) and resolved along ECEF-frame axes.
      * @param vx       x coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
      *                 ECEF-frame axes.
      * @param vy       y coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along

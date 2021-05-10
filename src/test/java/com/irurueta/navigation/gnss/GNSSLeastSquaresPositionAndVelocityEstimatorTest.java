@@ -80,7 +80,7 @@ public class GNSSLeastSquaresPositionAndVelocityEstimatorTest implements
     private static final double MAX_PRIOR_POSITION_ERROR = 500.0;
 
     private static final double MIN_PRIOR_VELOCITY_ERROR = -1.0;
-    private static final double MAX_PRIOR_VELOCITy_ERROR = 1.0;
+    private static final double MAX_PRIOR_VELOCITY_ERROR = 1.0;
 
     private static final int TIMES = 100;
 
@@ -651,11 +651,11 @@ public class GNSSLeastSquaresPositionAndVelocityEstimatorTest implements
             final double priorZ = ecefUserPosition.getZ()
                     + randomizer.nextDouble(MIN_PRIOR_POSITION_ERROR, MAX_PRIOR_POSITION_ERROR);
             final double priorVx = ecefUserVelocity.getVx()
-                    + randomizer.nextDouble(MIN_PRIOR_VELOCITY_ERROR, MAX_PRIOR_VELOCITy_ERROR);
+                    + randomizer.nextDouble(MIN_PRIOR_VELOCITY_ERROR, MAX_PRIOR_VELOCITY_ERROR);
             final double priorVy = ecefUserVelocity.getVy()
-                    + randomizer.nextDouble(MIN_PRIOR_VELOCITY_ERROR, MAX_PRIOR_VELOCITy_ERROR);
+                    + randomizer.nextDouble(MIN_PRIOR_VELOCITY_ERROR, MAX_PRIOR_VELOCITY_ERROR);
             final double priorVz = ecefUserVelocity.getVz()
-                    + randomizer.nextDouble(MIN_PRIOR_VELOCITY_ERROR, MAX_PRIOR_VELOCITy_ERROR);
+                    + randomizer.nextDouble(MIN_PRIOR_VELOCITY_ERROR, MAX_PRIOR_VELOCITY_ERROR);
 
             final ECEFPositionAndVelocity priorPositionAndVelocity =
                     new ECEFPositionAndVelocity(priorX, priorY, priorZ,

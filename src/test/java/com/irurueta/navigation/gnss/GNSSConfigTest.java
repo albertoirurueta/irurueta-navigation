@@ -1847,7 +1847,7 @@ public class GNSSConfigTest {
     }
 
     @Test
-    public void testGetSetInitialReceiverClockDriftSpeeD() {
+    public void testGetSetInitialReceiverClockDriftSpeed() {
         final GNSSConfig config = new GNSSConfig();
 
         final Speed initialReceiverClockDrift1 = config.getInitialReceiverClockDriftSpeed();

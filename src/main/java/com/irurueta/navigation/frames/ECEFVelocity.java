@@ -13,7 +13,6 @@ import java.util.Objects;
  * Contains body velocity with respect Earth, resolved about ECEF frame
  * and expressed in meters per second (m/s).
  */
-@SuppressWarnings("WeakerAccess")
 public class ECEFVelocity implements Serializable, Cloneable {
 
     /**
@@ -344,6 +343,7 @@ public class ECEFVelocity implements Serializable, Cloneable {
      * @param result matrix instance where velocity coordinates will be stored
      *               in x,y,z order.
      */
+    @SuppressWarnings("DuplicatedCode")
     public void asMatrix(final Matrix result) {
         if (result.getRows() != COMPONENTS || result.getColumns() != 1) {
             try {

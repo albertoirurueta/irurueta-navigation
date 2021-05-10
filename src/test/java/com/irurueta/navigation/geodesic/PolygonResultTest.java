@@ -15,10 +15,6 @@
  */
 package com.irurueta.navigation.geodesic;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.Random;
@@ -26,25 +22,6 @@ import java.util.Random;
 import static org.junit.Assert.assertEquals;
 
 public class PolygonResultTest {
-
-    public PolygonResultTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
 
     @Test
     public void testConstructor() {

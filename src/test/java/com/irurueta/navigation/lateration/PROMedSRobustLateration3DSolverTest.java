@@ -23,17 +23,12 @@ import com.irurueta.navigation.NotReadyException;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
 import com.irurueta.statistics.GaussianRandomizer;
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.Random;
 
 import static org.junit.Assert.*;
 
-@SuppressWarnings("Duplicates")
 public class PROMedSRobustLateration3DSolverTest implements
         RobustLaterationSolverListener<Point3D> {
 
@@ -60,27 +55,7 @@ public class PROMedSRobustLateration3DSolverTest implements
     private int solveNextIteration;
     private int solveProgressChange;
 
-    public PROMedSRobustLateration3DSolverTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
-
     @Test
-    @SuppressWarnings("all")
     public void testConstructor() {
         // empty constructor
         PROMedSRobustLateration3DSolver solver = new PROMedSRobustLateration3DSolver();
@@ -2227,7 +2202,7 @@ public class PROMedSRobustLateration3DSolverTest implements
     }
 
     @Test
-    public void testSolveWithInlierErrorWithRefinementAndStandardDeviatons() throws Exception {
+    public void testSolveWithInlierErrorWithRefinementAndStandardDeviations() throws Exception {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, STD_OUTLIER_ERROR);

@@ -23,7 +23,6 @@ import com.irurueta.navigation.LockedException;
 /**
  * Solves a Trilateration problem with an instance of a least squares optimizer.
  */
-@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquaresLaterationSolver<Point2D> {
 
     /**

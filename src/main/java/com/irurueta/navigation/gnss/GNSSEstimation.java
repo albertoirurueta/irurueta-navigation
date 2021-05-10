@@ -35,7 +35,6 @@ import java.util.Objects;
  * Contains GNSS state estimation, which contains user
  * position, velocity and estimated clock offset and drift.
  */
-@SuppressWarnings("WeakerAccess")
 public class GNSSEstimation implements Serializable, Cloneable {
 
     /**
@@ -644,7 +643,7 @@ public class GNSSEstimation implements Serializable, Cloneable {
      *
      * @param result instance where estimated receiver clock offset will be stored.
      */
-    public void getClockOffsetDistance(Distance result) {
+    public void getClockOffsetDistance(final Distance result) {
         result.setValue(mClockOffset);
         result.setUnit(DistanceUnit.METER);
     }
@@ -832,7 +831,7 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @param result instance where state data will be stored.
      * @throws IllegalArgumentException if provided array does not have length 8.
      */
-    public void asArray(double[] result) {
+    public void asArray(final double[] result) {
         if (result.length != NUM_PARAMETERS) {
             throw new IllegalArgumentException();
         }
@@ -915,7 +914,7 @@ public class GNSSEstimation implements Serializable, Cloneable {
             result = new Matrix(NUM_PARAMETERS, 1);
             asMatrix(result);
             return result;
-        } catch (WrongSizeException ignore) {
+        } catch (final WrongSizeException ignore) {
             // never happens
             return null;
         }
@@ -939,7 +938,7 @@ public class GNSSEstimation implements Serializable, Cloneable {
      *
      * @param output destination instance where data will be copied to.
      */
-    public void copyTo(GNSSEstimation output) {
+    public void copyTo(final GNSSEstimation output) {
         output.mX = mX;
         output.mY = mY;
         output.mZ = mZ;
@@ -957,7 +956,7 @@ public class GNSSEstimation implements Serializable, Cloneable {
      *
      * @param input instance to copy data from.
      */
-    public void copyFrom(GNSSEstimation input) {
+    public void copyFrom(final GNSSEstimation input) {
         mX = input.mX;
         mY = input.mY;
         mZ = input.mZ;
@@ -989,7 +988,7 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @return true if both objects are considered to be equal, false otherwise.
      */
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (obj == this) {
             return true;
         }
@@ -1007,7 +1006,7 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @param other instance to be compared.
      * @return true if both instances are considered to be equal, false otherwise.
      */
-    public boolean equals(GNSSEstimation other) {
+    public boolean equals(final GNSSEstimation other) {
         return equals(other, 0.0);
     }
 
@@ -1020,7 +1019,7 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @return true if both instances are considered to be equal (up to provided threshold),
      * false otherwise.
      */
-    public boolean equals(GNSSEstimation other, final double threshold) {
+    public boolean equals(final GNSSEstimation other, final double threshold) {
         if (other == null) {
             return false;
         }

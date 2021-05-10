@@ -15,10 +15,6 @@
  */
 package com.irurueta.navigation.geodesic;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -29,25 +25,6 @@ public class PolygonAreaTest {
     private static final double ABSOLUTE_ERROR = 1e-9;
 
     private static final double LARGE_ABSOLUTE_ERROR = 1e-6;
-
-    public PolygonAreaTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
 
     @Test
     public void testConstructor() {

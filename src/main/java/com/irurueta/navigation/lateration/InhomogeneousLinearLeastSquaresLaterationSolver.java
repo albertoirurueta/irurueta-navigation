@@ -30,7 +30,6 @@ import com.irurueta.navigation.NotReadyException;
  *
  * @param <P> a {@link Point} type.
  */
-@SuppressWarnings("WeakerAccess")
 public abstract class InhomogeneousLinearLeastSquaresLaterationSolver<P extends Point<P>> extends
         LaterationSolver<P> {
 
@@ -87,7 +86,6 @@ public abstract class InhomogeneousLinearLeastSquaresLaterationSolver<P extends 
      * @throws LockedException     if instance is busy solving the lateration problem.
      */
     @Override
-    @SuppressWarnings("Duplicates")
     public void solve() throws LaterationException, NotReadyException,
             LockedException {
         // The implementation on this method follows the algorithm bellow for 3D but
@@ -154,7 +152,7 @@ public abstract class InhomogeneousLinearLeastSquaresLaterationSolver<P extends 
                 }
             }
 
-            //reference point is first position mPositions[0] with distance mDistances[0]
+            // reference point is first position mPositions[0] with distance mDistances[0]
             final double referenceDistance = mDistances[0];
             final double sqrRefDistance = referenceDistance * referenceDistance;
             final double[] b = new double[numberOfPositionsMinus1];
@@ -162,14 +160,14 @@ public abstract class InhomogeneousLinearLeastSquaresLaterationSolver<P extends 
                 final double ri = mDistances[i];
                 final double sqrRi = ri * ri;
 
-                //find distance between ri and r0
+                // find distance between ri and r0
                 final double sqrRi0 = mPositions[i].sqrDistanceTo(mPositions[0]);
                 b[i2] = 0.5 * (sqrRefDistance - sqrRi + sqrRi0);
             }
 
             mEstimatedPositionCoordinates = Utils.solve(a, b);
 
-            //add position of reference point
+            // add position of reference point
             for (int i = 0; i < dims; i++) {
                 mEstimatedPositionCoordinates[i] += mPositions[0].getInhomogeneousCoordinate(i);
             }

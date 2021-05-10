@@ -36,10 +36,11 @@ import java.util.Random;
 
 /**
  * Generates satellite GNSS measurement data.
- * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multisensor
+ * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multi-sensor
  * Integrated Navigation Systems, Second Edition" and on the companion software available at:
  * https://github.com/ymjdz/MATLAB-Codes/blob/master/Generate_GNSS_measurements.m
  */
+@SuppressWarnings("DuplicatedCode")
 public class GNSSMeasurementsGenerator {
 
     /**
@@ -283,7 +284,7 @@ public class GNSSMeasurementsGenerator {
     /**
      * Generates satellite GNSS measurements.
      *
-     * @param time                            current simultion time expressed in
+     * @param time                            current simulation time expressed in
      *                                        seconds (s).
      * @param satellitePositionsAndVelocities satellite positions and velocities.
      * @param userX                           x ECEF coordinate of user position
@@ -319,7 +320,7 @@ public class GNSSMeasurementsGenerator {
         result.clear();
 
         int pos = 0;
-        for (ECEFPositionAndVelocity satellitePositionAndVelocity : satellitePositionsAndVelocities) {
+        for (final ECEFPositionAndVelocity satellitePositionAndVelocity : satellitePositionsAndVelocities) {
             final Double gnssRangeErrorBias = gnssRangeErrorBiases.get(pos);
             pos++;
 
@@ -765,7 +766,7 @@ public class GNSSMeasurementsGenerator {
      * @param omegaIe            skew symmetric matrix of Earth rotation rate.
      * @param cei                ECEF to ECI conversion matrix.
      * @param satellitePosition  column matrix containing satellite position.
-     * @param deltaR             vector containing satellite to user posittion
+     * @param deltaR             vector containing satellite to user position
      *                           difference.
      * @param satelliteVelocity  column matrix containing satellite velocity.
      * @param userPosition       column matrix containing user position.

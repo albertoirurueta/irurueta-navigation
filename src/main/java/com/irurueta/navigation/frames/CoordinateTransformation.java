@@ -36,12 +36,11 @@ import java.util.Objects;
  * matrix where a vector may be transformed in one step from one set of resolving axes to another by pre-multiplying it
  * by the appropriate coordinate transformation matrix. The coordinate transformation matrix is associated to a source
  * and destination frame.
- * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multisensor
+ * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multi-sensor
  * Integrated Navigation Systems, Second Edition" and on the companion software available at:
  * https://github.com/ymjdz/MATLAB-Codes/blob/master/Euler_to_CTM.m
  * https://github.com/ymjdz/MATLAB-Codes/blob/master/CTM_to_Euler.m
  */
-@SuppressWarnings("WeakerAccess")
 public class CoordinateTransformation implements Serializable, Cloneable {
 
     /**
@@ -577,7 +576,7 @@ public class CoordinateTransformation implements Serializable, Cloneable {
             // Because matrix needs to be a rotation (3x3 and orthonormal), its inverse is the transpose
             matrix.transpose();
             result.setMatrix(matrix);
-        } catch (WrongSizeException | InvalidRotationMatrixException ignore) {
+        } catch (final WrongSizeException | InvalidRotationMatrixException ignore) {
             // never happens
         }
     }
@@ -672,7 +671,7 @@ public class CoordinateTransformation implements Serializable, Cloneable {
         try {
             result = new Matrix(CoordinateTransformation.ROWS, CoordinateTransformation.COLS);
             ecefToNedMatrix(latitude, longitude, result);
-        } catch (WrongSizeException ignore) {
+        } catch (final WrongSizeException ignore) {
             // never happens
             result = null;
         }
@@ -721,7 +720,7 @@ public class CoordinateTransformation implements Serializable, Cloneable {
             result.setSourceType(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
             result.setDestinationType(FrameType.LOCAL_NAVIGATION_FRAME);
             result.setMatrix(ecefToNedMatrix(latitude, longitude));
-        } catch (InvalidRotationMatrixException ignore) {
+        } catch (final InvalidRotationMatrixException ignore) {
             // never happens
         }
     }
@@ -776,8 +775,8 @@ public class CoordinateTransformation implements Serializable, Cloneable {
      * @param result    instance where computed matrix will be stored.
      */
     public static void nedToEcefMatrix(final double latitude, final double longitude, final Matrix result) {
-        //NED to ECEF matrix is the inverse of ECEF to NED matrix.
-        //Since ECEF to NED matrix is a rotation (3x3 and orthonormal), its inverse is the transpose.
+        // NED to ECEF matrix is the inverse of ECEF to NED matrix.
+        // Since ECEF to NED matrix is a rotation (3x3 and orthonormal), its inverse is the transpose.
         ecefToNedMatrix(latitude, longitude, result);
         result.transpose();
     }
@@ -794,7 +793,7 @@ public class CoordinateTransformation implements Serializable, Cloneable {
         try {
             result = new Matrix(CoordinateTransformation.ROWS, CoordinateTransformation.COLS);
             nedToEcefMatrix(latitude, longitude, result);
-        } catch (WrongSizeException ignore) {
+        } catch (final WrongSizeException ignore) {
             // never happens
             result = null;
         }
@@ -844,7 +843,7 @@ public class CoordinateTransformation implements Serializable, Cloneable {
             result.setSourceType(FrameType.LOCAL_NAVIGATION_FRAME);
             result.setDestinationType(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
             result.setMatrix(nedToEcefMatrix(latitude, longitude));
-        } catch (InvalidRotationMatrixException ignore) {
+        } catch (final InvalidRotationMatrixException ignore) {
             // never happens
         }
     }
@@ -980,7 +979,7 @@ public class CoordinateTransformation implements Serializable, Cloneable {
         try {
             result = new Matrix(CoordinateTransformation.ROWS, CoordinateTransformation.COLS);
             ecefToEciMatrixFromAngle(angle, result);
-        } catch (WrongSizeException ignore) {
+        } catch (final WrongSizeException ignore) {
             // never happens
             result = null;
         }
@@ -1041,7 +1040,7 @@ public class CoordinateTransformation implements Serializable, Cloneable {
             result.setSourceType(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
             result.setDestinationType(FrameType.EARTH_CENTERED_INERTIAL_FRAME);
             result.setMatrix(ecefToEciMatrixFromAngle(angle));
-        } catch (InvalidRotationMatrixException ignore) {
+        } catch (final InvalidRotationMatrixException ignore) {
             // never happens
         }
     }
@@ -1207,7 +1206,7 @@ public class CoordinateTransformation implements Serializable, Cloneable {
         try {
             result = new Matrix(CoordinateTransformation.ROWS, CoordinateTransformation.COLS);
             eciToEcefMatrixFromAngle(angle, result);
-        } catch (WrongSizeException ignore) {
+        } catch (final WrongSizeException ignore) {
             // never happens
             result = null;
         }
@@ -1268,7 +1267,7 @@ public class CoordinateTransformation implements Serializable, Cloneable {
             result.setSourceType(FrameType.EARTH_CENTERED_INERTIAL_FRAME);
             result.setDestinationType(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
             result.setMatrix(eciToEcefMatrixFromAngle(angle));
-        } catch (InvalidRotationMatrixException ignore) {
+        } catch (final InvalidRotationMatrixException ignore) {
             // never happens
         }
     }

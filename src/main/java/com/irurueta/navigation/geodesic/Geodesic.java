@@ -182,7 +182,7 @@ package com.irurueta.navigation.geodesic;
  *     }
  * </pre>
  */
-@SuppressWarnings({"WeakerAccess", "Duplicates"})
+@SuppressWarnings("DuplicatedCode")
 public class Geodesic {
 
     /**
@@ -238,19 +238,19 @@ public class Geodesic {
 
     private static final double XTHRESH = 1000 * TOL2;
 
-    protected double mA;
+    protected final double mA;
 
-    protected double mF;
+    protected final double mF;
 
-    protected double mF1;
+    protected final double mF1;
 
-    protected double mE2;
+    protected final double mE2;
 
-    protected double mEp2;
+    protected final double mEp2;
 
-    protected double mB;
+    protected final double mB;
 
-    protected double mC2;
+    protected final double mC2;
 
     private final double mN;
 
@@ -275,24 +275,24 @@ public class Geodesic {
         mF1 = 1 - mF;
         mE2 = mF * (2 - mF);
 
-        //e2 / (1 - e2)
+        // e2 / (1 - e2)
         mEp2 = mE2 / GeoMath.sq(mF1);
         mN = mF / (2 - mF);
         mB = mA * mF1;
 
-        //authalic radius squared
+        // authalic radius squared
         final double tmp = (mE2 > 0 ? GeoMath.atanh(Math.sqrt(mE2)) :
                 Math.atan(Math.sqrt(-mE2)));
         mC2 = (GeoMath.sq(mA) + GeoMath.sq(mB) *
                 (mE2 == 0 ? 1 : tmp / Math.sqrt(Math.abs(mE2)))) / 2;
 
-        //The sig12 threshold for "really short". Using the auxiliary sphere solution with dnm computed at
-        //(bet1 + bet2) / 2, the relative error in the azimuth consistency check is
-        //sig12^2 * abs(f) * min(1, 1 - f/2) / 2.
-        //(Error measured for 1/100 < b/a < 100 and abs(f) >= 1/1000. For a given f and sig12, the max error occurs for
-        //lines near the pole. If the old rule for computing dnm = (dn1 + dn2)/2 is used, then the error increases by
-        //a factor of 2.) Setting this equal to epsilon gives sig12 = etol2. Here 0.1 is a safety factor (error
-        //decreased by 100) and max(0.001, abs(f)) stops etol2 getting too large in the nearly spherical case.
+        // The sig12 threshold for "really short". Using the auxiliary sphere solution with dnm computed at
+        // (bet1 + bet2) / 2, the relative error in the azimuth consistency check is
+        // sig12^2 * abs(f) * min(1, 1 - f/2) / 2.
+        // (Error measured for 1/100 < b/a < 100 and abs(f) >= 1/1000. For a given f and sig12, the max error occurs for
+        // lines near the pole. If the old rule for computing dnm = (dn1 + dn2)/2 is used, then the error increases by
+        // a factor of 2.) Setting this equal to epsilon gives sig12 = etol2. Here 0.1 is a safety factor (error
+        // decreased by 100) and max(0.001, abs(f)) stops etol2 getting too large in the nearly spherical case.
         mEtol2 = 0.1 * TOL2 / Math.sqrt(Math.max(0.001, Math.abs(mF)) * Math.min(1.0, 1 - mF / 2) / 2);
 
         if (!(GeoMath.isFinite(mA) && mA > 0)) {
@@ -439,7 +439,7 @@ public class Geodesic {
     public GeodesicData direct(
             final double lat1, final double lon1, final double azi1,
             final boolean arcmode, final double s12A12, int outmask) {
-        //automatically supply DISTANCE_IN if necessary
+        // automatically supply DISTANCE_IN if necessary
         if (!arcmode) {
             outmask |= GeodesicMask.DISTANCE_IN;
         }
@@ -545,12 +545,12 @@ public class Geodesic {
         final double salp1;
         final double calp1;
 
-        //Guard against underflow in salp0. Also -0 is converted to +0.
-        Pair p = GeoMath.sincosd(GeoMath.angRound(azi1));
+        // Guard against underflow in salp0. Also -0 is converted to +0.
+        final Pair p = GeoMath.sincosd(GeoMath.angRound(azi1));
         salp1 = p.getFirst();
         calp1 = p.getSecond();
 
-        //Automatically supply DISTANCE_IN if necessary
+        // Automatically supply DISTANCE_IN if necessary
         if (!arcmode) {
             caps |= GeodesicMask.DISTANCE_IN;
         }
@@ -664,7 +664,7 @@ public class Geodesic {
      * @param lat1 latitude of point 1 (degrees).
      * @param lon1 longitude of point 1 (degrees).
      * @param lat2 latitude of point 2 (degrees).
-     * @param lon2 longitude of point 2 (degres).
+     * @param lon2 longitude of point 2 (degrees).
      * @param caps bitor'ed combination of {@link GeodesicMask} values specifying the capabilities
      *             the GeodesicLine object should possess, i.e., which quantities can be returned
      *             in calls to {@link GeodesicLine#position}.
@@ -678,7 +678,7 @@ public class Geodesic {
         final double calp1 = result.mCalp1;
         final double azi1 = GeoMath.atan2d(salp1, calp1);
         final double a12 = result.mG.getA12();
-        //ensure that a12 can be converted to a distance
+        // ensure that a12 can be converted to a distance
         if ((caps & (GeodesicMask.OUT_MASK & GeodesicMask.DISTANCE_IN)) != 0) {
             caps |= GeodesicMask.DISTANCE;
         }
@@ -809,48 +809,48 @@ public class Geodesic {
      */
     protected static double sinCosSeries(
             final boolean sinp, final double sinx, final double cosx, final double[] c) {
-        //evaluate
-        //y = sinp ? sum(c[i] * sin(2 * i * x), i, 1, n) :
-        //      sum(c[i] * cos((2 * i + 1) * x), i, 0, n - 1)
-        //using Clenshaw summation. N.B. c[0] is unused for sin series
-        //Approx operation count = (n + 5) mult and (2 * n + 2) add
+        // evaluate
+        // y = sinp ? sum(c[i] * sin(2 * i * x), i, 1, n) :
+        //       sum(c[i] * cos((2 * i + 1) * x), i, 0, n - 1)
+        // using Clenshaw summation. N.B. c[0] is unused for sin series
+        // Approx operation count = (n + 5) mult and (2 * n + 2) add
 
-        //point to one beyond last element
+        // point to one beyond last element
         int k = c.length;
         int n = k - (sinp ? 1 : 0);
 
-        //2 * cos(2 * x)
+        // 2 * cos(2 * x)
         final double ar = 2 * (cosx - sinx) * (cosx + sinx);
-        //accumulators for sum
+        // accumulators for sum
         double y0 = (n & 1) != 0 ? c[--k] : 0;
         double y1 = 0;
 
-        //now n is even
+        // now n is even
         n /= 2;
         while (n-- != 0) {
-            //unroll loop x 2, so accumulators return to their original role
+            // unroll loop x 2, so accumulators return to their original role
             y1 = ar * y0 - y1 + c[--k];
             y0 = ar * y1 - y0 + c[--k];
         }
 
-        //sin(2 * x) * y0 or cos(x) * (y0 - y1)
+        // sin(2 * x) * y0 or cos(x) * (y0 - y1)
         return sinp ? 2 * sinx * cosx * y0 : cosx * (y0 - y1);
     }
 
     protected double a3f(final double eps) {
-        //evaluate a3
+        // evaluate a3
         return GeoMath.polyval(NA3 - 1, mA3x, 0, eps);
     }
 
     protected void c3f(final double eps, final double[] c) {
-        //evaluate c3 coeffs
-        //elements c[1] thru c[NC3 - 1] are set
+        // evaluate c3 coeffs
+        // elements c[1] thru c[NC3 - 1] are set
         double mult = 1;
         int o = 0;
 
-        //1 is index of c3[l]
+        // 1 is index of c3[l]
         for (int l = 1; l < NC3; ++l) {
-            //order of polynomial in eps
+            // order of polynomial in eps
             final int m = NC3 - l - 1;
             mult *= eps;
             c[l] = mult * GeoMath.polyval(m, mC3x, o, eps);
@@ -859,14 +859,14 @@ public class Geodesic {
     }
 
     protected void c4f(final double eps, final double[] c) {
-        //evaluate c4 coeffs
-        //elements c[0] thru c[NC4 - 1] are set
+        // evaluate c4 coeffs
+        // elements c[0] thru c[NC4 - 1] are set
         double mult = 1;
         int o = 0;
 
-        //l is index of c4[l]
+        // l is index of c4[l]
         for (int l = 0; l < NC4; ++l) {
-            //order of polynomial in eps
+            // order of polynomial in eps
             final int m = NC4 - l - 1;
             c[l] = mult * GeoMath.polyval(m, mC4x, o, eps);
             o += m + 1;
@@ -874,10 +874,10 @@ public class Geodesic {
         }
     }
 
-    //the scale factor a1 - 1 = mean value of (d/dsigma) i1 - 1
+    // the scale factor a1 - 1 = mean value of (d/dsigma) i1 - 1
     protected static double a1m1f(final double eps) {
         final double[] coeffs = {
-                //(1 - eps) * a1 - 1, polynomial in eps2 of order3
+                // (1 - eps) * a1 - 1, polynomial in eps2 of order3
                 1, 4, 64, 0, 256,
         };
         final int m = NA1 / 2;
@@ -885,20 +885,20 @@ public class Geodesic {
         return (t + eps) / (1 - eps);
     }
 
-    //The coefficients c1[l] in the Fourier expansion of b1
+    // The coefficients c1[l] in the Fourier expansion of b1
     protected static void c1f(final double eps, final double[] c) {
         final double[] coeff = {
-                //c1[1]/eps^1, polynomial in eps2 of order 2
+                // c1[1]/eps^1, polynomial in eps2 of order 2
                 -1, 6, -16, 32,
-                //c1[2]/eps^2, polynomial in eps2 of order 2
+                // c1[2]/eps^2, polynomial in eps2 of order 2
                 -9, 64, -128, 2048,
-                //c1[3]/eps^3, polynomial in eps2 of order 1
+                // c1[3]/eps^3, polynomial in eps2 of order 1
                 9, -16, 768,
-                //c1[4]/eps^4, polynomial in eps2 of order 1
+                // c1[4]/eps^4, polynomial in eps2 of order 1
                 3, -5, 512,
-                //c1[5]/eps^5, polynomial in eps2 of order 0
+                // c1[5]/eps^5, polynomial in eps2 of order 0
                 -7, 1280,
-                //c1[6]/eps^6, polynomial in eps2 of order 0
+                // c1[6]/eps^6, polynomial in eps2 of order 0
                 -7, 2048,
         };
 
@@ -906,8 +906,8 @@ public class Geodesic {
         double d = eps;
         int o = 0;
         for (int l = 1; l <= NC1; ++l) {
-            //l is index of c1p[l]
-            //order of polynomial in eps^2
+            // l is index of c1p[l]
+            // order of polynomial in eps^2
             final int m = (NC1 - l) / 2;
             c[l] = d * GeoMath.polyval(m, coeff, o, eps2) / coeff[o + m + 1];
             o += m + 2;
@@ -915,20 +915,20 @@ public class Geodesic {
         }
     }
 
-    //The coefficients c1p[l] in the Fourier expansion of b1p
+    // The coefficients c1p[l] in the Fourier expansion of b1p
     protected static void c1pf(final double eps, final double[] c) {
         final double[] coeff = {
-                //c1p[l]/eps^1, polynomial in eps2 of order 2
+                // c1p[l]/eps^1, polynomial in eps2 of order 2
                 205, -432, 768, 1536,
-                //c1p[2]/eps^2, polynomial in eps2 of order 2
+                // c1p[2]/eps^2, polynomial in eps2 of order 2
                 4005, -4736, 3840, 12288,
-                //c1p[3]/eps^3, polynomial in eps2 of order 1
+                // c1p[3]/eps^3, polynomial in eps2 of order 1
                 -225, 116, 384,
-                //c1p[4]/eps^4, polynomial in eps2 of order 1
+                // c1p[4]/eps^4, polynomial in eps2 of order 1
                 -7173, 2695, 7680,
-                //c1p[5]/eps^5, polynomial in eps2 of order 0
+                // c1p[5]/eps^5, polynomial in eps2 of order 0
                 3467, 7680,
-                //c1p[6]/eps^6, polynomial in eps2 of order 0
+                // c1p[6]/eps^6, polynomial in eps2 of order 0
                 38081, 61440,
         };
 
@@ -936,9 +936,9 @@ public class Geodesic {
         double d = eps;
         int o = 0;
 
-        //l is index of c1p[l]
+        // l is index of c1p[l]
         for (int l = 1; l <= NC1P; ++l) {
-            //order of polynomial in eps^2
+            // order of polynomial in eps^2
             final int m = (NC1P - l) / 2;
             c[l] = d * GeoMath.polyval(m, coeff, o, eps2) / coeff[o + m + 1];
             o += m + 2;
@@ -946,32 +946,32 @@ public class Geodesic {
         }
     }
 
-    //the scale factor a2 - 1 = mean value of (d/dsigma)i2 - 1
+    // the scale factor a2 - 1 = mean value of (d/dsigma)i2 - 1
     protected static double a2m1f(final double eps) {
         final double[] coeff = {
-                //(eps + 1)*a2 - 1, polynomial in eps2 of order 3
+                // (eps + 1)*a2 - 1, polynomial in eps2 of order 3
                 -11, -28, -192, 0, 256,
         };
 
-        int m = NA2 / 2;
-        double t = GeoMath.polyval(m, coeff, 0, GeoMath.sq(eps)) / coeff[m + 1];
+        final int m = NA2 / 2;
+        final double t = GeoMath.polyval(m, coeff, 0, GeoMath.sq(eps)) / coeff[m + 1];
         return (t - eps) / (1 + eps);
     }
 
-    //the coefficients c2[l] in the Fourier expansion of b2
+    // the coefficients c2[l] in the Fourier expansion of b2
     protected static void c2f(final double eps, final double[] c) {
         final double[] coeff = {
-                //c2[1]/eps^1, polynomial in eps2 of order 2
+                // c2[1]/eps^1, polynomial in eps2 of order 2
                 1, 2, 16, 32,
-                //c2[2]/eps^2, polynomial in eps2 of order 2
+                // c2[2]/eps^2, polynomial in eps2 of order 2
                 35, 64, 384, 2048,
-                //c2[3]/eps^3, polynomial in eps2 of order 1
+                // c2[3]/eps^3, polynomial in eps2 of order 1
                 15, 80, 768,
-                //c2[4]/eps^4, polynomial in eps2 of order 1
+                // c2[4]/eps^4, polynomial in eps2 of order 1
                 7, 35, 512,
-                //c2[5]/eps^5, polynomial in eps2 of order 0
+                // c2[5]/eps^5, polynomial in eps2 of order 0
                 63, 1280,
-                //c2[6]/eps^6, polynomial in eps2 of order 0
+                // c2[6]/eps^6, polynomial in eps2 of order 0
                 77, 2048,
         };
 
@@ -979,9 +979,9 @@ public class Geodesic {
         double d = eps;
         int o = 0;
 
-        //l is index of c2[l]
+        // l is index of c2[l]
         for (int l = 1; l <= NC2; ++l) {
-            //order of polynomial in eps^2
+            // order of polynomial in eps^2
             final int m = (NC2 - l) / 2;
             c[l] = d * GeoMath.polyval(m, coeff, o, eps2) / coeff[o + m + 1];
             o += m + 2;
@@ -989,36 +989,36 @@ public class Geodesic {
         }
     }
 
-    //The scale factor a3 = mean value of (d/dsigma)i3
+    // The scale factor a3 = mean value of (d/dsigma)i3
     private void a3coeff() {
         final double[] coeff = {
-                //a3, coeff of eps^5, polynomial in n of order 0
+                // a3, coeff of eps^5, polynomial in n of order 0
                 -3, 128,
-                //a3, coeff of eps^4, polynomial in n of order 1
+                // a3, coeff of eps^4, polynomial in n of order 1
                 -2, -3, 64,
-                //a3, coeff of eps^3, polynomial in n of order 2
+                // a3, coeff of eps^3, polynomial in n of order 2
                 -1, -3, -1, 16,
-                //a3, coeff of eps^2, polynomial in n of order 2
+                // a3, coeff of eps^2, polynomial in n of order 2
                 3, -1, -2, 8,
-                //a3, coeff of eps^1, polynomial in n of order 1
+                // a3, coeff of eps^1, polynomial in n of order 1
                 1, -1, 2,
-                //a3, coeff of eps^0, polynomial in n of order 0
+                // a3, coeff of eps^0, polynomial in n of order 0
                 1, 1,
         };
 
         int o = 0;
         int k = 0;
 
-        //coeff of eps^j
+        // coeff of eps^j
         for (int j = NA3 - 1; j >= 0; --j) {
-            //order of polynomial in n
+            // order of polynomial in n
             final int m = Math.min(NA3 - j - 1, j);
             mA3x[k++] = GeoMath.polyval(m, coeff, o, mN) / coeff[o + m + 1];
             o += m + 2;
         }
     }
 
-    //The coefficients c3[l] in the Fourier expansion of b3
+    // The coefficients c3[l] in the Fourier expansion of b3
     private void c3coeff() {
         final double[] coeff = {
                 // c3[1], coeff of eps^5, polynomial in n of order 0
@@ -1055,11 +1055,11 @@ public class Geodesic {
 
         int o = 0;
         int k = 0;
-        //l is index of c3[l]
+        // l is index of c3[l]
         for (int l = 1; l < NC3; ++l) {
             for (int j = NC3 - 1; j >= l; --j) {
-                //coeff of eps^j
-                //order of polynomial in n
+                // coeff of eps^j
+                // order of polynomial in n
                 final int m = Math.min(NC3 - j - 1, j);
                 mC3x[k++] = GeoMath.polyval(m, coeff, o, mN) / coeff[o + m + 1];
                 o += m + 2;
@@ -1114,11 +1114,11 @@ public class Geodesic {
         };
         int o = 0;
         int k = 0;
-        //l is index of c3[l]
+        // l is index of c3[l]
         for (int l = 0; l < NC4; ++l) {
-            //coeff of eps^j
+            // coeff of eps^j
             for (int j = NC4 - 1; j >= l; --j) {
-                //order of polynomial in n
+                // order of polynomial in n
                 final int m = NC4 - j - 1;
                 mC4x[k++] = GeoMath.polyval(m, coeff, o, mN) / coeff[o + m + 1];
                 o += m + 2;
@@ -1132,14 +1132,14 @@ public class Geodesic {
         final InverseData result = new InverseData();
         final GeodesicData r = result.mG;
 
-        //Compute longitude difference (angDiff does this carefully). Result is in [-180, 180] but
-        //-180 is only for west-going geodesics. 180 is for east-going and meridional geodesics.
+        // Compute longitude difference (angDiff does this carefully). Result is in [-180, 180] but
+        // -180 is only for west-going geodesics. 180 is for east-going and meridional geodesics.
         lat1 = GeoMath.latFix(lat1);
         lat2 = GeoMath.latFix(lat2);
         r.setLat1(lat1);
         r.setLat2(lat2);
 
-        //if really close to the equator, treat as on equator
+        // if really close to the equator, treat as on equator
         lat1 = GeoMath.angRound(lat1);
         lat2 = GeoMath.angRound(lat2);
 
@@ -1158,10 +1158,10 @@ public class Geodesic {
             r.setLon2(GeoMath.angNormalize(lon2));
         }
 
-        //make longitude difference positive
+        // make longitude difference positive
         int lonsign = lon12 >= 0 ? 1 : -1;
 
-        //if very close to being on the same half-meridian, then make it so
+        // if very close to being on the same half-meridian, then make it so
         lon12 = lonsign * GeoMath.angRound(lon12);
         lon12s = GeoMath.angRound((180 - lon12) - lonsign * lon12s);
         final double lam12 = Math.toRadians(lon12);
@@ -1172,8 +1172,8 @@ public class Geodesic {
         slam12 = p.getFirst();
         clam12 = (lon12 > 90 ? -1 : 1) * p.getSecond();
 
-        //swap points so that point with higher (abs) latitude is point 1
-        //if one latitude is a nan, then it becomes lat1
+        // swap points so that point with higher (abs) latitude is point 1
+        // if one latitude is a nan, then it becomes lat1
         final int swapp = Math.abs(lat1) < Math.abs(lat2) ? -1 : 1;
         if (swapp < 0) {
             lonsign *= -1;
@@ -1183,19 +1183,19 @@ public class Geodesic {
             lat2 = t;
         }
 
-        //make lat1 <= 0
+        // make lat1 <= 0
         final int latsign = lat1 < 0 ? 1 : -1;
         lat1 *= latsign;
         lat2 *= latsign;
 
-        //now we have
-        //0 <= lon2 <= 180
-        //-90 <= lat1 <= 0
-        //lat1 <= lat2 <= -lat1
-        //longsign, swapp, latsign register the transformation to bring the coordinates to this
-        //canonical form. In all cases, 1 means no change was made. We make these transformations
-        //so that there are few cases to check, e.g., on verifying quadrants in atan2. In addition,
-        //this enforces some symmetries in the results returned.
+        // now we have
+        // 0 <= lon2 <= 180
+        // -90 <= lat1 <= 0
+        // lat1 <= lat2 <= -lat1
+        // longsign, swapp, latsign register the transformation to bring the coordinates to this
+        // canonical form. In all cases, 1 means no change was made. We make these transformations
+        // so that there are few cases to check, e.g., on verifying quadrants in atan2. In addition,
+        // this enforces some symmetries in the results returned.
 
         double sbet1;
         double cbet1;
@@ -1209,8 +1209,8 @@ public class Geodesic {
         sbet1 = mF1 * p.getFirst();
         cbet1 = p.getSecond();
 
-        //ensure cbet1 = +epsilon at poles; doing the fix on beta means that sig12 will be <= 2*tiny
-        //for two points at the same pole.
+        // ensure cbet1 = +epsilon at poles; doing the fix on beta means that sig12 will be <= 2*tiny
+        // for two points at the same pole.
         p = GeoMath.norm(sbet1, cbet1);
         sbet1 = p.getFirst();
         cbet1 = p.getSecond();
@@ -1221,19 +1221,19 @@ public class Geodesic {
         sbet2 = mF1 * p.getFirst();
         cbet2 = p.getSecond();
 
-        //ensure cbet2 = +epsilon at poles
+        // ensure cbet2 = +epsilon at poles
         p = GeoMath.norm(sbet2, cbet2);
         sbet2 = p.getFirst();
         cbet2 = p.getSecond();
 
         cbet2 = Math.max(TINY, cbet2);
 
-        //if cbet1 < -sbet1, then cbet2 - cbet1 is a sensitive measure of the |bet1| - |bet2|.
-        //Alternatively (cbet1 >= -sbet1), abs(sbet2) + sbet1 is a better measure.
-        //This logic is used in assigning calp2 in lambda12.
-        //Sometimes these quantities vanish and in that case we force bet2 = +/- bet1 exactly.
-        //An example where it is necessary is the inverse problem
-        //48.522876735459 0 -48.522876735458293 179.599720456223079643
+        // if cbet1 < -sbet1, then cbet2 - cbet1 is a sensitive measure of the |bet1| - |bet2|.
+        // Alternatively (cbet1 >= -sbet1), abs(sbet2) + sbet1 is a better measure.
+        // This logic is used in assigning calp2 in lambda12.
+        // Sometimes these quantities vanish and in that case we force bet2 = +/- bet1 exactly.
+        // An example where it is necessary is the inverse problem
+        // 48.522876735459 0 -48.522876735458293 179.599720456223079643
 
         if (cbet1 < -sbet1) {
             if (cbet2 == cbet1) {
@@ -1256,7 +1256,7 @@ public class Geodesic {
         double salp2;
         a12 = calp1 = salp1 = calp2 = salp2 = Double.NaN;
 
-        //index zero elements of these arrays are unused
+        // index zero elements of these arrays are unused
         final double[] c1a = new double[NC1 + 1];
         final double[] c2a = new double[NC2 + 1];
         final double[] c3a = new double[NC3];
@@ -1264,23 +1264,23 @@ public class Geodesic {
         boolean meridian = lat1 == -90 || slam12 == 0;
 
         if (meridian) {
-            //endpoints are on a single full meridian, so the geodesic might lie on a meridian
+            // endpoints are on a single full meridian, so the geodesic might lie on a meridian
 
-            //head to the target longitude
+            // head to the target longitude
             calp1 = clam12;
             salp1 = slam12;
 
-            //at the target we're heading north
+            // at the target we're heading north
             calp2 = 1;
             salp2 = 0;
 
-            //tan(bet) = tan(sig) * cos(alp)
+            // tan(bet) = tan(sig) * cos(alp)
             //noinspection all
             final double ssig1 = sbet1;
             final double csig1 = calp1 * cbet1;
             final double csig2 = calp2 * cbet2;
 
-            //sig12 = sig2 - sig1
+            // sig12 = sig2 - sig1
             sig12 = Math.atan2(Math.max(0.0, csig1 * sbet2 - ssig1 * csig2),
                     csig1 * csig2 + ssig1 * sbet2);
 
@@ -1294,11 +1294,11 @@ public class Geodesic {
                 r.setScaleM21(v.mM21);
             }
 
-            //add the check for sig12 since zero length geodesics might yield m12 < 0. Test case was
-            //echo 20.001 0 20.001 0 | GeodSolve -i
-            //in fact, we will have sig12 > pi/2 for meridional geodesic which is not a shortest path.
+            // add the check for sig12 since zero length geodesics might yield m12 < 0. Test case was
+            // echo 20.001 0 20.001 0 | GeodSolve -i
+            // in fact, we will have sig12 > pi/2 for meridional geodesic which is not a shortest path.
             if (sig12 < 1 || m12x >= 0) {
-                //need at least 2, to handle 90 0 90 180
+                // need at least 2, to handle 90 0 90 180
                 if (sig12 < 3 * TINY) {
                     sig12 = m12x = s12x = 0;
                 }
@@ -1306,7 +1306,7 @@ public class Geodesic {
                 s12x *= mB;
                 a12 = Math.toDegrees(sig12);
             } else {
-                //m12 < 0, i.e., prolate and too close to anti-podal
+                // m12 < 0, i.e., prolate and too close to anti-podal
                 meridian = false;
             }
         }
@@ -1314,9 +1314,9 @@ public class Geodesic {
         double omg12 = Double.NaN;
         double somg12 = 2.0;
         double comg12 = Double.NaN;
-        //and sbet2 == 0 mimic the way Lambda12 works with calp1 = 0
+        // and sbet2 == 0 mimic the way Lambda12 works with calp1 = 0
         if (!meridian && sbet1 == 0 && (mF <= 0 || lon12s >= mF * 180)) {
-            //geodesic runs along equator
+            // geodesic runs along equator
             calp1 = calp2 = 0;
             salp1 = salp2 = 1;
             s12x = mA * lam12;
@@ -1330,10 +1330,10 @@ public class Geodesic {
             a12 = lon12 / mF1;
 
         } else if (!meridian) {
-            //now point1 and point2 belong within a hemisphere bounded by a
-            //meridian and geodesic is neither meridional or equatorial
+            // now point1 and point2 belong within a hemisphere bounded by a
+            // meridian and geodesic is neither meridional or equatorial
 
-            //figure a starting point for Newton's method
+            // figure a starting point for Newton's method
             final double dnm;
             final InverseStartV iv = inverseStart(sbet1, cbet1, dn1, sbet2, cbet2, dn2,
                     lam12, slam12, clam12, c1a, c2a);
@@ -1345,7 +1345,7 @@ public class Geodesic {
             dnm = iv.mDnm;
 
             if (sig12 >= 0) {
-                //short lines (inverseStart sets salp2, calp2, dnm)
+                // short lines (inverseStart sets salp2, calp2, dnm)
                 s12x = sig12 * mB * dnm;
                 m12x = GeoMath.sq(dnm) * mB * Math.sin(sig12 / dnm);
                 if ((outmask & GeodesicMask.GEODESIC_SCALE) != 0) {
@@ -1356,16 +1356,16 @@ public class Geodesic {
                 a12 = Math.toDegrees(sig12);
                 omg12 = lam12 / (mF1 * dnm);
             } else {
-                //Newton's method. This is a straightforward solution of f(alp1) =
-                //lambda12(alp1) - lam12 = 0 with one wrinkle. f(alp) has exactly one
-                //root in the interval (0, pi) and its derivative is positive at the
-                //root. Thus f(alp) is positive for alp > alp1 and negative for alp < alp1.
-                //During the course of the iteration, a range (alp1a, alp1b) is maintained
-                //which brackets the root and with each evaluation of f(alp) the range is
-                //shrunk, if possible. Newton's method is restarted whenever the derivative
-                //of f is negative (because the new value of alp1 is then further from the
-                //solution) or if the new estimate of alp1 lies outside (0,pi); in this
-                //case, the new starting guess is taken to be (alp1a + alp1b) / 2.
+                // Newton's method. This is a straightforward solution of f(alp1) =
+                // lambda12(alp1) - lam12 = 0 with one wrinkle. f(alp) has exactly one
+                // root in the interval (0, pi) and its derivative is positive at the
+                // root. Thus f(alp) is positive for alp > alp1 and negative for alp < alp1.
+                // During the course of the iteration, a range (alp1a, alp1b) is maintained
+                // which brackets the root and with each evaluation of f(alp) the range is
+                // shrunk, if possible. Newton's method is restarted whenever the derivative
+                // of f is negative (because the new value of alp1 is then further from the
+                // solution) or if the new estimate of alp1 lies outside (0,pi); in this
+                // case, the new starting guess is taken to be (alp1a + alp1b) / 2.
                 double ssig1;
                 double csig1;
                 double ssig2;
@@ -1374,14 +1374,14 @@ public class Geodesic {
                 double domg12;
                 ssig1 = csig1 = ssig2 = csig2 = eps = domg12 = Double.NaN;
                 int numit = 0;
-                //bracketing range
+                // bracketing range
                 double salp1a = TINY;
                 double calp1a = 1.0;
                 double salp1b = TINY;
                 double calp1b = -1.0;
                 for (boolean tripn = false, tripb = false; numit < MAXIT2; ++numit) {
-                    //the WGS84 test set: mean = 1.47, sd = 1.25, max = 16
-                    //WGS84 and random input: mean = 2.85, sd = 0.60
+                    // the WGS84 test set: mean = 1.47, sd = 1.25, max = 16
+                    // WGS84 and random input: mean = 2.85, sd = 0.60
                     final double v;
                     final double dv;
 
@@ -1399,14 +1399,14 @@ public class Geodesic {
                     domg12 = w.mDomg12;
                     dv = w.mDlam12;
 
-                    //2 * TOL0 is approximately 1 ulp for a number in [0, pi].
-                    //reversed test to allow escape with NaNs
+                    // 2 * TOL0 is approximately 1 ulp for a number in [0, pi].
+                    // reversed test to allow escape with NaNs
                     final double tmp = (tripn ? 8 : 1);
                     if (tripb || !(Math.abs(v) >= tmp * TOL0)) {
                         break;
                     }
 
-                    //update bracketing values
+                    // update bracketing values
                     if (v > 0 && (numit > MAXIT1 || calp1 / salp1 > calp1b / salp1b)) {
                         salp1b = salp1;
                         calp1b = calp1;
@@ -1428,21 +1428,21 @@ public class Geodesic {
                             salp1 = p.getFirst();
                             calp1 = p.getSecond();
 
-                            //in some regimes we don't get quadratic convergence because
-                            //slope -> 0. So use convergence conditions based on epsilon
-                            //instead of sqrt(epsilon).
+                            // in some regimes we don't get quadratic convergence because
+                            // slope -> 0. So use convergence conditions based on epsilon
+                            // instead of sqrt(epsilon).
                             tripn = Math.abs(v) <= 16 * TOL0;
                             continue;
                         }
                     }
 
-                    //either dv was not positive or updated value was outside legal range.
-                    //Use the midpoint of the bracket as the next estimate.
-                    //This mechanism is not needed for the WGS84 ellipsoid, but it does
-                    //catch problems with more eccentric ellipsoids. Its efficacy is such
-                    //for the WGS84 test set with the starting guess set to alp1 = 90deg
-                    //the WGS84 test set: mean = 5.21, sd = 3.93, max = 24
-                    //WGS84 and random input: mean = 4.74, sd = 0.99
+                    // either dv was not positive or updated value was outside legal range.
+                    // Use the midpoint of the bracket as the next estimate.
+                    // This mechanism is not needed for the WGS84 ellipsoid, but it does
+                    // catch problems with more eccentric ellipsoids. Its efficacy is such
+                    // for the WGS84 test set with the starting guess set to alp1 = 90deg
+                    // the WGS84 test set: mean = 5.21, sd = 3.93, max = 24
+                    // WGS84 and random input: mean = 4.74, sd = 0.99
                     salp1 = (salp1a + salp1b) / 2;
                     calp1 = (calp1a + calp1b) / 2;
 
@@ -1455,8 +1455,8 @@ public class Geodesic {
                             Math.abs(salp1 - salp1b) + (calp1 - calp1b) < TOLB);
                 }
 
-                //ensure that the reduced length and geodesic scale are computed in a
-                //"canonical" way, with the I2 integral.
+                // ensure that the reduced length and geodesic scale are computed in a
+                // "canonical" way, with the I2 integral.
                 final int lengthmask = outmask | ((outmask &
                         (GeodesicMask.REDUCED_LENGTH | GeodesicMask.GEODESIC_SCALE)) != 0 ?
                         GeodesicMask.DISTANCE : GeodesicMask.NONE);
@@ -1473,7 +1473,7 @@ public class Geodesic {
                 s12x *= mB;
                 a12 = Math.toDegrees(sig12);
                 if ((outmask & GeodesicMask.AREA) != 0) {
-                    //omg12 = lam12 - domg12
+                    // omg12 = lam12 - domg12
                     final double sdomg12 = Math.sin(domg12);
                     final double cdomg12 = Math.cos(domg12);
                     somg12 = slam12 * cdomg12 - clam12 * sdomg12;
@@ -1483,24 +1483,24 @@ public class Geodesic {
         }
 
         if ((outmask & GeodesicMask.DISTANCE) != 0) {
-            //convert -0 to 0
+            // convert -0 to 0
             r.setS12(0.0 + s12x);
         }
 
         if ((outmask & GeodesicMask.REDUCED_LENGTH) != 0) {
-            //convert -0 to 0
+            // convert -0 to 0
             r.setM12(0.0 + m12x);
         }
 
         if ((outmask & GeodesicMask.AREA) != 0) {
-            //from lambda12: sin(alp1) * cos(bet1) = sin(alp0)
-            //calp0 > 0
+            // from lambda12: sin(alp1) * cos(bet1) = sin(alp0)
+            // calp0 > 0
             final double salp0 = salp1 * cbet1;
             final double calp0 = GeoMath.hypot(calp1, salp1 * sbet1);
             final double alp12;
             if (calp0 != 0 && salp0 != 0) {
-                //from lambda12: tan(bet) = tan(sig) * cos(alp)
-                //multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0).
+                // from lambda12: tan(bet) = tan(sig) * cos(alp)
+                // multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0).
                 double ssig1 = sbet1;
                 double csig1 = calp1 * cbet1;
                 double ssig2 = sbet2;
@@ -1523,7 +1523,7 @@ public class Geodesic {
                 final double b42 = sinCosSeries(false, ssig2, csig2, c4a);
                 r.setAreaS12(a4 * (b42 - b41));
             } else {
-                //avoid problems with indeterminate sig1, sig2 on equator
+                // avoid problems with indeterminate sig1, sig2 on equator
                 r.setAreaS12(0.0);
             }
 
@@ -1532,25 +1532,25 @@ public class Geodesic {
                 comg12 = Math.cos(omg12);
             }
 
-            //long difference not too big
-            //lat difference not too big
+            // long difference not too big
+            // lat difference not too big
             if (!meridian && comg12 > -0.7071 && sbet2 - sbet1 < 1.75) {
-                //use tan(gamma/2) = tan(omg12/2) * (tan(bet1/2)+tan(bet2/2))/
-                //(1+tan(bet1/2)*tan(bet2/2)) with tan(x/2) = sin(x)/(1 + cos(x))
+                // use tan(gamma/2) = tan(omg12/2) * (tan(bet1/2)+tan(bet2/2))/
+                // (1+tan(bet1/2)*tan(bet2/2)) with tan(x/2) = sin(x)/(1 + cos(x))
                 final double domg12 = 1 + comg12;
                 final double dbet1 = 1 + cbet1;
                 final double dbet2 = 1 + cbet2;
                 alp12 = 2 * Math.atan2(somg12 * (sbet1 * dbet2 + sbet2 * dbet1),
                         domg12 * (sbet1 * sbet2 + dbet1 * dbet2));
             } else {
-                //alp12 = alp2 - alp1, used in atan2 so no need to normalize
+                // alp12 = alp2 - alp1, used in atan2 so no need to normalize
                 double salp12 = salp2 * calp1 - calp2 * salp1;
                 double calp12 = calp2 * calp1 + salp2 * salp1;
 
-                //the right thing appears to happed if alp1 = +/-180 and alp2 = 0, viz
-                //salp12 = -0 and alp12 = -180. However this depends on the sign
-                //being attached to 0 correctly. The following ensures the correct
-                //behavior.
+                // the right thing appears to happed if alp1 = +/-180 and alp2 = 0, viz
+                // salp12 = -0 and alp12 = -180. However this depends on the sign
+                // being attached to 0 correctly. The following ensures the correct
+                // behavior.
                 if (salp12 == 0 && calp12 < 0) {
                     salp12 = TINY * calp1;
                     calp12 = -1;
@@ -1560,11 +1560,11 @@ public class Geodesic {
             r.setAreaS12(r.getAreaS12() + mC2 * alp12);
             r.setAreaS12(r.getAreaS12() * swapp * lonsign * latsign);
 
-            //convert -0 to 0
+            // convert -0 to 0
             r.setAreaS12(r.getAreaS12() + 0.0);
         }
 
-        //convert calp, salp to azimuth accounting for lonsign, swapp, latsign
+        // convert calp, salp to azimuth accounting for lonsign, swapp, latsign
         if (swapp < 0) {
             double t = salp1;
             salp1 = salp2;
@@ -1586,7 +1586,7 @@ public class Geodesic {
         salp2 *= swapp * lonsign;
         calp2 *= swapp * latsign;
 
-        //returned value in [0, 180]
+        // returned value in [0, 180]
         r.setA12(a12);
         result.mSalp1 = salp1;
         result.mCalp1 = calp1;
@@ -1602,7 +1602,7 @@ public class Geodesic {
      * @param f flattening of ellipsoid. Setting <i>f</i> = 0 gives a sphere. Negative <i>f</i> gives a prolate ellipsoid.
      * @return a new Geodesic instance or null if something fails.
      */
-    @SuppressWarnings("all")
+    @SuppressWarnings("SameParameterValue")
     private static Geodesic safeInstance(final double a, final double f) {
         try {
             return new Geodesic(a, f);
@@ -1615,13 +1615,13 @@ public class Geodesic {
             final double eps, final double sig12, final double ssig1, final double csig1,
             final double dn1, final double ssig2, final double csig2, final double dn2,
             final double cbet1, final double cbet2,
-            //scratch areas of the right size
+            // scratch areas of the right size
             int outmask, final double[] c1a, final double[] c2a) {
-        //return m12b = (reduced length)/mB; also calculate s12b = distance/mB,
-        //and m0 = coefficient of secular term in expression for reduced length.
+        // return m12b = (reduced length)/mB; also calculate s12b = distance/mB,
+        // and m0 = coefficient of secular term in expression for reduced length.
         outmask &= GeodesicMask.OUT_MASK;
 
-        //to hold s12b, m12b, m0, M12, M21
+        // to hold s12b, m12b, m0, M12, M21
         final LengthsV v = new LengthsV();
 
         double m0x = 0;
@@ -1644,7 +1644,7 @@ public class Geodesic {
         if ((outmask & GeodesicMask.DISTANCE) != 0) {
             final double b1 = sinCosSeries(true, ssig2, csig2, c1a) -
                     sinCosSeries(true, ssig1, csig1, c1a);
-            //missing a factor of mB
+            // missing a factor of mB
             v.mS12b = a1 * (sig12 + b1);
             if ((outmask & (GeodesicMask.REDUCED_LENGTH | GeodesicMask.GEODESIC_SCALE)) != 0) {
                 final double b2 = sinCosSeries(true, ssig2, csig2, c2a) -
@@ -1652,7 +1652,7 @@ public class Geodesic {
                 j12 = m0x * sig12 + (a1 * b1 - a2 * b2);
             }
         } else if ((outmask & (GeodesicMask.REDUCED_LENGTH | GeodesicMask.GEODESIC_SCALE)) != 0) {
-            //assume here that NC1 >= NC2
+            // assume here that NC1 >= NC2
             for (int l = 1; l <= NC2; ++l) {
                 c2a[l] = a1 * c1a[l] - a2 * c2a[l];
             }
@@ -1662,9 +1662,9 @@ public class Geodesic {
 
         if ((outmask & GeodesicMask.REDUCED_LENGTH) != 0) {
             v.mM0 = m0x;
-            //Missing a factor of mB.
-            //Add parens around (csig1 * ssig2) and (ssig1 * csig2) to ensure
-            //accurate cancellation in the case of coincident points
+            // Missing a factor of mB.
+            // Add parens around (csig1 * ssig2) and (ssig1 * csig2) to ensure
+            // accurate cancellation in the case of coincident points
             v.mM12b = dn2 * (csig1 * ssig2) - dn1 * (ssig1 * csig2) - csig1 * csig2 * j12;
         }
 
@@ -1678,8 +1678,8 @@ public class Geodesic {
     }
 
     private static double astroid(final double x, final double y) {
-        //solve k^4 + 2 * k^3 - (x^2 + y^2 - 1) * k^2 - 2 * y^2 * k - y^2 = 0 for positive root k.
-        //this solution is adapted from Geocentric.reverse
+        // solve k^4 + 2 * k^3 - (x^2 + y^2 - 1) * k^2 - 2 * y^2 * k - y^2 = 0 for positive root k.
+        // this solution is adapted from Geocentric.reverse
         final double k;
         final double p = GeoMath.sq(x);
         //noinspection all
@@ -1687,57 +1687,57 @@ public class Geodesic {
         final double r = (p + q - 1) / 6;
 
         if (!(q == 0 && r <= 0)) {
-            //avoid possible division by zero when r = 0 by multiplying equations for s and t by
-            //r^3 and r, resp.
+            // avoid possible division by zero when r = 0 by multiplying equations for s and t by
+            // r^3 and r, resp.
 
-            //s = r^3 * s
+            // s = r^3 * s
             final double s = p * q / 4;
             final double r2 = GeoMath.sq(r);
             final double r3 = r * r2;
-            //the discriminant of the quadratic equation for T3. This is zero on the
-            //evolute curve p^(1/3) + q^(1/3) = 1
+            // the discriminant of the quadratic equation for T3. This is zero on the
+            // evolute curve p^(1/3) + q^(1/3) = 1
             final double disc = s * (s + 2 * r3);
             double u = r;
             if (disc >= 0) {
                 double t3 = s + r3;
 
-                //pick the sign on the sqrt to mazimize abs(t3). This minimizes loss of precision
-                //due to cancellation. The result is unchanged because of the way the T is used in
-                //definition of u.
+                // pick the sign on the sqrt to maximize abs(t3). This minimizes loss of precision
+                // due to cancellation. The result is unchanged because of the way the T is used in
+                // definition of u.
 
-                //t3 = (r * t)^3
+                // t3 = (r * t)^3
                 t3 += t3 < 0 ? -Math.sqrt(disc) : Math.sqrt(disc);
 
-                //N.B. cbrt always returns the double root. cbrt(-8) = -2.
-                //t = r * t
+                // N.B. cbrt always returns the double root. cbrt(-8) = -2.
+                // t = r * t
                 final double t = GeoMath.cbrt(t3);
 
-                //t can be zero; but then r2 / t -> 0.
+                // t can be zero; but then r2 / t -> 0.
                 u += t + (t != 0 ? r2 / t : 0);
             } else {
-                //t is complex, but the way u is defined the result is double.
+                // t is complex, but the way u is defined the result is double.
                 final double ang = Math.atan2(Math.sqrt(-disc), -(s + r3));
-                //there are three possible cube roots. We choose the root which
-                //avoids cancellation. Note that disc < 0 implies that r < 0.
+                // there are three possible cube roots. We choose the root which
+                // avoids cancellation. Note that disc < 0 implies that r < 0.
                 u += 2 * r * Math.cos(ang / 3);
             }
 
-            //guaranteed positive
+            // guaranteed positive
             final double v = Math.sqrt(GeoMath.sq(u) + q);
-            //avoid loss of accuracy when u < 0
-            //u + v, guaranteed positive
+            // avoid loss of accuracy when u < 0
+            // u + v, guaranteed positive
             final double uv = u < 0 ? q / (v - u) : u + v;
-            //positive?
+            // positive?
             final double w = (uv - q) / (2 * v);
 
-            //rearrange expression for k to avoid loss of accuracy due to subtraction. Division
-            //by 0 not possible because uv > 0, w >= 0
+            // rearrange expression for k to avoid loss of accuracy due to subtraction. Division
+            // by 0 not possible because uv > 0, w >= 0
 
-            //guaranteed positive
+            // guaranteed positive
             k = uv / (Math.sqrt(uv + GeoMath.sq(w)) + w);
         } else {
-            //y = 0 with |x| <= 1. Handle this case directly
-            //for y small, positive root is k = abs(y) / sqrt(1 - x ^2)
+            // y = 0 with |x| <= 1. Handle this case directly
+            // for y small, positive root is k = abs(y) / sqrt(1 - x ^2)
             k = 0;
         }
         return k;
@@ -1747,19 +1747,19 @@ public class Geodesic {
             final double sbet1, final double cbet1, final double dn1,
             final double sbet2, final double cbet2, final double dn2,
             final double lam12, final double slam12, final double clam12,
-            //scratch areas of the right size
+            // scratch areas of the right size
             final double[] c1a, final double[] c2a) {
-        //return a starting point for Newton's method in salp1 and calp1 (function value is -1).
-        //If Newton's method doesn't need to be used, return also salp2 and calp2 and function
-        //value is sig12.
+        // return a starting point for Newton's method in salp1 and calp1 (function value is -1).
+        // If Newton's method doesn't need to be used, return also salp2 and calp2 and function
+        // value is sig12.
 
-        //to hold sig12, salp1, calp1, salp2, calp2, dnm.
+        // to hold sig12, salp1, calp1, salp2, calp2, dnm.
         final InverseStartV w = new InverseStartV();
 
-        //return value
+        // return value
         w.mSig12 = -1;
 
-        //bet12 = bet2 - bet1 in [0, pi); bet12a = bet2 + bet1 in (-pi, 0]
+        // bet12 = bet2 - bet1 in [0, pi); bet12a = bet2 + bet1 in (-pi, 0]
         final double sbet12 = sbet2 * cbet1 - cbet2 * sbet1;
         final double cbet12 = cbet2 * cbet1 + sbet2 * sbet1;
         final double sbet12a = sbet2 * cbet1 + cbet2 * sbet1;
@@ -1770,8 +1770,8 @@ public class Geodesic {
         if (shortline) {
             double sbetm2 = GeoMath.sq(sbet1 + sbet2);
 
-            //sin((bet1 + bet2) / 2)^2
-            //= (sbet1 + sbet2)^2 / ((sbet1 + sbet2)^2 + (cbet1 + cbet2)^2)
+            // sin((bet1 + bet2) / 2)^2
+            // = (sbet1 + sbet2)^2 / ((sbet1 + sbet2)^2 + (cbet1 + cbet2)^2)
             sbetm2 /= sbetm2 + GeoMath.sq(cbet1 + cbet2);
             w.mDnm = Math.sqrt(1 + mEp2 * sbetm2);
             final double omg12 = lam12 / (mF1 * w.mDnm);
@@ -1791,7 +1791,7 @@ public class Geodesic {
         final double csig12 = sbet1 * sbet2 + cbet1 * cbet2 * comg12;
 
         if (shortline && ssig12 < mEtol2) {
-            //really short lines
+            // really short lines
             w.mSalp2 = cbet1 * somg12;
             w.mCalp2 = sbet12 - cbet1 * sbet2 * (comg12 >= 0 ?
                     GeoMath.sq(somg12) / (1 + comg12) : 1 - comg12);
@@ -1800,25 +1800,25 @@ public class Geodesic {
             w.mSalp2 = p.getFirst();
             w.mCalp2 = p.getSecond();
 
-            //set return value
+            // set return value
             w.mSig12 = Math.atan2(ssig12, csig12);
-            //skip astroid calc if too eccentric
+            // skip astroid calc if too eccentric
         } else if (!(Math.abs(mN) > 0.1 || csig12 >= 0 || ssig12 >= 6 * Math.abs(mN) * Math.PI * GeoMath.sq(cbet1))) {
-            //scale lam12 and bet2 to x, y coordinate system where antipodal point is at origin and
-            //singular point is at y = 0, x = -1
+            // scale lam12 and bet2 to x, y coordinate system where antipodal point is at origin and
+            // singular point is at y = 0, x = -1
             final double y;
             final double lamscale;
             final double betscale;
 
-            //In C++ volatile declaration needed to fix inverse case
-            //56.320923501171 0 -56.320923501171 179.664747671772880215
+            // In C++ volatile declaration needed to fix inverse case
+            // 56.320923501171 0 -56.320923501171 179.664747671772880215
             final double x;
-            //lam12 - pi
+            // lam12 - pi
             final double lam12x = Math.atan2(-slam12, -clam12);
             if (mF >= 0) {
-                //in fact f == 0 does not get here
+                // in fact f == 0 does not get here
 
-                //x = dlong, y = dlat
+                // x = dlong, y = dlat
                 final double k2 = GeoMath.sq(sbet1) * mEp2;
                 final double eps = k2 / (2 * (1 + Math.sqrt(1 + k2)) + k2);
                 lamscale = mF * cbet1 * a3f(eps) * Math.PI;
@@ -1828,14 +1828,14 @@ public class Geodesic {
                 x = lam12x / lamscale;
                 y = sbet12a / betscale;
             } else {
-                //mF < 0
-                //x = dlat, y = dlong
+                // mF < 0
+                // x = dlat, y = dlong
                 final double cbet12a = cbet2 * cbet1 - sbet2 * sbet1;
                 final double bet12a = Math.atan2(sbet12a, cbet12a);
                 final double m12b;
                 final double m0;
 
-                //in the case of lon12 = 180, this repeats a calculation made in inverse
+                // in the case of lon12 = 180, this repeats a calculation made in inverse
                 final LengthsV v = lengths(mN, Math.PI + bet12a, sbet1, -cbet1, dn1, sbet2, cbet2, dn2,
                         cbet1, cbet2, GeodesicMask.REDUCED_LENGTH, c1a, c2a);
                 m12b = v.mM12b;
@@ -1849,7 +1849,7 @@ public class Geodesic {
             }
 
             if (y > -TOL1 && x > -1 - XTHRESH) {
-                //strip near cut
+                // strip near cut
                 if (mF >= 0) {
                     w.mSalp1 = Math.min(1.0, -x);
                     w.mCalp1 = -Math.sqrt(1 - GeoMath.sq(w.mSalp1));
@@ -1858,50 +1858,50 @@ public class Geodesic {
                     w.mSalp1 = Math.sqrt(1 - GeoMath.sq(w.mCalp1));
                 }
             } else {
-                //estimate alp1, by solving the astroid problem
+                // estimate alp1, by solving the astroid problem
 
                 // could estimate alpha1 = theta + pi/2, directly, i.e.,
-                //calp1 = y / k; salp1 = -x / (1 + k); for mF >= 0
-                //calp1 = x / (1 + k); salp1 = -y / k; for mF < 0 (need to check)
+                // calp1 = y / k; salp1 = -x / (1 + k); for mF >= 0
+                // calp1 = x / (1 + k); salp1 = -y / k; for mF < 0 (need to check)
 
-                //However, it's better to estimate omg12 from astroid and use spherical
-                //formula to compute alp1. This reduces the mean number of Newton iterations
-                //for astroid cases from 2.24 (min 0, max 6) to 2.12 (min 0 max 5). The changes
-                //in the number of iterations are as follows:
+                // However, it's better to estimate omg12 from astroid and use spherical
+                // formula to compute alp1. This reduces the mean number of Newton iterations
+                // for astroid cases from 2.24 (min 0, max 6) to 2.12 (min 0 max 5). The changes
+                // in the number of iterations are as follows:
 
-                //change    percent
-                //  1           5
-                //  0           78
+                // change    percent
+                //   1           5
+                //   0           78
                 //  -1          16
                 //  -2          0.6
                 //  -3          0.04
                 //  -4          0.002
 
-                //The histogram of iterations is (m = number of iterations estimating alp1 directly,
-                //n = number of iterations estimating via omg12, total number of trials = 148605):
+                // The histogram of iterations is (m = number of iterations estimating alp1 directly,
+                // n = number of iterations estimating via omg12, total number of trials = 148605):
 
-                //iter      m       n
-                //  0       148     186
-                //  1       13046   13845
-                //  2       93315   102225
-                //  3       36189   32341
-                //  4       5396    7
-                //  5       455     1
-                //  6       56      0
+                // iter      m       n
+                //   0       148     186
+                //   1       13046   13845
+                //   2       93315   102225
+                //   3       36189   32341
+                //   4       5396    7
+                //   5       455     1
+                //   6       56      0
 
-                //Because omg12 is near pi, estimate work with omg12a = pi - omg12
+                // Because omg12 is near pi, estimate work with omg12a = pi - omg12
                 final double k = astroid(x, y);
                 final double omg12a = lamscale * (mF >= 0.0 ? -x * k / (1.0 + k) : -y * (1 + k) / k);
                 somg12 = Math.sin(omg12a);
                 comg12 = -Math.cos(omg12a);
 
-                //update spherical estimate of alp1 using omg12 instead of lam12
+                // update spherical estimate of alp1 using omg12 instead of lam12
                 w.mSalp1 = cbet2 * somg12;
                 w.mCalp1 = sbet12a - cbet2 * sbet1 * GeoMath.sq(somg12) / (1 - comg12);
             }
         }
 
-        //sanity check on starting guess. Backwards check allows NaN through
+        // sanity check on starting guess. Backwards check allows NaN through
         if (!(w.mSalp1 <= 0.0)) {
             final Pair p = GeoMath.norm(w.mSalp1, w.mCalp1);
             w.mSalp1 = p.getFirst();
@@ -1918,19 +1918,19 @@ public class Geodesic {
             final double sbet2, final double cbet2, final double dn2,
             final double salp1, double calp1,
             final double slam120, final double clam120, final boolean diffp,
-            //scratch areas of the right size
+            // scratch areas of the right size
             final double[] c1a, final double[] c2a, final double[] c3a) {
-        //object to hold lam12, salp2, calp2, sig12, ssig1, csig1, ssig2, csig2, eps, domg12, dlam12
+        // object to hold lam12, salp2, calp2, sig12, ssig1, csig1, ssig2, csig2, eps, domg12, dlam12
         final Lambda12V w = new Lambda12V();
 
         if (sbet1 == 0 && calp1 == 0) {
-            //break degeneracy of equatorial line. This case has already been handled
+            // break degeneracy of equatorial line. This case has already been handled
             calp1 = -TINY;
         }
 
-        //sin(alp1) * cos(bet1) = sin(alp0)
+        // sin(alp1) * cos(bet1) = sin(alp0)
         final double salp0 = salp1 * cbet1;
-        //calp0 > 0
+        // calp0 > 0
         final double calp0 = GeoMath.hypot(calp1, salp1 * sbet1);
 
         double somg1;
@@ -1939,8 +1939,8 @@ public class Geodesic {
         double comg2;
         double somg12;
         double comg12;
-        //tan(bet1) = tan(sig1) * cos(alp1)
-        //tan(omg1) = sin(alp0) * tan(sig1) = tan(omg1) = tan(alp1) * sin(bet1)
+        // tan(bet1) = tan(sig1) * cos(alp1)
+        // tan(omg1) = sin(alp0) * tan(sig1) = tan(omg1) = tan(alp1) * sin(bet1)
         w.mSsig1 = sbet1;
         somg1 = salp0 * sbet1;
         w.mCsig1 = comg1 = calp1 * cbet1;
@@ -1949,23 +1949,23 @@ public class Geodesic {
         w.mSsig1 = p.getFirst();
         w.mCsig1 = p.getSecond();
 
-        //GeoMath.norm(somg1, comg1); -- don't need to normalize!
+        // GeoMath.norm(somg1, comg1); -- don't need to normalize!
 
-        //Enforce symmetries in the case abs(bet2) = -bet1. Need to be careful about this case,
-        //since this can yield singularities in the Newton iteration.
-        //sin(alp2) * cos(bet2) = sin(alp0)
+        // Enforce symmetries in the case abs(bet2) = -bet1. Need to be careful about this case,
+        // since this can yield singularities in the Newton iteration.
+        // sin(alp2) * cos(bet2) = sin(alp0)
         w.mSalp2 = cbet2 != cbet1 ? salp0 / cbet2 : salp1;
-        //calp2 = sqrt(1 - sq(salp2))
-        //      = sqrt(sq(calp0) - sq(sbet2)) / cbet2
-        //and subst for calp0 and rearrange to give (choose positive sqrt
-        //to give alp2 in [0, pi/2]).
+        // calp2 = sqrt(1 - sq(salp2))
+        //       = sqrt(sq(calp0) - sq(sbet2)) / cbet2
+        // and subst for calp0 and rearrange to give (choose positive sqrt
+        // to give alp2 in [0, pi/2]).
         final double tmp = (cbet1 < -sbet1 ? (cbet2 - cbet1) * (cbet1 + cbet2) :
                 (sbet1 - sbet2) * (sbet1 + sbet2));
         w.mCalp2 = cbet2 != cbet1 || Math.abs(sbet2) != -sbet1 ?
                 Math.sqrt(GeoMath.sq(calp1 * cbet1) + tmp) / cbet2 :
                 Math.abs(calp1);
-        //tan(bet2) = tan(sig2) * cos(alp2)
-        //tan(omg2) = sin(alp0) * tan(sig2)
+        // tan(bet2) = tan(sig2) * cos(alp2)
+        // tan(omg2) = sin(alp0) * tan(sig2)
         w.mSsig2 = sbet2;
         somg2 = salp0 * sbet2;
         w.mCsig2 = comg2 = w.mCalp2 * cbet2;
@@ -1974,16 +1974,16 @@ public class Geodesic {
         w.mSsig2 = p.getFirst();
         w.mCsig2 = p.getSecond();
 
-        //GeoMath.norm(somg2, comg2); -- don't need to normalize!
+        // GeoMath.norm(somg2, comg2); -- don't need to normalize!
 
-        //sig12 = sig2 - sig1, limit to [0, pi]
+        // sig12 = sig2 - sig1, limit to [0, pi]
         w.mSig12 = Math.atan2(Math.max(0.0, w.mCsig1 * w.mSsig2 - w.mSsig1 * w.mCsig2),
                 w.mCsig1 * w.mCsig2 + w.mSsig1 * w.mSsig2);
 
-        //omg12 = omg2 - omg1, limit to [0, pi]
+        // omg12 = omg2 - omg1, limit to [0, pi]
         somg12 = Math.max(0.0, comg1 * somg2 - somg1 * comg2);
         comg12 = comg1 * comg2 + somg1 * somg2;
-        //eta = omg12 - lam120
+        // eta = omg12 - lam120
         final double eta = Math.atan2(somg12 * clam120 - comg12 * slam120,
                 comg12 * clam120 + somg12 * slam120);
 
@@ -2034,11 +2034,11 @@ public class Geodesic {
         private double mSalp1;
         private double mCalp1;
 
-        //only updated if return value >= 0
+        // only updated if return value >= 0
         private double mSalp2;
         private double mCalp2;
 
-        //only updated for short lines
+        // only updated for short lines
         private double mDnm;
 
         private InverseStartV() {

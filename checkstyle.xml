@@ -28,7 +28,7 @@
 		<module name="RightCurly"/>
 		<module name="AvoidNestedBlocks"/>
 		
-		<!-- class dessign -->
+		<!-- class design -->
 		<module name="VisibilityModifier">
 			<property name="protectedAllowed" value="true"/>
 		</module>

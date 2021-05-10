@@ -21,10 +21,6 @@ import com.irurueta.geometry.Point2D;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.Random;
@@ -32,7 +28,6 @@ import java.util.Random;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
-@SuppressWarnings("Duplicates")
 public class NonLinearLeastSquaresLateration2DSolverTest implements LaterationSolverListener<Point2D> {
 
     private static final int MIN_CIRCLES = 3;
@@ -54,25 +49,6 @@ public class NonLinearLeastSquaresLateration2DSolverTest implements LaterationSo
 
     private int solveStart;
     private int solveEnd;
-
-    public NonLinearLeastSquaresLateration2DSolverTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
 
     @Test
     public void testConstructor() {
@@ -488,7 +464,7 @@ public class NonLinearLeastSquaresLateration2DSolverTest implements LaterationSo
         assertNull(solver);
 
 
-        // constructor with positions, distances and stadard deviations
+        // constructor with positions, distances and standard deviations
         final double[] standardDeviations = new double[3];
         solver = new NonLinearLeastSquaresLateration2DSolver(positions, distances,
                 standardDeviations);

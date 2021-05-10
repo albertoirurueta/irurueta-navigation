@@ -28,7 +28,7 @@ import com.irurueta.navigation.geodesic.Constants;
 /**
  * Converts cartesian to curvilinear position and velocity resolving axes
  * from ECEF to NED.
- * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multisensor
+ * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multi-sensor
  * Integrated Navigation Systems, Second Edition" and on the companion software available at:
  * https://github.com/ymjdz/MATLAB-Codes/blob/master/pv_ECEF_to_NED.m
  */
@@ -121,6 +121,7 @@ public class ECEFtoNEDPositionVelocityConverter {
      * @param destinationVelocity instance where velocity resolved on NED frame will
      *                            be stored.
      */
+    @SuppressWarnings("DuplicatedCode")
     public static void convertECEFtoNED(final double x, final double y, final double z,
                                         final double vx, final double vy, final double vz,
                                         final NEDPosition destinationPosition,
@@ -191,7 +192,7 @@ public class ECEFtoNEDPositionVelocityConverter {
             destinationPosition.setCoordinates(latitude, longitude, height);
             destinationVelocity.setCoordinates(vn, ve, vd);
 
-        } catch (WrongSizeException ignore) {
+        } catch (final WrongSizeException ignore) {
             // never happens
         }
     }

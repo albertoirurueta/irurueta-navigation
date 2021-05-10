@@ -19,7 +19,6 @@ package com.irurueta.navigation.geodesic;
  * Defines mathematical functions and constants.
  * Based on net.sf.geographiclib library.
  */
-@SuppressWarnings("WeakerAccess")
 public class GeoMath {
 
     /**
@@ -71,9 +70,9 @@ public class GeoMath {
         final double a = Math.max(x, y);
         final double b = Math.min(x, y) / (a != 0 ? a : 1);
         return a * Math.sqrt(1 + b * b);
-        //For an alternative method see
-        //C. Moler and D. Morrisin (1983) https://doi.org/10.1147/rd.276.0577
-        //and A. A. Dubrulle (1983) https://doi.org/10.1147/rd.276.0582
+        // For an alternative method see
+        // C. Moler and D. Morrisin (1983) https://doi.org/10.1147/rd.276.0577
+        // and A. A. Dubrulle (1983) https://doi.org/10.1147/rd.276.0582
     }
 
     /**
@@ -92,9 +91,9 @@ public class GeoMath {
     public static double log1p(final double x) {
         final double y = 1 + x;
         final double z = y - 1;
-        //Here's the explanation for this magic: y = 1 + z, exactly, and z approx x, thus log(y)/z
-        //(which is nearly constant near z = 0) returns a good approximation to the true log(1 + x)/x.
-        //The multiplication of x * (log(y)/z) introduces little additional error.
+        // Here's the explanation for this magic: y = 1 + z, exactly, and z approx x, thus log(y)/z
+        // (which is nearly constant near z = 0) returns a good approximation to the true log(1 + x)/x.
+        // The multiplication of x * (log(y)/z) introduces little additional error.
         return z == 0 ? x : x * Math.log(y) / z;
     }
 
@@ -107,7 +106,8 @@ public class GeoMath {
      * @return atanh(<i>x</i>).
      */
     public static double atanh(final double x) {
-        double y = Math.abs(x); //Enforce odd parity
+        // Enforce odd parity
+        double y = Math.abs(x);
         y = Math.log1p(2 * y / (1 - y)) / 2;
         return x < 0 ? -y : y;
     }
@@ -130,17 +130,18 @@ public class GeoMath {
      * @return the real cube root of <i>x</i>.
      */
     public static double cbrt(final double x) {
-        final double y = Math.pow(Math.abs(x), 1 / 3.0); //Return the real cube root
+        // Return the real cube root
+        final double y = Math.pow(Math.abs(x), 1 / 3.0);
         return x < 0 ? -y : y;
     }
 
     /**
-     * Normalizes sinus and cosinus.
+     * Normalizes sinus and cosine.
      *
      * @param sinx sinus of x.
-     * @param cosx cosinus of x.
+     * @param cosx cosine of x.
      * @return normalized values.
-     * @throws IllegalArgumentException if provided sinus and cosinus values have zero
+     * @throws IllegalArgumentException if provided sinus and cosine values have zero
      *                                  norm.
      */
     public static Pair norm(final double sinx, final double cosx) {
@@ -168,7 +169,7 @@ public class GeoMath {
         up -= u;
         vpp -= v;
         final double t = -(up + vpp);
-        //u + v = s + t = round(u + v) + t
+        // u + v = s + t = round(u + v) + t
         return new Pair(s, t);
     }
 
@@ -211,7 +212,7 @@ public class GeoMath {
         }
 
         double y = Math.abs(x);
-        //The compiler mustn't "simplify" z - (z - y) to y
+        // The compiler mustn't "simplify" z - (z - y) to y
         y = y < z ? z - (z - y) : y;
         return x < 0 ? -y : y;
     }
@@ -273,16 +274,16 @@ public class GeoMath {
      * @return Pair(<i>s</i>, <i>t</i>) with <i>s</i> = sin(<i>x</i> and <i>c</i> = cos(<i>x</i>).
      */
     public static Pair sincosd(final double x) {
-        //In order to minimize round-off errors, this function exactly reduces the argument to the range [-45, 45]
+        // In order to minimize round-off errors, this function exactly reduces the argument to the range [-45, 45]
         // before converting it to radians.
         double r;
         final int q;
         r = x % 360.0;
         q = (int) Math.floor(r / 90 + 0.5);
         r -= 90 * q;
-        //now abs(r) <= 45
+        // now abs(r) <= 45
         r = Math.toRadians(r);
-        //Possibly could call the gnu extension sincos
+        // Possibly could call the gnu extension sincos
         final double s = Math.sin(r);
         final double c = Math.cos(r);
         double sinx;
@@ -323,7 +324,7 @@ public class GeoMath {
      * @return atan2(<i>y</i>, <i>x</i>) in degrees.
      */
     public static double atan2d(double y, double x) {
-        //In order to minimize round-off errors, this function rearranges the arguments so that result of atan2 is in
+        // In order to minimize round-off errors, this function rearranges the arguments so that result of atan2 is in
         // the range [-pi/4, pi/4] before converting it to degrees and mapping the result to the correct quadrant.
         int q = 0;
         if (Math.abs(y) > Math.abs(x)) {
@@ -338,12 +339,12 @@ public class GeoMath {
             x = -x;
             ++q;
         }
-        //here x >= 0 and x >= abs(y), so angle is in [-pi/4, pi/4]
+        // here x >= 0 and x >= abs(y), so angle is in [-pi/4, pi/4]
         double ang = Math.toDegrees(Math.atan2(y, x));
         switch (q) {
-            //Note that atan2d(-0.0, 1.0) will return -0. However, we expect that atan2d will not be called with y = -0.
-            //If need be, include case 0: ang = 0 + ang; break
-            //and handle mpfr as in angRound.
+            // Note that atan2d(-0.0, 1.0) will return -0. However, we expect that atan2d will not be called with y = -0.
+            // If need be, include case 0: ang = 0 + ang; break
+            // and handle mpfr as in angRound.
             case 1:
                 ang = (y >= 0 ? 180 : -180) - ang;
                 break;

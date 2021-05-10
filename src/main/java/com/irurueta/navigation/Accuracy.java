@@ -28,18 +28,17 @@ import com.irurueta.units.DistanceUnit;
  *
  * @param <A> type of internal accuracy.
  */
-@SuppressWarnings("WeakerAccess")
 public abstract class Accuracy<A extends com.irurueta.geometry.Accuracy> {
 
     /**
-     * Internal accuracy rference.
+     * Internal accuracy reference.
      */
     protected A mInternalAccuracy;
 
     /**
      * Constructor.
      */
-    public Accuracy() {
+    protected Accuracy() {
     }
 
     /**

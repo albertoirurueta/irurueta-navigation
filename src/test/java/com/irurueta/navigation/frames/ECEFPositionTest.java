@@ -440,6 +440,7 @@ public class ECEFPositionTest {
 
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
         assertTrue(position1.equals((Object) position1));
+        //noinspection EqualsWithItself
         assertTrue(position1.equals(position1));
         assertTrue(position1.equals(position2));
         assertFalse(position1.equals(position3));

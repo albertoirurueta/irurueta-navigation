@@ -26,7 +26,6 @@ import java.util.Objects;
  * Contains body velocity with respect Earth, resolved about north, east and down an expressed in meters per second
  * (m/s).
  */
-@SuppressWarnings("WeakerAccess")
 public class NEDVelocity implements Serializable, Cloneable {
     /**
      * Coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame and

@@ -30,7 +30,7 @@ import com.irurueta.units.TimeUnit;
 
 /**
  * Converts from ECI frame to ECEF frame.
- * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multisensor
+ * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multi-sensor
  * Integrated Navigation Systems, Second Edition" and on the companion software available at:
  * https://github.com/ymjdz/MATLAB-Codes/blob/master/ECI_to_ECEF.m
  */
@@ -50,7 +50,7 @@ public class ECItoECEFFrameConverter implements TimeIntervalFrameConverter<ECIFr
      * @return a new destination frame instance.
      */
     @Override
-    public ECEFFrame convertAndReturnNew(double timeInterval, final ECIFrame source) {
+    public ECEFFrame convertAndReturnNew(final double timeInterval, final ECIFrame source) {
         return convertECItoECEFAndReturnNew(timeInterval, source);
     }
 
@@ -124,7 +124,7 @@ public class ECItoECEFFrameConverter implements TimeIntervalFrameConverter<ECIFr
     }
 
     /**
-     * Convers source ECI frame to a new ECEF frame instance.
+     * Converts source ECI frame to a new ECEF frame instance.
      *
      * @param timeInterval a time interval.
      * @param source       source frame to convert from.
@@ -142,6 +142,7 @@ public class ECItoECEFFrameConverter implements TimeIntervalFrameConverter<ECIFr
      * @param source       source frame to convert from.
      * @param destination  destination frame instance to convert to.
      */
+    @SuppressWarnings("DuplicatedCode")
     public static void convertECItoECEF(final double timeInterval, final ECIFrame source, final ECEFFrame destination) {
         try {
             // Calculate ECEF to ECI coordinate transformation matrix using (2.145)
@@ -171,7 +172,8 @@ public class ECItoECEFFrameConverter implements TimeIntervalFrameConverter<ECIFr
             vIbi.setElementAtIndex(1, source.getVy());
             vIbi.setElementAtIndex(2, source.getVz());
 
-            vIbi.add(tmp); // vIbi - omega * [-y;x;0]
+            // vIbi - omega * [-y;x;0]
+            vIbi.add(tmp);
 
             final Matrix vEbe = cie.multiplyAndReturnNew(vIbi);
 
@@ -186,7 +188,7 @@ public class ECItoECEFFrameConverter implements TimeIntervalFrameConverter<ECIFr
             final CoordinateTransformation c = new CoordinateTransformation(cie,
                     FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
             destination.setCoordinateTransformation(c);
-        } catch (WrongSizeException | InvalidSourceAndDestinationFrameTypeException |
+        } catch (final WrongSizeException | InvalidSourceAndDestinationFrameTypeException |
                 InvalidRotationMatrixException ignore) {
             // never happens
         }

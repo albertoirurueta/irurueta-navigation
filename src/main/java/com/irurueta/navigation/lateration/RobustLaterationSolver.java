@@ -31,7 +31,6 @@ import com.irurueta.numerical.robust.RobustEstimatorMethod;
  *
  * @param <P> a {@link Point} type.
  */
-@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public abstract class RobustLaterationSolver<P extends Point<?>> {
 
     /**
@@ -87,7 +86,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
     /**
      * Constant defining default confidence of the estimated result, which is
      * 99%. This means that with a probability of 99% estimation will be
-     * accurate because chosen subsamples will be inliers.
+     * accurate because chosen sub-samples will be inliers.
      */
     public static final double DEFAULT_CONFIDENCE = 0.99;
 
@@ -681,7 +680,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
      * Sets known positions and euclidean distances.
      * If any distance value is zero or negative, it will be fixed assuming an EPSILON value.
      *
-     * @param positions known positios of static nodes.
+     * @param positions known positions of static nodes.
      * @param distances euclidean distances from static nodes to mobile node.
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      *                                  length is smaller than required (2 points).
@@ -700,7 +699,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
      * measured distances.
      * If any distance value is zero or negative, it will be fixed assuming an EPSILON value.
      *
-     * @param positions                  known positios of static nodes.
+     * @param positions                  known positions of static nodes.
      * @param distances                  euclidean distances from static nodes to mobile node.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
      * @throws IllegalArgumentException if either positions, distances or standard deviations
@@ -794,7 +793,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
      * Internally sets known positions and euclidean distances.
      * If any distance value is zero or negative, it will be fixed assuming an EPSILON value.
      *
-     * @param positions known positios of static nodes.
+     * @param positions known positions of static nodes.
      * @param distances euclidean distances from static nodes to mobile node.
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      *                                  length is smaller than required (2 points).
@@ -816,7 +815,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
         mPositions = positions;
         mDistances = distances;
 
-        //fix distances if needed
+        // fix distances if needed
         for (int i = 0; i < mDistances.length; i++) {
             if (mDistances[i] < EPSILON) {
                 mDistances[i] = EPSILON;
@@ -829,7 +828,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
      * deviations of measured distances.
      * If any distance value is zero or negative, it will be fixed assuming an EPSILON value.
      *
-     * @param positions                  known positios of static nodes.
+     * @param positions                  known positions of static nodes.
      * @param distances                  euclidean distances from static nodes to mobile node.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their

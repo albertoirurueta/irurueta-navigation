@@ -21,10 +21,6 @@ import com.irurueta.geometry.Sphere;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.Random;
@@ -32,7 +28,6 @@ import java.util.Random;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
-@SuppressWarnings("Duplicates")
 public class NonLinearLeastSquaresLateration3DSolverTest implements LaterationSolverListener<Point3D> {
 
     private static final int MIN_SPHERES = 4;
@@ -54,25 +49,6 @@ public class NonLinearLeastSquaresLateration3DSolverTest implements LaterationSo
 
     private int solveStart;
     private int solveEnd;
-
-    public NonLinearLeastSquaresLateration3DSolverTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
 
     @Test
     public void testConstructor() {

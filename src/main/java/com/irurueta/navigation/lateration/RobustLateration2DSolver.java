@@ -31,7 +31,7 @@ import java.util.List;
  * Implementations of this class should be able to detect and discard outliers
  * in order to find the best solution.
  */
-@SuppressWarnings({"WeakerAccess", "Duplicates"})
+@SuppressWarnings("DuplicatedCode")
 public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Point2D> {
 
     /**
@@ -61,7 +61,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
     protected double[] mInnerDistances;
 
     /**
-     * Standard deviations for non-linear inner solver used during robut estimation.
+     * Standard deviations for non-linear inner solver used during robust estimation.
      */
     protected double[] mInnerDistanceStandardDeviations;
 
@@ -203,7 +203,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      */
     public RobustLateration2DSolver(final Circle[] circles,
                                     final double[] distanceStandardDeviations,
-                                    RobustLaterationSolverListener<Point2D> listener) {
+                                    final RobustLaterationSolverListener<Point2D> listener) {
         this(listener);
         internalSetCirclesAndStandardDeviations(circles,
                 distanceStandardDeviations);
@@ -389,7 +389,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      * @param method                     robust estimator method.
      * @return a new robust 2D lateration solver.
      * @throws IllegalArgumentException if either positions or distances are null,
-     *                                  don't have the same length or their length is smaler than required
+     *                                  don't have the same length or their length is smaller than required
      *                                  (3 points).
      */
     public static RobustLateration2DSolver create(
@@ -1221,7 +1221,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      *                      The larger the score value the better the quality of
      *                      the sample.
      * @param positions     known positions of static nodes.
-     * @param distances     euclidean distances from static ndoes to mobile node.
+     * @param distances     euclidean distances from static nodes to mobile node.
      * @param listener      listener to be notified of events such as when estimation
      *                      starts, ends or its progress significantly changes.
      * @return a new robust 2D lateration solver.
@@ -1323,7 +1323,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
             int pos = 0;
             for (int i = 0; i < nSamples; i++) {
                 if (inliers.get(i)) {
-                    //sample is inlier
+                    // sample is inlier
                     inlierPositions[pos] = mPositions[i];
                     inlierDistances[pos] = mDistances[i];
                     if (inlierStandardDeviations != null) {
@@ -1345,7 +1345,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
                 mNonLinearSolver.solve();
 
                 if (mKeepCovariance) {
-                    //keep covariance
+                    // keep covariance
                     mCovariance = mNonLinearSolver.getCovariance();
                 } else {
                     mCovariance = null;
@@ -1353,7 +1353,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
 
                 mEstimatedPosition = mNonLinearSolver.getEstimatedPosition();
             } catch (Exception e) {
-                //refinement failed, so we return input value
+                // refinement failed, so we return input value
                 mCovariance = null;
                 mEstimatedPosition = position;
             }
@@ -1366,12 +1366,12 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
     }
 
     /**
-     * Solves a preliminar solution for a subset of samples picked by a robust estimator.
+     * Solves a preliminary solution for a subset of samples picked by a robust estimator.
      *
      * @param samplesIndices indices of samples picked by the robust estimator.
-     * @param solutions      list where estimated preliminar solution will be stored.
+     * @param solutions      list where estimated preliminary solution will be stored.
      */
-    protected void solvePreliminarSolutions(
+    protected void solvePreliminarySolutions(
             final int[] samplesIndices, final List<Point2D> solutions) {
         try {
             final int length = samplesIndices.length;
@@ -1412,7 +1412,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
 
             solutions.add(estimatedPosition);
         } catch (final NavigationException ignore) {
-            //if anything fails, no solution is added
+            // if anything fails, no solution is added
         }
     }
 
@@ -1465,7 +1465,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
         final Point2D[] positions = new Point2D[circles.length];
         final double[] distances = new double[circles.length];
         for (int i = 0; i < circles.length; i++) {
-            Circle circle = circles[i];
+            final Circle circle = circles[i];
             positions[i] = circle.getCenter();
             distances[i] = circle.getRadius();
         }

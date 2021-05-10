@@ -30,11 +30,10 @@ import com.irurueta.units.TimeUnit;
 
 /**
  * Converts from ECEF frame to ECI frame.
- * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multisensor
+ * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multi-sensor
  * Integrated Navigation Systems, Second Edition" and on the companion software available at:
  * https://github.com/ymjdz/MATLAB-Codes/blob/master/ECEF_to_ECI.m
  */
-@SuppressWarnings("WeakerAccess")
 public class ECEFtoECIFrameConverter implements TimeIntervalFrameConverter<ECEFFrame, ECIFrame> {
 
     /**
@@ -142,6 +141,7 @@ public class ECEFtoECIFrameConverter implements TimeIntervalFrameConverter<ECEFF
      * @param source       source frame to convert from.
      * @param destination  destination frame instance to convert to.
      */
+    @SuppressWarnings("DuplicatedCode")
     public static void convertECEFtoECI(final double timeInterval, final ECEFFrame source, final ECIFrame destination) {
         try {
             // Calculate ECEF to ECI coordinate transformation matrix using (2.145)
@@ -171,7 +171,8 @@ public class ECEFtoECIFrameConverter implements TimeIntervalFrameConverter<ECEFF
             vEbe.setElementAtIndex(1, source.getVy());
             vEbe.setElementAtIndex(2, source.getVz());
 
-            vEbe.add(tmp); // vEbe + omega * [-y;x;0]
+            // vEbe + omega * [-y;x;0]
+            vEbe.add(tmp);
 
             final Matrix vIbi = cei.multiplyAndReturnNew(vEbe);
 
@@ -186,7 +187,7 @@ public class ECEFtoECIFrameConverter implements TimeIntervalFrameConverter<ECEFF
             final CoordinateTransformation c = new CoordinateTransformation(cei,
                     FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_INERTIAL_FRAME);
             destination.setCoordinateTransformation(c);
-        } catch (WrongSizeException | InvalidSourceAndDestinationFrameTypeException |
+        } catch (final WrongSizeException | InvalidSourceAndDestinationFrameTypeException |
                 InvalidRotationMatrixException ignore) {
             // never happens
         }

@@ -23,7 +23,6 @@ import com.irurueta.navigation.LockedException;
 /**
  * Linearly solves the lateration problem using an homogeneous LMSE solution.
  */
-@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public class HomogeneousLinearLeastSquaresLateration2DSolver extends
         HomogeneousLinearLeastSquaresLaterationSolver<Point2D> {
 

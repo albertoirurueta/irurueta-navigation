@@ -30,7 +30,6 @@ import java.util.Objects;
  * Contains body cartesian position with respect Earth, resolved about ECEF frame
  * and expressed in meters (m).
  */
-@SuppressWarnings("WeakerAccess")
 public class ECEFPosition implements Serializable, Cloneable {
 
     /**
@@ -385,6 +384,7 @@ public class ECEFPosition implements Serializable, Cloneable {
      * @param result matrix instance where gravity coordinates will be stored in
      *               x,y,z order.
      */
+    @SuppressWarnings("DuplicatedCode")
     public void asMatrix(final Matrix result) {
         if (result.getRows() != COMPONENTS || result.getColumns() != 1) {
             try {

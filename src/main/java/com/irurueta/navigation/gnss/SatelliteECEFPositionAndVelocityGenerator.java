@@ -23,7 +23,7 @@ import java.util.List;
 
 /**
  * Computes satellites positions and velocities.
- * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multisensor
+ * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multi-sensor
  * Integrated Navigation Systems, Second Edition" and on the companion software available at:
  * https://github.com/ymjdz/MATLAB-Codes/blob/master/Satellite_positions_and_velocities.m
  */
@@ -81,8 +81,8 @@ public class SatelliteECEFPositionAndVelocityGenerator {
      * @return computed satellite position and velocity.
      */
     public static ECEFPositionAndVelocity generateSatellitePositionAndVelocity(final double time,
-                                                                                        final GNSSConfig config,
-                                                                                        final int j) {
+                                                                               final GNSSConfig config,
+                                                                               final int j) {
         final ECEFPositionAndVelocity result = new ECEFPositionAndVelocity();
         generateSatellitePositionAndVelocity(time, config, j, result);
         return result;
@@ -97,8 +97,7 @@ public class SatelliteECEFPositionAndVelocityGenerator {
      * @param result instance where computed satellite position and velocity will be stored.
      */
     public static void generateSatellitePositionAndVelocity(final double time, final GNSSConfig config,
-                                                            final int j,
-                                                            final ECEFPositionAndVelocity result) {
+                                                            final int j, final ECEFPositionAndVelocity result) {
 
         // Convert inclination angle to radians.
         final double inclinationRadians = Math.toRadians(config.getSatellitesInclinationDegrees());
@@ -141,7 +140,7 @@ public class SatelliteECEFPositionAndVelocityGenerator {
         // Satellite velocity in the orbital frame from (8.25), noting that with a circular orbit rOsO is
         // constant and the time derivative of uOsO is omegaIs.
         final double tmp = orbitalRadius * omegaIs;
-        final double vOsO1 = - tmp * sinUoso;
+        final double vOsO1 = -tmp * sinUoso;
         final double vOsO2 = tmp * cosUoso;
 
         // ECEF satellite velocity from (8.26)

@@ -31,7 +31,6 @@ import java.util.List;
  * Implementations of this class should be able to detect and discard outliers
  * in order to find the best solution.
  */
-@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Point3D> {
 
     /**
@@ -61,7 +60,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
     protected double[] mInnerDistances;
 
     /**
-     * Standard deviations for non-linear inner solver used during robut estimation.
+     * Standard deviations for non-linear inner solver used during robust estimation.
      */
     protected double[] mInnerDistanceStandardDeviations;
 
@@ -289,7 +288,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      * @param spheres                  spheres defining positions and distances.
      * @param radiusStandardDeviations standard deviations of spheres radii.
      * @throws IllegalArgumentException if spheres is null, length of arrays is less than
-     *                                  4 or don' thave the same length.
+     *                                  4 or don't have the same length.
      * @throws LockedException          if instance is busy solving the lateration problem.
      */
     public void setSpheresAndStandardDeviations(
@@ -1325,7 +1324,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
             int pos = 0;
             for (int i = 0; i < nSamples; i++) {
                 if (inliers.get(i)) {
-                    //sample is inlier
+                    // sample is inlier
                     inlierPositions[pos] = mPositions[i];
                     inlierDistances[pos] = mDistances[i];
                     if (inlierStandardDeviations != null) {
@@ -1347,7 +1346,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
                 mNonLinearSolver.solve();
 
                 if (mKeepCovariance) {
-                    //keep covariance
+                    // keep covariance
                     mCovariance = mNonLinearSolver.getCovariance();
                 } else {
                     mCovariance = null;
@@ -1355,7 +1354,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
 
                 mEstimatedPosition = mNonLinearSolver.getEstimatedPosition();
             } catch (Exception e) {
-                //refinement failed, so we return input value
+                // refinement failed, so we return input value
                 mCovariance = null;
                 mEstimatedPosition = position;
             }
@@ -1368,12 +1367,12 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
     }
 
     /**
-     * Solves a preliminar solution for a subset of samples picked by a robust estimator.
+     * Solves a preliminary solution for a subset of samples picked by a robust estimator.
      *
      * @param samplesIndices indices of samples picked by the robust estimator.
-     * @param solutions      list where estimated preliminar solution will be stored.
+     * @param solutions      list where estimated preliminary solution will be stored.
      */
-    protected void solvePreliminarSolutions(
+    protected void solvePreliminarySolutions(
             final int[] samplesIndices, final List<Point3D> solutions) {
         try {
             final int length = samplesIndices.length;
@@ -1414,7 +1413,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
 
             solutions.add(estimatedPosition);
         } catch (final NavigationException ignore) {
-            //if anything fails, no solution is added
+            // if anything fails, no solution is added
         }
     }
 

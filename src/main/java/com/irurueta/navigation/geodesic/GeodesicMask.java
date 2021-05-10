@@ -26,7 +26,6 @@ package com.irurueta.navigation.geodesic;
  * and to {@link Geodesic#line(double, double, double, int)} what capabilities
  * should be included in the {@link GeodesicLine} object.
  */
-@SuppressWarnings("WeakerAccess")
 public class GeodesicMask {
     protected static final int CAP_C1 = 1;
 
@@ -40,7 +39,7 @@ public class GeodesicMask {
 
     protected static final int OUT_ALL = 0x7F80;
 
-    //include LONG_UNROLL
+    // include LONG_UNROLL
     protected static final int OUT_MASK = 0xFF80;
 
     private static final int CAP_ALL = 0x1F;

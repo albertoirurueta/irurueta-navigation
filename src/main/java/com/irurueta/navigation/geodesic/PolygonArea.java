@@ -26,9 +26,9 @@ package com.irurueta.navigation.geodesic;
  *     </li>
  * </ul>
  * This class lets you add vertices one at a time to the polygon. The area and perimeter are
- * accumulated at two times the standard floating point precision to guard agains the loss of
+ * accumulated at two times the standard floating point precision to guard against the loss of
  * accuracy with many-sided polygons.
- * At any point you can ask for the permiter and area so far. There's an option to treat the
+ * At any point you can ask for the perimeter and area so far. There's an option to treat the
  * points as defining a polyline instead of a polygon; in that case, only the perimeter is
  * computed.
  * Example of use:
@@ -59,15 +59,15 @@ package com.irurueta.navigation.geodesic;
  *   }
  * }}</pre>
  */
-@SuppressWarnings({"WeakerAccess", "Duplicates"})
+@SuppressWarnings("DuplicatedCode")
 public class PolygonArea {
 
     private final Geodesic mEarth;
 
-    //full ellipsoid area
+    // full ellipsoid area
     private final double mArea0;
 
-    //assume polyline (don't close and skip area)
+    // assume polyline (don't close and skip area)
     private final boolean mPolyline;
 
     private final int mMask;
@@ -88,7 +88,6 @@ public class PolygonArea {
      * @param earth    the Geodesic object to use for geodesic calculations.
      * @param polyline if true that treat the points as defining a polyline instead of a polygon.
      */
-    @SuppressWarnings("WeakerAccess")
     public PolygonArea(final Geodesic earth, final boolean polyline) {
         mEarth = earth;
         mArea0 = mEarth.getEllipsoidArea();
@@ -151,7 +150,7 @@ public class PolygonArea {
      * @param s   distance from current point to next point (meters).
      */
     public void addEdge(final double azi, final double s) {
-        //do nothing if mNum is zero
+        // do nothing if mNum is zero
         if (mNum > 0) {
             final GeodesicData g = mEarth.direct(mLat1, mLon1, azi, s, mMask);
             mPerimetersum.add(g.getS12());
@@ -209,12 +208,12 @@ public class PolygonArea {
             tempsum.add((tempsum.getSum() < 0 ? 1 : -1) * mArea0 / 2);
         }
 
-        //area is with the clockwise sense. If !reverse convert to counter-clockwise convention
+        // area is with the clockwise sense. If !reverse convert to counter-clockwise convention
         if (!reverse) {
             tempsum.negate();
         }
 
-        //if sign put area in (-rea0/2, area0/2], else put area in [0, area0)
+        // if sign put area in (-rea0/2, area0/2], else put area in [0, area0)
         if (sign) {
             if (tempsum.getSum() > mArea0 / 2) {
                 tempsum.add(-mArea0);
@@ -281,12 +280,12 @@ public class PolygonArea {
             tempsum += (tempsum < 0 ? 1 : -1) * mArea0 / 2;
         }
 
-        //area is with the clockwise sense. If !reverse convert to counter-clockwise convention
+        // area is with the clockwise sense. If !reverse convert to counter-clockwise convention
         if (!reverse) {
             tempsum *= -1;
         }
 
-        //if sign put area in (-area0/2, area0/2], else put area in [0, area0)
+        // if sign put area in (-area0/2, area0/2], else put area in [0, area0)
         if (sign) {
             if (tempsum > mArea0 / 2) {
                 tempsum -= mArea0;
@@ -323,7 +322,7 @@ public class PolygonArea {
      */
     public PolygonResult testEdge(
             final double azi, final double s, final boolean reverse, final boolean sign) {
-        //we don't have a starting point!
+        // we don't have a starting point!
         if (mNum == 0) {
             return new PolygonResult(0, Double.NaN, Double.NaN);
         }
@@ -349,12 +348,12 @@ public class PolygonArea {
             tempsum += (tempsum < 0 ? 1 : -1) * mArea0 / 2;
         }
 
-        //area is with the clockwise sense. If !reverse convert to counter-clockwise convention.
+        // area is with the clockwise sense. If !reverse convert to counter-clockwise convention.
         if (!reverse) {
             tempsum *= -1;
         }
 
-        //if sign put area in (-area0/2, area0/2], else put area in [0, area0)
+        // if sign put area in (-area0/2, area0/2], else put area in [0, area0)
         if (sign) {
             if (tempsum > mArea0 / 2) {
                 tempsum -= mArea0;
@@ -404,9 +403,9 @@ public class PolygonArea {
     }
 
     private static int transit(double lon1, double lon2) {
-        //return 1 or -1 if crossing prime meridian in east or west direction.
-        //Otherwise return zero.
-        //Compute lon12 the same way as Geodesic.inverse.
+        // return 1 or -1 if crossing prime meridian in east or west direction.
+        // Otherwise return zero.
+        // Compute lon12 the same way as Geodesic.inverse.
         lon1 = GeoMath.angNormalize(lon1);
         lon2 = GeoMath.angNormalize(lon2);
 
@@ -418,10 +417,10 @@ public class PolygonArea {
         }
     }
 
-    //an alternate version of transit to deal with longitudes in the direct problem.
+    // an alternate version of transit to deal with longitudes in the direct problem.
     private static int transitDirect(double lon1, double lon2) {
-        //we want to compute exactly
-        //int(floor(lon2 / 360)) - int(floor(lon1 / 360))
+        // we want to compute exactly
+        // int(floor(lon2 / 360)) - int(floor(lon1 / 360))
         lon1 = lon1 % 720.0;
         lon2 = lon2 % 720.0;
         return (((lon2 >= 0 && lon2 < 360) || lon2 < -360 ? 0 : 1) -
