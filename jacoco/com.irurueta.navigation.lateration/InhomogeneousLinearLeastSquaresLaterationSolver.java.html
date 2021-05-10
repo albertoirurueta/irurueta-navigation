@@ -36,7 +36,7 @@ public abstract class InhomogeneousLinearLeastSquaresLaterationSolver&lt;P exten
     /**
      * Constructor.
      */
-    public InhomogeneousLinearLeastSquaresLaterationSolver() {
+    protected InhomogeneousLinearLeastSquaresLaterationSolver() {
 <span class="fc" id="L40">        super();</span>
 <span class="fc" id="L41">    }</span>
 
@@ -48,7 +48,7 @@ public abstract class InhomogeneousLinearLeastSquaresLaterationSolver&lt;P exten
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      *                                  length is smaller than required points.
      */
-    public InhomogeneousLinearLeastSquaresLaterationSolver(
+    protected InhomogeneousLinearLeastSquaresLaterationSolver(
             final P[] positions, final double[] distances) {
 <span class="fc" id="L53">        super(positions, distances);</span>
 <span class="fc" id="L54">    }</span>
@@ -58,7 +58,7 @@ public abstract class InhomogeneousLinearLeastSquaresLaterationSolver&lt;P exten
      *
      * @param listener listener to be notified of events raised by this instance.
      */
-    public InhomogeneousLinearLeastSquaresLaterationSolver(
+    protected InhomogeneousLinearLeastSquaresLaterationSolver(
             final LaterationSolverListener&lt;P&gt; listener) {
 <span class="fc" id="L63">        super(listener);</span>
 <span class="fc" id="L64">    }</span>
@@ -72,7 +72,7 @@ public abstract class InhomogeneousLinearLeastSquaresLaterationSolver&lt;P exten
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      *                                  length is smaller than required points.
      */
-    public InhomogeneousLinearLeastSquaresLaterationSolver(
+    protected InhomogeneousLinearLeastSquaresLaterationSolver(
             final P[] positions, final double[] distances,
             final LaterationSolverListener&lt;P&gt; listener) {
 <span class="fc" id="L78">        super(positions, distances, listener);</span>

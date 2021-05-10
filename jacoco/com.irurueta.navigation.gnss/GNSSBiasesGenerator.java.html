@@ -33,7 +33,7 @@ import java.util.Random;
  * Integrated Navigation Systems, Second Edition&quot; and on the companion software available at:
  * https://github.com/ymjdz/MATLAB-Codes/blob/master/Initialize_GNSS_biases.m
  */
-<span class="nc" id="L36">public class GNSSBiasesGenerator {</span>
+public class GNSSBiasesGenerator {
 
     /**
      * Ionosphere factor.
@@ -44,6 +44,13 @@ import java.util.Random;
      * Troposphere factor.
      */
     private static final double TROPO_FACTOR = 0.998;
+
+    /**
+     * Constructor.
+     * Prevents instantiation of utility class.
+     */
+    private GNSSBiasesGenerator() {
+    }
 
     /**
      * Generates biases.
@@ -57,9 +64,9 @@ import java.util.Random;
     public static List&lt;Double&gt; generateBiases(final List&lt;ECEFPosition&gt; satellitePositions,
                                               final ECEFPosition userPosition,
                                               final GNSSConfig config, final Random random) {
-<span class="fc" id="L60">        final List&lt;Double&gt; result = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L61">        generateBiases(satellitePositions, userPosition, config, random, result);</span>
-<span class="fc" id="L62">        return result;</span>
+<span class="fc" id="L67">        final List&lt;Double&gt; result = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L68">        generateBiases(satellitePositions, userPosition, config, random, result);</span>
+<span class="fc" id="L69">        return result;</span>
     }
 
     /**
@@ -77,15 +84,15 @@ import java.util.Random;
                                       final GNSSConfig config, final Random random,
                                       final List&lt;Double&gt; result) {
         // Calculate NED user position
-<span class="fc" id="L80">        final NEDPosition userNedPosition = new NEDPosition();</span>
-<span class="fc" id="L81">        final NEDVelocity userNedVelocity = new NEDVelocity();</span>
-<span class="fc" id="L82">        ECEFtoNEDPositionVelocityConverter.convertECEFtoNED(</span>
-<span class="fc" id="L83">                userPosition.getX(), userPosition.getY(), userPosition.getZ(),</span>
+<span class="fc" id="L87">        final NEDPosition userNedPosition = new NEDPosition();</span>
+<span class="fc" id="L88">        final NEDVelocity userNedVelocity = new NEDVelocity();</span>
+<span class="fc" id="L89">        ECEFtoNEDPositionVelocityConverter.convertECEFtoNED(</span>
+<span class="fc" id="L90">                userPosition.getX(), userPosition.getY(), userPosition.getZ(),</span>
                 0.0, 0.0, 0.0, userNedPosition, userNedVelocity);
-<span class="fc" id="L85">        generate(satellitePositions, userPosition,</span>
-<span class="fc" id="L86">                userNedPosition.getLatitude(), userNedPosition.getLongitude(),</span>
+<span class="fc" id="L92">        generate(satellitePositions, userPosition,</span>
+<span class="fc" id="L93">                userNedPosition.getLatitude(), userNedPosition.getLongitude(),</span>
                 config, random, result);
-<span class="fc" id="L88">    }</span>
+<span class="fc" id="L95">    }</span>
 
     /**
      * Generates biases.
@@ -100,17 +107,17 @@ import java.util.Random;
                                       final ECEFPosition userPosition, final GNSSConfig config,
                                       final Random random) {
         // Calculate NED user position
-<span class="fc" id="L103">        final NEDPosition userNedPosition = new NEDPosition();</span>
-<span class="fc" id="L104">        final NEDVelocity userNedVelocity = new NEDVelocity();</span>
-<span class="fc" id="L105">        ECEFtoNEDPositionVelocityConverter.convertECEFtoNED(</span>
-<span class="fc" id="L106">                userPosition.getX(), userPosition.getY(), userPosition.getZ(),</span>
+<span class="fc" id="L110">        final NEDPosition userNedPosition = new NEDPosition();</span>
+<span class="fc" id="L111">        final NEDVelocity userNedVelocity = new NEDVelocity();</span>
+<span class="fc" id="L112">        ECEFtoNEDPositionVelocityConverter.convertECEFtoNED(</span>
+<span class="fc" id="L113">                userPosition.getX(), userPosition.getY(), userPosition.getZ(),</span>
                 0.0, 0.0, 0.0, userNedPosition, userNedVelocity);
-<span class="fc" id="L108">        final double userLatitude = userNedPosition.getLatitude();</span>
-<span class="fc" id="L109">        final double userLongitude = userNedPosition.getLongitude();</span>
+<span class="fc" id="L115">        final double userLatitude = userNedPosition.getLatitude();</span>
+<span class="fc" id="L116">        final double userLongitude = userNedPosition.getLongitude();</span>
 
         // Calculate ECEF to NED coordinate transformation matrix
-<span class="fc" id="L112">        final Matrix cen = CoordinateTransformation.ecefToNedMatrix(userLatitude, userLongitude);</span>
-<span class="fc" id="L113">        return generate(satellitePosition, userPosition, config, cen, random);</span>
+<span class="fc" id="L119">        final Matrix cen = CoordinateTransformation.ecefToNedMatrix(userLatitude, userLongitude);</span>
+<span class="fc" id="L120">        return generate(satellitePosition, userPosition, config, cen, random);</span>
     }
 
     /**
@@ -131,16 +138,16 @@ import java.util.Random;
                                  final double userLongitude,
                                  final GNSSConfig config, final Random random,
                                  final List&lt;Double&gt; result) {
-<span class="fc" id="L134">        result.clear();</span>
+<span class="fc" id="L141">        result.clear();</span>
 
         // Calculate ECEF to NED coordinate transformation matrix
-<span class="fc" id="L137">        final Matrix cen = CoordinateTransformation.ecefToNedMatrix(userLatitude, userLongitude);</span>
+<span class="fc" id="L144">        final Matrix cen = CoordinateTransformation.ecefToNedMatrix(userLatitude, userLongitude);</span>
 
         // Loop satellites
-<span class="fc bfc" id="L140" title="All 2 branches covered.">        for (final ECEFPosition satellitePosition : satellitePositions) {</span>
-<span class="fc" id="L141">            result.add(generate(satellitePosition, userPosition, config, cen, random));</span>
-<span class="fc" id="L142">        }</span>
-<span class="fc" id="L143">    }</span>
+<span class="fc bfc" id="L147" title="All 2 branches covered.">        for (final ECEFPosition satellitePosition : satellitePositions) {</span>
+<span class="fc" id="L148">            result.add(generate(satellitePosition, userPosition, config, cen, random));</span>
+<span class="fc" id="L149">        }</span>
+<span class="fc" id="L150">    }</span>
 
     /**
      * Generates bias.
@@ -157,38 +164,38 @@ import java.util.Random;
                                    final GNSSConfig config, final Matrix cen, final Random random) {
 
         // Determine ECEF line-of-sight vector using (8.41)
-<span class="fc" id="L160">        final double deltaRx = satellitePosition.getX() - userPosition.getX();</span>
-<span class="fc" id="L161">        final double deltaRy = satellitePosition.getY() - userPosition.getY();</span>
-<span class="fc" id="L162">        final double deltaRz = satellitePosition.getZ() - userPosition.getZ();</span>
+<span class="fc" id="L167">        final double deltaRx = satellitePosition.getX() - userPosition.getX();</span>
+<span class="fc" id="L168">        final double deltaRy = satellitePosition.getY() - userPosition.getY();</span>
+<span class="fc" id="L169">        final double deltaRz = satellitePosition.getZ() - userPosition.getZ();</span>
 
-<span class="fc" id="L164">        final double deltaRNorm = Math.sqrt(deltaRx * deltaRx + deltaRy * deltaRy + deltaRz * deltaRz);</span>
+<span class="fc" id="L171">        final double deltaRNorm = Math.sqrt(deltaRx * deltaRx + deltaRy * deltaRy + deltaRz * deltaRz);</span>
 
-<span class="fc" id="L166">        final double uaseX = deltaRx / deltaRNorm;</span>
-<span class="fc" id="L167">        final double uaseY = deltaRy / deltaRNorm;</span>
-<span class="fc" id="L168">        final double uaseZ = deltaRz / deltaRNorm;</span>
+<span class="fc" id="L173">        final double uaseX = deltaRx / deltaRNorm;</span>
+<span class="fc" id="L174">        final double uaseY = deltaRy / deltaRNorm;</span>
+<span class="fc" id="L175">        final double uaseZ = deltaRz / deltaRNorm;</span>
 
         // Convert line of sight vector to NED using (8.39) and determine
         // elevation using (8.57)
-<span class="fc" id="L172">        final double cen1 = cen.getElementAt(2, 0);</span>
-<span class="fc" id="L173">        final double cen2 = cen.getElementAt(2, 1);</span>
-<span class="fc" id="L174">        final double cen3 = cen.getElementAt(2, 2);</span>
+<span class="fc" id="L179">        final double cen1 = cen.getElementAt(2, 0);</span>
+<span class="fc" id="L180">        final double cen2 = cen.getElementAt(2, 1);</span>
+<span class="fc" id="L181">        final double cen3 = cen.getElementAt(2, 2);</span>
 
-<span class="fc" id="L176">        double elevation = -Math.asin(cen1 * uaseX + cen2 * uaseY + cen3 * uaseZ);</span>
+<span class="fc" id="L183">        double elevation = -Math.asin(cen1 * uaseX + cen2 * uaseY + cen3 * uaseZ);</span>
 
         // Limit the minimum elevation angle to the masking angle
-<span class="fc" id="L179">        elevation = Math.max(elevation, Math.toRadians(config.getMaskAngleDegrees()));</span>
+<span class="fc" id="L186">        elevation = Math.max(elevation, Math.toRadians(config.getMaskAngleDegrees()));</span>
 
         // Calculate ionosphere and troposphere error SDs using (9.79) and (9.80)
-<span class="fc" id="L182">        final double cosElevation = Math.cos(elevation);</span>
-<span class="fc" id="L183">        final double cosElevation2 = cosElevation * cosElevation;</span>
-<span class="fc" id="L184">        final double ionoSD = config.getZenithIonosphereErrorSD() / Math.sqrt(1.0</span>
+<span class="fc" id="L189">        final double cosElevation = Math.cos(elevation);</span>
+<span class="fc" id="L190">        final double cosElevation2 = cosElevation * cosElevation;</span>
+<span class="fc" id="L191">        final double ionoSD = config.getZenithIonosphereErrorSD() / Math.sqrt(1.0</span>
                 - IONO_FACTOR * cosElevation2);
-<span class="fc" id="L186">        final double tropSD = config.getZenithTroposphereErrorSD() / Math.sqrt(1.0</span>
+<span class="fc" id="L193">        final double tropSD = config.getZenithTroposphereErrorSD() / Math.sqrt(1.0</span>
                 - TROPO_FACTOR * cosElevation2);
 
         // Determine range bias
-<span class="fc" id="L190">        return config.getSISErrorSD() * random.nextGaussian() + ionoSD * random.nextGaussian()</span>
-<span class="fc" id="L191">                + tropSD * random.nextGaussian();</span>
+<span class="fc" id="L197">        return config.getSISErrorSD() * random.nextGaussian() + ionoSD * random.nextGaussian()</span>
+<span class="fc" id="L198">                + tropSD * random.nextGaussian();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

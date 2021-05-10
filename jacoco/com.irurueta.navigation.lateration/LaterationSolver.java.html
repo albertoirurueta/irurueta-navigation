@@ -62,7 +62,7 @@ public abstract class LaterationSolver&lt;P extends Point&lt;?&gt;&gt; {
     /**
      * Constructor.
      */
-<span class="fc" id="L65">    public LaterationSolver() {</span>
+<span class="fc" id="L65">    protected LaterationSolver() {</span>
 <span class="fc" id="L66">    }</span>
 
     /**
@@ -74,7 +74,7 @@ public abstract class LaterationSolver&lt;P extends Point&lt;?&gt;&gt; {
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      *                                  length is smaller than required (3 for 2D points or 4 for 3D points).
      */
-<span class="fc" id="L77">    public LaterationSolver(final P[] positions, final double[] distances) {</span>
+<span class="fc" id="L77">    protected LaterationSolver(final P[] positions, final double[] distances) {</span>
 <span class="fc" id="L78">        internalSetPositionsAndDistances(positions, distances);</span>
 <span class="fc" id="L79">    }</span>
 
@@ -83,7 +83,7 @@ public abstract class LaterationSolver&lt;P extends Point&lt;?&gt;&gt; {
      *
      * @param listener listener to be notified of events raised by this instance.
      */
-<span class="fc" id="L86">    public LaterationSolver(final LaterationSolverListener&lt;P&gt; listener) {</span>
+<span class="fc" id="L86">    protected LaterationSolver(final LaterationSolverListener&lt;P&gt; listener) {</span>
 <span class="fc" id="L87">        mListener = listener;</span>
 <span class="fc" id="L88">    }</span>
 
@@ -97,7 +97,7 @@ public abstract class LaterationSolver&lt;P extends Point&lt;?&gt;&gt; {
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      *                                  length is smaller than required (3 for 2D points or 4 for 3D points).
      */
-    public LaterationSolver(
+    protected LaterationSolver(
             final P[] positions, final double[] distances,
             final LaterationSolverListener&lt;P&gt; listener) {
 <span class="fc" id="L103">        this(positions, distances);</span>

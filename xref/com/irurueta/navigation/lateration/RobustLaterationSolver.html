@@ -230,7 +230,7 @@
 <a class="jxr_linenumber" name="L222" href="#L222">222</a>     <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L223" href="#L223">223</a> <em class="jxr_javadoccomment">     * Constructor.</em>
 <a class="jxr_linenumber" name="L224" href="#L224">224</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L225" href="#L225">225</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../com/irurueta/navigation/lateration/RobustLaterationSolver.html">RobustLaterationSolver</a>() {
+<a class="jxr_linenumber" name="L225" href="#L225">225</a>     <strong class="jxr_keyword">protected</strong> <a href="../../../../com/irurueta/navigation/lateration/RobustLaterationSolver.html">RobustLaterationSolver</a>() {
 <a class="jxr_linenumber" name="L226" href="#L226">226</a>     }
 <a class="jxr_linenumber" name="L227" href="#L227">227</a> 
 <a class="jxr_linenumber" name="L228" href="#L228">228</a>     <em class="jxr_javadoccomment">/**</em>
@@ -239,7 +239,7 @@
 <a class="jxr_linenumber" name="L231" href="#L231">231</a> <em class="jxr_javadoccomment">     * @param listener listener to be notified of events such as when estimation</em>
 <a class="jxr_linenumber" name="L232" href="#L232">232</a> <em class="jxr_javadoccomment">     *                 starts, ends or its progress significantly changes.</em>
 <a class="jxr_linenumber" name="L233" href="#L233">233</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L234" href="#L234">234</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../com/irurueta/navigation/lateration/RobustLaterationSolver.html">RobustLaterationSolver</a>(
+<a class="jxr_linenumber" name="L234" href="#L234">234</a>     <strong class="jxr_keyword">protected</strong> <a href="../../../../com/irurueta/navigation/lateration/RobustLaterationSolver.html">RobustLaterationSolver</a>(
 <a class="jxr_linenumber" name="L235" href="#L235">235</a>             <strong class="jxr_keyword">final</strong> RobustLaterationSolverListener&lt;P&gt; listener) {
 <a class="jxr_linenumber" name="L236" href="#L236">236</a>         mListener = listener;
 <a class="jxr_linenumber" name="L237" href="#L237">237</a>     }
@@ -252,7 +252,7 @@
 <a class="jxr_linenumber" name="L244" href="#L244">244</a> <em class="jxr_javadoccomment">     * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their</em>
 <a class="jxr_linenumber" name="L245" href="#L245">245</a> <em class="jxr_javadoccomment">     *                                  length is smaller than required (3 for 2D points or 4 for 3D points).</em>
 <a class="jxr_linenumber" name="L246" href="#L246">246</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L247" href="#L247">247</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../com/irurueta/navigation/lateration/RobustLaterationSolver.html">RobustLaterationSolver</a>(<strong class="jxr_keyword">final</strong> P[] positions, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] distances) {
+<a class="jxr_linenumber" name="L247" href="#L247">247</a>     <strong class="jxr_keyword">protected</strong> <a href="../../../../com/irurueta/navigation/lateration/RobustLaterationSolver.html">RobustLaterationSolver</a>(<strong class="jxr_keyword">final</strong> P[] positions, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] distances) {
 <a class="jxr_linenumber" name="L248" href="#L248">248</a>         internalSetPositionsAndDistances(positions, distances);
 <a class="jxr_linenumber" name="L249" href="#L249">249</a>     }
 <a class="jxr_linenumber" name="L250" href="#L250">250</a> 
@@ -266,7 +266,7 @@
 <a class="jxr_linenumber" name="L258" href="#L258">258</a> <em class="jxr_javadoccomment">     *                                  are null, don't have the same length or their length is smaller than required (3 for</em>
 <a class="jxr_linenumber" name="L259" href="#L259">259</a> <em class="jxr_javadoccomment">     *                                  2D points or 4 for 3D points).</em>
 <a class="jxr_linenumber" name="L260" href="#L260">260</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L261" href="#L261">261</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../com/irurueta/navigation/lateration/RobustLaterationSolver.html">RobustLaterationSolver</a>(
+<a class="jxr_linenumber" name="L261" href="#L261">261</a>     <strong class="jxr_keyword">protected</strong> <a href="../../../../com/irurueta/navigation/lateration/RobustLaterationSolver.html">RobustLaterationSolver</a>(
 <a class="jxr_linenumber" name="L262" href="#L262">262</a>             <strong class="jxr_keyword">final</strong> P[] positions, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] distances,
 <a class="jxr_linenumber" name="L263" href="#L263">263</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] distanceStandardDeviations) {
 <a class="jxr_linenumber" name="L264" href="#L264">264</a>         internalSetPositionsDistancesAndStandardDeviations(positions, distances, distanceStandardDeviations);
@@ -283,7 +283,7 @@
 <a class="jxr_linenumber" name="L275" href="#L275">275</a> <em class="jxr_javadoccomment">     * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their</em>
 <a class="jxr_linenumber" name="L276" href="#L276">276</a> <em class="jxr_javadoccomment">     *                                  length is smaller than required (3 for 2D points or 4 for 3D points).</em>
 <a class="jxr_linenumber" name="L277" href="#L277">277</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L278" href="#L278">278</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../com/irurueta/navigation/lateration/RobustLaterationSolver.html">RobustLaterationSolver</a>(
+<a class="jxr_linenumber" name="L278" href="#L278">278</a>     <strong class="jxr_keyword">protected</strong> <a href="../../../../com/irurueta/navigation/lateration/RobustLaterationSolver.html">RobustLaterationSolver</a>(
 <a class="jxr_linenumber" name="L279" href="#L279">279</a>             <strong class="jxr_keyword">final</strong> P[] positions, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] distances,
 <a class="jxr_linenumber" name="L280" href="#L280">280</a>             <strong class="jxr_keyword">final</strong> RobustLaterationSolverListener&lt;P&gt; listener) {
 <a class="jxr_linenumber" name="L281" href="#L281">281</a>         internalSetPositionsAndDistances(positions, distances);
@@ -300,7 +300,7 @@
 <a class="jxr_linenumber" name="L292" href="#L292">292</a> <em class="jxr_javadoccomment">     * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their</em>
 <a class="jxr_linenumber" name="L293" href="#L293">293</a> <em class="jxr_javadoccomment">     *                                  length is smaller than required (3 for 2D points or 4 for 3D points).</em>
 <a class="jxr_linenumber" name="L294" href="#L294">294</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L295" href="#L295">295</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../com/irurueta/navigation/lateration/RobustLaterationSolver.html">RobustLaterationSolver</a>(
+<a class="jxr_linenumber" name="L295" href="#L295">295</a>     <strong class="jxr_keyword">protected</strong> <a href="../../../../com/irurueta/navigation/lateration/RobustLaterationSolver.html">RobustLaterationSolver</a>(
 <a class="jxr_linenumber" name="L296" href="#L296">296</a>             <strong class="jxr_keyword">final</strong> P[] positions, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] distances,
 <a class="jxr_linenumber" name="L297" href="#L297">297</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] distanceStandardDeviations,
 <a class="jxr_linenumber" name="L298" href="#L298">298</a>             <strong class="jxr_keyword">final</strong> RobustLaterationSolverListener&lt;P&gt; listener) {

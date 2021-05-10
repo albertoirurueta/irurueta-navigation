@@ -596,62 +596,64 @@ public class PROSACRobustLateration2DSolver extends RobustLateration2DSolver {
 
                     @Override
                     public void onEstimateStart(final RobustEstimator&lt;Point2D&gt; estimator) {
-<span class="fc" id="L599">                    }</span>
+                        // no action needed
+<span class="fc" id="L600">                    }</span>
 
                     @Override
                     public void onEstimateEnd(final RobustEstimator&lt;Point2D&gt; estimator) {
-<span class="fc" id="L603">                    }</span>
+                        // no action needed
+<span class="fc" id="L605">                    }</span>
 
                     @Override
                     public void onEstimateNextIteration(
                             final RobustEstimator&lt;Point2D&gt; estimator, final int iteration) {
-<span class="pc bpc" id="L608" title="1 of 2 branches missed.">                        if (mListener != null) {</span>
-<span class="fc" id="L609">                            mListener.onSolveNextIteration(</span>
+<span class="pc bpc" id="L610" title="1 of 2 branches missed.">                        if (mListener != null) {</span>
+<span class="fc" id="L611">                            mListener.onSolveNextIteration(</span>
                                     PROSACRobustLateration2DSolver.this, iteration);
                         }
-<span class="fc" id="L612">                    }</span>
+<span class="fc" id="L614">                    }</span>
 
                     @Override
                     public void onEstimateProgressChange(
                             final RobustEstimator&lt;Point2D&gt; estimator, final float progress) {
-<span class="pc bpc" id="L617" title="1 of 2 branches missed.">                        if (mListener != null) {</span>
-<span class="fc" id="L618">                            mListener.onSolveProgressChange(</span>
+<span class="pc bpc" id="L619" title="1 of 2 branches missed.">                        if (mListener != null) {</span>
+<span class="fc" id="L620">                            mListener.onSolveProgressChange(</span>
                                     PROSACRobustLateration2DSolver.this, progress);
                         }
-<span class="fc" id="L621">                    }</span>
+<span class="fc" id="L623">                    }</span>
                 });
 
         try {
-<span class="fc" id="L625">            mLocked = true;</span>
+<span class="fc" id="L627">            mLocked = true;</span>
 
-<span class="pc bpc" id="L627" title="1 of 2 branches missed.">            if (mListener != null) {</span>
-<span class="fc" id="L628">                mListener.onSolveStart(this);</span>
+<span class="pc bpc" id="L629" title="1 of 2 branches missed.">            if (mListener != null) {</span>
+<span class="fc" id="L630">                mListener.onSolveStart(this);</span>
             }
 
-<span class="fc" id="L631">            mInliersData = null;</span>
-<span class="fc bfc" id="L632" title="All 4 branches covered.">            innerEstimator.setComputeAndKeepInliersEnabled(</span>
+<span class="fc" id="L633">            mInliersData = null;</span>
+<span class="fc bfc" id="L634" title="All 4 branches covered.">            innerEstimator.setComputeAndKeepInliersEnabled(</span>
                     mComputeAndKeepInliers || mRefineResult);
-<span class="fc bfc" id="L634" title="All 4 branches covered.">            innerEstimator.setComputeAndKeepResidualsEnabled(</span>
+<span class="fc bfc" id="L636" title="All 4 branches covered.">            innerEstimator.setComputeAndKeepResidualsEnabled(</span>
                     mComputeAndKeepResiduals || mRefineResult);
-<span class="fc" id="L636">            innerEstimator.setConfidence(mConfidence);</span>
-<span class="fc" id="L637">            innerEstimator.setMaxIterations(mMaxIterations);</span>
-<span class="fc" id="L638">            innerEstimator.setProgressDelta(mProgressDelta);</span>
-<span class="fc" id="L639">            Point2D result = innerEstimator.estimate();</span>
-<span class="fc" id="L640">            mInliersData = innerEstimator.getInliersData();</span>
-<span class="fc" id="L641">            result = attemptRefine(result);</span>
+<span class="fc" id="L638">            innerEstimator.setConfidence(mConfidence);</span>
+<span class="fc" id="L639">            innerEstimator.setMaxIterations(mMaxIterations);</span>
+<span class="fc" id="L640">            innerEstimator.setProgressDelta(mProgressDelta);</span>
+<span class="fc" id="L641">            Point2D result = innerEstimator.estimate();</span>
+<span class="fc" id="L642">            mInliersData = innerEstimator.getInliersData();</span>
+<span class="fc" id="L643">            result = attemptRefine(result);</span>
 
-<span class="pc bpc" id="L643" title="1 of 2 branches missed.">            if (mListener != null) {</span>
-<span class="fc" id="L644">                mListener.onSolveEnd(this);</span>
+<span class="pc bpc" id="L645" title="1 of 2 branches missed.">            if (mListener != null) {</span>
+<span class="fc" id="L646">                mListener.onSolveEnd(this);</span>
             }
 
-<span class="fc" id="L647">            return result;</span>
+<span class="fc" id="L649">            return result;</span>
 
-<span class="nc" id="L649">        } catch (final com.irurueta.numerical.LockedException e) {</span>
-<span class="nc" id="L650">            throw new LockedException(e);</span>
-<span class="nc" id="L651">        } catch (final com.irurueta.numerical.NotReadyException e) {</span>
-<span class="nc" id="L652">            throw new NotReadyException(e);</span>
+<span class="nc" id="L651">        } catch (final com.irurueta.numerical.LockedException e) {</span>
+<span class="nc" id="L652">            throw new LockedException(e);</span>
+<span class="nc" id="L653">        } catch (final com.irurueta.numerical.NotReadyException e) {</span>
+<span class="nc" id="L654">            throw new NotReadyException(e);</span>
         } finally {
-<span class="fc" id="L654">            mLocked = false;</span>
+<span class="fc" id="L656">            mLocked = false;</span>
         }
     }
 
@@ -662,7 +664,7 @@ public class PROSACRobustLateration2DSolver extends RobustLateration2DSolver {
      */
     @Override
     public RobustEstimatorMethod getMethod() {
-<span class="fc" id="L665">        return RobustEstimatorMethod.PROSAC;</span>
+<span class="fc" id="L667">        return RobustEstimatorMethod.PROSAC;</span>
     }
 
     /**
@@ -675,12 +677,12 @@ public class PROSACRobustLateration2DSolver extends RobustLateration2DSolver {
      *                                  is smaller than 3 samples.
      */
     private void internalSetQualityScores(final double[] qualityScores) {
-<span class="fc bfc" id="L678" title="All 2 branches covered.">        if (qualityScores == null ||</span>
-<span class="fc bfc" id="L679" title="All 2 branches covered.">                qualityScores.length &lt; getMinRequiredPositionsAndDistances()) {</span>
-<span class="fc" id="L680">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L680" title="All 2 branches covered.">        if (qualityScores == null ||</span>
+<span class="fc bfc" id="L681" title="All 2 branches covered.">                qualityScores.length &lt; getMinRequiredPositionsAndDistances()) {</span>
+<span class="fc" id="L682">            throw new IllegalArgumentException();</span>
         }
 
-<span class="fc" id="L683">        mQualityScores = qualityScores;</span>
-<span class="fc" id="L684">    }</span>
+<span class="fc" id="L685">        mQualityScores = qualityScores;</span>
+<span class="fc" id="L686">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

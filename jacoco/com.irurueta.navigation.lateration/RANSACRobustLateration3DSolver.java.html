@@ -346,62 +346,64 @@ public class RANSACRobustLateration3DSolver extends RobustLateration3DSolver {
 
                     @Override
                     public void onEstimateStart(final RobustEstimator&lt;Point3D&gt; estimator) {
-<span class="fc" id="L349">                    }</span>
+                        // no action needed
+<span class="fc" id="L350">                    }</span>
 
                     @Override
                     public void onEstimateEnd(final RobustEstimator&lt;Point3D&gt; estimator) {
-<span class="fc" id="L353">                    }</span>
+                        // no action needed
+<span class="fc" id="L355">                    }</span>
 
                     @Override
                     public void onEstimateNextIteration(
                             final RobustEstimator&lt;Point3D&gt; estimator, final int iteration) {
-<span class="pc bpc" id="L358" title="1 of 2 branches missed.">                        if (mListener != null) {</span>
-<span class="fc" id="L359">                            mListener.onSolveNextIteration(</span>
+<span class="pc bpc" id="L360" title="1 of 2 branches missed.">                        if (mListener != null) {</span>
+<span class="fc" id="L361">                            mListener.onSolveNextIteration(</span>
                                     RANSACRobustLateration3DSolver.this, iteration);
                         }
-<span class="fc" id="L362">                    }</span>
+<span class="fc" id="L364">                    }</span>
 
                     @Override
                     public void onEstimateProgressChange(
                             final RobustEstimator&lt;Point3D&gt; estimator, final float progress) {
-<span class="pc bpc" id="L367" title="1 of 2 branches missed.">                        if (mListener != null) {</span>
-<span class="fc" id="L368">                            mListener.onSolveProgressChange(</span>
+<span class="pc bpc" id="L369" title="1 of 2 branches missed.">                        if (mListener != null) {</span>
+<span class="fc" id="L370">                            mListener.onSolveProgressChange(</span>
                                     RANSACRobustLateration3DSolver.this, progress);
                         }
-<span class="fc" id="L371">                    }</span>
+<span class="fc" id="L373">                    }</span>
                 });
 
         try {
-<span class="fc" id="L375">            mLocked = true;</span>
+<span class="fc" id="L377">            mLocked = true;</span>
 
-<span class="pc bpc" id="L377" title="1 of 2 branches missed.">            if (mListener != null) {</span>
-<span class="fc" id="L378">                mListener.onSolveStart(RANSACRobustLateration3DSolver.this);</span>
+<span class="pc bpc" id="L379" title="1 of 2 branches missed.">            if (mListener != null) {</span>
+<span class="fc" id="L380">                mListener.onSolveStart(RANSACRobustLateration3DSolver.this);</span>
             }
 
-<span class="fc" id="L381">            mInliersData = null;</span>
-<span class="fc bfc" id="L382" title="All 4 branches covered.">            innerEstimator.setComputeAndKeepInliersEnabled(</span>
+<span class="fc" id="L383">            mInliersData = null;</span>
+<span class="fc bfc" id="L384" title="All 4 branches covered.">            innerEstimator.setComputeAndKeepInliersEnabled(</span>
                     mComputeAndKeepInliers || mRefineResult);
-<span class="fc bfc" id="L384" title="All 4 branches covered.">            innerEstimator.setComputeAndKeepResidualsEnabled(</span>
+<span class="fc bfc" id="L386" title="All 4 branches covered.">            innerEstimator.setComputeAndKeepResidualsEnabled(</span>
                     mComputeAndKeepResiduals || mRefineResult);
-<span class="fc" id="L386">            innerEstimator.setConfidence(mConfidence);</span>
-<span class="fc" id="L387">            innerEstimator.setMaxIterations(mMaxIterations);</span>
-<span class="fc" id="L388">            innerEstimator.setProgressDelta(mProgressDelta);</span>
-<span class="fc" id="L389">            Point3D result = innerEstimator.estimate();</span>
-<span class="fc" id="L390">            mInliersData = innerEstimator.getInliersData();</span>
-<span class="fc" id="L391">            result = attemptRefine(result);</span>
+<span class="fc" id="L388">            innerEstimator.setConfidence(mConfidence);</span>
+<span class="fc" id="L389">            innerEstimator.setMaxIterations(mMaxIterations);</span>
+<span class="fc" id="L390">            innerEstimator.setProgressDelta(mProgressDelta);</span>
+<span class="fc" id="L391">            Point3D result = innerEstimator.estimate();</span>
+<span class="fc" id="L392">            mInliersData = innerEstimator.getInliersData();</span>
+<span class="fc" id="L393">            result = attemptRefine(result);</span>
 
-<span class="pc bpc" id="L393" title="1 of 2 branches missed.">            if (mListener != null) {</span>
-<span class="fc" id="L394">                mListener.onSolveEnd(RANSACRobustLateration3DSolver.this);</span>
+<span class="pc bpc" id="L395" title="1 of 2 branches missed.">            if (mListener != null) {</span>
+<span class="fc" id="L396">                mListener.onSolveEnd(RANSACRobustLateration3DSolver.this);</span>
             }
 
-<span class="fc" id="L397">            return result;</span>
+<span class="fc" id="L399">            return result;</span>
 
-<span class="nc" id="L399">        } catch (final com.irurueta.numerical.LockedException e) {</span>
-<span class="nc" id="L400">            throw new LockedException(e);</span>
-<span class="nc" id="L401">        } catch (final com.irurueta.numerical.NotReadyException e) {</span>
-<span class="nc" id="L402">            throw new NotReadyException(e);</span>
+<span class="nc" id="L401">        } catch (final com.irurueta.numerical.LockedException e) {</span>
+<span class="nc" id="L402">            throw new LockedException(e);</span>
+<span class="nc" id="L403">        } catch (final com.irurueta.numerical.NotReadyException e) {</span>
+<span class="nc" id="L404">            throw new NotReadyException(e);</span>
         } finally {
-<span class="fc" id="L404">            mLocked = false;</span>
+<span class="fc" id="L406">            mLocked = false;</span>
         }
     }
 
@@ -412,7 +414,7 @@ public class RANSACRobustLateration3DSolver extends RobustLateration3DSolver {
      */
     @Override
     public RobustEstimatorMethod getMethod() {
-<span class="fc" id="L415">        return RobustEstimatorMethod.RANSAC;</span>
+<span class="fc" id="L417">        return RobustEstimatorMethod.RANSAC;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

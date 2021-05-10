@@ -313,58 +313,60 @@ public class LMedSRobustLateration2DSolver extends RobustLateration2DSolver {
 
                     @Override
                     public void onEstimateStart(final RobustEstimator&lt;Point2D&gt; estimator) {
-<span class="fc" id="L316">                    }</span>
+                        // no action needed
+<span class="fc" id="L317">                    }</span>
 
                     @Override
                     public void onEstimateEnd(final RobustEstimator&lt;Point2D&gt; estimator) {
-<span class="fc" id="L320">                    }</span>
+                        // no action needed
+<span class="fc" id="L322">                    }</span>
 
                     @Override
                     public void onEstimateNextIteration(
                             final RobustEstimator&lt;Point2D&gt; estimator, final int iteration) {
-<span class="pc bpc" id="L325" title="1 of 2 branches missed.">                        if (mListener != null) {</span>
-<span class="fc" id="L326">                            mListener.onSolveNextIteration(</span>
+<span class="pc bpc" id="L327" title="1 of 2 branches missed.">                        if (mListener != null) {</span>
+<span class="fc" id="L328">                            mListener.onSolveNextIteration(</span>
                                     LMedSRobustLateration2DSolver.this, iteration);
                         }
-<span class="fc" id="L329">                    }</span>
+<span class="fc" id="L331">                    }</span>
 
                     @Override
                     public void onEstimateProgressChange(
                             final RobustEstimator&lt;Point2D&gt; estimator, final float progress) {
-<span class="pc bpc" id="L334" title="1 of 2 branches missed.">                        if (mListener != null) {</span>
-<span class="fc" id="L335">                            mListener.onSolveProgressChange(</span>
+<span class="pc bpc" id="L336" title="1 of 2 branches missed.">                        if (mListener != null) {</span>
+<span class="fc" id="L337">                            mListener.onSolveProgressChange(</span>
                                     LMedSRobustLateration2DSolver.this, progress);
                         }
-<span class="fc" id="L338">                    }</span>
+<span class="fc" id="L340">                    }</span>
                 });
 
         try {
-<span class="fc" id="L342">            mLocked = true;</span>
+<span class="fc" id="L344">            mLocked = true;</span>
 
-<span class="pc bpc" id="L344" title="1 of 2 branches missed.">            if (mListener != null) {</span>
-<span class="fc" id="L345">                mListener.onSolveStart(this);</span>
+<span class="pc bpc" id="L346" title="1 of 2 branches missed.">            if (mListener != null) {</span>
+<span class="fc" id="L347">                mListener.onSolveStart(this);</span>
             }
 
-<span class="fc" id="L348">            mInliersData = null;</span>
-<span class="fc" id="L349">            innerEstimator.setConfidence(mConfidence);</span>
-<span class="fc" id="L350">            innerEstimator.setMaxIterations(mMaxIterations);</span>
-<span class="fc" id="L351">            innerEstimator.setProgressDelta(mProgressDelta);</span>
-<span class="fc" id="L352">            Point2D result = innerEstimator.estimate();</span>
-<span class="fc" id="L353">            mInliersData = innerEstimator.getInliersData();</span>
-<span class="fc" id="L354">            result = attemptRefine(result);</span>
+<span class="fc" id="L350">            mInliersData = null;</span>
+<span class="fc" id="L351">            innerEstimator.setConfidence(mConfidence);</span>
+<span class="fc" id="L352">            innerEstimator.setMaxIterations(mMaxIterations);</span>
+<span class="fc" id="L353">            innerEstimator.setProgressDelta(mProgressDelta);</span>
+<span class="fc" id="L354">            Point2D result = innerEstimator.estimate();</span>
+<span class="fc" id="L355">            mInliersData = innerEstimator.getInliersData();</span>
+<span class="fc" id="L356">            result = attemptRefine(result);</span>
 
-<span class="pc bpc" id="L356" title="1 of 2 branches missed.">            if (mListener != null) {</span>
-<span class="fc" id="L357">                mListener.onSolveEnd(this);</span>
+<span class="pc bpc" id="L358" title="1 of 2 branches missed.">            if (mListener != null) {</span>
+<span class="fc" id="L359">                mListener.onSolveEnd(this);</span>
             }
 
-<span class="fc" id="L360">            return result;</span>
+<span class="fc" id="L362">            return result;</span>
 
-<span class="nc" id="L362">        } catch (final com.irurueta.numerical.LockedException e) {</span>
-<span class="nc" id="L363">            throw new LockedException(e);</span>
-<span class="nc" id="L364">        } catch (final com.irurueta.numerical.NotReadyException e) {</span>
-<span class="nc" id="L365">            throw new NotReadyException(e);</span>
+<span class="nc" id="L364">        } catch (final com.irurueta.numerical.LockedException e) {</span>
+<span class="nc" id="L365">            throw new LockedException(e);</span>
+<span class="nc" id="L366">        } catch (final com.irurueta.numerical.NotReadyException e) {</span>
+<span class="nc" id="L367">            throw new NotReadyException(e);</span>
         } finally {
-<span class="fc" id="L367">            mLocked = false;</span>
+<span class="fc" id="L369">            mLocked = false;</span>
         }
     }
 
@@ -375,7 +377,7 @@ public class LMedSRobustLateration2DSolver extends RobustLateration2DSolver {
      */
     @Override
     public RobustEstimatorMethod getMethod() {
-<span class="fc" id="L378">        return RobustEstimatorMethod.LMedS;</span>
+<span class="fc" id="L380">        return RobustEstimatorMethod.LMedS;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

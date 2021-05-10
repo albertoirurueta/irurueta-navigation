@@ -638,26 +638,27 @@ public class CoordinateTransformation implements Serializable, Cloneable {
             try {
 <span class="fc" id="L639">                result.resize(ROWS, COLS);</span>
 <span class="nc" id="L640">            } catch (final WrongSizeException ignore) {</span>
-<span class="fc" id="L641">            }</span>
+                // never happens
+<span class="fc" id="L642">            }</span>
         }
         // Calculate ECEF to NED coordinate transformation matrix using (2.150)
-<span class="fc" id="L644">        final double cosLat = Math.cos(latitude);</span>
-<span class="fc" id="L645">        final double sinLat = Math.sin(latitude);</span>
-<span class="fc" id="L646">        final double cosLong = Math.cos(longitude);</span>
-<span class="fc" id="L647">        final double sinLong = Math.sin(longitude);</span>
+<span class="fc" id="L645">        final double cosLat = Math.cos(latitude);</span>
+<span class="fc" id="L646">        final double sinLat = Math.sin(latitude);</span>
+<span class="fc" id="L647">        final double cosLong = Math.cos(longitude);</span>
+<span class="fc" id="L648">        final double sinLong = Math.sin(longitude);</span>
 
-<span class="fc" id="L649">        result.setElementAtIndex(0, -sinLat * cosLong);</span>
-<span class="fc" id="L650">        result.setElementAtIndex(1, -sinLong);</span>
-<span class="fc" id="L651">        result.setElementAtIndex(2, -cosLat * cosLong);</span>
+<span class="fc" id="L650">        result.setElementAtIndex(0, -sinLat * cosLong);</span>
+<span class="fc" id="L651">        result.setElementAtIndex(1, -sinLong);</span>
+<span class="fc" id="L652">        result.setElementAtIndex(2, -cosLat * cosLong);</span>
 
-<span class="fc" id="L653">        result.setElementAtIndex(3, -sinLat * sinLong);</span>
-<span class="fc" id="L654">        result.setElementAtIndex(4, cosLong);</span>
-<span class="fc" id="L655">        result.setElementAtIndex(5, -cosLat * sinLong);</span>
+<span class="fc" id="L654">        result.setElementAtIndex(3, -sinLat * sinLong);</span>
+<span class="fc" id="L655">        result.setElementAtIndex(4, cosLong);</span>
+<span class="fc" id="L656">        result.setElementAtIndex(5, -cosLat * sinLong);</span>
 
-<span class="fc" id="L657">        result.setElementAtIndex(6, cosLat);</span>
-<span class="fc" id="L658">        result.setElementAtIndex(7, 0.0);</span>
-<span class="fc" id="L659">        result.setElementAtIndex(8, -sinLat);</span>
-<span class="fc" id="L660">    }</span>
+<span class="fc" id="L658">        result.setElementAtIndex(6, cosLat);</span>
+<span class="fc" id="L659">        result.setElementAtIndex(7, 0.0);</span>
+<span class="fc" id="L660">        result.setElementAtIndex(8, -sinLat);</span>
+<span class="fc" id="L661">    }</span>
 
     /**
      * Computes matrix to convert ECEF to NED coordinates.
@@ -669,13 +670,13 @@ public class CoordinateTransformation implements Serializable, Cloneable {
     public static Matrix ecefToNedMatrix(final double latitude, final double longitude) {
         Matrix result;
         try {
-<span class="fc" id="L672">            result = new Matrix(CoordinateTransformation.ROWS, CoordinateTransformation.COLS);</span>
-<span class="fc" id="L673">            ecefToNedMatrix(latitude, longitude, result);</span>
-<span class="nc" id="L674">        } catch (final WrongSizeException ignore) {</span>
+<span class="fc" id="L673">            result = new Matrix(CoordinateTransformation.ROWS, CoordinateTransformation.COLS);</span>
+<span class="fc" id="L674">            ecefToNedMatrix(latitude, longitude, result);</span>
+<span class="nc" id="L675">        } catch (final WrongSizeException ignore) {</span>
             // never happens
-<span class="nc" id="L676">            result = null;</span>
-<span class="fc" id="L677">        }</span>
-<span class="fc" id="L678">        return result;</span>
+<span class="nc" id="L677">            result = null;</span>
+<span class="fc" id="L678">        }</span>
+<span class="fc" id="L679">        return result;</span>
     }
 
     /**
@@ -687,11 +688,11 @@ public class CoordinateTransformation implements Serializable, Cloneable {
      */
     public static void ecefToNedCoordinateTransformationMatrix(final Angle latitude, final Angle longitude,
                                                                final CoordinateTransformation result) {
-<span class="fc" id="L690">        ecefToNedCoordinateTransformationMatrix(</span>
-<span class="fc" id="L691">                AngleConverter.convert(latitude.getValue().doubleValue(), latitude.getUnit(), AngleUnit.RADIANS),</span>
-<span class="fc" id="L692">                AngleConverter.convert(longitude.getValue().doubleValue(), longitude.getUnit(), AngleUnit.RADIANS),</span>
+<span class="fc" id="L691">        ecefToNedCoordinateTransformationMatrix(</span>
+<span class="fc" id="L692">                AngleConverter.convert(latitude.getValue().doubleValue(), latitude.getUnit(), AngleUnit.RADIANS),</span>
+<span class="fc" id="L693">                AngleConverter.convert(longitude.getValue().doubleValue(), longitude.getUnit(), AngleUnit.RADIANS),</span>
                 result);
-<span class="fc" id="L694">    }</span>
+<span class="fc" id="L695">    }</span>
 
     /**
      * Computes ECEF to NED coordinate transformation matrix.
@@ -702,9 +703,9 @@ public class CoordinateTransformation implements Serializable, Cloneable {
      */
     public static CoordinateTransformation ecefToNedCoordinateTransformationMatrix(
             final Angle latitude, final Angle longitude) {
-<span class="fc" id="L705">        return ecefToNedCoordinateTransformationMatrix(</span>
-<span class="fc" id="L706">                AngleConverter.convert(latitude.getValue().doubleValue(), latitude.getUnit(), AngleUnit.RADIANS),</span>
-<span class="fc" id="L707">                AngleConverter.convert(longitude.getValue().doubleValue(), longitude.getUnit(), AngleUnit.RADIANS));</span>
+<span class="fc" id="L706">        return ecefToNedCoordinateTransformationMatrix(</span>
+<span class="fc" id="L707">                AngleConverter.convert(latitude.getValue().doubleValue(), latitude.getUnit(), AngleUnit.RADIANS),</span>
+<span class="fc" id="L708">                AngleConverter.convert(longitude.getValue().doubleValue(), longitude.getUnit(), AngleUnit.RADIANS));</span>
     }
 
     /**
@@ -717,13 +718,13 @@ public class CoordinateTransformation implements Serializable, Cloneable {
     public static void ecefToNedCoordinateTransformationMatrix(final double latitude, final double longitude,
                                                                final CoordinateTransformation result) {
         try {
-<span class="fc" id="L720">            result.setSourceType(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);</span>
-<span class="fc" id="L721">            result.setDestinationType(FrameType.LOCAL_NAVIGATION_FRAME);</span>
-<span class="fc" id="L722">            result.setMatrix(ecefToNedMatrix(latitude, longitude));</span>
-<span class="nc" id="L723">        } catch (final InvalidRotationMatrixException ignore) {</span>
+<span class="fc" id="L721">            result.setSourceType(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);</span>
+<span class="fc" id="L722">            result.setDestinationType(FrameType.LOCAL_NAVIGATION_FRAME);</span>
+<span class="fc" id="L723">            result.setMatrix(ecefToNedMatrix(latitude, longitude));</span>
+<span class="nc" id="L724">        } catch (final InvalidRotationMatrixException ignore) {</span>
             // never happens
-<span class="fc" id="L725">        }</span>
-<span class="fc" id="L726">    }</span>
+<span class="fc" id="L726">        }</span>
+<span class="fc" id="L727">    }</span>
 
     /**
      * Computes ECEF to NED coordinate transformation matrix.
@@ -734,10 +735,10 @@ public class CoordinateTransformation implements Serializable, Cloneable {
      */
     public static CoordinateTransformation ecefToNedCoordinateTransformationMatrix(final double latitude,
                                                                                    final double longitude) {
-<span class="fc" id="L737">        final CoordinateTransformation result = new CoordinateTransformation(</span>
+<span class="fc" id="L738">        final CoordinateTransformation result = new CoordinateTransformation(</span>
                 FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-<span class="fc" id="L739">        ecefToNedCoordinateTransformationMatrix(latitude, longitude, result);</span>
-<span class="fc" id="L740">        return result;</span>
+<span class="fc" id="L740">        ecefToNedCoordinateTransformationMatrix(latitude, longitude, result);</span>
+<span class="fc" id="L741">        return result;</span>
     }
 
     /**
@@ -748,11 +749,11 @@ public class CoordinateTransformation implements Serializable, Cloneable {
      * @param result    instance where computed matrix will be stored.
      */
     public static void nedToEcefMatrix(final Angle latitude, final Angle longitude, final Matrix result) {
-<span class="fc" id="L751">        nedToEcefMatrix(</span>
-<span class="fc" id="L752">                AngleConverter.convert(latitude.getValue().doubleValue(), latitude.getUnit(), AngleUnit.RADIANS),</span>
-<span class="fc" id="L753">                AngleConverter.convert(longitude.getValue().doubleValue(), longitude.getUnit(), AngleUnit.RADIANS),</span>
+<span class="fc" id="L752">        nedToEcefMatrix(</span>
+<span class="fc" id="L753">                AngleConverter.convert(latitude.getValue().doubleValue(), latitude.getUnit(), AngleUnit.RADIANS),</span>
+<span class="fc" id="L754">                AngleConverter.convert(longitude.getValue().doubleValue(), longitude.getUnit(), AngleUnit.RADIANS),</span>
                 result);
-<span class="fc" id="L755">    }</span>
+<span class="fc" id="L756">    }</span>
 
     /**
      * Computes matrix to convert NED to ECEF coordinates.
@@ -762,9 +763,9 @@ public class CoordinateTransformation implements Serializable, Cloneable {
      * @return a new matrix to convert NED to ECEF coordinates.
      */
     public static Matrix nedToEcefMatrix(final Angle latitude, final Angle longitude) {
-<span class="fc" id="L765">        return nedToEcefMatrix(</span>
-<span class="fc" id="L766">                AngleConverter.convert(latitude.getValue().doubleValue(), latitude.getUnit(), AngleUnit.RADIANS),</span>
-<span class="fc" id="L767">                AngleConverter.convert(longitude.getValue().doubleValue(), longitude.getUnit(), AngleUnit.RADIANS));</span>
+<span class="fc" id="L766">        return nedToEcefMatrix(</span>
+<span class="fc" id="L767">                AngleConverter.convert(latitude.getValue().doubleValue(), latitude.getUnit(), AngleUnit.RADIANS),</span>
+<span class="fc" id="L768">                AngleConverter.convert(longitude.getValue().doubleValue(), longitude.getUnit(), AngleUnit.RADIANS));</span>
     }
 
     /**
@@ -777,9 +778,9 @@ public class CoordinateTransformation implements Serializable, Cloneable {
     public static void nedToEcefMatrix(final double latitude, final double longitude, final Matrix result) {
         // NED to ECEF matrix is the inverse of ECEF to NED matrix.
         // Since ECEF to NED matrix is a rotation (3x3 and orthonormal), its inverse is the transpose.
-<span class="fc" id="L780">        ecefToNedMatrix(latitude, longitude, result);</span>
-<span class="fc" id="L781">        result.transpose();</span>
-<span class="fc" id="L782">    }</span>
+<span class="fc" id="L781">        ecefToNedMatrix(latitude, longitude, result);</span>
+<span class="fc" id="L782">        result.transpose();</span>
+<span class="fc" id="L783">    }</span>
 
     /**
      * Computes matrix to convert NED to ECEF coordinates.
@@ -791,14 +792,14 @@ public class CoordinateTransformation implements Serializable, Cloneable {
     public static Matrix nedToEcefMatrix(final double latitude, final double longitude) {
         Matrix result;
         try {
-<span class="fc" id="L794">            result = new Matrix(CoordinateTransformation.ROWS, CoordinateTransformation.COLS);</span>
-<span class="fc" id="L795">            nedToEcefMatrix(latitude, longitude, result);</span>
-<span class="nc" id="L796">        } catch (final WrongSizeException ignore) {</span>
+<span class="fc" id="L795">            result = new Matrix(CoordinateTransformation.ROWS, CoordinateTransformation.COLS);</span>
+<span class="fc" id="L796">            nedToEcefMatrix(latitude, longitude, result);</span>
+<span class="nc" id="L797">        } catch (final WrongSizeException ignore) {</span>
             // never happens
-<span class="nc" id="L798">            result = null;</span>
-<span class="fc" id="L799">        }</span>
+<span class="nc" id="L799">            result = null;</span>
+<span class="fc" id="L800">        }</span>
 
-<span class="fc" id="L801">        return result;</span>
+<span class="fc" id="L802">        return result;</span>
     }
 
     /**
@@ -810,11 +811,11 @@ public class CoordinateTransformation implements Serializable, Cloneable {
      */
     public static void nedToEcefCoordinateTransformationMatrix(final Angle latitude, final Angle longitude,
                                                                final CoordinateTransformation result) {
-<span class="fc" id="L813">        nedToEcefCoordinateTransformationMatrix(</span>
-<span class="fc" id="L814">                AngleConverter.convert(latitude.getValue().doubleValue(), latitude.getUnit(), AngleUnit.RADIANS),</span>
-<span class="fc" id="L815">                AngleConverter.convert(longitude.getValue().doubleValue(), longitude.getUnit(), AngleUnit.RADIANS),</span>
+<span class="fc" id="L814">        nedToEcefCoordinateTransformationMatrix(</span>
+<span class="fc" id="L815">                AngleConverter.convert(latitude.getValue().doubleValue(), latitude.getUnit(), AngleUnit.RADIANS),</span>
+<span class="fc" id="L816">                AngleConverter.convert(longitude.getValue().doubleValue(), longitude.getUnit(), AngleUnit.RADIANS),</span>
                 result);
-<span class="fc" id="L817">    }</span>
+<span class="fc" id="L818">    }</span>
 
     /**
      * Computes NED to ECEF coordinate transformation matrix.
@@ -825,9 +826,9 @@ public class CoordinateTransformation implements Serializable, Cloneable {
      */
     public static CoordinateTransformation nedToEcefCoordinateTransformationMatrix(
             final Angle latitude, final Angle longitude) {
-<span class="fc" id="L828">        return nedToEcefCoordinateTransformationMatrix(</span>
-<span class="fc" id="L829">                AngleConverter.convert(latitude.getValue().doubleValue(), latitude.getUnit(), AngleUnit.RADIANS),</span>
-<span class="fc" id="L830">                AngleConverter.convert(longitude.getValue().doubleValue(), longitude.getUnit(), AngleUnit.RADIANS));</span>
+<span class="fc" id="L829">        return nedToEcefCoordinateTransformationMatrix(</span>
+<span class="fc" id="L830">                AngleConverter.convert(latitude.getValue().doubleValue(), latitude.getUnit(), AngleUnit.RADIANS),</span>
+<span class="fc" id="L831">                AngleConverter.convert(longitude.getValue().doubleValue(), longitude.getUnit(), AngleUnit.RADIANS));</span>
     }
 
     /**
@@ -840,13 +841,13 @@ public class CoordinateTransformation implements Serializable, Cloneable {
     public static void nedToEcefCoordinateTransformationMatrix(final double latitude, final double longitude,
                                                                final CoordinateTransformation result) {
         try {
-<span class="fc" id="L843">            result.setSourceType(FrameType.LOCAL_NAVIGATION_FRAME);</span>
-<span class="fc" id="L844">            result.setDestinationType(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);</span>
-<span class="fc" id="L845">            result.setMatrix(nedToEcefMatrix(latitude, longitude));</span>
-<span class="nc" id="L846">        } catch (final InvalidRotationMatrixException ignore) {</span>
+<span class="fc" id="L844">            result.setSourceType(FrameType.LOCAL_NAVIGATION_FRAME);</span>
+<span class="fc" id="L845">            result.setDestinationType(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);</span>
+<span class="fc" id="L846">            result.setMatrix(nedToEcefMatrix(latitude, longitude));</span>
+<span class="nc" id="L847">        } catch (final InvalidRotationMatrixException ignore) {</span>
             // never happens
-<span class="fc" id="L848">        }</span>
-<span class="fc" id="L849">    }</span>
+<span class="fc" id="L849">        }</span>
+<span class="fc" id="L850">    }</span>
 
     /**
      * Computes NED to ECEF coordinate transformation matrix.
@@ -857,10 +858,10 @@ public class CoordinateTransformation implements Serializable, Cloneable {
      */
     public static CoordinateTransformation nedToEcefCoordinateTransformationMatrix(final double latitude,
                                                                                    final double longitude) {
-<span class="fc" id="L860">        final CoordinateTransformation result = new CoordinateTransformation(</span>
+<span class="fc" id="L861">        final CoordinateTransformation result = new CoordinateTransformation(</span>
                 FrameType.LOCAL_NAVIGATION_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
-<span class="fc" id="L862">        nedToEcefCoordinateTransformationMatrix(latitude, longitude, result);</span>
-<span class="fc" id="L863">        return result;</span>
+<span class="fc" id="L863">        nedToEcefCoordinateTransformationMatrix(latitude, longitude, result);</span>
+<span class="fc" id="L864">        return result;</span>
     }
 
     /**
@@ -871,10 +872,10 @@ public class CoordinateTransformation implements Serializable, Cloneable {
      * @param result       instance where result will be stored.
      */
     public static void ecefToEciMatrixFromTimeInterval(final Time timeInterval, final Matrix result) {
-<span class="fc" id="L874">        ecefToEciMatrixFromTimeInterval(TimeConverter.convert(</span>
-<span class="fc" id="L875">                timeInterval.getValue().doubleValue(), timeInterval.getUnit(),</span>
+<span class="fc" id="L875">        ecefToEciMatrixFromTimeInterval(TimeConverter.convert(</span>
+<span class="fc" id="L876">                timeInterval.getValue().doubleValue(), timeInterval.getUnit(),</span>
                 TimeUnit.SECOND), result);
-<span class="fc" id="L877">    }</span>
+<span class="fc" id="L878">    }</span>
 
     /**
      * Computes ECEF to ECI coordinate transformation matrix taking into account Earth
@@ -884,8 +885,8 @@ public class CoordinateTransformation implements Serializable, Cloneable {
      * @param result       instance where result will be stored.
      */
     public static void ecefToEciMatrixFromTimeInterval(final double timeInterval, final Matrix result) {
-<span class="fc" id="L887">        ecefToEciMatrixFromAngle(EARTH_ROTATION_RATE * timeInterval, result);</span>
-<span class="fc" id="L888">    }</span>
+<span class="fc" id="L888">        ecefToEciMatrixFromAngle(EARTH_ROTATION_RATE * timeInterval, result);</span>
+<span class="fc" id="L889">    }</span>
 
     /**
      * Computes ECEF to ECI coordinate transformation matrix for provided Earth
@@ -895,9 +896,9 @@ public class CoordinateTransformation implements Serializable, Cloneable {
      * @param result instance where result will be stored.
      */
     public static void ecefToEciMatrixFromAngle(final Angle angle, final Matrix result) {
-<span class="fc" id="L898">        ecefToEciMatrixFromAngle(AngleConverter.convert(angle.getValue().doubleValue(),</span>
-<span class="fc" id="L899">                angle.getUnit(), AngleUnit.RADIANS), result);</span>
-<span class="fc" id="L900">    }</span>
+<span class="fc" id="L899">        ecefToEciMatrixFromAngle(AngleConverter.convert(angle.getValue().doubleValue(),</span>
+<span class="fc" id="L900">                angle.getUnit(), AngleUnit.RADIANS), result);</span>
+<span class="fc" id="L901">    }</span>
 
     /**
      * Computes ECEF to ECI coordinate transformation matrix for provided Earth
@@ -907,28 +908,29 @@ public class CoordinateTransformation implements Serializable, Cloneable {
      * @param result instance where result will be stored.
      */
     public static void ecefToEciMatrixFromAngle(final double angle, final Matrix result) {
-<span class="pc bpc" id="L910" title="2 of 4 branches missed.">        if (result.getRows() != ROWS || result.getColumns() != COLS) {</span>
+<span class="pc bpc" id="L911" title="2 of 4 branches missed.">        if (result.getRows() != ROWS || result.getColumns() != COLS) {</span>
             try {
-<span class="nc" id="L912">                result.resize(ROWS, COLS);</span>
-<span class="nc" id="L913">            } catch (final WrongSizeException ignore) {</span>
-<span class="nc" id="L914">            }</span>
+<span class="nc" id="L913">                result.resize(ROWS, COLS);</span>
+<span class="nc" id="L914">            } catch (final WrongSizeException ignore) {</span>
+                // never happens
+<span class="nc" id="L916">            }</span>
         }
 
-<span class="fc" id="L917">        final double sinAngle = Math.sin(angle);</span>
-<span class="fc" id="L918">        final double cosAngle = Math.cos(angle);</span>
+<span class="fc" id="L919">        final double sinAngle = Math.sin(angle);</span>
+<span class="fc" id="L920">        final double cosAngle = Math.cos(angle);</span>
 
-<span class="fc" id="L920">        result.setElementAt(0, 0, cosAngle);</span>
-<span class="fc" id="L921">        result.setElementAt(1, 0, sinAngle);</span>
-<span class="fc" id="L922">        result.setElementAt(2, 0, 0.0);</span>
+<span class="fc" id="L922">        result.setElementAt(0, 0, cosAngle);</span>
+<span class="fc" id="L923">        result.setElementAt(1, 0, sinAngle);</span>
+<span class="fc" id="L924">        result.setElementAt(2, 0, 0.0);</span>
 
-<span class="fc" id="L924">        result.setElementAt(0, 1, -sinAngle);</span>
-<span class="fc" id="L925">        result.setElementAt(1, 1, cosAngle);</span>
-<span class="fc" id="L926">        result.setElementAt(2, 1, 0.0);</span>
+<span class="fc" id="L926">        result.setElementAt(0, 1, -sinAngle);</span>
+<span class="fc" id="L927">        result.setElementAt(1, 1, cosAngle);</span>
+<span class="fc" id="L928">        result.setElementAt(2, 1, 0.0);</span>
 
-<span class="fc" id="L928">        result.setElementAt(0, 2, 0.0);</span>
-<span class="fc" id="L929">        result.setElementAt(1, 2, 0.0);</span>
-<span class="fc" id="L930">        result.setElementAt(2, 2, 1.0);</span>
-<span class="fc" id="L931">    }</span>
+<span class="fc" id="L930">        result.setElementAt(0, 2, 0.0);</span>
+<span class="fc" id="L931">        result.setElementAt(1, 2, 0.0);</span>
+<span class="fc" id="L932">        result.setElementAt(2, 2, 1.0);</span>
+<span class="fc" id="L933">    }</span>
 
     /**
      * Computes ECEF to ECI coordinate transformation matrix taking into account Earth
@@ -938,8 +940,8 @@ public class CoordinateTransformation implements Serializable, Cloneable {
      * @return a new ECEF to ECI coordinate transformation matrix.
      */
     public static Matrix ecefToEciMatrixFromTimeInterval(final Time timeInterval) {
-<span class="fc" id="L941">        return ecefToEciMatrixFromTimeInterval(TimeConverter.convert(</span>
-<span class="fc" id="L942">                timeInterval.getValue().doubleValue(), timeInterval.getUnit(),</span>
+<span class="fc" id="L943">        return ecefToEciMatrixFromTimeInterval(TimeConverter.convert(</span>
+<span class="fc" id="L944">                timeInterval.getValue().doubleValue(), timeInterval.getUnit(),</span>
                 TimeUnit.SECOND));
     }
 
@@ -951,7 +953,7 @@ public class CoordinateTransformation implements Serializable, Cloneable {
      * @return a new ECEF to ECI coordinate transformation matrix.
      */
     public static Matrix ecefToEciMatrixFromTimeInterval(final double timeInterval) {
-<span class="fc" id="L954">        return ecefToEciMatrixFromAngle(EARTH_ROTATION_RATE * timeInterval);</span>
+<span class="fc" id="L956">        return ecefToEciMatrixFromAngle(EARTH_ROTATION_RATE * timeInterval);</span>
     }
 
     /**
@@ -962,9 +964,9 @@ public class CoordinateTransformation implements Serializable, Cloneable {
      * @return a new ECEF to ECI coordinate transformation matrix.
      */
     public static Matrix ecefToEciMatrixFromAngle(final Angle angle) {
-<span class="fc" id="L965">        return ecefToEciMatrixFromAngle(AngleConverter.convert(</span>
-<span class="fc" id="L966">                angle.getValue().doubleValue(),</span>
-<span class="fc" id="L967">                angle.getUnit(), AngleUnit.RADIANS));</span>
+<span class="fc" id="L967">        return ecefToEciMatrixFromAngle(AngleConverter.convert(</span>
+<span class="fc" id="L968">                angle.getValue().doubleValue(),</span>
+<span class="fc" id="L969">                angle.getUnit(), AngleUnit.RADIANS));</span>
     }
 
     /**
@@ -977,13 +979,13 @@ public class CoordinateTransformation implements Serializable, Cloneable {
     public static Matrix ecefToEciMatrixFromAngle(final double angle) {
         Matrix result;
         try {
-<span class="fc" id="L980">            result = new Matrix(CoordinateTransformation.ROWS, CoordinateTransformation.COLS);</span>
-<span class="fc" id="L981">            ecefToEciMatrixFromAngle(angle, result);</span>
-<span class="nc" id="L982">        } catch (final WrongSizeException ignore) {</span>
+<span class="fc" id="L982">            result = new Matrix(CoordinateTransformation.ROWS, CoordinateTransformation.COLS);</span>
+<span class="fc" id="L983">            ecefToEciMatrixFromAngle(angle, result);</span>
+<span class="nc" id="L984">        } catch (final WrongSizeException ignore) {</span>
             // never happens
-<span class="nc" id="L984">            result = null;</span>
-<span class="fc" id="L985">        }</span>
-<span class="fc" id="L986">        return result;</span>
+<span class="nc" id="L986">            result = null;</span>
+<span class="fc" id="L987">        }</span>
+<span class="fc" id="L988">        return result;</span>
     }
 
     /**
@@ -995,10 +997,10 @@ public class CoordinateTransformation implements Serializable, Cloneable {
      */
     public static void ecefToEciCoordinateTransformationMatrixFromTimeInterval(
             final Time timeInterval, final CoordinateTransformation result) {
-<span class="fc" id="L998">        ecefToEciCoordinateTransformationMatrixFromTimeInterval(</span>
-<span class="fc" id="L999">                TimeConverter.convert(timeInterval.getValue().doubleValue(),</span>
-<span class="fc" id="L1000">                        timeInterval.getUnit(), TimeUnit.SECOND), result);</span>
-<span class="fc" id="L1001">    }</span>
+<span class="fc" id="L1000">        ecefToEciCoordinateTransformationMatrixFromTimeInterval(</span>
+<span class="fc" id="L1001">                TimeConverter.convert(timeInterval.getValue().doubleValue(),</span>
+<span class="fc" id="L1002">                        timeInterval.getUnit(), TimeUnit.SECOND), result);</span>
+<span class="fc" id="L1003">    }</span>
 
     /**
      * Computes ECEF to ECI coordinate transformation matrix taking into account Earth
@@ -1009,9 +1011,9 @@ public class CoordinateTransformation implements Serializable, Cloneable {
      */
     public static void ecefToEciCoordinateTransformationMatrixFromTimeInterval(
             final double timeInterval, final CoordinateTransformation result) {
-<span class="fc" id="L1012">        ecefToEciCoordinateTransformationMatrixFromAngle(</span>
+<span class="fc" id="L1014">        ecefToEciCoordinateTransformationMatrixFromAngle(</span>
                 EARTH_ROTATION_RATE * timeInterval, result);
-<span class="fc" id="L1014">    }</span>
+<span class="fc" id="L1016">    }</span>
 
     /**
      * Computes ECEF to ECI coordinate transformation matrix for provided Earth
@@ -1022,10 +1024,10 @@ public class CoordinateTransformation implements Serializable, Cloneable {
      */
     public static void ecefToEciCoordinateTransformationMatrixFromAngle(
             final Angle angle, final CoordinateTransformation result) {
-<span class="fc" id="L1025">        ecefToEciCoordinateTransformationMatrixFromAngle(</span>
-<span class="fc" id="L1026">                AngleConverter.convert(angle.getValue().doubleValue(),</span>
-<span class="fc" id="L1027">                        angle.getUnit(), AngleUnit.RADIANS), result);</span>
-<span class="fc" id="L1028">    }</span>
+<span class="fc" id="L1027">        ecefToEciCoordinateTransformationMatrixFromAngle(</span>
+<span class="fc" id="L1028">                AngleConverter.convert(angle.getValue().doubleValue(),</span>
+<span class="fc" id="L1029">                        angle.getUnit(), AngleUnit.RADIANS), result);</span>
+<span class="fc" id="L1030">    }</span>
 
     /**
      * Computes ECEF to ECI coordinate transformation matrix for provided Earth
@@ -1037,13 +1039,13 @@ public class CoordinateTransformation implements Serializable, Cloneable {
     public static void ecefToEciCoordinateTransformationMatrixFromAngle(
             final double angle, final CoordinateTransformation result) {
         try {
-<span class="fc" id="L1040">            result.setSourceType(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);</span>
-<span class="fc" id="L1041">            result.setDestinationType(FrameType.EARTH_CENTERED_INERTIAL_FRAME);</span>
-<span class="fc" id="L1042">            result.setMatrix(ecefToEciMatrixFromAngle(angle));</span>
-<span class="nc" id="L1043">        } catch (final InvalidRotationMatrixException ignore) {</span>
+<span class="fc" id="L1042">            result.setSourceType(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);</span>
+<span class="fc" id="L1043">            result.setDestinationType(FrameType.EARTH_CENTERED_INERTIAL_FRAME);</span>
+<span class="fc" id="L1044">            result.setMatrix(ecefToEciMatrixFromAngle(angle));</span>
+<span class="nc" id="L1045">        } catch (final InvalidRotationMatrixException ignore) {</span>
             // never happens
-<span class="fc" id="L1045">        }</span>
-<span class="fc" id="L1046">    }</span>
+<span class="fc" id="L1047">        }</span>
+<span class="fc" id="L1048">    }</span>
 
     /**
      * Computes ECEF to ECI coordinate transformation matrix taking into account Earth
@@ -1054,11 +1056,11 @@ public class CoordinateTransformation implements Serializable, Cloneable {
      */
     public static CoordinateTransformation ecefToEciCoordinateTransformationMatrixFromTimeInterval(
             final Time timeInterval) {
-<span class="fc" id="L1057">        final CoordinateTransformation result = new CoordinateTransformation(</span>
+<span class="fc" id="L1059">        final CoordinateTransformation result = new CoordinateTransformation(</span>
                 FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME,
                 FrameType.EARTH_CENTERED_INERTIAL_FRAME);
-<span class="fc" id="L1060">        ecefToEciCoordinateTransformationMatrixFromTimeInterval(timeInterval, result);</span>
-<span class="fc" id="L1061">        return result;</span>
+<span class="fc" id="L1062">        ecefToEciCoordinateTransformationMatrixFromTimeInterval(timeInterval, result);</span>
+<span class="fc" id="L1063">        return result;</span>
     }
 
     /**
@@ -1070,11 +1072,11 @@ public class CoordinateTransformation implements Serializable, Cloneable {
      */
     public static CoordinateTransformation ecefToEciCoordinateTransformationMatrixFromTimeInterval(
             final double timeInterval) {
-<span class="fc" id="L1073">        final CoordinateTransformation result = new CoordinateTransformation(</span>
+<span class="fc" id="L1075">        final CoordinateTransformation result = new CoordinateTransformation(</span>
                 FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME,
                 FrameType.EARTH_CENTERED_INERTIAL_FRAME);
-<span class="fc" id="L1076">        ecefToEciCoordinateTransformationMatrixFromTimeInterval(timeInterval, result);</span>
-<span class="fc" id="L1077">        return result;</span>
+<span class="fc" id="L1078">        ecefToEciCoordinateTransformationMatrixFromTimeInterval(timeInterval, result);</span>
+<span class="fc" id="L1079">        return result;</span>
     }
 
     /**
@@ -1085,11 +1087,11 @@ public class CoordinateTransformation implements Serializable, Cloneable {
      */
     public static CoordinateTransformation ecefToEciCoordinateTransformationMatrixFromAngle(
             final Angle angle) {
-<span class="fc" id="L1088">        final CoordinateTransformation result = new CoordinateTransformation(</span>
+<span class="fc" id="L1090">        final CoordinateTransformation result = new CoordinateTransformation(</span>
                 FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME,
                 FrameType.EARTH_CENTERED_INERTIAL_FRAME);
-<span class="fc" id="L1091">        ecefToEciCoordinateTransformationMatrixFromAngle(angle, result);</span>
-<span class="fc" id="L1092">        return result;</span>
+<span class="fc" id="L1093">        ecefToEciCoordinateTransformationMatrixFromAngle(angle, result);</span>
+<span class="fc" id="L1094">        return result;</span>
     }
 
     /**
@@ -1100,11 +1102,11 @@ public class CoordinateTransformation implements Serializable, Cloneable {
      */
     public static CoordinateTransformation ecefToEciCoordinateTransformationMatrixFromAngle(
             final double angle) {
-<span class="fc" id="L1103">        final CoordinateTransformation result = new CoordinateTransformation(</span>
+<span class="fc" id="L1105">        final CoordinateTransformation result = new CoordinateTransformation(</span>
                 FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME,
                 FrameType.EARTH_CENTERED_INERTIAL_FRAME);
-<span class="fc" id="L1106">        ecefToEciCoordinateTransformationMatrixFromAngle(angle, result);</span>
-<span class="fc" id="L1107">        return result;</span>
+<span class="fc" id="L1108">        ecefToEciCoordinateTransformationMatrixFromAngle(angle, result);</span>
+<span class="fc" id="L1109">        return result;</span>
     }
 
     /**
@@ -1116,10 +1118,10 @@ public class CoordinateTransformation implements Serializable, Cloneable {
      */
     public static void eciToEcefMatrixFromTimeInterval(final Time timeInterval,
                                                        final Matrix result) {
-<span class="fc" id="L1119">        eciToEcefMatrixFromTimeInterval(TimeConverter.convert(</span>
-<span class="fc" id="L1120">                timeInterval.getValue().doubleValue(), timeInterval.getUnit(),</span>
+<span class="fc" id="L1121">        eciToEcefMatrixFromTimeInterval(TimeConverter.convert(</span>
+<span class="fc" id="L1122">                timeInterval.getValue().doubleValue(), timeInterval.getUnit(),</span>
                 TimeUnit.SECOND), result);
-<span class="fc" id="L1122">    }</span>
+<span class="fc" id="L1124">    }</span>
 
     /**
      * Computes ECI to ECEF coordinate transformation matrix taking into account Earth
@@ -1130,8 +1132,8 @@ public class CoordinateTransformation implements Serializable, Cloneable {
      */
     public static void eciToEcefMatrixFromTimeInterval(final double timeInterval,
                                                        final Matrix result) {
-<span class="fc" id="L1133">        eciToEcefMatrixFromAngle(EARTH_ROTATION_RATE * timeInterval, result);</span>
-<span class="fc" id="L1134">    }</span>
+<span class="fc" id="L1135">        eciToEcefMatrixFromAngle(EARTH_ROTATION_RATE * timeInterval, result);</span>
+<span class="fc" id="L1136">    }</span>
 
     /**
      * Computes ECI to ECEF coordinate transformation matrix for provided Earth
@@ -1141,9 +1143,9 @@ public class CoordinateTransformation implements Serializable, Cloneable {
      * @param result instance where result will be stored.
      */
     public static void eciToEcefMatrixFromAngle(final Angle angle, final Matrix result) {
-<span class="fc" id="L1144">        eciToEcefMatrixFromAngle(AngleConverter.convert(angle.getValue().doubleValue(),</span>
-<span class="fc" id="L1145">                angle.getUnit(), AngleUnit.RADIANS), result);</span>
-<span class="fc" id="L1146">    }</span>
+<span class="fc" id="L1146">        eciToEcefMatrixFromAngle(AngleConverter.convert(angle.getValue().doubleValue(),</span>
+<span class="fc" id="L1147">                angle.getUnit(), AngleUnit.RADIANS), result);</span>
+<span class="fc" id="L1148">    }</span>
 
     /**
      * Computes ECI to ECEF coordinate transformation matrix for provided Earth
@@ -1153,9 +1155,9 @@ public class CoordinateTransformation implements Serializable, Cloneable {
      * @param result instance where result will be stored.
      */
     public static void eciToEcefMatrixFromAngle(final double angle, final Matrix result) {
-<span class="fc" id="L1156">        ecefToEciMatrixFromAngle(angle, result);</span>
-<span class="fc" id="L1157">        result.transpose();</span>
-<span class="fc" id="L1158">    }</span>
+<span class="fc" id="L1158">        ecefToEciMatrixFromAngle(angle, result);</span>
+<span class="fc" id="L1159">        result.transpose();</span>
+<span class="fc" id="L1160">    }</span>
 
     /**
      * Computes ECI to ECEF coordinate transformation matrix taking into account Earth
@@ -1165,8 +1167,8 @@ public class CoordinateTransformation implements Serializable, Cloneable {
      * @return a new ECI to ECEF coordinate transformation matrix.
      */
     public static Matrix eciToEcefMatrixFromTimeInterval(final Time timeInterval) {
-<span class="fc" id="L1168">        return eciToEcefMatrixFromTimeInterval(TimeConverter.convert(</span>
-<span class="fc" id="L1169">                timeInterval.getValue().doubleValue(), timeInterval.getUnit(),</span>
+<span class="fc" id="L1170">        return eciToEcefMatrixFromTimeInterval(TimeConverter.convert(</span>
+<span class="fc" id="L1171">                timeInterval.getValue().doubleValue(), timeInterval.getUnit(),</span>
                 TimeUnit.SECOND));
     }
 
@@ -1178,7 +1180,7 @@ public class CoordinateTransformation implements Serializable, Cloneable {
      * @return a new ECI to ECEF coordinate transformation matrix.
      */
     public static Matrix eciToEcefMatrixFromTimeInterval(final double timeInterval) {
-<span class="fc" id="L1181">        return eciToEcefMatrixFromAngle(EARTH_ROTATION_RATE * timeInterval);</span>
+<span class="fc" id="L1183">        return eciToEcefMatrixFromAngle(EARTH_ROTATION_RATE * timeInterval);</span>
     }
 
     /**
@@ -1189,9 +1191,9 @@ public class CoordinateTransformation implements Serializable, Cloneable {
      * @return a new ECI to ECEF coordinate transformation matrix.
      */
     public static Matrix eciToEcefMatrixFromAngle(final Angle angle) {
-<span class="fc" id="L1192">        return eciToEcefMatrixFromAngle(AngleConverter.convert(</span>
-<span class="fc" id="L1193">                angle.getValue().doubleValue(),</span>
-<span class="fc" id="L1194">                angle.getUnit(), AngleUnit.RADIANS));</span>
+<span class="fc" id="L1194">        return eciToEcefMatrixFromAngle(AngleConverter.convert(</span>
+<span class="fc" id="L1195">                angle.getValue().doubleValue(),</span>
+<span class="fc" id="L1196">                angle.getUnit(), AngleUnit.RADIANS));</span>
     }
 
     /**
@@ -1204,13 +1206,13 @@ public class CoordinateTransformation implements Serializable, Cloneable {
     public static Matrix eciToEcefMatrixFromAngle(final double angle) {
         Matrix result;
         try {
-<span class="fc" id="L1207">            result = new Matrix(CoordinateTransformation.ROWS, CoordinateTransformation.COLS);</span>
-<span class="fc" id="L1208">            eciToEcefMatrixFromAngle(angle, result);</span>
-<span class="nc" id="L1209">        } catch (final WrongSizeException ignore) {</span>
+<span class="fc" id="L1209">            result = new Matrix(CoordinateTransformation.ROWS, CoordinateTransformation.COLS);</span>
+<span class="fc" id="L1210">            eciToEcefMatrixFromAngle(angle, result);</span>
+<span class="nc" id="L1211">        } catch (final WrongSizeException ignore) {</span>
             // never happens
-<span class="nc" id="L1211">            result = null;</span>
-<span class="fc" id="L1212">        }</span>
-<span class="fc" id="L1213">        return result;</span>
+<span class="nc" id="L1213">            result = null;</span>
+<span class="fc" id="L1214">        }</span>
+<span class="fc" id="L1215">        return result;</span>
     }
 
     /**
@@ -1222,10 +1224,10 @@ public class CoordinateTransformation implements Serializable, Cloneable {
      */
     public static void eciToEcefCoordinateTransformationMatrixFromTimeInterval(
             final Time timeInterval, final CoordinateTransformation result) {
-<span class="fc" id="L1225">        eciToEcefCoordinateTransformationMatrixFromTimeInterval(</span>
-<span class="fc" id="L1226">                TimeConverter.convert(timeInterval.getValue().doubleValue(),</span>
-<span class="fc" id="L1227">                        timeInterval.getUnit(), TimeUnit.SECOND), result);</span>
-<span class="fc" id="L1228">    }</span>
+<span class="fc" id="L1227">        eciToEcefCoordinateTransformationMatrixFromTimeInterval(</span>
+<span class="fc" id="L1228">                TimeConverter.convert(timeInterval.getValue().doubleValue(),</span>
+<span class="fc" id="L1229">                        timeInterval.getUnit(), TimeUnit.SECOND), result);</span>
+<span class="fc" id="L1230">    }</span>
 
     /**
      * Computes ECI to ECEF coordinate transformation matrix taking into account Earth
@@ -1236,9 +1238,9 @@ public class CoordinateTransformation implements Serializable, Cloneable {
      */
     public static void eciToEcefCoordinateTransformationMatrixFromTimeInterval(
             final double timeInterval, final CoordinateTransformation result) {
-<span class="fc" id="L1239">        eciToEcefCoordinateTransformationMatrixFromAngle(</span>
+<span class="fc" id="L1241">        eciToEcefCoordinateTransformationMatrixFromAngle(</span>
                 EARTH_ROTATION_RATE * timeInterval, result);
-<span class="fc" id="L1241">    }</span>
+<span class="fc" id="L1243">    }</span>
 
     /**
      * Computes ECI to ECEF coordinate transformation matrix for provided Earth
@@ -1249,10 +1251,10 @@ public class CoordinateTransformation implements Serializable, Cloneable {
      */
     public static void eciToEcefCoordinateTransformationMatrixFromAngle(
             final Angle angle, final CoordinateTransformation result) {
-<span class="fc" id="L1252">        eciToEcefCoordinateTransformationMatrixFromAngle(</span>
-<span class="fc" id="L1253">                AngleConverter.convert(angle.getValue().doubleValue(),</span>
-<span class="fc" id="L1254">                        angle.getUnit(), AngleUnit.RADIANS), result);</span>
-<span class="fc" id="L1255">    }</span>
+<span class="fc" id="L1254">        eciToEcefCoordinateTransformationMatrixFromAngle(</span>
+<span class="fc" id="L1255">                AngleConverter.convert(angle.getValue().doubleValue(),</span>
+<span class="fc" id="L1256">                        angle.getUnit(), AngleUnit.RADIANS), result);</span>
+<span class="fc" id="L1257">    }</span>
 
     /**
      * Computes ECI to ECEF coordinate transformation matrix for provided Earth
@@ -1264,13 +1266,13 @@ public class CoordinateTransformation implements Serializable, Cloneable {
     public static void eciToEcefCoordinateTransformationMatrixFromAngle(
             final double angle, final CoordinateTransformation result) {
         try {
-<span class="fc" id="L1267">            result.setSourceType(FrameType.EARTH_CENTERED_INERTIAL_FRAME);</span>
-<span class="fc" id="L1268">            result.setDestinationType(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);</span>
-<span class="fc" id="L1269">            result.setMatrix(eciToEcefMatrixFromAngle(angle));</span>
-<span class="nc" id="L1270">        } catch (final InvalidRotationMatrixException ignore) {</span>
+<span class="fc" id="L1269">            result.setSourceType(FrameType.EARTH_CENTERED_INERTIAL_FRAME);</span>
+<span class="fc" id="L1270">            result.setDestinationType(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);</span>
+<span class="fc" id="L1271">            result.setMatrix(eciToEcefMatrixFromAngle(angle));</span>
+<span class="nc" id="L1272">        } catch (final InvalidRotationMatrixException ignore) {</span>
             // never happens
-<span class="fc" id="L1272">        }</span>
-<span class="fc" id="L1273">    }</span>
+<span class="fc" id="L1274">        }</span>
+<span class="fc" id="L1275">    }</span>
 
     /**
      * Computes ECI to ECEF coordinate transformation matrix taking into account Earth
@@ -1281,11 +1283,11 @@ public class CoordinateTransformation implements Serializable, Cloneable {
      */
     public static CoordinateTransformation eciToEcefCoordinateTransformationMatrixFromTimeInterval(
             final Time timeInterval) {
-<span class="fc" id="L1284">        final CoordinateTransformation result = new CoordinateTransformation(</span>
+<span class="fc" id="L1286">        final CoordinateTransformation result = new CoordinateTransformation(</span>
                 FrameType.EARTH_CENTERED_INERTIAL_FRAME,
                 FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
-<span class="fc" id="L1287">        eciToEcefCoordinateTransformationMatrixFromTimeInterval(timeInterval, result);</span>
-<span class="fc" id="L1288">        return result;</span>
+<span class="fc" id="L1289">        eciToEcefCoordinateTransformationMatrixFromTimeInterval(timeInterval, result);</span>
+<span class="fc" id="L1290">        return result;</span>
     }
 
     /**
@@ -1297,11 +1299,11 @@ public class CoordinateTransformation implements Serializable, Cloneable {
      */
     public static CoordinateTransformation eciToEcefCoordinateTransformationMatrixFromInterval(
             final double timeInterval) {
-<span class="fc" id="L1300">        final CoordinateTransformation result = new CoordinateTransformation(</span>
+<span class="fc" id="L1302">        final CoordinateTransformation result = new CoordinateTransformation(</span>
                 FrameType.EARTH_CENTERED_INERTIAL_FRAME,
                 FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
-<span class="fc" id="L1303">        eciToEcefCoordinateTransformationMatrixFromTimeInterval(timeInterval, result);</span>
-<span class="fc" id="L1304">        return result;</span>
+<span class="fc" id="L1305">        eciToEcefCoordinateTransformationMatrixFromTimeInterval(timeInterval, result);</span>
+<span class="fc" id="L1306">        return result;</span>
     }
 
     /**
@@ -1313,11 +1315,11 @@ public class CoordinateTransformation implements Serializable, Cloneable {
      */
     public static CoordinateTransformation eciToEcefCoordinateTransformationMatrixFromAngle(
             final Angle angle) {
-<span class="fc" id="L1316">        final CoordinateTransformation result = new CoordinateTransformation(</span>
+<span class="fc" id="L1318">        final CoordinateTransformation result = new CoordinateTransformation(</span>
                 FrameType.EARTH_CENTERED_INERTIAL_FRAME,
                 FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
-<span class="fc" id="L1319">        eciToEcefCoordinateTransformationMatrixFromAngle(angle, result);</span>
-<span class="fc" id="L1320">        return result;</span>
+<span class="fc" id="L1321">        eciToEcefCoordinateTransformationMatrixFromAngle(angle, result);</span>
+<span class="fc" id="L1322">        return result;</span>
     }
 
     /**
@@ -1329,11 +1331,11 @@ public class CoordinateTransformation implements Serializable, Cloneable {
      */
     public static CoordinateTransformation eciToEcefCoordinateTransformationMatrixFromAngle(
             final double angle) {
-<span class="fc" id="L1332">        final CoordinateTransformation result = new CoordinateTransformation(</span>
+<span class="fc" id="L1334">        final CoordinateTransformation result = new CoordinateTransformation(</span>
                 FrameType.EARTH_CENTERED_INERTIAL_FRAME,
                 FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
-<span class="fc" id="L1335">        eciToEcefCoordinateTransformationMatrixFromAngle(angle, result);</span>
-<span class="fc" id="L1336">        return result;</span>
+<span class="fc" id="L1337">        eciToEcefCoordinateTransformationMatrixFromAngle(angle, result);</span>
+<span class="fc" id="L1338">        return result;</span>
     }
 
     /**
@@ -1344,9 +1346,9 @@ public class CoordinateTransformation implements Serializable, Cloneable {
      */
     @Override
     protected Object clone() throws CloneNotSupportedException {
-<span class="fc" id="L1347">        final CoordinateTransformation result = (CoordinateTransformation)super.clone();</span>
-<span class="fc" id="L1348">        copyTo(result);</span>
-<span class="fc" id="L1349">        return result;</span>
+<span class="fc" id="L1349">        final CoordinateTransformation result = (CoordinateTransformation)super.clone();</span>
+<span class="fc" id="L1350">        copyTo(result);</span>
+<span class="fc" id="L1351">        return result;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

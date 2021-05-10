@@ -582,91 +582,93 @@
 <a class="jxr_linenumber" name="L574" href="#L574">574</a> 
 <a class="jxr_linenumber" name="L575" href="#L575">575</a>                     @Override
 <a class="jxr_linenumber" name="L576" href="#L576">576</a>                     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> onEstimateStart(<strong class="jxr_keyword">final</strong> RobustEstimator&lt;Point3D&gt; estimator) {
-<a class="jxr_linenumber" name="L577" href="#L577">577</a>                     }
-<a class="jxr_linenumber" name="L578" href="#L578">578</a> 
-<a class="jxr_linenumber" name="L579" href="#L579">579</a>                     @Override
-<a class="jxr_linenumber" name="L580" href="#L580">580</a>                     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> onEstimateEnd(<strong class="jxr_keyword">final</strong> RobustEstimator&lt;Point3D&gt; estimator) {
-<a class="jxr_linenumber" name="L581" href="#L581">581</a>                     }
-<a class="jxr_linenumber" name="L582" href="#L582">582</a> 
-<a class="jxr_linenumber" name="L583" href="#L583">583</a>                     @Override
-<a class="jxr_linenumber" name="L584" href="#L584">584</a>                     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> onEstimateNextIteration(
-<a class="jxr_linenumber" name="L585" href="#L585">585</a>                             <strong class="jxr_keyword">final</strong> RobustEstimator&lt;Point3D&gt; estimator, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> iteration) {
-<a class="jxr_linenumber" name="L586" href="#L586">586</a>                         <strong class="jxr_keyword">if</strong> (mListener != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L587" href="#L587">587</a>                             mListener.onSolveNextIteration(
-<a class="jxr_linenumber" name="L588" href="#L588">588</a>                                     PROMedSRobustLateration3DSolver.<strong class="jxr_keyword">this</strong>, iteration);
-<a class="jxr_linenumber" name="L589" href="#L589">589</a>                         }
-<a class="jxr_linenumber" name="L590" href="#L590">590</a>                     }
-<a class="jxr_linenumber" name="L591" href="#L591">591</a> 
-<a class="jxr_linenumber" name="L592" href="#L592">592</a>                     @Override
-<a class="jxr_linenumber" name="L593" href="#L593">593</a>                     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> onEstimateProgressChange(
-<a class="jxr_linenumber" name="L594" href="#L594">594</a>                             <strong class="jxr_keyword">final</strong> RobustEstimator&lt;Point3D&gt; estimator, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">float</strong> progress) {
-<a class="jxr_linenumber" name="L595" href="#L595">595</a>                         <strong class="jxr_keyword">if</strong> (mListener != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L596" href="#L596">596</a>                             mListener.onSolveProgressChange(
-<a class="jxr_linenumber" name="L597" href="#L597">597</a>                                     PROMedSRobustLateration3DSolver.<strong class="jxr_keyword">this</strong>, progress);
-<a class="jxr_linenumber" name="L598" href="#L598">598</a>                         }
-<a class="jxr_linenumber" name="L599" href="#L599">599</a>                     }
-<a class="jxr_linenumber" name="L600" href="#L600">600</a>                 });
-<a class="jxr_linenumber" name="L601" href="#L601">601</a> 
-<a class="jxr_linenumber" name="L602" href="#L602">602</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L603" href="#L603">603</a>             mLocked = <strong class="jxr_keyword">true</strong>;
-<a class="jxr_linenumber" name="L604" href="#L604">604</a> 
-<a class="jxr_linenumber" name="L605" href="#L605">605</a>             <strong class="jxr_keyword">if</strong> (mListener != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L606" href="#L606">606</a>                 mListener.onSolveStart(<strong class="jxr_keyword">this</strong>);
-<a class="jxr_linenumber" name="L607" href="#L607">607</a>             }
-<a class="jxr_linenumber" name="L608" href="#L608">608</a> 
-<a class="jxr_linenumber" name="L609" href="#L609">609</a>             mInliersData = <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L610" href="#L610">610</a>             innerEstimator.setConfidence(mConfidence);
-<a class="jxr_linenumber" name="L611" href="#L611">611</a>             innerEstimator.setMaxIterations(mMaxIterations);
-<a class="jxr_linenumber" name="L612" href="#L612">612</a>             innerEstimator.setProgressDelta(mProgressDelta);
-<a class="jxr_linenumber" name="L613" href="#L613">613</a>             innerEstimator.setUseInlierThresholds(false);
-<a class="jxr_linenumber" name="L614" href="#L614">614</a>             Point3D result = innerEstimator.estimate();
-<a class="jxr_linenumber" name="L615" href="#L615">615</a>             mInliersData = innerEstimator.getInliersData();
-<a class="jxr_linenumber" name="L616" href="#L616">616</a>             result = attemptRefine(result);
-<a class="jxr_linenumber" name="L617" href="#L617">617</a> 
-<a class="jxr_linenumber" name="L618" href="#L618">618</a>             <strong class="jxr_keyword">if</strong> (mListener != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L619" href="#L619">619</a>                 mListener.onSolveEnd(<strong class="jxr_keyword">this</strong>);
-<a class="jxr_linenumber" name="L620" href="#L620">620</a>             }
-<a class="jxr_linenumber" name="L621" href="#L621">621</a> 
-<a class="jxr_linenumber" name="L622" href="#L622">622</a>             <strong class="jxr_keyword">return</strong> result;
+<a class="jxr_linenumber" name="L577" href="#L577">577</a>                         <em class="jxr_comment">// no action needed</em>
+<a class="jxr_linenumber" name="L578" href="#L578">578</a>                     }
+<a class="jxr_linenumber" name="L579" href="#L579">579</a> 
+<a class="jxr_linenumber" name="L580" href="#L580">580</a>                     @Override
+<a class="jxr_linenumber" name="L581" href="#L581">581</a>                     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> onEstimateEnd(<strong class="jxr_keyword">final</strong> RobustEstimator&lt;Point3D&gt; estimator) {
+<a class="jxr_linenumber" name="L582" href="#L582">582</a>                         <em class="jxr_comment">// no action needed</em>
+<a class="jxr_linenumber" name="L583" href="#L583">583</a>                     }
+<a class="jxr_linenumber" name="L584" href="#L584">584</a> 
+<a class="jxr_linenumber" name="L585" href="#L585">585</a>                     @Override
+<a class="jxr_linenumber" name="L586" href="#L586">586</a>                     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> onEstimateNextIteration(
+<a class="jxr_linenumber" name="L587" href="#L587">587</a>                             <strong class="jxr_keyword">final</strong> RobustEstimator&lt;Point3D&gt; estimator, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> iteration) {
+<a class="jxr_linenumber" name="L588" href="#L588">588</a>                         <strong class="jxr_keyword">if</strong> (mListener != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L589" href="#L589">589</a>                             mListener.onSolveNextIteration(
+<a class="jxr_linenumber" name="L590" href="#L590">590</a>                                     PROMedSRobustLateration3DSolver.<strong class="jxr_keyword">this</strong>, iteration);
+<a class="jxr_linenumber" name="L591" href="#L591">591</a>                         }
+<a class="jxr_linenumber" name="L592" href="#L592">592</a>                     }
+<a class="jxr_linenumber" name="L593" href="#L593">593</a> 
+<a class="jxr_linenumber" name="L594" href="#L594">594</a>                     @Override
+<a class="jxr_linenumber" name="L595" href="#L595">595</a>                     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> onEstimateProgressChange(
+<a class="jxr_linenumber" name="L596" href="#L596">596</a>                             <strong class="jxr_keyword">final</strong> RobustEstimator&lt;Point3D&gt; estimator, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">float</strong> progress) {
+<a class="jxr_linenumber" name="L597" href="#L597">597</a>                         <strong class="jxr_keyword">if</strong> (mListener != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L598" href="#L598">598</a>                             mListener.onSolveProgressChange(
+<a class="jxr_linenumber" name="L599" href="#L599">599</a>                                     PROMedSRobustLateration3DSolver.<strong class="jxr_keyword">this</strong>, progress);
+<a class="jxr_linenumber" name="L600" href="#L600">600</a>                         }
+<a class="jxr_linenumber" name="L601" href="#L601">601</a>                     }
+<a class="jxr_linenumber" name="L602" href="#L602">602</a>                 });
+<a class="jxr_linenumber" name="L603" href="#L603">603</a> 
+<a class="jxr_linenumber" name="L604" href="#L604">604</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L605" href="#L605">605</a>             mLocked = <strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="L606" href="#L606">606</a> 
+<a class="jxr_linenumber" name="L607" href="#L607">607</a>             <strong class="jxr_keyword">if</strong> (mListener != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L608" href="#L608">608</a>                 mListener.onSolveStart(<strong class="jxr_keyword">this</strong>);
+<a class="jxr_linenumber" name="L609" href="#L609">609</a>             }
+<a class="jxr_linenumber" name="L610" href="#L610">610</a> 
+<a class="jxr_linenumber" name="L611" href="#L611">611</a>             mInliersData = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L612" href="#L612">612</a>             innerEstimator.setConfidence(mConfidence);
+<a class="jxr_linenumber" name="L613" href="#L613">613</a>             innerEstimator.setMaxIterations(mMaxIterations);
+<a class="jxr_linenumber" name="L614" href="#L614">614</a>             innerEstimator.setProgressDelta(mProgressDelta);
+<a class="jxr_linenumber" name="L615" href="#L615">615</a>             innerEstimator.setUseInlierThresholds(false);
+<a class="jxr_linenumber" name="L616" href="#L616">616</a>             Point3D result = innerEstimator.estimate();
+<a class="jxr_linenumber" name="L617" href="#L617">617</a>             mInliersData = innerEstimator.getInliersData();
+<a class="jxr_linenumber" name="L618" href="#L618">618</a>             result = attemptRefine(result);
+<a class="jxr_linenumber" name="L619" href="#L619">619</a> 
+<a class="jxr_linenumber" name="L620" href="#L620">620</a>             <strong class="jxr_keyword">if</strong> (mListener != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L621" href="#L621">621</a>                 mListener.onSolveEnd(<strong class="jxr_keyword">this</strong>);
+<a class="jxr_linenumber" name="L622" href="#L622">622</a>             }
 <a class="jxr_linenumber" name="L623" href="#L623">623</a> 
-<a class="jxr_linenumber" name="L624" href="#L624">624</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> com.irurueta.numerical.LockedException e) {
-<a class="jxr_linenumber" name="L625" href="#L625">625</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../com/irurueta/navigation/LockedException.html">LockedException</a>(e);
-<a class="jxr_linenumber" name="L626" href="#L626">626</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> com.irurueta.numerical.NotReadyException e) {
-<a class="jxr_linenumber" name="L627" href="#L627">627</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../com/irurueta/navigation/NotReadyException.html">NotReadyException</a>(e);
-<a class="jxr_linenumber" name="L628" href="#L628">628</a>         } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="L629" href="#L629">629</a>             mLocked = false;
-<a class="jxr_linenumber" name="L630" href="#L630">630</a>         }
-<a class="jxr_linenumber" name="L631" href="#L631">631</a>     }
-<a class="jxr_linenumber" name="L632" href="#L632">632</a> 
-<a class="jxr_linenumber" name="L633" href="#L633">633</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L634" href="#L634">634</a> <em class="jxr_javadoccomment">     * Returns method being used for robust estimation.</em>
-<a class="jxr_linenumber" name="L635" href="#L635">635</a> <em class="jxr_javadoccomment">     *</em>
-<a class="jxr_linenumber" name="L636" href="#L636">636</a> <em class="jxr_javadoccomment">     * @return method being used for robust estimation.</em>
-<a class="jxr_linenumber" name="L637" href="#L637">637</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L638" href="#L638">638</a>     @Override
-<a class="jxr_linenumber" name="L639" href="#L639">639</a>     <strong class="jxr_keyword">public</strong> RobustEstimatorMethod getMethod() {
-<a class="jxr_linenumber" name="L640" href="#L640">640</a>         <strong class="jxr_keyword">return</strong> RobustEstimatorMethod.PROMedS;
-<a class="jxr_linenumber" name="L641" href="#L641">641</a>     }
-<a class="jxr_linenumber" name="L642" href="#L642">642</a> 
-<a class="jxr_linenumber" name="L643" href="#L643">643</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L644" href="#L644">644</a> <em class="jxr_javadoccomment">     * Sets quality scores corresponding to each provided sample.</em>
-<a class="jxr_linenumber" name="L645" href="#L645">645</a> <em class="jxr_javadoccomment">     * This method is used internally and does not check whether instance is</em>
-<a class="jxr_linenumber" name="L646" href="#L646">646</a> <em class="jxr_javadoccomment">     * locked or not.</em>
-<a class="jxr_linenumber" name="L647" href="#L647">647</a> <em class="jxr_javadoccomment">     *</em>
-<a class="jxr_linenumber" name="L648" href="#L648">648</a> <em class="jxr_javadoccomment">     * @param qualityScores quality scores to be set.</em>
-<a class="jxr_linenumber" name="L649" href="#L649">649</a> <em class="jxr_javadoccomment">     * @throws IllegalArgumentException if provided quality scores length</em>
-<a class="jxr_linenumber" name="L650" href="#L650">650</a> <em class="jxr_javadoccomment">     *                                  is smaller than 3 samples.</em>
-<a class="jxr_linenumber" name="L651" href="#L651">651</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L652" href="#L652">652</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> internalSetQualityScores(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] qualityScores) {
-<a class="jxr_linenumber" name="L653" href="#L653">653</a>         <strong class="jxr_keyword">if</strong> (qualityScores == <strong class="jxr_keyword">null</strong> ||
-<a class="jxr_linenumber" name="L654" href="#L654">654</a>                 qualityScores.length &lt; getMinRequiredPositionsAndDistances()) {
-<a class="jxr_linenumber" name="L655" href="#L655">655</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException();
-<a class="jxr_linenumber" name="L656" href="#L656">656</a>         }
-<a class="jxr_linenumber" name="L657" href="#L657">657</a> 
-<a class="jxr_linenumber" name="L658" href="#L658">658</a>         mQualityScores = qualityScores;
-<a class="jxr_linenumber" name="L659" href="#L659">659</a>     }
-<a class="jxr_linenumber" name="L660" href="#L660">660</a> }
-<a class="jxr_linenumber" name="L661" href="#L661">661</a> 
+<a class="jxr_linenumber" name="L624" href="#L624">624</a>             <strong class="jxr_keyword">return</strong> result;
+<a class="jxr_linenumber" name="L625" href="#L625">625</a> 
+<a class="jxr_linenumber" name="L626" href="#L626">626</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> com.irurueta.numerical.LockedException e) {
+<a class="jxr_linenumber" name="L627" href="#L627">627</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../com/irurueta/navigation/LockedException.html">LockedException</a>(e);
+<a class="jxr_linenumber" name="L628" href="#L628">628</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> com.irurueta.numerical.NotReadyException e) {
+<a class="jxr_linenumber" name="L629" href="#L629">629</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../com/irurueta/navigation/NotReadyException.html">NotReadyException</a>(e);
+<a class="jxr_linenumber" name="L630" href="#L630">630</a>         } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="L631" href="#L631">631</a>             mLocked = false;
+<a class="jxr_linenumber" name="L632" href="#L632">632</a>         }
+<a class="jxr_linenumber" name="L633" href="#L633">633</a>     }
+<a class="jxr_linenumber" name="L634" href="#L634">634</a> 
+<a class="jxr_linenumber" name="L635" href="#L635">635</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L636" href="#L636">636</a> <em class="jxr_javadoccomment">     * Returns method being used for robust estimation.</em>
+<a class="jxr_linenumber" name="L637" href="#L637">637</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L638" href="#L638">638</a> <em class="jxr_javadoccomment">     * @return method being used for robust estimation.</em>
+<a class="jxr_linenumber" name="L639" href="#L639">639</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L640" href="#L640">640</a>     @Override
+<a class="jxr_linenumber" name="L641" href="#L641">641</a>     <strong class="jxr_keyword">public</strong> RobustEstimatorMethod getMethod() {
+<a class="jxr_linenumber" name="L642" href="#L642">642</a>         <strong class="jxr_keyword">return</strong> RobustEstimatorMethod.PROMedS;
+<a class="jxr_linenumber" name="L643" href="#L643">643</a>     }
+<a class="jxr_linenumber" name="L644" href="#L644">644</a> 
+<a class="jxr_linenumber" name="L645" href="#L645">645</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L646" href="#L646">646</a> <em class="jxr_javadoccomment">     * Sets quality scores corresponding to each provided sample.</em>
+<a class="jxr_linenumber" name="L647" href="#L647">647</a> <em class="jxr_javadoccomment">     * This method is used internally and does not check whether instance is</em>
+<a class="jxr_linenumber" name="L648" href="#L648">648</a> <em class="jxr_javadoccomment">     * locked or not.</em>
+<a class="jxr_linenumber" name="L649" href="#L649">649</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L650" href="#L650">650</a> <em class="jxr_javadoccomment">     * @param qualityScores quality scores to be set.</em>
+<a class="jxr_linenumber" name="L651" href="#L651">651</a> <em class="jxr_javadoccomment">     * @throws IllegalArgumentException if provided quality scores length</em>
+<a class="jxr_linenumber" name="L652" href="#L652">652</a> <em class="jxr_javadoccomment">     *                                  is smaller than 3 samples.</em>
+<a class="jxr_linenumber" name="L653" href="#L653">653</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L654" href="#L654">654</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> internalSetQualityScores(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong>[] qualityScores) {
+<a class="jxr_linenumber" name="L655" href="#L655">655</a>         <strong class="jxr_keyword">if</strong> (qualityScores == <strong class="jxr_keyword">null</strong> ||
+<a class="jxr_linenumber" name="L656" href="#L656">656</a>                 qualityScores.length &lt; getMinRequiredPositionsAndDistances()) {
+<a class="jxr_linenumber" name="L657" href="#L657">657</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException();
+<a class="jxr_linenumber" name="L658" href="#L658">658</a>         }
+<a class="jxr_linenumber" name="L659" href="#L659">659</a> 
+<a class="jxr_linenumber" name="L660" href="#L660">660</a>         mQualityScores = qualityScores;
+<a class="jxr_linenumber" name="L661" href="#L661">661</a>     }
+<a class="jxr_linenumber" name="L662" href="#L662">662</a> }
+<a class="jxr_linenumber" name="L663" href="#L663">663</a> 
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2018&#x2013;2021. All rights reserved.</div>
