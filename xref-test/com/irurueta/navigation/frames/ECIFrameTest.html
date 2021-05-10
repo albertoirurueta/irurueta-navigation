@@ -1397,86 +1397,87 @@
 <a class="jxr_linenumber" name="L1389" href="#L1389">1389</a> 
 <a class="jxr_linenumber" name="L1390" href="#L1390">1390</a>         <em class="jxr_comment">//noinspection ConstantConditions,SimplifiableJUnitAssertion</em>
 <a class="jxr_linenumber" name="L1391" href="#L1391">1391</a>         assertTrue(frame1.equals((Object) frame1));
-<a class="jxr_linenumber" name="L1392" href="#L1392">1392</a>         assertTrue(frame1.equals(frame1));
-<a class="jxr_linenumber" name="L1393" href="#L1393">1393</a>         assertTrue(frame1.equals(frame2));
-<a class="jxr_linenumber" name="L1394" href="#L1394">1394</a>         assertFalse(frame1.equals(frame3));
-<a class="jxr_linenumber" name="L1395" href="#L1395">1395</a>         <em class="jxr_comment">//noinspection ConstantConditions,SimplifiableJUnitAssertion</em>
-<a class="jxr_linenumber" name="L1396" href="#L1396">1396</a>         assertFalse(frame1.equals((Object) <strong class="jxr_keyword">null</strong>));
-<a class="jxr_linenumber" name="L1397" href="#L1397">1397</a>         assertFalse(frame1.equals(<strong class="jxr_keyword">null</strong>));
-<a class="jxr_linenumber" name="L1398" href="#L1398">1398</a>         <em class="jxr_comment">//noinspection SimplifiableJUnitAssertion</em>
-<a class="jxr_linenumber" name="L1399" href="#L1399">1399</a>         assertFalse(frame1.equals(<strong class="jxr_keyword">new</strong> Object()));
-<a class="jxr_linenumber" name="L1400" href="#L1400">1400</a>     }
-<a class="jxr_linenumber" name="L1401" href="#L1401">1401</a> 
-<a class="jxr_linenumber" name="L1402" href="#L1402">1402</a>     @Test
-<a class="jxr_linenumber" name="L1403" href="#L1403">1403</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testEqualsWithThreshold() <strong class="jxr_keyword">throws</strong> InvalidRotationMatrixException, InvalidSourceAndDestinationFrameTypeException {
-<a class="jxr_linenumber" name="L1404" href="#L1404">1404</a> 
-<a class="jxr_linenumber" name="L1405" href="#L1405">1405</a>         <strong class="jxr_keyword">final</strong> UniformRandomizer randomizer = <strong class="jxr_keyword">new</strong> UniformRandomizer(<strong class="jxr_keyword">new</strong> Random());
-<a class="jxr_linenumber" name="L1406" href="#L1406">1406</a> 
-<a class="jxr_linenumber" name="L1407" href="#L1407">1407</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-<a class="jxr_linenumber" name="L1408" href="#L1408">1408</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-<a class="jxr_linenumber" name="L1409" href="#L1409">1409</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-<a class="jxr_linenumber" name="L1410" href="#L1410">1410</a> 
-<a class="jxr_linenumber" name="L1411" href="#L1411">1411</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-<a class="jxr_linenumber" name="L1412" href="#L1412">1412</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-<a class="jxr_linenumber" name="L1413" href="#L1413">1413</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-<a class="jxr_linenumber" name="L1414" href="#L1414">1414</a> 
-<a class="jxr_linenumber" name="L1415" href="#L1415">1415</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> roll = Math.toRadians(
-<a class="jxr_linenumber" name="L1416" href="#L1416">1416</a>                 randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-<a class="jxr_linenumber" name="L1417" href="#L1417">1417</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> pitch = Math.toRadians(
-<a class="jxr_linenumber" name="L1418" href="#L1418">1418</a>                 randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-<a class="jxr_linenumber" name="L1419" href="#L1419">1419</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> yaw = Math.toRadians(
-<a class="jxr_linenumber" name="L1420" href="#L1420">1420</a>                 randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-<a class="jxr_linenumber" name="L1421" href="#L1421">1421</a>         <strong class="jxr_keyword">final</strong> Quaternion q = <strong class="jxr_keyword">new</strong> Quaternion(roll, pitch, yaw);
-<a class="jxr_linenumber" name="L1422" href="#L1422">1422</a> 
-<a class="jxr_linenumber" name="L1423" href="#L1423">1423</a>         <strong class="jxr_keyword">final</strong> Matrix m = q.asInhomogeneousMatrix();
-<a class="jxr_linenumber" name="L1424" href="#L1424">1424</a>         <strong class="jxr_keyword">final</strong> CoordinateTransformation c = <strong class="jxr_keyword">new</strong> CoordinateTransformation(
-<a class="jxr_linenumber" name="L1425" href="#L1425">1425</a>                 m, FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_INERTIAL_FRAME);
-<a class="jxr_linenumber" name="L1426" href="#L1426">1426</a> 
-<a class="jxr_linenumber" name="L1427" href="#L1427">1427</a>         <strong class="jxr_keyword">final</strong> ECIFrame frame1 = <strong class="jxr_keyword">new</strong> ECIFrame(x, y, z, vx, vy, vz, c);
-<a class="jxr_linenumber" name="L1428" href="#L1428">1428</a>         <strong class="jxr_keyword">final</strong> ECIFrame frame2 = <strong class="jxr_keyword">new</strong> ECIFrame(x, y, z, vx, vy, vz, c);
-<a class="jxr_linenumber" name="L1429" href="#L1429">1429</a>         <strong class="jxr_keyword">final</strong> ECIFrame frame3 = <strong class="jxr_keyword">new</strong> ECIFrame();
-<a class="jxr_linenumber" name="L1430" href="#L1430">1430</a> 
-<a class="jxr_linenumber" name="L1431" href="#L1431">1431</a>         assertTrue(frame1.equals(frame1, THRESHOLD));
-<a class="jxr_linenumber" name="L1432" href="#L1432">1432</a>         assertTrue(frame1.equals(frame2, THRESHOLD));
-<a class="jxr_linenumber" name="L1433" href="#L1433">1433</a>         assertFalse(frame1.equals(frame3, THRESHOLD));
-<a class="jxr_linenumber" name="L1434" href="#L1434">1434</a>         assertFalse(frame1.equals(<strong class="jxr_keyword">null</strong>, THRESHOLD));
-<a class="jxr_linenumber" name="L1435" href="#L1435">1435</a>     }
-<a class="jxr_linenumber" name="L1436" href="#L1436">1436</a> 
-<a class="jxr_linenumber" name="L1437" href="#L1437">1437</a>     @Test
-<a class="jxr_linenumber" name="L1438" href="#L1438">1438</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testClone() <strong class="jxr_keyword">throws</strong> InvalidRotationMatrixException,
-<a class="jxr_linenumber" name="L1439" href="#L1439">1439</a>             InvalidSourceAndDestinationFrameTypeException,
-<a class="jxr_linenumber" name="L1440" href="#L1440">1440</a>             CloneNotSupportedException {
-<a class="jxr_linenumber" name="L1441" href="#L1441">1441</a> 
-<a class="jxr_linenumber" name="L1442" href="#L1442">1442</a>         <strong class="jxr_keyword">final</strong> UniformRandomizer randomizer = <strong class="jxr_keyword">new</strong> UniformRandomizer(<strong class="jxr_keyword">new</strong> Random());
-<a class="jxr_linenumber" name="L1443" href="#L1443">1443</a> 
-<a class="jxr_linenumber" name="L1444" href="#L1444">1444</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-<a class="jxr_linenumber" name="L1445" href="#L1445">1445</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-<a class="jxr_linenumber" name="L1446" href="#L1446">1446</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-<a class="jxr_linenumber" name="L1447" href="#L1447">1447</a> 
-<a class="jxr_linenumber" name="L1448" href="#L1448">1448</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-<a class="jxr_linenumber" name="L1449" href="#L1449">1449</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-<a class="jxr_linenumber" name="L1450" href="#L1450">1450</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-<a class="jxr_linenumber" name="L1451" href="#L1451">1451</a> 
-<a class="jxr_linenumber" name="L1452" href="#L1452">1452</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> roll = Math.toRadians(
-<a class="jxr_linenumber" name="L1453" href="#L1453">1453</a>                 randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-<a class="jxr_linenumber" name="L1454" href="#L1454">1454</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> pitch = Math.toRadians(
-<a class="jxr_linenumber" name="L1455" href="#L1455">1455</a>                 randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-<a class="jxr_linenumber" name="L1456" href="#L1456">1456</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> yaw = Math.toRadians(
-<a class="jxr_linenumber" name="L1457" href="#L1457">1457</a>                 randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-<a class="jxr_linenumber" name="L1458" href="#L1458">1458</a>         <strong class="jxr_keyword">final</strong> Quaternion q = <strong class="jxr_keyword">new</strong> Quaternion(roll, pitch, yaw);
-<a class="jxr_linenumber" name="L1459" href="#L1459">1459</a> 
-<a class="jxr_linenumber" name="L1460" href="#L1460">1460</a>         <strong class="jxr_keyword">final</strong> Matrix m = q.asInhomogeneousMatrix();
-<a class="jxr_linenumber" name="L1461" href="#L1461">1461</a>         <strong class="jxr_keyword">final</strong> CoordinateTransformation c = <strong class="jxr_keyword">new</strong> CoordinateTransformation(
-<a class="jxr_linenumber" name="L1462" href="#L1462">1462</a>                 m, FrameType.BODY_FRAME,
-<a class="jxr_linenumber" name="L1463" href="#L1463">1463</a>                 FrameType.EARTH_CENTERED_INERTIAL_FRAME);
-<a class="jxr_linenumber" name="L1464" href="#L1464">1464</a> 
-<a class="jxr_linenumber" name="L1465" href="#L1465">1465</a>         <strong class="jxr_keyword">final</strong> ECIFrame frame1 = <strong class="jxr_keyword">new</strong> ECIFrame(x, y, z, vx, vy, vz, c);
-<a class="jxr_linenumber" name="L1466" href="#L1466">1466</a> 
-<a class="jxr_linenumber" name="L1467" href="#L1467">1467</a>         <strong class="jxr_keyword">final</strong> Object frame2 = frame1.clone();
-<a class="jxr_linenumber" name="L1468" href="#L1468">1468</a> 
-<a class="jxr_linenumber" name="L1469" href="#L1469">1469</a>         assertEquals(frame1, frame2);
-<a class="jxr_linenumber" name="L1470" href="#L1470">1470</a>     }
-<a class="jxr_linenumber" name="L1471" href="#L1471">1471</a> }
+<a class="jxr_linenumber" name="L1392" href="#L1392">1392</a>         <em class="jxr_comment">//noinspection EqualsWithItself</em>
+<a class="jxr_linenumber" name="L1393" href="#L1393">1393</a>         assertTrue(frame1.equals(frame1));
+<a class="jxr_linenumber" name="L1394" href="#L1394">1394</a>         assertTrue(frame1.equals(frame2));
+<a class="jxr_linenumber" name="L1395" href="#L1395">1395</a>         assertFalse(frame1.equals(frame3));
+<a class="jxr_linenumber" name="L1396" href="#L1396">1396</a>         <em class="jxr_comment">//noinspection ConstantConditions,SimplifiableJUnitAssertion</em>
+<a class="jxr_linenumber" name="L1397" href="#L1397">1397</a>         assertFalse(frame1.equals((Object) <strong class="jxr_keyword">null</strong>));
+<a class="jxr_linenumber" name="L1398" href="#L1398">1398</a>         assertFalse(frame1.equals(<strong class="jxr_keyword">null</strong>));
+<a class="jxr_linenumber" name="L1399" href="#L1399">1399</a>         <em class="jxr_comment">//noinspection SimplifiableJUnitAssertion</em>
+<a class="jxr_linenumber" name="L1400" href="#L1400">1400</a>         assertFalse(frame1.equals(<strong class="jxr_keyword">new</strong> Object()));
+<a class="jxr_linenumber" name="L1401" href="#L1401">1401</a>     }
+<a class="jxr_linenumber" name="L1402" href="#L1402">1402</a> 
+<a class="jxr_linenumber" name="L1403" href="#L1403">1403</a>     @Test
+<a class="jxr_linenumber" name="L1404" href="#L1404">1404</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testEqualsWithThreshold() <strong class="jxr_keyword">throws</strong> InvalidRotationMatrixException, InvalidSourceAndDestinationFrameTypeException {
+<a class="jxr_linenumber" name="L1405" href="#L1405">1405</a> 
+<a class="jxr_linenumber" name="L1406" href="#L1406">1406</a>         <strong class="jxr_keyword">final</strong> UniformRandomizer randomizer = <strong class="jxr_keyword">new</strong> UniformRandomizer(<strong class="jxr_keyword">new</strong> Random());
+<a class="jxr_linenumber" name="L1407" href="#L1407">1407</a> 
+<a class="jxr_linenumber" name="L1408" href="#L1408">1408</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+<a class="jxr_linenumber" name="L1409" href="#L1409">1409</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+<a class="jxr_linenumber" name="L1410" href="#L1410">1410</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+<a class="jxr_linenumber" name="L1411" href="#L1411">1411</a> 
+<a class="jxr_linenumber" name="L1412" href="#L1412">1412</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+<a class="jxr_linenumber" name="L1413" href="#L1413">1413</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+<a class="jxr_linenumber" name="L1414" href="#L1414">1414</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+<a class="jxr_linenumber" name="L1415" href="#L1415">1415</a> 
+<a class="jxr_linenumber" name="L1416" href="#L1416">1416</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> roll = Math.toRadians(
+<a class="jxr_linenumber" name="L1417" href="#L1417">1417</a>                 randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+<a class="jxr_linenumber" name="L1418" href="#L1418">1418</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> pitch = Math.toRadians(
+<a class="jxr_linenumber" name="L1419" href="#L1419">1419</a>                 randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+<a class="jxr_linenumber" name="L1420" href="#L1420">1420</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> yaw = Math.toRadians(
+<a class="jxr_linenumber" name="L1421" href="#L1421">1421</a>                 randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+<a class="jxr_linenumber" name="L1422" href="#L1422">1422</a>         <strong class="jxr_keyword">final</strong> Quaternion q = <strong class="jxr_keyword">new</strong> Quaternion(roll, pitch, yaw);
+<a class="jxr_linenumber" name="L1423" href="#L1423">1423</a> 
+<a class="jxr_linenumber" name="L1424" href="#L1424">1424</a>         <strong class="jxr_keyword">final</strong> Matrix m = q.asInhomogeneousMatrix();
+<a class="jxr_linenumber" name="L1425" href="#L1425">1425</a>         <strong class="jxr_keyword">final</strong> CoordinateTransformation c = <strong class="jxr_keyword">new</strong> CoordinateTransformation(
+<a class="jxr_linenumber" name="L1426" href="#L1426">1426</a>                 m, FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+<a class="jxr_linenumber" name="L1427" href="#L1427">1427</a> 
+<a class="jxr_linenumber" name="L1428" href="#L1428">1428</a>         <strong class="jxr_keyword">final</strong> ECIFrame frame1 = <strong class="jxr_keyword">new</strong> ECIFrame(x, y, z, vx, vy, vz, c);
+<a class="jxr_linenumber" name="L1429" href="#L1429">1429</a>         <strong class="jxr_keyword">final</strong> ECIFrame frame2 = <strong class="jxr_keyword">new</strong> ECIFrame(x, y, z, vx, vy, vz, c);
+<a class="jxr_linenumber" name="L1430" href="#L1430">1430</a>         <strong class="jxr_keyword">final</strong> ECIFrame frame3 = <strong class="jxr_keyword">new</strong> ECIFrame();
+<a class="jxr_linenumber" name="L1431" href="#L1431">1431</a> 
+<a class="jxr_linenumber" name="L1432" href="#L1432">1432</a>         assertTrue(frame1.equals(frame1, THRESHOLD));
+<a class="jxr_linenumber" name="L1433" href="#L1433">1433</a>         assertTrue(frame1.equals(frame2, THRESHOLD));
+<a class="jxr_linenumber" name="L1434" href="#L1434">1434</a>         assertFalse(frame1.equals(frame3, THRESHOLD));
+<a class="jxr_linenumber" name="L1435" href="#L1435">1435</a>         assertFalse(frame1.equals(<strong class="jxr_keyword">null</strong>, THRESHOLD));
+<a class="jxr_linenumber" name="L1436" href="#L1436">1436</a>     }
+<a class="jxr_linenumber" name="L1437" href="#L1437">1437</a> 
+<a class="jxr_linenumber" name="L1438" href="#L1438">1438</a>     @Test
+<a class="jxr_linenumber" name="L1439" href="#L1439">1439</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testClone() <strong class="jxr_keyword">throws</strong> InvalidRotationMatrixException,
+<a class="jxr_linenumber" name="L1440" href="#L1440">1440</a>             InvalidSourceAndDestinationFrameTypeException,
+<a class="jxr_linenumber" name="L1441" href="#L1441">1441</a>             CloneNotSupportedException {
+<a class="jxr_linenumber" name="L1442" href="#L1442">1442</a> 
+<a class="jxr_linenumber" name="L1443" href="#L1443">1443</a>         <strong class="jxr_keyword">final</strong> UniformRandomizer randomizer = <strong class="jxr_keyword">new</strong> UniformRandomizer(<strong class="jxr_keyword">new</strong> Random());
+<a class="jxr_linenumber" name="L1444" href="#L1444">1444</a> 
+<a class="jxr_linenumber" name="L1445" href="#L1445">1445</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+<a class="jxr_linenumber" name="L1446" href="#L1446">1446</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+<a class="jxr_linenumber" name="L1447" href="#L1447">1447</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+<a class="jxr_linenumber" name="L1448" href="#L1448">1448</a> 
+<a class="jxr_linenumber" name="L1449" href="#L1449">1449</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+<a class="jxr_linenumber" name="L1450" href="#L1450">1450</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+<a class="jxr_linenumber" name="L1451" href="#L1451">1451</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+<a class="jxr_linenumber" name="L1452" href="#L1452">1452</a> 
+<a class="jxr_linenumber" name="L1453" href="#L1453">1453</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> roll = Math.toRadians(
+<a class="jxr_linenumber" name="L1454" href="#L1454">1454</a>                 randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+<a class="jxr_linenumber" name="L1455" href="#L1455">1455</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> pitch = Math.toRadians(
+<a class="jxr_linenumber" name="L1456" href="#L1456">1456</a>                 randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+<a class="jxr_linenumber" name="L1457" href="#L1457">1457</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> yaw = Math.toRadians(
+<a class="jxr_linenumber" name="L1458" href="#L1458">1458</a>                 randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+<a class="jxr_linenumber" name="L1459" href="#L1459">1459</a>         <strong class="jxr_keyword">final</strong> Quaternion q = <strong class="jxr_keyword">new</strong> Quaternion(roll, pitch, yaw);
+<a class="jxr_linenumber" name="L1460" href="#L1460">1460</a> 
+<a class="jxr_linenumber" name="L1461" href="#L1461">1461</a>         <strong class="jxr_keyword">final</strong> Matrix m = q.asInhomogeneousMatrix();
+<a class="jxr_linenumber" name="L1462" href="#L1462">1462</a>         <strong class="jxr_keyword">final</strong> CoordinateTransformation c = <strong class="jxr_keyword">new</strong> CoordinateTransformation(
+<a class="jxr_linenumber" name="L1463" href="#L1463">1463</a>                 m, FrameType.BODY_FRAME,
+<a class="jxr_linenumber" name="L1464" href="#L1464">1464</a>                 FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+<a class="jxr_linenumber" name="L1465" href="#L1465">1465</a> 
+<a class="jxr_linenumber" name="L1466" href="#L1466">1466</a>         <strong class="jxr_keyword">final</strong> ECIFrame frame1 = <strong class="jxr_keyword">new</strong> ECIFrame(x, y, z, vx, vy, vz, c);
+<a class="jxr_linenumber" name="L1467" href="#L1467">1467</a> 
+<a class="jxr_linenumber" name="L1468" href="#L1468">1468</a>         <strong class="jxr_keyword">final</strong> Object frame2 = frame1.clone();
+<a class="jxr_linenumber" name="L1469" href="#L1469">1469</a> 
+<a class="jxr_linenumber" name="L1470" href="#L1470">1470</a>         assertEquals(frame1, frame2);
+<a class="jxr_linenumber" name="L1471" href="#L1471">1471</a>     }
+<a class="jxr_linenumber" name="L1472" href="#L1472">1472</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2018&#x2013;2021. All rights reserved.</div>

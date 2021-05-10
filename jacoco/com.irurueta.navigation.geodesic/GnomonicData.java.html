@@ -26,7 +26,6 @@ package com.irurueta.navigation.geodesic;
  * and it always includes the fields &lt;i&gt;x&lt;/i&gt;, &lt;i&gt;y&lt;/i&gt;, &lt;i&gt;azi&lt;/i&gt;, and
  * &lt;i&gt;rk&lt;/i&gt;.
  */
-@SuppressWarnings(&quot;WeakerAccess&quot;)
 public class GnomonicData {
 
     /**
@@ -73,9 +72,9 @@ public class GnomonicData {
      * Initialize all the fields to Double.NaN.
      */
     @SuppressWarnings(&quot;WeakerAccess&quot;)
-<span class="fc" id="L76">    public GnomonicData() {</span>
-<span class="fc" id="L77">        lat0 = lon0 = lat = lon = x = y = azi = rk = Double.NaN;</span>
-<span class="fc" id="L78">    }</span>
+<span class="fc" id="L75">    public GnomonicData() {</span>
+<span class="fc" id="L76">        lat0 = lon0 = lat = lon = x = y = azi = rk = Double.NaN;</span>
+<span class="fc" id="L77">    }</span>
 
     /**
      * Constructor initializing all the fields for gnomonic projection of a
@@ -91,19 +90,18 @@ public class GnomonicData {
      * @param azi  azimuth of geodesic at point (degrees).
      * @param rk   reciprocal of azimuthal scale at point.
      */
-    @SuppressWarnings(&quot;WeakerAccess&quot;)
     public GnomonicData(
             final double lat0, final double lon0, final double lat, final double lon,
-<span class="fc" id="L97">            final double x, final double y, final double azi, final double rk) {</span>
-<span class="fc" id="L98">        this.lat0 = lat0;</span>
-<span class="fc" id="L99">        this.lon0 = lon0;</span>
-<span class="fc" id="L100">        this.lat = lat;</span>
-<span class="fc" id="L101">        this.lon = lon;</span>
-<span class="fc" id="L102">        this.x = x;</span>
-<span class="fc" id="L103">        this.y = y;</span>
-<span class="fc" id="L104">        this.azi = azi;</span>
-<span class="fc" id="L105">        this.rk = rk;</span>
-<span class="fc" id="L106">    }</span>
+<span class="fc" id="L95">            final double x, final double y, final double azi, final double rk) {</span>
+<span class="fc" id="L96">        this.lat0 = lat0;</span>
+<span class="fc" id="L97">        this.lon0 = lon0;</span>
+<span class="fc" id="L98">        this.lat = lat;</span>
+<span class="fc" id="L99">        this.lon = lon;</span>
+<span class="fc" id="L100">        this.x = x;</span>
+<span class="fc" id="L101">        this.y = y;</span>
+<span class="fc" id="L102">        this.azi = azi;</span>
+<span class="fc" id="L103">        this.rk = rk;</span>
+<span class="fc" id="L104">    }</span>
 
     /**
      * Gets latitude of center point of projection (degrees).
@@ -111,7 +109,7 @@ public class GnomonicData {
      * @return latitude of center point of projection.
      */
     public double getLat0() {
-<span class="fc" id="L114">        return lat0;</span>
+<span class="fc" id="L112">        return lat0;</span>
     }
 
     /**
@@ -120,8 +118,8 @@ public class GnomonicData {
      * @param lat0 latitude of center point of projection.
      */
     public void setLat0(final double lat0) {
-<span class="fc" id="L123">        this.lat0 = lat0;</span>
-<span class="fc" id="L124">    }</span>
+<span class="fc" id="L121">        this.lat0 = lat0;</span>
+<span class="fc" id="L122">    }</span>
 
     /**
      * Gets longitude of center point of projection (degrees).
@@ -129,7 +127,7 @@ public class GnomonicData {
      * @return longitude of center point of projection.
      */
     public double getLon0() {
-<span class="fc" id="L132">        return lon0;</span>
+<span class="fc" id="L130">        return lon0;</span>
     }
 
     /**
@@ -138,8 +136,8 @@ public class GnomonicData {
      * @param lon0 longitude of center point of projection.
      */
     public void setLon0(final double lon0) {
-<span class="fc" id="L141">        this.lon0 = lon0;</span>
-<span class="fc" id="L142">    }</span>
+<span class="fc" id="L139">        this.lon0 = lon0;</span>
+<span class="fc" id="L140">    }</span>
 
     /**
      * Gets latitude of point (degrees).
@@ -147,7 +145,7 @@ public class GnomonicData {
      * @return latitude of point.
      */
     public double getLat() {
-<span class="fc" id="L150">        return lat;</span>
+<span class="fc" id="L148">        return lat;</span>
     }
 
     /**
@@ -156,8 +154,8 @@ public class GnomonicData {
      * @param lat latitude of point.
      */
     public void setLat(final double lat) {
-<span class="fc" id="L159">        this.lat = lat;</span>
-<span class="fc" id="L160">    }</span>
+<span class="fc" id="L157">        this.lat = lat;</span>
+<span class="fc" id="L158">    }</span>
 
     /**
      * Gets longitude of point (degrees).
@@ -165,7 +163,7 @@ public class GnomonicData {
      * @return longitude of point.
      */
     public double getLon() {
-<span class="fc" id="L168">        return lon;</span>
+<span class="fc" id="L166">        return lon;</span>
     }
 
     /**
@@ -174,8 +172,8 @@ public class GnomonicData {
      * @param lon longitude of point.
      */
     public void setLon(final double lon) {
-<span class="fc" id="L177">        this.lon = lon;</span>
-<span class="fc" id="L178">    }</span>
+<span class="fc" id="L175">        this.lon = lon;</span>
+<span class="fc" id="L176">    }</span>
 
     /**
      * Gets easting of point (meters).
@@ -183,7 +181,7 @@ public class GnomonicData {
      * @return easting of point.
      */
     public double getX() {
-<span class="fc" id="L186">        return x;</span>
+<span class="fc" id="L184">        return x;</span>
     }
 
     /**
@@ -192,8 +190,8 @@ public class GnomonicData {
      * @param x easting of point.
      */
     public void setX(final double x) {
-<span class="fc" id="L195">        this.x = x;</span>
-<span class="fc" id="L196">    }</span>
+<span class="fc" id="L193">        this.x = x;</span>
+<span class="fc" id="L194">    }</span>
 
     /**
      * Gets northing of point (meters).
@@ -201,7 +199,7 @@ public class GnomonicData {
      * @return northing of point.
      */
     public double getY() {
-<span class="fc" id="L204">        return y;</span>
+<span class="fc" id="L202">        return y;</span>
     }
 
     /**
@@ -210,8 +208,8 @@ public class GnomonicData {
      * @param y northing of point.
      */
     public void setY(final double y) {
-<span class="fc" id="L213">        this.y = y;</span>
-<span class="fc" id="L214">    }</span>
+<span class="fc" id="L211">        this.y = y;</span>
+<span class="fc" id="L212">    }</span>
 
     /**
      * Gets azimuth of geodesic at point (degrees).
@@ -219,7 +217,7 @@ public class GnomonicData {
      * @return azimuth of geodesic at point.
      */
     public double getAzi() {
-<span class="fc" id="L222">        return azi;</span>
+<span class="fc" id="L220">        return azi;</span>
     }
 
     /**
@@ -228,8 +226,8 @@ public class GnomonicData {
      * @param azi azimuth of geodesic at point.
      */
     public void setAzi(final double azi) {
-<span class="fc" id="L231">        this.azi = azi;</span>
-<span class="fc" id="L232">    }</span>
+<span class="fc" id="L229">        this.azi = azi;</span>
+<span class="fc" id="L230">    }</span>
 
     /**
      * Gets reciprocal of azimuthal scale at point.
@@ -237,7 +235,7 @@ public class GnomonicData {
      * @return reciprocal of azimuthal scale at point.
      */
     public double getRk() {
-<span class="fc" id="L240">        return rk;</span>
+<span class="fc" id="L238">        return rk;</span>
     }
 
     /**
@@ -246,7 +244,7 @@ public class GnomonicData {
      * @param rk reciprocal of azimuthal scale at point.
      */
     public void setRk(final double rk) {
-<span class="fc" id="L249">        this.rk = rk;</span>
-<span class="fc" id="L250">    }</span>
+<span class="fc" id="L247">        this.rk = rk;</span>
+<span class="fc" id="L248">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

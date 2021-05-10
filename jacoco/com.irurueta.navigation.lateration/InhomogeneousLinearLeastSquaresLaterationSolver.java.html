@@ -30,7 +30,6 @@ import com.irurueta.navigation.NotReadyException;
  *
  * @param &lt;P&gt; a {@link Point} type.
  */
-@SuppressWarnings(&quot;WeakerAccess&quot;)
 public abstract class InhomogeneousLinearLeastSquaresLaterationSolver&lt;P extends Point&lt;P&gt;&gt; extends
         LaterationSolver&lt;P&gt; {
 
@@ -38,8 +37,8 @@ public abstract class InhomogeneousLinearLeastSquaresLaterationSolver&lt;P exten
      * Constructor.
      */
     public InhomogeneousLinearLeastSquaresLaterationSolver() {
-<span class="fc" id="L41">        super();</span>
-<span class="fc" id="L42">    }</span>
+<span class="fc" id="L40">        super();</span>
+<span class="fc" id="L41">    }</span>
 
     /**
      * Constructor.
@@ -51,8 +50,8 @@ public abstract class InhomogeneousLinearLeastSquaresLaterationSolver&lt;P exten
      */
     public InhomogeneousLinearLeastSquaresLaterationSolver(
             final P[] positions, final double[] distances) {
-<span class="fc" id="L54">        super(positions, distances);</span>
-<span class="fc" id="L55">    }</span>
+<span class="fc" id="L53">        super(positions, distances);</span>
+<span class="fc" id="L54">    }</span>
 
     /**
      * Constructor.
@@ -61,8 +60,8 @@ public abstract class InhomogeneousLinearLeastSquaresLaterationSolver&lt;P exten
      */
     public InhomogeneousLinearLeastSquaresLaterationSolver(
             final LaterationSolverListener&lt;P&gt; listener) {
-<span class="fc" id="L64">        super(listener);</span>
-<span class="fc" id="L65">    }</span>
+<span class="fc" id="L63">        super(listener);</span>
+<span class="fc" id="L64">    }</span>
 
     /**
      * Constructor.
@@ -76,8 +75,8 @@ public abstract class InhomogeneousLinearLeastSquaresLaterationSolver&lt;P exten
     public InhomogeneousLinearLeastSquaresLaterationSolver(
             final P[] positions, final double[] distances,
             final LaterationSolverListener&lt;P&gt; listener) {
-<span class="fc" id="L79">        super(positions, distances, listener);</span>
-<span class="fc" id="L80">    }</span>
+<span class="fc" id="L78">        super(positions, distances, listener);</span>
+<span class="fc" id="L79">    }</span>
 
     /**
      * Solves the lateration problem.
@@ -87,7 +86,6 @@ public abstract class InhomogeneousLinearLeastSquaresLaterationSolver&lt;P exten
      * @throws LockedException     if instance is busy solving the lateration problem.
      */
     @Override
-    @SuppressWarnings(&quot;Duplicates&quot;)
     public void solve() throws LaterationException, NotReadyException,
             LockedException {
         // The implementation on this method follows the algorithm bellow for 3D but
@@ -128,61 +126,61 @@ public abstract class InhomogeneousLinearLeastSquaresLaterationSolver&lt;P exten
         // Hence, the linear system of equations solves (x - x1, y - y1, z - z1), we need a final step to
         // add the reference point (x1, y1, z1) in order to solve (x, y, z).
 
-<span class="fc bfc" id="L131" title="All 2 branches covered.">        if (!isReady()) {</span>
-<span class="fc" id="L132">            throw new NotReadyException();</span>
+<span class="fc bfc" id="L129" title="All 2 branches covered.">        if (!isReady()) {</span>
+<span class="fc" id="L130">            throw new NotReadyException();</span>
         }
-<span class="fc bfc" id="L134" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L135">            throw new LockedException();</span>
+<span class="fc bfc" id="L132" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L133">            throw new LockedException();</span>
         }
 
         try {
-<span class="fc" id="L139">            mLocked = true;</span>
+<span class="fc" id="L137">            mLocked = true;</span>
 
-<span class="fc bfc" id="L141" title="All 2 branches covered.">            if (mListener != null) {</span>
-<span class="fc" id="L142">                mListener.onSolveStart(this);</span>
+<span class="fc bfc" id="L139" title="All 2 branches covered.">            if (mListener != null) {</span>
+<span class="fc" id="L140">                mListener.onSolveStart(this);</span>
             }
 
-<span class="fc" id="L145">            final int numberOfPositions = mPositions.length;</span>
-<span class="fc" id="L146">            final int numberOfPositionsMinus1 = numberOfPositions - 1;</span>
-<span class="fc" id="L147">            final int dims = getNumberOfDimensions();</span>
+<span class="fc" id="L143">            final int numberOfPositions = mPositions.length;</span>
+<span class="fc" id="L144">            final int numberOfPositionsMinus1 = numberOfPositions - 1;</span>
+<span class="fc" id="L145">            final int dims = getNumberOfDimensions();</span>
 
-<span class="fc" id="L149">            final Matrix a = new Matrix(numberOfPositionsMinus1, dims);</span>
-<span class="fc bfc" id="L150" title="All 2 branches covered.">            for (int i = 1, i2 = 0; i &lt; numberOfPositions; i++, i2++) {</span>
-<span class="fc bfc" id="L151" title="All 2 branches covered.">                for (int j = 0; j &lt; dims; j++) {</span>
-<span class="fc" id="L152">                    a.setElementAt(i2, j, mPositions[i].getInhomogeneousCoordinate(j) -</span>
-<span class="fc" id="L153">                            mPositions[0].getInhomogeneousCoordinate(j));</span>
+<span class="fc" id="L147">            final Matrix a = new Matrix(numberOfPositionsMinus1, dims);</span>
+<span class="fc bfc" id="L148" title="All 2 branches covered.">            for (int i = 1, i2 = 0; i &lt; numberOfPositions; i++, i2++) {</span>
+<span class="fc bfc" id="L149" title="All 2 branches covered.">                for (int j = 0; j &lt; dims; j++) {</span>
+<span class="fc" id="L150">                    a.setElementAt(i2, j, mPositions[i].getInhomogeneousCoordinate(j) -</span>
+<span class="fc" id="L151">                            mPositions[0].getInhomogeneousCoordinate(j));</span>
                 }
             }
 
-            //reference point is first position mPositions[0] with distance mDistances[0]
-<span class="fc" id="L158">            final double referenceDistance = mDistances[0];</span>
-<span class="fc" id="L159">            final double sqrRefDistance = referenceDistance * referenceDistance;</span>
-<span class="fc" id="L160">            final double[] b = new double[numberOfPositionsMinus1];</span>
-<span class="fc bfc" id="L161" title="All 2 branches covered.">            for (int i = 1, i2 = 0; i &lt; numberOfPositions; i++, i2++) {</span>
-<span class="fc" id="L162">                final double ri = mDistances[i];</span>
-<span class="fc" id="L163">                final double sqrRi = ri * ri;</span>
+            // reference point is first position mPositions[0] with distance mDistances[0]
+<span class="fc" id="L156">            final double referenceDistance = mDistances[0];</span>
+<span class="fc" id="L157">            final double sqrRefDistance = referenceDistance * referenceDistance;</span>
+<span class="fc" id="L158">            final double[] b = new double[numberOfPositionsMinus1];</span>
+<span class="fc bfc" id="L159" title="All 2 branches covered.">            for (int i = 1, i2 = 0; i &lt; numberOfPositions; i++, i2++) {</span>
+<span class="fc" id="L160">                final double ri = mDistances[i];</span>
+<span class="fc" id="L161">                final double sqrRi = ri * ri;</span>
 
-                //find distance between ri and r0
-<span class="fc" id="L166">                final double sqrRi0 = mPositions[i].sqrDistanceTo(mPositions[0]);</span>
-<span class="fc" id="L167">                b[i2] = 0.5 * (sqrRefDistance - sqrRi + sqrRi0);</span>
+                // find distance between ri and r0
+<span class="fc" id="L164">                final double sqrRi0 = mPositions[i].sqrDistanceTo(mPositions[0]);</span>
+<span class="fc" id="L165">                b[i2] = 0.5 * (sqrRefDistance - sqrRi + sqrRi0);</span>
             }
 
-<span class="fc" id="L170">            mEstimatedPositionCoordinates = Utils.solve(a, b);</span>
+<span class="fc" id="L168">            mEstimatedPositionCoordinates = Utils.solve(a, b);</span>
 
-            //add position of reference point
-<span class="fc bfc" id="L173" title="All 2 branches covered.">            for (int i = 0; i &lt; dims; i++) {</span>
-<span class="fc" id="L174">                mEstimatedPositionCoordinates[i] += mPositions[0].getInhomogeneousCoordinate(i);</span>
+            // add position of reference point
+<span class="fc bfc" id="L171" title="All 2 branches covered.">            for (int i = 0; i &lt; dims; i++) {</span>
+<span class="fc" id="L172">                mEstimatedPositionCoordinates[i] += mPositions[0].getInhomogeneousCoordinate(i);</span>
             }
 
-<span class="fc bfc" id="L177" title="All 2 branches covered.">            if (mListener != null) {</span>
-<span class="fc" id="L178">                mListener.onSolveEnd(this);</span>
+<span class="fc bfc" id="L175" title="All 2 branches covered.">            if (mListener != null) {</span>
+<span class="fc" id="L176">                mListener.onSolveEnd(this);</span>
             }
-<span class="fc" id="L180">        } catch (final AlgebraException e) {</span>
-<span class="fc" id="L181">            throw new LaterationException(e);</span>
+<span class="fc" id="L178">        } catch (final AlgebraException e) {</span>
+<span class="fc" id="L179">            throw new LaterationException(e);</span>
         } finally {
-<span class="fc" id="L183">            mLocked = false;</span>
+<span class="fc" id="L181">            mLocked = false;</span>
         }
-<span class="fc" id="L185">    }</span>
+<span class="fc" id="L183">    }</span>
 
     /**
      * Gets lateration solver type.
@@ -191,7 +189,7 @@ public abstract class InhomogeneousLinearLeastSquaresLaterationSolver&lt;P exten
      */
     @Override
     public LaterationSolverType getType() {
-<span class="fc" id="L194">        return LaterationSolverType.INHOMOGENEOUS_LINEAR_TRILATERATION_SOLVER;</span>
+<span class="fc" id="L192">        return LaterationSolverType.INHOMOGENEOUS_LINEAR_TRILATERATION_SOLVER;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

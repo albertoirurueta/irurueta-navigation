@@ -88,7 +88,7 @@
 <a class="jxr_linenumber" name="L80" href="#L80">80</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> MAX_PRIOR_POSITION_ERROR = 500.0;
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>  
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> MIN_PRIOR_VELOCITY_ERROR = -1.0;
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> MAX_PRIOR_VELOCITy_ERROR = 1.0;
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> MAX_PRIOR_VELOCITY_ERROR = 1.0;
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>  
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> TIMES = 100;
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>  
@@ -659,11 +659,11 @@
 <a class="jxr_linenumber" name="L651" href="#L651">651</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> priorZ = ecefUserPosition.getZ()
 <a class="jxr_linenumber" name="L652" href="#L652">652</a>                     + randomizer.nextDouble(MIN_PRIOR_POSITION_ERROR, MAX_PRIOR_POSITION_ERROR);
 <a class="jxr_linenumber" name="L653" href="#L653">653</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> priorVx = ecefUserVelocity.getVx()
-<a class="jxr_linenumber" name="L654" href="#L654">654</a>                     + randomizer.nextDouble(MIN_PRIOR_VELOCITY_ERROR, MAX_PRIOR_VELOCITy_ERROR);
+<a class="jxr_linenumber" name="L654" href="#L654">654</a>                     + randomizer.nextDouble(MIN_PRIOR_VELOCITY_ERROR, MAX_PRIOR_VELOCITY_ERROR);
 <a class="jxr_linenumber" name="L655" href="#L655">655</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> priorVy = ecefUserVelocity.getVy()
-<a class="jxr_linenumber" name="L656" href="#L656">656</a>                     + randomizer.nextDouble(MIN_PRIOR_VELOCITY_ERROR, MAX_PRIOR_VELOCITy_ERROR);
+<a class="jxr_linenumber" name="L656" href="#L656">656</a>                     + randomizer.nextDouble(MIN_PRIOR_VELOCITY_ERROR, MAX_PRIOR_VELOCITY_ERROR);
 <a class="jxr_linenumber" name="L657" href="#L657">657</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> priorVz = ecefUserVelocity.getVz()
-<a class="jxr_linenumber" name="L658" href="#L658">658</a>                     + randomizer.nextDouble(MIN_PRIOR_VELOCITY_ERROR, MAX_PRIOR_VELOCITy_ERROR);
+<a class="jxr_linenumber" name="L658" href="#L658">658</a>                     + randomizer.nextDouble(MIN_PRIOR_VELOCITY_ERROR, MAX_PRIOR_VELOCITY_ERROR);
 <a class="jxr_linenumber" name="L659" href="#L659">659</a> 
 <a class="jxr_linenumber" name="L660" href="#L660">660</a>             <strong class="jxr_keyword">final</strong> ECEFPositionAndVelocity priorPositionAndVelocity =
 <a class="jxr_linenumber" name="L661" href="#L661">661</a>                     <strong class="jxr_keyword">new</strong> ECEFPositionAndVelocity(priorX, priorY, priorZ,

@@ -23,15 +23,14 @@ import com.irurueta.navigation.LockedException;
 /**
  * Solves a Trilateration problem with an instance of a least squares optimizer.
  */
-@SuppressWarnings({&quot;WeakerAccess&quot;, &quot;Duplicates&quot;})
 public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquaresLaterationSolver&lt;Point2D&gt; {
 
     /**
      * Constructor.
      */
     public NonLinearLeastSquaresLateration2DSolver() {
-<span class="fc" id="L33">        super();</span>
-<span class="fc" id="L34">    }</span>
+<span class="fc" id="L32">        super();</span>
+<span class="fc" id="L33">    }</span>
 
     /**
      * Constructor.
@@ -43,8 +42,8 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
      */
     public NonLinearLeastSquaresLateration2DSolver(
             final Point2D[] positions, final double[] distances) {
-<span class="fc" id="L46">        super(positions, distances);</span>
-<span class="fc" id="L47">    }</span>
+<span class="fc" id="L45">        super(positions, distances);</span>
+<span class="fc" id="L46">    }</span>
 
     /**
      * Constructor.
@@ -52,8 +51,8 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
      * @param initialPosition initial position to start lateration solving.
      */
     public NonLinearLeastSquaresLateration2DSolver(final Point2D initialPosition) {
-<span class="fc" id="L55">        super(initialPosition);</span>
-<span class="fc" id="L56">    }</span>
+<span class="fc" id="L54">        super(initialPosition);</span>
+<span class="fc" id="L55">    }</span>
 
     /**
      * Constructor.
@@ -67,8 +66,8 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
     public NonLinearLeastSquaresLateration2DSolver(
             final Point2D[] positions,
             final double[] distances, final Point2D initialPosition) {
-<span class="fc" id="L70">        super(positions, distances, initialPosition);</span>
-<span class="fc" id="L71">    }</span>
+<span class="fc" id="L69">        super(positions, distances, initialPosition);</span>
+<span class="fc" id="L70">    }</span>
 
     /**
      * Constructor.
@@ -77,8 +76,8 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
      */
     public NonLinearLeastSquaresLateration2DSolver(
             final LaterationSolverListener&lt;Point2D&gt; listener) {
-<span class="fc" id="L80">        super(listener);</span>
-<span class="fc" id="L81">    }</span>
+<span class="fc" id="L79">        super(listener);</span>
+<span class="fc" id="L80">    }</span>
 
     /**
      * Constructor.
@@ -92,8 +91,8 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
     public NonLinearLeastSquaresLateration2DSolver(
             final Point2D[] positions, final double[] distances,
             final LaterationSolverListener&lt;Point2D&gt; listener) {
-<span class="fc" id="L95">        super(positions, distances, listener);</span>
-<span class="fc" id="L96">    }</span>
+<span class="fc" id="L94">        super(positions, distances, listener);</span>
+<span class="fc" id="L95">    }</span>
 
     /**
      * Constructor.
@@ -104,8 +103,8 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
     public NonLinearLeastSquaresLateration2DSolver(
             final Point2D initialPosition,
             final LaterationSolverListener&lt;Point2D&gt; listener) {
-<span class="fc" id="L107">        super(initialPosition, listener);</span>
-<span class="fc" id="L108">    }</span>
+<span class="fc" id="L106">        super(initialPosition, listener);</span>
+<span class="fc" id="L107">    }</span>
 
     /**
      * Constructor.
@@ -121,8 +120,8 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
             final Point2D[] positions,
             final double[] distances, final Point2D initialPosition,
             final LaterationSolverListener&lt;Point2D&gt; listener) {
-<span class="fc" id="L124">        super(positions, distances, initialPosition, listener);</span>
-<span class="fc" id="L125">    }</span>
+<span class="fc" id="L123">        super(positions, distances, initialPosition, listener);</span>
+<span class="fc" id="L124">    }</span>
 
     /**
      * Constructor.
@@ -131,9 +130,9 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
      * @throws IllegalArgumentException if circles is null or if length of circles array is less than 2.
      */
     public NonLinearLeastSquaresLateration2DSolver(final Circle[] circles) {
-<span class="fc" id="L134">        super();</span>
-<span class="fc" id="L135">        internalSetCircles(circles);</span>
-<span class="fc" id="L136">    }</span>
+<span class="fc" id="L133">        super();</span>
+<span class="fc" id="L134">        internalSetCircles(circles);</span>
+<span class="fc" id="L135">    }</span>
 
     /**
      * Constructor.
@@ -144,9 +143,9 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
      */
     public NonLinearLeastSquaresLateration2DSolver(
             final Circle[] circles, final Point2D initialPosition) {
-<span class="fc" id="L147">        super(initialPosition);</span>
-<span class="fc" id="L148">        internalSetCircles(circles);</span>
-<span class="fc" id="L149">    }</span>
+<span class="fc" id="L146">        super(initialPosition);</span>
+<span class="fc" id="L147">        internalSetCircles(circles);</span>
+<span class="fc" id="L148">    }</span>
 
     /**
      * Constructor.
@@ -158,9 +157,9 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
     public NonLinearLeastSquaresLateration2DSolver(
             final Circle[] circles,
             final LaterationSolverListener&lt;Point2D&gt; listener) {
-<span class="fc" id="L161">        super(listener);</span>
-<span class="fc" id="L162">        internalSetCircles(circles);</span>
-<span class="fc" id="L163">    }</span>
+<span class="fc" id="L160">        super(listener);</span>
+<span class="fc" id="L161">        internalSetCircles(circles);</span>
+<span class="fc" id="L162">    }</span>
 
     /**
      * Constructor.
@@ -173,9 +172,9 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
     public NonLinearLeastSquaresLateration2DSolver(
             final Circle[] circles, final Point2D initialPosition,
             final LaterationSolverListener&lt;Point2D&gt; listener) {
-<span class="fc" id="L176">        super(initialPosition, listener);</span>
-<span class="fc" id="L177">        internalSetCircles(circles);</span>
-<span class="fc" id="L178">    }</span>
+<span class="fc" id="L175">        super(initialPosition, listener);</span>
+<span class="fc" id="L176">        internalSetCircles(circles);</span>
+<span class="fc" id="L177">    }</span>
 
     /**
      * Constructor.
@@ -189,8 +188,8 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
     public NonLinearLeastSquaresLateration2DSolver(
             final Point2D[] positions, final double[] distances,
             final double[] distanceStandardDeviations) {
-<span class="fc" id="L192">        super(positions, distances, distanceStandardDeviations);</span>
-<span class="fc" id="L193">    }</span>
+<span class="fc" id="L191">        super(positions, distances, distanceStandardDeviations);</span>
+<span class="fc" id="L192">    }</span>
 
     /**
      * Constructor.
@@ -205,8 +204,8 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
     public NonLinearLeastSquaresLateration2DSolver(
             final Point2D[] positions, final double[] distances,
             final double[] distanceStandardDeviations, final Point2D initialPosition) {
-<span class="fc" id="L208">        super(positions, distances, distanceStandardDeviations, initialPosition);</span>
-<span class="fc" id="L209">    }</span>
+<span class="fc" id="L207">        super(positions, distances, distanceStandardDeviations, initialPosition);</span>
+<span class="fc" id="L208">    }</span>
 
     /**
      * Constructor.
@@ -222,8 +221,8 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
             final Point2D[] positions, final double[] distances,
             final double[] distanceStandardDeviations,
             final LaterationSolverListener&lt;Point2D&gt; listener) {
-<span class="fc" id="L225">        super(positions, distances, distanceStandardDeviations, listener);</span>
-<span class="fc" id="L226">    }</span>
+<span class="fc" id="L224">        super(positions, distances, distanceStandardDeviations, listener);</span>
+<span class="fc" id="L225">    }</span>
 
     /**
      * Constructor.
@@ -240,8 +239,8 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
             final Point2D[] positions, final double[] distances,
             final double[] distanceStandardDeviations, final Point2D initialPosition,
             final LaterationSolverListener&lt;Point2D&gt; listener) {
-<span class="fc" id="L243">        super(positions, distances, distanceStandardDeviations, initialPosition, listener);</span>
-<span class="fc" id="L244">    }</span>
+<span class="fc" id="L242">        super(positions, distances, distanceStandardDeviations, initialPosition, listener);</span>
+<span class="fc" id="L243">    }</span>
 
     /**
      * Constructor.
@@ -253,9 +252,9 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
     public NonLinearLeastSquaresLateration2DSolver(
             final Circle[] circles,
             final double[] distanceStandardDeviations) {
-<span class="fc" id="L256">        super();</span>
-<span class="fc" id="L257">        internalSetCirclesAndStandardDeviations(circles, distanceStandardDeviations);</span>
-<span class="fc" id="L258">    }</span>
+<span class="fc" id="L255">        super();</span>
+<span class="fc" id="L256">        internalSetCirclesAndStandardDeviations(circles, distanceStandardDeviations);</span>
+<span class="fc" id="L257">    }</span>
 
     /**
      * Constructor.
@@ -268,9 +267,9 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
     public NonLinearLeastSquaresLateration2DSolver(
             final Circle[] circles,
             final double[] distanceStandardDeviations, final Point2D initialPosition) {
-<span class="fc" id="L271">        super(initialPosition);</span>
-<span class="fc" id="L272">        internalSetCirclesAndStandardDeviations(circles, distanceStandardDeviations);</span>
-<span class="fc" id="L273">    }</span>
+<span class="fc" id="L270">        super(initialPosition);</span>
+<span class="fc" id="L271">        internalSetCirclesAndStandardDeviations(circles, distanceStandardDeviations);</span>
+<span class="fc" id="L272">    }</span>
 
     /**
      * Constructor.
@@ -284,9 +283,9 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
             final Circle[] circles,
             final double[] distanceStandardDeviations,
             final LaterationSolverListener&lt;Point2D&gt; listener) {
-<span class="fc" id="L287">        super(listener);</span>
-<span class="fc" id="L288">        internalSetCirclesAndStandardDeviations(circles, distanceStandardDeviations);</span>
-<span class="fc" id="L289">    }</span>
+<span class="fc" id="L286">        super(listener);</span>
+<span class="fc" id="L287">        internalSetCirclesAndStandardDeviations(circles, distanceStandardDeviations);</span>
+<span class="fc" id="L288">    }</span>
 
     /**
      * Constructor.
@@ -301,9 +300,9 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
             final Circle[] circles,
             final double[] distanceStandardDeviations, final Point2D initialPosition,
             final LaterationSolverListener&lt;Point2D&gt; listener) {
-<span class="fc" id="L304">        super(initialPosition, listener);</span>
-<span class="fc" id="L305">        internalSetCirclesAndStandardDeviations(circles, distanceStandardDeviations);</span>
-<span class="fc" id="L306">    }</span>
+<span class="fc" id="L303">        super(initialPosition, listener);</span>
+<span class="fc" id="L304">        internalSetCirclesAndStandardDeviations(circles, distanceStandardDeviations);</span>
+<span class="fc" id="L305">    }</span>
 
     /**
      * Gets circles defined by provided positions and distances.
@@ -311,16 +310,16 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
      * @return circles defined by provided positions and distances.
      */
     public Circle[] getCircles() {
-<span class="fc bfc" id="L314" title="All 2 branches covered.">        if (mPositions == null) {</span>
-<span class="fc" id="L315">            return null;</span>
+<span class="fc bfc" id="L313" title="All 2 branches covered.">        if (mPositions == null) {</span>
+<span class="fc" id="L314">            return null;</span>
         }
 
-<span class="fc" id="L318">        final Circle[] result = new Circle[mPositions.length];</span>
+<span class="fc" id="L317">        final Circle[] result = new Circle[mPositions.length];</span>
 
-<span class="fc bfc" id="L320" title="All 2 branches covered.">        for (int i = 0; i &lt; mPositions.length; i++) {</span>
-<span class="fc" id="L321">            result[i] = new Circle(mPositions[i], mDistances[i]);</span>
+<span class="fc bfc" id="L319" title="All 2 branches covered.">        for (int i = 0; i &lt; mPositions.length; i++) {</span>
+<span class="fc" id="L320">            result[i] = new Circle(mPositions[i], mDistances[i]);</span>
         }
-<span class="fc" id="L323">        return result;</span>
+<span class="fc" id="L322">        return result;</span>
     }
 
     /**
@@ -332,11 +331,11 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
      * @throws LockedException          if instance is busy solving the lateration problem.
      */
     public void setCircles(final Circle[] circles) throws LockedException {
-<span class="fc bfc" id="L335" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L336">            throw new LockedException();</span>
+<span class="fc bfc" id="L334" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L335">            throw new LockedException();</span>
         }
-<span class="fc" id="L338">        internalSetCircles(circles);</span>
-<span class="fc" id="L339">    }</span>
+<span class="fc" id="L337">        internalSetCircles(circles);</span>
+<span class="fc" id="L338">    }</span>
 
     /**
      * Sets circles defining positions and euclidean distances along with the standard
@@ -351,11 +350,11 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
     public void setCirclesAndStandardDeviations(
             final Circle[] circles, final double[] radiusStandardDeviations)
             throws LockedException {
-<span class="fc bfc" id="L354" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L355">            throw new LockedException();</span>
+<span class="fc bfc" id="L353" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L354">            throw new LockedException();</span>
         }
-<span class="fc" id="L357">        internalSetCirclesAndStandardDeviations(circles, radiusStandardDeviations);</span>
-<span class="fc" id="L358">    }</span>
+<span class="fc" id="L356">        internalSetCirclesAndStandardDeviations(circles, radiusStandardDeviations);</span>
+<span class="fc" id="L357">    }</span>
 
     /**
      * Gets number of dimensions of provided points.
@@ -364,7 +363,7 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
      */
     @Override
     public int getNumberOfDimensions() {
-<span class="fc" id="L367">        return Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH;</span>
+<span class="fc" id="L366">        return Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH;</span>
     }
 
     /**
@@ -375,7 +374,7 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
      */
     @Override
     public int getMinRequiredPositionsAndDistances() {
-<span class="fc" id="L378">        return Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH + 1;</span>
+<span class="fc" id="L377">        return Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH + 1;</span>
     }
 
     /**
@@ -385,13 +384,13 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
      */
     @Override
     public Point2D getEstimatedPosition() {
-<span class="fc bfc" id="L388" title="All 2 branches covered.">        if (mEstimatedPositionCoordinates == null) {</span>
-<span class="fc" id="L389">            return null;</span>
+<span class="fc bfc" id="L387" title="All 2 branches covered.">        if (mEstimatedPositionCoordinates == null) {</span>
+<span class="fc" id="L388">            return null;</span>
         }
 
-<span class="fc" id="L392">        final InhomogeneousPoint2D position = new InhomogeneousPoint2D();</span>
-<span class="fc" id="L393">        getEstimatedPosition(position);</span>
-<span class="fc" id="L394">        return position;</span>
+<span class="fc" id="L391">        final InhomogeneousPoint2D position = new InhomogeneousPoint2D();</span>
+<span class="fc" id="L392">        getEstimatedPosition(position);</span>
+<span class="fc" id="L393">        return position;</span>
     }
 
     /**
@@ -402,20 +401,20 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
      *                                  is less than 2.
      */
     private void internalSetCircles(final Circle[] circles) {
-<span class="fc bfc" id="L405" title="All 4 branches covered.">        if (circles == null || circles.length &lt; getMinRequiredPositionsAndDistances()) {</span>
-<span class="fc" id="L406">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L404" title="All 4 branches covered.">        if (circles == null || circles.length &lt; getMinRequiredPositionsAndDistances()) {</span>
+<span class="fc" id="L405">            throw new IllegalArgumentException();</span>
         }
 
-<span class="fc" id="L409">        final Point2D[] positions = new Point2D[circles.length];</span>
-<span class="fc" id="L410">        final double[] distances = new double[circles.length];</span>
-<span class="fc bfc" id="L411" title="All 2 branches covered.">        for (int i = 0; i &lt; circles.length; i++) {</span>
-<span class="fc" id="L412">            final Circle circle = circles[i];</span>
-<span class="fc" id="L413">            positions[i] = circle.getCenter();</span>
-<span class="fc" id="L414">            distances[i] = circle.getRadius();</span>
+<span class="fc" id="L408">        final Point2D[] positions = new Point2D[circles.length];</span>
+<span class="fc" id="L409">        final double[] distances = new double[circles.length];</span>
+<span class="fc bfc" id="L410" title="All 2 branches covered.">        for (int i = 0; i &lt; circles.length; i++) {</span>
+<span class="fc" id="L411">            final Circle circle = circles[i];</span>
+<span class="fc" id="L412">            positions[i] = circle.getCenter();</span>
+<span class="fc" id="L413">            distances[i] = circle.getRadius();</span>
         }
 
-<span class="fc" id="L417">        internalSetPositionsAndDistances(positions, distances);</span>
-<span class="fc" id="L418">    }</span>
+<span class="fc" id="L416">        internalSetPositionsAndDistances(positions, distances);</span>
+<span class="fc" id="L417">    }</span>
 
     /**
      * Internally sets circles defining positions and euclidean distances along with the standard
@@ -429,28 +428,28 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
     private void internalSetCirclesAndStandardDeviations(
             final Circle[] circles,
             final double[] radiusStandardDeviations) {
-<span class="fc bfc" id="L432" title="All 4 branches covered.">        if (circles == null || circles.length &lt; getMinRequiredPositionsAndDistances()) {</span>
-<span class="fc" id="L433">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L431" title="All 4 branches covered.">        if (circles == null || circles.length &lt; getMinRequiredPositionsAndDistances()) {</span>
+<span class="fc" id="L432">            throw new IllegalArgumentException();</span>
         }
 
-<span class="fc bfc" id="L436" title="All 2 branches covered.">        if (radiusStandardDeviations == null) {</span>
-<span class="fc" id="L437">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L435" title="All 2 branches covered.">        if (radiusStandardDeviations == null) {</span>
+<span class="fc" id="L436">            throw new IllegalArgumentException();</span>
         }
 
-<span class="fc bfc" id="L440" title="All 2 branches covered.">        if (radiusStandardDeviations.length != circles.length) {</span>
-<span class="fc" id="L441">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L439" title="All 2 branches covered.">        if (radiusStandardDeviations.length != circles.length) {</span>
+<span class="fc" id="L440">            throw new IllegalArgumentException();</span>
         }
 
-<span class="fc" id="L444">        final Point2D[] positions = new Point2D[circles.length];</span>
-<span class="fc" id="L445">        final double[] distances = new double[circles.length];</span>
-<span class="fc bfc" id="L446" title="All 2 branches covered.">        for (int i = 0; i &lt; circles.length; i++) {</span>
-<span class="fc" id="L447">            Circle circle = circles[i];</span>
-<span class="fc" id="L448">            positions[i] = circle.getCenter();</span>
-<span class="fc" id="L449">            distances[i] = circle.getRadius();</span>
+<span class="fc" id="L443">        final Point2D[] positions = new Point2D[circles.length];</span>
+<span class="fc" id="L444">        final double[] distances = new double[circles.length];</span>
+<span class="fc bfc" id="L445" title="All 2 branches covered.">        for (int i = 0; i &lt; circles.length; i++) {</span>
+<span class="fc" id="L446">            Circle circle = circles[i];</span>
+<span class="fc" id="L447">            positions[i] = circle.getCenter();</span>
+<span class="fc" id="L448">            distances[i] = circle.getRadius();</span>
         }
 
-<span class="fc" id="L452">        internalSetPositionsDistancesAndStandardDeviations(positions, distances,</span>
+<span class="fc" id="L451">        internalSetPositionsDistancesAndStandardDeviations(positions, distances,</span>
                 radiusStandardDeviations);
-<span class="fc" id="L454">    }</span>
+<span class="fc" id="L453">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

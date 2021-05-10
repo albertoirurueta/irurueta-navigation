@@ -35,7 +35,6 @@ import java.util.Objects;
  * Contains GNSS state estimation, which contains user
  * position, velocity and estimated clock offset and drift.
  */
-@SuppressWarnings(&quot;WeakerAccess&quot;)
 public class GNSSEstimation implements Serializable, Cloneable {
 
     /**
@@ -86,8 +85,8 @@ public class GNSSEstimation implements Serializable, Cloneable {
     /**
      * Constructor.
      */
-<span class="fc" id="L89">    public GNSSEstimation() {</span>
-<span class="fc" id="L90">    }</span>
+<span class="fc" id="L88">    public GNSSEstimation() {</span>
+<span class="fc" id="L89">    }</span>
 
     /**
      * Constructor.
@@ -103,12 +102,12 @@ public class GNSSEstimation implements Serializable, Cloneable {
      */
     public GNSSEstimation(final double x, final double y, final double z,
                           final double vx, final double vy, final double vz,
-<span class="fc" id="L106">                          final double clockOffset, final double clockDrift) {</span>
-<span class="fc" id="L107">        setPositionCoordinates(x, y, z);</span>
-<span class="fc" id="L108">        setVelocityCoordinates(vx, vy, vz);</span>
-<span class="fc" id="L109">        setClockOffset(clockOffset);</span>
-<span class="fc" id="L110">        setClockDrift(clockDrift);</span>
-<span class="fc" id="L111">    }</span>
+<span class="fc" id="L105">                          final double clockOffset, final double clockDrift) {</span>
+<span class="fc" id="L106">        setPositionCoordinates(x, y, z);</span>
+<span class="fc" id="L107">        setVelocityCoordinates(vx, vy, vz);</span>
+<span class="fc" id="L108">        setClockOffset(clockOffset);</span>
+<span class="fc" id="L109">        setClockDrift(clockDrift);</span>
+<span class="fc" id="L110">    }</span>
 
     /**
      * Constructor.
@@ -124,12 +123,12 @@ public class GNSSEstimation implements Serializable, Cloneable {
      */
     public GNSSEstimation(final Distance x, final Distance y, final Distance z,
                           final Speed vx, final Speed vy, final Speed vz,
-<span class="fc" id="L127">                          final Distance clockOffset, final Speed clockDrift) {</span>
-<span class="fc" id="L128">        setPositionCoordinates(x, y, z);</span>
-<span class="fc" id="L129">        setVelocityCoordinates(vx, vy, vz);</span>
-<span class="fc" id="L130">        setClockOffset(clockOffset);</span>
-<span class="fc" id="L131">        setClockDrift(clockDrift);</span>
-<span class="fc" id="L132">    }</span>
+<span class="fc" id="L126">                          final Distance clockOffset, final Speed clockDrift) {</span>
+<span class="fc" id="L127">        setPositionCoordinates(x, y, z);</span>
+<span class="fc" id="L128">        setVelocityCoordinates(vx, vy, vz);</span>
+<span class="fc" id="L129">        setClockOffset(clockOffset);</span>
+<span class="fc" id="L130">        setClockDrift(clockDrift);</span>
+<span class="fc" id="L131">    }</span>
 
     /**
      * Constructor.
@@ -149,12 +148,12 @@ public class GNSSEstimation implements Serializable, Cloneable {
     public GNSSEstimation(
             final Point3D position,
             final double vx, final double vy, final double vz,
-<span class="fc" id="L152">            final double clockOffset, final double clockDrift) {</span>
-<span class="fc" id="L153">        setPosition(position);</span>
-<span class="fc" id="L154">        setVelocityCoordinates(vx, vy, vz);</span>
-<span class="fc" id="L155">        setClockOffset(clockOffset);</span>
-<span class="fc" id="L156">        setClockDrift(clockDrift);</span>
-<span class="fc" id="L157">    }</span>
+<span class="fc" id="L151">            final double clockOffset, final double clockDrift) {</span>
+<span class="fc" id="L152">        setPosition(position);</span>
+<span class="fc" id="L153">        setVelocityCoordinates(vx, vy, vz);</span>
+<span class="fc" id="L154">        setClockOffset(clockOffset);</span>
+<span class="fc" id="L155">        setClockDrift(clockDrift);</span>
+<span class="fc" id="L156">    }</span>
 
     /**
      * Constructor.
@@ -169,12 +168,12 @@ public class GNSSEstimation implements Serializable, Cloneable {
      */
     public GNSSEstimation(final Point3D position,
                           final Speed vx, final Speed vy, final Speed vz,
-<span class="fc" id="L172">                          final Distance clockOffset, final Speed clockDrift) {</span>
-<span class="fc" id="L173">        setPosition(position);</span>
-<span class="fc" id="L174">        setVelocityCoordinates(vx, vy, vz);</span>
-<span class="fc" id="L175">        setClockOffset(clockOffset);</span>
-<span class="fc" id="L176">        setClockDrift(clockDrift);</span>
-<span class="fc" id="L177">    }</span>
+<span class="fc" id="L171">                          final Distance clockOffset, final Speed clockDrift) {</span>
+<span class="fc" id="L172">        setPosition(position);</span>
+<span class="fc" id="L173">        setVelocityCoordinates(vx, vy, vz);</span>
+<span class="fc" id="L174">        setClockOffset(clockOffset);</span>
+<span class="fc" id="L175">        setClockDrift(clockDrift);</span>
+<span class="fc" id="L176">    }</span>
 
     /**
      * Constructor.
@@ -188,12 +187,12 @@ public class GNSSEstimation implements Serializable, Cloneable {
     public GNSSEstimation(
             final ECEFPosition position,
             final ECEFVelocity velocity,
-<span class="fc" id="L191">            final double clockOffset, final double clockDrift) {</span>
-<span class="fc" id="L192">        setEcefPosition(position);</span>
-<span class="fc" id="L193">        setEcefVelocity(velocity);</span>
-<span class="fc" id="L194">        setClockOffset(clockOffset);</span>
-<span class="fc" id="L195">        setClockDrift(clockDrift);</span>
-<span class="fc" id="L196">    }</span>
+<span class="fc" id="L190">            final double clockOffset, final double clockDrift) {</span>
+<span class="fc" id="L191">        setEcefPosition(position);</span>
+<span class="fc" id="L192">        setEcefVelocity(velocity);</span>
+<span class="fc" id="L193">        setClockOffset(clockOffset);</span>
+<span class="fc" id="L194">        setClockDrift(clockDrift);</span>
+<span class="fc" id="L195">    }</span>
 
     /**
      * Constructor.
@@ -207,12 +206,12 @@ public class GNSSEstimation implements Serializable, Cloneable {
             final ECEFPosition position,
             final ECEFVelocity velocity,
             final Distance clockOffset,
-<span class="fc" id="L210">            final Speed clockDrift) {</span>
-<span class="fc" id="L211">        setEcefPosition(position);</span>
-<span class="fc" id="L212">        setEcefVelocity(velocity);</span>
-<span class="fc" id="L213">        setClockOffset(clockOffset);</span>
-<span class="fc" id="L214">        setClockDrift(clockDrift);</span>
-<span class="fc" id="L215">    }</span>
+<span class="fc" id="L209">            final Speed clockDrift) {</span>
+<span class="fc" id="L210">        setEcefPosition(position);</span>
+<span class="fc" id="L211">        setEcefVelocity(velocity);</span>
+<span class="fc" id="L212">        setClockOffset(clockOffset);</span>
+<span class="fc" id="L213">        setClockDrift(clockDrift);</span>
+<span class="fc" id="L214">    }</span>
 
     /**
      * Constructor.
@@ -225,11 +224,11 @@ public class GNSSEstimation implements Serializable, Cloneable {
      */
     public GNSSEstimation(
             final ECEFPositionAndVelocity positionAndVelocity,
-<span class="fc" id="L228">            final double clockOffset, final double clockDrift) {</span>
-<span class="fc" id="L229">        setPositionAndVelocity(positionAndVelocity);</span>
-<span class="fc" id="L230">        setClockOffset(clockOffset);</span>
-<span class="fc" id="L231">        setClockDrift(clockDrift);</span>
-<span class="fc" id="L232">    }</span>
+<span class="fc" id="L227">            final double clockOffset, final double clockDrift) {</span>
+<span class="fc" id="L228">        setPositionAndVelocity(positionAndVelocity);</span>
+<span class="fc" id="L229">        setClockOffset(clockOffset);</span>
+<span class="fc" id="L230">        setClockDrift(clockDrift);</span>
+<span class="fc" id="L231">    }</span>
 
     /**
      * Constructor.
@@ -241,20 +240,20 @@ public class GNSSEstimation implements Serializable, Cloneable {
     public GNSSEstimation(
             final ECEFPositionAndVelocity positionAndVelocity,
             final Distance clockOffset,
-<span class="fc" id="L244">            final Speed clockDrift) {</span>
-<span class="fc" id="L245">        setPositionAndVelocity(positionAndVelocity);</span>
-<span class="fc" id="L246">        setClockOffset(clockOffset);</span>
-<span class="fc" id="L247">        setClockDrift(clockDrift);</span>
-<span class="fc" id="L248">    }</span>
+<span class="fc" id="L243">            final Speed clockDrift) {</span>
+<span class="fc" id="L244">        setPositionAndVelocity(positionAndVelocity);</span>
+<span class="fc" id="L245">        setClockOffset(clockOffset);</span>
+<span class="fc" id="L246">        setClockDrift(clockDrift);</span>
+<span class="fc" id="L247">    }</span>
 
     /**
      * Copy constructor.
      *
      * @param input input instance to copy data from.
      */
-<span class="fc" id="L255">    public GNSSEstimation(final GNSSEstimation input) {</span>
-<span class="fc" id="L256">        copyFrom(input);</span>
-<span class="fc" id="L257">    }</span>
+<span class="fc" id="L254">    public GNSSEstimation(final GNSSEstimation input) {</span>
+<span class="fc" id="L255">        copyFrom(input);</span>
+<span class="fc" id="L256">    }</span>
 
     /**
      * Gets x coordinate of estimated ECEF user position expressed in meters (m).
@@ -262,7 +261,7 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @return x coordinate of estimated ECEF user position.
      */
     public double getX() {
-<span class="fc" id="L265">        return mX;</span>
+<span class="fc" id="L264">        return mX;</span>
     }
 
     /**
@@ -271,8 +270,8 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @param x x coordinate of estimated ECEF user position.
      */
     public void setX(final double x) {
-<span class="fc" id="L274">        mX = x;</span>
-<span class="fc" id="L275">    }</span>
+<span class="fc" id="L273">        mX = x;</span>
+<span class="fc" id="L274">    }</span>
 
     /**
      * Gets y coordinate of estimated ECEF user position expressed in meters (m).
@@ -280,7 +279,7 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @return y coordinate of estimated ECEF user position.
      */
     public double getY() {
-<span class="fc" id="L283">        return mY;</span>
+<span class="fc" id="L282">        return mY;</span>
     }
 
     /**
@@ -289,8 +288,8 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @param y y coordinate of estimated ECEF user position.
      */
     public void setY(final double y) {
-<span class="fc" id="L292">        mY = y;</span>
-<span class="fc" id="L293">    }</span>
+<span class="fc" id="L291">        mY = y;</span>
+<span class="fc" id="L292">    }</span>
 
     /**
      * Gets z coordinate of estimated ECEF user position expressed in meters (m).
@@ -298,7 +297,7 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @return z coordinate of estimated ECEF user position.
      */
     public double getZ() {
-<span class="fc" id="L301">        return mZ;</span>
+<span class="fc" id="L300">        return mZ;</span>
     }
 
     /**
@@ -307,8 +306,8 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @param z z coordinate of estimated ECEF user position.
      */
     public void setZ(final double z) {
-<span class="fc" id="L310">        mZ = z;</span>
-<span class="fc" id="L311">    }</span>
+<span class="fc" id="L309">        mZ = z;</span>
+<span class="fc" id="L310">    }</span>
 
     /**
      * Sets coordinates of estimated ECEF user position expressed in meters (m).
@@ -318,10 +317,10 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @param z z coordinate.
      */
     public void setPositionCoordinates(final double x, final double y, final double z) {
-<span class="fc" id="L321">        mX = x;</span>
-<span class="fc" id="L322">        mY = y;</span>
-<span class="fc" id="L323">        mZ = z;</span>
-<span class="fc" id="L324">    }</span>
+<span class="fc" id="L320">        mX = x;</span>
+<span class="fc" id="L321">        mY = y;</span>
+<span class="fc" id="L322">        mZ = z;</span>
+<span class="fc" id="L323">    }</span>
 
     /**
      * Gets x coordinate of estimated ECEF user velocity expressed in meters per second (m/s).
@@ -329,7 +328,7 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @return x coordinate of estimated ECEF user velocity.
      */
     public double getVx() {
-<span class="fc" id="L332">        return mVx;</span>
+<span class="fc" id="L331">        return mVx;</span>
     }
 
     /**
@@ -338,8 +337,8 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @param vx x coordinate of estimated ECEF user velocity.
      */
     public void setVx(final double vx) {
-<span class="fc" id="L341">        mVx = vx;</span>
-<span class="fc" id="L342">    }</span>
+<span class="fc" id="L340">        mVx = vx;</span>
+<span class="fc" id="L341">    }</span>
 
     /**
      * Gets y coordinate of estimated ECEF user velocity expressed in meters per second (m/s).
@@ -347,7 +346,7 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @return y coordinate of estimated ECEF user velocity.
      */
     public double getVy() {
-<span class="fc" id="L350">        return mVy;</span>
+<span class="fc" id="L349">        return mVy;</span>
     }
 
     /**
@@ -356,8 +355,8 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @param vy y coordinate of estimated ECEF user velocity.
      */
     public void setVy(final double vy) {
-<span class="fc" id="L359">        mVy = vy;</span>
-<span class="fc" id="L360">    }</span>
+<span class="fc" id="L358">        mVy = vy;</span>
+<span class="fc" id="L359">    }</span>
 
     /**
      * Gets z coordinate of estimated ECEF user velocity expressed in meters per second (m/s).
@@ -365,7 +364,7 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @return z coordinate of estimated ECEF user velocity.
      */
     public double getVz() {
-<span class="fc" id="L368">        return mVz;</span>
+<span class="fc" id="L367">        return mVz;</span>
     }
 
     /**
@@ -374,8 +373,8 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @param vz z coordinate of estimated ECEF user velocity.
      */
     public void setVz(final double vz) {
-<span class="fc" id="L377">        mVz = vz;</span>
-<span class="fc" id="L378">    }</span>
+<span class="fc" id="L376">        mVz = vz;</span>
+<span class="fc" id="L377">    }</span>
 
     /**
      * Sets coordinates of estimated ECEF user velocity expressed in meters per second (m/s).
@@ -385,10 +384,10 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @param vz z coordinate.
      */
     public void setVelocityCoordinates(final double vx, final double vy, final double vz) {
-<span class="fc" id="L388">        mVx = vx;</span>
-<span class="fc" id="L389">        mVy = vy;</span>
-<span class="fc" id="L390">        mVz = vz;</span>
-<span class="fc" id="L391">    }</span>
+<span class="fc" id="L387">        mVx = vx;</span>
+<span class="fc" id="L388">        mVy = vy;</span>
+<span class="fc" id="L389">        mVz = vz;</span>
+<span class="fc" id="L390">    }</span>
 
     /**
      * Gets estimated receiver clock offset expressed in meters (m).
@@ -398,7 +397,7 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @return estimated receiver clock offset.
      */
     public double getClockOffset() {
-<span class="fc" id="L401">        return mClockOffset;</span>
+<span class="fc" id="L400">        return mClockOffset;</span>
     }
 
     /**
@@ -409,8 +408,8 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @param clockOffset estimated receiver clock offset.
      */
     public void setClockOffset(final double clockOffset) {
-<span class="fc" id="L412">        mClockOffset = clockOffset;</span>
-<span class="fc" id="L413">    }</span>
+<span class="fc" id="L411">        mClockOffset = clockOffset;</span>
+<span class="fc" id="L412">    }</span>
 
     /**
      * Gets estimated receiver clock drift expressed in meters per second (m/s).
@@ -420,7 +419,7 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @return estimated receiver clock drift.
      */
     public double getClockDrift() {
-<span class="fc" id="L423">        return mClockDrift;</span>
+<span class="fc" id="L422">        return mClockDrift;</span>
     }
 
     /**
@@ -431,8 +430,8 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @param clockDrift estimated receiver clock drift.
      */
     public void setClockDrift(final double clockDrift) {
-<span class="fc" id="L434">        mClockDrift = clockDrift;</span>
-<span class="fc" id="L435">    }</span>
+<span class="fc" id="L433">        mClockDrift = clockDrift;</span>
+<span class="fc" id="L434">    }</span>
 
     /**
      * Gets x coordinate of estimated ECEF user position.
@@ -440,9 +439,9 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @param result instance where x coordinate of estimated ECEF user position will be stored.
      */
     public void getDistanceX(final Distance result) {
-<span class="fc" id="L443">        result.setValue(mX);</span>
-<span class="fc" id="L444">        result.setUnit(DistanceUnit.METER);</span>
-<span class="fc" id="L445">    }</span>
+<span class="fc" id="L442">        result.setValue(mX);</span>
+<span class="fc" id="L443">        result.setUnit(DistanceUnit.METER);</span>
+<span class="fc" id="L444">    }</span>
 
     /**
      * Gets x coordinate of estimated ECEF user position.
@@ -450,7 +449,7 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @return x coordinate of estimated ECEF user position.
      */
     public Distance getDistanceX() {
-<span class="fc" id="L453">        return new Distance(mX, DistanceUnit.METER);</span>
+<span class="fc" id="L452">        return new Distance(mX, DistanceUnit.METER);</span>
     }
 
     /**
@@ -459,9 +458,9 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @param x x coordinate of estimated ECEF user position.
      */
     public void setDistanceX(final Distance x) {
-<span class="fc" id="L462">        mX = DistanceConverter.convert(x.getValue().doubleValue(), x.getUnit(),</span>
+<span class="fc" id="L461">        mX = DistanceConverter.convert(x.getValue().doubleValue(), x.getUnit(),</span>
                 DistanceUnit.METER);
-<span class="fc" id="L464">    }</span>
+<span class="fc" id="L463">    }</span>
 
     /**
      * Gets y coordinate of estimated ECEF user position.
@@ -469,9 +468,9 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @param result instance where y coordinate of estimated ECEF user position will be stored.
      */
     public void getDistanceY(final Distance result) {
-<span class="fc" id="L472">        result.setValue(mY);</span>
-<span class="fc" id="L473">        result.setUnit(DistanceUnit.METER);</span>
-<span class="fc" id="L474">    }</span>
+<span class="fc" id="L471">        result.setValue(mY);</span>
+<span class="fc" id="L472">        result.setUnit(DistanceUnit.METER);</span>
+<span class="fc" id="L473">    }</span>
 
     /**
      * Gets y coordinate of estimated ECEF user position.
@@ -479,7 +478,7 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @return y coordinate of estimated ECEF user position.
      */
     public Distance getDistanceY() {
-<span class="fc" id="L482">        return new Distance(mY, DistanceUnit.METER);</span>
+<span class="fc" id="L481">        return new Distance(mY, DistanceUnit.METER);</span>
     }
 
     /**
@@ -488,9 +487,9 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @param y y coordinate of estimated ECEF user position.
      */
     public void setDistanceY(final Distance y) {
-<span class="fc" id="L491">        mY = DistanceConverter.convert(y.getValue().doubleValue(), y.getUnit(),</span>
+<span class="fc" id="L490">        mY = DistanceConverter.convert(y.getValue().doubleValue(), y.getUnit(),</span>
                 DistanceUnit.METER);
-<span class="fc" id="L493">    }</span>
+<span class="fc" id="L492">    }</span>
 
     /**
      * Gets z coordinate of estimated ECEF user position.
@@ -498,9 +497,9 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @param result instance where z coordinate of estimated ECEF user position will be stored.
      */
     public void getDistanceZ(final Distance result) {
-<span class="fc" id="L501">        result.setValue(mZ);</span>
-<span class="fc" id="L502">        result.setUnit(DistanceUnit.METER);</span>
-<span class="fc" id="L503">    }</span>
+<span class="fc" id="L500">        result.setValue(mZ);</span>
+<span class="fc" id="L501">        result.setUnit(DistanceUnit.METER);</span>
+<span class="fc" id="L502">    }</span>
 
     /**
      * Gets z coordinate of estimated ECEF user position.
@@ -508,7 +507,7 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @return z coordinate of estimated ECEF user position.
      */
     public Distance getDistanceZ() {
-<span class="fc" id="L511">        return new Distance(mZ, DistanceUnit.METER);</span>
+<span class="fc" id="L510">        return new Distance(mZ, DistanceUnit.METER);</span>
     }
 
     /**
@@ -517,9 +516,9 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @param z z coordinate of estimated ECEF user position.
      */
     public void setDistanceZ(final Distance z) {
-<span class="fc" id="L520">        mZ = DistanceConverter.convert(z.getValue().doubleValue(), z.getUnit(),</span>
+<span class="fc" id="L519">        mZ = DistanceConverter.convert(z.getValue().doubleValue(), z.getUnit(),</span>
                 DistanceUnit.METER);
-<span class="fc" id="L522">    }</span>
+<span class="fc" id="L521">    }</span>
 
     /**
      * Sets coordinates of estimated ECEF user position.
@@ -529,10 +528,10 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @param z z coordinate.
      */
     public void setPositionCoordinates(final Distance x, final Distance y, final Distance z) {
-<span class="fc" id="L532">        setDistanceX(x);</span>
-<span class="fc" id="L533">        setDistanceY(y);</span>
-<span class="fc" id="L534">        setDistanceZ(z);</span>
-<span class="fc" id="L535">    }</span>
+<span class="fc" id="L531">        setDistanceX(x);</span>
+<span class="fc" id="L532">        setDistanceY(y);</span>
+<span class="fc" id="L533">        setDistanceZ(z);</span>
+<span class="fc" id="L534">    }</span>
 
     /**
      * Gets x coordinate of estimated ECEF user velocity.
@@ -541,9 +540,9 @@ public class GNSSEstimation implements Serializable, Cloneable {
      *               be stored.
      */
     public void getSpeedX(final Speed result) {
-<span class="fc" id="L544">        result.setValue(mVx);</span>
-<span class="fc" id="L545">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
-<span class="fc" id="L546">    }</span>
+<span class="fc" id="L543">        result.setValue(mVx);</span>
+<span class="fc" id="L544">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L545">    }</span>
 
     /**
      * Gets x coordinate of estimated ECEF user velocity.
@@ -551,7 +550,7 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @return x coordinate of estimated ECEF user velocity.
      */
     public Speed getSpeedX() {
-<span class="fc" id="L554">        return new Speed(mVx, SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L553">        return new Speed(mVx, SpeedUnit.METERS_PER_SECOND);</span>
     }
 
     /**
@@ -560,9 +559,9 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @param speedX x coordinate of estimated ECEF user velocity.
      */
     public void setSpeedX(final Speed speedX) {
-<span class="fc" id="L563">        mVx = SpeedConverter.convert(speedX.getValue().doubleValue(), speedX.getUnit(),</span>
+<span class="fc" id="L562">        mVx = SpeedConverter.convert(speedX.getValue().doubleValue(), speedX.getUnit(),</span>
                 SpeedUnit.METERS_PER_SECOND);
-<span class="fc" id="L565">    }</span>
+<span class="fc" id="L564">    }</span>
 
     /**
      * Gets y coordinate of estimated ECEF user velocity.
@@ -571,9 +570,9 @@ public class GNSSEstimation implements Serializable, Cloneable {
      *               be stored.
      */
     public void getSpeedY(final Speed result) {
-<span class="fc" id="L574">        result.setValue(mVy);</span>
-<span class="fc" id="L575">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
-<span class="fc" id="L576">    }</span>
+<span class="fc" id="L573">        result.setValue(mVy);</span>
+<span class="fc" id="L574">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L575">    }</span>
 
     /**
      * Gets y coordinate of estimated ECEF user velocity.
@@ -581,7 +580,7 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @return y coordinate of estimated ECEF user velocity.
      */
     public Speed getSpeedY() {
-<span class="fc" id="L584">        return new Speed(mVy, SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L583">        return new Speed(mVy, SpeedUnit.METERS_PER_SECOND);</span>
     }
 
     /**
@@ -590,9 +589,9 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @param speedY y coordinate of estimated ECEF user velocity.
      */
     public void setSpeedY(final Speed speedY) {
-<span class="fc" id="L593">        mVy = SpeedConverter.convert(speedY.getValue().doubleValue(), speedY.getUnit(),</span>
+<span class="fc" id="L592">        mVy = SpeedConverter.convert(speedY.getValue().doubleValue(), speedY.getUnit(),</span>
                 SpeedUnit.METERS_PER_SECOND);
-<span class="fc" id="L595">    }</span>
+<span class="fc" id="L594">    }</span>
 
     /**
      * Gets z coordinate of estimated ECEF user velocity.
@@ -601,9 +600,9 @@ public class GNSSEstimation implements Serializable, Cloneable {
      *               be stored.
      */
     public void getSpeedZ(final Speed result) {
-<span class="fc" id="L604">        result.setValue(mVz);</span>
-<span class="fc" id="L605">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
-<span class="fc" id="L606">    }</span>
+<span class="fc" id="L603">        result.setValue(mVz);</span>
+<span class="fc" id="L604">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L605">    }</span>
 
     /**
      * Gets z coordinate of estimated ECEF user velocity.
@@ -611,7 +610,7 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @return z coordinate of estimated ECEF user velocity.
      */
     public Speed getSpeedZ() {
-<span class="fc" id="L614">        return new Speed(mVz, SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L613">        return new Speed(mVz, SpeedUnit.METERS_PER_SECOND);</span>
     }
 
     /**
@@ -620,9 +619,9 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @param speedZ z coordinate of estimated ECEF user velocity.
      */
     public void setSpeedZ(final Speed speedZ) {
-<span class="fc" id="L623">        mVz = SpeedConverter.convert(speedZ.getValue().doubleValue(), speedZ.getUnit(),</span>
+<span class="fc" id="L622">        mVz = SpeedConverter.convert(speedZ.getValue().doubleValue(), speedZ.getUnit(),</span>
                 SpeedUnit.METERS_PER_SECOND);
-<span class="fc" id="L625">    }</span>
+<span class="fc" id="L624">    }</span>
 
     /**
      * Sets coordinates of estimated ECEF user velocity.
@@ -632,10 +631,10 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @param speedZ z coordinate.
      */
     public void setVelocityCoordinates(final Speed speedX, final Speed speedY, final Speed speedZ) {
-<span class="fc" id="L635">        setSpeedX(speedX);</span>
-<span class="fc" id="L636">        setSpeedY(speedY);</span>
-<span class="fc" id="L637">        setSpeedZ(speedZ);</span>
-<span class="fc" id="L638">    }</span>
+<span class="fc" id="L634">        setSpeedX(speedX);</span>
+<span class="fc" id="L635">        setSpeedY(speedY);</span>
+<span class="fc" id="L636">        setSpeedZ(speedZ);</span>
+<span class="fc" id="L637">    }</span>
 
     /**
      * Gets estimated receiver clock offset.
@@ -644,10 +643,10 @@ public class GNSSEstimation implements Serializable, Cloneable {
      *
      * @param result instance where estimated receiver clock offset will be stored.
      */
-    public void getClockOffsetDistance(Distance result) {
-<span class="fc" id="L648">        result.setValue(mClockOffset);</span>
-<span class="fc" id="L649">        result.setUnit(DistanceUnit.METER);</span>
-<span class="fc" id="L650">    }</span>
+    public void getClockOffsetDistance(final Distance result) {
+<span class="fc" id="L647">        result.setValue(mClockOffset);</span>
+<span class="fc" id="L648">        result.setUnit(DistanceUnit.METER);</span>
+<span class="fc" id="L649">    }</span>
 
     /**
      * Gets estimated receiver clock offset.
@@ -657,7 +656,7 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @return estimated receiver clock offset.
      */
     public Distance getClockOffsetDistance() {
-<span class="fc" id="L660">        return new Distance(mClockOffset, DistanceUnit.METER);</span>
+<span class="fc" id="L659">        return new Distance(mClockOffset, DistanceUnit.METER);</span>
     }
 
     /**
@@ -668,9 +667,9 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @param clockOffset estimated receiver clock offset.
      */
     public void setClockOffset(final Distance clockOffset) {
-<span class="fc" id="L671">        mClockOffset = DistanceConverter.convert(clockOffset.getValue().doubleValue(),</span>
-<span class="fc" id="L672">                clockOffset.getUnit(), DistanceUnit.METER);</span>
-<span class="fc" id="L673">    }</span>
+<span class="fc" id="L670">        mClockOffset = DistanceConverter.convert(clockOffset.getValue().doubleValue(),</span>
+<span class="fc" id="L671">                clockOffset.getUnit(), DistanceUnit.METER);</span>
+<span class="fc" id="L672">    }</span>
 
     /**
      * Gets estimated receiver clock drift.
@@ -680,9 +679,9 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @param result instance where estimated receiver clock drift will be stored.
      */
     public void getClockDriftSpeed(final Speed result) {
-<span class="fc" id="L683">        result.setValue(mClockDrift);</span>
-<span class="fc" id="L684">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
-<span class="fc" id="L685">    }</span>
+<span class="fc" id="L682">        result.setValue(mClockDrift);</span>
+<span class="fc" id="L683">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L684">    }</span>
 
     /**
      * Gets estimated receiver clock drift.
@@ -692,7 +691,7 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @return estimated receiver clock drift.
      */
     public Speed getClockDriftSpeed() {
-<span class="fc" id="L695">        return new Speed(mClockDrift, SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L694">        return new Speed(mClockDrift, SpeedUnit.METERS_PER_SECOND);</span>
     }
 
     /**
@@ -703,9 +702,9 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @param clockDrift estimated receiver clock drift.
      */
     public void setClockDrift(final Speed clockDrift) {
-<span class="fc" id="L706">        mClockDrift = SpeedConverter.convert(clockDrift.getValue().doubleValue(),</span>
-<span class="fc" id="L707">                clockDrift.getUnit(), SpeedUnit.METERS_PER_SECOND);</span>
-<span class="fc" id="L708">    }</span>
+<span class="fc" id="L705">        mClockDrift = SpeedConverter.convert(clockDrift.getValue().doubleValue(),</span>
+<span class="fc" id="L706">                clockDrift.getUnit(), SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L707">    }</span>
 
     /**
      * Gets estimated ECEF user position expressed in meters (m).
@@ -713,8 +712,8 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @param result instance where estimated ECEF user position will be stored.
      */
     public void getPosition(final Point3D result) {
-<span class="fc" id="L716">        result.setInhomogeneousCoordinates(mX, mY, mZ);</span>
-<span class="fc" id="L717">    }</span>
+<span class="fc" id="L715">        result.setInhomogeneousCoordinates(mX, mY, mZ);</span>
+<span class="fc" id="L716">    }</span>
 
     /**
      * Gets estimated ECEF user position expressed in meters (m).
@@ -722,7 +721,7 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @return estimated ECEF user position.
      */
     public Point3D getPosition() {
-<span class="fc" id="L725">        return new InhomogeneousPoint3D(mX, mY, mZ);</span>
+<span class="fc" id="L724">        return new InhomogeneousPoint3D(mX, mY, mZ);</span>
     }
 
     /**
@@ -731,10 +730,10 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @param position estimated ECEF user position.
      */
     public void setPosition(final Point3D position) {
-<span class="fc" id="L734">        mX = position.getInhomX();</span>
-<span class="fc" id="L735">        mY = position.getInhomY();</span>
-<span class="fc" id="L736">        mZ = position.getInhomZ();</span>
-<span class="fc" id="L737">    }</span>
+<span class="fc" id="L733">        mX = position.getInhomX();</span>
+<span class="fc" id="L734">        mY = position.getInhomY();</span>
+<span class="fc" id="L735">        mZ = position.getInhomZ();</span>
+<span class="fc" id="L736">    }</span>
 
     /**
      * Gets estimatedECEF user position.
@@ -742,8 +741,8 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @param result instance where result will be stored.
      */
     public void getEcefPosition(final ECEFPosition result) {
-<span class="fc" id="L745">        result.setCoordinates(mX, mY, mZ);</span>
-<span class="fc" id="L746">    }</span>
+<span class="fc" id="L744">        result.setCoordinates(mX, mY, mZ);</span>
+<span class="fc" id="L745">    }</span>
 
     /**
      * Gets estimated ECEF user position.
@@ -751,7 +750,7 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @return estimated ECEF user position.
      */
     public ECEFPosition getEcefPosition() {
-<span class="fc" id="L754">        return new ECEFPosition(mX, mY, mZ);</span>
+<span class="fc" id="L753">        return new ECEFPosition(mX, mY, mZ);</span>
     }
 
     /**
@@ -760,10 +759,10 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @param ecefPosition estimated ECEF user position.
      */
     public void setEcefPosition(final ECEFPosition ecefPosition) {
-<span class="fc" id="L763">        mX = ecefPosition.getX();</span>
-<span class="fc" id="L764">        mY = ecefPosition.getY();</span>
-<span class="fc" id="L765">        mZ = ecefPosition.getZ();</span>
-<span class="fc" id="L766">    }</span>
+<span class="fc" id="L762">        mX = ecefPosition.getX();</span>
+<span class="fc" id="L763">        mY = ecefPosition.getY();</span>
+<span class="fc" id="L764">        mZ = ecefPosition.getZ();</span>
+<span class="fc" id="L765">    }</span>
 
     /**
      * Gets estimated ECEF user velocity.
@@ -771,8 +770,8 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @param result instance where result will be stored.
      */
     public void getEcefVelocity(final ECEFVelocity result) {
-<span class="fc" id="L774">        result.setCoordinates(mVx, mVy, mVz);</span>
-<span class="fc" id="L775">    }</span>
+<span class="fc" id="L773">        result.setCoordinates(mVx, mVy, mVz);</span>
+<span class="fc" id="L774">    }</span>
 
     /**
      * Gets estimated ECEF user velocity.
@@ -780,7 +779,7 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @return estimated ECEF user velocity.
      */
     public ECEFVelocity getEcefVelocity() {
-<span class="fc" id="L783">        return new ECEFVelocity(mVx, mVy, mVz);</span>
+<span class="fc" id="L782">        return new ECEFVelocity(mVx, mVy, mVz);</span>
     }
 
     /**
@@ -789,10 +788,10 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @param ecefVelocity estimated ECEF user velocity.
      */
     public void setEcefVelocity(final ECEFVelocity ecefVelocity) {
-<span class="fc" id="L792">        mVx = ecefVelocity.getVx();</span>
-<span class="fc" id="L793">        mVy = ecefVelocity.getVy();</span>
-<span class="fc" id="L794">        mVz = ecefVelocity.getVz();</span>
-<span class="fc" id="L795">    }</span>
+<span class="fc" id="L791">        mVx = ecefVelocity.getVx();</span>
+<span class="fc" id="L792">        mVy = ecefVelocity.getVy();</span>
+<span class="fc" id="L793">        mVz = ecefVelocity.getVz();</span>
+<span class="fc" id="L794">    }</span>
 
     /**
      * Gets estimated ECEF user position and velocity.
@@ -800,9 +799,9 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @param result instance where result will be stored.
      */
     public void getPositionAndVelocity(final ECEFPositionAndVelocity result) {
-<span class="fc" id="L803">        result.setPositionCoordinates(mX, mY, mZ);</span>
-<span class="fc" id="L804">        result.setVelocityCoordinates(mVx, mVy, mVz);</span>
-<span class="fc" id="L805">    }</span>
+<span class="fc" id="L802">        result.setPositionCoordinates(mX, mY, mZ);</span>
+<span class="fc" id="L803">        result.setVelocityCoordinates(mVx, mVy, mVz);</span>
+<span class="fc" id="L804">    }</span>
 
     /**
      * Gets estimated ECEF user position and velocity.
@@ -810,7 +809,7 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @return estimated ECEF user position and velocity.
      */
     public ECEFPositionAndVelocity getPositionAndVelocity() {
-<span class="fc" id="L813">        return new ECEFPositionAndVelocity(mX, mY, mZ, mVx, mVy, mVz);</span>
+<span class="fc" id="L812">        return new ECEFPositionAndVelocity(mX, mY, mZ, mVx, mVy, mVz);</span>
     }
 
     /**
@@ -820,11 +819,11 @@ public class GNSSEstimation implements Serializable, Cloneable {
      */
     public void setPositionAndVelocity(
             final ECEFPositionAndVelocity positionAndVelocity) {
-<span class="fc" id="L823">        setPositionCoordinates(positionAndVelocity.getX(),</span>
-<span class="fc" id="L824">                positionAndVelocity.getY(), positionAndVelocity.getZ());</span>
-<span class="fc" id="L825">        setVelocityCoordinates(positionAndVelocity.getVx(),</span>
-<span class="fc" id="L826">                positionAndVelocity.getVy(), positionAndVelocity.getVz());</span>
-<span class="fc" id="L827">    }</span>
+<span class="fc" id="L822">        setPositionCoordinates(positionAndVelocity.getX(),</span>
+<span class="fc" id="L823">                positionAndVelocity.getY(), positionAndVelocity.getZ());</span>
+<span class="fc" id="L824">        setVelocityCoordinates(positionAndVelocity.getVx(),</span>
+<span class="fc" id="L825">                positionAndVelocity.getVy(), positionAndVelocity.getVz());</span>
+<span class="fc" id="L826">    }</span>
 
     /**
      * Converts state data into an array.
@@ -832,20 +831,20 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @param result instance where state data will be stored.
      * @throws IllegalArgumentException if provided array does not have length 8.
      */
-    public void asArray(double[] result) {
-<span class="fc bfc" id="L836" title="All 2 branches covered.">        if (result.length != NUM_PARAMETERS) {</span>
-<span class="fc" id="L837">            throw new IllegalArgumentException();</span>
+    public void asArray(final double[] result) {
+<span class="fc bfc" id="L835" title="All 2 branches covered.">        if (result.length != NUM_PARAMETERS) {</span>
+<span class="fc" id="L836">            throw new IllegalArgumentException();</span>
         }
 
-<span class="fc" id="L840">        result[0] = mX;</span>
-<span class="fc" id="L841">        result[1] = mY;</span>
-<span class="fc" id="L842">        result[2] = mZ;</span>
-<span class="fc" id="L843">        result[3] = mVx;</span>
-<span class="fc" id="L844">        result[4] = mVy;</span>
-<span class="fc" id="L845">        result[5] = mVz;</span>
-<span class="fc" id="L846">        result[6] = mClockOffset;</span>
-<span class="fc" id="L847">        result[7] = mClockDrift;</span>
-<span class="fc" id="L848">    }</span>
+<span class="fc" id="L839">        result[0] = mX;</span>
+<span class="fc" id="L840">        result[1] = mY;</span>
+<span class="fc" id="L841">        result[2] = mZ;</span>
+<span class="fc" id="L842">        result[3] = mVx;</span>
+<span class="fc" id="L843">        result[4] = mVy;</span>
+<span class="fc" id="L844">        result[5] = mVz;</span>
+<span class="fc" id="L845">        result[6] = mClockOffset;</span>
+<span class="fc" id="L846">        result[7] = mClockDrift;</span>
+<span class="fc" id="L847">    }</span>
 
     /**
      * Converts state data into an array.
@@ -853,9 +852,9 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @return a new array containing state data.
      */
     public double[] asArray() {
-<span class="fc" id="L856">        final double[] result = new double[NUM_PARAMETERS];</span>
-<span class="fc" id="L857">        asArray(result);</span>
-<span class="fc" id="L858">        return result;</span>
+<span class="fc" id="L855">        final double[] result = new double[NUM_PARAMETERS];</span>
+<span class="fc" id="L856">        asArray(result);</span>
+<span class="fc" id="L857">        return result;</span>
     }
 
     /**
@@ -865,19 +864,19 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @throws IllegalArgumentException if provided array does not have length 8.
      */
     public void fromArray(final double[] array) {
-<span class="fc bfc" id="L868" title="All 2 branches covered.">        if (array.length != NUM_PARAMETERS) {</span>
-<span class="fc" id="L869">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L867" title="All 2 branches covered.">        if (array.length != NUM_PARAMETERS) {</span>
+<span class="fc" id="L868">            throw new IllegalArgumentException();</span>
         }
 
-<span class="fc" id="L872">        mX = array[0];</span>
-<span class="fc" id="L873">        mY = array[1];</span>
-<span class="fc" id="L874">        mZ = array[2];</span>
-<span class="fc" id="L875">        mVx = array[3];</span>
-<span class="fc" id="L876">        mVy = array[4];</span>
-<span class="fc" id="L877">        mVz = array[5];</span>
-<span class="fc" id="L878">        mClockOffset = array[6];</span>
-<span class="fc" id="L879">        mClockDrift = array[7];</span>
-<span class="fc" id="L880">    }</span>
+<span class="fc" id="L871">        mX = array[0];</span>
+<span class="fc" id="L872">        mY = array[1];</span>
+<span class="fc" id="L873">        mZ = array[2];</span>
+<span class="fc" id="L874">        mVx = array[3];</span>
+<span class="fc" id="L875">        mVy = array[4];</span>
+<span class="fc" id="L876">        mVz = array[5];</span>
+<span class="fc" id="L877">        mClockOffset = array[6];</span>
+<span class="fc" id="L878">        mClockDrift = array[7];</span>
+<span class="fc" id="L879">    }</span>
 
     /**
      * Converts state data into a column matrix.
@@ -886,23 +885,23 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @param result instance where state data will be stored.
      */
     public void asMatrix(final Matrix result) {
-<span class="pc bpc" id="L889" title="1 of 4 branches missed.">        if (result.getRows() != NUM_PARAMETERS || result.getColumns() != 1) {</span>
+<span class="pc bpc" id="L888" title="1 of 4 branches missed.">        if (result.getRows() != NUM_PARAMETERS || result.getColumns() != 1) {</span>
             try {
-<span class="fc" id="L891">                result.resize(NUM_PARAMETERS, 1);</span>
-<span class="nc" id="L892">            } catch (WrongSizeException ignore) {</span>
+<span class="fc" id="L890">                result.resize(NUM_PARAMETERS, 1);</span>
+<span class="nc" id="L891">            } catch (WrongSizeException ignore) {</span>
                 // never happens
-<span class="fc" id="L894">            }</span>
+<span class="fc" id="L893">            }</span>
         }
 
-<span class="fc" id="L897">        result.setElementAtIndex(0, mX);</span>
-<span class="fc" id="L898">        result.setElementAtIndex(1, mY);</span>
-<span class="fc" id="L899">        result.setElementAtIndex(2, mZ);</span>
-<span class="fc" id="L900">        result.setElementAtIndex(3, mVx);</span>
-<span class="fc" id="L901">        result.setElementAtIndex(4, mVy);</span>
-<span class="fc" id="L902">        result.setElementAtIndex(5, mVz);</span>
-<span class="fc" id="L903">        result.setElementAtIndex(6, mClockOffset);</span>
-<span class="fc" id="L904">        result.setElementAtIndex(7, mClockDrift);</span>
-<span class="fc" id="L905">    }</span>
+<span class="fc" id="L896">        result.setElementAtIndex(0, mX);</span>
+<span class="fc" id="L897">        result.setElementAtIndex(1, mY);</span>
+<span class="fc" id="L898">        result.setElementAtIndex(2, mZ);</span>
+<span class="fc" id="L899">        result.setElementAtIndex(3, mVx);</span>
+<span class="fc" id="L900">        result.setElementAtIndex(4, mVy);</span>
+<span class="fc" id="L901">        result.setElementAtIndex(5, mVz);</span>
+<span class="fc" id="L902">        result.setElementAtIndex(6, mClockOffset);</span>
+<span class="fc" id="L903">        result.setElementAtIndex(7, mClockDrift);</span>
+<span class="fc" id="L904">    }</span>
 
     /**
      * Converts state data into a column matrix.
@@ -912,12 +911,12 @@ public class GNSSEstimation implements Serializable, Cloneable {
     public Matrix asMatrix() {
         final Matrix result;
         try {
-<span class="fc" id="L915">            result = new Matrix(NUM_PARAMETERS, 1);</span>
-<span class="fc" id="L916">            asMatrix(result);</span>
-<span class="fc" id="L917">            return result;</span>
-<span class="nc" id="L918">        } catch (WrongSizeException ignore) {</span>
+<span class="fc" id="L914">            result = new Matrix(NUM_PARAMETERS, 1);</span>
+<span class="fc" id="L915">            asMatrix(result);</span>
+<span class="fc" id="L916">            return result;</span>
+<span class="nc" id="L917">        } catch (final WrongSizeException ignore) {</span>
             // never happens
-<span class="nc" id="L920">            return null;</span>
+<span class="nc" id="L919">            return null;</span>
         }
     }
 
@@ -928,47 +927,47 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @throws IllegalArgumentException if provided matrix is not 8x1.
      */
     public void fromMatrix(final Matrix matrix) {
-<span class="pc bpc" id="L931" title="1 of 4 branches missed.">        if (matrix.getRows() != NUM_PARAMETERS || matrix.getColumns() != 1) {</span>
-<span class="fc" id="L932">            throw new IllegalArgumentException();</span>
+<span class="pc bpc" id="L930" title="1 of 4 branches missed.">        if (matrix.getRows() != NUM_PARAMETERS || matrix.getColumns() != 1) {</span>
+<span class="fc" id="L931">            throw new IllegalArgumentException();</span>
         }
-<span class="fc" id="L934">        fromArray(matrix.getBuffer());</span>
-<span class="fc" id="L935">    }</span>
+<span class="fc" id="L933">        fromArray(matrix.getBuffer());</span>
+<span class="fc" id="L934">    }</span>
 
     /**
      * Copies this instance data into provided instance.
      *
      * @param output destination instance where data will be copied to.
      */
-    public void copyTo(GNSSEstimation output) {
-<span class="fc" id="L943">        output.mX = mX;</span>
-<span class="fc" id="L944">        output.mY = mY;</span>
-<span class="fc" id="L945">        output.mZ = mZ;</span>
+    public void copyTo(final GNSSEstimation output) {
+<span class="fc" id="L942">        output.mX = mX;</span>
+<span class="fc" id="L943">        output.mY = mY;</span>
+<span class="fc" id="L944">        output.mZ = mZ;</span>
 
-<span class="fc" id="L947">        output.mVx = mVx;</span>
-<span class="fc" id="L948">        output.mVy = mVy;</span>
-<span class="fc" id="L949">        output.mVz = mVz;</span>
+<span class="fc" id="L946">        output.mVx = mVx;</span>
+<span class="fc" id="L947">        output.mVy = mVy;</span>
+<span class="fc" id="L948">        output.mVz = mVz;</span>
 
-<span class="fc" id="L951">        output.mClockOffset = mClockOffset;</span>
-<span class="fc" id="L952">        output.mClockDrift = mClockDrift;</span>
-<span class="fc" id="L953">    }</span>
+<span class="fc" id="L950">        output.mClockOffset = mClockOffset;</span>
+<span class="fc" id="L951">        output.mClockDrift = mClockDrift;</span>
+<span class="fc" id="L952">    }</span>
 
     /**
      * Copies data of provided instance into this instance.
      *
      * @param input instance to copy data from.
      */
-    public void copyFrom(GNSSEstimation input) {
-<span class="fc" id="L961">        mX = input.mX;</span>
-<span class="fc" id="L962">        mY = input.mY;</span>
-<span class="fc" id="L963">        mZ = input.mZ;</span>
+    public void copyFrom(final GNSSEstimation input) {
+<span class="fc" id="L960">        mX = input.mX;</span>
+<span class="fc" id="L961">        mY = input.mY;</span>
+<span class="fc" id="L962">        mZ = input.mZ;</span>
 
-<span class="fc" id="L965">        mVx = input.mVx;</span>
-<span class="fc" id="L966">        mVy = input.mVy;</span>
-<span class="fc" id="L967">        mVz = input.mVz;</span>
+<span class="fc" id="L964">        mVx = input.mVx;</span>
+<span class="fc" id="L965">        mVy = input.mVy;</span>
+<span class="fc" id="L966">        mVz = input.mVz;</span>
 
-<span class="fc" id="L969">        mClockOffset = input.mClockOffset;</span>
-<span class="fc" id="L970">        mClockDrift = input.mClockDrift;</span>
-<span class="fc" id="L971">    }</span>
+<span class="fc" id="L968">        mClockOffset = input.mClockOffset;</span>
+<span class="fc" id="L969">        mClockDrift = input.mClockDrift;</span>
+<span class="fc" id="L970">    }</span>
 
     /**
      * Computes and returns hash code for this instance. Hash codes are almost unique
@@ -978,7 +977,7 @@ public class GNSSEstimation implements Serializable, Cloneable {
      */
     @Override
     public int hashCode() {
-<span class="fc" id="L981">        return Objects.hash(mX, mY, mZ, mVx, mVy, mVz, mClockOffset, mClockDrift);</span>
+<span class="fc" id="L980">        return Objects.hash(mX, mY, mZ, mVx, mVy, mVz, mClockOffset, mClockDrift);</span>
     }
 
     /**
@@ -989,16 +988,16 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @return true if both objects are considered to be equal, false otherwise.
      */
     @Override
-    public boolean equals(Object obj) {
-<span class="fc bfc" id="L993" title="All 2 branches covered.">        if (obj == this) {</span>
-<span class="fc" id="L994">            return true;</span>
+    public boolean equals(final Object obj) {
+<span class="fc bfc" id="L992" title="All 2 branches covered.">        if (obj == this) {</span>
+<span class="fc" id="L993">            return true;</span>
         }
-<span class="fc bfc" id="L996" title="All 4 branches covered.">        if (obj == null || getClass() != obj.getClass()) {</span>
-<span class="fc" id="L997">            return false;</span>
+<span class="fc bfc" id="L995" title="All 4 branches covered.">        if (obj == null || getClass() != obj.getClass()) {</span>
+<span class="fc" id="L996">            return false;</span>
         }
 
-<span class="fc" id="L1000">        final GNSSEstimation other = (GNSSEstimation) obj;</span>
-<span class="fc" id="L1001">        return equals(other);</span>
+<span class="fc" id="L999">        final GNSSEstimation other = (GNSSEstimation) obj;</span>
+<span class="fc" id="L1000">        return equals(other);</span>
     }
 
     /**
@@ -1007,8 +1006,8 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @param other instance to be compared.
      * @return true if both instances are considered to be equal, false otherwise.
      */
-    public boolean equals(GNSSEstimation other) {
-<span class="fc" id="L1011">        return equals(other, 0.0);</span>
+    public boolean equals(final GNSSEstimation other) {
+<span class="fc" id="L1010">        return equals(other, 0.0);</span>
     }
 
     /**
@@ -1020,19 +1019,19 @@ public class GNSSEstimation implements Serializable, Cloneable {
      * @return true if both instances are considered to be equal (up to provided threshold),
      * false otherwise.
      */
-    public boolean equals(GNSSEstimation other, final double threshold) {
-<span class="fc bfc" id="L1024" title="All 2 branches covered.">        if (other == null) {</span>
-<span class="fc" id="L1025">            return false;</span>
+    public boolean equals(final GNSSEstimation other, final double threshold) {
+<span class="fc bfc" id="L1023" title="All 2 branches covered.">        if (other == null) {</span>
+<span class="fc" id="L1024">            return false;</span>
         }
 
-<span class="fc bfc" id="L1028" title="All 2 branches covered.">        return Math.abs(mX - other.mX) &lt;= threshold</span>
-<span class="pc bpc" id="L1029" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(mY - other.mY) &lt;= threshold</span>
-<span class="pc bpc" id="L1030" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(mZ - other.mZ) &lt;= threshold</span>
-<span class="pc bpc" id="L1031" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(mVx - other.mVx) &lt;= threshold</span>
-<span class="pc bpc" id="L1032" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(mVy - other.mVy) &lt;= threshold</span>
-<span class="pc bpc" id="L1033" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(mVz - other.mVz) &lt;= threshold</span>
-<span class="pc bpc" id="L1034" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(mClockOffset - other.mClockOffset) &lt;= threshold</span>
-<span class="pc bpc" id="L1035" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(mClockDrift - other.mClockDrift) &lt;= threshold;</span>
+<span class="fc bfc" id="L1027" title="All 2 branches covered.">        return Math.abs(mX - other.mX) &lt;= threshold</span>
+<span class="pc bpc" id="L1028" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(mY - other.mY) &lt;= threshold</span>
+<span class="pc bpc" id="L1029" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(mZ - other.mZ) &lt;= threshold</span>
+<span class="pc bpc" id="L1030" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(mVx - other.mVx) &lt;= threshold</span>
+<span class="pc bpc" id="L1031" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(mVy - other.mVy) &lt;= threshold</span>
+<span class="pc bpc" id="L1032" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(mVz - other.mVz) &lt;= threshold</span>
+<span class="pc bpc" id="L1033" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(mClockOffset - other.mClockOffset) &lt;= threshold</span>
+<span class="pc bpc" id="L1034" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(mClockDrift - other.mClockDrift) &lt;= threshold;</span>
     }
 
     /**
@@ -1043,9 +1042,9 @@ public class GNSSEstimation implements Serializable, Cloneable {
      */
     @Override
     protected Object clone() throws CloneNotSupportedException {
-<span class="fc" id="L1046">        final GNSSEstimation result = (GNSSEstimation) super.clone();</span>
-<span class="fc" id="L1047">        copyTo(result);</span>
-<span class="fc" id="L1048">        return result;</span>
+<span class="fc" id="L1045">        final GNSSEstimation result = (GNSSEstimation) super.clone();</span>
+<span class="fc" id="L1046">        copyTo(result);</span>
+<span class="fc" id="L1047">        return result;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

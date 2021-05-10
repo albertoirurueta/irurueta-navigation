@@ -31,7 +31,7 @@ import java.util.List;
  * Implementations of this class should be able to detect and discard outliers
  * in order to find the best solution.
  */
-@SuppressWarnings({&quot;WeakerAccess&quot;, &quot;Duplicates&quot;})
+@SuppressWarnings(&quot;DuplicatedCode&quot;)
 public abstract class RobustLateration2DSolver extends RobustLaterationSolver&lt;Point2D&gt; {
 
     /**
@@ -61,7 +61,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver&lt
     protected double[] mInnerDistances;
 
     /**
-     * Standard deviations for non-linear inner solver used during robut estimation.
+     * Standard deviations for non-linear inner solver used during robust estimation.
      */
     protected double[] mInnerDistanceStandardDeviations;
 
@@ -203,7 +203,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver&lt
      */
     public RobustLateration2DSolver(final Circle[] circles,
                                     final double[] distanceStandardDeviations,
-                                    RobustLaterationSolverListener&lt;Point2D&gt; listener) {
+                                    final RobustLaterationSolverListener&lt;Point2D&gt; listener) {
 <span class="fc" id="L207">        this(listener);</span>
 <span class="fc" id="L208">        internalSetCirclesAndStandardDeviations(circles,</span>
                 distanceStandardDeviations);
@@ -389,7 +389,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver&lt
      * @param method                     robust estimator method.
      * @return a new robust 2D lateration solver.
      * @throws IllegalArgumentException if either positions or distances are null,
-     *                                  don't have the same length or their length is smaler than required
+     *                                  don't have the same length or their length is smaller than required
      *                                  (3 points).
      */
     public static RobustLateration2DSolver create(
@@ -1221,7 +1221,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver&lt
      *                      The larger the score value the better the quality of
      *                      the sample.
      * @param positions     known positions of static nodes.
-     * @param distances     euclidean distances from static ndoes to mobile node.
+     * @param distances     euclidean distances from static nodes to mobile node.
      * @param listener      listener to be notified of events such as when estimation
      *                      starts, ends or its progress significantly changes.
      * @return a new robust 2D lateration solver.
@@ -1323,7 +1323,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver&lt
 <span class="fc" id="L1323">            int pos = 0;</span>
 <span class="fc bfc" id="L1324" title="All 2 branches covered.">            for (int i = 0; i &lt; nSamples; i++) {</span>
 <span class="fc bfc" id="L1325" title="All 2 branches covered.">                if (inliers.get(i)) {</span>
-                    //sample is inlier
+                    // sample is inlier
 <span class="fc" id="L1327">                    inlierPositions[pos] = mPositions[i];</span>
 <span class="fc" id="L1328">                    inlierDistances[pos] = mDistances[i];</span>
 <span class="fc bfc" id="L1329" title="All 2 branches covered.">                    if (inlierStandardDeviations != null) {</span>
@@ -1345,7 +1345,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver&lt
 <span class="fc" id="L1345">                mNonLinearSolver.solve();</span>
 
 <span class="pc bpc" id="L1347" title="1 of 2 branches missed.">                if (mKeepCovariance) {</span>
-                    //keep covariance
+                    // keep covariance
 <span class="fc" id="L1349">                    mCovariance = mNonLinearSolver.getCovariance();</span>
                 } else {
 <span class="nc" id="L1351">                    mCovariance = null;</span>
@@ -1353,7 +1353,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver&lt
 
 <span class="fc" id="L1354">                mEstimatedPosition = mNonLinearSolver.getEstimatedPosition();</span>
 <span class="nc" id="L1355">            } catch (Exception e) {</span>
-                //refinement failed, so we return input value
+                // refinement failed, so we return input value
 <span class="nc" id="L1357">                mCovariance = null;</span>
 <span class="nc" id="L1358">                mEstimatedPosition = position;</span>
 <span class="fc" id="L1359">            }</span>
@@ -1366,12 +1366,12 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver&lt
     }
 
     /**
-     * Solves a preliminar solution for a subset of samples picked by a robust estimator.
+     * Solves a preliminary solution for a subset of samples picked by a robust estimator.
      *
      * @param samplesIndices indices of samples picked by the robust estimator.
-     * @param solutions      list where estimated preliminar solution will be stored.
+     * @param solutions      list where estimated preliminary solution will be stored.
      */
-    protected void solvePreliminarSolutions(
+    protected void solvePreliminarySolutions(
             final int[] samplesIndices, final List&lt;Point2D&gt; solutions) {
         try {
 <span class="fc" id="L1377">            final int length = samplesIndices.length;</span>
@@ -1412,7 +1412,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver&lt
 
 <span class="fc" id="L1413">            solutions.add(estimatedPosition);</span>
 <span class="nc" id="L1414">        } catch (final NavigationException ignore) {</span>
-            //if anything fails, no solution is added
+            // if anything fails, no solution is added
 <span class="fc" id="L1416">        }</span>
 <span class="fc" id="L1417">    }</span>
 
@@ -1465,7 +1465,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver&lt
 <span class="fc" id="L1465">        final Point2D[] positions = new Point2D[circles.length];</span>
 <span class="fc" id="L1466">        final double[] distances = new double[circles.length];</span>
 <span class="fc bfc" id="L1467" title="All 2 branches covered.">        for (int i = 0; i &lt; circles.length; i++) {</span>
-<span class="fc" id="L1468">            Circle circle = circles[i];</span>
+<span class="fc" id="L1468">            final Circle circle = circles[i];</span>
 <span class="fc" id="L1469">            positions[i] = circle.getCenter();</span>
 <span class="fc" id="L1470">            distances[i] = circle.getRadius();</span>
         }

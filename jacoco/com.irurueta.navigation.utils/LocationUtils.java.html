@@ -26,7 +26,6 @@ import java.util.StringTokenizer;
 /**
  * Location utility class based on Android's SDK Location class.
  */
-@SuppressWarnings({&quot;WeakerAccess&quot;, &quot;Duplicates&quot;})
 public class LocationUtils {
     /**
      * Constant used to specify formatting of a latitude or longitude
@@ -73,41 +72,41 @@ public class LocationUtils {
      *                                  FORMAT_DEGREES, FORMAT_MINUTES, or FORMAT_SECONDS.
      */
     public static String convert(double coordinate, final int outputType) {
-<span class="fc bfc" id="L76" title="All 4 branches covered.">        if (coordinate &lt; -180.0 || coordinate &gt; 180.0 ||</span>
-<span class="pc bpc" id="L77" title="1 of 2 branches missed.">                Double.isNaN(coordinate)) {</span>
-<span class="fc" id="L78">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L75" title="All 4 branches covered.">        if (coordinate &lt; -180.0 || coordinate &gt; 180.0 ||</span>
+<span class="pc bpc" id="L76" title="1 of 2 branches missed.">                Double.isNaN(coordinate)) {</span>
+<span class="fc" id="L77">            throw new IllegalArgumentException();</span>
         }
-<span class="fc bfc" id="L80" title="All 6 branches covered.">        if ((outputType != FORMAT_DEGREES) &amp;&amp;</span>
+<span class="fc bfc" id="L79" title="All 6 branches covered.">        if ((outputType != FORMAT_DEGREES) &amp;&amp;</span>
                 (outputType != FORMAT_MINUTES) &amp;&amp;
                 (outputType != FORMAT_SECONDS)) {
-<span class="fc" id="L83">            throw new IllegalArgumentException();</span>
+<span class="fc" id="L82">            throw new IllegalArgumentException();</span>
         }
 
-<span class="fc" id="L86">        final StringBuilder sb = new StringBuilder();</span>
+<span class="fc" id="L85">        final StringBuilder sb = new StringBuilder();</span>
 
         // Handle negative values
-<span class="fc bfc" id="L89" title="All 2 branches covered.">        if (coordinate &lt; 0) {</span>
-<span class="fc" id="L90">            sb.append('-');</span>
-<span class="fc" id="L91">            coordinate = -coordinate;</span>
+<span class="fc bfc" id="L88" title="All 2 branches covered.">        if (coordinate &lt; 0) {</span>
+<span class="fc" id="L89">            sb.append('-');</span>
+<span class="fc" id="L90">            coordinate = -coordinate;</span>
         }
 
-<span class="fc" id="L94">        final DecimalFormat df = new DecimalFormat(&quot;###.#####&quot;);</span>
-<span class="fc bfc" id="L95" title="All 4 branches covered.">        if (outputType == FORMAT_MINUTES || outputType == FORMAT_SECONDS) {</span>
-<span class="fc" id="L96">            final int degrees = (int) Math.floor(coordinate);</span>
-<span class="fc" id="L97">            sb.append(degrees);</span>
-<span class="fc" id="L98">            sb.append(':');</span>
-<span class="fc" id="L99">            coordinate -= degrees;</span>
-<span class="fc" id="L100">            coordinate *= 60.0;</span>
-<span class="fc bfc" id="L101" title="All 2 branches covered.">            if (outputType == FORMAT_SECONDS) {</span>
-<span class="fc" id="L102">                final int minutes = (int) Math.floor(coordinate);</span>
-<span class="fc" id="L103">                sb.append(minutes);</span>
-<span class="fc" id="L104">                sb.append(':');</span>
-<span class="fc" id="L105">                coordinate -= minutes;</span>
-<span class="fc" id="L106">                coordinate *= 60.0;</span>
+<span class="fc" id="L93">        final DecimalFormat df = new DecimalFormat(&quot;###.#####&quot;);</span>
+<span class="fc bfc" id="L94" title="All 4 branches covered.">        if (outputType == FORMAT_MINUTES || outputType == FORMAT_SECONDS) {</span>
+<span class="fc" id="L95">            final int degrees = (int) Math.floor(coordinate);</span>
+<span class="fc" id="L96">            sb.append(degrees);</span>
+<span class="fc" id="L97">            sb.append(':');</span>
+<span class="fc" id="L98">            coordinate -= degrees;</span>
+<span class="fc" id="L99">            coordinate *= 60.0;</span>
+<span class="fc bfc" id="L100" title="All 2 branches covered.">            if (outputType == FORMAT_SECONDS) {</span>
+<span class="fc" id="L101">                final int minutes = (int) Math.floor(coordinate);</span>
+<span class="fc" id="L102">                sb.append(minutes);</span>
+<span class="fc" id="L103">                sb.append(':');</span>
+<span class="fc" id="L104">                coordinate -= minutes;</span>
+<span class="fc" id="L105">                coordinate *= 60.0;</span>
             }
         }
-<span class="fc" id="L109">        sb.append(df.format(coordinate));</span>
-<span class="fc" id="L110">        return sb.toString();</span>
+<span class="fc" id="L108">        sb.append(df.format(coordinate));</span>
+<span class="fc" id="L109">        return sb.toString();</span>
     }
 
     /**
@@ -125,67 +124,67 @@ public class LocationUtils {
      */
     public static double convert(String coordinate) {
         // IllegalArgumentException if bad syntax
-<span class="fc bfc" id="L128" title="All 2 branches covered.">        if (coordinate == null) {</span>
-<span class="fc" id="L129">            throw new NullPointerException();</span>
+<span class="fc bfc" id="L127" title="All 2 branches covered.">        if (coordinate == null) {</span>
+<span class="fc" id="L128">            throw new NullPointerException();</span>
         }
 
-<span class="fc" id="L132">        boolean negative = false;</span>
-<span class="fc bfc" id="L133" title="All 2 branches covered.">        if (coordinate.charAt(0) == '-') {</span>
-<span class="fc" id="L134">            coordinate = coordinate.substring(1);</span>
-<span class="fc" id="L135">            negative = true;</span>
+<span class="fc" id="L131">        boolean negative = false;</span>
+<span class="fc bfc" id="L132" title="All 2 branches covered.">        if (coordinate.charAt(0) == '-') {</span>
+<span class="fc" id="L133">            coordinate = coordinate.substring(1);</span>
+<span class="fc" id="L134">            negative = true;</span>
         }
 
-<span class="fc" id="L138">        final StringTokenizer st = new StringTokenizer(coordinate, &quot;:&quot;);</span>
-<span class="fc" id="L139">        final int tokens = st.countTokens();</span>
-<span class="pc bpc" id="L140" title="1 of 2 branches missed.">        if (tokens &lt; 1) {</span>
-<span class="nc" id="L141">            throw new IllegalArgumentException();</span>
+<span class="fc" id="L137">        final StringTokenizer st = new StringTokenizer(coordinate, &quot;:&quot;);</span>
+<span class="fc" id="L138">        final int tokens = st.countTokens();</span>
+<span class="pc bpc" id="L139" title="1 of 2 branches missed.">        if (tokens &lt; 1) {</span>
+<span class="nc" id="L140">            throw new IllegalArgumentException();</span>
         }
         try {
-<span class="fc" id="L144">            final String degrees = st.nextToken();</span>
+<span class="fc" id="L143">            final String degrees = st.nextToken();</span>
             double val;
-<span class="fc bfc" id="L146" title="All 2 branches covered.">            if (tokens == 1) {</span>
-<span class="fc" id="L147">                val = Double.parseDouble(degrees);</span>
-<span class="fc bfc" id="L148" title="All 2 branches covered.">                return negative ? -val : val;</span>
+<span class="fc bfc" id="L145" title="All 2 branches covered.">            if (tokens == 1) {</span>
+<span class="fc" id="L146">                val = Double.parseDouble(degrees);</span>
+<span class="fc bfc" id="L147" title="All 2 branches covered.">                return negative ? -val : val;</span>
             }
 
-<span class="fc" id="L151">            final String minutes = st.nextToken();</span>
-<span class="fc" id="L152">            final int deg = Integer.parseInt(degrees);</span>
+<span class="fc" id="L150">            final String minutes = st.nextToken();</span>
+<span class="fc" id="L151">            final int deg = Integer.parseInt(degrees);</span>
             double min;
-<span class="fc" id="L154">            double sec = 0.0;</span>
-<span class="fc" id="L155">            boolean secPresent = false;</span>
+<span class="fc" id="L153">            double sec = 0.0;</span>
+<span class="fc" id="L154">            boolean secPresent = false;</span>
 
-<span class="fc bfc" id="L157" title="All 2 branches covered.">            if (st.hasMoreTokens()) {</span>
-<span class="fc" id="L158">                min = Integer.parseInt(minutes);</span>
-<span class="fc" id="L159">                final String seconds = st.nextToken();</span>
-<span class="fc" id="L160">                sec = Double.parseDouble(seconds);</span>
-<span class="fc" id="L161">                secPresent = true;</span>
-<span class="fc" id="L162">            } else {</span>
-<span class="fc" id="L163">                min = Double.parseDouble(minutes);</span>
+<span class="fc bfc" id="L156" title="All 2 branches covered.">            if (st.hasMoreTokens()) {</span>
+<span class="fc" id="L157">                min = Integer.parseInt(minutes);</span>
+<span class="fc" id="L158">                final String seconds = st.nextToken();</span>
+<span class="fc" id="L159">                sec = Double.parseDouble(seconds);</span>
+<span class="fc" id="L160">                secPresent = true;</span>
+<span class="fc" id="L161">            } else {</span>
+<span class="fc" id="L162">                min = Double.parseDouble(minutes);</span>
             }
 
-<span class="pc bpc" id="L166" title="5 of 8 branches missed.">            final boolean isNegative180 = negative &amp;&amp; (deg == 180) &amp;&amp;</span>
+<span class="pc bpc" id="L165" title="5 of 8 branches missed.">            final boolean isNegative180 = negative &amp;&amp; (deg == 180) &amp;&amp;</span>
                     (min == 0) &amp;&amp; (sec == 0);
 
             // deg must be in [0, 179] except for the case of -180 degrees
-<span class="pc bpc" id="L170" title="1 of 6 branches missed.">            if ((deg &lt; 0.0) || (deg &gt; 179 &amp;&amp; !isNegative180)) {</span>
-<span class="fc" id="L171">                throw new IllegalArgumentException();</span>
+<span class="pc bpc" id="L169" title="1 of 6 branches missed.">            if ((deg &lt; 0.0) || (deg &gt; 179 &amp;&amp; !isNegative180)) {</span>
+<span class="fc" id="L170">                throw new IllegalArgumentException();</span>
             }
 
             // min must be in [0, 59] if seconds are present, otherwise [0.0, 60.0)
-<span class="pc bpc" id="L175" title="1 of 8 branches missed.">            if (min &lt; 0 || min &gt;= 60 || (secPresent &amp;&amp; (min &gt; 59))) {</span>
-<span class="fc" id="L176">                throw new IllegalArgumentException();</span>
+<span class="pc bpc" id="L174" title="1 of 8 branches missed.">            if (min &lt; 0 || min &gt;= 60 || (secPresent &amp;&amp; (min &gt; 59))) {</span>
+<span class="fc" id="L175">                throw new IllegalArgumentException();</span>
             }
 
             // sec must be in [0.0, 60.0)
-<span class="fc bfc" id="L180" title="All 4 branches covered.">            if (sec &lt; 0 || sec &gt;= 60) {</span>
-<span class="fc" id="L181">                throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L179" title="All 4 branches covered.">            if (sec &lt; 0 || sec &gt;= 60) {</span>
+<span class="fc" id="L180">                throw new IllegalArgumentException();</span>
             }
 
-<span class="fc" id="L184">            val = deg * 3600.0 + min * 60.0 + sec;</span>
-<span class="fc" id="L185">            val /= 3600.0;</span>
-<span class="pc bpc" id="L186" title="1 of 2 branches missed.">            return negative ? -val : val;</span>
-<span class="fc" id="L187">        } catch (final NumberFormatException nfe) {</span>
-<span class="fc" id="L188">            throw new IllegalArgumentException();</span>
+<span class="fc" id="L183">            val = deg * 3600.0 + min * 60.0 + sec;</span>
+<span class="fc" id="L184">            val /= 3600.0;</span>
+<span class="pc bpc" id="L185" title="1 of 2 branches missed.">            return negative ? -val : val;</span>
+<span class="fc" id="L186">        } catch (final NumberFormatException nfe) {</span>
+<span class="fc" id="L187">            throw new IllegalArgumentException();</span>
         }
     }
 
@@ -204,15 +203,15 @@ public class LocationUtils {
             final double endLatitude, final double endLongitude,
             final BearingDistance results) {
         //noinspection all
-<span class="fc" id="L207">        GeodesicData data = Geodesic.WGS84.inverse(startLatitude, startLongitude, endLatitude, endLongitude);</span>
-<span class="fc" id="L208">        results.mStartLatitude = data.getLat1();</span>
-<span class="fc" id="L209">        results.mStartLongitude = data.getLon1();</span>
-<span class="fc" id="L210">        results.mEndLatitude = data.getLat2();</span>
-<span class="fc" id="L211">        results.mEndLongitude = data.getLon2();</span>
-<span class="fc" id="L212">        results.mDistance = data.getS12();</span>
-<span class="fc" id="L213">        results.mInitialBearing = data.getAzi1();</span>
-<span class="fc" id="L214">        results.mFinalBearing = data.getAzi2();</span>
-<span class="fc" id="L215">    }</span>
+<span class="fc" id="L206">        GeodesicData data = Geodesic.WGS84.inverse(startLatitude, startLongitude, endLatitude, endLongitude);</span>
+<span class="fc" id="L207">        results.mStartLatitude = data.getLat1();</span>
+<span class="fc" id="L208">        results.mStartLongitude = data.getLon1();</span>
+<span class="fc" id="L209">        results.mEndLatitude = data.getLat2();</span>
+<span class="fc" id="L210">        results.mEndLongitude = data.getLon2();</span>
+<span class="fc" id="L211">        results.mDistance = data.getS12();</span>
+<span class="fc" id="L212">        results.mInitialBearing = data.getAzi1();</span>
+<span class="fc" id="L213">        results.mFinalBearing = data.getAzi2();</span>
+<span class="fc" id="L214">    }</span>
 
     /**
      * Computes the approximate distance in meters between two locations, and the initial and final bearings of the
@@ -227,9 +226,9 @@ public class LocationUtils {
     public static BearingDistance distanceAndBearing(
             final double startLatitude, final double startLongitude,
             final double endLatitude, final double endLongitude) {
-<span class="fc" id="L230">        final BearingDistance results = new BearingDistance();</span>
-<span class="fc" id="L231">        distanceAndBearing(startLatitude, startLongitude, endLatitude, endLongitude, results);</span>
-<span class="fc" id="L232">        return results;</span>
+<span class="fc" id="L229">        final BearingDistance results = new BearingDistance();</span>
+<span class="fc" id="L230">        distanceAndBearing(startLatitude, startLongitude, endLatitude, endLongitude, results);</span>
+<span class="fc" id="L231">        return results;</span>
     }
 
     /**
@@ -247,19 +246,19 @@ public class LocationUtils {
     public static void distanceAndBearing(
             final double startLatitude, final double startLongitude,
             final double endLatitude, final double endLongitude, final double[] results) {
-<span class="fc bfc" id="L250" title="All 2 branches covered.">        if (results.length == 0) {</span>
-<span class="fc" id="L251">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L249" title="All 2 branches covered.">        if (results.length == 0) {</span>
+<span class="fc" id="L250">            throw new IllegalArgumentException();</span>
         }
         //noinspection all
-<span class="fc" id="L254">        final GeodesicData data = Geodesic.WGS84.inverse(startLatitude, startLongitude, endLatitude, endLongitude);</span>
-<span class="fc" id="L255">        results[0] = data.getS12();</span>
-<span class="fc bfc" id="L256" title="All 2 branches covered.">        if (results.length &gt; 1) {</span>
-<span class="fc" id="L257">            results[1] = data.getAzi1();</span>
-<span class="fc bfc" id="L258" title="All 2 branches covered.">            if (results.length &gt; 2) {</span>
-<span class="fc" id="L259">                results[2] = data.getAzi2();</span>
+<span class="fc" id="L253">        final GeodesicData data = Geodesic.WGS84.inverse(startLatitude, startLongitude, endLatitude, endLongitude);</span>
+<span class="fc" id="L254">        results[0] = data.getS12();</span>
+<span class="fc bfc" id="L255" title="All 2 branches covered.">        if (results.length &gt; 1) {</span>
+<span class="fc" id="L256">            results[1] = data.getAzi1();</span>
+<span class="fc bfc" id="L257" title="All 2 branches covered.">            if (results.length &gt; 2) {</span>
+<span class="fc" id="L258">                results[2] = data.getAzi2();</span>
             }
         }
-<span class="fc" id="L262">    }</span>
+<span class="fc" id="L261">    }</span>
 
     /**
      * Computes the approximate distance in meters between two locations.
@@ -274,7 +273,7 @@ public class LocationUtils {
             final double startLatitude, final double startLongitude, final double endLatitude,
             final double endLongitude) {
         //noinspection all
-<span class="fc" id="L277">        return Geodesic.WGS84.inverse(startLatitude, startLongitude, endLatitude, endLongitude).getS12();</span>
+<span class="fc" id="L276">        return Geodesic.WGS84.inverse(startLatitude, startLongitude, endLatitude, endLongitude).getS12();</span>
     }
 
     /**
@@ -289,7 +288,7 @@ public class LocationUtils {
     public static Distance distanceBetween(
             final double startLatitude, final double startLongitude,
             final double endLatitude, final double endLongitude) {
-<span class="fc" id="L292">        return new Distance(distanceBetweenMeters(startLatitude, startLongitude, endLatitude, endLongitude),</span>
+<span class="fc" id="L291">        return new Distance(distanceBetweenMeters(startLatitude, startLongitude, endLatitude, endLongitude),</span>
                 DistanceUnit.METER);
     }
 
@@ -306,16 +305,16 @@ public class LocationUtils {
     public static Distance distanceBetween(
             final double startLatitude, final double startLongitude,
             final double endLatitude, final double endLongitude, final Distance result) {
-<span class="fc" id="L309">        result.setValue(distanceBetweenMeters(startLatitude, startLongitude, endLatitude, endLongitude));</span>
-<span class="fc" id="L310">        result.setUnit(DistanceUnit.METER);</span>
-<span class="fc" id="L311">        return result;</span>
+<span class="fc" id="L308">        result.setValue(distanceBetweenMeters(startLatitude, startLongitude, endLatitude, endLongitude));</span>
+<span class="fc" id="L309">        result.setUnit(DistanceUnit.METER);</span>
+<span class="fc" id="L310">        return result;</span>
     }
 
 
     /**
      * Contains distance and bearing.
      */
-<span class="fc" id="L318">    public static class BearingDistance {</span>
+<span class="fc" id="L317">    public static class BearingDistance {</span>
         /**
          * Starting latitude (degrees).
          */
@@ -339,17 +338,17 @@ public class LocationUtils {
         /**
          * Distance (meters).
          */
-<span class="fc" id="L342">        private double mDistance = 0.0f;</span>
+<span class="fc" id="L341">        private double mDistance = 0.0f;</span>
 
         /**
          * Initial bearing (degrees).
          */
-<span class="fc" id="L347">        private double mInitialBearing = 0.0f;</span>
+<span class="fc" id="L346">        private double mInitialBearing = 0.0f;</span>
 
         /**
          * Final bearing (degrees).
          */
-<span class="fc" id="L352">        private double mFinalBearing = 0.0f;</span>
+<span class="fc" id="L351">        private double mFinalBearing = 0.0f;</span>
 
         /**
          * Gets starting latitude expressed in degrees.
@@ -357,7 +356,7 @@ public class LocationUtils {
          * @return starting latitude (degrees).
          */
         public double getStartLatitude() {
-<span class="fc" id="L360">            return mStartLatitude;</span>
+<span class="fc" id="L359">            return mStartLatitude;</span>
         }
 
         /**
@@ -366,7 +365,7 @@ public class LocationUtils {
          * @return starting longitude (degrees).
          */
         public double getStartLongitude() {
-<span class="fc" id="L369">            return mStartLongitude;</span>
+<span class="fc" id="L368">            return mStartLongitude;</span>
         }
 
         /**
@@ -375,7 +374,7 @@ public class LocationUtils {
          * @return ending latitude (degrees).
          */
         public double getEndLatitude() {
-<span class="fc" id="L378">            return mEndLatitude;</span>
+<span class="fc" id="L377">            return mEndLatitude;</span>
         }
 
         /**
@@ -384,7 +383,7 @@ public class LocationUtils {
          * @return ending longitude (degrees).
          */
         public double getEndLongitude() {
-<span class="fc" id="L387">            return mEndLongitude;</span>
+<span class="fc" id="L386">            return mEndLongitude;</span>
         }
 
         /**
@@ -393,7 +392,7 @@ public class LocationUtils {
          * @return distance (meters).
          */
         public double getDistanceMeters() {
-<span class="fc" id="L396">            return mDistance;</span>
+<span class="fc" id="L395">            return mDistance;</span>
         }
 
         /**
@@ -402,7 +401,7 @@ public class LocationUtils {
          * @return distance.
          */
         public Distance getDistance() {
-<span class="fc" id="L405">            return new Distance(mDistance, DistanceUnit.METER);</span>
+<span class="fc" id="L404">            return new Distance(mDistance, DistanceUnit.METER);</span>
         }
 
         /**
@@ -412,9 +411,9 @@ public class LocationUtils {
          * @return provided distance instance.
          */
         public Distance getDistance(final Distance result) {
-<span class="fc" id="L415">            result.setValue(mDistance);</span>
-<span class="fc" id="L416">            result.setUnit(DistanceUnit.METER);</span>
-<span class="fc" id="L417">            return result;</span>
+<span class="fc" id="L414">            result.setValue(mDistance);</span>
+<span class="fc" id="L415">            result.setUnit(DistanceUnit.METER);</span>
+<span class="fc" id="L416">            return result;</span>
         }
 
         /**
@@ -423,7 +422,7 @@ public class LocationUtils {
          * @return initial bearing/azimuth (degrees).
          */
         public double getInitialBearing() {
-<span class="fc" id="L426">            return mInitialBearing;</span>
+<span class="fc" id="L425">            return mInitialBearing;</span>
         }
 
         /**
@@ -432,7 +431,7 @@ public class LocationUtils {
          * @return final bearing/azimuth (degrees).
          */
         public double getFinalBearing() {
-<span class="fc" id="L435">            return mFinalBearing;</span>
+<span class="fc" id="L434">            return mFinalBearing;</span>
         }
     }
 }

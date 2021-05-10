@@ -29,7 +29,7 @@ import java.util.Random;
 /**
  * Generates the GNSS range errors due to signal in space, ionosphere and troposphere
  * errors based on the elevation angles.
- * This implementation is based on the equations defined in &quot;Principles of GNSS, Inertial, and Multisensor
+ * This implementation is based on the equations defined in &quot;Principles of GNSS, Inertial, and Multi-sensor
  * Integrated Navigation Systems, Second Edition&quot; and on the companion software available at:
  * https://github.com/ymjdz/MATLAB-Codes/blob/master/Initialize_GNSS_biases.m
  */
@@ -152,42 +152,43 @@ import java.util.Random;
      * @param random            random number generator.
      * @return generated bias provided satellite position.
      */
+    @SuppressWarnings(&quot;DuplicatedCode&quot;)
     private static double generate(final ECEFPosition satellitePosition, final ECEFPosition userPosition,
                                    final GNSSConfig config, final Matrix cen, final Random random) {
 
         // Determine ECEF line-of-sight vector using (8.41)
-<span class="fc" id="L159">        final double deltaRx = satellitePosition.getX() - userPosition.getX();</span>
-<span class="fc" id="L160">        final double deltaRy = satellitePosition.getY() - userPosition.getY();</span>
-<span class="fc" id="L161">        final double deltaRz = satellitePosition.getZ() - userPosition.getZ();</span>
+<span class="fc" id="L160">        final double deltaRx = satellitePosition.getX() - userPosition.getX();</span>
+<span class="fc" id="L161">        final double deltaRy = satellitePosition.getY() - userPosition.getY();</span>
+<span class="fc" id="L162">        final double deltaRz = satellitePosition.getZ() - userPosition.getZ();</span>
 
-<span class="fc" id="L163">        final double deltaRNorm = Math.sqrt(deltaRx * deltaRx + deltaRy * deltaRy + deltaRz * deltaRz);</span>
+<span class="fc" id="L164">        final double deltaRNorm = Math.sqrt(deltaRx * deltaRx + deltaRy * deltaRy + deltaRz * deltaRz);</span>
 
-<span class="fc" id="L165">        final double uaseX = deltaRx / deltaRNorm;</span>
-<span class="fc" id="L166">        final double uaseY = deltaRy / deltaRNorm;</span>
-<span class="fc" id="L167">        final double uaseZ = deltaRz / deltaRNorm;</span>
+<span class="fc" id="L166">        final double uaseX = deltaRx / deltaRNorm;</span>
+<span class="fc" id="L167">        final double uaseY = deltaRy / deltaRNorm;</span>
+<span class="fc" id="L168">        final double uaseZ = deltaRz / deltaRNorm;</span>
 
         // Convert line of sight vector to NED using (8.39) and determine
         // elevation using (8.57)
-<span class="fc" id="L171">        final double cen1 = cen.getElementAt(2, 0);</span>
-<span class="fc" id="L172">        final double cen2 = cen.getElementAt(2, 1);</span>
-<span class="fc" id="L173">        final double cen3 = cen.getElementAt(2, 2);</span>
+<span class="fc" id="L172">        final double cen1 = cen.getElementAt(2, 0);</span>
+<span class="fc" id="L173">        final double cen2 = cen.getElementAt(2, 1);</span>
+<span class="fc" id="L174">        final double cen3 = cen.getElementAt(2, 2);</span>
 
-<span class="fc" id="L175">        double elevation = -Math.asin(cen1 * uaseX + cen2 * uaseY + cen3 * uaseZ);</span>
+<span class="fc" id="L176">        double elevation = -Math.asin(cen1 * uaseX + cen2 * uaseY + cen3 * uaseZ);</span>
 
         // Limit the minimum elevation angle to the masking angle
-<span class="fc" id="L178">        elevation = Math.max(elevation, Math.toRadians(config.getMaskAngleDegrees()));</span>
+<span class="fc" id="L179">        elevation = Math.max(elevation, Math.toRadians(config.getMaskAngleDegrees()));</span>
 
         // Calculate ionosphere and troposphere error SDs using (9.79) and (9.80)
-<span class="fc" id="L181">        final double cosElevation = Math.cos(elevation);</span>
-<span class="fc" id="L182">        final double cosElevation2 = cosElevation * cosElevation;</span>
-<span class="fc" id="L183">        final double ionoSD = config.getZenithIonosphereErrorSD() / Math.sqrt(1.0</span>
+<span class="fc" id="L182">        final double cosElevation = Math.cos(elevation);</span>
+<span class="fc" id="L183">        final double cosElevation2 = cosElevation * cosElevation;</span>
+<span class="fc" id="L184">        final double ionoSD = config.getZenithIonosphereErrorSD() / Math.sqrt(1.0</span>
                 - IONO_FACTOR * cosElevation2);
-<span class="fc" id="L185">        final double tropSD = config.getZenithTroposphereErrorSD() / Math.sqrt(1.0</span>
+<span class="fc" id="L186">        final double tropSD = config.getZenithTroposphereErrorSD() / Math.sqrt(1.0</span>
                 - TROPO_FACTOR * cosElevation2);
 
         // Determine range bias
-<span class="fc" id="L189">        return config.getSISErrorSD() * random.nextGaussian() + ionoSD * random.nextGaussian()</span>
-<span class="fc" id="L190">                + tropSD * random.nextGaussian();</span>
+<span class="fc" id="L190">        return config.getSISErrorSD() * random.nextGaussian() + ionoSD * random.nextGaussian()</span>
+<span class="fc" id="L191">                + tropSD * random.nextGaussian();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

@@ -36,14 +36,14 @@ import java.util.Collection;
  * unweighted iterated least squares.
  * Separate calculations are implemented for position and clock offset and
  * for velocity and clock drift.
- * This implementation is based on the equations defined in &quot;Principles of GNSS, Inertial, and Multisensor
+ * This implementation is based on the equations defined in &quot;Principles of GNSS, Inertial, and Multi-sensor
  * Integrated Navigation Systems, Second Edition&quot; and on the companion software available at:
  * https://github.com/ymjdz/MATLAB-Codes/blob/master/GNSS_LS_position_velocity.m
  */
 public class GNSSLeastSquaresPositionAndVelocityEstimator {
 
     /**
-     * Minimum nuber of measurements required to obtain a solution.
+     * Minimum number of measurements required to obtain a solution.
      */
     public static final int MIN_MEASUREMENTS = 4;
 
@@ -567,264 +567,265 @@ public class GNSSLeastSquaresPositionAndVelocityEstimator {
      * @throws LockedException   if estimator is already running.
      * @throws GNSSException     if estimation fails due to numerical instabilities.
      */
+    @SuppressWarnings(&quot;DuplicatedCode&quot;)
     public void estimate(final GNSSEstimation result)
             throws NotReadyException, LockedException, GNSSException {
-<span class="pc bpc" id="L572" title="1 of 2 branches missed.">        if (!isReady()) {</span>
-<span class="nc" id="L573">            throw new NotReadyException();</span>
+<span class="pc bpc" id="L573" title="1 of 2 branches missed.">        if (!isReady()) {</span>
+<span class="nc" id="L574">            throw new NotReadyException();</span>
         }
-<span class="fc bfc" id="L575" title="All 2 branches covered.">        if (mRunning) {</span>
-<span class="fc" id="L576">            throw new LockedException();</span>
+<span class="fc bfc" id="L576" title="All 2 branches covered.">        if (mRunning) {</span>
+<span class="fc" id="L577">            throw new LockedException();</span>
         }
 
         try {
-<span class="fc" id="L580">            mRunning = true;</span>
+<span class="fc" id="L581">            mRunning = true;</span>
 
-<span class="fc bfc" id="L582" title="All 2 branches covered.">            if (mListener != null) {</span>
-<span class="fc" id="L583">                mListener.onEstimateStart(this);</span>
+<span class="fc bfc" id="L583" title="All 2 branches covered.">            if (mListener != null) {</span>
+<span class="fc" id="L584">                mListener.onEstimateStart(this);</span>
             }
 
             // if no prior position and velocity is available, assume that
             // we are at latitude,longitude equal to the average of satellite
             // measurements, at Earth's surface (height = 0) and with zero velocity.
-<span class="fc" id="L589">            initializePriorPositionAndVelocityIfNeeded();</span>
+<span class="fc" id="L590">            initializePriorPositionAndVelocityIfNeeded();</span>
 
             // POSITION AND CLOCK OFFSET
 
             // Setup predicted state
-<span class="fc" id="L594">            final double priorX = mPriorPositionAndVelocity.getX();</span>
-<span class="fc" id="L595">            final double priorY = mPriorPositionAndVelocity.getY();</span>
-<span class="fc" id="L596">            final double priorZ = mPriorPositionAndVelocity.getZ();</span>
+<span class="fc" id="L595">            final double priorX = mPriorPositionAndVelocity.getX();</span>
+<span class="fc" id="L596">            final double priorY = mPriorPositionAndVelocity.getY();</span>
+<span class="fc" id="L597">            final double priorZ = mPriorPositionAndVelocity.getZ();</span>
 
-<span class="fc" id="L598">            mXPred.setElementAtIndex(0, priorX);</span>
-<span class="fc" id="L599">            mXPred.setElementAtIndex(1, priorY);</span>
-<span class="fc" id="L600">            mXPred.setElementAtIndex(2, priorZ);</span>
-<span class="fc" id="L601">            mXPred.setElementAtIndex(3, 0.0);</span>
+<span class="fc" id="L599">            mXPred.setElementAtIndex(0, priorX);</span>
+<span class="fc" id="L600">            mXPred.setElementAtIndex(1, priorY);</span>
+<span class="fc" id="L601">            mXPred.setElementAtIndex(2, priorZ);</span>
+<span class="fc" id="L602">            mXPred.setElementAtIndex(3, 0.0);</span>
 
-<span class="fc" id="L603">            final int numMeasurements = mMeasurements.size();</span>
-<span class="fc" id="L604">            final Matrix predMeas = new Matrix(numMeasurements, 1);</span>
-<span class="fc" id="L605">            final Matrix h = new Matrix(numMeasurements, STATE_COMPONENTS);</span>
-<span class="fc bfc" id="L606" title="All 2 branches covered.">            for (int i = 0; i &lt; numMeasurements; i++) {</span>
-<span class="fc" id="L607">                h.setElementAt(i, 3, 1.0);</span>
+<span class="fc" id="L604">            final int numMeasurements = mMeasurements.size();</span>
+<span class="fc" id="L605">            final Matrix predMeas = new Matrix(numMeasurements, 1);</span>
+<span class="fc" id="L606">            final Matrix h = new Matrix(numMeasurements, STATE_COMPONENTS);</span>
+<span class="fc bfc" id="L607" title="All 2 branches covered.">            for (int i = 0; i &lt; numMeasurements; i++) {</span>
+<span class="fc" id="L608">                h.setElementAt(i, 3, 1.0);</span>
             }
 
-<span class="fc" id="L610">            final Matrix hTrans = new Matrix(STATE_COMPONENTS, numMeasurements);</span>
-<span class="fc" id="L611">            final Matrix hTmp1 = new Matrix(STATE_COMPONENTS, numMeasurements);</span>
-<span class="fc" id="L612">            final Matrix deltaPseudoRange = new Matrix(numMeasurements, 1);</span>
+<span class="fc" id="L611">            final Matrix hTrans = new Matrix(STATE_COMPONENTS, numMeasurements);</span>
+<span class="fc" id="L612">            final Matrix hTmp1 = new Matrix(STATE_COMPONENTS, numMeasurements);</span>
+<span class="fc" id="L613">            final Matrix deltaPseudoRange = new Matrix(numMeasurements, 1);</span>
 
             // Repeat until convergence
-<span class="fc" id="L615">            double testConvergence = 1.0;</span>
-<span class="fc bfc" id="L616" title="All 2 branches covered.">            while (testConvergence &gt; mConvergenceThreshold) {</span>
+<span class="fc" id="L616">            double testConvergence = 1.0;</span>
+<span class="fc bfc" id="L617" title="All 2 branches covered.">            while (testConvergence &gt; mConvergenceThreshold) {</span>
 
                 // Loop measurements
-<span class="fc" id="L619">                int j = 0;</span>
-<span class="fc bfc" id="L620" title="All 2 branches covered.">                for (final GNSSMeasurement measurement : mMeasurements) {</span>
+<span class="fc" id="L620">                int j = 0;</span>
+<span class="fc bfc" id="L621" title="All 2 branches covered.">                for (final GNSSMeasurement measurement : mMeasurements) {</span>
 
                     // Predict approx range
-<span class="fc" id="L623">                    final double measX = measurement.getX();</span>
-<span class="fc" id="L624">                    final double measY = measurement.getY();</span>
-<span class="fc" id="L625">                    final double measZ = measurement.getZ();</span>
+<span class="fc" id="L624">                    final double measX = measurement.getX();</span>
+<span class="fc" id="L625">                    final double measY = measurement.getY();</span>
+<span class="fc" id="L626">                    final double measZ = measurement.getZ();</span>
 
-<span class="fc" id="L627">                    double deltaRx = measX - priorX;</span>
-<span class="fc" id="L628">                    double deltaRy = measY - priorY;</span>
-<span class="fc" id="L629">                    double deltaRz = measZ - priorZ;</span>
-<span class="fc" id="L630">                    final double approxRange = norm(deltaRx, deltaRy, deltaRz);</span>
+<span class="fc" id="L628">                    double deltaRx = measX - priorX;</span>
+<span class="fc" id="L629">                    double deltaRy = measY - priorY;</span>
+<span class="fc" id="L630">                    double deltaRz = measZ - priorZ;</span>
+<span class="fc" id="L631">                    final double approxRange = norm(deltaRx, deltaRy, deltaRz);</span>
 
                     // Calculate frame rotation during signal transit time using (8.36)
-<span class="fc" id="L633">                    final double ceiValue = EARTH_ROTATION_RATE * approxRange / SPEED_OF_LIGHT;</span>
-<span class="fc" id="L634">                    mCei.setElementAt(0, 1, ceiValue);</span>
-<span class="fc" id="L635">                    mCei.setElementAt(1, 0, -ceiValue);</span>
+<span class="fc" id="L634">                    final double ceiValue = EARTH_ROTATION_RATE * approxRange / SPEED_OF_LIGHT;</span>
+<span class="fc" id="L635">                    mCei.setElementAt(0, 1, ceiValue);</span>
+<span class="fc" id="L636">                    mCei.setElementAt(1, 0, -ceiValue);</span>
 
                     // Predict pseudo-range using (9.143)
-<span class="fc" id="L638">                    mTmp1.setElementAtIndex(0, measX);</span>
-<span class="fc" id="L639">                    mTmp1.setElementAtIndex(1, measY);</span>
-<span class="fc" id="L640">                    mTmp1.setElementAtIndex(2, measZ);</span>
+<span class="fc" id="L639">                    mTmp1.setElementAtIndex(0, measX);</span>
+<span class="fc" id="L640">                    mTmp1.setElementAtIndex(1, measY);</span>
+<span class="fc" id="L641">                    mTmp1.setElementAtIndex(2, measZ);</span>
 
-<span class="fc" id="L642">                    mCei.multiply(mTmp1, mTmp2);</span>
+<span class="fc" id="L643">                    mCei.multiply(mTmp1, mTmp2);</span>
 
-<span class="fc" id="L644">                    deltaRx = mTmp2.getElementAtIndex(0) - mXPred.getElementAtIndex(0);</span>
-<span class="fc" id="L645">                    deltaRy = mTmp2.getElementAtIndex(1) - mXPred.getElementAtIndex(1);</span>
-<span class="fc" id="L646">                    deltaRz = mTmp2.getElementAtIndex(2) - mXPred.getElementAtIndex(2);</span>
-<span class="fc" id="L647">                    final double range = norm(deltaRx, deltaRy, deltaRz);</span>
+<span class="fc" id="L645">                    deltaRx = mTmp2.getElementAtIndex(0) - mXPred.getElementAtIndex(0);</span>
+<span class="fc" id="L646">                    deltaRy = mTmp2.getElementAtIndex(1) - mXPred.getElementAtIndex(1);</span>
+<span class="fc" id="L647">                    deltaRz = mTmp2.getElementAtIndex(2) - mXPred.getElementAtIndex(2);</span>
+<span class="fc" id="L648">                    final double range = norm(deltaRx, deltaRy, deltaRz);</span>
 
-<span class="fc" id="L649">                    final double predictedPseudoRange = range + mXPred.getElementAtIndex(3);</span>
-<span class="fc" id="L650">                    predMeas.setElementAtIndex(j, predictedPseudoRange);</span>
+<span class="fc" id="L650">                    final double predictedPseudoRange = range + mXPred.getElementAtIndex(3);</span>
+<span class="fc" id="L651">                    predMeas.setElementAtIndex(j, predictedPseudoRange);</span>
 
-<span class="fc" id="L652">                    deltaPseudoRange.setElementAtIndex(j,</span>
-<span class="fc" id="L653">                            measurement.getPseudoRange() - predictedPseudoRange);</span>
+<span class="fc" id="L653">                    deltaPseudoRange.setElementAtIndex(j,</span>
+<span class="fc" id="L654">                            measurement.getPseudoRange() - predictedPseudoRange);</span>
 
                     // Predict line of sight and deploy in measurement matrix, (9.144)
-<span class="fc" id="L656">                    h.setElementAt(j, 0, -deltaRx / range);</span>
-<span class="fc" id="L657">                    h.setElementAt(j, 1, -deltaRy / range);</span>
-<span class="fc" id="L658">                    h.setElementAt(j, 2, -deltaRz / range);</span>
+<span class="fc" id="L657">                    h.setElementAt(j, 0, -deltaRx / range);</span>
+<span class="fc" id="L658">                    h.setElementAt(j, 1, -deltaRy / range);</span>
+<span class="fc" id="L659">                    h.setElementAt(j, 2, -deltaRz / range);</span>
 
-<span class="fc" id="L660">                    j++;</span>
-<span class="fc" id="L661">                }</span>
+<span class="fc" id="L661">                    j++;</span>
+<span class="fc" id="L662">                }</span>
 
                 // Unweighted least-squares solution, (9.35)/(9.141)
-<span class="fc" id="L664">                h.transpose(hTrans);</span>
-<span class="fc" id="L665">                hTrans.multiply(h, mHSqr);</span>
-<span class="fc" id="L666">                Utils.inverse(mHSqr, mInvHSqr);</span>
-<span class="fc" id="L667">                mInvHSqr.multiply(hTrans, hTmp1);</span>
-<span class="fc" id="L668">                hTmp1.multiply(deltaPseudoRange, mTmp3);</span>
+<span class="fc" id="L665">                h.transpose(hTrans);</span>
+<span class="fc" id="L666">                hTrans.multiply(h, mHSqr);</span>
+<span class="fc" id="L667">                Utils.inverse(mHSqr, mInvHSqr);</span>
+<span class="fc" id="L668">                mInvHSqr.multiply(hTrans, hTmp1);</span>
+<span class="fc" id="L669">                hTmp1.multiply(deltaPseudoRange, mTmp3);</span>
 
-<span class="fc" id="L670">                mXPred.add(mTmp3, mXEst);</span>
+<span class="fc" id="L671">                mXPred.add(mTmp3, mXEst);</span>
 
                 // Test convergence
-<span class="fc" id="L673">                testConvergence = predictionError();</span>
+<span class="fc" id="L674">                testConvergence = predictionError();</span>
 
                 // Set predictions to estimates for next iteration
-<span class="fc" id="L676">                mXPred.copyFrom(mXEst);</span>
-<span class="fc" id="L677">            }</span>
+<span class="fc" id="L677">                mXPred.copyFrom(mXEst);</span>
+<span class="fc" id="L678">            }</span>
 
             // Set outputs to estimates
-<span class="fc" id="L680">            final double resultX = mXEst.getElementAtIndex(0);</span>
-<span class="fc" id="L681">            final double resultY = mXEst.getElementAtIndex(1);</span>
-<span class="fc" id="L682">            final double resultZ = mXEst.getElementAtIndex(2);</span>
-<span class="fc" id="L683">            result.setPositionCoordinates(resultX, resultY, resultZ);</span>
+<span class="fc" id="L681">            final double resultX = mXEst.getElementAtIndex(0);</span>
+<span class="fc" id="L682">            final double resultY = mXEst.getElementAtIndex(1);</span>
+<span class="fc" id="L683">            final double resultZ = mXEst.getElementAtIndex(2);</span>
+<span class="fc" id="L684">            result.setPositionCoordinates(resultX, resultY, resultZ);</span>
 
-<span class="fc" id="L685">            final double resultClockOffset = mXEst.getElementAtIndex(3);</span>
-<span class="fc" id="L686">            result.setClockOffset(resultClockOffset);</span>
+<span class="fc" id="L686">            final double resultClockOffset = mXEst.getElementAtIndex(3);</span>
+<span class="fc" id="L687">            result.setClockOffset(resultClockOffset);</span>
 
 
             // VELOCITY AND CLOCK DRIFT
 
             // Setup predicted state
-<span class="fc" id="L692">            final double priorVx = mPriorPositionAndVelocity.getVx();</span>
-<span class="fc" id="L693">            final double priorVy = mPriorPositionAndVelocity.getVy();</span>
-<span class="fc" id="L694">            final double priorVz = mPriorPositionAndVelocity.getVz();</span>
+<span class="fc" id="L693">            final double priorVx = mPriorPositionAndVelocity.getVx();</span>
+<span class="fc" id="L694">            final double priorVy = mPriorPositionAndVelocity.getVy();</span>
+<span class="fc" id="L695">            final double priorVz = mPriorPositionAndVelocity.getVz();</span>
 
-<span class="fc" id="L696">            mXPred.setElementAtIndex(0, priorVx);</span>
-<span class="fc" id="L697">            mXPred.setElementAtIndex(1, priorVy);</span>
-<span class="fc" id="L698">            mXPred.setElementAtIndex(2, priorVz);</span>
-<span class="fc" id="L699">            mXPred.setElementAtIndex(3, 0.0);</span>
+<span class="fc" id="L697">            mXPred.setElementAtIndex(0, priorVx);</span>
+<span class="fc" id="L698">            mXPred.setElementAtIndex(1, priorVy);</span>
+<span class="fc" id="L699">            mXPred.setElementAtIndex(2, priorVz);</span>
+<span class="fc" id="L700">            mXPred.setElementAtIndex(3, 0.0);</span>
 
-<span class="fc" id="L701">            mResultPosition.setElementAtIndex(0, resultX);</span>
-<span class="fc" id="L702">            mResultPosition.setElementAtIndex(1, resultY);</span>
-<span class="fc" id="L703">            mResultPosition.setElementAtIndex(2, resultZ);</span>
+<span class="fc" id="L702">            mResultPosition.setElementAtIndex(0, resultX);</span>
+<span class="fc" id="L703">            mResultPosition.setElementAtIndex(1, resultY);</span>
+<span class="fc" id="L704">            mResultPosition.setElementAtIndex(2, resultZ);</span>
 
-<span class="fc" id="L705">            final Matrix deltaPseudoRangeRate = new Matrix(numMeasurements, 1);</span>
+<span class="fc" id="L706">            final Matrix deltaPseudoRangeRate = new Matrix(numMeasurements, 1);</span>
 
             // Repeat until convergence
-<span class="fc" id="L708">            testConvergence = 1.0;</span>
-<span class="fc bfc" id="L709" title="All 2 branches covered.">            while (testConvergence &gt; mConvergenceThreshold) {</span>
+<span class="fc" id="L709">            testConvergence = 1.0;</span>
+<span class="fc bfc" id="L710" title="All 2 branches covered.">            while (testConvergence &gt; mConvergenceThreshold) {</span>
 
                 // Loop measurements
-<span class="fc" id="L712">                int j = 0;</span>
-<span class="fc bfc" id="L713" title="All 2 branches covered.">                for (final GNSSMeasurement measurement : mMeasurements) {</span>
+<span class="fc" id="L713">                int j = 0;</span>
+<span class="fc bfc" id="L714" title="All 2 branches covered.">                for (final GNSSMeasurement measurement : mMeasurements) {</span>
                     // Predict approx range
-<span class="fc" id="L715">                    final double measX = measurement.getX();</span>
-<span class="fc" id="L716">                    final double measY = measurement.getY();</span>
-<span class="fc" id="L717">                    final double measZ = measurement.getZ();</span>
+<span class="fc" id="L716">                    final double measX = measurement.getX();</span>
+<span class="fc" id="L717">                    final double measY = measurement.getY();</span>
+<span class="fc" id="L718">                    final double measZ = measurement.getZ();</span>
 
-<span class="fc" id="L719">                    double deltaRx = measX - resultX;</span>
-<span class="fc" id="L720">                    double deltaRy = measY - resultY;</span>
-<span class="fc" id="L721">                    double deltaRz = measZ - resultZ;</span>
-<span class="fc" id="L722">                    final double approxRange = norm(deltaRx, deltaRy, deltaRz);</span>
+<span class="fc" id="L720">                    double deltaRx = measX - resultX;</span>
+<span class="fc" id="L721">                    double deltaRy = measY - resultY;</span>
+<span class="fc" id="L722">                    double deltaRz = measZ - resultZ;</span>
+<span class="fc" id="L723">                    final double approxRange = norm(deltaRx, deltaRy, deltaRz);</span>
 
                     // Calculate frame rotation during signal transit time using (8.36)
-<span class="fc" id="L725">                    final double ceiValue = EARTH_ROTATION_RATE * approxRange / SPEED_OF_LIGHT;</span>
-<span class="fc" id="L726">                    mCei.setElementAt(0, 1, ceiValue);</span>
-<span class="fc" id="L727">                    mCei.setElementAt(1, 0, -ceiValue);</span>
+<span class="fc" id="L726">                    final double ceiValue = EARTH_ROTATION_RATE * approxRange / SPEED_OF_LIGHT;</span>
+<span class="fc" id="L727">                    mCei.setElementAt(0, 1, ceiValue);</span>
+<span class="fc" id="L728">                    mCei.setElementAt(1, 0, -ceiValue);</span>
 
                     // Calculate range using (8.35)
-<span class="fc" id="L730">                    mTmp1.setElementAtIndex(0, measX);</span>
-<span class="fc" id="L731">                    mTmp1.setElementAtIndex(1, measY);</span>
-<span class="fc" id="L732">                    mTmp1.setElementAtIndex(2, measZ);</span>
+<span class="fc" id="L731">                    mTmp1.setElementAtIndex(0, measX);</span>
+<span class="fc" id="L732">                    mTmp1.setElementAtIndex(1, measY);</span>
+<span class="fc" id="L733">                    mTmp1.setElementAtIndex(2, measZ);</span>
 
-<span class="fc" id="L734">                    mCei.multiply(mTmp1, mTmp2);</span>
+<span class="fc" id="L735">                    mCei.multiply(mTmp1, mTmp2);</span>
 
-<span class="fc" id="L736">                    deltaRx = mTmp2.getElementAtIndex(0) - resultX;</span>
-<span class="fc" id="L737">                    deltaRy = mTmp2.getElementAtIndex(1) - resultY;</span>
-<span class="fc" id="L738">                    deltaRz = mTmp2.getElementAtIndex(2) - resultZ;</span>
-<span class="fc" id="L739">                    final double range = norm(deltaRx, deltaRy, deltaRz);</span>
+<span class="fc" id="L737">                    deltaRx = mTmp2.getElementAtIndex(0) - resultX;</span>
+<span class="fc" id="L738">                    deltaRy = mTmp2.getElementAtIndex(1) - resultY;</span>
+<span class="fc" id="L739">                    deltaRz = mTmp2.getElementAtIndex(2) - resultZ;</span>
+<span class="fc" id="L740">                    final double range = norm(deltaRx, deltaRy, deltaRz);</span>
 
                     // Calculate line of sight using (8.41)
-<span class="fc" id="L742">                    final double uaseX = deltaRx / range;</span>
-<span class="fc" id="L743">                    final double uaseY = deltaRy / range;</span>
-<span class="fc" id="L744">                    final double uaseZ = deltaRz / range;</span>
+<span class="fc" id="L743">                    final double uaseX = deltaRx / range;</span>
+<span class="fc" id="L744">                    final double uaseY = deltaRy / range;</span>
+<span class="fc" id="L745">                    final double uaseZ = deltaRz / range;</span>
 
                     // Predict pseudo-range rate using (9.143)
-<span class="fc" id="L747">                    mMeasurementPosition.setElementAtIndex(0, measX);</span>
-<span class="fc" id="L748">                    mMeasurementPosition.setElementAtIndex(1, measY);</span>
-<span class="fc" id="L749">                    mMeasurementPosition.setElementAtIndex(2, measZ);</span>
+<span class="fc" id="L748">                    mMeasurementPosition.setElementAtIndex(0, measX);</span>
+<span class="fc" id="L749">                    mMeasurementPosition.setElementAtIndex(1, measY);</span>
+<span class="fc" id="L750">                    mMeasurementPosition.setElementAtIndex(2, measZ);</span>
 
-<span class="fc" id="L751">                    final double measVx = measurement.getVx();</span>
-<span class="fc" id="L752">                    final double measVy = measurement.getVy();</span>
-<span class="fc" id="L753">                    final double measVz = measurement.getVz();</span>
+<span class="fc" id="L752">                    final double measVx = measurement.getVx();</span>
+<span class="fc" id="L753">                    final double measVy = measurement.getVy();</span>
+<span class="fc" id="L754">                    final double measVz = measurement.getVz();</span>
 
-<span class="fc" id="L755">                    mMeasurementVelocity.setElementAtIndex(0, measVx);</span>
-<span class="fc" id="L756">                    mMeasurementVelocity.setElementAtIndex(1, measVy);</span>
-<span class="fc" id="L757">                    mMeasurementVelocity.setElementAtIndex(2, measVz);</span>
+<span class="fc" id="L756">                    mMeasurementVelocity.setElementAtIndex(0, measVx);</span>
+<span class="fc" id="L757">                    mMeasurementVelocity.setElementAtIndex(1, measVy);</span>
+<span class="fc" id="L758">                    mMeasurementVelocity.setElementAtIndex(2, measVz);</span>
 
-<span class="fc" id="L759">                    mOmegaIe.multiply(mMeasurementPosition, mTmp4);</span>
+<span class="fc" id="L760">                    mOmegaIe.multiply(mMeasurementPosition, mTmp4);</span>
 
-<span class="fc" id="L761">                    mMeasurementVelocity.add(mTmp4, mTmp5);</span>
+<span class="fc" id="L762">                    mMeasurementVelocity.add(mTmp4, mTmp5);</span>
 
-<span class="fc" id="L763">                    mCei.multiply(mTmp5, mTmp6);</span>
+<span class="fc" id="L764">                    mCei.multiply(mTmp5, mTmp6);</span>
 
-<span class="fc" id="L765">                    mOmegaIe.multiply(mResultPosition, mTmp7);</span>
+<span class="fc" id="L766">                    mOmegaIe.multiply(mResultPosition, mTmp7);</span>
 
-<span class="fc" id="L767">                    mXPred.getSubmatrix(0, 0,</span>
+<span class="fc" id="L768">                    mXPred.getSubmatrix(0, 0,</span>
                             ELEMS_MINUS_ONE, 0, mPredVelocity);
 
-<span class="fc" id="L770">                    mPredVelocity.add(mTmp7, mTmp8);</span>
+<span class="fc" id="L771">                    mPredVelocity.add(mTmp7, mTmp8);</span>
 
-<span class="fc" id="L772">                    mTmp6.subtract(mTmp8, mTmp9);</span>
+<span class="fc" id="L773">                    mTmp6.subtract(mTmp8, mTmp9);</span>
 
-<span class="fc" id="L774">                    final double rangeRate = uaseX * mTmp9.getElementAtIndex(0)</span>
-<span class="fc" id="L775">                            + uaseY * mTmp9.getElementAtIndex(1)</span>
-<span class="fc" id="L776">                            + uaseZ * mTmp9.getElementAtIndex(2);</span>
+<span class="fc" id="L775">                    final double rangeRate = uaseX * mTmp9.getElementAtIndex(0)</span>
+<span class="fc" id="L776">                            + uaseY * mTmp9.getElementAtIndex(1)</span>
+<span class="fc" id="L777">                            + uaseZ * mTmp9.getElementAtIndex(2);</span>
 
-<span class="fc" id="L778">                    final double predictedPseudoRangeRate = rangeRate + mXPred.getElementAtIndex(3);</span>
-<span class="fc" id="L779">                    predMeas.setElementAtIndex(j, predictedPseudoRangeRate);</span>
+<span class="fc" id="L779">                    final double predictedPseudoRangeRate = rangeRate + mXPred.getElementAtIndex(3);</span>
+<span class="fc" id="L780">                    predMeas.setElementAtIndex(j, predictedPseudoRangeRate);</span>
 
-<span class="fc" id="L781">                    deltaPseudoRangeRate.setElementAtIndex(j,</span>
-<span class="fc" id="L782">                            measurement.getPseudoRate() - predictedPseudoRangeRate);</span>
+<span class="fc" id="L782">                    deltaPseudoRangeRate.setElementAtIndex(j,</span>
+<span class="fc" id="L783">                            measurement.getPseudoRate() - predictedPseudoRangeRate);</span>
 
                     // Predict line of sight and deploy in measurement matrix, (9.144)
-<span class="fc" id="L785">                    h.setElementAt(j, 0, -uaseX);</span>
-<span class="fc" id="L786">                    h.setElementAt(j, 1, -uaseY);</span>
-<span class="fc" id="L787">                    h.setElementAt(j, 2, -uaseZ);</span>
+<span class="fc" id="L786">                    h.setElementAt(j, 0, -uaseX);</span>
+<span class="fc" id="L787">                    h.setElementAt(j, 1, -uaseY);</span>
+<span class="fc" id="L788">                    h.setElementAt(j, 2, -uaseZ);</span>
 
-<span class="fc" id="L789">                    j++;</span>
-<span class="fc" id="L790">                }</span>
+<span class="fc" id="L790">                    j++;</span>
+<span class="fc" id="L791">                }</span>
 
                 // Unweighted least-squares solution, (9.35)/(9.141)
-<span class="fc" id="L793">                h.transpose(hTrans);</span>
-<span class="fc" id="L794">                hTrans.multiply(h, mHSqr);</span>
-<span class="fc" id="L795">                Utils.inverse(mHSqr, mInvHSqr);</span>
-<span class="fc" id="L796">                mInvHSqr.multiply(hTrans, hTmp1);</span>
-<span class="fc" id="L797">                hTmp1.multiply(deltaPseudoRangeRate, mTmp10);</span>
+<span class="fc" id="L794">                h.transpose(hTrans);</span>
+<span class="fc" id="L795">                hTrans.multiply(h, mHSqr);</span>
+<span class="fc" id="L796">                Utils.inverse(mHSqr, mInvHSqr);</span>
+<span class="fc" id="L797">                mInvHSqr.multiply(hTrans, hTmp1);</span>
+<span class="fc" id="L798">                hTmp1.multiply(deltaPseudoRangeRate, mTmp10);</span>
 
-<span class="fc" id="L799">                mXPred.add(mTmp10, mXEst);</span>
+<span class="fc" id="L800">                mXPred.add(mTmp10, mXEst);</span>
 
                 // Test convergence
-<span class="fc" id="L802">                testConvergence = predictionError();</span>
+<span class="fc" id="L803">                testConvergence = predictionError();</span>
 
                 // Set predictions to estimates for next iteration
-<span class="fc" id="L805">                mXPred.copyFrom(mXEst);</span>
-<span class="fc" id="L806">            }</span>
+<span class="fc" id="L806">                mXPred.copyFrom(mXEst);</span>
+<span class="fc" id="L807">            }</span>
 
             // Set outputs to estimates
-<span class="fc" id="L809">            final double resultVx = mXEst.getElementAtIndex(0);</span>
-<span class="fc" id="L810">            final double resultVy = mXEst.getElementAtIndex(1);</span>
-<span class="fc" id="L811">            final double resultVz = mXEst.getElementAtIndex(2);</span>
-<span class="fc" id="L812">            result.setVelocityCoordinates(resultVx, resultVy, resultVz);</span>
+<span class="fc" id="L810">            final double resultVx = mXEst.getElementAtIndex(0);</span>
+<span class="fc" id="L811">            final double resultVy = mXEst.getElementAtIndex(1);</span>
+<span class="fc" id="L812">            final double resultVz = mXEst.getElementAtIndex(2);</span>
+<span class="fc" id="L813">            result.setVelocityCoordinates(resultVx, resultVy, resultVz);</span>
 
-<span class="fc" id="L814">            final double resultClockDrift = mXEst.getElementAtIndex(3);</span>
-<span class="fc" id="L815">            result.setClockDrift(resultClockDrift);</span>
+<span class="fc" id="L815">            final double resultClockDrift = mXEst.getElementAtIndex(3);</span>
+<span class="fc" id="L816">            result.setClockDrift(resultClockDrift);</span>
 
-<span class="nc" id="L817">        } catch (final AlgebraException e) {</span>
-<span class="nc" id="L818">            throw new GNSSException(e);</span>
+<span class="nc" id="L818">        } catch (final AlgebraException e) {</span>
+<span class="nc" id="L819">            throw new GNSSException(e);</span>
         } finally {
 
-<span class="fc bfc" id="L821" title="All 2 branches covered.">            if (mListener != null) {</span>
-<span class="fc" id="L822">                mListener.onEstimateEnd(this);</span>
+<span class="fc bfc" id="L822" title="All 2 branches covered.">            if (mListener != null) {</span>
+<span class="fc" id="L823">                mListener.onEstimateEnd(this);</span>
             }
 
-<span class="fc" id="L825">            mRunning = false;</span>
+<span class="fc" id="L826">            mRunning = false;</span>
         }
-<span class="fc" id="L827">    }</span>
+<span class="fc" id="L828">    }</span>
 
     /**
      * Estimates new ECEF user position and velocity as well as clock
@@ -837,53 +838,53 @@ public class GNSSLeastSquaresPositionAndVelocityEstimator {
      */
     public GNSSEstimation estimate()
             throws NotReadyException, LockedException, GNSSException {
-<span class="fc" id="L840">        final GNSSEstimation result =</span>
+<span class="fc" id="L841">        final GNSSEstimation result =</span>
                 new GNSSEstimation();
-<span class="fc" id="L842">        estimate(result);</span>
-<span class="fc" id="L843">        return result;</span>
+<span class="fc" id="L843">        estimate(result);</span>
+<span class="fc" id="L844">        return result;</span>
     }
 
     /**
      * Initializes prior position and velocity if not set, assuming that
-     * user is located at the average latitude,longitud of all provided
+     * user is located at the average latitude, longitude of all provided
      * satellite measurements, at Earth's surface (height = 0) and with zero velocity.
      */
     private void initializePriorPositionAndVelocityIfNeeded() {
-<span class="fc bfc" id="L852" title="All 2 branches covered.">        if (mPriorPositionAndVelocity != null) {</span>
-<span class="fc" id="L853">            return;</span>
+<span class="fc bfc" id="L853" title="All 2 branches covered.">        if (mPriorPositionAndVelocity != null) {</span>
+<span class="fc" id="L854">            return;</span>
         }
 
-<span class="fc" id="L856">        int numMeasurements = mMeasurements.size();</span>
-<span class="fc" id="L857">        final NEDPosition nedPosition = new NEDPosition();</span>
-<span class="fc" id="L858">        final NEDVelocity nedVelocity = new NEDVelocity();</span>
+<span class="fc" id="L857">        int numMeasurements = mMeasurements.size();</span>
+<span class="fc" id="L858">        final NEDPosition nedPosition = new NEDPosition();</span>
+<span class="fc" id="L859">        final NEDVelocity nedVelocity = new NEDVelocity();</span>
 
-<span class="fc" id="L860">        final ECEFPosition ecefPosition = new ECEFPosition();</span>
-<span class="fc" id="L861">        final ECEFVelocity ecefVelocity = new ECEFVelocity();</span>
+<span class="fc" id="L861">        final ECEFPosition ecefPosition = new ECEFPosition();</span>
+<span class="fc" id="L862">        final ECEFVelocity ecefVelocity = new ECEFVelocity();</span>
 
-<span class="fc" id="L863">        double userLatitude = 0.0;</span>
-<span class="fc" id="L864">        double userLongitude = 0.0;</span>
-<span class="fc bfc" id="L865" title="All 2 branches covered.">        for (final GNSSMeasurement measurement : mMeasurements) {</span>
-<span class="fc" id="L866">            measurement.getEcefPosition(ecefPosition);</span>
-<span class="fc" id="L867">            measurement.getEcefVelocity(ecefVelocity);</span>
-<span class="fc" id="L868">            ECEFtoNEDPositionVelocityConverter.convertECEFtoNED(</span>
+<span class="fc" id="L864">        double userLatitude = 0.0;</span>
+<span class="fc" id="L865">        double userLongitude = 0.0;</span>
+<span class="fc bfc" id="L866" title="All 2 branches covered.">        for (final GNSSMeasurement measurement : mMeasurements) {</span>
+<span class="fc" id="L867">            measurement.getEcefPosition(ecefPosition);</span>
+<span class="fc" id="L868">            measurement.getEcefVelocity(ecefVelocity);</span>
+<span class="fc" id="L869">            ECEFtoNEDPositionVelocityConverter.convertECEFtoNED(</span>
                     ecefPosition, ecefVelocity, nedPosition, nedVelocity);
 
-<span class="fc" id="L871">            final double satLatitude = nedPosition.getLatitude();</span>
-<span class="fc" id="L872">            final double satLongitude = nedPosition.getLongitude();</span>
+<span class="fc" id="L872">            final double satLatitude = nedPosition.getLatitude();</span>
+<span class="fc" id="L873">            final double satLongitude = nedPosition.getLongitude();</span>
 
-<span class="fc" id="L874">            userLatitude += satLatitude / numMeasurements;</span>
-<span class="fc" id="L875">            userLongitude += satLongitude / numMeasurements;</span>
-<span class="fc" id="L876">        }</span>
+<span class="fc" id="L875">            userLatitude += satLatitude / numMeasurements;</span>
+<span class="fc" id="L876">            userLongitude += satLongitude / numMeasurements;</span>
+<span class="fc" id="L877">        }</span>
 
-<span class="fc" id="L878">        nedPosition.setCoordinates(userLatitude, userLongitude, 0.0);</span>
-<span class="fc" id="L879">        nedVelocity.setCoordinates(0.0, 0.0, 0.0);</span>
+<span class="fc" id="L879">        nedPosition.setCoordinates(userLatitude, userLongitude, 0.0);</span>
+<span class="fc" id="L880">        nedVelocity.setCoordinates(0.0, 0.0, 0.0);</span>
 
-<span class="fc" id="L881">        NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(</span>
+<span class="fc" id="L882">        NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(</span>
                 nedPosition, nedVelocity, ecefPosition, ecefVelocity);
 
-<span class="fc" id="L884">        mPriorPositionAndVelocity = new ECEFPositionAndVelocity(</span>
+<span class="fc" id="L885">        mPriorPositionAndVelocity = new ECEFPositionAndVelocity(</span>
                 ecefPosition, ecefVelocity);
-<span class="fc" id="L886">    }</span>
+<span class="fc" id="L887">    }</span>
 
     /**
      * Computes norm of provided coordinates.
@@ -894,7 +895,7 @@ public class GNSSLeastSquaresPositionAndVelocityEstimator {
      * @return computed norm.
      */
     private static double norm(final double x, final double y, final double z) {
-<span class="fc" id="L897">        return Math.sqrt(x * x + y * y + z * z);</span>
+<span class="fc" id="L898">        return Math.sqrt(x * x + y * y + z * z);</span>
     }
 
     /**
@@ -904,13 +905,13 @@ public class GNSSLeastSquaresPositionAndVelocityEstimator {
      * @return norm of error.
      */
     private double predictionError() {
-<span class="fc" id="L907">        double sqrPredictionError = 0.0;</span>
-<span class="fc bfc" id="L908" title="All 2 branches covered.">        for (int i = 0; i &lt; STATE_COMPONENTS; i++) {</span>
-<span class="fc" id="L909">            final double diff = mXEst.getElementAtIndex(i)</span>
-<span class="fc" id="L910">                    - mXPred.getElementAtIndex(i);</span>
-<span class="fc" id="L911">            sqrPredictionError += diff * diff;</span>
+<span class="fc" id="L908">        double sqrPredictionError = 0.0;</span>
+<span class="fc bfc" id="L909" title="All 2 branches covered.">        for (int i = 0; i &lt; STATE_COMPONENTS; i++) {</span>
+<span class="fc" id="L910">            final double diff = mXEst.getElementAtIndex(i)</span>
+<span class="fc" id="L911">                    - mXPred.getElementAtIndex(i);</span>
+<span class="fc" id="L912">            sqrPredictionError += diff * diff;</span>
         }
-<span class="fc" id="L913">        return Math.sqrt(sqrPredictionError);</span>
+<span class="fc" id="L914">        return Math.sqrt(sqrPredictionError);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

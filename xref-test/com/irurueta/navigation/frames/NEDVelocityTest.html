@@ -386,49 +386,50 @@
 <a class="jxr_linenumber" name="L378" href="#L378">378</a> 
 <a class="jxr_linenumber" name="L379" href="#L379">379</a>         <em class="jxr_comment">//noinspection ConstantConditions,SimplifiableJUnitAssertion</em>
 <a class="jxr_linenumber" name="L380" href="#L380">380</a>         assertTrue(velocity1.equals((Object) velocity1));
-<a class="jxr_linenumber" name="L381" href="#L381">381</a>         assertTrue(velocity1.equals(velocity1));
-<a class="jxr_linenumber" name="L382" href="#L382">382</a>         assertTrue(velocity1.equals(velocity2));
-<a class="jxr_linenumber" name="L383" href="#L383">383</a>         assertFalse(velocity1.equals(velocity3));
-<a class="jxr_linenumber" name="L384" href="#L384">384</a>         <em class="jxr_comment">//noinspection SimplifiableJUnitAssertion,ConstantConditions</em>
-<a class="jxr_linenumber" name="L385" href="#L385">385</a>         assertFalse(velocity1.equals((Object) <strong class="jxr_keyword">null</strong>));
-<a class="jxr_linenumber" name="L386" href="#L386">386</a>         assertFalse(velocity1.equals(<strong class="jxr_keyword">null</strong>));
-<a class="jxr_linenumber" name="L387" href="#L387">387</a>         <em class="jxr_comment">//noinspection SimplifiableJUnitAssertion</em>
-<a class="jxr_linenumber" name="L388" href="#L388">388</a>         assertFalse(velocity1.equals(<strong class="jxr_keyword">new</strong> Object()));
-<a class="jxr_linenumber" name="L389" href="#L389">389</a>     }
-<a class="jxr_linenumber" name="L390" href="#L390">390</a> 
-<a class="jxr_linenumber" name="L391" href="#L391">391</a>     @Test
-<a class="jxr_linenumber" name="L392" href="#L392">392</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testEqualsWithThreshold() {
-<a class="jxr_linenumber" name="L393" href="#L393">393</a> 
-<a class="jxr_linenumber" name="L394" href="#L394">394</a>         <strong class="jxr_keyword">final</strong> UniformRandomizer randomizer = <strong class="jxr_keyword">new</strong> UniformRandomizer(<strong class="jxr_keyword">new</strong> Random());
-<a class="jxr_linenumber" name="L395" href="#L395">395</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-<a class="jxr_linenumber" name="L396" href="#L396">396</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-<a class="jxr_linenumber" name="L397" href="#L397">397</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-<a class="jxr_linenumber" name="L398" href="#L398">398</a> 
-<a class="jxr_linenumber" name="L399" href="#L399">399</a>         <strong class="jxr_keyword">final</strong> com.irurueta.navigation.frames.NEDVelocity velocity1 = <strong class="jxr_keyword">new</strong> com.irurueta.navigation.frames.NEDVelocity(vn, ve, vd);
-<a class="jxr_linenumber" name="L400" href="#L400">400</a>         <strong class="jxr_keyword">final</strong> com.irurueta.navigation.frames.NEDVelocity velocity2 = <strong class="jxr_keyword">new</strong> com.irurueta.navigation.frames.NEDVelocity(vn, ve, vd);
-<a class="jxr_linenumber" name="L401" href="#L401">401</a>         <strong class="jxr_keyword">final</strong> com.irurueta.navigation.frames.NEDVelocity velocity3 = <strong class="jxr_keyword">new</strong> com.irurueta.navigation.frames.NEDVelocity();
-<a class="jxr_linenumber" name="L402" href="#L402">402</a> 
-<a class="jxr_linenumber" name="L403" href="#L403">403</a>         assertTrue(velocity1.equals(velocity1, THRESHOLD));
-<a class="jxr_linenumber" name="L404" href="#L404">404</a>         assertTrue(velocity1.equals(velocity2, THRESHOLD));
-<a class="jxr_linenumber" name="L405" href="#L405">405</a>         assertFalse(velocity1.equals(velocity3, THRESHOLD));
-<a class="jxr_linenumber" name="L406" href="#L406">406</a>         assertFalse(velocity1.equals(<strong class="jxr_keyword">null</strong>, THRESHOLD));
-<a class="jxr_linenumber" name="L407" href="#L407">407</a>     }
-<a class="jxr_linenumber" name="L408" href="#L408">408</a> 
-<a class="jxr_linenumber" name="L409" href="#L409">409</a>     @Test
-<a class="jxr_linenumber" name="L410" href="#L410">410</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testClone() <strong class="jxr_keyword">throws</strong> CloneNotSupportedException {
-<a class="jxr_linenumber" name="L411" href="#L411">411</a> 
-<a class="jxr_linenumber" name="L412" href="#L412">412</a>         <strong class="jxr_keyword">final</strong> UniformRandomizer randomizer = <strong class="jxr_keyword">new</strong> UniformRandomizer(<strong class="jxr_keyword">new</strong> Random());
-<a class="jxr_linenumber" name="L413" href="#L413">413</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-<a class="jxr_linenumber" name="L414" href="#L414">414</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-<a class="jxr_linenumber" name="L415" href="#L415">415</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-<a class="jxr_linenumber" name="L416" href="#L416">416</a> 
-<a class="jxr_linenumber" name="L417" href="#L417">417</a>         <strong class="jxr_keyword">final</strong> com.irurueta.navigation.frames.NEDVelocity velocity1 = <strong class="jxr_keyword">new</strong> NEDVelocity(vn, ve, vd);
-<a class="jxr_linenumber" name="L418" href="#L418">418</a> 
-<a class="jxr_linenumber" name="L419" href="#L419">419</a>         <strong class="jxr_keyword">final</strong> Object velocity2 = velocity1.clone();
-<a class="jxr_linenumber" name="L420" href="#L420">420</a> 
-<a class="jxr_linenumber" name="L421" href="#L421">421</a>         assertEquals(velocity1, velocity2);
-<a class="jxr_linenumber" name="L422" href="#L422">422</a>     }
-<a class="jxr_linenumber" name="L423" href="#L423">423</a> }
+<a class="jxr_linenumber" name="L381" href="#L381">381</a>         <em class="jxr_comment">//noinspection EqualsWithItself</em>
+<a class="jxr_linenumber" name="L382" href="#L382">382</a>         assertTrue(velocity1.equals(velocity1));
+<a class="jxr_linenumber" name="L383" href="#L383">383</a>         assertTrue(velocity1.equals(velocity2));
+<a class="jxr_linenumber" name="L384" href="#L384">384</a>         assertFalse(velocity1.equals(velocity3));
+<a class="jxr_linenumber" name="L385" href="#L385">385</a>         <em class="jxr_comment">//noinspection SimplifiableJUnitAssertion,ConstantConditions</em>
+<a class="jxr_linenumber" name="L386" href="#L386">386</a>         assertFalse(velocity1.equals((Object) <strong class="jxr_keyword">null</strong>));
+<a class="jxr_linenumber" name="L387" href="#L387">387</a>         assertFalse(velocity1.equals(<strong class="jxr_keyword">null</strong>));
+<a class="jxr_linenumber" name="L388" href="#L388">388</a>         <em class="jxr_comment">//noinspection SimplifiableJUnitAssertion</em>
+<a class="jxr_linenumber" name="L389" href="#L389">389</a>         assertFalse(velocity1.equals(<strong class="jxr_keyword">new</strong> Object()));
+<a class="jxr_linenumber" name="L390" href="#L390">390</a>     }
+<a class="jxr_linenumber" name="L391" href="#L391">391</a> 
+<a class="jxr_linenumber" name="L392" href="#L392">392</a>     @Test
+<a class="jxr_linenumber" name="L393" href="#L393">393</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testEqualsWithThreshold() {
+<a class="jxr_linenumber" name="L394" href="#L394">394</a> 
+<a class="jxr_linenumber" name="L395" href="#L395">395</a>         <strong class="jxr_keyword">final</strong> UniformRandomizer randomizer = <strong class="jxr_keyword">new</strong> UniformRandomizer(<strong class="jxr_keyword">new</strong> Random());
+<a class="jxr_linenumber" name="L396" href="#L396">396</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+<a class="jxr_linenumber" name="L397" href="#L397">397</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+<a class="jxr_linenumber" name="L398" href="#L398">398</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+<a class="jxr_linenumber" name="L399" href="#L399">399</a> 
+<a class="jxr_linenumber" name="L400" href="#L400">400</a>         <strong class="jxr_keyword">final</strong> com.irurueta.navigation.frames.NEDVelocity velocity1 = <strong class="jxr_keyword">new</strong> com.irurueta.navigation.frames.NEDVelocity(vn, ve, vd);
+<a class="jxr_linenumber" name="L401" href="#L401">401</a>         <strong class="jxr_keyword">final</strong> com.irurueta.navigation.frames.NEDVelocity velocity2 = <strong class="jxr_keyword">new</strong> com.irurueta.navigation.frames.NEDVelocity(vn, ve, vd);
+<a class="jxr_linenumber" name="L402" href="#L402">402</a>         <strong class="jxr_keyword">final</strong> com.irurueta.navigation.frames.NEDVelocity velocity3 = <strong class="jxr_keyword">new</strong> com.irurueta.navigation.frames.NEDVelocity();
+<a class="jxr_linenumber" name="L403" href="#L403">403</a> 
+<a class="jxr_linenumber" name="L404" href="#L404">404</a>         assertTrue(velocity1.equals(velocity1, THRESHOLD));
+<a class="jxr_linenumber" name="L405" href="#L405">405</a>         assertTrue(velocity1.equals(velocity2, THRESHOLD));
+<a class="jxr_linenumber" name="L406" href="#L406">406</a>         assertFalse(velocity1.equals(velocity3, THRESHOLD));
+<a class="jxr_linenumber" name="L407" href="#L407">407</a>         assertFalse(velocity1.equals(<strong class="jxr_keyword">null</strong>, THRESHOLD));
+<a class="jxr_linenumber" name="L408" href="#L408">408</a>     }
+<a class="jxr_linenumber" name="L409" href="#L409">409</a> 
+<a class="jxr_linenumber" name="L410" href="#L410">410</a>     @Test
+<a class="jxr_linenumber" name="L411" href="#L411">411</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testClone() <strong class="jxr_keyword">throws</strong> CloneNotSupportedException {
+<a class="jxr_linenumber" name="L412" href="#L412">412</a> 
+<a class="jxr_linenumber" name="L413" href="#L413">413</a>         <strong class="jxr_keyword">final</strong> UniformRandomizer randomizer = <strong class="jxr_keyword">new</strong> UniformRandomizer(<strong class="jxr_keyword">new</strong> Random());
+<a class="jxr_linenumber" name="L414" href="#L414">414</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+<a class="jxr_linenumber" name="L415" href="#L415">415</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+<a class="jxr_linenumber" name="L416" href="#L416">416</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+<a class="jxr_linenumber" name="L417" href="#L417">417</a> 
+<a class="jxr_linenumber" name="L418" href="#L418">418</a>         <strong class="jxr_keyword">final</strong> com.irurueta.navigation.frames.NEDVelocity velocity1 = <strong class="jxr_keyword">new</strong> NEDVelocity(vn, ve, vd);
+<a class="jxr_linenumber" name="L419" href="#L419">419</a> 
+<a class="jxr_linenumber" name="L420" href="#L420">420</a>         <strong class="jxr_keyword">final</strong> Object velocity2 = velocity1.clone();
+<a class="jxr_linenumber" name="L421" href="#L421">421</a> 
+<a class="jxr_linenumber" name="L422" href="#L422">422</a>         assertEquals(velocity1, velocity2);
+<a class="jxr_linenumber" name="L423" href="#L423">423</a>     }
+<a class="jxr_linenumber" name="L424" href="#L424">424</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2018&#x2013;2021. All rights reserved.</div>

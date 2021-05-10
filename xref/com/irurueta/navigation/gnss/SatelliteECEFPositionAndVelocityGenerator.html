@@ -31,7 +31,7 @@
 <a class="jxr_linenumber" name="L23" href="#L23">23</a>  
 <a class="jxr_linenumber" name="L24" href="#L24">24</a>  <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L25" href="#L25">25</a>  <em class="jxr_javadoccomment"> * Computes satellites positions and velocities.</em>
-<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <em class="jxr_javadoccomment"> * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multisensor</em>
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <em class="jxr_javadoccomment"> * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multi-sensor</em>
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>  <em class="jxr_javadoccomment"> * Integrated Navigation Systems, Second Edition" and on the companion software available at:</em>
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>  <em class="jxr_javadoccomment"> * https://github.com/ymjdz/MATLAB-Codes/blob/master/Satellite_positions_and_velocities.m</em>
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>  <em class="jxr_javadoccomment"> */</em>
@@ -89,8 +89,8 @@
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>  <em class="jxr_javadoccomment">     * @return computed satellite position and velocity.</em>
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>  <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <a href="../../../../com/irurueta/navigation/gnss/ECEFPositionAndVelocity.html">ECEFPositionAndVelocity</a> generateSatellitePositionAndVelocity(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> time,
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>                                                                                          <strong class="jxr_keyword">final</strong> <a href="../../../../com/irurueta/navigation/gnss/GNSSConfig.html">GNSSConfig</a> config,
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>                                                                                          <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> j) {
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>                                                                                 <strong class="jxr_keyword">final</strong> <a href="../../../../com/irurueta/navigation/gnss/GNSSConfig.html">GNSSConfig</a> config,
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>                                                                                 <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> j) {
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>          <strong class="jxr_keyword">final</strong> <a href="../../../../com/irurueta/navigation/gnss/ECEFPositionAndVelocity.html">ECEFPositionAndVelocity</a> result = <strong class="jxr_keyword">new</strong> <a href="../../../../com/irurueta/navigation/gnss/ECEFPositionAndVelocity.html">ECEFPositionAndVelocity</a>();
 <a class="jxr_linenumber" name="L87" href="#L87">87</a>          generateSatellitePositionAndVelocity(time, config, j, result);
 <a class="jxr_linenumber" name="L88" href="#L88">88</a>          <strong class="jxr_keyword">return</strong> result;
@@ -105,64 +105,63 @@
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>  <em class="jxr_javadoccomment">     * @param result instance where computed satellite position and velocity will be stored.</em>
 <a class="jxr_linenumber" name="L98" href="#L98">98</a>  <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="L99" href="#L99">99</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> generateSatellitePositionAndVelocity(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> time, <strong class="jxr_keyword">final</strong> <a href="../../../../com/irurueta/navigation/gnss/GNSSConfig.html">GNSSConfig</a> config,
-<a class="jxr_linenumber" name="L100" href="#L100">100</a>                                                             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> j,
-<a class="jxr_linenumber" name="L101" href="#L101">101</a>                                                             <strong class="jxr_keyword">final</strong> <a href="../../../../com/irurueta/navigation/gnss/ECEFPositionAndVelocity.html">ECEFPositionAndVelocity</a> result) {
-<a class="jxr_linenumber" name="L102" href="#L102">102</a> 
-<a class="jxr_linenumber" name="L103" href="#L103">103</a>         <em class="jxr_comment">// Convert inclination angle to radians.</em>
-<a class="jxr_linenumber" name="L104" href="#L104">104</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> inclinationRadians = Math.toRadians(config.getSatellitesInclinationDegrees());
-<a class="jxr_linenumber" name="L105" href="#L105">105</a> 
-<a class="jxr_linenumber" name="L106" href="#L106">106</a>         <em class="jxr_comment">// Determine orbital angular rate using (8.8)</em>
-<a class="jxr_linenumber" name="L107" href="#L107">107</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> orbitalRadius = config.getOrbitalRadiusOfSatellites();
-<a class="jxr_linenumber" name="L108" href="#L108">108</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> orbitalRadius3 = orbitalRadius * orbitalRadius * orbitalRadius;
-<a class="jxr_linenumber" name="L109" href="#L109">109</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> omegaIs = Math.sqrt(EARTH_GRAVITATIONAL_CONSTANT / orbitalRadius3);
-<a class="jxr_linenumber" name="L110" href="#L110">110</a> 
-<a class="jxr_linenumber" name="L111" href="#L111">111</a>         <em class="jxr_comment">// determine constellation time</em>
-<a class="jxr_linenumber" name="L112" href="#L112">112</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> constTime = time + config.getConstellationTimingOffset();
-<a class="jxr_linenumber" name="L113" href="#L113">113</a> 
-<a class="jxr_linenumber" name="L114" href="#L114">114</a>         <em class="jxr_comment">// (Corrected) argument of latitude</em>
-<a class="jxr_linenumber" name="L115" href="#L115">115</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> uOsO = 2.0 * Math.PI * j / config.getNumberOfSatellites()
-<a class="jxr_linenumber" name="L116" href="#L116">116</a>                 + omegaIs * constTime;
-<a class="jxr_linenumber" name="L117" href="#L117">117</a> 
-<a class="jxr_linenumber" name="L118" href="#L118">118</a>         <em class="jxr_comment">// Satellite position in the orbital frame from (8.14)</em>
-<a class="jxr_linenumber" name="L119" href="#L119">119</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> cosUoso = Math.cos(uOsO);
-<a class="jxr_linenumber" name="L120" href="#L120">120</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> sinUoso = Math.sin(uOsO);
-<a class="jxr_linenumber" name="L121" href="#L121">121</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> rOsO1 = orbitalRadius * cosUoso;
-<a class="jxr_linenumber" name="L122" href="#L122">122</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> rOsO2 = orbitalRadius * sinUoso;
-<a class="jxr_linenumber" name="L123" href="#L123">123</a> 
-<a class="jxr_linenumber" name="L124" href="#L124">124</a>         <em class="jxr_comment">// longitude of the ascending node from (8.16)</em>
-<a class="jxr_linenumber" name="L125" href="#L125">125</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> constDeltaLambdaRadians = Math.toRadians(config.getConstellationLongitudeOffsetDegrees());
-<a class="jxr_linenumber" name="L126" href="#L126">126</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> omega = (Math.PI * ((j + 1) % 6) / 3.0 + constDeltaLambdaRadians)
-<a class="jxr_linenumber" name="L127" href="#L127">127</a>                 - EARTH_ROTATION_RATE * constTime;
-<a class="jxr_linenumber" name="L128" href="#L128">128</a> 
-<a class="jxr_linenumber" name="L129" href="#L129">129</a>         <em class="jxr_comment">// ECEF satellite position from (8.19)</em>
-<a class="jxr_linenumber" name="L130" href="#L130">130</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> cosOmega = Math.cos(omega);
-<a class="jxr_linenumber" name="L131" href="#L131">131</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> sinOmega = Math.sin(omega);
-<a class="jxr_linenumber" name="L132" href="#L132">132</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> cosInclination = Math.cos(inclinationRadians);
-<a class="jxr_linenumber" name="L133" href="#L133">133</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> sinInclination = Math.sin(inclinationRadians);
-<a class="jxr_linenumber" name="L134" href="#L134">134</a> 
-<a class="jxr_linenumber" name="L135" href="#L135">135</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> satelliteX = rOsO1 * cosOmega
-<a class="jxr_linenumber" name="L136" href="#L136">136</a>                 - rOsO2 * cosInclination * sinOmega;
-<a class="jxr_linenumber" name="L137" href="#L137">137</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> satelliteY = rOsO1 * sinOmega
-<a class="jxr_linenumber" name="L138" href="#L138">138</a>                 + rOsO2 * cosInclination * cosOmega;
-<a class="jxr_linenumber" name="L139" href="#L139">139</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> satelliteZ = rOsO2 * sinInclination;
-<a class="jxr_linenumber" name="L140" href="#L140">140</a> 
-<a class="jxr_linenumber" name="L141" href="#L141">141</a>         <em class="jxr_comment">// Satellite velocity in the orbital frame from (8.25), noting that with a circular orbit rOsO is</em>
-<a class="jxr_linenumber" name="L142" href="#L142">142</a>         <em class="jxr_comment">// constant and the time derivative of uOsO is omegaIs.</em>
-<a class="jxr_linenumber" name="L143" href="#L143">143</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> tmp = orbitalRadius * omegaIs;
-<a class="jxr_linenumber" name="L144" href="#L144">144</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vOsO1 = - tmp * sinUoso;
-<a class="jxr_linenumber" name="L145" href="#L145">145</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vOsO2 = tmp * cosUoso;
-<a class="jxr_linenumber" name="L146" href="#L146">146</a> 
-<a class="jxr_linenumber" name="L147" href="#L147">147</a>         <em class="jxr_comment">// ECEF satellite velocity from (8.26)</em>
-<a class="jxr_linenumber" name="L148" href="#L148">148</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> satelliteVx = vOsO1 * cosOmega - vOsO2 * cosInclination * sinOmega
-<a class="jxr_linenumber" name="L149" href="#L149">149</a>                 + EARTH_ROTATION_RATE * satelliteY;
-<a class="jxr_linenumber" name="L150" href="#L150">150</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> satelliteVy = vOsO1 * sinOmega + vOsO2 * cosInclination * cosOmega
-<a class="jxr_linenumber" name="L151" href="#L151">151</a>                 - EARTH_ROTATION_RATE * satelliteX;
-<a class="jxr_linenumber" name="L152" href="#L152">152</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> satelliteVz = vOsO2 * sinInclination;
-<a class="jxr_linenumber" name="L153" href="#L153">153</a> 
-<a class="jxr_linenumber" name="L154" href="#L154">154</a>         result.setPositionCoordinates(satelliteX, satelliteY, satelliteZ);
-<a class="jxr_linenumber" name="L155" href="#L155">155</a>         result.setVelocityCoordinates(satelliteVx, satelliteVy, satelliteVz);
-<a class="jxr_linenumber" name="L156" href="#L156">156</a>     }
-<a class="jxr_linenumber" name="L157" href="#L157">157</a> }
+<a class="jxr_linenumber" name="L100" href="#L100">100</a>                                                             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> j, <strong class="jxr_keyword">final</strong> <a href="../../../../com/irurueta/navigation/gnss/ECEFPositionAndVelocity.html">ECEFPositionAndVelocity</a> result) {
+<a class="jxr_linenumber" name="L101" href="#L101">101</a> 
+<a class="jxr_linenumber" name="L102" href="#L102">102</a>         <em class="jxr_comment">// Convert inclination angle to radians.</em>
+<a class="jxr_linenumber" name="L103" href="#L103">103</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> inclinationRadians = Math.toRadians(config.getSatellitesInclinationDegrees());
+<a class="jxr_linenumber" name="L104" href="#L104">104</a> 
+<a class="jxr_linenumber" name="L105" href="#L105">105</a>         <em class="jxr_comment">// Determine orbital angular rate using (8.8)</em>
+<a class="jxr_linenumber" name="L106" href="#L106">106</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> orbitalRadius = config.getOrbitalRadiusOfSatellites();
+<a class="jxr_linenumber" name="L107" href="#L107">107</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> orbitalRadius3 = orbitalRadius * orbitalRadius * orbitalRadius;
+<a class="jxr_linenumber" name="L108" href="#L108">108</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> omegaIs = Math.sqrt(EARTH_GRAVITATIONAL_CONSTANT / orbitalRadius3);
+<a class="jxr_linenumber" name="L109" href="#L109">109</a> 
+<a class="jxr_linenumber" name="L110" href="#L110">110</a>         <em class="jxr_comment">// determine constellation time</em>
+<a class="jxr_linenumber" name="L111" href="#L111">111</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> constTime = time + config.getConstellationTimingOffset();
+<a class="jxr_linenumber" name="L112" href="#L112">112</a> 
+<a class="jxr_linenumber" name="L113" href="#L113">113</a>         <em class="jxr_comment">// (Corrected) argument of latitude</em>
+<a class="jxr_linenumber" name="L114" href="#L114">114</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> uOsO = 2.0 * Math.PI * j / config.getNumberOfSatellites()
+<a class="jxr_linenumber" name="L115" href="#L115">115</a>                 + omegaIs * constTime;
+<a class="jxr_linenumber" name="L116" href="#L116">116</a> 
+<a class="jxr_linenumber" name="L117" href="#L117">117</a>         <em class="jxr_comment">// Satellite position in the orbital frame from (8.14)</em>
+<a class="jxr_linenumber" name="L118" href="#L118">118</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> cosUoso = Math.cos(uOsO);
+<a class="jxr_linenumber" name="L119" href="#L119">119</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> sinUoso = Math.sin(uOsO);
+<a class="jxr_linenumber" name="L120" href="#L120">120</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> rOsO1 = orbitalRadius * cosUoso;
+<a class="jxr_linenumber" name="L121" href="#L121">121</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> rOsO2 = orbitalRadius * sinUoso;
+<a class="jxr_linenumber" name="L122" href="#L122">122</a> 
+<a class="jxr_linenumber" name="L123" href="#L123">123</a>         <em class="jxr_comment">// longitude of the ascending node from (8.16)</em>
+<a class="jxr_linenumber" name="L124" href="#L124">124</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> constDeltaLambdaRadians = Math.toRadians(config.getConstellationLongitudeOffsetDegrees());
+<a class="jxr_linenumber" name="L125" href="#L125">125</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> omega = (Math.PI * ((j + 1) % 6) / 3.0 + constDeltaLambdaRadians)
+<a class="jxr_linenumber" name="L126" href="#L126">126</a>                 - EARTH_ROTATION_RATE * constTime;
+<a class="jxr_linenumber" name="L127" href="#L127">127</a> 
+<a class="jxr_linenumber" name="L128" href="#L128">128</a>         <em class="jxr_comment">// ECEF satellite position from (8.19)</em>
+<a class="jxr_linenumber" name="L129" href="#L129">129</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> cosOmega = Math.cos(omega);
+<a class="jxr_linenumber" name="L130" href="#L130">130</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> sinOmega = Math.sin(omega);
+<a class="jxr_linenumber" name="L131" href="#L131">131</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> cosInclination = Math.cos(inclinationRadians);
+<a class="jxr_linenumber" name="L132" href="#L132">132</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> sinInclination = Math.sin(inclinationRadians);
+<a class="jxr_linenumber" name="L133" href="#L133">133</a> 
+<a class="jxr_linenumber" name="L134" href="#L134">134</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> satelliteX = rOsO1 * cosOmega
+<a class="jxr_linenumber" name="L135" href="#L135">135</a>                 - rOsO2 * cosInclination * sinOmega;
+<a class="jxr_linenumber" name="L136" href="#L136">136</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> satelliteY = rOsO1 * sinOmega
+<a class="jxr_linenumber" name="L137" href="#L137">137</a>                 + rOsO2 * cosInclination * cosOmega;
+<a class="jxr_linenumber" name="L138" href="#L138">138</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> satelliteZ = rOsO2 * sinInclination;
+<a class="jxr_linenumber" name="L139" href="#L139">139</a> 
+<a class="jxr_linenumber" name="L140" href="#L140">140</a>         <em class="jxr_comment">// Satellite velocity in the orbital frame from (8.25), noting that with a circular orbit rOsO is</em>
+<a class="jxr_linenumber" name="L141" href="#L141">141</a>         <em class="jxr_comment">// constant and the time derivative of uOsO is omegaIs.</em>
+<a class="jxr_linenumber" name="L142" href="#L142">142</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> tmp = orbitalRadius * omegaIs;
+<a class="jxr_linenumber" name="L143" href="#L143">143</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vOsO1 = -tmp * sinUoso;
+<a class="jxr_linenumber" name="L144" href="#L144">144</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vOsO2 = tmp * cosUoso;
+<a class="jxr_linenumber" name="L145" href="#L145">145</a> 
+<a class="jxr_linenumber" name="L146" href="#L146">146</a>         <em class="jxr_comment">// ECEF satellite velocity from (8.26)</em>
+<a class="jxr_linenumber" name="L147" href="#L147">147</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> satelliteVx = vOsO1 * cosOmega - vOsO2 * cosInclination * sinOmega
+<a class="jxr_linenumber" name="L148" href="#L148">148</a>                 + EARTH_ROTATION_RATE * satelliteY;
+<a class="jxr_linenumber" name="L149" href="#L149">149</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> satelliteVy = vOsO1 * sinOmega + vOsO2 * cosInclination * cosOmega
+<a class="jxr_linenumber" name="L150" href="#L150">150</a>                 - EARTH_ROTATION_RATE * satelliteX;
+<a class="jxr_linenumber" name="L151" href="#L151">151</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> satelliteVz = vOsO2 * sinInclination;
+<a class="jxr_linenumber" name="L152" href="#L152">152</a> 
+<a class="jxr_linenumber" name="L153" href="#L153">153</a>         result.setPositionCoordinates(satelliteX, satelliteY, satelliteZ);
+<a class="jxr_linenumber" name="L154" href="#L154">154</a>         result.setVelocityCoordinates(satelliteVx, satelliteVy, satelliteVz);
+<a class="jxr_linenumber" name="L155" href="#L155">155</a>     }
+<a class="jxr_linenumber" name="L156" href="#L156">156</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2018&#x2013;2021. All rights reserved.</div>

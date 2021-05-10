@@ -1492,7 +1492,7 @@ public class GNSSConfig implements Serializable, Cloneable {
     /**
      * Sets initial receiver clock drift at time = 0.
      *
-     * @param initialReceiverClockDrift initial reciever clock drift at time = 0.
+     * @param initialReceiverClockDrift initial receiver clock drift at time = 0.
      */
     public void setInitialReceiverClockDriftSpeed(
             final Speed initialReceiverClockDrift) {

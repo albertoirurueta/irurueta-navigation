@@ -28,7 +28,7 @@ import com.irurueta.navigation.geodesic.Constants;
 /**
  * Converts curvilinear to cartesian position and velocity resolving
  * axes from NED to ECEF.
- * This implementation is based on the equations defined in &quot;Principles of GNSS, Inertial, and Multisensor
+ * This implementation is based on the equations defined in &quot;Principles of GNSS, Inertial, and Multi-sensor
  * Integrated Navigation Systems, Second Edition&quot; and on the companion software available at:
  * https://github.com/ymjdz/MATLAB-Codes/blob/master/pv_NED_to_ECEF.m
  */
@@ -135,6 +135,7 @@ import com.irurueta.navigation.geodesic.Constants;
      * @param destinationVelocity instance where velocity resolved on ECEF frame will
      *                            be stored.
      */
+    @SuppressWarnings(&quot;DuplicatedCode&quot;)
     public static void convertNEDtoECEF(final double latitude, final double longitude,
                                         final double height, final double vn,
                                         final double ve, final double vd,
@@ -143,39 +144,39 @@ import com.irurueta.navigation.geodesic.Constants;
         try {
 
             // Calculate transverse radius of curvature using (2.105)
-<span class="fc" id="L146">            final double re = EARTH_EQUATORIAL_RADIUS_WGS84</span>
-<span class="fc" id="L147">                    / Math.sqrt(1.0 - Math.pow(EARTH_ECCENTRICITY * Math.sin(latitude), 2.0));</span>
+<span class="fc" id="L147">            final double re = EARTH_EQUATORIAL_RADIUS_WGS84</span>
+<span class="fc" id="L148">                    / Math.sqrt(1.0 - Math.pow(EARTH_ECCENTRICITY * Math.sin(latitude), 2.0));</span>
 
             // Convert position using (2.112)
-<span class="fc" id="L150">            final double cosLat = Math.cos(latitude);</span>
-<span class="fc" id="L151">            final double sinLat = Math.sin(latitude);</span>
-<span class="fc" id="L152">            final double cosLong = Math.cos(longitude);</span>
-<span class="fc" id="L153">            final double sinLong = Math.sin(longitude);</span>
+<span class="fc" id="L151">            final double cosLat = Math.cos(latitude);</span>
+<span class="fc" id="L152">            final double sinLat = Math.sin(latitude);</span>
+<span class="fc" id="L153">            final double cosLong = Math.cos(longitude);</span>
+<span class="fc" id="L154">            final double sinLong = Math.sin(longitude);</span>
 
-<span class="fc" id="L155">            final double x = (re + height) * cosLat * cosLong;</span>
-<span class="fc" id="L156">            final double y = (re + height) * cosLat * sinLong;</span>
-<span class="fc" id="L157">            final double z = ((1.0 - EARTH_ECCENTRICITY * EARTH_ECCENTRICITY) * re + height) * sinLat;</span>
+<span class="fc" id="L156">            final double x = (re + height) * cosLat * cosLong;</span>
+<span class="fc" id="L157">            final double y = (re + height) * cosLat * sinLong;</span>
+<span class="fc" id="L158">            final double z = ((1.0 - EARTH_ECCENTRICITY * EARTH_ECCENTRICITY) * re + height) * sinLat;</span>
 
-<span class="fc" id="L159">            destinationPosition.setCoordinates(x, y, z);</span>
+<span class="fc" id="L160">            destinationPosition.setCoordinates(x, y, z);</span>
 
             // Calculate NED to ECEF coordinate transformation matrix
-<span class="fc" id="L162">            final Matrix cne = CoordinateTransformation.nedToEcefMatrix(latitude, longitude);</span>
+<span class="fc" id="L163">            final Matrix cne = CoordinateTransformation.nedToEcefMatrix(latitude, longitude);</span>
 
             // Transform velocity using (2.73)
-<span class="fc" id="L165">            final Matrix vEbn = new Matrix(NEDFrame.NUM_VELOCITY_COORDINATES, 1);</span>
-<span class="fc" id="L166">            vEbn.setElementAtIndex(0, vn);</span>
-<span class="fc" id="L167">            vEbn.setElementAtIndex(1, ve);</span>
-<span class="fc" id="L168">            vEbn.setElementAtIndex(2, vd);</span>
+<span class="fc" id="L166">            final Matrix vEbn = new Matrix(NEDFrame.NUM_VELOCITY_COORDINATES, 1);</span>
+<span class="fc" id="L167">            vEbn.setElementAtIndex(0, vn);</span>
+<span class="fc" id="L168">            vEbn.setElementAtIndex(1, ve);</span>
+<span class="fc" id="L169">            vEbn.setElementAtIndex(2, vd);</span>
 
-<span class="fc" id="L170">            final Matrix vEbe = cne.multiplyAndReturnNew(vEbn);</span>
-<span class="fc" id="L171">            final double vx = vEbe.getElementAtIndex(0);</span>
-<span class="fc" id="L172">            final double vy = vEbe.getElementAtIndex(1);</span>
-<span class="fc" id="L173">            final double vz = vEbe.getElementAtIndex(2);</span>
+<span class="fc" id="L171">            final Matrix vEbe = cne.multiplyAndReturnNew(vEbn);</span>
+<span class="fc" id="L172">            final double vx = vEbe.getElementAtIndex(0);</span>
+<span class="fc" id="L173">            final double vy = vEbe.getElementAtIndex(1);</span>
+<span class="fc" id="L174">            final double vz = vEbe.getElementAtIndex(2);</span>
 
-<span class="fc" id="L175">            destinationVelocity.setCoordinates(vx, vy, vz);</span>
-<span class="nc" id="L176">        } catch (WrongSizeException ignore) {</span>
+<span class="fc" id="L176">            destinationVelocity.setCoordinates(vx, vy, vz);</span>
+<span class="nc" id="L177">        } catch (final WrongSizeException ignore) {</span>
             // never happens
-<span class="fc" id="L178">        }</span>
-<span class="fc" id="L179">    }</span>
+<span class="fc" id="L179">        }</span>
+<span class="fc" id="L180">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

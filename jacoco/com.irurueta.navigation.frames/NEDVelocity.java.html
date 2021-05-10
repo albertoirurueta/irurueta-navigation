@@ -26,7 +26,6 @@ import java.util.Objects;
  * Contains body velocity with respect Earth, resolved about north, east and down an expressed in meters per second
  * (m/s).
  */
-@SuppressWarnings(&quot;WeakerAccess&quot;)
 public class NEDVelocity implements Serializable, Cloneable {
     /**
      * Coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame and
@@ -49,8 +48,8 @@ public class NEDVelocity implements Serializable, Cloneable {
     /**
      * Constructor.
      */
-<span class="fc" id="L52">    public NEDVelocity() {</span>
-<span class="fc" id="L53">    }</span>
+<span class="fc" id="L51">    public NEDVelocity() {</span>
+<span class="fc" id="L52">    }</span>
 
     /**
      * Constructor.
@@ -59,9 +58,9 @@ public class NEDVelocity implements Serializable, Cloneable {
      * @param ve East velocity coordinate value expressed in meters per second (m/s).
      * @param vd Down velocity coordinate value expressed in meters per second (m/s).
      */
-<span class="fc" id="L62">    public NEDVelocity(final double vn, final double ve, final double vd) {</span>
-<span class="fc" id="L63">        setCoordinates(vn, ve, vd);</span>
-<span class="fc" id="L64">    }</span>
+<span class="fc" id="L61">    public NEDVelocity(final double vn, final double ve, final double vd) {</span>
+<span class="fc" id="L62">        setCoordinates(vn, ve, vd);</span>
+<span class="fc" id="L63">    }</span>
 
     /**
      * Constructor.
@@ -70,18 +69,18 @@ public class NEDVelocity implements Serializable, Cloneable {
      * @param ve East velocity coordinate value.
      * @param vd Down velocity coordinate value.
      */
-<span class="fc" id="L73">    public NEDVelocity(final Speed vn, final Speed ve, final Speed vd) {</span>
-<span class="fc" id="L74">        setCoordinates(vn, ve, vd);</span>
-<span class="fc" id="L75">    }</span>
+<span class="fc" id="L72">    public NEDVelocity(final Speed vn, final Speed ve, final Speed vd) {</span>
+<span class="fc" id="L73">        setCoordinates(vn, ve, vd);</span>
+<span class="fc" id="L74">    }</span>
 
     /**
      * Constructor.
      *
      * @param input Body velocity to copy data from.
      */
-<span class="fc" id="L82">    public NEDVelocity(final NEDVelocity input) {</span>
-<span class="fc" id="L83">        copyFrom(input);</span>
-<span class="fc" id="L84">    }</span>
+<span class="fc" id="L81">    public NEDVelocity(final NEDVelocity input) {</span>
+<span class="fc" id="L82">        copyFrom(input);</span>
+<span class="fc" id="L83">    }</span>
 
     /**
      * Gets coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame and
@@ -90,7 +89,7 @@ public class NEDVelocity implements Serializable, Cloneable {
      * @return North velocity coordinate value.
      */
     public double getVn() {
-<span class="fc" id="L93">        return mVn;</span>
+<span class="fc" id="L92">        return mVn;</span>
     }
 
     /**
@@ -100,8 +99,8 @@ public class NEDVelocity implements Serializable, Cloneable {
      * @param vn North velocity coordinate value.
      */
     public void setVn(final double vn) {
-<span class="fc" id="L103">        mVn = vn;</span>
-<span class="fc" id="L104">    }</span>
+<span class="fc" id="L102">        mVn = vn;</span>
+<span class="fc" id="L103">    }</span>
 
     /**
      * Gets coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame and
@@ -110,7 +109,7 @@ public class NEDVelocity implements Serializable, Cloneable {
      * @return East velocity coordinate value.
      */
     public double getVe() {
-<span class="fc" id="L113">        return mVe;</span>
+<span class="fc" id="L112">        return mVe;</span>
     }
 
     /**
@@ -120,8 +119,8 @@ public class NEDVelocity implements Serializable, Cloneable {
      * @param ve East velocity coordinate value.
      */
     public void setVe(final double ve) {
-<span class="fc" id="L123">        mVe = ve;</span>
-<span class="fc" id="L124">    }</span>
+<span class="fc" id="L122">        mVe = ve;</span>
+<span class="fc" id="L123">    }</span>
 
     /**
      * Gets coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame and
@@ -130,7 +129,7 @@ public class NEDVelocity implements Serializable, Cloneable {
      * @return Down velocity coordinate value.
      */
     public double getVd() {
-<span class="fc" id="L133">        return mVd;</span>
+<span class="fc" id="L132">        return mVd;</span>
     }
 
     /**
@@ -140,8 +139,8 @@ public class NEDVelocity implements Serializable, Cloneable {
      * @param vd Down velocity coordinate value.
      */
     public void setVd(final double vd) {
-<span class="fc" id="L143">        mVd = vd;</span>
-<span class="fc" id="L144">    }</span>
+<span class="fc" id="L142">        mVd = vd;</span>
+<span class="fc" id="L143">    }</span>
 
     /**
      * Sets velocity coordinates of body frame expressed in meters per second (m/s) resolved along North, East, Down
@@ -152,10 +151,10 @@ public class NEDVelocity implements Serializable, Cloneable {
      * @param vd Down velocity coordinate value.
      */
     public void setCoordinates(final double vn, final double ve, final double vd) {
-<span class="fc" id="L155">        mVn = vn;</span>
-<span class="fc" id="L156">        mVe = ve;</span>
-<span class="fc" id="L157">        mVd = vd;</span>
-<span class="fc" id="L158">    }</span>
+<span class="fc" id="L154">        mVn = vn;</span>
+<span class="fc" id="L155">        mVe = ve;</span>
+<span class="fc" id="L156">        mVd = vd;</span>
+<span class="fc" id="L157">    }</span>
 
     /**
      * Gets norm of velocity expressed in meters per second (m/s), which represents
@@ -164,7 +163,7 @@ public class NEDVelocity implements Serializable, Cloneable {
      * @return norm of velocity expressed in meters per second (m/s).
      */
     public double getNorm() {
-<span class="fc" id="L167">        return Math.sqrt(mVn * mVn + mVe * mVe + mVd * mVd);</span>
+<span class="fc" id="L166">        return Math.sqrt(mVn * mVn + mVe * mVe + mVd * mVd);</span>
     }
 
     /**
@@ -173,9 +172,9 @@ public class NEDVelocity implements Serializable, Cloneable {
      * @param result velocity norm.
      */
     public void getNormAsSpeed(final Speed result) {
-<span class="fc" id="L176">        result.setValue(getNorm());</span>
-<span class="fc" id="L177">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
-<span class="fc" id="L178">    }</span>
+<span class="fc" id="L175">        result.setValue(getNorm());</span>
+<span class="fc" id="L176">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L177">    }</span>
 
     /**
      * Gets norm of velocity, which represents the speed of the body.
@@ -183,7 +182,7 @@ public class NEDVelocity implements Serializable, Cloneable {
      * @return velocity norm.
      */
     public Speed getNormAsSpeed() {
-<span class="fc" id="L186">        return new Speed(getNorm(), SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L185">        return new Speed(getNorm(), SpeedUnit.METERS_PER_SECOND);</span>
     }
 
     /**
@@ -193,9 +192,9 @@ public class NEDVelocity implements Serializable, Cloneable {
      * @param result instance where North velocity coordinate will be stored.
      */
     public void getSpeedN(final Speed result) {
-<span class="fc" id="L196">        result.setValue(mVn);</span>
-<span class="fc" id="L197">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
-<span class="fc" id="L198">    }</span>
+<span class="fc" id="L195">        result.setValue(mVn);</span>
+<span class="fc" id="L196">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L197">    }</span>
 
     /**
      * Gets coordinate of velocity of body frame with respect ECEF frame and
@@ -204,7 +203,7 @@ public class NEDVelocity implements Serializable, Cloneable {
      * @return North velocity coordinate.
      */
     public Speed getSpeedN() {
-<span class="fc" id="L207">        return new Speed(mVn, SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L206">        return new Speed(mVn, SpeedUnit.METERS_PER_SECOND);</span>
     }
 
     /**
@@ -214,9 +213,9 @@ public class NEDVelocity implements Serializable, Cloneable {
      * @param speedN North velocity coordinate to be set.
      */
     public void setSpeedN(final Speed speedN) {
-<span class="fc" id="L217">        mVn = SpeedConverter.convert(speedN.getValue().doubleValue(),</span>
-<span class="fc" id="L218">                speedN.getUnit(), SpeedUnit.METERS_PER_SECOND);</span>
-<span class="fc" id="L219">    }</span>
+<span class="fc" id="L216">        mVn = SpeedConverter.convert(speedN.getValue().doubleValue(),</span>
+<span class="fc" id="L217">                speedN.getUnit(), SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L218">    }</span>
 
     /**
      * Gets coordinate of velocity of body frame with respect ECEF frame and
@@ -225,9 +224,9 @@ public class NEDVelocity implements Serializable, Cloneable {
      * @param result instance where East velocity coordinate will be stored.
      */
     public void getSpeedE(final Speed result) {
-<span class="fc" id="L228">        result.setValue(mVe);</span>
-<span class="fc" id="L229">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
-<span class="fc" id="L230">    }</span>
+<span class="fc" id="L227">        result.setValue(mVe);</span>
+<span class="fc" id="L228">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L229">    }</span>
 
     /**
      * Gets coordinate of velocity of body frame with respect ECEF frame and
@@ -236,7 +235,7 @@ public class NEDVelocity implements Serializable, Cloneable {
      * @return East velocity coordinate.
      */
     public Speed getSpeedE() {
-<span class="fc" id="L239">        return new Speed(mVe, SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L238">        return new Speed(mVe, SpeedUnit.METERS_PER_SECOND);</span>
     }
 
     /**
@@ -246,9 +245,9 @@ public class NEDVelocity implements Serializable, Cloneable {
      * @param speedE East velocity coordinate to be set.
      */
     public void setSpeedE(final Speed speedE) {
-<span class="fc" id="L249">        mVe = SpeedConverter.convert(speedE.getValue().doubleValue(),</span>
-<span class="fc" id="L250">                speedE.getUnit(), SpeedUnit.METERS_PER_SECOND);</span>
-<span class="fc" id="L251">    }</span>
+<span class="fc" id="L248">        mVe = SpeedConverter.convert(speedE.getValue().doubleValue(),</span>
+<span class="fc" id="L249">                speedE.getUnit(), SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L250">    }</span>
 
     /**
      * Gets coordinate of velocity of body frame with respect ECEF frame and
@@ -257,9 +256,9 @@ public class NEDVelocity implements Serializable, Cloneable {
      * @param result instance where Down velocity coordinate will be stored.
      */
     public void getSpeedD(final Speed result) {
-<span class="fc" id="L260">        result.setValue(mVd);</span>
-<span class="fc" id="L261">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
-<span class="fc" id="L262">    }</span>
+<span class="fc" id="L259">        result.setValue(mVd);</span>
+<span class="fc" id="L260">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L261">    }</span>
 
     /**
      * Gets coordinate of velocity of body frame with respect ECEF frame and
@@ -268,7 +267,7 @@ public class NEDVelocity implements Serializable, Cloneable {
      * @return Down velocity coordinate.
      */
     public Speed getSpeedD() {
-<span class="fc" id="L271">        return new Speed(mVd, SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L270">        return new Speed(mVd, SpeedUnit.METERS_PER_SECOND);</span>
     }
 
     /**
@@ -278,9 +277,9 @@ public class NEDVelocity implements Serializable, Cloneable {
      * @param speedD Down velocity coordinate to be set.
      */
     public void setSpeedD(final Speed speedD) {
-<span class="fc" id="L281">        mVd = SpeedConverter.convert(speedD.getValue().doubleValue(),</span>
-<span class="fc" id="L282">                speedD.getUnit(), SpeedUnit.METERS_PER_SECOND);</span>
-<span class="fc" id="L283">    }</span>
+<span class="fc" id="L280">        mVd = SpeedConverter.convert(speedD.getValue().doubleValue(),</span>
+<span class="fc" id="L281">                speedD.getUnit(), SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L282">    }</span>
 
     /**
      * Sets velocity coordinates of body frame resolved along North, East, Down
@@ -292,10 +291,10 @@ public class NEDVelocity implements Serializable, Cloneable {
      */
     public void setCoordinates(final Speed speedN, final Speed speedE,
                                final Speed speedD) {
-<span class="fc" id="L295">        setSpeedN(speedN);</span>
-<span class="fc" id="L296">        setSpeedE(speedE);</span>
-<span class="fc" id="L297">        setSpeedD(speedD);</span>
-<span class="fc" id="L298">    }</span>
+<span class="fc" id="L294">        setSpeedN(speedN);</span>
+<span class="fc" id="L295">        setSpeedE(speedE);</span>
+<span class="fc" id="L296">        setSpeedD(speedD);</span>
+<span class="fc" id="L297">    }</span>
 
     /**
      * Copies this instance data into provided instance.
@@ -303,10 +302,10 @@ public class NEDVelocity implements Serializable, Cloneable {
      * @param output destination instance where data will be copied to.
      */
     public void copyTo(final NEDVelocity output) {
-<span class="fc" id="L306">        output.mVn = mVn;</span>
-<span class="fc" id="L307">        output.mVe = mVe;</span>
-<span class="fc" id="L308">        output.mVd = mVd;</span>
-<span class="fc" id="L309">    }</span>
+<span class="fc" id="L305">        output.mVn = mVn;</span>
+<span class="fc" id="L306">        output.mVe = mVe;</span>
+<span class="fc" id="L307">        output.mVd = mVd;</span>
+<span class="fc" id="L308">    }</span>
 
     /**
      * Copies data of provided instance into this instance.
@@ -314,10 +313,10 @@ public class NEDVelocity implements Serializable, Cloneable {
      * @param input instance to copy data from.
      */
     public void copyFrom(final NEDVelocity input) {
-<span class="fc" id="L317">        mVn = input.mVn;</span>
-<span class="fc" id="L318">        mVe = input.mVe;</span>
-<span class="fc" id="L319">        mVd = input.mVd;</span>
-<span class="fc" id="L320">    }</span>
+<span class="fc" id="L316">        mVn = input.mVn;</span>
+<span class="fc" id="L317">        mVe = input.mVe;</span>
+<span class="fc" id="L318">        mVd = input.mVd;</span>
+<span class="fc" id="L319">    }</span>
 
     /**
      * Computes and returns hash code for this instance. Hash codes are almost unique
@@ -327,7 +326,7 @@ public class NEDVelocity implements Serializable, Cloneable {
      */
     @Override
     public int hashCode() {
-<span class="fc" id="L330">        return Objects.hash(mVn, mVe, mVd);</span>
+<span class="fc" id="L329">        return Objects.hash(mVn, mVe, mVd);</span>
     }
 
     /**
@@ -339,18 +338,18 @@ public class NEDVelocity implements Serializable, Cloneable {
      */
     @Override
     public boolean equals(final Object obj) {
-<span class="fc bfc" id="L342" title="All 2 branches covered.">        if (obj == null) {</span>
-<span class="fc" id="L343">            return false;</span>
+<span class="fc bfc" id="L341" title="All 2 branches covered.">        if (obj == null) {</span>
+<span class="fc" id="L342">            return false;</span>
         }
-<span class="fc bfc" id="L345" title="All 2 branches covered.">        if (obj == this) {</span>
-<span class="fc" id="L346">            return true;</span>
+<span class="fc bfc" id="L344" title="All 2 branches covered.">        if (obj == this) {</span>
+<span class="fc" id="L345">            return true;</span>
         }
-<span class="fc bfc" id="L348" title="All 2 branches covered.">        if (!(obj instanceof NEDVelocity)) {</span>
-<span class="fc" id="L349">            return false;</span>
+<span class="fc bfc" id="L347" title="All 2 branches covered.">        if (!(obj instanceof NEDVelocity)) {</span>
+<span class="fc" id="L348">            return false;</span>
         }
 
-<span class="fc" id="L352">        final NEDVelocity other = (NEDVelocity) obj;</span>
-<span class="fc" id="L353">        return equals(other);</span>
+<span class="fc" id="L351">        final NEDVelocity other = (NEDVelocity) obj;</span>
+<span class="fc" id="L352">        return equals(other);</span>
     }
 
     /**
@@ -360,7 +359,7 @@ public class NEDVelocity implements Serializable, Cloneable {
      * @return true if both instances are considered to be equal, false otherwise.
      */
     public boolean equals(final NEDVelocity other) {
-<span class="fc" id="L363">        return equals(other, 0.0);</span>
+<span class="fc" id="L362">        return equals(other, 0.0);</span>
     }
 
     /**
@@ -372,13 +371,13 @@ public class NEDVelocity implements Serializable, Cloneable {
      * @return true if both instances are considered to be equal (up to provided threshold), false otherwise.
      */
     public boolean equals(final NEDVelocity other, final double threshold) {
-<span class="fc bfc" id="L375" title="All 2 branches covered.">        if (other == null) {</span>
-<span class="fc" id="L376">            return false;</span>
+<span class="fc bfc" id="L374" title="All 2 branches covered.">        if (other == null) {</span>
+<span class="fc" id="L375">            return false;</span>
         }
 
-<span class="fc bfc" id="L379" title="All 2 branches covered.">        return Math.abs(mVn - other.mVn) &lt;= threshold</span>
-<span class="pc bpc" id="L380" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(mVe - other.mVe) &lt;= threshold</span>
-<span class="pc bpc" id="L381" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(mVd - other.mVd) &lt;= threshold;</span>
+<span class="fc bfc" id="L378" title="All 2 branches covered.">        return Math.abs(mVn - other.mVn) &lt;= threshold</span>
+<span class="pc bpc" id="L379" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(mVe - other.mVe) &lt;= threshold</span>
+<span class="pc bpc" id="L380" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(mVd - other.mVd) &lt;= threshold;</span>
     }
 
     /**
@@ -389,9 +388,9 @@ public class NEDVelocity implements Serializable, Cloneable {
      */
     @Override
     protected Object clone() throws CloneNotSupportedException {
-<span class="fc" id="L392">        final NEDVelocity result = (NEDVelocity) super.clone();</span>
-<span class="fc" id="L393">        copyTo(result);</span>
-<span class="fc" id="L394">        return result;</span>
+<span class="fc" id="L391">        final NEDVelocity result = (NEDVelocity) super.clone();</span>
+<span class="fc" id="L392">        copyTo(result);</span>
+<span class="fc" id="L393">        return result;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

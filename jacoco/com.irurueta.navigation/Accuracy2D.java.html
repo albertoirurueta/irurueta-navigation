@@ -24,15 +24,14 @@ import com.irurueta.geometry.InvalidRotationMatrixException;
  * Contains methods to convert covariance matrices into ellipses representing accuracy with
  * requested confidence.
  */
-@SuppressWarnings(&quot;WeakerAccess&quot;)
 public class Accuracy2D extends Accuracy&lt;com.irurueta.geometry.Accuracy2D&gt; {
 
     /**
      * Constructor.
      */
-<span class="fc" id="L33">    public Accuracy2D() {</span>
-<span class="fc" id="L34">        mInternalAccuracy = new com.irurueta.geometry.Accuracy2D();</span>
-<span class="fc" id="L35">    }</span>
+<span class="fc" id="L32">    public Accuracy2D() {</span>
+<span class="fc" id="L33">        mInternalAccuracy = new com.irurueta.geometry.Accuracy2D();</span>
+<span class="fc" id="L34">    }</span>
 
     /**
      * Constructor.
@@ -45,9 +44,9 @@ public class Accuracy2D extends Accuracy&lt;com.irurueta.geometry.Accuracy2D&gt;
      *                                                     symmetric and positive definite.
      */
     public Accuracy2D(final Matrix covarianceMatrix)
-<span class="fc" id="L48">            throws NonSymmetricPositiveDefiniteMatrixException {</span>
-<span class="fc" id="L49">        mInternalAccuracy = new com.irurueta.geometry.Accuracy2D(covarianceMatrix);</span>
-<span class="fc" id="L50">    }</span>
+<span class="fc" id="L47">            throws NonSymmetricPositiveDefiniteMatrixException {</span>
+<span class="fc" id="L48">        mInternalAccuracy = new com.irurueta.geometry.Accuracy2D(covarianceMatrix);</span>
+<span class="fc" id="L49">    }</span>
 
     /**
      * Constructor.
@@ -55,9 +54,9 @@ public class Accuracy2D extends Accuracy&lt;com.irurueta.geometry.Accuracy2D&gt;
      * @param confidence confidence of provided accuracy of an estimated position.
      * @throws IllegalArgumentException if provided value is not within 0 and 1.
      */
-<span class="fc" id="L58">    public Accuracy2D(double confidence) {</span>
-<span class="fc" id="L59">        mInternalAccuracy = new com.irurueta.geometry.Accuracy2D(confidence);</span>
-<span class="fc" id="L60">    }</span>
+<span class="fc" id="L57">    public Accuracy2D(final double confidence) {</span>
+<span class="fc" id="L58">        mInternalAccuracy = new com.irurueta.geometry.Accuracy2D(confidence);</span>
+<span class="fc" id="L59">    }</span>
 
     /**
      * Constructor.
@@ -72,9 +71,9 @@ public class Accuracy2D extends Accuracy&lt;com.irurueta.geometry.Accuracy2D&gt;
      *                                                     symmetric and positive definite.
      */
     public Accuracy2D(final Matrix covarianceMatrix, final double confidence)
-<span class="fc" id="L75">            throws NonSymmetricPositiveDefiniteMatrixException {</span>
-<span class="fc" id="L76">        mInternalAccuracy = new com.irurueta.geometry.Accuracy2D(covarianceMatrix, confidence);</span>
-<span class="fc" id="L77">    }</span>
+<span class="fc" id="L74">            throws NonSymmetricPositiveDefiniteMatrixException {</span>
+<span class="fc" id="L75">        mInternalAccuracy = new com.irurueta.geometry.Accuracy2D(covarianceMatrix, confidence);</span>
+<span class="fc" id="L76">    }</span>
 
     /**
      * Constructor.
@@ -82,8 +81,8 @@ public class Accuracy2D extends Accuracy&lt;com.irurueta.geometry.Accuracy2D&gt;
      * @param internalAccuracy internal accuracy to be set.
      */
     Accuracy2D(final com.irurueta.geometry.Accuracy2D internalAccuracy) {
-<span class="fc" id="L85">        super(internalAccuracy);</span>
-<span class="fc" id="L86">    }</span>
+<span class="fc" id="L84">        super(internalAccuracy);</span>
+<span class="fc" id="L85">    }</span>
 
     /**
      * Converts provided covariance matrix into a 2D ellipse taking into account current
@@ -95,7 +94,7 @@ public class Accuracy2D extends Accuracy&lt;com.irurueta.geometry.Accuracy2D&gt;
      * @throws InvalidRotationMatrixException if rotation cannot be properly determined.
      */
     public Ellipse toEllipse() throws InvalidRotationMatrixException {
-<span class="fc" id="L98">        return mInternalAccuracy.toEllipse();</span>
+<span class="fc" id="L97">        return mInternalAccuracy.toEllipse();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

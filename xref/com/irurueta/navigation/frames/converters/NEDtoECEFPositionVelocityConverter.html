@@ -36,7 +36,7 @@
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>  <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>  <em class="jxr_javadoccomment"> * Converts curvilinear to cartesian position and velocity resolving</em>
 <a class="jxr_linenumber" name="L30" href="#L30">30</a>  <em class="jxr_javadoccomment"> * axes from NED to ECEF.</em>
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <em class="jxr_javadoccomment"> * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multisensor</em>
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <em class="jxr_javadoccomment"> * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multi-sensor</em>
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>  <em class="jxr_javadoccomment"> * Integrated Navigation Systems, Second Edition" and on the companion software available at:</em>
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>  <em class="jxr_javadoccomment"> * https://github.com/ymjdz/MATLAB-Codes/blob/master/pv_NED_to_ECEF.m</em>
 <a class="jxr_linenumber" name="L34" href="#L34">34</a>  <em class="jxr_javadoccomment"> */</em>
@@ -143,49 +143,50 @@
 <a class="jxr_linenumber" name="L135" href="#L135">135</a> <em class="jxr_javadoccomment">     * @param destinationVelocity instance where velocity resolved on ECEF frame will</em>
 <a class="jxr_linenumber" name="L136" href="#L136">136</a> <em class="jxr_javadoccomment">     *                            be stored.</em>
 <a class="jxr_linenumber" name="L137" href="#L137">137</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L138" href="#L138">138</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> convertNEDtoECEF(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> latitude, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> longitude,
-<a class="jxr_linenumber" name="L139" href="#L139">139</a>                                         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> height, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vn,
-<a class="jxr_linenumber" name="L140" href="#L140">140</a>                                         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> ve, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vd,
-<a class="jxr_linenumber" name="L141" href="#L141">141</a>                                         <strong class="jxr_keyword">final</strong> <a href="../../../../../com/irurueta/navigation/frames/ECEFPosition.html">ECEFPosition</a> destinationPosition,
-<a class="jxr_linenumber" name="L142" href="#L142">142</a>                                         <strong class="jxr_keyword">final</strong> <a href="../../../../../com/irurueta/navigation/frames/ECEFVelocity.html">ECEFVelocity</a> destinationVelocity) {
-<a class="jxr_linenumber" name="L143" href="#L143">143</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L144" href="#L144">144</a> 
-<a class="jxr_linenumber" name="L145" href="#L145">145</a>             <em class="jxr_comment">// Calculate transverse radius of curvature using (2.105)</em>
-<a class="jxr_linenumber" name="L146" href="#L146">146</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> re = EARTH_EQUATORIAL_RADIUS_WGS84
-<a class="jxr_linenumber" name="L147" href="#L147">147</a>                     / Math.sqrt(1.0 - Math.pow(EARTH_ECCENTRICITY * Math.sin(latitude), 2.0));
-<a class="jxr_linenumber" name="L148" href="#L148">148</a> 
-<a class="jxr_linenumber" name="L149" href="#L149">149</a>             <em class="jxr_comment">// Convert position using (2.112)</em>
-<a class="jxr_linenumber" name="L150" href="#L150">150</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> cosLat = Math.cos(latitude);
-<a class="jxr_linenumber" name="L151" href="#L151">151</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> sinLat = Math.sin(latitude);
-<a class="jxr_linenumber" name="L152" href="#L152">152</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> cosLong = Math.cos(longitude);
-<a class="jxr_linenumber" name="L153" href="#L153">153</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> sinLong = Math.sin(longitude);
-<a class="jxr_linenumber" name="L154" href="#L154">154</a> 
-<a class="jxr_linenumber" name="L155" href="#L155">155</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> x = (re + height) * cosLat * cosLong;
-<a class="jxr_linenumber" name="L156" href="#L156">156</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> y = (re + height) * cosLat * sinLong;
-<a class="jxr_linenumber" name="L157" href="#L157">157</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> z = ((1.0 - EARTH_ECCENTRICITY * EARTH_ECCENTRICITY) * re + height) * sinLat;
-<a class="jxr_linenumber" name="L158" href="#L158">158</a> 
-<a class="jxr_linenumber" name="L159" href="#L159">159</a>             destinationPosition.setCoordinates(x, y, z);
-<a class="jxr_linenumber" name="L160" href="#L160">160</a> 
-<a class="jxr_linenumber" name="L161" href="#L161">161</a>             <em class="jxr_comment">// Calculate NED to ECEF coordinate transformation matrix</em>
-<a class="jxr_linenumber" name="L162" href="#L162">162</a>             <strong class="jxr_keyword">final</strong> Matrix cne = CoordinateTransformation.nedToEcefMatrix(latitude, longitude);
-<a class="jxr_linenumber" name="L163" href="#L163">163</a> 
-<a class="jxr_linenumber" name="L164" href="#L164">164</a>             <em class="jxr_comment">// Transform velocity using (2.73)</em>
-<a class="jxr_linenumber" name="L165" href="#L165">165</a>             <strong class="jxr_keyword">final</strong> Matrix vEbn = <strong class="jxr_keyword">new</strong> Matrix(NEDFrame.NUM_VELOCITY_COORDINATES, 1);
-<a class="jxr_linenumber" name="L166" href="#L166">166</a>             vEbn.setElementAtIndex(0, vn);
-<a class="jxr_linenumber" name="L167" href="#L167">167</a>             vEbn.setElementAtIndex(1, ve);
-<a class="jxr_linenumber" name="L168" href="#L168">168</a>             vEbn.setElementAtIndex(2, vd);
-<a class="jxr_linenumber" name="L169" href="#L169">169</a> 
-<a class="jxr_linenumber" name="L170" href="#L170">170</a>             <strong class="jxr_keyword">final</strong> Matrix vEbe = cne.multiplyAndReturnNew(vEbn);
-<a class="jxr_linenumber" name="L171" href="#L171">171</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vx = vEbe.getElementAtIndex(0);
-<a class="jxr_linenumber" name="L172" href="#L172">172</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vy = vEbe.getElementAtIndex(1);
-<a class="jxr_linenumber" name="L173" href="#L173">173</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vz = vEbe.getElementAtIndex(2);
-<a class="jxr_linenumber" name="L174" href="#L174">174</a> 
-<a class="jxr_linenumber" name="L175" href="#L175">175</a>             destinationVelocity.setCoordinates(vx, vy, vz);
-<a class="jxr_linenumber" name="L176" href="#L176">176</a>         } <strong class="jxr_keyword">catch</strong> (WrongSizeException ignore) {
-<a class="jxr_linenumber" name="L177" href="#L177">177</a>             <em class="jxr_comment">// never happens</em>
-<a class="jxr_linenumber" name="L178" href="#L178">178</a>         }
-<a class="jxr_linenumber" name="L179" href="#L179">179</a>     }
-<a class="jxr_linenumber" name="L180" href="#L180">180</a> }
+<a class="jxr_linenumber" name="L138" href="#L138">138</a>     @SuppressWarnings(<span class="jxr_string">"DuplicatedCode"</span>)
+<a class="jxr_linenumber" name="L139" href="#L139">139</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> convertNEDtoECEF(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> latitude, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> longitude,
+<a class="jxr_linenumber" name="L140" href="#L140">140</a>                                         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> height, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vn,
+<a class="jxr_linenumber" name="L141" href="#L141">141</a>                                         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> ve, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vd,
+<a class="jxr_linenumber" name="L142" href="#L142">142</a>                                         <strong class="jxr_keyword">final</strong> <a href="../../../../../com/irurueta/navigation/frames/ECEFPosition.html">ECEFPosition</a> destinationPosition,
+<a class="jxr_linenumber" name="L143" href="#L143">143</a>                                         <strong class="jxr_keyword">final</strong> <a href="../../../../../com/irurueta/navigation/frames/ECEFVelocity.html">ECEFVelocity</a> destinationVelocity) {
+<a class="jxr_linenumber" name="L144" href="#L144">144</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L145" href="#L145">145</a> 
+<a class="jxr_linenumber" name="L146" href="#L146">146</a>             <em class="jxr_comment">// Calculate transverse radius of curvature using (2.105)</em>
+<a class="jxr_linenumber" name="L147" href="#L147">147</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> re = EARTH_EQUATORIAL_RADIUS_WGS84
+<a class="jxr_linenumber" name="L148" href="#L148">148</a>                     / Math.sqrt(1.0 - Math.pow(EARTH_ECCENTRICITY * Math.sin(latitude), 2.0));
+<a class="jxr_linenumber" name="L149" href="#L149">149</a> 
+<a class="jxr_linenumber" name="L150" href="#L150">150</a>             <em class="jxr_comment">// Convert position using (2.112)</em>
+<a class="jxr_linenumber" name="L151" href="#L151">151</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> cosLat = Math.cos(latitude);
+<a class="jxr_linenumber" name="L152" href="#L152">152</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> sinLat = Math.sin(latitude);
+<a class="jxr_linenumber" name="L153" href="#L153">153</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> cosLong = Math.cos(longitude);
+<a class="jxr_linenumber" name="L154" href="#L154">154</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> sinLong = Math.sin(longitude);
+<a class="jxr_linenumber" name="L155" href="#L155">155</a> 
+<a class="jxr_linenumber" name="L156" href="#L156">156</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> x = (re + height) * cosLat * cosLong;
+<a class="jxr_linenumber" name="L157" href="#L157">157</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> y = (re + height) * cosLat * sinLong;
+<a class="jxr_linenumber" name="L158" href="#L158">158</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> z = ((1.0 - EARTH_ECCENTRICITY * EARTH_ECCENTRICITY) * re + height) * sinLat;
+<a class="jxr_linenumber" name="L159" href="#L159">159</a> 
+<a class="jxr_linenumber" name="L160" href="#L160">160</a>             destinationPosition.setCoordinates(x, y, z);
+<a class="jxr_linenumber" name="L161" href="#L161">161</a> 
+<a class="jxr_linenumber" name="L162" href="#L162">162</a>             <em class="jxr_comment">// Calculate NED to ECEF coordinate transformation matrix</em>
+<a class="jxr_linenumber" name="L163" href="#L163">163</a>             <strong class="jxr_keyword">final</strong> Matrix cne = CoordinateTransformation.nedToEcefMatrix(latitude, longitude);
+<a class="jxr_linenumber" name="L164" href="#L164">164</a> 
+<a class="jxr_linenumber" name="L165" href="#L165">165</a>             <em class="jxr_comment">// Transform velocity using (2.73)</em>
+<a class="jxr_linenumber" name="L166" href="#L166">166</a>             <strong class="jxr_keyword">final</strong> Matrix vEbn = <strong class="jxr_keyword">new</strong> Matrix(NEDFrame.NUM_VELOCITY_COORDINATES, 1);
+<a class="jxr_linenumber" name="L167" href="#L167">167</a>             vEbn.setElementAtIndex(0, vn);
+<a class="jxr_linenumber" name="L168" href="#L168">168</a>             vEbn.setElementAtIndex(1, ve);
+<a class="jxr_linenumber" name="L169" href="#L169">169</a>             vEbn.setElementAtIndex(2, vd);
+<a class="jxr_linenumber" name="L170" href="#L170">170</a> 
+<a class="jxr_linenumber" name="L171" href="#L171">171</a>             <strong class="jxr_keyword">final</strong> Matrix vEbe = cne.multiplyAndReturnNew(vEbn);
+<a class="jxr_linenumber" name="L172" href="#L172">172</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vx = vEbe.getElementAtIndex(0);
+<a class="jxr_linenumber" name="L173" href="#L173">173</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vy = vEbe.getElementAtIndex(1);
+<a class="jxr_linenumber" name="L174" href="#L174">174</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vz = vEbe.getElementAtIndex(2);
+<a class="jxr_linenumber" name="L175" href="#L175">175</a> 
+<a class="jxr_linenumber" name="L176" href="#L176">176</a>             destinationVelocity.setCoordinates(vx, vy, vz);
+<a class="jxr_linenumber" name="L177" href="#L177">177</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> WrongSizeException ignore) {
+<a class="jxr_linenumber" name="L178" href="#L178">178</a>             <em class="jxr_comment">// never happens</em>
+<a class="jxr_linenumber" name="L179" href="#L179">179</a>         }
+<a class="jxr_linenumber" name="L180" href="#L180">180</a>     }
+<a class="jxr_linenumber" name="L181" href="#L181">181</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2018&#x2013;2021. All rights reserved.</div>

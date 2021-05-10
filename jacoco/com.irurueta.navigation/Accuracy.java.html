@@ -28,28 +28,27 @@ import com.irurueta.units.DistanceUnit;
  *
  * @param &lt;A&gt; type of internal accuracy.
  */
-@SuppressWarnings(&quot;WeakerAccess&quot;)
 public abstract class Accuracy&lt;A extends com.irurueta.geometry.Accuracy&gt; {
 
     /**
-     * Internal accuracy rference.
+     * Internal accuracy reference.
      */
     protected A mInternalAccuracy;
 
     /**
      * Constructor.
      */
-<span class="fc" id="L42">    public Accuracy() {</span>
-<span class="fc" id="L43">    }</span>
+<span class="fc" id="L41">    protected Accuracy() {</span>
+<span class="fc" id="L42">    }</span>
 
     /**
      * Constructor.
      *
      * @param internalAccuracy internal accuracy to be set.
      */
-<span class="fc" id="L50">    Accuracy(final A internalAccuracy) {</span>
-<span class="fc" id="L51">        mInternalAccuracy = internalAccuracy;</span>
-<span class="fc" id="L52">    }</span>
+<span class="fc" id="L49">    Accuracy(final A internalAccuracy) {</span>
+<span class="fc" id="L50">        mInternalAccuracy = internalAccuracy;</span>
+<span class="fc" id="L51">    }</span>
 
     /**
      * Gets covariance matrix representing the accuracy of an estimated point or measure.
@@ -57,7 +56,7 @@ public abstract class Accuracy&lt;A extends com.irurueta.geometry.Accuracy&gt; {
      * @return covariance matrix representing the accuracy of an estimated point or measure.
      */
     public Matrix getCovarianceMatrix() {
-<span class="fc" id="L60">        return mInternalAccuracy.getCovarianceMatrix();</span>
+<span class="fc" id="L59">        return mInternalAccuracy.getCovarianceMatrix();</span>
     }
 
     /**
@@ -73,8 +72,8 @@ public abstract class Accuracy&lt;A extends com.irurueta.geometry.Accuracy&gt; {
      */
     public void setCovarianceMatrix(final Matrix covarianceMatrix)
             throws NonSymmetricPositiveDefiniteMatrixException {
-<span class="fc" id="L76">        mInternalAccuracy.setCovarianceMatrix(covarianceMatrix);</span>
-<span class="fc" id="L77">    }</span>
+<span class="fc" id="L75">        mInternalAccuracy.setCovarianceMatrix(covarianceMatrix);</span>
+<span class="fc" id="L76">    }</span>
 
     /**
      * Gets standard deviation factor to account for a given accuracy confidence.
@@ -86,7 +85,7 @@ public abstract class Accuracy&lt;A extends com.irurueta.geometry.Accuracy&gt; {
      * @return standard deviation factor.
      */
     public double getStandardDeviationFactor() {
-<span class="fc" id="L89">        return mInternalAccuracy.getStandardDeviationFactor();</span>
+<span class="fc" id="L88">        return mInternalAccuracy.getStandardDeviationFactor();</span>
     }
 
     /**
@@ -100,8 +99,8 @@ public abstract class Accuracy&lt;A extends com.irurueta.geometry.Accuracy&gt; {
      * @throws IllegalArgumentException if provided value is zero or negative.
      */
     public void setStandardDeviationFactor(final double standardDeviationFactor) {
-<span class="fc" id="L103">        mInternalAccuracy.setStandardDeviationFactor(standardDeviationFactor);</span>
-<span class="fc" id="L104">    }</span>
+<span class="fc" id="L102">        mInternalAccuracy.setStandardDeviationFactor(standardDeviationFactor);</span>
+<span class="fc" id="L103">    }</span>
 
     /**
      * Gets confidence of provided accuracy of estimated point or measure.
@@ -111,7 +110,7 @@ public abstract class Accuracy&lt;A extends com.irurueta.geometry.Accuracy&gt; {
      * @return confidence of provided accuracy of estimated point or measure.
      */
     public double getConfidence() {
-<span class="fc" id="L114">        return mInternalAccuracy.getConfidence();</span>
+<span class="fc" id="L113">        return mInternalAccuracy.getConfidence();</span>
     }
 
     /**
@@ -123,8 +122,8 @@ public abstract class Accuracy&lt;A extends com.irurueta.geometry.Accuracy&gt; {
      * @throws IllegalArgumentException if provided value is not within 0 and 1.
      */
     public void setConfidence(final double confidence) {
-<span class="fc" id="L126">        mInternalAccuracy.setConfidence(confidence);</span>
-<span class="fc" id="L127">    }</span>
+<span class="fc" id="L125">        mInternalAccuracy.setConfidence(confidence);</span>
+<span class="fc" id="L126">    }</span>
 
     /**
      * Gets smallest (best) accuracy in any direction (i.e. either 2D or 3D).
@@ -133,7 +132,7 @@ public abstract class Accuracy&lt;A extends com.irurueta.geometry.Accuracy&gt; {
      * @return smallest accuracy in any direction.
      */
     public Distance getSmallestAccuracy() {
-<span class="fc" id="L136">        return new Distance(getSmallestAccuracyMeters(), DistanceUnit.METER);</span>
+<span class="fc" id="L135">        return new Distance(getSmallestAccuracyMeters(), DistanceUnit.METER);</span>
     }
 
     /**
@@ -144,7 +143,7 @@ public abstract class Accuracy&lt;A extends com.irurueta.geometry.Accuracy&gt; {
      * @return smallest accuracy in any direction expressed in meters.
      */
     public double getSmallestAccuracyMeters() {
-<span class="fc" id="L147">        return mInternalAccuracy.getSmallestAccuracy();</span>
+<span class="fc" id="L146">        return mInternalAccuracy.getSmallestAccuracy();</span>
     }
 
     /**
@@ -154,7 +153,7 @@ public abstract class Accuracy&lt;A extends com.irurueta.geometry.Accuracy&gt; {
      * @return largest accuracy in any direction.
      */
     public Distance getLargestAccuracy() {
-<span class="fc" id="L157">        return new Distance(getLargestAccuracyMeters(), DistanceUnit.METER);</span>
+<span class="fc" id="L156">        return new Distance(getLargestAccuracyMeters(), DistanceUnit.METER);</span>
     }
 
     /**
@@ -165,7 +164,7 @@ public abstract class Accuracy&lt;A extends com.irurueta.geometry.Accuracy&gt; {
      * @return largest accuracy in any direction expressed in meters.
      */
     public double getLargestAccuracyMeters() {
-<span class="fc" id="L168">        return mInternalAccuracy.getLargestAccuracy();</span>
+<span class="fc" id="L167">        return mInternalAccuracy.getLargestAccuracy();</span>
     }
 
     /**
@@ -176,7 +175,7 @@ public abstract class Accuracy&lt;A extends com.irurueta.geometry.Accuracy&gt; {
      * @return average accuracy among all directions.
      */
     public Distance getAverageAccuracy() {
-<span class="fc" id="L179">        return new Distance(getAverageAccuracyMeters(), DistanceUnit.METER);</span>
+<span class="fc" id="L178">        return new Distance(getAverageAccuracyMeters(), DistanceUnit.METER);</span>
     }
 
     /**
@@ -187,7 +186,7 @@ public abstract class Accuracy&lt;A extends com.irurueta.geometry.Accuracy&gt; {
      * @return average accuracy among all directions expressed in meters.
      */
     public double getAverageAccuracyMeters() {
-<span class="fc" id="L190">        return mInternalAccuracy.getAverageAccuracy();</span>
+<span class="fc" id="L189">        return mInternalAccuracy.getAverageAccuracy();</span>
     }
 
     /**
@@ -197,7 +196,7 @@ public abstract class Accuracy&lt;A extends com.irurueta.geometry.Accuracy&gt; {
      * @return number of dimensions.
      */
     public int getNumberOfDimensions() {
-<span class="fc" id="L200">        return mInternalAccuracy.getNumberOfDimensions();</span>
+<span class="fc" id="L199">        return mInternalAccuracy.getNumberOfDimensions();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

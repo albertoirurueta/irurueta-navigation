@@ -365,49 +365,50 @@
 <a class="jxr_linenumber" name="L357" href="#L357">357</a> 
 <a class="jxr_linenumber" name="L358" href="#L358">358</a>         <em class="jxr_comment">//noinspection ConstantConditions,SimplifiableJUnitAssertion</em>
 <a class="jxr_linenumber" name="L359" href="#L359">359</a>         assertTrue(position1.equals((Object) position1));
-<a class="jxr_linenumber" name="L360" href="#L360">360</a>         assertTrue(position1.equals(position1));
-<a class="jxr_linenumber" name="L361" href="#L361">361</a>         assertTrue(position1.equals(position2));
-<a class="jxr_linenumber" name="L362" href="#L362">362</a>         assertFalse(position1.equals(position3));
-<a class="jxr_linenumber" name="L363" href="#L363">363</a>         <em class="jxr_comment">//noinspection SimplifiableJUnitAssertion,ConstantConditions</em>
-<a class="jxr_linenumber" name="L364" href="#L364">364</a>         assertFalse(position1.equals((Object) <strong class="jxr_keyword">null</strong>));
-<a class="jxr_linenumber" name="L365" href="#L365">365</a>         assertFalse(position1.equals(<strong class="jxr_keyword">null</strong>));
-<a class="jxr_linenumber" name="L366" href="#L366">366</a>         <em class="jxr_comment">//noinspection SimplifiableJUnitAssertion</em>
-<a class="jxr_linenumber" name="L367" href="#L367">367</a>         assertFalse(position1.equals(<strong class="jxr_keyword">new</strong> Object()));
-<a class="jxr_linenumber" name="L368" href="#L368">368</a>     }
-<a class="jxr_linenumber" name="L369" href="#L369">369</a> 
-<a class="jxr_linenumber" name="L370" href="#L370">370</a>     @Test
-<a class="jxr_linenumber" name="L371" href="#L371">371</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testEqualsWithThreshold() {
-<a class="jxr_linenumber" name="L372" href="#L372">372</a>         <strong class="jxr_keyword">final</strong> UniformRandomizer randomizer = <strong class="jxr_keyword">new</strong> UniformRandomizer(<strong class="jxr_keyword">new</strong> Random());
-<a class="jxr_linenumber" name="L373" href="#L373">373</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-<a class="jxr_linenumber" name="L374" href="#L374">374</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-<a class="jxr_linenumber" name="L375" href="#L375">375</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-<a class="jxr_linenumber" name="L376" href="#L376">376</a> 
-<a class="jxr_linenumber" name="L377" href="#L377">377</a>         <strong class="jxr_keyword">final</strong> com.irurueta.navigation.frames.NEDPosition
-<a class="jxr_linenumber" name="L378" href="#L378">378</a>             position1 = <strong class="jxr_keyword">new</strong> com.irurueta.navigation.frames.NEDPosition(latitude, longitude, height);
-<a class="jxr_linenumber" name="L379" href="#L379">379</a>         <strong class="jxr_keyword">final</strong> com.irurueta.navigation.frames.NEDPosition
-<a class="jxr_linenumber" name="L380" href="#L380">380</a>             position2 = <strong class="jxr_keyword">new</strong> com.irurueta.navigation.frames.NEDPosition(latitude, longitude, height);
-<a class="jxr_linenumber" name="L381" href="#L381">381</a>         <strong class="jxr_keyword">final</strong> com.irurueta.navigation.frames.NEDPosition position3 = <strong class="jxr_keyword">new</strong> com.irurueta.navigation.frames.NEDPosition();
-<a class="jxr_linenumber" name="L382" href="#L382">382</a> 
-<a class="jxr_linenumber" name="L383" href="#L383">383</a>         assertTrue(position1.equals(position1, THRESHOLD));
-<a class="jxr_linenumber" name="L384" href="#L384">384</a>         assertTrue(position1.equals(position2, THRESHOLD));
-<a class="jxr_linenumber" name="L385" href="#L385">385</a>         assertFalse(position1.equals(position3, THRESHOLD));
-<a class="jxr_linenumber" name="L386" href="#L386">386</a>         assertFalse(position1.equals(<strong class="jxr_keyword">null</strong>, THRESHOLD));
-<a class="jxr_linenumber" name="L387" href="#L387">387</a>     }
-<a class="jxr_linenumber" name="L388" href="#L388">388</a> 
-<a class="jxr_linenumber" name="L389" href="#L389">389</a>     @Test
-<a class="jxr_linenumber" name="L390" href="#L390">390</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testClone() <strong class="jxr_keyword">throws</strong> CloneNotSupportedException {
-<a class="jxr_linenumber" name="L391" href="#L391">391</a>         <strong class="jxr_keyword">final</strong> UniformRandomizer randomizer = <strong class="jxr_keyword">new</strong> UniformRandomizer(<strong class="jxr_keyword">new</strong> Random());
-<a class="jxr_linenumber" name="L392" href="#L392">392</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-<a class="jxr_linenumber" name="L393" href="#L393">393</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-<a class="jxr_linenumber" name="L394" href="#L394">394</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-<a class="jxr_linenumber" name="L395" href="#L395">395</a> 
-<a class="jxr_linenumber" name="L396" href="#L396">396</a>         <strong class="jxr_keyword">final</strong> com.irurueta.navigation.frames.NEDPosition position1 = <strong class="jxr_keyword">new</strong> NEDPosition(latitude, longitude, height);
-<a class="jxr_linenumber" name="L397" href="#L397">397</a> 
-<a class="jxr_linenumber" name="L398" href="#L398">398</a>         <strong class="jxr_keyword">final</strong> Object position2 = position1.clone();
-<a class="jxr_linenumber" name="L399" href="#L399">399</a> 
-<a class="jxr_linenumber" name="L400" href="#L400">400</a>         assertEquals(position1, position2);
-<a class="jxr_linenumber" name="L401" href="#L401">401</a>     }
-<a class="jxr_linenumber" name="L402" href="#L402">402</a> }
+<a class="jxr_linenumber" name="L360" href="#L360">360</a>         <em class="jxr_comment">//noinspection EqualsWithItself</em>
+<a class="jxr_linenumber" name="L361" href="#L361">361</a>         assertTrue(position1.equals(position1));
+<a class="jxr_linenumber" name="L362" href="#L362">362</a>         assertTrue(position1.equals(position2));
+<a class="jxr_linenumber" name="L363" href="#L363">363</a>         assertFalse(position1.equals(position3));
+<a class="jxr_linenumber" name="L364" href="#L364">364</a>         <em class="jxr_comment">//noinspection SimplifiableJUnitAssertion,ConstantConditions</em>
+<a class="jxr_linenumber" name="L365" href="#L365">365</a>         assertFalse(position1.equals((Object) <strong class="jxr_keyword">null</strong>));
+<a class="jxr_linenumber" name="L366" href="#L366">366</a>         assertFalse(position1.equals(<strong class="jxr_keyword">null</strong>));
+<a class="jxr_linenumber" name="L367" href="#L367">367</a>         <em class="jxr_comment">//noinspection SimplifiableJUnitAssertion</em>
+<a class="jxr_linenumber" name="L368" href="#L368">368</a>         assertFalse(position1.equals(<strong class="jxr_keyword">new</strong> Object()));
+<a class="jxr_linenumber" name="L369" href="#L369">369</a>     }
+<a class="jxr_linenumber" name="L370" href="#L370">370</a> 
+<a class="jxr_linenumber" name="L371" href="#L371">371</a>     @Test
+<a class="jxr_linenumber" name="L372" href="#L372">372</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testEqualsWithThreshold() {
+<a class="jxr_linenumber" name="L373" href="#L373">373</a>         <strong class="jxr_keyword">final</strong> UniformRandomizer randomizer = <strong class="jxr_keyword">new</strong> UniformRandomizer(<strong class="jxr_keyword">new</strong> Random());
+<a class="jxr_linenumber" name="L374" href="#L374">374</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+<a class="jxr_linenumber" name="L375" href="#L375">375</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+<a class="jxr_linenumber" name="L376" href="#L376">376</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+<a class="jxr_linenumber" name="L377" href="#L377">377</a> 
+<a class="jxr_linenumber" name="L378" href="#L378">378</a>         <strong class="jxr_keyword">final</strong> com.irurueta.navigation.frames.NEDPosition
+<a class="jxr_linenumber" name="L379" href="#L379">379</a>             position1 = <strong class="jxr_keyword">new</strong> com.irurueta.navigation.frames.NEDPosition(latitude, longitude, height);
+<a class="jxr_linenumber" name="L380" href="#L380">380</a>         <strong class="jxr_keyword">final</strong> com.irurueta.navigation.frames.NEDPosition
+<a class="jxr_linenumber" name="L381" href="#L381">381</a>             position2 = <strong class="jxr_keyword">new</strong> com.irurueta.navigation.frames.NEDPosition(latitude, longitude, height);
+<a class="jxr_linenumber" name="L382" href="#L382">382</a>         <strong class="jxr_keyword">final</strong> com.irurueta.navigation.frames.NEDPosition position3 = <strong class="jxr_keyword">new</strong> com.irurueta.navigation.frames.NEDPosition();
+<a class="jxr_linenumber" name="L383" href="#L383">383</a> 
+<a class="jxr_linenumber" name="L384" href="#L384">384</a>         assertTrue(position1.equals(position1, THRESHOLD));
+<a class="jxr_linenumber" name="L385" href="#L385">385</a>         assertTrue(position1.equals(position2, THRESHOLD));
+<a class="jxr_linenumber" name="L386" href="#L386">386</a>         assertFalse(position1.equals(position3, THRESHOLD));
+<a class="jxr_linenumber" name="L387" href="#L387">387</a>         assertFalse(position1.equals(<strong class="jxr_keyword">null</strong>, THRESHOLD));
+<a class="jxr_linenumber" name="L388" href="#L388">388</a>     }
+<a class="jxr_linenumber" name="L389" href="#L389">389</a> 
+<a class="jxr_linenumber" name="L390" href="#L390">390</a>     @Test
+<a class="jxr_linenumber" name="L391" href="#L391">391</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testClone() <strong class="jxr_keyword">throws</strong> CloneNotSupportedException {
+<a class="jxr_linenumber" name="L392" href="#L392">392</a>         <strong class="jxr_keyword">final</strong> UniformRandomizer randomizer = <strong class="jxr_keyword">new</strong> UniformRandomizer(<strong class="jxr_keyword">new</strong> Random());
+<a class="jxr_linenumber" name="L393" href="#L393">393</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+<a class="jxr_linenumber" name="L394" href="#L394">394</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+<a class="jxr_linenumber" name="L395" href="#L395">395</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+<a class="jxr_linenumber" name="L396" href="#L396">396</a> 
+<a class="jxr_linenumber" name="L397" href="#L397">397</a>         <strong class="jxr_keyword">final</strong> com.irurueta.navigation.frames.NEDPosition position1 = <strong class="jxr_keyword">new</strong> NEDPosition(latitude, longitude, height);
+<a class="jxr_linenumber" name="L398" href="#L398">398</a> 
+<a class="jxr_linenumber" name="L399" href="#L399">399</a>         <strong class="jxr_keyword">final</strong> Object position2 = position1.clone();
+<a class="jxr_linenumber" name="L400" href="#L400">400</a> 
+<a class="jxr_linenumber" name="L401" href="#L401">401</a>         assertEquals(position1, position2);
+<a class="jxr_linenumber" name="L402" href="#L402">402</a>     }
+<a class="jxr_linenumber" name="L403" href="#L403">403</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2018&#x2013;2021. All rights reserved.</div>

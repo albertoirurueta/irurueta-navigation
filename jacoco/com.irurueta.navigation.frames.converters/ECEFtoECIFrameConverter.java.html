@@ -30,12 +30,11 @@ import com.irurueta.units.TimeUnit;
 
 /**
  * Converts from ECEF frame to ECI frame.
- * This implementation is based on the equations defined in &quot;Principles of GNSS, Inertial, and Multisensor
+ * This implementation is based on the equations defined in &quot;Principles of GNSS, Inertial, and Multi-sensor
  * Integrated Navigation Systems, Second Edition&quot; and on the companion software available at:
  * https://github.com/ymjdz/MATLAB-Codes/blob/master/ECEF_to_ECI.m
  */
-@SuppressWarnings(&quot;WeakerAccess&quot;)
-<span class="fc" id="L38">public class ECEFtoECIFrameConverter implements TimeIntervalFrameConverter&lt;ECEFFrame, ECIFrame&gt; {</span>
+<span class="fc" id="L37">public class ECEFtoECIFrameConverter implements TimeIntervalFrameConverter&lt;ECEFFrame, ECIFrame&gt; {</span>
 
     /**
      * Earth rotation rate expressed in radians per second (rad/s).
@@ -51,7 +50,7 @@ import com.irurueta.units.TimeUnit;
      */
     @Override
     public ECIFrame convertAndReturnNew(final double timeInterval, final ECEFFrame source) {
-<span class="fc" id="L54">        return convertECEFtoECIAndReturnNew(timeInterval, source);</span>
+<span class="fc" id="L53">        return convertECEFtoECIAndReturnNew(timeInterval, source);</span>
     }
 
     /**
@@ -63,7 +62,7 @@ import com.irurueta.units.TimeUnit;
      */
     @Override
     public ECIFrame convertAndReturnNew(final Time timeInterval, final ECEFFrame source) {
-<span class="fc" id="L66">        return convertECEFtoECIAndReturnNew(timeInterval, source);</span>
+<span class="fc" id="L65">        return convertECEFtoECIAndReturnNew(timeInterval, source);</span>
     }
 
     /**
@@ -75,8 +74,8 @@ import com.irurueta.units.TimeUnit;
      */
     @Override
     public void convert(final double timeInterval, final ECEFFrame source, final ECIFrame destination) {
-<span class="fc" id="L78">        convertECEFtoECI(timeInterval, source, destination);</span>
-<span class="fc" id="L79">    }</span>
+<span class="fc" id="L77">        convertECEFtoECI(timeInterval, source, destination);</span>
+<span class="fc" id="L78">    }</span>
 
     /**
      * Converts source frame to destination frame.
@@ -87,8 +86,8 @@ import com.irurueta.units.TimeUnit;
      */
     @Override
     public void convert(final Time timeInterval, final ECEFFrame source, final ECIFrame destination) {
-<span class="fc" id="L90">        convertECEFtoECI(timeInterval, source, destination);</span>
-<span class="fc" id="L91">    }</span>
+<span class="fc" id="L89">        convertECEFtoECI(timeInterval, source, destination);</span>
+<span class="fc" id="L90">    }</span>
 
     /**
      * Gets source frame type.
@@ -97,7 +96,7 @@ import com.irurueta.units.TimeUnit;
      */
     @Override
     public FrameType getSourceType() {
-<span class="fc" id="L100">        return FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME;</span>
+<span class="fc" id="L99">        return FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME;</span>
     }
 
     /**
@@ -107,7 +106,7 @@ import com.irurueta.units.TimeUnit;
      */
     @Override
     public FrameType getDestinationType() {
-<span class="fc" id="L110">        return FrameType.EARTH_CENTERED_INERTIAL_FRAME;</span>
+<span class="fc" id="L109">        return FrameType.EARTH_CENTERED_INERTIAL_FRAME;</span>
     }
 
     /**
@@ -118,9 +117,9 @@ import com.irurueta.units.TimeUnit;
      * @return a new destination frame instance.
      */
     public static ECIFrame convertECEFtoECIAndReturnNew(final double timeInterval, final ECEFFrame source) {
-<span class="fc" id="L121">        final ECIFrame result = new ECIFrame();</span>
-<span class="fc" id="L122">        convertECEFtoECI(timeInterval, source, result);</span>
-<span class="fc" id="L123">        return result;</span>
+<span class="fc" id="L120">        final ECIFrame result = new ECIFrame();</span>
+<span class="fc" id="L121">        convertECEFtoECI(timeInterval, source, result);</span>
+<span class="fc" id="L122">        return result;</span>
     }
 
     /**
@@ -131,8 +130,8 @@ import com.irurueta.units.TimeUnit;
      * @return a new destination frame instance.
      */
     public static ECIFrame convertECEFtoECIAndReturnNew(final Time timeInterval, final ECEFFrame source) {
-<span class="fc" id="L134">        return convertECEFtoECIAndReturnNew(TimeConverter.convert(timeInterval.getValue().doubleValue(),</span>
-<span class="fc" id="L135">                timeInterval.getUnit(), TimeUnit.SECOND), source);</span>
+<span class="fc" id="L133">        return convertECEFtoECIAndReturnNew(TimeConverter.convert(timeInterval.getValue().doubleValue(),</span>
+<span class="fc" id="L134">                timeInterval.getUnit(), TimeUnit.SECOND), source);</span>
     }
 
     /**
@@ -142,6 +141,7 @@ import com.irurueta.units.TimeUnit;
      * @param source       source frame to convert from.
      * @param destination  destination frame instance to convert to.
      */
+    @SuppressWarnings(&quot;DuplicatedCode&quot;)
     public static void convertECEFtoECI(final double timeInterval, final ECEFFrame source, final ECIFrame destination) {
         try {
             // Calculate ECEF to ECI coordinate transformation matrix using (2.145)
@@ -171,26 +171,27 @@ import com.irurueta.units.TimeUnit;
 <span class="fc" id="L171">            vEbe.setElementAtIndex(1, source.getVy());</span>
 <span class="fc" id="L172">            vEbe.setElementAtIndex(2, source.getVz());</span>
 
-<span class="fc" id="L174">            vEbe.add(tmp); // vEbe + omega * [-y;x;0]</span>
+            // vEbe + omega * [-y;x;0]
+<span class="fc" id="L175">            vEbe.add(tmp);</span>
 
-<span class="fc" id="L176">            final Matrix vIbi = cei.multiplyAndReturnNew(vEbe);</span>
+<span class="fc" id="L177">            final Matrix vIbi = cei.multiplyAndReturnNew(vEbe);</span>
 
-<span class="fc" id="L178">            destination.setVelocityCoordinates(vIbi.getElementAtIndex(0),</span>
-<span class="fc" id="L179">                    vIbi.getElementAtIndex(1), vIbi.getElementAtIndex(2));</span>
+<span class="fc" id="L179">            destination.setVelocityCoordinates(vIbi.getElementAtIndex(0),</span>
+<span class="fc" id="L180">                    vIbi.getElementAtIndex(1), vIbi.getElementAtIndex(2));</span>
 
             // Transform attitude using (2.15)
             // cbi = cei * cbe
-<span class="fc" id="L183">            final Matrix cbe = source.getCoordinateTransformationMatrix();</span>
-<span class="fc" id="L184">            cei.multiply(cbe);</span>
+<span class="fc" id="L184">            final Matrix cbe = source.getCoordinateTransformationMatrix();</span>
+<span class="fc" id="L185">            cei.multiply(cbe);</span>
 
-<span class="fc" id="L186">            final CoordinateTransformation c = new CoordinateTransformation(cei,</span>
+<span class="fc" id="L187">            final CoordinateTransformation c = new CoordinateTransformation(cei,</span>
                     FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_INERTIAL_FRAME);
-<span class="fc" id="L188">            destination.setCoordinateTransformation(c);</span>
-<span class="nc" id="L189">        } catch (WrongSizeException | InvalidSourceAndDestinationFrameTypeException |</span>
+<span class="fc" id="L189">            destination.setCoordinateTransformation(c);</span>
+<span class="nc" id="L190">        } catch (final WrongSizeException | InvalidSourceAndDestinationFrameTypeException |</span>
                 InvalidRotationMatrixException ignore) {
             // never happens
-<span class="fc" id="L192">        }</span>
-<span class="fc" id="L193">    }</span>
+<span class="fc" id="L193">        }</span>
+<span class="fc" id="L194">    }</span>
 
     /**
      * Converts source ECEF frame to destination ECI frame.
@@ -200,8 +201,8 @@ import com.irurueta.units.TimeUnit;
      * @param destination  destination frame instance to convert to.
      */
     public static void convertECEFtoECI(final Time timeInterval, final ECEFFrame source, final ECIFrame destination) {
-<span class="fc" id="L203">        convertECEFtoECI(TimeConverter.convert(timeInterval.getValue().doubleValue(),</span>
-<span class="fc" id="L204">                timeInterval.getUnit(), TimeUnit.SECOND), source, destination);</span>
-<span class="fc" id="L205">    }</span>
+<span class="fc" id="L204">        convertECEFtoECI(TimeConverter.convert(timeInterval.getValue().doubleValue(),</span>
+<span class="fc" id="L205">                timeInterval.getUnit(), TimeUnit.SECOND), source, destination);</span>
+<span class="fc" id="L206">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

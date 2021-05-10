@@ -27,12 +27,11 @@ import com.irurueta.navigation.geodesic.Constants;
 
 /**
  * Converts from NED frame to ECEF frame.
- * This implementation is based on the equations defined in &quot;Principles of GNSS, Inertial, and Multisensor
+ * This implementation is based on the equations defined in &quot;Principles of GNSS, Inertial, and Multi-sensor
  * Integrated Navigation Systems, Second Edition&quot; and on the companion software available at:
  * https://github.com/ymjdz/MATLAB-Codes/blob/master/NED_to_ECEF.m
  */
-@SuppressWarnings(&quot;WeakerAccess&quot;)
-<span class="fc" id="L35">public class NEDtoECEFFrameConverter implements FrameConverter&lt;NEDFrame, ECEFFrame&gt; {</span>
+<span class="fc" id="L34">public class NEDtoECEFFrameConverter implements FrameConverter&lt;NEDFrame, ECEFFrame&gt; {</span>
 
     /**
      * The equatorial radius of WGS84 ellipsoid (6378137 m) defining Earth's shape.
@@ -52,9 +51,9 @@ import com.irurueta.navigation.geodesic.Constants;
      */
     @Override
     public ECEFFrame convertAndReturnNew(final NEDFrame source) {
-<span class="fc" id="L55">        final ECEFFrame result = new ECEFFrame();</span>
-<span class="fc" id="L56">        convert(source, result);</span>
-<span class="fc" id="L57">        return result;</span>
+<span class="fc" id="L54">        final ECEFFrame result = new ECEFFrame();</span>
+<span class="fc" id="L55">        convert(source, result);</span>
+<span class="fc" id="L56">        return result;</span>
     }
 
     /**
@@ -64,8 +63,8 @@ import com.irurueta.navigation.geodesic.Constants;
      */
     @Override
     public void convert(final NEDFrame source, final ECEFFrame destination) {
-<span class="fc" id="L67">        convertNEDtoECEF(source, destination);</span>
-<span class="fc" id="L68">    }</span>
+<span class="fc" id="L66">        convertNEDtoECEF(source, destination);</span>
+<span class="fc" id="L67">    }</span>
 
     /**
      * Gets source frame type.
@@ -74,7 +73,7 @@ import com.irurueta.navigation.geodesic.Constants;
      */
     @Override
     public FrameType getSourceType() {
-<span class="fc" id="L77">        return FrameType.LOCAL_NAVIGATION_FRAME;</span>
+<span class="fc" id="L76">        return FrameType.LOCAL_NAVIGATION_FRAME;</span>
     }
 
     /**
@@ -84,7 +83,7 @@ import com.irurueta.navigation.geodesic.Constants;
      */
     @Override
     public FrameType getDestinationType() {
-<span class="fc" id="L87">        return FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME;</span>
+<span class="fc" id="L86">        return FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME;</span>
     }
 
     /**
@@ -94,9 +93,9 @@ import com.irurueta.navigation.geodesic.Constants;
      * @return a new destination frame instance.
      */
     public static ECEFFrame convertNEDtoECEFAndReturnNew(final NEDFrame source) {
-<span class="fc" id="L97">        final ECEFFrame result = new ECEFFrame();</span>
-<span class="fc" id="L98">        convertNEDtoECEF(source, result);</span>
-<span class="fc" id="L99">        return result;</span>
+<span class="fc" id="L96">        final ECEFFrame result = new ECEFFrame();</span>
+<span class="fc" id="L97">        convertNEDtoECEF(source, result);</span>
+<span class="fc" id="L98">        return result;</span>
     }
 
     /**
@@ -104,6 +103,7 @@ import com.irurueta.navigation.geodesic.Constants;
      * @param source      source frame to convert from.
      * @param destination destination frame instance to convert to.
      */
+    @SuppressWarnings(&quot;DuplicatedCode&quot;)
     public static void convertNEDtoECEF(final NEDFrame source, final ECEFFrame destination) {
         try {
 <span class="fc" id="L109">            final double latitude = source.getLatitude();</span>
@@ -161,7 +161,7 @@ import com.irurueta.navigation.geodesic.Constants;
 
 <span class="fc" id="L162">            destination.setCoordinateTransformation(c);</span>
 
-<span class="nc" id="L164">        } catch (WrongSizeException | InvalidRotationMatrixException |</span>
+<span class="nc" id="L164">        } catch (final WrongSizeException | InvalidRotationMatrixException |</span>
                 InvalidSourceAndDestinationFrameTypeException ignore) {
             // never happens
 <span class="fc" id="L167">        }</span>

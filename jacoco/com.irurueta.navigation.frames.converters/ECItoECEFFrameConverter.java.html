@@ -30,7 +30,7 @@ import com.irurueta.units.TimeUnit;
 
 /**
  * Converts from ECI frame to ECEF frame.
- * This implementation is based on the equations defined in &quot;Principles of GNSS, Inertial, and Multisensor
+ * This implementation is based on the equations defined in &quot;Principles of GNSS, Inertial, and Multi-sensor
  * Integrated Navigation Systems, Second Edition&quot; and on the companion software available at:
  * https://github.com/ymjdz/MATLAB-Codes/blob/master/ECI_to_ECEF.m
  */
@@ -50,7 +50,7 @@ import com.irurueta.units.TimeUnit;
      * @return a new destination frame instance.
      */
     @Override
-    public ECEFFrame convertAndReturnNew(double timeInterval, final ECIFrame source) {
+    public ECEFFrame convertAndReturnNew(final double timeInterval, final ECIFrame source) {
 <span class="fc" id="L54">        return convertECItoECEFAndReturnNew(timeInterval, source);</span>
     }
 
@@ -124,7 +124,7 @@ import com.irurueta.units.TimeUnit;
     }
 
     /**
-     * Convers source ECI frame to a new ECEF frame instance.
+     * Converts source ECI frame to a new ECEF frame instance.
      *
      * @param timeInterval a time interval.
      * @param source       source frame to convert from.
@@ -142,55 +142,57 @@ import com.irurueta.units.TimeUnit;
      * @param source       source frame to convert from.
      * @param destination  destination frame instance to convert to.
      */
+    @SuppressWarnings(&quot;DuplicatedCode&quot;)
     public static void convertECItoECEF(final double timeInterval, final ECIFrame source, final ECEFFrame destination) {
         try {
             // Calculate ECEF to ECI coordinate transformation matrix using (2.145)
-<span class="fc" id="L148">            final double alpha = EARTH_ROTATION_RATE * timeInterval;</span>
-<span class="fc" id="L149">            final Matrix cie = CoordinateTransformation.eciToEcefMatrixFromAngle(alpha);</span>
+<span class="fc" id="L149">            final double alpha = EARTH_ROTATION_RATE * timeInterval;</span>
+<span class="fc" id="L150">            final Matrix cie = CoordinateTransformation.eciToEcefMatrixFromAngle(alpha);</span>
 
             // Transform position using (2.146)
-<span class="fc" id="L152">            final Matrix rIbi = new Matrix(ECIFrame.NUM_POSITION_COORDINATES, 1);</span>
-<span class="fc" id="L153">            rIbi.setElementAtIndex(0, source.getX());</span>
-<span class="fc" id="L154">            rIbi.setElementAtIndex(1, source.getY());</span>
-<span class="fc" id="L155">            rIbi.setElementAtIndex(2, source.getZ());</span>
+<span class="fc" id="L153">            final Matrix rIbi = new Matrix(ECIFrame.NUM_POSITION_COORDINATES, 1);</span>
+<span class="fc" id="L154">            rIbi.setElementAtIndex(0, source.getX());</span>
+<span class="fc" id="L155">            rIbi.setElementAtIndex(1, source.getY());</span>
+<span class="fc" id="L156">            rIbi.setElementAtIndex(2, source.getZ());</span>
 
-<span class="fc" id="L157">            final Matrix rEbe = cie.multiplyAndReturnNew(rIbi);</span>
+<span class="fc" id="L158">            final Matrix rEbe = cie.multiplyAndReturnNew(rIbi);</span>
 
-<span class="fc" id="L159">            destination.setCoordinates(rEbe.getElementAtIndex(0),</span>
-<span class="fc" id="L160">                    rEbe.getElementAtIndex(1), rEbe.getElementAtIndex(2));</span>
+<span class="fc" id="L160">            destination.setCoordinates(rEbe.getElementAtIndex(0),</span>
+<span class="fc" id="L161">                    rEbe.getElementAtIndex(1), rEbe.getElementAtIndex(2));</span>
 
             // Transform velocity using (2.145)
-<span class="fc" id="L163">            final Matrix tmp = new Matrix(ECIFrame.NUM_POSITION_COORDINATES, 1);</span>
-<span class="fc" id="L164">            tmp.setElementAtIndex(0, -source.getY());</span>
-<span class="fc" id="L165">            tmp.setElementAtIndex(1, source.getX());</span>
-<span class="fc" id="L166">            tmp.setElementAtIndex(2, 0.0);</span>
-<span class="fc" id="L167">            tmp.multiplyByScalar(-EARTH_ROTATION_RATE);</span>
+<span class="fc" id="L164">            final Matrix tmp = new Matrix(ECIFrame.NUM_POSITION_COORDINATES, 1);</span>
+<span class="fc" id="L165">            tmp.setElementAtIndex(0, -source.getY());</span>
+<span class="fc" id="L166">            tmp.setElementAtIndex(1, source.getX());</span>
+<span class="fc" id="L167">            tmp.setElementAtIndex(2, 0.0);</span>
+<span class="fc" id="L168">            tmp.multiplyByScalar(-EARTH_ROTATION_RATE);</span>
 
-<span class="fc" id="L169">            final Matrix vIbi = new Matrix(ECIFrame.NUM_VELOCITY_COORDINATES, 1);</span>
-<span class="fc" id="L170">            vIbi.setElementAtIndex(0, source.getVx());</span>
-<span class="fc" id="L171">            vIbi.setElementAtIndex(1, source.getVy());</span>
-<span class="fc" id="L172">            vIbi.setElementAtIndex(2, source.getVz());</span>
+<span class="fc" id="L170">            final Matrix vIbi = new Matrix(ECIFrame.NUM_VELOCITY_COORDINATES, 1);</span>
+<span class="fc" id="L171">            vIbi.setElementAtIndex(0, source.getVx());</span>
+<span class="fc" id="L172">            vIbi.setElementAtIndex(1, source.getVy());</span>
+<span class="fc" id="L173">            vIbi.setElementAtIndex(2, source.getVz());</span>
 
-<span class="fc" id="L174">            vIbi.add(tmp); // vIbi - omega * [-y;x;0]</span>
+            // vIbi - omega * [-y;x;0]
+<span class="fc" id="L176">            vIbi.add(tmp);</span>
 
-<span class="fc" id="L176">            final Matrix vEbe = cie.multiplyAndReturnNew(vIbi);</span>
+<span class="fc" id="L178">            final Matrix vEbe = cie.multiplyAndReturnNew(vIbi);</span>
 
-<span class="fc" id="L178">            destination.setVelocityCoordinates(vEbe.getElementAtIndex(0),</span>
-<span class="fc" id="L179">                    vEbe.getElementAtIndex(1), vEbe.getElementAtIndex(2));</span>
+<span class="fc" id="L180">            destination.setVelocityCoordinates(vEbe.getElementAtIndex(0),</span>
+<span class="fc" id="L181">                    vEbe.getElementAtIndex(1), vEbe.getElementAtIndex(2));</span>
 
             // Transform attitude using (2.15)
             // cbe = cie * cbi
-<span class="fc" id="L183">            final Matrix cbi = source.getCoordinateTransformationMatrix();</span>
-<span class="fc" id="L184">            cie.multiply(cbi);</span>
+<span class="fc" id="L185">            final Matrix cbi = source.getCoordinateTransformationMatrix();</span>
+<span class="fc" id="L186">            cie.multiply(cbi);</span>
 
-<span class="fc" id="L186">            final CoordinateTransformation c = new CoordinateTransformation(cie,</span>
+<span class="fc" id="L188">            final CoordinateTransformation c = new CoordinateTransformation(cie,</span>
                     FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
-<span class="fc" id="L188">            destination.setCoordinateTransformation(c);</span>
-<span class="nc" id="L189">        } catch (WrongSizeException | InvalidSourceAndDestinationFrameTypeException |</span>
+<span class="fc" id="L190">            destination.setCoordinateTransformation(c);</span>
+<span class="nc" id="L191">        } catch (final WrongSizeException | InvalidSourceAndDestinationFrameTypeException |</span>
                 InvalidRotationMatrixException ignore) {
             // never happens
-<span class="fc" id="L192">        }</span>
-<span class="fc" id="L193">    }</span>
+<span class="fc" id="L194">        }</span>
+<span class="fc" id="L195">    }</span>
 
     /**
      * Converts source ECI frame to destination ECEF frame.
@@ -200,8 +202,8 @@ import com.irurueta.units.TimeUnit;
      * @param destination  destination frame instance to convert to.
      */
     public static void convertECItoECEF(final Time timeInterval, final ECIFrame source, final ECEFFrame destination) {
-<span class="fc" id="L203">        convertECItoECEF(TimeConverter.convert(timeInterval.getValue().doubleValue(),</span>
-<span class="fc" id="L204">                timeInterval.getUnit(), TimeUnit.SECOND), source, destination);</span>
-<span class="fc" id="L205">    }</span>
+<span class="fc" id="L205">        convertECItoECEF(TimeConverter.convert(timeInterval.getValue().doubleValue(),</span>
+<span class="fc" id="L206">                timeInterval.getUnit(), TimeUnit.SECOND), source, destination);</span>
+<span class="fc" id="L207">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

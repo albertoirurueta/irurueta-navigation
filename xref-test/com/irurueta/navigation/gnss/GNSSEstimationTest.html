@@ -362,7 +362,7 @@
 <a class="jxr_linenumber" name="L354" href="#L354">354</a> 
 <a class="jxr_linenumber" name="L355" href="#L355">355</a>         estimation.setVz(vz);
 <a class="jxr_linenumber" name="L356" href="#L356">356</a> 
-<a class="jxr_linenumber" name="L357" href="#L357">357</a>         <em class="jxr_comment">// chekc</em>
+<a class="jxr_linenumber" name="L357" href="#L357">357</a>         <em class="jxr_comment">// check</em>
 <a class="jxr_linenumber" name="L358" href="#L358">358</a>         assertEquals(estimation.getVz(), vz, 0.0);
 <a class="jxr_linenumber" name="L359" href="#L359">359</a>     }
 <a class="jxr_linenumber" name="L360" href="#L360">360</a> 
@@ -609,8 +609,8 @@
 <a class="jxr_linenumber" name="L601" href="#L601">601</a>         assertEquals(speedZ1.getUnit(), SpeedUnit.METERS_PER_SECOND);
 <a class="jxr_linenumber" name="L602" href="#L602">602</a> 
 <a class="jxr_linenumber" name="L603" href="#L603">603</a>         <em class="jxr_comment">// set new value</em>
-<a class="jxr_linenumber" name="L604" href="#L604">604</a>         <strong class="jxr_keyword">final</strong> UniformRandomizer randomizser = <strong class="jxr_keyword">new</strong> UniformRandomizer(<strong class="jxr_keyword">new</strong> Random());
-<a class="jxr_linenumber" name="L605" href="#L605">605</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vz = randomizser.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+<a class="jxr_linenumber" name="L604" href="#L604">604</a>         <strong class="jxr_keyword">final</strong> UniformRandomizer randomizer = <strong class="jxr_keyword">new</strong> UniformRandomizer(<strong class="jxr_keyword">new</strong> Random());
+<a class="jxr_linenumber" name="L605" href="#L605">605</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 <a class="jxr_linenumber" name="L606" href="#L606">606</a> 
 <a class="jxr_linenumber" name="L607" href="#L607">607</a>         <strong class="jxr_keyword">final</strong> Speed speedZ2 = <strong class="jxr_keyword">new</strong> Speed(vz, SpeedUnit.METERS_PER_SECOND);
 <a class="jxr_linenumber" name="L608" href="#L608">608</a> 
@@ -701,7 +701,7 @@
 <a class="jxr_linenumber" name="L693" href="#L693">693</a>         assertEquals(clockDrift1.getValue().doubleValue(), 0.0, 0.0);
 <a class="jxr_linenumber" name="L694" href="#L694">694</a>         assertEquals(clockDrift1.getUnit(), SpeedUnit.METERS_PER_SECOND);
 <a class="jxr_linenumber" name="L695" href="#L695">695</a> 
-<a class="jxr_linenumber" name="L696" href="#L696">696</a>         <em class="jxr_comment">// set new vlaue</em>
+<a class="jxr_linenumber" name="L696" href="#L696">696</a>         <em class="jxr_comment">// set new value</em>
 <a class="jxr_linenumber" name="L697" href="#L697">697</a>         <strong class="jxr_keyword">final</strong> UniformRandomizer randomizer = <strong class="jxr_keyword">new</strong> UniformRandomizer(<strong class="jxr_keyword">new</strong> Random());
 <a class="jxr_linenumber" name="L698" href="#L698">698</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT,
 <a class="jxr_linenumber" name="L699" href="#L699">699</a>                 MAX_CLOCK_DRIFT);
@@ -1118,68 +1118,69 @@
 <a class="jxr_linenumber" name="L1110" href="#L1110">1110</a> 
 <a class="jxr_linenumber" name="L1111" href="#L1111">1111</a>         <em class="jxr_comment">//noinspection ConstantConditions,SimplifiableJUnitAssertion</em>
 <a class="jxr_linenumber" name="L1112" href="#L1112">1112</a>         assertTrue(estimation1.equals((Object) estimation1));
-<a class="jxr_linenumber" name="L1113" href="#L1113">1113</a>         assertTrue(estimation1.equals(estimation1));
-<a class="jxr_linenumber" name="L1114" href="#L1114">1114</a>         assertTrue(estimation1.equals(estimation2));
-<a class="jxr_linenumber" name="L1115" href="#L1115">1115</a>         assertFalse(estimation1.equals(estimation3));
-<a class="jxr_linenumber" name="L1116" href="#L1116">1116</a>         <em class="jxr_comment">//noinspection SimplifiableJUnitAssertion,ConstantConditions</em>
-<a class="jxr_linenumber" name="L1117" href="#L1117">1117</a>         assertFalse(estimation1.equals((Object) <strong class="jxr_keyword">null</strong>));
-<a class="jxr_linenumber" name="L1118" href="#L1118">1118</a>         assertFalse(estimation1.equals(<strong class="jxr_keyword">null</strong>));
-<a class="jxr_linenumber" name="L1119" href="#L1119">1119</a>         <em class="jxr_comment">//noinspection SimplifiableJUnitAssertion</em>
-<a class="jxr_linenumber" name="L1120" href="#L1120">1120</a>         assertFalse(estimation1.equals(<strong class="jxr_keyword">new</strong> Object()));
-<a class="jxr_linenumber" name="L1121" href="#L1121">1121</a>     }
-<a class="jxr_linenumber" name="L1122" href="#L1122">1122</a> 
-<a class="jxr_linenumber" name="L1123" href="#L1123">1123</a>     @Test
-<a class="jxr_linenumber" name="L1124" href="#L1124">1124</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testEqualsWithThreshold() {
-<a class="jxr_linenumber" name="L1125" href="#L1125">1125</a>         <strong class="jxr_keyword">final</strong> UniformRandomizer randomizer = <strong class="jxr_keyword">new</strong> UniformRandomizer(<strong class="jxr_keyword">new</strong> Random());
-<a class="jxr_linenumber" name="L1126" href="#L1126">1126</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-<a class="jxr_linenumber" name="L1127" href="#L1127">1127</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-<a class="jxr_linenumber" name="L1128" href="#L1128">1128</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-<a class="jxr_linenumber" name="L1129" href="#L1129">1129</a> 
-<a class="jxr_linenumber" name="L1130" href="#L1130">1130</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-<a class="jxr_linenumber" name="L1131" href="#L1131">1131</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-<a class="jxr_linenumber" name="L1132" href="#L1132">1132</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-<a class="jxr_linenumber" name="L1133" href="#L1133">1133</a> 
-<a class="jxr_linenumber" name="L1134" href="#L1134">1134</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET,
-<a class="jxr_linenumber" name="L1135" href="#L1135">1135</a>                 MAX_CLOCK_OFFSET);
-<a class="jxr_linenumber" name="L1136" href="#L1136">1136</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT,
-<a class="jxr_linenumber" name="L1137" href="#L1137">1137</a>                 MAX_CLOCK_DRIFT);
-<a class="jxr_linenumber" name="L1138" href="#L1138">1138</a> 
-<a class="jxr_linenumber" name="L1139" href="#L1139">1139</a>         <strong class="jxr_keyword">final</strong> GNSSEstimation estimation1 = <strong class="jxr_keyword">new</strong> GNSSEstimation(x, y, z, vx, vy, vz,
-<a class="jxr_linenumber" name="L1140" href="#L1140">1140</a>                 clockOffset, clockDrift);
-<a class="jxr_linenumber" name="L1141" href="#L1141">1141</a>         <strong class="jxr_keyword">final</strong> GNSSEstimation estimation2 = <strong class="jxr_keyword">new</strong> GNSSEstimation(x, y, z, vx, vy, vz,
-<a class="jxr_linenumber" name="L1142" href="#L1142">1142</a>                 clockOffset, clockDrift);
-<a class="jxr_linenumber" name="L1143" href="#L1143">1143</a>         <strong class="jxr_keyword">final</strong> GNSSEstimation estimation3 = <strong class="jxr_keyword">new</strong> GNSSEstimation();
-<a class="jxr_linenumber" name="L1144" href="#L1144">1144</a> 
-<a class="jxr_linenumber" name="L1145" href="#L1145">1145</a>         assertTrue(estimation1.equals(estimation1, THRESHOLD));
-<a class="jxr_linenumber" name="L1146" href="#L1146">1146</a>         assertTrue(estimation1.equals(estimation2, THRESHOLD));
-<a class="jxr_linenumber" name="L1147" href="#L1147">1147</a>         assertFalse(estimation1.equals(estimation3, THRESHOLD));
-<a class="jxr_linenumber" name="L1148" href="#L1148">1148</a>         assertFalse(estimation1.equals(<strong class="jxr_keyword">null</strong>, THRESHOLD));
-<a class="jxr_linenumber" name="L1149" href="#L1149">1149</a>     }
-<a class="jxr_linenumber" name="L1150" href="#L1150">1150</a> 
-<a class="jxr_linenumber" name="L1151" href="#L1151">1151</a>     @Test
-<a class="jxr_linenumber" name="L1152" href="#L1152">1152</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testClone() <strong class="jxr_keyword">throws</strong> CloneNotSupportedException {
-<a class="jxr_linenumber" name="L1153" href="#L1153">1153</a>         <strong class="jxr_keyword">final</strong> UniformRandomizer randomizer = <strong class="jxr_keyword">new</strong> UniformRandomizer(<strong class="jxr_keyword">new</strong> Random());
-<a class="jxr_linenumber" name="L1154" href="#L1154">1154</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-<a class="jxr_linenumber" name="L1155" href="#L1155">1155</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-<a class="jxr_linenumber" name="L1156" href="#L1156">1156</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
-<a class="jxr_linenumber" name="L1157" href="#L1157">1157</a> 
-<a class="jxr_linenumber" name="L1158" href="#L1158">1158</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-<a class="jxr_linenumber" name="L1159" href="#L1159">1159</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-<a class="jxr_linenumber" name="L1160" href="#L1160">1160</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-<a class="jxr_linenumber" name="L1161" href="#L1161">1161</a> 
-<a class="jxr_linenumber" name="L1162" href="#L1162">1162</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET,
-<a class="jxr_linenumber" name="L1163" href="#L1163">1163</a>                 MAX_CLOCK_OFFSET);
-<a class="jxr_linenumber" name="L1164" href="#L1164">1164</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT,
-<a class="jxr_linenumber" name="L1165" href="#L1165">1165</a>                 MAX_CLOCK_DRIFT);
-<a class="jxr_linenumber" name="L1166" href="#L1166">1166</a> 
-<a class="jxr_linenumber" name="L1167" href="#L1167">1167</a>         <strong class="jxr_keyword">final</strong> GNSSEstimation estimation1 = <strong class="jxr_keyword">new</strong> GNSSEstimation(x, y, z, vx, vy, vz,
-<a class="jxr_linenumber" name="L1168" href="#L1168">1168</a>                 clockOffset, clockDrift);
-<a class="jxr_linenumber" name="L1169" href="#L1169">1169</a> 
-<a class="jxr_linenumber" name="L1170" href="#L1170">1170</a>         <strong class="jxr_keyword">final</strong> Object estimation2 = estimation1.clone();
-<a class="jxr_linenumber" name="L1171" href="#L1171">1171</a> 
-<a class="jxr_linenumber" name="L1172" href="#L1172">1172</a>         assertEquals(estimation1, estimation2);
-<a class="jxr_linenumber" name="L1173" href="#L1173">1173</a>     }
-<a class="jxr_linenumber" name="L1174" href="#L1174">1174</a> }
+<a class="jxr_linenumber" name="L1113" href="#L1113">1113</a>         <em class="jxr_comment">//noinspection EqualsWithItself</em>
+<a class="jxr_linenumber" name="L1114" href="#L1114">1114</a>         assertTrue(estimation1.equals(estimation1));
+<a class="jxr_linenumber" name="L1115" href="#L1115">1115</a>         assertTrue(estimation1.equals(estimation2));
+<a class="jxr_linenumber" name="L1116" href="#L1116">1116</a>         assertFalse(estimation1.equals(estimation3));
+<a class="jxr_linenumber" name="L1117" href="#L1117">1117</a>         <em class="jxr_comment">//noinspection SimplifiableJUnitAssertion,ConstantConditions</em>
+<a class="jxr_linenumber" name="L1118" href="#L1118">1118</a>         assertFalse(estimation1.equals((Object) <strong class="jxr_keyword">null</strong>));
+<a class="jxr_linenumber" name="L1119" href="#L1119">1119</a>         assertFalse(estimation1.equals(<strong class="jxr_keyword">null</strong>));
+<a class="jxr_linenumber" name="L1120" href="#L1120">1120</a>         <em class="jxr_comment">//noinspection SimplifiableJUnitAssertion</em>
+<a class="jxr_linenumber" name="L1121" href="#L1121">1121</a>         assertFalse(estimation1.equals(<strong class="jxr_keyword">new</strong> Object()));
+<a class="jxr_linenumber" name="L1122" href="#L1122">1122</a>     }
+<a class="jxr_linenumber" name="L1123" href="#L1123">1123</a> 
+<a class="jxr_linenumber" name="L1124" href="#L1124">1124</a>     @Test
+<a class="jxr_linenumber" name="L1125" href="#L1125">1125</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testEqualsWithThreshold() {
+<a class="jxr_linenumber" name="L1126" href="#L1126">1126</a>         <strong class="jxr_keyword">final</strong> UniformRandomizer randomizer = <strong class="jxr_keyword">new</strong> UniformRandomizer(<strong class="jxr_keyword">new</strong> Random());
+<a class="jxr_linenumber" name="L1127" href="#L1127">1127</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+<a class="jxr_linenumber" name="L1128" href="#L1128">1128</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+<a class="jxr_linenumber" name="L1129" href="#L1129">1129</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+<a class="jxr_linenumber" name="L1130" href="#L1130">1130</a> 
+<a class="jxr_linenumber" name="L1131" href="#L1131">1131</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+<a class="jxr_linenumber" name="L1132" href="#L1132">1132</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+<a class="jxr_linenumber" name="L1133" href="#L1133">1133</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+<a class="jxr_linenumber" name="L1134" href="#L1134">1134</a> 
+<a class="jxr_linenumber" name="L1135" href="#L1135">1135</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET,
+<a class="jxr_linenumber" name="L1136" href="#L1136">1136</a>                 MAX_CLOCK_OFFSET);
+<a class="jxr_linenumber" name="L1137" href="#L1137">1137</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT,
+<a class="jxr_linenumber" name="L1138" href="#L1138">1138</a>                 MAX_CLOCK_DRIFT);
+<a class="jxr_linenumber" name="L1139" href="#L1139">1139</a> 
+<a class="jxr_linenumber" name="L1140" href="#L1140">1140</a>         <strong class="jxr_keyword">final</strong> GNSSEstimation estimation1 = <strong class="jxr_keyword">new</strong> GNSSEstimation(x, y, z, vx, vy, vz,
+<a class="jxr_linenumber" name="L1141" href="#L1141">1141</a>                 clockOffset, clockDrift);
+<a class="jxr_linenumber" name="L1142" href="#L1142">1142</a>         <strong class="jxr_keyword">final</strong> GNSSEstimation estimation2 = <strong class="jxr_keyword">new</strong> GNSSEstimation(x, y, z, vx, vy, vz,
+<a class="jxr_linenumber" name="L1143" href="#L1143">1143</a>                 clockOffset, clockDrift);
+<a class="jxr_linenumber" name="L1144" href="#L1144">1144</a>         <strong class="jxr_keyword">final</strong> GNSSEstimation estimation3 = <strong class="jxr_keyword">new</strong> GNSSEstimation();
+<a class="jxr_linenumber" name="L1145" href="#L1145">1145</a> 
+<a class="jxr_linenumber" name="L1146" href="#L1146">1146</a>         assertTrue(estimation1.equals(estimation1, THRESHOLD));
+<a class="jxr_linenumber" name="L1147" href="#L1147">1147</a>         assertTrue(estimation1.equals(estimation2, THRESHOLD));
+<a class="jxr_linenumber" name="L1148" href="#L1148">1148</a>         assertFalse(estimation1.equals(estimation3, THRESHOLD));
+<a class="jxr_linenumber" name="L1149" href="#L1149">1149</a>         assertFalse(estimation1.equals(<strong class="jxr_keyword">null</strong>, THRESHOLD));
+<a class="jxr_linenumber" name="L1150" href="#L1150">1150</a>     }
+<a class="jxr_linenumber" name="L1151" href="#L1151">1151</a> 
+<a class="jxr_linenumber" name="L1152" href="#L1152">1152</a>     @Test
+<a class="jxr_linenumber" name="L1153" href="#L1153">1153</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testClone() <strong class="jxr_keyword">throws</strong> CloneNotSupportedException {
+<a class="jxr_linenumber" name="L1154" href="#L1154">1154</a>         <strong class="jxr_keyword">final</strong> UniformRandomizer randomizer = <strong class="jxr_keyword">new</strong> UniformRandomizer(<strong class="jxr_keyword">new</strong> Random());
+<a class="jxr_linenumber" name="L1155" href="#L1155">1155</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+<a class="jxr_linenumber" name="L1156" href="#L1156">1156</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+<a class="jxr_linenumber" name="L1157" href="#L1157">1157</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+<a class="jxr_linenumber" name="L1158" href="#L1158">1158</a> 
+<a class="jxr_linenumber" name="L1159" href="#L1159">1159</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+<a class="jxr_linenumber" name="L1160" href="#L1160">1160</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+<a class="jxr_linenumber" name="L1161" href="#L1161">1161</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+<a class="jxr_linenumber" name="L1162" href="#L1162">1162</a> 
+<a class="jxr_linenumber" name="L1163" href="#L1163">1163</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET,
+<a class="jxr_linenumber" name="L1164" href="#L1164">1164</a>                 MAX_CLOCK_OFFSET);
+<a class="jxr_linenumber" name="L1165" href="#L1165">1165</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT,
+<a class="jxr_linenumber" name="L1166" href="#L1166">1166</a>                 MAX_CLOCK_DRIFT);
+<a class="jxr_linenumber" name="L1167" href="#L1167">1167</a> 
+<a class="jxr_linenumber" name="L1168" href="#L1168">1168</a>         <strong class="jxr_keyword">final</strong> GNSSEstimation estimation1 = <strong class="jxr_keyword">new</strong> GNSSEstimation(x, y, z, vx, vy, vz,
+<a class="jxr_linenumber" name="L1169" href="#L1169">1169</a>                 clockOffset, clockDrift);
+<a class="jxr_linenumber" name="L1170" href="#L1170">1170</a> 
+<a class="jxr_linenumber" name="L1171" href="#L1171">1171</a>         <strong class="jxr_keyword">final</strong> Object estimation2 = estimation1.clone();
+<a class="jxr_linenumber" name="L1172" href="#L1172">1172</a> 
+<a class="jxr_linenumber" name="L1173" href="#L1173">1173</a>         assertEquals(estimation1, estimation2);
+<a class="jxr_linenumber" name="L1174" href="#L1174">1174</a>     }
+<a class="jxr_linenumber" name="L1175" href="#L1175">1175</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2018&#x2013;2021. All rights reserved.</div>

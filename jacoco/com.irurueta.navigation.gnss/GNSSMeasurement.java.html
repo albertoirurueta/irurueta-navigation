@@ -32,7 +32,6 @@ import java.util.Objects;
 /**
  * Contains GNSS measurement data of a satellite.
  */
-@SuppressWarnings(&quot;WeakerAccess&quot;)
 public class GNSSMeasurement implements Serializable, Cloneable {
 
     /**
@@ -78,8 +77,8 @@ public class GNSSMeasurement implements Serializable, Cloneable {
     /**
      * Constructor.
      */
-<span class="fc" id="L81">    public GNSSMeasurement() {</span>
-<span class="fc" id="L82">    }</span>
+<span class="fc" id="L80">    public GNSSMeasurement() {</span>
+<span class="fc" id="L81">    }</span>
 
     /**
      * Constructor.
@@ -95,12 +94,12 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      */
     public GNSSMeasurement(final double pseudoRange, final double pseudoRate,
                            final double x, final double y, final double z,
-<span class="fc" id="L98">                           final double vx, final double vy, final double vz) {</span>
-<span class="fc" id="L99">        setPseudoRange(pseudoRange);</span>
-<span class="fc" id="L100">        setPseudoRate(pseudoRate);</span>
-<span class="fc" id="L101">        setPositionCoordinates(x, y, z);</span>
-<span class="fc" id="L102">        setVelocityCoordinates(vx, vy, vz);</span>
-<span class="fc" id="L103">    }</span>
+<span class="fc" id="L97">                           final double vx, final double vy, final double vz) {</span>
+<span class="fc" id="L98">        setPseudoRange(pseudoRange);</span>
+<span class="fc" id="L99">        setPseudoRate(pseudoRate);</span>
+<span class="fc" id="L100">        setPositionCoordinates(x, y, z);</span>
+<span class="fc" id="L101">        setVelocityCoordinates(vx, vy, vz);</span>
+<span class="fc" id="L102">    }</span>
 
     /**
      * Constructor.
@@ -116,12 +115,12 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      */
     public GNSSMeasurement(final Distance pseudoRange, final Speed pseudoRate,
                            final Distance x, final Distance y, final Distance z,
-<span class="fc" id="L119">                           final Speed vx, final Speed vy, final Speed vz) {</span>
-<span class="fc" id="L120">        setPseudoRangeDistance(pseudoRange);</span>
-<span class="fc" id="L121">        setPseudoRateSpeed(pseudoRate);</span>
-<span class="fc" id="L122">        setPositionCoordinates(x, y, z);</span>
-<span class="fc" id="L123">        setVelocityCoordinates(vx, vy, vz);</span>
-<span class="fc" id="L124">    }</span>
+<span class="fc" id="L118">                           final Speed vx, final Speed vy, final Speed vz) {</span>
+<span class="fc" id="L119">        setPseudoRangeDistance(pseudoRange);</span>
+<span class="fc" id="L120">        setPseudoRateSpeed(pseudoRate);</span>
+<span class="fc" id="L121">        setPositionCoordinates(x, y, z);</span>
+<span class="fc" id="L122">        setVelocityCoordinates(vx, vy, vz);</span>
+<span class="fc" id="L123">    }</span>
 
     /**
      * Constructor.
@@ -135,12 +134,12 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      */
     public GNSSMeasurement(final Distance pseudoRange, final Speed pseudoRate,
                            final Point3D position,
-<span class="fc" id="L138">                           final Speed vx, final Speed vy, final Speed vz) {</span>
-<span class="fc" id="L139">        setPseudoRangeDistance(pseudoRange);</span>
-<span class="fc" id="L140">        setPseudoRateSpeed(pseudoRate);</span>
-<span class="fc" id="L141">        setPosition(position);</span>
-<span class="fc" id="L142">        setVelocityCoordinates(vx, vy, vz);</span>
-<span class="fc" id="L143">    }</span>
+<span class="fc" id="L137">                           final Speed vx, final Speed vy, final Speed vz) {</span>
+<span class="fc" id="L138">        setPseudoRangeDistance(pseudoRange);</span>
+<span class="fc" id="L139">        setPseudoRateSpeed(pseudoRate);</span>
+<span class="fc" id="L140">        setPosition(position);</span>
+<span class="fc" id="L141">        setVelocityCoordinates(vx, vy, vz);</span>
+<span class="fc" id="L142">    }</span>
 
     /**
      * Constructor.
@@ -152,12 +151,12 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      */
     public GNSSMeasurement(final double pseudoRange, final double pseudoRate,
                            final ECEFPosition position,
-<span class="fc" id="L155">                           final ECEFVelocity velocity) {</span>
-<span class="fc" id="L156">        setPseudoRange(pseudoRange);</span>
-<span class="fc" id="L157">        setPseudoRate(pseudoRate);</span>
-<span class="fc" id="L158">        setEcefPosition(position);</span>
-<span class="fc" id="L159">        setEcefVelocity(velocity);</span>
-<span class="fc" id="L160">    }</span>
+<span class="fc" id="L154">                           final ECEFVelocity velocity) {</span>
+<span class="fc" id="L155">        setPseudoRange(pseudoRange);</span>
+<span class="fc" id="L156">        setPseudoRate(pseudoRate);</span>
+<span class="fc" id="L157">        setEcefPosition(position);</span>
+<span class="fc" id="L158">        setEcefVelocity(velocity);</span>
+<span class="fc" id="L159">    }</span>
 
     /**
      * Constructor.
@@ -167,11 +166,11 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param positionAndVelocity satellite ECEF position and velocity.
      */
     public GNSSMeasurement(final double pseudoRange, final double pseudoRate,
-<span class="fc" id="L170">                           final ECEFPositionAndVelocity positionAndVelocity) {</span>
-<span class="fc" id="L171">        setPseudoRange(pseudoRange);</span>
-<span class="fc" id="L172">        setPseudoRate(pseudoRate);</span>
-<span class="fc" id="L173">        setPositionAndVelocity(positionAndVelocity);</span>
-<span class="fc" id="L174">    }</span>
+<span class="fc" id="L169">                           final ECEFPositionAndVelocity positionAndVelocity) {</span>
+<span class="fc" id="L170">        setPseudoRange(pseudoRange);</span>
+<span class="fc" id="L171">        setPseudoRate(pseudoRate);</span>
+<span class="fc" id="L172">        setPositionAndVelocity(positionAndVelocity);</span>
+<span class="fc" id="L173">    }</span>
 
     /**
      * Constructor.
@@ -183,12 +182,12 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      */
     public GNSSMeasurement(final Distance pseudoRange, final Speed pseudoRate,
                            final ECEFPosition position,
-<span class="fc" id="L186">                           final ECEFVelocity velocity) {</span>
-<span class="fc" id="L187">        setPseudoRangeDistance(pseudoRange);</span>
-<span class="fc" id="L188">        setPseudoRateSpeed(pseudoRate);</span>
-<span class="fc" id="L189">        setEcefPosition(position);</span>
-<span class="fc" id="L190">        setEcefVelocity(velocity);</span>
-<span class="fc" id="L191">    }</span>
+<span class="fc" id="L185">                           final ECEFVelocity velocity) {</span>
+<span class="fc" id="L186">        setPseudoRangeDistance(pseudoRange);</span>
+<span class="fc" id="L187">        setPseudoRateSpeed(pseudoRate);</span>
+<span class="fc" id="L188">        setEcefPosition(position);</span>
+<span class="fc" id="L189">        setEcefVelocity(velocity);</span>
+<span class="fc" id="L190">    }</span>
 
     /**
      * Constructor.
@@ -198,20 +197,20 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param positionAndVelocity satellite ECEF position and velocity.
      */
     public GNSSMeasurement(final Distance pseudoRange, final Speed pseudoRate,
-<span class="fc" id="L201">                           final ECEFPositionAndVelocity positionAndVelocity) {</span>
-<span class="fc" id="L202">        setPseudoRangeDistance(pseudoRange);</span>
-<span class="fc" id="L203">        setPseudoRateSpeed(pseudoRate);</span>
-<span class="fc" id="L204">        setPositionAndVelocity(positionAndVelocity);</span>
-<span class="fc" id="L205">    }</span>
+<span class="fc" id="L200">                           final ECEFPositionAndVelocity positionAndVelocity) {</span>
+<span class="fc" id="L201">        setPseudoRangeDistance(pseudoRange);</span>
+<span class="fc" id="L202">        setPseudoRateSpeed(pseudoRate);</span>
+<span class="fc" id="L203">        setPositionAndVelocity(positionAndVelocity);</span>
+<span class="fc" id="L204">    }</span>
 
     /**
      * Copy constructor.
      *
      * @param input input instance to copy data from.
      */
-<span class="fc" id="L212">    public GNSSMeasurement(final GNSSMeasurement input) {</span>
-<span class="fc" id="L213">        copyFrom(input);</span>
-<span class="fc" id="L214">    }</span>
+<span class="fc" id="L211">    public GNSSMeasurement(final GNSSMeasurement input) {</span>
+<span class="fc" id="L212">        copyFrom(input);</span>
+<span class="fc" id="L213">    }</span>
 
     /**
      * Gets pseudo-range measurement expressed in meters (m).
@@ -219,7 +218,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @return pseudo-range measurement expressed in meters (m).
      */
     public double getPseudoRange() {
-<span class="fc" id="L222">        return mPseudoRange;</span>
+<span class="fc" id="L221">        return mPseudoRange;</span>
     }
 
     /**
@@ -228,8 +227,8 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param pseudoRange pseudo-range measurement expressed in meters (m).
      */
     public void setPseudoRange(final double pseudoRange) {
-<span class="fc" id="L231">        mPseudoRange = pseudoRange;</span>
-<span class="fc" id="L232">    }</span>
+<span class="fc" id="L230">        mPseudoRange = pseudoRange;</span>
+<span class="fc" id="L231">    }</span>
 
     /**
      * Gets pseudo-range measurement.
@@ -237,9 +236,9 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param result instance where pseudo-range measurement will be stored.
      */
     public void getPseudoRangeDistance(final Distance result) {
-<span class="fc" id="L240">        result.setValue(mPseudoRange);</span>
-<span class="fc" id="L241">        result.setUnit(DistanceUnit.METER);</span>
-<span class="fc" id="L242">    }</span>
+<span class="fc" id="L239">        result.setValue(mPseudoRange);</span>
+<span class="fc" id="L240">        result.setUnit(DistanceUnit.METER);</span>
+<span class="fc" id="L241">    }</span>
 
     /**
      * Gets pseudo-range measurement.
@@ -247,7 +246,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @return pseudo-range measurement.
      */
     public Distance getPseudoRangeDistance() {
-<span class="fc" id="L250">        return new Distance(mPseudoRange, DistanceUnit.METER);</span>
+<span class="fc" id="L249">        return new Distance(mPseudoRange, DistanceUnit.METER);</span>
     }
 
     /**
@@ -255,10 +254,10 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      *
      * @param pseudoRange pseudo-range measurement.
      */
-    public void setPseudoRangeDistance(Distance pseudoRange) {
-<span class="fc" id="L259">        mPseudoRange = DistanceConverter.convert(pseudoRange.getValue().doubleValue(),</span>
-<span class="fc" id="L260">                pseudoRange.getUnit(), DistanceUnit.METER);</span>
-<span class="fc" id="L261">    }</span>
+    public void setPseudoRangeDistance(final Distance pseudoRange) {
+<span class="fc" id="L258">        mPseudoRange = DistanceConverter.convert(pseudoRange.getValue().doubleValue(),</span>
+<span class="fc" id="L259">                pseudoRange.getUnit(), DistanceUnit.METER);</span>
+<span class="fc" id="L260">    }</span>
 
     /**
      * Gets pseudo-range rate measurement expressed in meters per second (m/s).
@@ -266,7 +265,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @return pseudo-range rate measurement expressed in meters per second (m/s).
      */
     public double getPseudoRate() {
-<span class="fc" id="L269">        return mPseudoRate;</span>
+<span class="fc" id="L268">        return mPseudoRate;</span>
     }
 
     /**
@@ -275,8 +274,8 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param pseudoRate pseudo-range rate measurement expressed in meters per second (m/s).
      */
     public void setPseudoRate(final double pseudoRate) {
-<span class="fc" id="L278">        mPseudoRate = pseudoRate;</span>
-<span class="fc" id="L279">    }</span>
+<span class="fc" id="L277">        mPseudoRate = pseudoRate;</span>
+<span class="fc" id="L278">    }</span>
 
     /**
      * Gets pseudo-range rate measurement.
@@ -284,9 +283,9 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param result instance where pseudo-range rate measurement will be stored.
      */
     public void getPseudoRateSpeed(final Speed result) {
-<span class="fc" id="L287">        result.setValue(mPseudoRate);</span>
-<span class="fc" id="L288">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
-<span class="fc" id="L289">    }</span>
+<span class="fc" id="L286">        result.setValue(mPseudoRate);</span>
+<span class="fc" id="L287">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L288">    }</span>
 
     /**
      * Gets pseudo-range rate measurement.
@@ -294,7 +293,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @return pseudo-range rate measurement.
      */
     public Speed getPseudoRateSpeed() {
-<span class="fc" id="L297">        return new Speed(mPseudoRate, SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L296">        return new Speed(mPseudoRate, SpeedUnit.METERS_PER_SECOND);</span>
     }
 
     /**
@@ -303,9 +302,9 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param pseudoRate pseudo-range rate measurement.
      */
     public void setPseudoRateSpeed(final Speed pseudoRate) {
-<span class="fc" id="L306">        mPseudoRate = SpeedConverter.convert(pseudoRate.getValue().doubleValue(),</span>
-<span class="fc" id="L307">                pseudoRate.getUnit(), SpeedUnit.METERS_PER_SECOND);</span>
-<span class="fc" id="L308">    }</span>
+<span class="fc" id="L305">        mPseudoRate = SpeedConverter.convert(pseudoRate.getValue().doubleValue(),</span>
+<span class="fc" id="L306">                pseudoRate.getUnit(), SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L307">    }</span>
 
     /**
      * Gets x coordinate of satellite ECEF position expressed in meters (m).
@@ -313,7 +312,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @return x coordinate of satellite ECEF position expressed in meters (m).
      */
     public double getX() {
-<span class="fc" id="L316">        return mX;</span>
+<span class="fc" id="L315">        return mX;</span>
     }
 
     /**
@@ -322,8 +321,8 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param x x coordinate of satellite ECEF position expressed in meters (m).
      */
     public void setX(final double x) {
-<span class="fc" id="L325">        mX = x;</span>
-<span class="fc" id="L326">    }</span>
+<span class="fc" id="L324">        mX = x;</span>
+<span class="fc" id="L325">    }</span>
 
     /**
      * Gets x coordinate of satellite ECEF position.
@@ -332,9 +331,9 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      *               stored.
      */
     public void getDistanceX(final Distance result) {
-<span class="fc" id="L335">        result.setValue(mX);</span>
-<span class="fc" id="L336">        result.setUnit(DistanceUnit.METER);</span>
-<span class="fc" id="L337">    }</span>
+<span class="fc" id="L334">        result.setValue(mX);</span>
+<span class="fc" id="L335">        result.setUnit(DistanceUnit.METER);</span>
+<span class="fc" id="L336">    }</span>
 
     /**
      * Gets x coordinate of satellite ECEF position.
@@ -342,7 +341,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @return x coordinate of satellite ECEF position.
      */
     public Distance getDistanceX() {
-<span class="fc" id="L345">        return new Distance(mX, DistanceUnit.METER);</span>
+<span class="fc" id="L344">        return new Distance(mX, DistanceUnit.METER);</span>
     }
 
     /**
@@ -351,9 +350,9 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param x x coordinate of satellite ECEF position.
      */
     public void setDistanceX(final Distance x) {
-<span class="fc" id="L354">        mX = DistanceConverter.convert(x.getValue().doubleValue(), x.getUnit(),</span>
+<span class="fc" id="L353">        mX = DistanceConverter.convert(x.getValue().doubleValue(), x.getUnit(),</span>
                 DistanceUnit.METER);
-<span class="fc" id="L356">    }</span>
+<span class="fc" id="L355">    }</span>
 
     /**
      * Gets y coordinate of satellite ECEF position expressed in meters (m).
@@ -361,7 +360,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @return y coordinate of satellite ECEF position expressed in meters (m).
      */
     public double getY() {
-<span class="fc" id="L364">        return mY;</span>
+<span class="fc" id="L363">        return mY;</span>
     }
 
     /**
@@ -370,8 +369,8 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param y y coordinate of satellite ECEF position expressed in meters (m).
      */
     public void setY(final double y) {
-<span class="fc" id="L373">        mY = y;</span>
-<span class="fc" id="L374">    }</span>
+<span class="fc" id="L372">        mY = y;</span>
+<span class="fc" id="L373">    }</span>
 
     /**
      * Gets y coordinate of satellite ECEF position.
@@ -380,9 +379,9 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      *               stored.
      */
     public void getDistanceY(final Distance result) {
-<span class="fc" id="L383">        result.setValue(mY);</span>
-<span class="fc" id="L384">        result.setUnit(DistanceUnit.METER);</span>
-<span class="fc" id="L385">    }</span>
+<span class="fc" id="L382">        result.setValue(mY);</span>
+<span class="fc" id="L383">        result.setUnit(DistanceUnit.METER);</span>
+<span class="fc" id="L384">    }</span>
 
     /**
      * Gets y coordinate of satellite ECEF position.
@@ -390,7 +389,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @return y coordinate of satellite ECEF position.
      */
     public Distance getDistanceY() {
-<span class="fc" id="L393">        return new Distance(mY, DistanceUnit.METER);</span>
+<span class="fc" id="L392">        return new Distance(mY, DistanceUnit.METER);</span>
     }
 
     /**
@@ -399,9 +398,9 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param y y coordinate of satellite ECEF position.
      */
     public void setDistanceY(final Distance y) {
-<span class="fc" id="L402">        mY = DistanceConverter.convert(y.getValue().doubleValue(), y.getUnit(),</span>
+<span class="fc" id="L401">        mY = DistanceConverter.convert(y.getValue().doubleValue(), y.getUnit(),</span>
                 DistanceUnit.METER);
-<span class="fc" id="L404">    }</span>
+<span class="fc" id="L403">    }</span>
 
     /**
      * Gets z coordinate of satellite ECEF position expressed in meters (m).
@@ -409,7 +408,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @return z coordinate of satellite ECEF position expressed in meters (m).
      */
     public double getZ() {
-<span class="fc" id="L412">        return mZ;</span>
+<span class="fc" id="L411">        return mZ;</span>
     }
 
     /**
@@ -418,8 +417,8 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param z z coordinate of satellite ECEF position expressed in meters (m).
      */
     public void setZ(final double z) {
-<span class="fc" id="L421">        mZ = z;</span>
-<span class="fc" id="L422">    }</span>
+<span class="fc" id="L420">        mZ = z;</span>
+<span class="fc" id="L421">    }</span>
 
     /**
      * Gets z coordinate of satellite ECEF position.
@@ -428,9 +427,9 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      *               stored.
      */
     public void getDistanceZ(final Distance result) {
-<span class="fc" id="L431">        result.setValue(mZ);</span>
-<span class="fc" id="L432">        result.setUnit(DistanceUnit.METER);</span>
-<span class="fc" id="L433">    }</span>
+<span class="fc" id="L430">        result.setValue(mZ);</span>
+<span class="fc" id="L431">        result.setUnit(DistanceUnit.METER);</span>
+<span class="fc" id="L432">    }</span>
 
     /**
      * Gets z coordinate of satellite ECEF position.
@@ -438,7 +437,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @return z coordinate of satellite ECEF position.
      */
     public Distance getDistanceZ() {
-<span class="fc" id="L441">        return new Distance(mZ, DistanceUnit.METER);</span>
+<span class="fc" id="L440">        return new Distance(mZ, DistanceUnit.METER);</span>
     }
 
     /**
@@ -447,9 +446,9 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param z z coordinate of satellite ECEF position.
      */
     public void setDistanceZ(final Distance z) {
-<span class="fc" id="L450">        mZ = DistanceConverter.convert(z.getValue().doubleValue(), z.getUnit(),</span>
+<span class="fc" id="L449">        mZ = DistanceConverter.convert(z.getValue().doubleValue(), z.getUnit(),</span>
                 DistanceUnit.METER);
-<span class="fc" id="L452">    }</span>
+<span class="fc" id="L451">    }</span>
 
     /**
      * Sets coordinates of satellite ECEF position expressed in meters (m).
@@ -459,10 +458,10 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param z z coordinate.
      */
     public void setPositionCoordinates(final double x, final double y, final double z) {
-<span class="fc" id="L462">        mX = x;</span>
-<span class="fc" id="L463">        mY = y;</span>
-<span class="fc" id="L464">        mZ = z;</span>
-<span class="fc" id="L465">    }</span>
+<span class="fc" id="L461">        mX = x;</span>
+<span class="fc" id="L462">        mY = y;</span>
+<span class="fc" id="L463">        mZ = z;</span>
+<span class="fc" id="L464">    }</span>
 
     /**
      * Sets coordinates of satellite ECEF position.
@@ -472,19 +471,19 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param z z coordinate.
      */
     public void setPositionCoordinates(final Distance x, final Distance y, final Distance z) {
-<span class="fc" id="L475">        setDistanceX(x);</span>
-<span class="fc" id="L476">        setDistanceY(y);</span>
-<span class="fc" id="L477">        setDistanceZ(z);</span>
-<span class="fc" id="L478">    }</span>
+<span class="fc" id="L474">        setDistanceX(x);</span>
+<span class="fc" id="L475">        setDistanceY(y);</span>
+<span class="fc" id="L476">        setDistanceZ(z);</span>
+<span class="fc" id="L477">    }</span>
 
     /**
      * Gets satellite ECEF position expressed in meters (m).
      *
      * @param result instance where satellite ECEF position will be stored.
      */
-    public void getPosition(Point3D result) {
-<span class="fc" id="L486">        result.setInhomogeneousCoordinates(mX, mY, mZ);</span>
-<span class="fc" id="L487">    }</span>
+    public void getPosition(final Point3D result) {
+<span class="fc" id="L485">        result.setInhomogeneousCoordinates(mX, mY, mZ);</span>
+<span class="fc" id="L486">    }</span>
 
     /**
      * Gets satellite ECEF position expressed in meters (m).
@@ -492,7 +491,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @return ECEF position of satellite.
      */
     public Point3D getPosition() {
-<span class="fc" id="L495">        return new InhomogeneousPoint3D(mX, mY, mZ);</span>
+<span class="fc" id="L494">        return new InhomogeneousPoint3D(mX, mY, mZ);</span>
     }
 
     /**
@@ -501,10 +500,10 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param position ECEF position of satellite.
      */
     public void setPosition(final Point3D position) {
-<span class="fc" id="L504">        mX = position.getInhomX();</span>
-<span class="fc" id="L505">        mY = position.getInhomY();</span>
-<span class="fc" id="L506">        mZ = position.getInhomZ();</span>
-<span class="fc" id="L507">    }</span>
+<span class="fc" id="L503">        mX = position.getInhomX();</span>
+<span class="fc" id="L504">        mY = position.getInhomY();</span>
+<span class="fc" id="L505">        mZ = position.getInhomZ();</span>
+<span class="fc" id="L506">    }</span>
 
     /**
      * Gets ECEF position of satellite.
@@ -512,8 +511,8 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param result instance where ECEF position of satellite will be stored.
      */
     public void getEcefPosition(final ECEFPosition result) {
-<span class="fc" id="L515">        result.setCoordinates(mX, mY, mZ);</span>
-<span class="fc" id="L516">    }</span>
+<span class="fc" id="L514">        result.setCoordinates(mX, mY, mZ);</span>
+<span class="fc" id="L515">    }</span>
 
     /**
      * Gets ECEF position of satellite.
@@ -521,7 +520,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @return ECEF position of satellite.
      */
     public ECEFPosition getEcefPosition() {
-<span class="fc" id="L524">        return new ECEFPosition(mX, mY, mZ);</span>
+<span class="fc" id="L523">        return new ECEFPosition(mX, mY, mZ);</span>
     }
 
     /**
@@ -530,10 +529,10 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param ecefPosition ECEF position of satellite.
      */
     public void setEcefPosition(final ECEFPosition ecefPosition) {
-<span class="fc" id="L533">        mX = ecefPosition.getX();</span>
-<span class="fc" id="L534">        mY = ecefPosition.getY();</span>
-<span class="fc" id="L535">        mZ = ecefPosition.getZ();</span>
-<span class="fc" id="L536">    }</span>
+<span class="fc" id="L532">        mX = ecefPosition.getX();</span>
+<span class="fc" id="L533">        mY = ecefPosition.getY();</span>
+<span class="fc" id="L534">        mZ = ecefPosition.getZ();</span>
+<span class="fc" id="L535">    }</span>
 
     /**
      * Gets x coordinate of satellite ECEF velocity expressed in meters per second (m/s).
@@ -541,7 +540,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @return x coordinate of satellite ECEF velocity expressed in meters per second (m/s).
      */
     public double getVx() {
-<span class="fc" id="L544">        return mVx;</span>
+<span class="fc" id="L543">        return mVx;</span>
     }
 
     /**
@@ -550,8 +549,8 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param vx x coordinate of satellite ECEF velocity expressed in meters per second (m/s).
      */
     public void setVx(final double vx) {
-<span class="fc" id="L553">        mVx = vx;</span>
-<span class="fc" id="L554">    }</span>
+<span class="fc" id="L552">        mVx = vx;</span>
+<span class="fc" id="L553">    }</span>
 
     /**
      * Gets x coordinate of satellite ECEF velocity.
@@ -560,9 +559,9 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      *               be stored.
      */
     public void getSpeedX(final Speed result) {
-<span class="fc" id="L563">        result.setValue(mVx);</span>
-<span class="fc" id="L564">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
-<span class="fc" id="L565">    }</span>
+<span class="fc" id="L562">        result.setValue(mVx);</span>
+<span class="fc" id="L563">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L564">    }</span>
 
     /**
      * Gets x coordinate of satellite ECEF velocity.
@@ -570,7 +569,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @return x coordinate of satellite ECEF velocity.
      */
     public Speed getSpeedX() {
-<span class="fc" id="L573">        return new Speed(mVx, SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L572">        return new Speed(mVx, SpeedUnit.METERS_PER_SECOND);</span>
     }
 
     /**
@@ -579,9 +578,9 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param speedX x coordinate of satellite ECEF velocity.
      */
     public void setSpeedX(final Speed speedX) {
-<span class="fc" id="L582">        mVx = SpeedConverter.convert(speedX.getValue().doubleValue(), speedX.getUnit(),</span>
+<span class="fc" id="L581">        mVx = SpeedConverter.convert(speedX.getValue().doubleValue(), speedX.getUnit(),</span>
                 SpeedUnit.METERS_PER_SECOND);
-<span class="fc" id="L584">    }</span>
+<span class="fc" id="L583">    }</span>
 
     /**
      * Gets y coordinate of satellite ECEF velocity expressed in meters per second (m/s).
@@ -589,7 +588,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @return y coordinate of satellite ECEF velocity expressed in meters per second (m/s).
      */
     public double getVy() {
-<span class="fc" id="L592">        return mVy;</span>
+<span class="fc" id="L591">        return mVy;</span>
     }
 
     /**
@@ -598,8 +597,8 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param vy y coordinate of satellite ECEF velocity expressed in meters per second (m/s).
      */
     public void setVy(final double vy) {
-<span class="fc" id="L601">        mVy = vy;</span>
-<span class="fc" id="L602">    }</span>
+<span class="fc" id="L600">        mVy = vy;</span>
+<span class="fc" id="L601">    }</span>
 
     /**
      * Gets y coordinate of satellite ECEF velocity.
@@ -608,9 +607,9 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      *               be stored.
      */
     public void getSpeedY(final Speed result) {
-<span class="fc" id="L611">        result.setValue(mVy);</span>
-<span class="fc" id="L612">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
-<span class="fc" id="L613">    }</span>
+<span class="fc" id="L610">        result.setValue(mVy);</span>
+<span class="fc" id="L611">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L612">    }</span>
 
     /**
      * Gets y coordinate of satellite ECEF velocity.
@@ -618,7 +617,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @return y coordinate of satellite ECEF velocity.
      */
     public Speed getSpeedY() {
-<span class="fc" id="L621">        return new Speed(mVy, SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L620">        return new Speed(mVy, SpeedUnit.METERS_PER_SECOND);</span>
     }
 
     /**
@@ -627,9 +626,9 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param speedY y coordinate of satellite ECEF velocity.
      */
     public void setSpeedY(final Speed speedY) {
-<span class="fc" id="L630">        mVy = SpeedConverter.convert(speedY.getValue().doubleValue(), speedY.getUnit(),</span>
+<span class="fc" id="L629">        mVy = SpeedConverter.convert(speedY.getValue().doubleValue(), speedY.getUnit(),</span>
                 SpeedUnit.METERS_PER_SECOND);
-<span class="fc" id="L632">    }</span>
+<span class="fc" id="L631">    }</span>
 
     /**
      * Gets z coordinate of satellite ECEF velocity expressed in meters per second (m/s).
@@ -637,7 +636,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @return z coordinate of satellite ECEF velocity expressed in meters per second (m/s).
      */
     public double getVz() {
-<span class="fc" id="L640">        return mVz;</span>
+<span class="fc" id="L639">        return mVz;</span>
     }
 
     /**
@@ -646,8 +645,8 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param vz z coordinate of satellite ECEF velocity expressed in meters per second (m/s).
      */
     public void setVz(final double vz) {
-<span class="fc" id="L649">        mVz = vz;</span>
-<span class="fc" id="L650">    }</span>
+<span class="fc" id="L648">        mVz = vz;</span>
+<span class="fc" id="L649">    }</span>
 
     /**
      * Gets z coordinate of satellite ECEF velocity.
@@ -655,9 +654,9 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param result z coordinate of satellite ECEF velocity.
      */
     public void getSpeedZ(final Speed result) {
-<span class="fc" id="L658">        result.setValue(mVz);</span>
-<span class="fc" id="L659">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
-<span class="fc" id="L660">    }</span>
+<span class="fc" id="L657">        result.setValue(mVz);</span>
+<span class="fc" id="L658">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L659">    }</span>
 
     /**
      * Gets z coordinate of satellite ECEF velocity.
@@ -665,7 +664,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @return z coordinate of satellite ECEF velocity.
      */
     public Speed getSpeedZ() {
-<span class="fc" id="L668">        return new Speed(mVz, SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L667">        return new Speed(mVz, SpeedUnit.METERS_PER_SECOND);</span>
     }
 
     /**
@@ -674,9 +673,9 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param speedZ z coordinate of satellite ECEF velocity.
      */
     public void setSpeedZ(final Speed speedZ) {
-<span class="fc" id="L677">        mVz = SpeedConverter.convert(speedZ.getValue().doubleValue(), speedZ.getUnit(),</span>
+<span class="fc" id="L676">        mVz = SpeedConverter.convert(speedZ.getValue().doubleValue(), speedZ.getUnit(),</span>
                 SpeedUnit.METERS_PER_SECOND);
-<span class="fc" id="L679">    }</span>
+<span class="fc" id="L678">    }</span>
 
     /**
      * Sets ECEF coordinates of satellite velocity expressed in meters per second (m/s).
@@ -686,10 +685,10 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param vz z coordinate of satellite ECEF velocity.
      */
     public void setVelocityCoordinates(final double vx, final double vy, final double vz) {
-<span class="fc" id="L689">        mVx = vx;</span>
-<span class="fc" id="L690">        mVy = vy;</span>
-<span class="fc" id="L691">        mVz = vz;</span>
-<span class="fc" id="L692">    }</span>
+<span class="fc" id="L688">        mVx = vx;</span>
+<span class="fc" id="L689">        mVy = vy;</span>
+<span class="fc" id="L690">        mVz = vz;</span>
+<span class="fc" id="L691">    }</span>
 
     /**
      * Sets ECEF coordinates of satellite velocity.
@@ -699,10 +698,10 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param speedZ z coordinate of satellite ECEF velocity.
      */
     public void setVelocityCoordinates(final Speed speedX, final Speed speedY, final Speed speedZ) {
-<span class="fc" id="L702">        setSpeedX(speedX);</span>
-<span class="fc" id="L703">        setSpeedY(speedY);</span>
-<span class="fc" id="L704">        setSpeedZ(speedZ);</span>
-<span class="fc" id="L705">    }</span>
+<span class="fc" id="L701">        setSpeedX(speedX);</span>
+<span class="fc" id="L702">        setSpeedY(speedY);</span>
+<span class="fc" id="L703">        setSpeedZ(speedZ);</span>
+<span class="fc" id="L704">    }</span>
 
     /**
      * Gets ECEF velocity of satellite.
@@ -710,8 +709,8 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param result instance where ECEF velocity of satellite will be stored.
      */
     public void getEcefVelocity(final ECEFVelocity result) {
-<span class="fc" id="L713">        result.setCoordinates(mVx, mVy, mVz);</span>
-<span class="fc" id="L714">    }</span>
+<span class="fc" id="L712">        result.setCoordinates(mVx, mVy, mVz);</span>
+<span class="fc" id="L713">    }</span>
 
     /**
      * Gets ECEF velocity of satellite.
@@ -719,7 +718,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @return ECEF velocity of satellite.
      */
     public ECEFVelocity getEcefVelocity() {
-<span class="fc" id="L722">        return new ECEFVelocity(mVx, mVy, mVz);</span>
+<span class="fc" id="L721">        return new ECEFVelocity(mVx, mVy, mVz);</span>
     }
 
     /**
@@ -728,10 +727,10 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param ecefVelocity ECEF velocity of satellite.
      */
     public void setEcefVelocity(final ECEFVelocity ecefVelocity) {
-<span class="fc" id="L731">        mVx = ecefVelocity.getVx();</span>
-<span class="fc" id="L732">        mVy = ecefVelocity.getVy();</span>
-<span class="fc" id="L733">        mVz = ecefVelocity.getVz();</span>
-<span class="fc" id="L734">    }</span>
+<span class="fc" id="L730">        mVx = ecefVelocity.getVx();</span>
+<span class="fc" id="L731">        mVy = ecefVelocity.getVy();</span>
+<span class="fc" id="L732">        mVz = ecefVelocity.getVz();</span>
+<span class="fc" id="L733">    }</span>
 
     /**
      * Gets ECEF position and velocity of satellite.
@@ -739,9 +738,9 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param result instance where position and velocity will be stored.
      */
     public void getPositionAndVelocity(final ECEFPositionAndVelocity result) {
-<span class="fc" id="L742">        result.setPositionCoordinates(mX, mY, mZ);</span>
-<span class="fc" id="L743">        result.setVelocityCoordinates(mVx, mVy, mVz);</span>
-<span class="fc" id="L744">    }</span>
+<span class="fc" id="L741">        result.setPositionCoordinates(mX, mY, mZ);</span>
+<span class="fc" id="L742">        result.setVelocityCoordinates(mVx, mVy, mVz);</span>
+<span class="fc" id="L743">    }</span>
 
     /**
      * Gets ECEF position and velocity of satellite.
@@ -749,7 +748,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @return ECEF position and velocity of satellite.
      */
     public ECEFPositionAndVelocity getPositionAndVelocity() {
-<span class="fc" id="L752">        return new ECEFPositionAndVelocity(mX, mY, mZ, mVx, mVy, mVz);</span>
+<span class="fc" id="L751">        return new ECEFPositionAndVelocity(mX, mY, mZ, mVx, mVy, mVz);</span>
     }
 
     /**
@@ -758,32 +757,32 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param positionAndVelocity ECEF position and velocity of satellite.
      */
     public void setPositionAndVelocity(final ECEFPositionAndVelocity positionAndVelocity) {
-<span class="fc" id="L761">        mX = positionAndVelocity.getX();</span>
-<span class="fc" id="L762">        mY = positionAndVelocity.getY();</span>
-<span class="fc" id="L763">        mZ = positionAndVelocity.getZ();</span>
+<span class="fc" id="L760">        mX = positionAndVelocity.getX();</span>
+<span class="fc" id="L761">        mY = positionAndVelocity.getY();</span>
+<span class="fc" id="L762">        mZ = positionAndVelocity.getZ();</span>
 
-<span class="fc" id="L765">        mVx = positionAndVelocity.getVx();</span>
-<span class="fc" id="L766">        mVy = positionAndVelocity.getVy();</span>
-<span class="fc" id="L767">        mVz = positionAndVelocity.getVz();</span>
-<span class="fc" id="L768">    }</span>
+<span class="fc" id="L764">        mVx = positionAndVelocity.getVx();</span>
+<span class="fc" id="L765">        mVy = positionAndVelocity.getVy();</span>
+<span class="fc" id="L766">        mVz = positionAndVelocity.getVz();</span>
+<span class="fc" id="L767">    }</span>
 
     /**
      * Copies this instance data into provided instance.
      *
      * @param output destination instance where data will be copied to.
      */
-    public void copyTo(GNSSMeasurement output) {
-<span class="fc" id="L776">        output.mPseudoRange = mPseudoRange;</span>
-<span class="fc" id="L777">        output.mPseudoRate = mPseudoRate;</span>
+    public void copyTo(final GNSSMeasurement output) {
+<span class="fc" id="L775">        output.mPseudoRange = mPseudoRange;</span>
+<span class="fc" id="L776">        output.mPseudoRate = mPseudoRate;</span>
 
-<span class="fc" id="L779">        output.mX = mX;</span>
-<span class="fc" id="L780">        output.mY = mY;</span>
-<span class="fc" id="L781">        output.mZ = mZ;</span>
+<span class="fc" id="L778">        output.mX = mX;</span>
+<span class="fc" id="L779">        output.mY = mY;</span>
+<span class="fc" id="L780">        output.mZ = mZ;</span>
 
-<span class="fc" id="L783">        output.mVx = mVx;</span>
-<span class="fc" id="L784">        output.mVy = mVy;</span>
-<span class="fc" id="L785">        output.mVz = mVz;</span>
-<span class="fc" id="L786">    }</span>
+<span class="fc" id="L782">        output.mVx = mVx;</span>
+<span class="fc" id="L783">        output.mVy = mVy;</span>
+<span class="fc" id="L784">        output.mVz = mVz;</span>
+<span class="fc" id="L785">    }</span>
 
     /**
      * Copies data of provided instance into this instance.
@@ -791,17 +790,17 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param input instance to copy data from.
      */
     public void copyFrom(final GNSSMeasurement input) {
-<span class="fc" id="L794">        mPseudoRange = input.mPseudoRange;</span>
-<span class="fc" id="L795">        mPseudoRate = input.mPseudoRate;</span>
+<span class="fc" id="L793">        mPseudoRange = input.mPseudoRange;</span>
+<span class="fc" id="L794">        mPseudoRate = input.mPseudoRate;</span>
 
-<span class="fc" id="L797">        mX = input.mX;</span>
-<span class="fc" id="L798">        mY = input.mY;</span>
-<span class="fc" id="L799">        mZ = input.mZ;</span>
+<span class="fc" id="L796">        mX = input.mX;</span>
+<span class="fc" id="L797">        mY = input.mY;</span>
+<span class="fc" id="L798">        mZ = input.mZ;</span>
 
-<span class="fc" id="L801">        mVx = input.mVx;</span>
-<span class="fc" id="L802">        mVy = input.mVy;</span>
-<span class="fc" id="L803">        mVz = input.mVz;</span>
-<span class="fc" id="L804">    }</span>
+<span class="fc" id="L800">        mVx = input.mVx;</span>
+<span class="fc" id="L801">        mVy = input.mVy;</span>
+<span class="fc" id="L802">        mVz = input.mVz;</span>
+<span class="fc" id="L803">    }</span>
 
     /**
      * Computes and returns hash code for this instance. Hash codes are almost unique
@@ -811,7 +810,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      */
     @Override
     public int hashCode() {
-<span class="fc" id="L814">        return Objects.hash(mPseudoRange, mPseudoRate, mX, mY, mZ, mVx, mVy, mVz);</span>
+<span class="fc" id="L813">        return Objects.hash(mPseudoRange, mPseudoRate, mX, mY, mZ, mVx, mVy, mVz);</span>
     }
 
     /**
@@ -823,15 +822,15 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      */
     @Override
     public boolean equals(final Object obj) {
-<span class="fc bfc" id="L826" title="All 2 branches covered.">        if (obj == this) {</span>
-<span class="fc" id="L827">            return true;</span>
+<span class="fc bfc" id="L825" title="All 2 branches covered.">        if (obj == this) {</span>
+<span class="fc" id="L826">            return true;</span>
         }
-<span class="fc bfc" id="L829" title="All 4 branches covered.">        if (obj == null || getClass() != obj.getClass()) {</span>
-<span class="fc" id="L830">            return false;</span>
+<span class="fc bfc" id="L828" title="All 4 branches covered.">        if (obj == null || getClass() != obj.getClass()) {</span>
+<span class="fc" id="L829">            return false;</span>
         }
 
-<span class="fc" id="L833">        final GNSSMeasurement other = (GNSSMeasurement) obj;</span>
-<span class="fc" id="L834">        return equals(other);</span>
+<span class="fc" id="L832">        final GNSSMeasurement other = (GNSSMeasurement) obj;</span>
+<span class="fc" id="L833">        return equals(other);</span>
     }
 
     /**
@@ -841,7 +840,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @return true if both instances are considered to be equal, false otherwise.
      */
     public boolean equals(final GNSSMeasurement other) {
-<span class="fc" id="L844">        return equals(other, 0.0);</span>
+<span class="fc" id="L843">        return equals(other, 0.0);</span>
     }
 
     /**
@@ -854,18 +853,18 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * false otherwise.
      */
     public boolean equals(final GNSSMeasurement other, final double threshold) {
-<span class="fc bfc" id="L857" title="All 2 branches covered.">        if (other == null) {</span>
-<span class="fc" id="L858">            return false;</span>
+<span class="fc bfc" id="L856" title="All 2 branches covered.">        if (other == null) {</span>
+<span class="fc" id="L857">            return false;</span>
         }
 
-<span class="fc bfc" id="L861" title="All 2 branches covered.">        return Math.abs(mPseudoRange - other.mPseudoRange) &lt;= threshold</span>
-<span class="pc bpc" id="L862" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(mPseudoRate - other.mPseudoRate) &lt;= threshold</span>
-<span class="pc bpc" id="L863" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(mX - other.mX) &lt;= threshold</span>
-<span class="pc bpc" id="L864" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(mY - other.mY) &lt;= threshold</span>
-<span class="pc bpc" id="L865" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(mZ - other.mZ) &lt;= threshold</span>
-<span class="pc bpc" id="L866" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(mVx - other.mVx) &lt;= threshold</span>
-<span class="pc bpc" id="L867" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(mVy - other.mVy) &lt;= threshold</span>
-<span class="pc bpc" id="L868" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(mVz - other.mVz) &lt;= threshold;</span>
+<span class="fc bfc" id="L860" title="All 2 branches covered.">        return Math.abs(mPseudoRange - other.mPseudoRange) &lt;= threshold</span>
+<span class="pc bpc" id="L861" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(mPseudoRate - other.mPseudoRate) &lt;= threshold</span>
+<span class="pc bpc" id="L862" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(mX - other.mX) &lt;= threshold</span>
+<span class="pc bpc" id="L863" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(mY - other.mY) &lt;= threshold</span>
+<span class="pc bpc" id="L864" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(mZ - other.mZ) &lt;= threshold</span>
+<span class="pc bpc" id="L865" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(mVx - other.mVx) &lt;= threshold</span>
+<span class="pc bpc" id="L866" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(mVy - other.mVy) &lt;= threshold</span>
+<span class="pc bpc" id="L867" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(mVz - other.mVz) &lt;= threshold;</span>
     }
 
     /**
@@ -876,9 +875,9 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      */
     @Override
     protected Object clone() throws CloneNotSupportedException {
-<span class="fc" id="L879">        final GNSSMeasurement result = (GNSSMeasurement) super.clone();</span>
-<span class="fc" id="L880">        copyTo(result);</span>
-<span class="fc" id="L881">        return result;</span>
+<span class="fc" id="L878">        final GNSSMeasurement result = (GNSSMeasurement) super.clone();</span>
+<span class="fc" id="L879">        copyTo(result);</span>
+<span class="fc" id="L880">        return result;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

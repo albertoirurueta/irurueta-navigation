@@ -37,7 +37,6 @@ import java.util.Arrays;
  *
  * @param &lt;P&gt; a {@link Point} type.
  */
-@SuppressWarnings({&quot;WeakerAccess&quot;, &quot;Duplicates&quot;})
 public abstract class NonLinearLeastSquaresLaterationSolver&lt;P extends Point&lt;?&gt;&gt; extends LaterationSolver&lt;P&gt; {
 
     /**
@@ -49,7 +48,7 @@ public abstract class NonLinearLeastSquaresLaterationSolver&lt;P extends Point&l
     /**
      * Levenberg-Marquardt  fitter to find a non-linear solution.
      */
-<span class="fc" id="L52">    private final LevenbergMarquardtMultiDimensionFitter mFitter =</span>
+<span class="fc" id="L51">    private final LevenbergMarquardtMultiDimensionFitter mFitter =</span>
             new LevenbergMarquardtMultiDimensionFitter();
 
     /**
@@ -77,8 +76,8 @@ public abstract class NonLinearLeastSquaresLaterationSolver&lt;P extends Point&l
      * Constructor.
      */
     public NonLinearLeastSquaresLaterationSolver() {
-<span class="fc" id="L80">        super();</span>
-<span class="fc" id="L81">    }</span>
+<span class="fc" id="L79">        super();</span>
+<span class="fc" id="L80">    }</span>
 
     /**
      * Constructor.
@@ -90,9 +89,9 @@ public abstract class NonLinearLeastSquaresLaterationSolver&lt;P extends Point&l
      */
     public NonLinearLeastSquaresLaterationSolver(
             final P[] positions, final double[] distances) {
-<span class="fc" id="L93">        super();</span>
-<span class="fc" id="L94">        internalSetPositionsAndDistances(positions, distances);</span>
-<span class="fc" id="L95">    }</span>
+<span class="fc" id="L92">        super();</span>
+<span class="fc" id="L93">        internalSetPositionsAndDistances(positions, distances);</span>
+<span class="fc" id="L94">    }</span>
 
     /**
      * Constructor.
@@ -100,9 +99,9 @@ public abstract class NonLinearLeastSquaresLaterationSolver&lt;P extends Point&l
      * @param initialPosition initial position to start lateration solving.
      */
     public NonLinearLeastSquaresLaterationSolver(final P initialPosition) {
-<span class="fc" id="L103">        super();</span>
-<span class="fc" id="L104">        mInitialPosition = initialPosition;</span>
-<span class="fc" id="L105">    }</span>
+<span class="fc" id="L102">        super();</span>
+<span class="fc" id="L103">        mInitialPosition = initialPosition;</span>
+<span class="fc" id="L104">    }</span>
 
     /**
      * Constructor.
@@ -115,9 +114,9 @@ public abstract class NonLinearLeastSquaresLaterationSolver&lt;P extends Point&l
      */
     public NonLinearLeastSquaresLaterationSolver(
             final P[] positions, final double[] distances, final P initialPosition) {
-<span class="fc" id="L118">        this(initialPosition);</span>
-<span class="fc" id="L119">        internalSetPositionsAndDistances(positions, distances);</span>
-<span class="fc" id="L120">    }</span>
+<span class="fc" id="L117">        this(initialPosition);</span>
+<span class="fc" id="L118">        internalSetPositionsAndDistances(positions, distances);</span>
+<span class="fc" id="L119">    }</span>
 
     /**
      * Constructor.
@@ -126,8 +125,8 @@ public abstract class NonLinearLeastSquaresLaterationSolver&lt;P extends Point&l
      */
     public NonLinearLeastSquaresLaterationSolver(
             final LaterationSolverListener&lt;P&gt; listener) {
-<span class="fc" id="L129">        super(listener);</span>
-<span class="fc" id="L130">    }</span>
+<span class="fc" id="L128">        super(listener);</span>
+<span class="fc" id="L129">    }</span>
 
     /**
      * Constructor.
@@ -141,9 +140,9 @@ public abstract class NonLinearLeastSquaresLaterationSolver&lt;P extends Point&l
     public NonLinearLeastSquaresLaterationSolver(
             final P[] positions, final double[] distances,
             final LaterationSolverListener&lt;P&gt; listener) {
-<span class="fc" id="L144">        super(listener);</span>
-<span class="fc" id="L145">        internalSetPositionsAndDistances(positions, distances);</span>
-<span class="fc" id="L146">    }</span>
+<span class="fc" id="L143">        super(listener);</span>
+<span class="fc" id="L144">        internalSetPositionsAndDistances(positions, distances);</span>
+<span class="fc" id="L145">    }</span>
 
     /**
      * Constructor.
@@ -153,9 +152,9 @@ public abstract class NonLinearLeastSquaresLaterationSolver&lt;P extends Point&l
      */
     public NonLinearLeastSquaresLaterationSolver(
             final P initialPosition, final LaterationSolverListener&lt;P&gt; listener) {
-<span class="fc" id="L156">        super(listener);</span>
-<span class="fc" id="L157">        mInitialPosition = initialPosition;</span>
-<span class="fc" id="L158">    }</span>
+<span class="fc" id="L155">        super(listener);</span>
+<span class="fc" id="L156">        mInitialPosition = initialPosition;</span>
+<span class="fc" id="L157">    }</span>
 
     /**
      * Constructor.
@@ -170,9 +169,9 @@ public abstract class NonLinearLeastSquaresLaterationSolver&lt;P extends Point&l
     public NonLinearLeastSquaresLaterationSolver(
             final P[] positions, final double[] distances, final P initialPosition,
             final LaterationSolverListener&lt;P&gt; listener) {
-<span class="fc" id="L173">        this(initialPosition, listener);</span>
-<span class="fc" id="L174">        internalSetPositionsAndDistances(positions, distances);</span>
-<span class="fc" id="L175">    }</span>
+<span class="fc" id="L172">        this(initialPosition, listener);</span>
+<span class="fc" id="L173">        internalSetPositionsAndDistances(positions, distances);</span>
+<span class="fc" id="L174">    }</span>
 
     /**
      * Constructor.
@@ -186,10 +185,10 @@ public abstract class NonLinearLeastSquaresLaterationSolver&lt;P extends Point&l
     public NonLinearLeastSquaresLaterationSolver(
             final P[] positions, final double[] distances,
             final double[] distanceStandardDeviations) {
-<span class="fc" id="L189">        super();</span>
-<span class="fc" id="L190">        internalSetPositionsDistancesAndStandardDeviations(positions, distances,</span>
+<span class="fc" id="L188">        super();</span>
+<span class="fc" id="L189">        internalSetPositionsDistancesAndStandardDeviations(positions, distances,</span>
                 distanceStandardDeviations);
-<span class="fc" id="L192">    }</span>
+<span class="fc" id="L191">    }</span>
 
     /**
      * Constructor.
@@ -204,10 +203,10 @@ public abstract class NonLinearLeastSquaresLaterationSolver&lt;P extends Point&l
     public NonLinearLeastSquaresLaterationSolver(
             final P[] positions, final double[] distances,
             final double[] distanceStandardDeviations, final P initialPosition) {
-<span class="fc" id="L207">        this(initialPosition);</span>
-<span class="fc" id="L208">        internalSetPositionsDistancesAndStandardDeviations(positions, distances,</span>
+<span class="fc" id="L206">        this(initialPosition);</span>
+<span class="fc" id="L207">        internalSetPositionsDistancesAndStandardDeviations(positions, distances,</span>
                 distanceStandardDeviations);
-<span class="fc" id="L210">    }</span>
+<span class="fc" id="L209">    }</span>
 
     /**
      * Constructor.
@@ -223,10 +222,10 @@ public abstract class NonLinearLeastSquaresLaterationSolver&lt;P extends Point&l
             final P[] positions, final double[] distances,
             final double[] distanceStandardDeviations,
             final LaterationSolverListener&lt;P&gt; listener) {
-<span class="fc" id="L226">        super(listener);</span>
-<span class="fc" id="L227">        internalSetPositionsDistancesAndStandardDeviations(positions, distances,</span>
+<span class="fc" id="L225">        super(listener);</span>
+<span class="fc" id="L226">        internalSetPositionsDistancesAndStandardDeviations(positions, distances,</span>
                 distanceStandardDeviations);
-<span class="fc" id="L229">    }</span>
+<span class="fc" id="L228">    }</span>
 
     /**
      * Constructor.
@@ -243,16 +242,16 @@ public abstract class NonLinearLeastSquaresLaterationSolver&lt;P extends Point&l
             final P[] positions, final double[] distances,
             final double[] distanceStandardDeviations, final P initialPosition,
             final LaterationSolverListener&lt;P&gt; listener) {
-<span class="fc" id="L246">        this(initialPosition, listener);</span>
-<span class="fc" id="L247">        internalSetPositionsDistancesAndStandardDeviations(positions, distances,</span>
+<span class="fc" id="L245">        this(initialPosition, listener);</span>
+<span class="fc" id="L246">        internalSetPositionsDistancesAndStandardDeviations(positions, distances,</span>
                 distanceStandardDeviations);
-<span class="fc" id="L249">    }</span>
+<span class="fc" id="L248">    }</span>
 
     /**
      * Sets known positions and euclidean distances.
      * If any distance value is zero or negative, it will be fixed assuming an EPSILON value.
      *
-     * @param positions known positios of static nodes.
+     * @param positions known positions of static nodes.
      * @param distances euclidean distances from static nodes to mobile node.
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      *                                  length is smaller than required (2 points).
@@ -261,23 +260,24 @@ public abstract class NonLinearLeastSquaresLaterationSolver&lt;P extends Point&l
     @Override
     public void setPositionsAndDistances(final P[] positions, final double[] distances)
             throws LockedException {
-<span class="fc bfc" id="L264" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L265">            throw new LockedException();</span>
+<span class="fc bfc" id="L263" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L264">            throw new LockedException();</span>
         }
-<span class="fc" id="L267">        internalSetPositionsAndDistances(positions, distances);</span>
-<span class="fc" id="L268">    }</span>
+<span class="fc" id="L266">        internalSetPositionsAndDistances(positions, distances);</span>
+<span class="fc" id="L267">    }</span>
 
     /**
      * Sets known positions, euclidean distances and the respective standard deviations of
      * measured distances.
      * If any distance value is zero or negative, it will be fixed assuming an EPSILON value.
      *
-     * @param positions                  known positios of static nodes.
+     * @param positions                  known positions of static nodes.
      * @param distances                  euclidean distances from static nodes to mobile node.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
      * @throws IllegalArgumentException if either positions, distances or standard deviations
-     *                                  are null, don't have the same length of their length is smaller than required (2 points).
-     * @throws LockedException          if instance is busy solving the trialteration problem.
+     *                                  are null, don't have the same length of their length is smaller than required
+     *                                  (2 points).
+     * @throws LockedException          if instance is busy solving the trilateration problem.
      */
     public void setPositionsDistancesAndStandardDeviations(
             final P[] positions, final double[] distances,
@@ -368,7 +368,7 @@ public abstract class NonLinearLeastSquaresLaterationSolver&lt;P extends Point&l
 
 <span class="fc" id="L369">            mFitter.fit();</span>
 
-            //estimated position
+            // estimated position
 <span class="fc" id="L372">            mEstimatedPositionCoordinates = mFitter.getA();</span>
 <span class="fc" id="L373">            mCovariance = mFitter.getCovar();</span>
 <span class="fc" id="L374">            mChiSq = mFitter.getChisq();</span>
@@ -397,7 +397,7 @@ public abstract class NonLinearLeastSquaresLaterationSolver&lt;P extends Point&l
      * Internally sets known positions and euclidean distances.
      * If any distance value is zero or negative, it will be fixed assuming an EPSILON value.
      *
-     * @param positions known positios of static nodes.
+     * @param positions known positions of static nodes.
      * @param distances euclidean distances from static nodes to mobile node.
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      *                                  length is smaller than required (2 points).
@@ -407,7 +407,7 @@ public abstract class NonLinearLeastSquaresLaterationSolver&lt;P extends Point&l
             final P[] positions, final double[] distances) {
 <span class="fc" id="L408">        super.internalSetPositionsAndDistances(positions, distances);</span>
 
-        //initialize distances standard deviations to default values
+        // initialize distances standard deviations to default values
 <span class="fc" id="L411">        mDistanceStandardDeviations = new double[distances.length];</span>
 <span class="fc" id="L412">        Arrays.fill(mDistanceStandardDeviations, DEFAULT_DISTANCE_STANDARD_DEVIATION);</span>
 <span class="fc" id="L413">    }</span>
@@ -417,7 +417,7 @@ public abstract class NonLinearLeastSquaresLaterationSolver&lt;P extends Point&l
      * measured distances.
      * If any distance value is zero or negative, it will be fixed assuming an EPSILON value.
      *
-     * @param positions                  known positios of static nodes.
+     * @param positions                  known positions of static nodes.
      * @param distances                  euclidean distances from static nodes to mobile node.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
      * @throws IllegalArgumentException if either positions, distances or standard deviations
@@ -456,7 +456,7 @@ public abstract class NonLinearLeastSquaresLaterationSolver&lt;P extends Point&l
 <span class="fc" id="L456">                        final double[] initial = new double[dims];</span>
 
 <span class="fc bfc" id="L458" title="All 2 branches covered.">                        if (mInitialPosition == null) {</span>
-                            //use centroid of positions as initial value
+                            // use centroid of positions as initial value
 <span class="fc" id="L460">                            final int numSamples = mPositions.length;</span>
 
 <span class="fc bfc" id="L462" title="All 2 branches covered.">                            for (int i = 0; i &lt; dims; i++) {</span>
@@ -466,7 +466,7 @@ public abstract class NonLinearLeastSquaresLaterationSolver&lt;P extends Point&l
                                 }
                             }
 <span class="fc" id="L468">                        } else {</span>
-                            //use provided initial position
+                            // use provided initial position
 <span class="fc bfc" id="L470" title="All 2 branches covered.">                            for (int i = 0; i &lt; dims; i++) {</span>
 <span class="fc" id="L471">                                initial[i] = mInitialPosition.getInhomogeneousCoordinate(i);</span>
                             }
@@ -479,11 +479,11 @@ public abstract class NonLinearLeastSquaresLaterationSolver&lt;P extends Point&l
                     public double evaluate(
                             final int i, final double[] point, final double[] params,
                             final double[] derivatives) {
-                        //we want to estimate the position contained as inhomogeneous coordinates in params array.
-                        //the function evaluates the distance to provided point respect to current parameter
+                        // we want to estimate the position contained as inhomogeneous coordinates in params array.
+                        // the function evaluates the distance to provided point respect to current parameter
                         // (estimated position)
-                        //sqrDist = (x - px)^2 + (y - py)^2
-                        //grad = [2*(x - px), 2*(y - py)]
+                        // sqrDist = (x - px)^2 + (y - py)^2
+                        // grad = [2*(x - px), 2*(y - py)]
 <span class="fc" id="L487">                        final int dims = getNumberOfDimensions();</span>
 <span class="fc" id="L488">                        double result = 0.0;</span>
                         double diff;
@@ -516,7 +516,7 @@ public abstract class NonLinearLeastSquaresLaterationSolver&lt;P extends Point&l
 
 <span class="fc" id="L517">            mFitter.setInputData(x, y, mDistanceStandardDeviations);</span>
 <span class="nc" id="L518">        } catch (final AlgebraException ignore) {</span>
-            //never happens
+            // never happens
 <span class="fc" id="L520">        }</span>
 <span class="fc" id="L521">    }</span>
 }

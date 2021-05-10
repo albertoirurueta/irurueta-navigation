@@ -38,7 +38,7 @@
 <a class="jxr_linenumber" name="L30" href="#L30">30</a>  <em class="jxr_javadoccomment"> * Calculates position, velocity, clock offset and clock drift using an</em>
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>  <em class="jxr_javadoccomment"> * unweighted iterated least squares estimator along with a Kalman filter</em>
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>  <em class="jxr_javadoccomment"> * to smooth results.</em>
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <em class="jxr_javadoccomment"> * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multisensor</em>
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <em class="jxr_javadoccomment"> * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multi-sensor</em>
 <a class="jxr_linenumber" name="L34" href="#L34">34</a>  <em class="jxr_javadoccomment"> * Integrated Navigation Systems, Second Edition" and on the companion software available at:</em>
 <a class="jxr_linenumber" name="L35" href="#L35">35</a>  <em class="jxr_javadoccomment"> * https://github.com/ymjdz/MATLAB-Codes/blob/master/GNSS_Kalman_Filter.m</em>
 <a class="jxr_linenumber" name="L36" href="#L36">36</a>  <em class="jxr_javadoccomment"> */</em>
@@ -410,7 +410,7 @@
 <a class="jxr_linenumber" name="L402" href="#L402">402</a>         }
 <a class="jxr_linenumber" name="L403" href="#L403">403</a> 
 <a class="jxr_linenumber" name="L404" href="#L404">404</a>         <strong class="jxr_keyword">final</strong> List&lt;GNSSMeasurement&gt; result = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
-<a class="jxr_linenumber" name="L405" href="#L405">405</a>         <strong class="jxr_keyword">for</strong> (GNSSMeasurement measurement : mMeasurements) {
+<a class="jxr_linenumber" name="L405" href="#L405">405</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> GNSSMeasurement measurement : mMeasurements) {
 <a class="jxr_linenumber" name="L406" href="#L406">406</a>             result.add(<strong class="jxr_keyword">new</strong> <a href="../../../../com/irurueta/navigation/gnss/GNSSMeasurement.html">GNSSMeasurement</a>(measurement));
 <a class="jxr_linenumber" name="L407" href="#L407">407</a>         }
 <a class="jxr_linenumber" name="L408" href="#L408">408</a>         <strong class="jxr_keyword">return</strong> result;
@@ -484,7 +484,7 @@
 <a class="jxr_linenumber" name="L476" href="#L476">476</a>     }
 <a class="jxr_linenumber" name="L477" href="#L477">477</a> 
 <a class="jxr_linenumber" name="L478" href="#L478">478</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L479" href="#L479">479</a> <em class="jxr_javadoccomment">     * Gets timestamp since epoch time when Kalman filter state was last propageted.</em>
+<a class="jxr_linenumber" name="L479" href="#L479">479</a> <em class="jxr_javadoccomment">     * Gets timestamp since epoch time when Kalman filter state was last propagated.</em>
 <a class="jxr_linenumber" name="L480" href="#L480">480</a> <em class="jxr_javadoccomment">     *</em>
 <a class="jxr_linenumber" name="L481" href="#L481">481</a> <em class="jxr_javadoccomment">     * @param result instance where timestamp since epoch time when Kalman filter</em>
 <a class="jxr_linenumber" name="L482" href="#L482">482</a> <em class="jxr_javadoccomment">     *               state was last propagated will be stored.</em>

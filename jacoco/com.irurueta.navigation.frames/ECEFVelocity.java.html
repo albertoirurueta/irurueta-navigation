@@ -13,7 +13,6 @@ import java.util.Objects;
  * Contains body velocity with respect Earth, resolved about ECEF frame
  * and expressed in meters per second (m/s).
  */
-@SuppressWarnings(&quot;WeakerAccess&quot;)
 public class ECEFVelocity implements Serializable, Cloneable {
 
     /**
@@ -42,8 +41,8 @@ public class ECEFVelocity implements Serializable, Cloneable {
     /**
      * Constructor.
      */
-<span class="fc" id="L45">    public ECEFVelocity() {</span>
-<span class="fc" id="L46">    }</span>
+<span class="fc" id="L44">    public ECEFVelocity() {</span>
+<span class="fc" id="L45">    }</span>
 
     /**
      * Constructor.
@@ -55,9 +54,9 @@ public class ECEFVelocity implements Serializable, Cloneable {
      * @param vz z coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
      *           ECEF-frame axes.
      */
-<span class="fc" id="L58">    public ECEFVelocity(final double vx, final double vy, final double vz) {</span>
-<span class="fc" id="L59">        setCoordinates(vx, vy, vz);</span>
-<span class="fc" id="L60">    }</span>
+<span class="fc" id="L57">    public ECEFVelocity(final double vx, final double vy, final double vz) {</span>
+<span class="fc" id="L58">        setCoordinates(vx, vy, vz);</span>
+<span class="fc" id="L59">    }</span>
 
     /**
      * Constructor.
@@ -69,18 +68,18 @@ public class ECEFVelocity implements Serializable, Cloneable {
      * @param vz z coordinate of velocity of body frame and resolved along ECEF-frame
      *           axes.
      */
-<span class="fc" id="L72">    public ECEFVelocity(final Speed vx, final Speed vy, final Speed vz) {</span>
-<span class="fc" id="L73">        setCoordinates(vx, vy, vz);</span>
-<span class="fc" id="L74">    }</span>
+<span class="fc" id="L71">    public ECEFVelocity(final Speed vx, final Speed vy, final Speed vz) {</span>
+<span class="fc" id="L72">        setCoordinates(vx, vy, vz);</span>
+<span class="fc" id="L73">    }</span>
 
     /**
      * Constructor.
      *
      * @param input Body velocity to copy data from.
      */
-<span class="fc" id="L81">    public ECEFVelocity(final ECEFVelocity input) {</span>
-<span class="fc" id="L82">        copyFrom(input);</span>
-<span class="fc" id="L83">    }</span>
+<span class="fc" id="L80">    public ECEFVelocity(final ECEFVelocity input) {</span>
+<span class="fc" id="L81">        copyFrom(input);</span>
+<span class="fc" id="L82">    }</span>
 
     /**
      * Gets x coordinate of velocity of body frame expressed in meters per second (m/s)
@@ -89,7 +88,7 @@ public class ECEFVelocity implements Serializable, Cloneable {
      * @return x coordinate of velocity.
      */
     public double getVx() {
-<span class="fc" id="L92">        return mVx;</span>
+<span class="fc" id="L91">        return mVx;</span>
     }
 
     /**
@@ -99,8 +98,8 @@ public class ECEFVelocity implements Serializable, Cloneable {
      * @param vx x coordinate of velocity.
      */
     public void setVx(final double vx) {
-<span class="fc" id="L102">        mVx = vx;</span>
-<span class="fc" id="L103">    }</span>
+<span class="fc" id="L101">        mVx = vx;</span>
+<span class="fc" id="L102">    }</span>
 
     /**
      * Gets y coordinate of velocity of body frame expressed in meters per second (m/s)
@@ -109,7 +108,7 @@ public class ECEFVelocity implements Serializable, Cloneable {
      * @return y coordinate of velocity.
      */
     public double getVy() {
-<span class="fc" id="L112">        return mVy;</span>
+<span class="fc" id="L111">        return mVy;</span>
     }
 
     /**
@@ -119,8 +118,8 @@ public class ECEFVelocity implements Serializable, Cloneable {
      * @param vy y coordinate of velocity.
      */
     public void setVy(final double vy) {
-<span class="fc" id="L122">        mVy = vy;</span>
-<span class="fc" id="L123">    }</span>
+<span class="fc" id="L121">        mVy = vy;</span>
+<span class="fc" id="L122">    }</span>
 
     /**
      * Gets z coordinate of velocity of body frame expressed in meters per second (m/s)
@@ -129,7 +128,7 @@ public class ECEFVelocity implements Serializable, Cloneable {
      * @return z coordinate of velocity.
      */
     public double getVz() {
-<span class="fc" id="L132">        return mVz;</span>
+<span class="fc" id="L131">        return mVz;</span>
     }
 
     /**
@@ -139,8 +138,8 @@ public class ECEFVelocity implements Serializable, Cloneable {
      * @param vz z coordinate of velocity.
      */
     public void setVz(final double vz) {
-<span class="fc" id="L142">        mVz = vz;</span>
-<span class="fc" id="L143">    }</span>
+<span class="fc" id="L141">        mVz = vz;</span>
+<span class="fc" id="L142">    }</span>
 
     /**
      * Sets velocity coordinates of body frame expressed in meters per second (m/s)
@@ -151,10 +150,10 @@ public class ECEFVelocity implements Serializable, Cloneable {
      * @param vz z coordinate of velocity.
      */
     public void setCoordinates(final double vx, final double vy, final double vz) {
-<span class="fc" id="L154">        mVx = vx;</span>
-<span class="fc" id="L155">        mVy = vy;</span>
-<span class="fc" id="L156">        mVz = vz;</span>
-<span class="fc" id="L157">    }</span>
+<span class="fc" id="L153">        mVx = vx;</span>
+<span class="fc" id="L154">        mVy = vy;</span>
+<span class="fc" id="L155">        mVz = vz;</span>
+<span class="fc" id="L156">    }</span>
 
     /**
      * Gets cartesian x coordinate of velocity of body frame resolved along ECEF-frame
@@ -163,9 +162,9 @@ public class ECEFVelocity implements Serializable, Cloneable {
      * @param result instance where cartesian x coordinate of velocity will be stored.
      */
     public void getSpeedX(final Speed result) {
-<span class="fc" id="L166">        result.setValue(mVx);</span>
-<span class="fc" id="L167">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
-<span class="fc" id="L168">    }</span>
+<span class="fc" id="L165">        result.setValue(mVx);</span>
+<span class="fc" id="L166">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L167">    }</span>
 
     /**
      * Gets x coordinate of velocity of body frame resolved along ECEF-frame axes.
@@ -173,7 +172,7 @@ public class ECEFVelocity implements Serializable, Cloneable {
      * @return x coordinate of velocity of body frame resolved along ECEF-frame axes.
      */
     public Speed getSpeedX() {
-<span class="fc" id="L176">        return new Speed(mVx, SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L175">        return new Speed(mVx, SpeedUnit.METERS_PER_SECOND);</span>
     }
 
     /**
@@ -182,8 +181,8 @@ public class ECEFVelocity implements Serializable, Cloneable {
      * @param vx x coordinate of body velocity to be set.
      */
     public void setVx(final Speed vx) {
-<span class="fc" id="L185">        mVx = convertSpeed(vx);</span>
-<span class="fc" id="L186">    }</span>
+<span class="fc" id="L184">        mVx = convertSpeed(vx);</span>
+<span class="fc" id="L185">    }</span>
 
     /**
      * Gets cartesian y coordinate of velocity of body frame resolved along ECEF-frame
@@ -192,9 +191,9 @@ public class ECEFVelocity implements Serializable, Cloneable {
      * @param result instance where cartesian y coordinate of velocity will be stored.
      */
     public void getSpeedY(final Speed result) {
-<span class="fc" id="L195">        result.setValue(mVy);</span>
-<span class="fc" id="L196">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
-<span class="fc" id="L197">    }</span>
+<span class="fc" id="L194">        result.setValue(mVy);</span>
+<span class="fc" id="L195">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L196">    }</span>
 
     /**
      * Gets y coordinate of velocity of body frame resolved along ECEF-frame axes.
@@ -202,7 +201,7 @@ public class ECEFVelocity implements Serializable, Cloneable {
      * @return y coordinate of velocity of body frame resolved along ECEF-frame axes.
      */
     public Speed getSpeedY() {
-<span class="fc" id="L205">        return new Speed(mVy, SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L204">        return new Speed(mVy, SpeedUnit.METERS_PER_SECOND);</span>
     }
 
     /**
@@ -211,8 +210,8 @@ public class ECEFVelocity implements Serializable, Cloneable {
      * @param vy y coordinate of body velocity to be set.
      */
     public void setVy(final Speed vy) {
-<span class="fc" id="L214">        mVy = convertSpeed(vy);</span>
-<span class="fc" id="L215">    }</span>
+<span class="fc" id="L213">        mVy = convertSpeed(vy);</span>
+<span class="fc" id="L214">    }</span>
 
     /**
      * Gets cartesian z coordinate of velocity of body frame resolved along ECEF-frame
@@ -221,9 +220,9 @@ public class ECEFVelocity implements Serializable, Cloneable {
      * @param result instance where cartesian z coordinate of velocity will be stored.
      */
     public void getSpeedZ(final Speed result) {
-<span class="fc" id="L224">        result.setValue(mVz);</span>
-<span class="fc" id="L225">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
-<span class="fc" id="L226">    }</span>
+<span class="fc" id="L223">        result.setValue(mVz);</span>
+<span class="fc" id="L224">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L225">    }</span>
 
     /**
      * Gets z coordinate of velocity of body frame resolved along ECEF-frame axes.
@@ -231,7 +230,7 @@ public class ECEFVelocity implements Serializable, Cloneable {
      * @return z coordinate of velocity of body frame resolved along ECEF-frame axes.
      */
     public Speed getSpeedZ() {
-<span class="fc" id="L234">        return new Speed(mVz, SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L233">        return new Speed(mVz, SpeedUnit.METERS_PER_SECOND);</span>
     }
 
     /**
@@ -240,8 +239,8 @@ public class ECEFVelocity implements Serializable, Cloneable {
      * @param vz z coordinate of body velocity to be set.
      */
     public void setVz(final Speed vz) {
-<span class="fc" id="L243">        mVz = convertSpeed(vz);</span>
-<span class="fc" id="L244">    }</span>
+<span class="fc" id="L242">        mVz = convertSpeed(vz);</span>
+<span class="fc" id="L243">    }</span>
 
     /**
      * Sets cartesian coordinates of body velocity resolved along ECEF-frame axes.
@@ -251,10 +250,10 @@ public class ECEFVelocity implements Serializable, Cloneable {
      * @param vz z cartesian coordinate of body velocity.
      */
     public void setCoordinates(final Speed vx, final Speed vy, final Speed vz) {
-<span class="fc" id="L254">        setVx(vx);</span>
-<span class="fc" id="L255">        setVy(vy);</span>
-<span class="fc" id="L256">        setVz(vz);</span>
-<span class="fc" id="L257">    }</span>
+<span class="fc" id="L253">        setVx(vx);</span>
+<span class="fc" id="L254">        setVy(vy);</span>
+<span class="fc" id="L255">        setVz(vz);</span>
+<span class="fc" id="L256">    }</span>
 
     /**
      * Gets norm of velocity expressed in meters per second (m/s), which represents
@@ -263,7 +262,7 @@ public class ECEFVelocity implements Serializable, Cloneable {
      * @return norm of velocity expressed in meters per second (m/s).
      */
     public double getNorm() {
-<span class="fc" id="L266">        return Math.sqrt(mVx * mVx + mVy * mVy + mVz * mVz);</span>
+<span class="fc" id="L265">        return Math.sqrt(mVx * mVx + mVy * mVy + mVz * mVz);</span>
     }
 
     /**
@@ -272,9 +271,9 @@ public class ECEFVelocity implements Serializable, Cloneable {
      * @param result velocity norm.
      */
     public void getNormAsSpeed(final Speed result) {
-<span class="fc" id="L275">        result.setValue(getNorm());</span>
-<span class="fc" id="L276">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
-<span class="fc" id="L277">    }</span>
+<span class="fc" id="L274">        result.setValue(getNorm());</span>
+<span class="fc" id="L275">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L276">    }</span>
 
     /**
      * Gets norm of velocity, which represents the speed of the body.
@@ -282,7 +281,7 @@ public class ECEFVelocity implements Serializable, Cloneable {
      * @return velocity norm.
      */
     public Speed getNormAsSpeed() {
-<span class="fc" id="L285">        return new Speed(getNorm(), SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L284">        return new Speed(getNorm(), SpeedUnit.METERS_PER_SECOND);</span>
     }
 
     /**
@@ -291,10 +290,10 @@ public class ECEFVelocity implements Serializable, Cloneable {
      * @param output destination instance where data will be copied to.
      */
     public void copyTo(final ECEFVelocity output) {
-<span class="fc" id="L294">        output.mVx = mVx;</span>
-<span class="fc" id="L295">        output.mVy = mVy;</span>
-<span class="fc" id="L296">        output.mVz = mVz;</span>
-<span class="fc" id="L297">    }</span>
+<span class="fc" id="L293">        output.mVx = mVx;</span>
+<span class="fc" id="L294">        output.mVy = mVy;</span>
+<span class="fc" id="L295">        output.mVz = mVz;</span>
+<span class="fc" id="L296">    }</span>
 
     /**
      * Copies data of provided instance into this instance.
@@ -302,10 +301,10 @@ public class ECEFVelocity implements Serializable, Cloneable {
      * @param input instance to copy data from.
      */
     public void copyFrom(final ECEFVelocity input) {
-<span class="fc" id="L305">        mVx = input.mVx;</span>
-<span class="fc" id="L306">        mVy = input.mVy;</span>
-<span class="fc" id="L307">        mVz = input.mVz;</span>
-<span class="fc" id="L308">    }</span>
+<span class="fc" id="L304">        mVx = input.mVx;</span>
+<span class="fc" id="L305">        mVy = input.mVy;</span>
+<span class="fc" id="L306">        mVz = input.mVz;</span>
+<span class="fc" id="L307">    }</span>
 
     /**
      * Gets velocity coordinates expressed in meters per second (m/s)
@@ -316,14 +315,14 @@ public class ECEFVelocity implements Serializable, Cloneable {
      * @throws IllegalArgumentException if provided array does not have length 3.
      */
     public void asArray(final double[] result) {
-<span class="fc bfc" id="L319" title="All 2 branches covered.">        if (result.length != COMPONENTS) {</span>
-<span class="fc" id="L320">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L318" title="All 2 branches covered.">        if (result.length != COMPONENTS) {</span>
+<span class="fc" id="L319">            throw new IllegalArgumentException();</span>
         }
 
-<span class="fc" id="L323">        result[0] = mVx;</span>
-<span class="fc" id="L324">        result[1] = mVy;</span>
-<span class="fc" id="L325">        result[2] = mVz;</span>
-<span class="fc" id="L326">    }</span>
+<span class="fc" id="L322">        result[0] = mVx;</span>
+<span class="fc" id="L323">        result[1] = mVy;</span>
+<span class="fc" id="L324">        result[2] = mVz;</span>
+<span class="fc" id="L325">    }</span>
 
     /**
      * Gets velocity coordinates expressed in meters per second (m/s) as an array.
@@ -331,9 +330,9 @@ public class ECEFVelocity implements Serializable, Cloneable {
      * @return array containing velocity coordinates in x,y,z order.
      */
     public double[] asArray() {
-<span class="fc" id="L334">        final double[] result = new double[COMPONENTS];</span>
-<span class="fc" id="L335">        asArray(result);</span>
-<span class="fc" id="L336">        return result;</span>
+<span class="fc" id="L333">        final double[] result = new double[COMPONENTS];</span>
+<span class="fc" id="L334">        asArray(result);</span>
+<span class="fc" id="L335">        return result;</span>
     }
 
     /**
@@ -344,6 +343,7 @@ public class ECEFVelocity implements Serializable, Cloneable {
      * @param result matrix instance where velocity coordinates will be stored
      *               in x,y,z order.
      */
+    @SuppressWarnings(&quot;DuplicatedCode&quot;)
     public void asMatrix(final Matrix result) {
 <span class="pc bpc" id="L348" title="1 of 4 branches missed.">        if (result.getRows() != COMPONENTS || result.getColumns() != 1) {</span>
             try {

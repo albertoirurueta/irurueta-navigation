@@ -25,7 +25,6 @@ package com.irurueta.navigation.geodesic;
  * {@link Geodesic#inverse(double, double, double, double)} and it always includes the field
  * &lt;i&gt;a12&lt;/i&gt;.
  */
-@SuppressWarnings(&quot;WeakerAccess&quot;)
 public class GeodesicData {
 
     /**
@@ -92,10 +91,10 @@ public class GeodesicData {
      * Constructor.
      * Initialize all the fields to Double.NaN.
      */
-<span class="fc" id="L95">    public GeodesicData() {</span>
-<span class="fc" id="L96">        lat1 = lon1 = azi1 = lat2 = lon2 = azi2 = s12 = a12 = m12 =</span>
+<span class="fc" id="L94">    public GeodesicData() {</span>
+<span class="fc" id="L95">        lat1 = lon1 = azi1 = lat2 = lon2 = azi2 = s12 = a12 = m12 =</span>
                 scaleM12 = scaleM21 = areaS12 = Double.NaN;
-<span class="fc" id="L98">    }</span>
+<span class="fc" id="L97">    }</span>
 
     /**
      * Gets latitude of point 1 (degrees).
@@ -103,7 +102,7 @@ public class GeodesicData {
      * @return latitude of point 1.
      */
     public double getLat1() {
-<span class="fc" id="L106">        return lat1;</span>
+<span class="fc" id="L105">        return lat1;</span>
     }
 
     /**
@@ -112,8 +111,8 @@ public class GeodesicData {
      * @param lat1 latitude of point 1.
      */
     public void setLat1(final double lat1) {
-<span class="fc" id="L115">        this.lat1 = lat1;</span>
-<span class="fc" id="L116">    }</span>
+<span class="fc" id="L114">        this.lat1 = lat1;</span>
+<span class="fc" id="L115">    }</span>
 
     /**
      * Gets longitude of point 1 (degrees).
@@ -121,7 +120,7 @@ public class GeodesicData {
      * @return longitude of point 1.
      */
     public double getLon1() {
-<span class="fc" id="L124">        return lon1;</span>
+<span class="fc" id="L123">        return lon1;</span>
     }
 
     /**
@@ -130,8 +129,8 @@ public class GeodesicData {
      * @param lon1 longitude of point 1.
      */
     public void setLon1(final double lon1) {
-<span class="fc" id="L133">        this.lon1 = lon1;</span>
-<span class="fc" id="L134">    }</span>
+<span class="fc" id="L132">        this.lon1 = lon1;</span>
+<span class="fc" id="L133">    }</span>
 
     /**
      * Gets azimuth at point 1 (degrees).
@@ -139,7 +138,7 @@ public class GeodesicData {
      * @return azimuth at point 1.
      */
     public double getAzi1() {
-<span class="fc" id="L142">        return azi1;</span>
+<span class="fc" id="L141">        return azi1;</span>
     }
 
     /**
@@ -148,8 +147,8 @@ public class GeodesicData {
      * @param azi1 azimuth at point 1.
      */
     public void setAzi1(final double azi1) {
-<span class="fc" id="L151">        this.azi1 = azi1;</span>
-<span class="fc" id="L152">    }</span>
+<span class="fc" id="L150">        this.azi1 = azi1;</span>
+<span class="fc" id="L151">    }</span>
 
     /**
      * Gets latitude of point 2 (degrees).
@@ -157,7 +156,7 @@ public class GeodesicData {
      * @return latitude of point 2.
      */
     public double getLat2() {
-<span class="fc" id="L160">        return lat2;</span>
+<span class="fc" id="L159">        return lat2;</span>
     }
 
     /**
@@ -166,8 +165,8 @@ public class GeodesicData {
      * @param lat2 latitude of point 2.
      */
     public void setLat2(final double lat2) {
-<span class="fc" id="L169">        this.lat2 = lat2;</span>
-<span class="fc" id="L170">    }</span>
+<span class="fc" id="L168">        this.lat2 = lat2;</span>
+<span class="fc" id="L169">    }</span>
 
     /**
      * Gets longitude of point 2 (degrees).
@@ -175,7 +174,7 @@ public class GeodesicData {
      * @return longitude of point 2.
      */
     public double getLon2() {
-<span class="fc" id="L178">        return lon2;</span>
+<span class="fc" id="L177">        return lon2;</span>
     }
 
     /**
@@ -184,8 +183,8 @@ public class GeodesicData {
      * @param lon2 longitude of point 2.
      */
     public void setLon2(final double lon2) {
-<span class="fc" id="L187">        this.lon2 = lon2;</span>
-<span class="fc" id="L188">    }</span>
+<span class="fc" id="L186">        this.lon2 = lon2;</span>
+<span class="fc" id="L187">    }</span>
 
     /**
      * Gets azimuth at point 2 (degrees).
@@ -193,7 +192,7 @@ public class GeodesicData {
      * @return azimuth at point 2.
      */
     public double getAzi2() {
-<span class="fc" id="L196">        return azi2;</span>
+<span class="fc" id="L195">        return azi2;</span>
     }
 
     /**
@@ -202,8 +201,8 @@ public class GeodesicData {
      * @param azi2 azimuth at point 2.
      */
     public void setAzi2(final double azi2) {
-<span class="fc" id="L205">        this.azi2 = azi2;</span>
-<span class="fc" id="L206">    }</span>
+<span class="fc" id="L204">        this.azi2 = azi2;</span>
+<span class="fc" id="L205">    }</span>
 
     /**
      * Gets distance between point 1 and point 2 (meters).
@@ -211,7 +210,7 @@ public class GeodesicData {
      * @return distance between point 1 and point 2.
      */
     public double getS12() {
-<span class="fc" id="L214">        return s12;</span>
+<span class="fc" id="L213">        return s12;</span>
     }
 
     /**
@@ -220,8 +219,8 @@ public class GeodesicData {
      * @param s12 distance between point 1 and point 2.
      */
     public void setS12(final double s12) {
-<span class="fc" id="L223">        this.s12 = s12;</span>
-<span class="fc" id="L224">    }</span>
+<span class="fc" id="L222">        this.s12 = s12;</span>
+<span class="fc" id="L223">    }</span>
 
     /**
      * Gets arc length on the auxiliary sphere between point 1 and point 2 (degrees).
@@ -229,7 +228,7 @@ public class GeodesicData {
      * @return arc length on the auxiliary sphere between point 1 and point 2.
      */
     public double getA12() {
-<span class="fc" id="L232">        return a12;</span>
+<span class="fc" id="L231">        return a12;</span>
     }
 
     /**
@@ -238,8 +237,8 @@ public class GeodesicData {
      * @param a12 arc length on the auxiliary sphere between point 1 and point 2.
      */
     public void setA12(final double a12) {
-<span class="fc" id="L241">        this.a12 = a12;</span>
-<span class="fc" id="L242">    }</span>
+<span class="fc" id="L240">        this.a12 = a12;</span>
+<span class="fc" id="L241">    }</span>
 
     /**
      * Gets reduced length of geodesic (meters).
@@ -247,7 +246,7 @@ public class GeodesicData {
      * @return reduced length of geodesic.
      */
     public double getM12() {
-<span class="fc" id="L250">        return m12;</span>
+<span class="fc" id="L249">        return m12;</span>
     }
 
     /**
@@ -256,8 +255,8 @@ public class GeodesicData {
      * @param m12 reduced length of geodesic.
      */
     public void setM12(final double m12) {
-<span class="fc" id="L259">        this.m12 = m12;</span>
-<span class="fc" id="L260">    }</span>
+<span class="fc" id="L258">        this.m12 = m12;</span>
+<span class="fc" id="L259">    }</span>
 
     /**
      * Gets geodesic scale of point 2 relative to point 1 (dimensionless).
@@ -265,7 +264,7 @@ public class GeodesicData {
      * @return geodesic scale of point 2 relative to point 1.
      */
     public double getScaleM12() {
-<span class="fc" id="L268">        return scaleM12;</span>
+<span class="fc" id="L267">        return scaleM12;</span>
     }
 
     /**
@@ -274,8 +273,8 @@ public class GeodesicData {
      * @param scaleM12 geodesic scale of point 2 relative to point 1.
      */
     public void setScaleM12(final double scaleM12) {
-<span class="fc" id="L277">        this.scaleM12 = scaleM12;</span>
-<span class="fc" id="L278">    }</span>
+<span class="fc" id="L276">        this.scaleM12 = scaleM12;</span>
+<span class="fc" id="L277">    }</span>
 
     /**
      * Gets geodesic scale of point 1 relative to point 2 (dimensionless).
@@ -283,7 +282,7 @@ public class GeodesicData {
      * @return geodesic scale of point 1 relative to point 2.
      */
     public double getScaleM21() {
-<span class="fc" id="L286">        return scaleM21;</span>
+<span class="fc" id="L285">        return scaleM21;</span>
     }
 
     /**
@@ -292,8 +291,8 @@ public class GeodesicData {
      * @param scaleM21 geodesic scale of point 1 relative to point 2.
      */
     public void setScaleM21(final double scaleM21) {
-<span class="fc" id="L295">        this.scaleM21 = scaleM21;</span>
-<span class="fc" id="L296">    }</span>
+<span class="fc" id="L294">        this.scaleM21 = scaleM21;</span>
+<span class="fc" id="L295">    }</span>
 
     /**
      * Gets area under the geodesic (meter&lt;sup&gt;2&lt;/sup&gt;).
@@ -301,7 +300,7 @@ public class GeodesicData {
      * @return area under the geodesic.
      */
     public double getAreaS12() {
-<span class="fc" id="L304">        return areaS12;</span>
+<span class="fc" id="L303">        return areaS12;</span>
     }
 
     /**
@@ -310,7 +309,7 @@ public class GeodesicData {
      * @param areaS12 area under the geodesic.
      */
     public void setAreaS12(final double areaS12) {
-<span class="fc" id="L313">        this.areaS12 = areaS12;</span>
-<span class="fc" id="L314">    }</span>
+<span class="fc" id="L312">        this.areaS12 = areaS12;</span>
+<span class="fc" id="L313">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

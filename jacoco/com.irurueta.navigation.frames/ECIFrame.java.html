@@ -24,7 +24,6 @@ import com.irurueta.units.Speed;
  * Position and velocity of this frame is expressed along ECI axes as described here:
  * {@link FrameType#EARTH_CENTERED_INERTIAL_FRAME}.
  */
-@SuppressWarnings(&quot;WeakerAccess&quot;)
 public class ECIFrame extends ECIorECEFFrame&lt;ECIFrame&gt; {
 
     /**
@@ -32,9 +31,9 @@ public class ECIFrame extends ECIorECEFFrame&lt;ECIFrame&gt; {
      * Initializes position and velocity coordinates to zero and the coordinate transformation matrix to the
      * identity.
      */
-<span class="fc" id="L35">    public ECIFrame() {</span>
-<span class="fc" id="L36">        mC = new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_INERTIAL_FRAME);</span>
-<span class="fc" id="L37">    }</span>
+<span class="fc" id="L34">    public ECIFrame() {</span>
+<span class="fc" id="L35">        mC = new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_INERTIAL_FRAME);</span>
+<span class="fc" id="L36">    }</span>
 
     /**
      * Constructor.
@@ -43,8 +42,8 @@ public class ECIFrame extends ECIorECEFFrame&lt;ECIFrame&gt; {
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
      */
     public ECIFrame(final CoordinateTransformation c) throws InvalidSourceAndDestinationFrameTypeException {
-<span class="fc" id="L46">        super(c);</span>
-<span class="fc" id="L47">    }</span>
+<span class="fc" id="L45">        super(c);</span>
+<span class="fc" id="L46">    }</span>
 
     /**
      * Constructor.
@@ -57,9 +56,9 @@ public class ECIFrame extends ECIorECEFFrame&lt;ECIFrame&gt; {
      *          ECI-frame axes.
      */
     public ECIFrame(final double x, final double y, final double z) {
-<span class="fc" id="L60">        this();</span>
-<span class="fc" id="L61">        setCoordinates(x, y, z);</span>
-<span class="fc" id="L62">    }</span>
+<span class="fc" id="L59">        this();</span>
+<span class="fc" id="L60">        setCoordinates(x, y, z);</span>
+<span class="fc" id="L61">    }</span>
 
     /**
      * Constructor.
@@ -67,9 +66,9 @@ public class ECIFrame extends ECIorECEFFrame&lt;ECIFrame&gt; {
      * @param position body position expressed in meters (m) and resolved along ECI-frame axes.
      */
     public ECIFrame(final Point3D position) {
-<span class="fc" id="L70">        this();</span>
-<span class="fc" id="L71">        setPosition(position);</span>
-<span class="fc" id="L72">    }</span>
+<span class="fc" id="L69">        this();</span>
+<span class="fc" id="L70">        setPosition(position);</span>
+<span class="fc" id="L71">    }</span>
 
     /**
      * Constructor.
@@ -80,9 +79,9 @@ public class ECIFrame extends ECIorECEFFrame&lt;ECIFrame&gt; {
      */
     public ECIFrame(final Distance positionX, final Distance positionY,
                     final Distance positionZ) {
-<span class="fc" id="L83">        this();</span>
-<span class="fc" id="L84">        setPositionCoordinates(positionX, positionY, positionZ);</span>
-<span class="fc" id="L85">    }</span>
+<span class="fc" id="L82">        this();</span>
+<span class="fc" id="L83">        setPositionCoordinates(positionX, positionY, positionZ);</span>
+<span class="fc" id="L84">    }</span>
 
     /**
      * Constructor.
@@ -99,9 +98,9 @@ public class ECIFrame extends ECIorECEFFrame&lt;ECIFrame&gt; {
      */
     public ECIFrame(final double x, final double y, final double z,
                     final double vx, final double vy, final double vz) {
-<span class="fc" id="L102">        this(x, y, z);</span>
-<span class="fc" id="L103">        setVelocityCoordinates(vx, vy, vz);</span>
-<span class="fc" id="L104">    }</span>
+<span class="fc" id="L101">        this(x, y, z);</span>
+<span class="fc" id="L102">        setVelocityCoordinates(vx, vy, vz);</span>
+<span class="fc" id="L103">    }</span>
 
     /**
      * Constructor.
@@ -116,9 +115,9 @@ public class ECIFrame extends ECIorECEFFrame&lt;ECIFrame&gt; {
      */
     public ECIFrame(final Point3D position,
                     final double vx, final double vy, final double vz) {
-<span class="fc" id="L119">        this(position);</span>
-<span class="fc" id="L120">        setVelocityCoordinates(vx, vy, vz);</span>
-<span class="fc" id="L121">    }</span>
+<span class="fc" id="L118">        this(position);</span>
+<span class="fc" id="L119">        setVelocityCoordinates(vx, vy, vz);</span>
+<span class="fc" id="L120">    }</span>
 
     /**
      * Constructor.
@@ -130,9 +129,9 @@ public class ECIFrame extends ECIorECEFFrame&lt;ECIFrame&gt; {
      */
     public ECIFrame(final Point3D position,
                     final Speed speedX, final Speed speedY, final Speed speedZ) {
-<span class="fc" id="L133">        this(position);</span>
-<span class="fc" id="L134">        setSpeedCoordinates(speedX, speedY, speedZ);</span>
-<span class="fc" id="L135">    }</span>
+<span class="fc" id="L132">        this(position);</span>
+<span class="fc" id="L133">        setSpeedCoordinates(speedX, speedY, speedZ);</span>
+<span class="fc" id="L134">    }</span>
 
     /**
      * Constructor.
@@ -149,9 +148,9 @@ public class ECIFrame extends ECIorECEFFrame&lt;ECIFrame&gt; {
      */
     public ECIFrame(final double x, final double y, final double z,
                     final Speed speedX, final Speed speedY, final Speed speedZ) {
-<span class="fc" id="L152">        this(x, y, z);</span>
-<span class="fc" id="L153">        setSpeedCoordinates(speedX, speedY, speedZ);</span>
-<span class="fc" id="L154">    }</span>
+<span class="fc" id="L151">        this(x, y, z);</span>
+<span class="fc" id="L152">        setSpeedCoordinates(speedX, speedY, speedZ);</span>
+<span class="fc" id="L153">    }</span>
 
     /**
      * Constructor.
@@ -169,9 +168,9 @@ public class ECIFrame extends ECIorECEFFrame&lt;ECIFrame&gt; {
     public ECIFrame(final Distance positionX, final Distance positionY,
                     final Distance positionZ, final double vx,
                     final double vy, final double vz) {
-<span class="fc" id="L172">        this(positionX, positionY, positionZ);</span>
-<span class="fc" id="L173">        setVelocityCoordinates(vx, vy, vz);</span>
-<span class="fc" id="L174">    }</span>
+<span class="fc" id="L171">        this(positionX, positionY, positionZ);</span>
+<span class="fc" id="L172">        setVelocityCoordinates(vx, vy, vz);</span>
+<span class="fc" id="L173">    }</span>
 
     /**
      * Constructor.
@@ -186,9 +185,9 @@ public class ECIFrame extends ECIorECEFFrame&lt;ECIFrame&gt; {
     public ECIFrame(final Distance positionX, final Distance positionY,
                     final Distance positionZ, final Speed speedX,
                     final Speed speedY, final Speed speedZ) {
-<span class="fc" id="L189">        this(positionX, positionY, positionZ);</span>
-<span class="fc" id="L190">        setSpeedCoordinates(speedX, speedY, speedZ);</span>
-<span class="fc" id="L191">    }</span>
+<span class="fc" id="L188">        this(positionX, positionY, positionZ);</span>
+<span class="fc" id="L189">        setSpeedCoordinates(speedX, speedY, speedZ);</span>
+<span class="fc" id="L190">    }</span>
 
     /**
      * Constructor.
@@ -204,9 +203,9 @@ public class ECIFrame extends ECIorECEFFrame&lt;ECIFrame&gt; {
      */
     public ECIFrame(final double x, final double y, final double z, final CoordinateTransformation c)
             throws InvalidSourceAndDestinationFrameTypeException {
-<span class="fc" id="L207">        this(x, y, z);</span>
-<span class="fc" id="L208">        setCoordinateTransformation(c);</span>
-<span class="fc" id="L209">    }</span>
+<span class="fc" id="L206">        this(x, y, z);</span>
+<span class="fc" id="L207">        setCoordinateTransformation(c);</span>
+<span class="fc" id="L208">    }</span>
 
     /**
      * Constructor.
@@ -219,9 +218,9 @@ public class ECIFrame extends ECIorECEFFrame&lt;ECIFrame&gt; {
                     final CoordinateTransformation c)
             throws InvalidSourceAndDestinationFrameTypeException {
 
-<span class="fc" id="L222">        this(position);</span>
-<span class="fc" id="L223">        setCoordinateTransformation(c);</span>
-<span class="fc" id="L224">    }</span>
+<span class="fc" id="L221">        this(position);</span>
+<span class="fc" id="L222">        setCoordinateTransformation(c);</span>
+<span class="fc" id="L223">    }</span>
 
     /**
      * Constructor.
@@ -237,9 +236,9 @@ public class ECIFrame extends ECIorECEFFrame&lt;ECIFrame&gt; {
                     final CoordinateTransformation c)
             throws InvalidSourceAndDestinationFrameTypeException {
 
-<span class="fc" id="L240">        this(positionX, positionY, positionZ);</span>
-<span class="fc" id="L241">        setCoordinateTransformation(c);</span>
-<span class="fc" id="L242">    }</span>
+<span class="fc" id="L239">        this(positionX, positionY, positionZ);</span>
+<span class="fc" id="L240">        setCoordinateTransformation(c);</span>
+<span class="fc" id="L241">    }</span>
 
     /**
      * Constructor.
@@ -263,9 +262,9 @@ public class ECIFrame extends ECIorECEFFrame&lt;ECIFrame&gt; {
                     final double vx, final double vy, final double vz,
                     final CoordinateTransformation c)
             throws InvalidSourceAndDestinationFrameTypeException {
-<span class="fc" id="L266">        this(x, y, z, vx, vy, vz);</span>
-<span class="fc" id="L267">        setCoordinateTransformation(c);</span>
-<span class="fc" id="L268">    }</span>
+<span class="fc" id="L265">        this(x, y, z, vx, vy, vz);</span>
+<span class="fc" id="L266">        setCoordinateTransformation(c);</span>
+<span class="fc" id="L267">    }</span>
 
     /**
      * Constructor.
@@ -284,9 +283,9 @@ public class ECIFrame extends ECIorECEFFrame&lt;ECIFrame&gt; {
                     final double vx, final double vy, final double vz,
                     final CoordinateTransformation c)
             throws InvalidSourceAndDestinationFrameTypeException {
-<span class="fc" id="L287">        this(position, vx, vy, vz);</span>
-<span class="fc" id="L288">        setCoordinateTransformation(c);</span>
-<span class="fc" id="L289">    }</span>
+<span class="fc" id="L286">        this(position, vx, vy, vz);</span>
+<span class="fc" id="L287">        setCoordinateTransformation(c);</span>
+<span class="fc" id="L288">    }</span>
 
     /**
      * Constructor.
@@ -302,9 +301,9 @@ public class ECIFrame extends ECIorECEFFrame&lt;ECIFrame&gt; {
                     final Speed speedX, final Speed speedY, final Speed speedZ,
                     final CoordinateTransformation c)
             throws InvalidSourceAndDestinationFrameTypeException {
-<span class="fc" id="L305">        this(position, speedX, speedY, speedZ);</span>
-<span class="fc" id="L306">        setCoordinateTransformation(c);</span>
-<span class="fc" id="L307">    }</span>
+<span class="fc" id="L304">        this(position, speedX, speedY, speedZ);</span>
+<span class="fc" id="L305">        setCoordinateTransformation(c);</span>
+<span class="fc" id="L306">    }</span>
 
     /**
      * Constructor.
@@ -325,9 +324,9 @@ public class ECIFrame extends ECIorECEFFrame&lt;ECIFrame&gt; {
                     final Speed speedX, final Speed speedY, final Speed speedZ,
                     final CoordinateTransformation c)
             throws InvalidSourceAndDestinationFrameTypeException {
-<span class="fc" id="L328">        this(x, y, z, speedX, speedY, speedZ);</span>
-<span class="fc" id="L329">        setCoordinateTransformation(c);</span>
-<span class="fc" id="L330">    }</span>
+<span class="fc" id="L327">        this(x, y, z, speedX, speedY, speedZ);</span>
+<span class="fc" id="L328">        setCoordinateTransformation(c);</span>
+<span class="fc" id="L329">    }</span>
 
     /**
      * Constructor.
@@ -349,9 +348,9 @@ public class ECIFrame extends ECIorECEFFrame&lt;ECIFrame&gt; {
                     final double vy, final double vz,
                     final CoordinateTransformation c)
             throws InvalidSourceAndDestinationFrameTypeException {
-<span class="fc" id="L352">        this(positionX, positionY, positionZ, vx, vy, vz);</span>
-<span class="fc" id="L353">        setCoordinateTransformation(c);</span>
-<span class="fc" id="L354">    }</span>
+<span class="fc" id="L351">        this(positionX, positionY, positionZ, vx, vy, vz);</span>
+<span class="fc" id="L352">        setCoordinateTransformation(c);</span>
+<span class="fc" id="L353">    }</span>
 
     /**
      * Constructor.
@@ -370,9 +369,9 @@ public class ECIFrame extends ECIorECEFFrame&lt;ECIFrame&gt; {
                     final Speed speedY, final Speed speedZ,
                     final CoordinateTransformation c)
             throws InvalidSourceAndDestinationFrameTypeException {
-<span class="fc" id="L373">        this(positionX, positionY, positionZ, speedX, speedY, speedZ);</span>
-<span class="fc" id="L374">        setCoordinateTransformation(c);</span>
-<span class="fc" id="L375">    }</span>
+<span class="fc" id="L372">        this(positionX, positionY, positionZ, speedX, speedY, speedZ);</span>
+<span class="fc" id="L373">        setCoordinateTransformation(c);</span>
+<span class="fc" id="L374">    }</span>
 
     /**
      * Constructor.
@@ -380,9 +379,9 @@ public class ECIFrame extends ECIorECEFFrame&lt;ECIFrame&gt; {
      * @param input ECI frame to copy data from.
      */
     public ECIFrame(final ECIFrame input) {
-<span class="fc" id="L383">        this();</span>
-<span class="fc" id="L384">        copyFrom(input);</span>
-<span class="fc" id="L385">    }</span>
+<span class="fc" id="L382">        this();</span>
+<span class="fc" id="L383">        copyFrom(input);</span>
+<span class="fc" id="L384">    }</span>
 
     /**
      * Gets coordinate transformation matrix.
@@ -391,10 +390,10 @@ public class ECIFrame extends ECIorECEFFrame&lt;ECIFrame&gt; {
      */
     @Override
     public CoordinateTransformation getCoordinateTransformation() {
-<span class="fc" id="L394">        final CoordinateTransformation result = new CoordinateTransformation(FrameType.BODY_FRAME,</span>
+<span class="fc" id="L393">        final CoordinateTransformation result = new CoordinateTransformation(FrameType.BODY_FRAME,</span>
                 FrameType.EARTH_CENTERED_INERTIAL_FRAME);
-<span class="fc" id="L396">        getCoordinateTransformation(result);</span>
-<span class="fc" id="L397">        return result;</span>
+<span class="fc" id="L395">        getCoordinateTransformation(result);</span>
+<span class="fc" id="L396">        return result;</span>
     }
 
     /**
@@ -404,8 +403,8 @@ public class ECIFrame extends ECIorECEFFrame&lt;ECIFrame&gt; {
      */
     @Override
     public void getCoordinateTransformation(final CoordinateTransformation result) {
-<span class="fc" id="L407">        mC.copyTo(result);</span>
-<span class="fc" id="L408">    }</span>
+<span class="fc" id="L406">        mC.copyTo(result);</span>
+<span class="fc" id="L407">    }</span>
 
     /**
      * Sets coordinate transformation matrix.
@@ -417,12 +416,12 @@ public class ECIFrame extends ECIorECEFFrame&lt;ECIFrame&gt; {
     @Override
     public void setCoordinateTransformation(final CoordinateTransformation c)
             throws InvalidSourceAndDestinationFrameTypeException {
-<span class="fc bfc" id="L420" title="All 2 branches covered.">        if (!isValidCoordinateTransformation(c)) {</span>
-<span class="fc" id="L421">            throw new InvalidSourceAndDestinationFrameTypeException();</span>
+<span class="fc bfc" id="L419" title="All 2 branches covered.">        if (!isValidCoordinateTransformation(c)) {</span>
+<span class="fc" id="L420">            throw new InvalidSourceAndDestinationFrameTypeException();</span>
         }
 
-<span class="fc" id="L424">        mC = c;</span>
-<span class="fc" id="L425">    }</span>
+<span class="fc" id="L423">        mC = c;</span>
+<span class="fc" id="L424">    }</span>
 
     /**
      * Checks whether provided coordinate transformation is valid or not.
@@ -432,8 +431,8 @@ public class ECIFrame extends ECIorECEFFrame&lt;ECIFrame&gt; {
      * @return true if provided value is valid, false otherwise.
      */
     public static boolean isValidCoordinateTransformation(final CoordinateTransformation c) {
-<span class="fc bfc" id="L435" title="All 2 branches covered.">        return c.getSourceType() == FrameType.BODY_FRAME &amp;&amp;</span>
-<span class="fc bfc" id="L436" title="All 2 branches covered.">                c.getDestinationType() == FrameType.EARTH_CENTERED_INERTIAL_FRAME;</span>
+<span class="fc bfc" id="L434" title="All 2 branches covered.">        return c.getSourceType() == FrameType.BODY_FRAME &amp;&amp;</span>
+<span class="fc bfc" id="L435" title="All 2 branches covered.">                c.getDestinationType() == FrameType.EARTH_CENTERED_INERTIAL_FRAME;</span>
     }
 
     /**
@@ -445,18 +444,18 @@ public class ECIFrame extends ECIorECEFFrame&lt;ECIFrame&gt; {
      */
     @Override
     public boolean equals(final Object obj) {
-<span class="fc bfc" id="L448" title="All 2 branches covered.">        if (obj == null) {</span>
-<span class="fc" id="L449">            return false;</span>
+<span class="fc bfc" id="L447" title="All 2 branches covered.">        if (obj == null) {</span>
+<span class="fc" id="L448">            return false;</span>
         }
-<span class="fc bfc" id="L451" title="All 2 branches covered.">        if (obj == this) {</span>
-<span class="fc" id="L452">            return true;</span>
+<span class="fc bfc" id="L450" title="All 2 branches covered.">        if (obj == this) {</span>
+<span class="fc" id="L451">            return true;</span>
         }
-<span class="fc bfc" id="L454" title="All 2 branches covered.">        if (!(obj instanceof ECIFrame)) {</span>
-<span class="fc" id="L455">            return false;</span>
+<span class="fc bfc" id="L453" title="All 2 branches covered.">        if (!(obj instanceof ECIFrame)) {</span>
+<span class="fc" id="L454">            return false;</span>
         }
 
-<span class="fc" id="L458">        final ECIFrame other = (ECIFrame) obj;</span>
-<span class="fc" id="L459">        return equals(other);</span>
+<span class="fc" id="L457">        final ECIFrame other = (ECIFrame) obj;</span>
+<span class="fc" id="L458">        return equals(other);</span>
     }
 
     /**
@@ -467,9 +466,9 @@ public class ECIFrame extends ECIorECEFFrame&lt;ECIFrame&gt; {
      */
     @Override
     protected Object clone() throws CloneNotSupportedException {
-<span class="fc" id="L470">        final ECIFrame result = (ECIFrame)super.clone();</span>
-<span class="fc" id="L471">        copyTo(result);</span>
-<span class="fc" id="L472">        return result;</span>
+<span class="fc" id="L469">        final ECIFrame result = (ECIFrame)super.clone();</span>
+<span class="fc" id="L470">        copyTo(result);</span>
+<span class="fc" id="L471">        return result;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

@@ -448,47 +448,48 @@
 <a class="jxr_linenumber" name="L440" href="#L440">440</a> 
 <a class="jxr_linenumber" name="L441" href="#L441">441</a>         <em class="jxr_comment">//noinspection ConstantConditions,SimplifiableJUnitAssertion</em>
 <a class="jxr_linenumber" name="L442" href="#L442">442</a>         assertTrue(position1.equals((Object) position1));
-<a class="jxr_linenumber" name="L443" href="#L443">443</a>         assertTrue(position1.equals(position1));
-<a class="jxr_linenumber" name="L444" href="#L444">444</a>         assertTrue(position1.equals(position2));
-<a class="jxr_linenumber" name="L445" href="#L445">445</a>         assertFalse(position1.equals(position3));
-<a class="jxr_linenumber" name="L446" href="#L446">446</a>         <em class="jxr_comment">//noinspection ConstantConditions,SimplifiableJUnitAssertion</em>
-<a class="jxr_linenumber" name="L447" href="#L447">447</a>         assertFalse(position1.equals((Object) <strong class="jxr_keyword">null</strong>));
-<a class="jxr_linenumber" name="L448" href="#L448">448</a>         assertFalse(position1.equals(<strong class="jxr_keyword">null</strong>));
-<a class="jxr_linenumber" name="L449" href="#L449">449</a>         <em class="jxr_comment">//noinspection SimplifiableJUnitAssertion</em>
-<a class="jxr_linenumber" name="L450" href="#L450">450</a>         assertFalse(position1.equals(<strong class="jxr_keyword">new</strong> Object()));
-<a class="jxr_linenumber" name="L451" href="#L451">451</a>     }
-<a class="jxr_linenumber" name="L452" href="#L452">452</a> 
-<a class="jxr_linenumber" name="L453" href="#L453">453</a>     @Test
-<a class="jxr_linenumber" name="L454" href="#L454">454</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testEqualsWithThreshold() {
-<a class="jxr_linenumber" name="L455" href="#L455">455</a>         <strong class="jxr_keyword">final</strong> UniformRandomizer randomizer = <strong class="jxr_keyword">new</strong> UniformRandomizer(<strong class="jxr_keyword">new</strong> Random());
-<a class="jxr_linenumber" name="L456" href="#L456">456</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-<a class="jxr_linenumber" name="L457" href="#L457">457</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-<a class="jxr_linenumber" name="L458" href="#L458">458</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-<a class="jxr_linenumber" name="L459" href="#L459">459</a> 
-<a class="jxr_linenumber" name="L460" href="#L460">460</a>         <strong class="jxr_keyword">final</strong> com.irurueta.navigation.frames.ECEFPosition position1 = <strong class="jxr_keyword">new</strong> com.irurueta.navigation.frames.ECEFPosition(x, y, z);
-<a class="jxr_linenumber" name="L461" href="#L461">461</a>         <strong class="jxr_keyword">final</strong> com.irurueta.navigation.frames.ECEFPosition position2 = <strong class="jxr_keyword">new</strong> com.irurueta.navigation.frames.ECEFPosition(x, y, z);
-<a class="jxr_linenumber" name="L462" href="#L462">462</a>         <strong class="jxr_keyword">final</strong> com.irurueta.navigation.frames.ECEFPosition position3 = <strong class="jxr_keyword">new</strong> com.irurueta.navigation.frames.ECEFPosition();
-<a class="jxr_linenumber" name="L463" href="#L463">463</a> 
-<a class="jxr_linenumber" name="L464" href="#L464">464</a>         assertTrue(position1.equals(position1, THRESHOLD));
-<a class="jxr_linenumber" name="L465" href="#L465">465</a>         assertTrue(position1.equals(position2, THRESHOLD));
-<a class="jxr_linenumber" name="L466" href="#L466">466</a>         assertFalse(position1.equals(position3, THRESHOLD));
-<a class="jxr_linenumber" name="L467" href="#L467">467</a>         assertFalse(position1.equals(<strong class="jxr_keyword">null</strong>, THRESHOLD));
-<a class="jxr_linenumber" name="L468" href="#L468">468</a>     }
-<a class="jxr_linenumber" name="L469" href="#L469">469</a> 
-<a class="jxr_linenumber" name="L470" href="#L470">470</a>     @Test
-<a class="jxr_linenumber" name="L471" href="#L471">471</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testClone() <strong class="jxr_keyword">throws</strong> CloneNotSupportedException {
-<a class="jxr_linenumber" name="L472" href="#L472">472</a>         <strong class="jxr_keyword">final</strong> UniformRandomizer randomizer = <strong class="jxr_keyword">new</strong> UniformRandomizer(<strong class="jxr_keyword">new</strong> Random());
-<a class="jxr_linenumber" name="L473" href="#L473">473</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-<a class="jxr_linenumber" name="L474" href="#L474">474</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-<a class="jxr_linenumber" name="L475" href="#L475">475</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-<a class="jxr_linenumber" name="L476" href="#L476">476</a> 
-<a class="jxr_linenumber" name="L477" href="#L477">477</a>         <strong class="jxr_keyword">final</strong> com.irurueta.navigation.frames.ECEFPosition position1 = <strong class="jxr_keyword">new</strong> ECEFPosition(x, y, z);
-<a class="jxr_linenumber" name="L478" href="#L478">478</a> 
-<a class="jxr_linenumber" name="L479" href="#L479">479</a>         <strong class="jxr_keyword">final</strong> Object position2 = position1.clone();
-<a class="jxr_linenumber" name="L480" href="#L480">480</a> 
-<a class="jxr_linenumber" name="L481" href="#L481">481</a>         assertEquals(position1, position2);
-<a class="jxr_linenumber" name="L482" href="#L482">482</a>     }
-<a class="jxr_linenumber" name="L483" href="#L483">483</a> }
+<a class="jxr_linenumber" name="L443" href="#L443">443</a>         <em class="jxr_comment">//noinspection EqualsWithItself</em>
+<a class="jxr_linenumber" name="L444" href="#L444">444</a>         assertTrue(position1.equals(position1));
+<a class="jxr_linenumber" name="L445" href="#L445">445</a>         assertTrue(position1.equals(position2));
+<a class="jxr_linenumber" name="L446" href="#L446">446</a>         assertFalse(position1.equals(position3));
+<a class="jxr_linenumber" name="L447" href="#L447">447</a>         <em class="jxr_comment">//noinspection ConstantConditions,SimplifiableJUnitAssertion</em>
+<a class="jxr_linenumber" name="L448" href="#L448">448</a>         assertFalse(position1.equals((Object) <strong class="jxr_keyword">null</strong>));
+<a class="jxr_linenumber" name="L449" href="#L449">449</a>         assertFalse(position1.equals(<strong class="jxr_keyword">null</strong>));
+<a class="jxr_linenumber" name="L450" href="#L450">450</a>         <em class="jxr_comment">//noinspection SimplifiableJUnitAssertion</em>
+<a class="jxr_linenumber" name="L451" href="#L451">451</a>         assertFalse(position1.equals(<strong class="jxr_keyword">new</strong> Object()));
+<a class="jxr_linenumber" name="L452" href="#L452">452</a>     }
+<a class="jxr_linenumber" name="L453" href="#L453">453</a> 
+<a class="jxr_linenumber" name="L454" href="#L454">454</a>     @Test
+<a class="jxr_linenumber" name="L455" href="#L455">455</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testEqualsWithThreshold() {
+<a class="jxr_linenumber" name="L456" href="#L456">456</a>         <strong class="jxr_keyword">final</strong> UniformRandomizer randomizer = <strong class="jxr_keyword">new</strong> UniformRandomizer(<strong class="jxr_keyword">new</strong> Random());
+<a class="jxr_linenumber" name="L457" href="#L457">457</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+<a class="jxr_linenumber" name="L458" href="#L458">458</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+<a class="jxr_linenumber" name="L459" href="#L459">459</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+<a class="jxr_linenumber" name="L460" href="#L460">460</a> 
+<a class="jxr_linenumber" name="L461" href="#L461">461</a>         <strong class="jxr_keyword">final</strong> com.irurueta.navigation.frames.ECEFPosition position1 = <strong class="jxr_keyword">new</strong> com.irurueta.navigation.frames.ECEFPosition(x, y, z);
+<a class="jxr_linenumber" name="L462" href="#L462">462</a>         <strong class="jxr_keyword">final</strong> com.irurueta.navigation.frames.ECEFPosition position2 = <strong class="jxr_keyword">new</strong> com.irurueta.navigation.frames.ECEFPosition(x, y, z);
+<a class="jxr_linenumber" name="L463" href="#L463">463</a>         <strong class="jxr_keyword">final</strong> com.irurueta.navigation.frames.ECEFPosition position3 = <strong class="jxr_keyword">new</strong> com.irurueta.navigation.frames.ECEFPosition();
+<a class="jxr_linenumber" name="L464" href="#L464">464</a> 
+<a class="jxr_linenumber" name="L465" href="#L465">465</a>         assertTrue(position1.equals(position1, THRESHOLD));
+<a class="jxr_linenumber" name="L466" href="#L466">466</a>         assertTrue(position1.equals(position2, THRESHOLD));
+<a class="jxr_linenumber" name="L467" href="#L467">467</a>         assertFalse(position1.equals(position3, THRESHOLD));
+<a class="jxr_linenumber" name="L468" href="#L468">468</a>         assertFalse(position1.equals(<strong class="jxr_keyword">null</strong>, THRESHOLD));
+<a class="jxr_linenumber" name="L469" href="#L469">469</a>     }
+<a class="jxr_linenumber" name="L470" href="#L470">470</a> 
+<a class="jxr_linenumber" name="L471" href="#L471">471</a>     @Test
+<a class="jxr_linenumber" name="L472" href="#L472">472</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testClone() <strong class="jxr_keyword">throws</strong> CloneNotSupportedException {
+<a class="jxr_linenumber" name="L473" href="#L473">473</a>         <strong class="jxr_keyword">final</strong> UniformRandomizer randomizer = <strong class="jxr_keyword">new</strong> UniformRandomizer(<strong class="jxr_keyword">new</strong> Random());
+<a class="jxr_linenumber" name="L474" href="#L474">474</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+<a class="jxr_linenumber" name="L475" href="#L475">475</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+<a class="jxr_linenumber" name="L476" href="#L476">476</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+<a class="jxr_linenumber" name="L477" href="#L477">477</a> 
+<a class="jxr_linenumber" name="L478" href="#L478">478</a>         <strong class="jxr_keyword">final</strong> com.irurueta.navigation.frames.ECEFPosition position1 = <strong class="jxr_keyword">new</strong> ECEFPosition(x, y, z);
+<a class="jxr_linenumber" name="L479" href="#L479">479</a> 
+<a class="jxr_linenumber" name="L480" href="#L480">480</a>         <strong class="jxr_keyword">final</strong> Object position2 = position1.clone();
+<a class="jxr_linenumber" name="L481" href="#L481">481</a> 
+<a class="jxr_linenumber" name="L482" href="#L482">482</a>         assertEquals(position1, position2);
+<a class="jxr_linenumber" name="L483" href="#L483">483</a>     }
+<a class="jxr_linenumber" name="L484" href="#L484">484</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2018&#x2013;2021. All rights reserved.</div>

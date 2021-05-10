@@ -36,7 +36,6 @@ import java.util.Objects;
  * Velocity of body frame is expressed with respect ECEF frame and resolved along north, east and down axes,
  * as defined in {@link FrameType#LOCAL_NAVIGATION_FRAME}.
  */
-@SuppressWarnings(&quot;WeakerAccess&quot;)
 public class NEDFrame implements Frame, Serializable, Cloneable {
 
     /**
@@ -87,9 +86,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * Initializes position and velocity coordinates to zero and the coordinate transformation matrix to the
      * identity.
      */
-<span class="fc" id="L90">    public NEDFrame() {</span>
-<span class="fc" id="L91">        mC = new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);</span>
-<span class="fc" id="L92">    }</span>
+<span class="fc" id="L89">    public NEDFrame() {</span>
+<span class="fc" id="L90">        mC = new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);</span>
+<span class="fc" id="L91">    }</span>
 
     /**
      * Constructor.
@@ -97,9 +96,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param c Body to NED (Local Navigation frame) coordinate transformation matrix to be set.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
      */
-<span class="fc" id="L100">    public NEDFrame(final CoordinateTransformation c) throws InvalidSourceAndDestinationFrameTypeException {</span>
-<span class="fc" id="L101">        setCoordinateTransformation(c);</span>
-<span class="fc" id="L102">    }</span>
+<span class="fc" id="L99">    public NEDFrame(final CoordinateTransformation c) throws InvalidSourceAndDestinationFrameTypeException {</span>
+<span class="fc" id="L100">        setCoordinateTransformation(c);</span>
+<span class="fc" id="L101">    }</span>
 
     /**
      * Constructor.
@@ -109,9 +108,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param height    height expressed in meters.
      */
     public NEDFrame(final double latitude, final double longitude, final double height) {
-<span class="fc" id="L112">        this();</span>
-<span class="fc" id="L113">        setPosition(latitude, longitude, height);</span>
-<span class="fc" id="L114">    }</span>
+<span class="fc" id="L111">        this();</span>
+<span class="fc" id="L112">        setPosition(latitude, longitude, height);</span>
+<span class="fc" id="L113">    }</span>
 
     /**
      * Constructor.
@@ -121,9 +120,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param height    height to be set.
      */
     public NEDFrame(final double latitude, final double longitude, final Distance height) {
-<span class="fc" id="L124">        this();</span>
-<span class="fc" id="L125">        setPosition(latitude, longitude, height);</span>
-<span class="fc" id="L126">    }</span>
+<span class="fc" id="L123">        this();</span>
+<span class="fc" id="L124">        setPosition(latitude, longitude, height);</span>
+<span class="fc" id="L125">    }</span>
 
     /**
      * Constructor.
@@ -133,9 +132,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param height    height expressed in meters to be set.
      */
     public NEDFrame(final Angle latitude, final Angle longitude, final double height) {
-<span class="fc" id="L136">        this();</span>
-<span class="fc" id="L137">        setPosition(latitude, longitude, height);</span>
-<span class="fc" id="L138">    }</span>
+<span class="fc" id="L135">        this();</span>
+<span class="fc" id="L136">        setPosition(latitude, longitude, height);</span>
+<span class="fc" id="L137">    }</span>
 
     /**
      * Constructor.
@@ -145,9 +144,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param height    height to be set.
      */
     public NEDFrame(final Angle latitude, final Angle longitude, final Distance height) {
-<span class="fc" id="L148">        this();</span>
-<span class="fc" id="L149">        setPosition(latitude, longitude, height);</span>
-<span class="fc" id="L150">    }</span>
+<span class="fc" id="L147">        this();</span>
+<span class="fc" id="L148">        setPosition(latitude, longitude, height);</span>
+<span class="fc" id="L149">    }</span>
 
     /**
      * Constructor.
@@ -155,9 +154,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param position curvilinear position containing latitude, longitude and height.
      */
     public NEDFrame(final NEDPosition position) {
-<span class="fc" id="L158">        this();</span>
-<span class="fc" id="L159">        setPosition(position);</span>
-<span class="fc" id="L160">    }</span>
+<span class="fc" id="L157">        this();</span>
+<span class="fc" id="L158">        setPosition(position);</span>
+<span class="fc" id="L159">    }</span>
 
     /**
      * Constructor.
@@ -174,9 +173,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      */
     public NEDFrame(final double latitude, final double longitude, final double height,
                     final double vn, final double ve, final double vd) {
-<span class="fc" id="L177">        this(latitude, longitude, height);</span>
-<span class="fc" id="L178">        setVelocityCoordinates(vn, ve, vd);</span>
-<span class="fc" id="L179">    }</span>
+<span class="fc" id="L176">        this(latitude, longitude, height);</span>
+<span class="fc" id="L177">        setVelocityCoordinates(vn, ve, vd);</span>
+<span class="fc" id="L178">    }</span>
 
     /**
      * Constructor.
@@ -193,9 +192,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      */
     public NEDFrame(final double latitude, final double longitude, final Distance height,
                     final double vn, final double ve, final double vd) {
-<span class="fc" id="L196">        this(latitude, longitude, height);</span>
-<span class="fc" id="L197">        setVelocityCoordinates(vn, ve, vd);</span>
-<span class="fc" id="L198">    }</span>
+<span class="fc" id="L195">        this(latitude, longitude, height);</span>
+<span class="fc" id="L196">        setVelocityCoordinates(vn, ve, vd);</span>
+<span class="fc" id="L197">    }</span>
 
     /**
      * Constructor.
@@ -212,9 +211,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      */
     public NEDFrame(final Angle latitude, final Angle longitude, final double height,
                     final double vn, final double ve, final double vd) {
-<span class="fc" id="L215">        this(latitude, longitude, height);</span>
-<span class="fc" id="L216">        setVelocityCoordinates(vn, ve, vd);</span>
-<span class="fc" id="L217">    }</span>
+<span class="fc" id="L214">        this(latitude, longitude, height);</span>
+<span class="fc" id="L215">        setVelocityCoordinates(vn, ve, vd);</span>
+<span class="fc" id="L216">    }</span>
 
     /**
      * Constructor.
@@ -231,9 +230,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      */
     public NEDFrame(final Angle latitude, final Angle longitude, final Distance height,
                     final double vn, final double ve, final double vd) {
-<span class="fc" id="L234">        this(latitude, longitude, height);</span>
-<span class="fc" id="L235">        setVelocityCoordinates(vn, ve, vd);</span>
-<span class="fc" id="L236">    }</span>
+<span class="fc" id="L233">        this(latitude, longitude, height);</span>
+<span class="fc" id="L234">        setVelocityCoordinates(vn, ve, vd);</span>
+<span class="fc" id="L235">    }</span>
 
     /**
      * Constructor.
@@ -247,9 +246,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      */
     public NEDFrame(final double latitude, final double longitude, final double height,
                     final Speed speedN, final Speed speedE, final Speed speedD) {
-<span class="fc" id="L250">        this(latitude, longitude, height);</span>
-<span class="fc" id="L251">        setSpeedCoordinates(speedN, speedE, speedD);</span>
-<span class="fc" id="L252">    }</span>
+<span class="fc" id="L249">        this(latitude, longitude, height);</span>
+<span class="fc" id="L250">        setSpeedCoordinates(speedN, speedE, speedD);</span>
+<span class="fc" id="L251">    }</span>
 
     /**
      * Constructor.
@@ -263,9 +262,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      */
     public NEDFrame(final double latitude, final double longitude, final Distance height,
                     final Speed speedN, final Speed speedE, final Speed speedD) {
-<span class="fc" id="L266">        this(latitude, longitude, height);</span>
-<span class="fc" id="L267">        setSpeedCoordinates(speedN, speedE, speedD);</span>
-<span class="fc" id="L268">    }</span>
+<span class="fc" id="L265">        this(latitude, longitude, height);</span>
+<span class="fc" id="L266">        setSpeedCoordinates(speedN, speedE, speedD);</span>
+<span class="fc" id="L267">    }</span>
 
     /**
      * Constructor.
@@ -279,9 +278,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      */
     public NEDFrame(final Angle latitude, final Angle longitude, final double height,
                     final Speed speedN, final Speed speedE, final Speed speedD) {
-<span class="fc" id="L282">        this(latitude, longitude, height);</span>
-<span class="fc" id="L283">        setSpeedCoordinates(speedN, speedE, speedD);</span>
-<span class="fc" id="L284">    }</span>
+<span class="fc" id="L281">        this(latitude, longitude, height);</span>
+<span class="fc" id="L282">        setSpeedCoordinates(speedN, speedE, speedD);</span>
+<span class="fc" id="L283">    }</span>
 
     /**
      * Constructor.
@@ -295,9 +294,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      */
     public NEDFrame(final Angle latitude, final Angle longitude, final Distance height,
                     final Speed speedN, final Speed speedE, final Speed speedD) {
-<span class="fc" id="L298">        this(latitude, longitude, height);</span>
-<span class="fc" id="L299">        setSpeedCoordinates(speedN, speedE, speedD);</span>
-<span class="fc" id="L300">    }</span>
+<span class="fc" id="L297">        this(latitude, longitude, height);</span>
+<span class="fc" id="L298">        setSpeedCoordinates(speedN, speedE, speedD);</span>
+<span class="fc" id="L299">    }</span>
 
     /**
      * Constructor.
@@ -306,9 +305,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param velocity velocity of body frame resolved along North, East, Down axes.
      */
     public NEDFrame(final NEDPosition position, final NEDVelocity velocity) {
-<span class="fc" id="L309">        this(position);</span>
-<span class="fc" id="L310">        setVelocity(velocity);</span>
-<span class="fc" id="L311">    }</span>
+<span class="fc" id="L308">        this(position);</span>
+<span class="fc" id="L309">        setVelocity(velocity);</span>
+<span class="fc" id="L310">    }</span>
 
     /**
      * Constructor.
@@ -321,9 +320,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      */
     public NEDFrame(final double latitude, final double longitude, final double height,
                     final CoordinateTransformation c) throws InvalidSourceAndDestinationFrameTypeException {
-<span class="fc" id="L324">        this(latitude, longitude, height);</span>
-<span class="fc" id="L325">        setCoordinateTransformation(c);</span>
-<span class="fc" id="L326">    }</span>
+<span class="fc" id="L323">        this(latitude, longitude, height);</span>
+<span class="fc" id="L324">        setCoordinateTransformation(c);</span>
+<span class="fc" id="L325">    }</span>
 
     /**
      * Constructor.
@@ -336,9 +335,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      */
     public NEDFrame(final Angle latitude, final Angle longitude, final double height,
                     final CoordinateTransformation c) throws InvalidSourceAndDestinationFrameTypeException {
-<span class="fc" id="L339">        this(latitude, longitude, height);</span>
-<span class="fc" id="L340">        setCoordinateTransformation(c);</span>
-<span class="fc" id="L341">    }</span>
+<span class="fc" id="L338">        this(latitude, longitude, height);</span>
+<span class="fc" id="L339">        setCoordinateTransformation(c);</span>
+<span class="fc" id="L340">    }</span>
 
     /**
      * Constructor.
@@ -351,9 +350,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      */
     public NEDFrame(final Angle latitude, final Angle longitude, final Distance height,
                     final CoordinateTransformation c) throws InvalidSourceAndDestinationFrameTypeException {
-<span class="fc" id="L354">        this(latitude, longitude, height);</span>
-<span class="fc" id="L355">        setCoordinateTransformation(c);</span>
-<span class="fc" id="L356">    }</span>
+<span class="fc" id="L353">        this(latitude, longitude, height);</span>
+<span class="fc" id="L354">        setCoordinateTransformation(c);</span>
+<span class="fc" id="L355">    }</span>
 
     /**
      * Constructor.
@@ -364,9 +363,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      */
     public NEDFrame(final NEDPosition position, final CoordinateTransformation c)
             throws InvalidSourceAndDestinationFrameTypeException {
-<span class="fc" id="L367">        this(position);</span>
-<span class="fc" id="L368">        setCoordinateTransformation(c);</span>
-<span class="fc" id="L369">    }</span>
+<span class="fc" id="L366">        this(position);</span>
+<span class="fc" id="L367">        setCoordinateTransformation(c);</span>
+<span class="fc" id="L368">    }</span>
 
     /**
      * Constructor.
@@ -386,9 +385,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
     public NEDFrame(final double latitude, final double longitude, final double height,
                     final double vn, final double ve, final double vd,
                     final CoordinateTransformation c) throws InvalidSourceAndDestinationFrameTypeException {
-<span class="fc" id="L389">        this(latitude, longitude, height, vn, ve, vd);</span>
-<span class="fc" id="L390">        setCoordinateTransformation(c);</span>
-<span class="fc" id="L391">    }</span>
+<span class="fc" id="L388">        this(latitude, longitude, height, vn, ve, vd);</span>
+<span class="fc" id="L389">        setCoordinateTransformation(c);</span>
+<span class="fc" id="L390">    }</span>
 
     /**
      * Constructor.
@@ -408,9 +407,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
     public NEDFrame(final double latitude, final double longitude, final Distance height,
                     final double vn, final double ve, final double vd,
                     final CoordinateTransformation c) throws InvalidSourceAndDestinationFrameTypeException {
-<span class="fc" id="L411">        this(latitude, longitude, height, vn, ve, vd);</span>
-<span class="fc" id="L412">        setCoordinateTransformation(c);</span>
-<span class="fc" id="L413">    }</span>
+<span class="fc" id="L410">        this(latitude, longitude, height, vn, ve, vd);</span>
+<span class="fc" id="L411">        setCoordinateTransformation(c);</span>
+<span class="fc" id="L412">    }</span>
 
     /**
      * Constructor.
@@ -430,9 +429,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
     public NEDFrame(final Angle latitude, final Angle longitude, final double height,
                     final double vn, final double ve, final double vd,
                     final CoordinateTransformation c) throws InvalidSourceAndDestinationFrameTypeException {
-<span class="fc" id="L433">        this(latitude, longitude, height, vn, ve, vd);</span>
-<span class="fc" id="L434">        setCoordinateTransformation(c);</span>
-<span class="fc" id="L435">    }</span>
+<span class="fc" id="L432">        this(latitude, longitude, height, vn, ve, vd);</span>
+<span class="fc" id="L433">        setCoordinateTransformation(c);</span>
+<span class="fc" id="L434">    }</span>
 
     /**
      * Constructor.
@@ -452,9 +451,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
     public NEDFrame(final Angle latitude, final Angle longitude, final Distance height,
                     final double vn, final double ve, final double vd,
                     final CoordinateTransformation c) throws InvalidSourceAndDestinationFrameTypeException {
-<span class="fc" id="L455">        this(latitude, longitude, height, vn, ve, vd);</span>
-<span class="fc" id="L456">        setCoordinateTransformation(c);</span>
-<span class="fc" id="L457">    }</span>
+<span class="fc" id="L454">        this(latitude, longitude, height, vn, ve, vd);</span>
+<span class="fc" id="L455">        setCoordinateTransformation(c);</span>
+<span class="fc" id="L456">    }</span>
 
     /**
      * Constructor.
@@ -471,9 +470,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
     public NEDFrame(final double latitude, final double longitude, final double height,
                     final Speed speedN, final Speed speedE, final Speed speedD,
                     final CoordinateTransformation c) throws InvalidSourceAndDestinationFrameTypeException {
-<span class="fc" id="L474">        this(latitude, longitude, height, speedN, speedE, speedD);</span>
-<span class="fc" id="L475">        setCoordinateTransformation(c);</span>
-<span class="fc" id="L476">    }</span>
+<span class="fc" id="L473">        this(latitude, longitude, height, speedN, speedE, speedD);</span>
+<span class="fc" id="L474">        setCoordinateTransformation(c);</span>
+<span class="fc" id="L475">    }</span>
 
     /**
      * Constructor.
@@ -490,9 +489,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
     public NEDFrame(final double latitude, final double longitude, final Distance height,
                     final Speed speedN, final Speed speedE, final Speed speedD,
                     final CoordinateTransformation c) throws InvalidSourceAndDestinationFrameTypeException {
-<span class="fc" id="L493">        this(latitude, longitude, height, speedN, speedE, speedD);</span>
-<span class="fc" id="L494">        setCoordinateTransformation(c);</span>
-<span class="fc" id="L495">    }</span>
+<span class="fc" id="L492">        this(latitude, longitude, height, speedN, speedE, speedD);</span>
+<span class="fc" id="L493">        setCoordinateTransformation(c);</span>
+<span class="fc" id="L494">    }</span>
 
     /**
      * Constructor.
@@ -509,9 +508,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
     public NEDFrame(final Angle latitude, final Angle longitude, final double height,
                     final Speed speedN, final Speed speedE, final Speed speedD,
                     final CoordinateTransformation c) throws InvalidSourceAndDestinationFrameTypeException {
-<span class="fc" id="L512">        this(latitude, longitude, height, speedN, speedE, speedD);</span>
-<span class="fc" id="L513">        setCoordinateTransformation(c);</span>
-<span class="fc" id="L514">    }</span>
+<span class="fc" id="L511">        this(latitude, longitude, height, speedN, speedE, speedD);</span>
+<span class="fc" id="L512">        setCoordinateTransformation(c);</span>
+<span class="fc" id="L513">    }</span>
 
     /**
      * Constructor.
@@ -528,9 +527,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
     public NEDFrame(final Angle latitude, final Angle longitude, final Distance height,
                     final Speed speedN, final Speed speedE, final Speed speedD,
                     final CoordinateTransformation c) throws InvalidSourceAndDestinationFrameTypeException {
-<span class="fc" id="L531">        this(latitude, longitude, height, speedN, speedE, speedD);</span>
-<span class="fc" id="L532">        setCoordinateTransformation(c);</span>
-<span class="fc" id="L533">    }</span>
+<span class="fc" id="L530">        this(latitude, longitude, height, speedN, speedE, speedD);</span>
+<span class="fc" id="L531">        setCoordinateTransformation(c);</span>
+<span class="fc" id="L532">    }</span>
 
     /**
      * Constructor.
@@ -542,9 +541,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      */
     public NEDFrame(final NEDPosition position, final NEDVelocity velocity,
                     final CoordinateTransformation c) throws InvalidSourceAndDestinationFrameTypeException {
-<span class="fc" id="L545">        this(position, velocity);</span>
-<span class="fc" id="L546">        setCoordinateTransformation(c);</span>
-<span class="fc" id="L547">    }</span>
+<span class="fc" id="L544">        this(position, velocity);</span>
+<span class="fc" id="L545">        setCoordinateTransformation(c);</span>
+<span class="fc" id="L546">    }</span>
 
     /**
      * Constructor.
@@ -552,9 +551,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param input NED frame to copy data from.
      */
     public NEDFrame(final NEDFrame input) {
-<span class="fc" id="L555">        this();</span>
-<span class="fc" id="L556">        copyFrom(input);</span>
-<span class="fc" id="L557">    }</span>
+<span class="fc" id="L554">        this();</span>
+<span class="fc" id="L555">        copyFrom(input);</span>
+<span class="fc" id="L556">    }</span>
 
     /**
      * Gets latitude expressed in radians.
@@ -562,7 +561,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @return latitude expressed in radians.
      */
     public double getLatitude() {
-<span class="fc" id="L565">        return mLatitude;</span>
+<span class="fc" id="L564">        return mLatitude;</span>
     }
 
     /**
@@ -571,8 +570,8 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param latitude latitude expressed in radians to be set.
      */
     public void setLatitude(final double latitude) {
-<span class="fc" id="L574">        mLatitude = latitude;</span>
-<span class="fc" id="L575">    }</span>
+<span class="fc" id="L573">        mLatitude = latitude;</span>
+<span class="fc" id="L574">    }</span>
 
     /**
      * Gets longitude expressed in radians.
@@ -580,7 +579,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @return longitude expressed in radians.
      */
     public double getLongitude() {
-<span class="fc" id="L583">        return mLongitude;</span>
+<span class="fc" id="L582">        return mLongitude;</span>
     }
 
     /**
@@ -589,8 +588,8 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param longitude longitude expressed in radians to be set.
      */
     public void setLongitude(final double longitude) {
-<span class="fc" id="L592">        mLongitude = longitude;</span>
-<span class="fc" id="L593">    }</span>
+<span class="fc" id="L591">        mLongitude = longitude;</span>
+<span class="fc" id="L592">    }</span>
 
     /**
      * Gets height expressed in meters.
@@ -598,7 +597,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @return height expressed in meters.
      */
     public double getHeight() {
-<span class="fc" id="L601">        return mHeight;</span>
+<span class="fc" id="L600">        return mHeight;</span>
     }
 
     /**
@@ -606,9 +605,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      *
      * @param height height expressed in meters to be set.
      */
-    public void setHeight(double height) {
-<span class="fc" id="L610">        mHeight = height;</span>
-<span class="fc" id="L611">    }</span>
+    public void setHeight(final double height) {
+<span class="fc" id="L609">        mHeight = height;</span>
+<span class="fc" id="L610">    }</span>
 
     /**
      * Sets body position.
@@ -618,10 +617,10 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param height    height expressed in meters to be set.
      */
     public void setPosition(final double latitude, final double longitude, final double height) {
-<span class="fc" id="L621">        mLatitude = latitude;</span>
-<span class="fc" id="L622">        mLongitude = longitude;</span>
-<span class="fc" id="L623">        mHeight = height;</span>
-<span class="fc" id="L624">    }</span>
+<span class="fc" id="L620">        mLatitude = latitude;</span>
+<span class="fc" id="L621">        mLongitude = longitude;</span>
+<span class="fc" id="L622">        mHeight = height;</span>
+<span class="fc" id="L623">    }</span>
 
     /**
      * Gets latitude.
@@ -629,9 +628,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param result instance where latitude will be stored.
      */
     public void getLatitudeAngle(final Angle result) {
-<span class="fc" id="L632">        result.setValue(mLatitude);</span>
-<span class="fc" id="L633">        result.setUnit(AngleUnit.RADIANS);</span>
-<span class="fc" id="L634">    }</span>
+<span class="fc" id="L631">        result.setValue(mLatitude);</span>
+<span class="fc" id="L632">        result.setUnit(AngleUnit.RADIANS);</span>
+<span class="fc" id="L633">    }</span>
 
     /**
      * Gets latitude.
@@ -639,7 +638,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @return latitude.
      */
     public Angle getLatitudeAngle() {
-<span class="fc" id="L642">        return new Angle(mLatitude, AngleUnit.RADIANS);</span>
+<span class="fc" id="L641">        return new Angle(mLatitude, AngleUnit.RADIANS);</span>
     }
 
     /**
@@ -648,9 +647,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param latitudeAngle latitude to be set.
      */
     public void setLatitudeAngle(final Angle latitudeAngle) {
-<span class="fc" id="L651">        mLatitude = AngleConverter.convert(latitudeAngle.getValue().doubleValue(),</span>
-<span class="fc" id="L652">                latitudeAngle.getUnit(), AngleUnit.RADIANS);</span>
-<span class="fc" id="L653">    }</span>
+<span class="fc" id="L650">        mLatitude = AngleConverter.convert(latitudeAngle.getValue().doubleValue(),</span>
+<span class="fc" id="L651">                latitudeAngle.getUnit(), AngleUnit.RADIANS);</span>
+<span class="fc" id="L652">    }</span>
 
     /**
      * Gets longitude.
@@ -658,9 +657,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param result instance where longitude will be stored.
      */
     public void getLongitudeAngle(final Angle result) {
-<span class="fc" id="L661">        result.setValue(mLongitude);</span>
-<span class="fc" id="L662">        result.setUnit(AngleUnit.RADIANS);</span>
-<span class="fc" id="L663">    }</span>
+<span class="fc" id="L660">        result.setValue(mLongitude);</span>
+<span class="fc" id="L661">        result.setUnit(AngleUnit.RADIANS);</span>
+<span class="fc" id="L662">    }</span>
 
     /**
      * Gets longitude.
@@ -668,7 +667,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @return longitude.
      */
     public Angle getLongitudeAngle() {
-<span class="fc" id="L671">        return new Angle(mLongitude, AngleUnit.RADIANS);</span>
+<span class="fc" id="L670">        return new Angle(mLongitude, AngleUnit.RADIANS);</span>
     }
 
     /**
@@ -677,9 +676,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param longitudeAngle longitude to be set.
      */
     public void setLongitudeAngle(final Angle longitudeAngle) {
-<span class="fc" id="L680">        mLongitude = AngleConverter.convert(longitudeAngle.getValue().doubleValue(),</span>
-<span class="fc" id="L681">                longitudeAngle.getUnit(), AngleUnit.RADIANS);</span>
-<span class="fc" id="L682">    }</span>
+<span class="fc" id="L679">        mLongitude = AngleConverter.convert(longitudeAngle.getValue().doubleValue(),</span>
+<span class="fc" id="L680">                longitudeAngle.getUnit(), AngleUnit.RADIANS);</span>
+<span class="fc" id="L681">    }</span>
 
     /**
      * Gets height.
@@ -687,9 +686,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param result instance where height will be stored.
      */
     public void getHeightDistance(final Distance result) {
-<span class="fc" id="L690">        result.setValue(mHeight);</span>
-<span class="fc" id="L691">        result.setUnit(DistanceUnit.METER);</span>
-<span class="fc" id="L692">    }</span>
+<span class="fc" id="L689">        result.setValue(mHeight);</span>
+<span class="fc" id="L690">        result.setUnit(DistanceUnit.METER);</span>
+<span class="fc" id="L691">    }</span>
 
     /**
      * Gets height.
@@ -697,7 +696,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @return height.
      */
     public Distance getHeightDistance() {
-<span class="fc" id="L700">        return new Distance(mHeight, DistanceUnit.METER);</span>
+<span class="fc" id="L699">        return new Distance(mHeight, DistanceUnit.METER);</span>
     }
 
     /**
@@ -706,9 +705,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param heightDistance height to be set.
      */
     public void setHeightDistance(final Distance heightDistance) {
-<span class="fc" id="L709">        mHeight = DistanceConverter.convert(heightDistance.getValue().doubleValue(),</span>
-<span class="fc" id="L710">                heightDistance.getUnit(), DistanceUnit.METER);</span>
-<span class="fc" id="L711">    }</span>
+<span class="fc" id="L708">        mHeight = DistanceConverter.convert(heightDistance.getValue().doubleValue(),</span>
+<span class="fc" id="L709">                heightDistance.getUnit(), DistanceUnit.METER);</span>
+<span class="fc" id="L710">    }</span>
 
     /**
      * Sets body position.
@@ -718,10 +717,10 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param height    height to be set.
      */
     public void setPosition(final double latitude, final double longitude, final Distance height) {
-<span class="fc" id="L721">        mLatitude = latitude;</span>
-<span class="fc" id="L722">        mLongitude = longitude;</span>
-<span class="fc" id="L723">        setHeightDistance(height);</span>
-<span class="fc" id="L724">    }</span>
+<span class="fc" id="L720">        mLatitude = latitude;</span>
+<span class="fc" id="L721">        mLongitude = longitude;</span>
+<span class="fc" id="L722">        setHeightDistance(height);</span>
+<span class="fc" id="L723">    }</span>
 
     /**
      * Sets body position.
@@ -731,10 +730,10 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param height    height expressed in meters to be set.
      */
     public void setPosition(final Angle latitude, final Angle longitude, final double height) {
-<span class="fc" id="L734">        setLatitudeAngle(latitude);</span>
-<span class="fc" id="L735">        setLongitudeAngle(longitude);</span>
-<span class="fc" id="L736">        mHeight = height;</span>
-<span class="fc" id="L737">    }</span>
+<span class="fc" id="L733">        setLatitudeAngle(latitude);</span>
+<span class="fc" id="L734">        setLongitudeAngle(longitude);</span>
+<span class="fc" id="L735">        mHeight = height;</span>
+<span class="fc" id="L736">    }</span>
 
     /**
      * Sets body position.
@@ -744,10 +743,10 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param height    height to be set.
      */
     public void setPosition(final Angle latitude, final Angle longitude, final Distance height) {
-<span class="fc" id="L747">        setLatitudeAngle(latitude);</span>
-<span class="fc" id="L748">        setLongitudeAngle(longitude);</span>
-<span class="fc" id="L749">        setHeightDistance(height);</span>
-<span class="fc" id="L750">    }</span>
+<span class="fc" id="L746">        setLatitudeAngle(latitude);</span>
+<span class="fc" id="L747">        setLongitudeAngle(longitude);</span>
+<span class="fc" id="L748">        setHeightDistance(height);</span>
+<span class="fc" id="L749">    }</span>
 
     /**
      * Gets curvilinear position, expressed in terms of latitude, longitude and height.
@@ -755,8 +754,8 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param result instance where curvilinear coordinates will be stored.
      */
     public void getPosition(final NEDPosition result) {
-<span class="fc" id="L758">        result.setCoordinates(mLatitude, mLongitude, mHeight);</span>
-<span class="fc" id="L759">    }</span>
+<span class="fc" id="L757">        result.setCoordinates(mLatitude, mLongitude, mHeight);</span>
+<span class="fc" id="L758">    }</span>
 
     /**
      * Gets curvilinear position, expressed in terms of latitude, longitude and height.
@@ -764,7 +763,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @return curvilinear coordinates.
      */
     public NEDPosition getPosition() {
-<span class="fc" id="L767">        return new NEDPosition(mLatitude, mLongitude, mHeight);</span>
+<span class="fc" id="L766">        return new NEDPosition(mLatitude, mLongitude, mHeight);</span>
     }
 
     /**
@@ -773,10 +772,10 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param position curvilinear position to be set.
      */
     public void setPosition(final NEDPosition position) {
-<span class="fc" id="L776">        mLatitude = position.getLatitude();</span>
-<span class="fc" id="L777">        mLongitude = position.getLongitude();</span>
-<span class="fc" id="L778">        mHeight = position.getHeight();</span>
-<span class="fc" id="L779">    }</span>
+<span class="fc" id="L775">        mLatitude = position.getLatitude();</span>
+<span class="fc" id="L776">        mLongitude = position.getLongitude();</span>
+<span class="fc" id="L777">        mHeight = position.getHeight();</span>
+<span class="fc" id="L778">    }</span>
 
     /**
      * Gets coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame and
@@ -785,7 +784,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @return North velocity coordinate value.
      */
     public double getVn() {
-<span class="fc" id="L788">        return mVn;</span>
+<span class="fc" id="L787">        return mVn;</span>
     }
 
     /**
@@ -795,8 +794,8 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param vn North velocity coordinate value.
      */
     public void setVn(final double vn) {
-<span class="fc" id="L798">        mVn = vn;</span>
-<span class="fc" id="L799">    }</span>
+<span class="fc" id="L797">        mVn = vn;</span>
+<span class="fc" id="L798">    }</span>
 
     /**
      * Gets coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame and
@@ -805,7 +804,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @return East velocity coordinate value.
      */
     public double getVe() {
-<span class="fc" id="L808">        return mVe;</span>
+<span class="fc" id="L807">        return mVe;</span>
     }
 
     /**
@@ -815,8 +814,8 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param ve East velocity coordinate value.
      */
     public void setVe(final double ve) {
-<span class="fc" id="L818">        mVe = ve;</span>
-<span class="fc" id="L819">    }</span>
+<span class="fc" id="L817">        mVe = ve;</span>
+<span class="fc" id="L818">    }</span>
 
     /**
      * Gets coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame and
@@ -825,7 +824,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @return Down velocity coordinate value.
      */
     public double getVd() {
-<span class="fc" id="L828">        return mVd;</span>
+<span class="fc" id="L827">        return mVd;</span>
     }
 
     /**
@@ -835,8 +834,8 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param vd Down velocity coordinate value.
      */
     public void setVd(final double vd) {
-<span class="fc" id="L838">        mVd = vd;</span>
-<span class="fc" id="L839">    }</span>
+<span class="fc" id="L837">        mVd = vd;</span>
+<span class="fc" id="L838">    }</span>
 
     /**
      * Sets velocity coordinates of body frame expressed in meters per second (m/s) resolved along North, East, Down
@@ -847,10 +846,10 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param vd Down velocity coordinate value.
      */
     public void setVelocityCoordinates(final double vn, final double ve, final double vd) {
-<span class="fc" id="L850">        mVn = vn;</span>
-<span class="fc" id="L851">        mVe = ve;</span>
-<span class="fc" id="L852">        mVd = vd;</span>
-<span class="fc" id="L853">    }</span>
+<span class="fc" id="L849">        mVn = vn;</span>
+<span class="fc" id="L850">        mVe = ve;</span>
+<span class="fc" id="L851">        mVd = vd;</span>
+<span class="fc" id="L852">    }</span>
 
     /**
      * Gets norm of velocity expressed in meters per second (m/s), which represents
@@ -859,7 +858,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @return norm of velocity expressed in meters per second (m/s).
      */
     public double getVelocityNorm() {
-<span class="fc" id="L862">        return Math.sqrt(mVn * mVn + mVe * mVe + mVd * mVd);</span>
+<span class="fc" id="L861">        return Math.sqrt(mVn * mVn + mVe * mVe + mVd * mVd);</span>
     }
 
     /**
@@ -868,9 +867,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param result velocity norm.
      */
     public void getVelocityNormAsSpeed(final Speed result) {
-<span class="fc" id="L871">        result.setValue(getVelocityNorm());</span>
-<span class="fc" id="L872">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
-<span class="fc" id="L873">    }</span>
+<span class="fc" id="L870">        result.setValue(getVelocityNorm());</span>
+<span class="fc" id="L871">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L872">    }</span>
 
     /**
      * Gets norm of velocity, which represents the speed of the body.
@@ -878,7 +877,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @return velocity norm.
      */
     public Speed getVelocityNormAsSpeed() {
-<span class="fc" id="L881">        return new Speed(getVelocityNorm(), SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L880">        return new Speed(getVelocityNorm(), SpeedUnit.METERS_PER_SECOND);</span>
     }
 
     /**
@@ -888,9 +887,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param result instance where North velocity coordinate will be stored.
      */
     public void getSpeedN(final Speed result) {
-<span class="fc" id="L891">        result.setValue(mVn);</span>
-<span class="fc" id="L892">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
-<span class="fc" id="L893">    }</span>
+<span class="fc" id="L890">        result.setValue(mVn);</span>
+<span class="fc" id="L891">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L892">    }</span>
 
     /**
      * Gets coordinate of velocity of body frame with respect ECEF frame and
@@ -899,7 +898,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @return North velocity coordinate.
      */
     public Speed getSpeedN() {
-<span class="fc" id="L902">        return new Speed(mVn, SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L901">        return new Speed(mVn, SpeedUnit.METERS_PER_SECOND);</span>
     }
 
     /**
@@ -909,9 +908,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param speedN North velocity coordinate to be set.
      */
     public void setSpeedN(final Speed speedN) {
-<span class="fc" id="L912">        mVn = SpeedConverter.convert(speedN.getValue().doubleValue(),</span>
-<span class="fc" id="L913">                speedN.getUnit(), SpeedUnit.METERS_PER_SECOND);</span>
-<span class="fc" id="L914">    }</span>
+<span class="fc" id="L911">        mVn = SpeedConverter.convert(speedN.getValue().doubleValue(),</span>
+<span class="fc" id="L912">                speedN.getUnit(), SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L913">    }</span>
 
     /**
      * Gets coordinate of velocity of body frame with respect ECEF frame and
@@ -920,9 +919,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param result instance where East velocity coordinate will be stored.
      */
     public void getSpeedE(final Speed result) {
-<span class="fc" id="L923">        result.setValue(mVe);</span>
-<span class="fc" id="L924">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
-<span class="fc" id="L925">    }</span>
+<span class="fc" id="L922">        result.setValue(mVe);</span>
+<span class="fc" id="L923">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L924">    }</span>
 
     /**
      * Gets coordinate of velocity of body frame with respect ECEF frame and
@@ -931,7 +930,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @return East velocity coordinate.
      */
     public Speed getSpeedE() {
-<span class="fc" id="L934">        return new Speed(mVe, SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L933">        return new Speed(mVe, SpeedUnit.METERS_PER_SECOND);</span>
     }
 
     /**
@@ -941,9 +940,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param speedE East velocity coordinate to be set.
      */
     public void setSpeedE(final Speed speedE) {
-<span class="fc" id="L944">        mVe = SpeedConverter.convert(speedE.getValue().doubleValue(),</span>
-<span class="fc" id="L945">                speedE.getUnit(), SpeedUnit.METERS_PER_SECOND);</span>
-<span class="fc" id="L946">    }</span>
+<span class="fc" id="L943">        mVe = SpeedConverter.convert(speedE.getValue().doubleValue(),</span>
+<span class="fc" id="L944">                speedE.getUnit(), SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L945">    }</span>
 
     /**
      * Gets coordinate of velocity of body frame with respect ECEF frame and
@@ -952,9 +951,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param result instance where Down velocity coordinate will be stored.
      */
     public void getSpeedD(final Speed result) {
-<span class="fc" id="L955">        result.setValue(mVd);</span>
-<span class="fc" id="L956">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
-<span class="fc" id="L957">    }</span>
+<span class="fc" id="L954">        result.setValue(mVd);</span>
+<span class="fc" id="L955">        result.setUnit(SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L956">    }</span>
 
     /**
      * Gets coordinate of velocity of body frame with respect ECEF frame and
@@ -963,7 +962,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @return Down velocity coordinate.
      */
     public Speed getSpeedD() {
-<span class="fc" id="L966">        return new Speed(mVd, SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L965">        return new Speed(mVd, SpeedUnit.METERS_PER_SECOND);</span>
     }
 
     /**
@@ -973,9 +972,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param speedD Down velocity coordinate to be set.
      */
     public void setSpeedD(final Speed speedD) {
-<span class="fc" id="L976">        mVd = SpeedConverter.convert(speedD.getValue().doubleValue(),</span>
-<span class="fc" id="L977">                speedD.getUnit(), SpeedUnit.METERS_PER_SECOND);</span>
-<span class="fc" id="L978">    }</span>
+<span class="fc" id="L975">        mVd = SpeedConverter.convert(speedD.getValue().doubleValue(),</span>
+<span class="fc" id="L976">                speedD.getUnit(), SpeedUnit.METERS_PER_SECOND);</span>
+<span class="fc" id="L977">    }</span>
 
     /**
      * Sets velocity coordinates of body frame resolved along North, East, Down
@@ -987,10 +986,10 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      */
     public void setSpeedCoordinates(final Speed speedN, final Speed speedE,
                                     final Speed speedD) {
-<span class="fc" id="L990">        setSpeedN(speedN);</span>
-<span class="fc" id="L991">        setSpeedE(speedE);</span>
-<span class="fc" id="L992">        setSpeedD(speedD);</span>
-<span class="fc" id="L993">    }</span>
+<span class="fc" id="L989">        setSpeedN(speedN);</span>
+<span class="fc" id="L990">        setSpeedE(speedE);</span>
+<span class="fc" id="L991">        setSpeedD(speedD);</span>
+<span class="fc" id="L992">    }</span>
 
     /**
      * Gets velocity coordinates of body frame resolved along North, East, Down axes.
@@ -998,8 +997,8 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param result instance where velocity values will be stored.
      */
     public void getVelocity(final NEDVelocity result) {
-<span class="fc" id="L1001">        result.setCoordinates(mVn, mVe, mVd);</span>
-<span class="fc" id="L1002">    }</span>
+<span class="fc" id="L1000">        result.setCoordinates(mVn, mVe, mVd);</span>
+<span class="fc" id="L1001">    }</span>
 
     /**
      * Gets velocity coordinates of body frame resolved along North, East, Down axes.
@@ -1007,7 +1006,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @return velocity coordinates.
      */
     public NEDVelocity getVelocity() {
-<span class="fc" id="L1010">        return new NEDVelocity(mVn, mVe, mVd);</span>
+<span class="fc" id="L1009">        return new NEDVelocity(mVn, mVe, mVd);</span>
     }
 
     /**
@@ -1016,10 +1015,10 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param velocity velocity to be set.
      */
     public void setVelocity(final NEDVelocity velocity) {
-<span class="fc" id="L1019">        mVn = velocity.getVn();</span>
-<span class="fc" id="L1020">        mVe = velocity.getVe();</span>
-<span class="fc" id="L1021">        mVd = velocity.getVd();</span>
-<span class="fc" id="L1022">    }</span>
+<span class="fc" id="L1018">        mVn = velocity.getVn();</span>
+<span class="fc" id="L1019">        mVe = velocity.getVe();</span>
+<span class="fc" id="L1020">        mVd = velocity.getVd();</span>
+<span class="fc" id="L1021">    }</span>
 
     /**
      * Gets coordinate transformation matrix.
@@ -1028,10 +1027,10 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      */
     @Override
     public CoordinateTransformation getCoordinateTransformation() {
-<span class="fc" id="L1031">        CoordinateTransformation result = new CoordinateTransformation(FrameType.BODY_FRAME,</span>
+<span class="fc" id="L1030">        final CoordinateTransformation result = new CoordinateTransformation(FrameType.BODY_FRAME,</span>
                 FrameType.LOCAL_NAVIGATION_FRAME);
-<span class="fc" id="L1033">        getCoordinateTransformation(result);</span>
-<span class="fc" id="L1034">        return result;</span>
+<span class="fc" id="L1032">        getCoordinateTransformation(result);</span>
+<span class="fc" id="L1033">        return result;</span>
     }
 
     /**
@@ -1041,8 +1040,8 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      */
     @Override
     public void getCoordinateTransformation(final CoordinateTransformation result) {
-<span class="fc" id="L1044">        mC.copyTo(result);</span>
-<span class="fc" id="L1045">    }</span>
+<span class="fc" id="L1043">        mC.copyTo(result);</span>
+<span class="fc" id="L1044">    }</span>
 
     /**
      * Gets coordinate transformation matrix.
@@ -1054,13 +1053,13 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
     public Matrix getCoordinateTransformationMatrix() {
         Matrix result;
         try {
-<span class="fc" id="L1057">            result = new Matrix(CoordinateTransformation.ROWS, CoordinateTransformation.COLS);</span>
-<span class="fc" id="L1058">            getCoordinateTransformationMatrix(result);</span>
-<span class="nc" id="L1059">        } catch (final WrongSizeException ignore) {</span>
+<span class="fc" id="L1056">            result = new Matrix(CoordinateTransformation.ROWS, CoordinateTransformation.COLS);</span>
+<span class="fc" id="L1057">            getCoordinateTransformationMatrix(result);</span>
+<span class="nc" id="L1058">        } catch (final WrongSizeException ignore) {</span>
             // never happens
-<span class="nc" id="L1061">            result = null;</span>
-<span class="fc" id="L1062">        }</span>
-<span class="fc" id="L1063">        return result;</span>
+<span class="nc" id="L1060">            result = null;</span>
+<span class="fc" id="L1061">        }</span>
+<span class="fc" id="L1062">        return result;</span>
     }
 
     /**
@@ -1071,8 +1070,8 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      */
     @Override
     public void getCoordinateTransformationMatrix(final Matrix result) {
-<span class="fc" id="L1074">        mC.mMatrix.copyTo(result);</span>
-<span class="fc" id="L1075">    }</span>
+<span class="fc" id="L1073">        mC.mMatrix.copyTo(result);</span>
+<span class="fc" id="L1074">    }</span>
 
     /**
      * Sets coordinate transformation matrix.
@@ -1084,12 +1083,12 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
     @Override
     public void setCoordinateTransformation(final CoordinateTransformation c)
             throws InvalidSourceAndDestinationFrameTypeException {
-<span class="fc bfc" id="L1087" title="All 2 branches covered.">        if (!isValidCoordinateTransformation(c)) {</span>
-<span class="fc" id="L1088">            throw new InvalidSourceAndDestinationFrameTypeException();</span>
+<span class="fc bfc" id="L1086" title="All 2 branches covered.">        if (!isValidCoordinateTransformation(c)) {</span>
+<span class="fc" id="L1087">            throw new InvalidSourceAndDestinationFrameTypeException();</span>
         }
 
-<span class="fc" id="L1091">        mC = c;</span>
-<span class="fc" id="L1092">    }</span>
+<span class="fc" id="L1090">        mC = c;</span>
+<span class="fc" id="L1091">    }</span>
 
     /**
      * Checks whether provided coordinate transformation matrix is valid or not.
@@ -1099,8 +1098,8 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @return true if provided value is valid, false otherwise.
      */
     public static boolean isValidCoordinateTransformation(final CoordinateTransformation c) {
-<span class="fc bfc" id="L1102" title="All 2 branches covered.">        return c.getSourceType() == FrameType.BODY_FRAME &amp;&amp;</span>
-<span class="fc bfc" id="L1103" title="All 2 branches covered.">                c.getDestinationType() == FrameType.LOCAL_NAVIGATION_FRAME;</span>
+<span class="fc bfc" id="L1101" title="All 2 branches covered.">        return c.getSourceType() == FrameType.BODY_FRAME &amp;&amp;</span>
+<span class="fc bfc" id="L1102" title="All 2 branches covered.">                c.getDestinationType() == FrameType.LOCAL_NAVIGATION_FRAME;</span>
     }
 
     /**
@@ -1109,16 +1108,16 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param output destination instance where data will be copied to.
      */
     public void copyTo(final NEDFrame output) {
-<span class="fc" id="L1112">        output.mLatitude = mLatitude;</span>
-<span class="fc" id="L1113">        output.mLongitude = mLongitude;</span>
-<span class="fc" id="L1114">        output.mHeight = mHeight;</span>
+<span class="fc" id="L1111">        output.mLatitude = mLatitude;</span>
+<span class="fc" id="L1112">        output.mLongitude = mLongitude;</span>
+<span class="fc" id="L1113">        output.mHeight = mHeight;</span>
 
-<span class="fc" id="L1116">        output.mVn = mVn;</span>
-<span class="fc" id="L1117">        output.mVe = mVe;</span>
-<span class="fc" id="L1118">        output.mVd = mVd;</span>
+<span class="fc" id="L1115">        output.mVn = mVn;</span>
+<span class="fc" id="L1116">        output.mVe = mVe;</span>
+<span class="fc" id="L1117">        output.mVd = mVd;</span>
 
-<span class="fc" id="L1120">        mC.copyTo(output.mC);</span>
-<span class="fc" id="L1121">    }</span>
+<span class="fc" id="L1119">        mC.copyTo(output.mC);</span>
+<span class="fc" id="L1120">    }</span>
 
     /**
      * Copies data of provided instance into this instance.
@@ -1126,16 +1125,16 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param input instance to copy data from.
      */
     public void copyFrom(final NEDFrame input) {
-<span class="fc" id="L1129">        mLatitude = input.mLatitude;</span>
-<span class="fc" id="L1130">        mLongitude = input.mLongitude;</span>
-<span class="fc" id="L1131">        mHeight = input.mHeight;</span>
+<span class="fc" id="L1128">        mLatitude = input.mLatitude;</span>
+<span class="fc" id="L1129">        mLongitude = input.mLongitude;</span>
+<span class="fc" id="L1130">        mHeight = input.mHeight;</span>
 
-<span class="fc" id="L1133">        mVn = input.mVn;</span>
-<span class="fc" id="L1134">        mVe = input.mVe;</span>
-<span class="fc" id="L1135">        mVd = input.mVd;</span>
+<span class="fc" id="L1132">        mVn = input.mVn;</span>
+<span class="fc" id="L1133">        mVe = input.mVe;</span>
+<span class="fc" id="L1134">        mVd = input.mVd;</span>
 
-<span class="fc" id="L1137">        mC.copyFrom(input.mC);</span>
-<span class="fc" id="L1138">    }</span>
+<span class="fc" id="L1136">        mC.copyFrom(input.mC);</span>
+<span class="fc" id="L1137">    }</span>
 
     /**
      * Computes and returns hash code for this instance. Hash codes are almost unique
@@ -1145,7 +1144,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      */
     @Override
     public int hashCode() {
-<span class="fc" id="L1148">        return Objects.hash(mLatitude, mLongitude, mHeight, mVn, mVe, mVd, mC);</span>
+<span class="fc" id="L1147">        return Objects.hash(mLatitude, mLongitude, mHeight, mVn, mVe, mVd, mC);</span>
     }
 
     /**
@@ -1157,18 +1156,18 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      */
     @Override
     public boolean equals(final Object obj) {
-<span class="fc bfc" id="L1160" title="All 2 branches covered.">        if (obj == null) {</span>
-<span class="fc" id="L1161">            return false;</span>
+<span class="fc bfc" id="L1159" title="All 2 branches covered.">        if (obj == null) {</span>
+<span class="fc" id="L1160">            return false;</span>
         }
-<span class="fc bfc" id="L1163" title="All 2 branches covered.">        if (obj == this) {</span>
-<span class="fc" id="L1164">            return true;</span>
+<span class="fc bfc" id="L1162" title="All 2 branches covered.">        if (obj == this) {</span>
+<span class="fc" id="L1163">            return true;</span>
         }
-<span class="fc bfc" id="L1166" title="All 2 branches covered.">        if (!(obj instanceof NEDFrame)) {</span>
-<span class="fc" id="L1167">            return false;</span>
+<span class="fc bfc" id="L1165" title="All 2 branches covered.">        if (!(obj instanceof NEDFrame)) {</span>
+<span class="fc" id="L1166">            return false;</span>
         }
 
-<span class="fc" id="L1170">        final NEDFrame other = (NEDFrame) obj;</span>
-<span class="fc" id="L1171">        return equals(other);</span>
+<span class="fc" id="L1169">        final NEDFrame other = (NEDFrame) obj;</span>
+<span class="fc" id="L1170">        return equals(other);</span>
     }
 
     /**
@@ -1178,7 +1177,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @return true if both instances are considered to be equal, false otherwise.
      */
     public boolean equals(final NEDFrame other) {
-<span class="fc" id="L1181">        return equals(other, 0.0);</span>
+<span class="fc" id="L1180">        return equals(other, 0.0);</span>
     }
 
     /**
@@ -1190,17 +1189,17 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @return true if both instances are considered to be equal (up to provided threshold), false otherwise.
      */
     public boolean equals(final NEDFrame other, final double threshold) {
-<span class="fc bfc" id="L1193" title="All 2 branches covered.">        if (other == null) {</span>
-<span class="fc" id="L1194">            return false;</span>
+<span class="fc bfc" id="L1192" title="All 2 branches covered.">        if (other == null) {</span>
+<span class="fc" id="L1193">            return false;</span>
         }
 
-<span class="fc bfc" id="L1197" title="All 2 branches covered.">        return Math.abs(mLatitude - other.mLatitude) &lt;= threshold</span>
-<span class="pc bpc" id="L1198" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(mLongitude - other.mLongitude) &lt;= threshold</span>
-<span class="pc bpc" id="L1199" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(mHeight - other.mHeight) &lt;= threshold</span>
-<span class="pc bpc" id="L1200" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(mVn - other.mVn) &lt;= threshold</span>
-<span class="pc bpc" id="L1201" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(mVe - other.mVe) &lt;= threshold</span>
-<span class="pc bpc" id="L1202" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(mVd - other.mVd) &lt;= threshold</span>
-<span class="pc bpc" id="L1203" title="1 of 2 branches missed.">                &amp;&amp; mC.equals(other.mC, threshold);</span>
+<span class="fc bfc" id="L1196" title="All 2 branches covered.">        return Math.abs(mLatitude - other.mLatitude) &lt;= threshold</span>
+<span class="pc bpc" id="L1197" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(mLongitude - other.mLongitude) &lt;= threshold</span>
+<span class="pc bpc" id="L1198" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(mHeight - other.mHeight) &lt;= threshold</span>
+<span class="pc bpc" id="L1199" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(mVn - other.mVn) &lt;= threshold</span>
+<span class="pc bpc" id="L1200" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(mVe - other.mVe) &lt;= threshold</span>
+<span class="pc bpc" id="L1201" title="1 of 2 branches missed.">                &amp;&amp; Math.abs(mVd - other.mVd) &lt;= threshold</span>
+<span class="pc bpc" id="L1202" title="1 of 2 branches missed.">                &amp;&amp; mC.equals(other.mC, threshold);</span>
     }
 
     /**
@@ -1211,9 +1210,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      */
     @Override
     protected Object clone() throws CloneNotSupportedException {
-<span class="fc" id="L1214">        final NEDFrame result = (NEDFrame)super.clone();</span>
-<span class="fc" id="L1215">        copyTo(result);</span>
-<span class="fc" id="L1216">        return result;</span>
+<span class="fc" id="L1213">        final NEDFrame result = (NEDFrame)super.clone();</span>
+<span class="fc" id="L1214">        copyTo(result);</span>
+<span class="fc" id="L1215">        return result;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

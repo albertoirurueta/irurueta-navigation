@@ -107,9 +107,8 @@ package com.irurueta.navigation.geodesic;
  * }
  * &lt;/pre&gt;
  */
-@SuppressWarnings(&quot;WeakerAccess&quot;)
 public class Gnomonic {
-<span class="fc" id="L112">    private static final double EPS = 0.01 * Math.sqrt(GeoMath.EPSILON);</span>
+<span class="fc" id="L111">    private static final double EPS = 0.01 * Math.sqrt(GeoMath.EPSILON);</span>
     private static final int NUMIT = 10;
 
     /**
@@ -132,12 +131,11 @@ public class Gnomonic {
      *
      * @param earth the {@link Geodesic} object to use for geodesic calculations.
      */
-    @SuppressWarnings(&quot;WeakerAccess&quot;)
-<span class="fc" id="L136">    public Gnomonic(final Geodesic earth) {</span>
-<span class="fc" id="L137">        mEarth = earth;</span>
-<span class="fc" id="L138">        mA = mEarth.getMajorRadius();</span>
-<span class="fc" id="L139">        mF = mEarth.getFlattening();</span>
-<span class="fc" id="L140">    }</span>
+<span class="fc" id="L134">    public Gnomonic(final Geodesic earth) {</span>
+<span class="fc" id="L135">        mEarth = earth;</span>
+<span class="fc" id="L136">        mA = mEarth.getMajorRadius();</span>
+<span class="fc" id="L137">        mF = mEarth.getFlattening();</span>
+<span class="fc" id="L138">    }</span>
 
     /**
      * Forward projection, from geographic to gnomonic.
@@ -159,20 +157,20 @@ public class Gnomonic {
      */
     public GnomonicData forward(
             final double lat0, final double lon0, final double lat, final double lon) {
-<span class="fc" id="L162">        final GeodesicData inv = mEarth.inverse(lat0, lon0, lat, lon,</span>
+<span class="fc" id="L160">        final GeodesicData inv = mEarth.inverse(lat0, lon0, lat, lon,</span>
                 GeodesicMask.AZIMUTH | GeodesicMask.GEODESIC_SCALE |
                         GeodesicMask.REDUCED_LENGTH);
-<span class="fc" id="L165">        final GnomonicData fwd = new GnomonicData(lat0, lon0, lat, lon, Double.NaN, Double.NaN,</span>
-<span class="fc" id="L166">                inv.getAzi2(), inv.getScaleM12());</span>
+<span class="fc" id="L163">        final GnomonicData fwd = new GnomonicData(lat0, lon0, lat, lon, Double.NaN, Double.NaN,</span>
+<span class="fc" id="L164">                inv.getAzi2(), inv.getScaleM12());</span>
 
-<span class="pc bpc" id="L168" title="1 of 2 branches missed.">        if (inv.getScaleM12() &gt; 0) {</span>
-<span class="fc" id="L169">            final double rho = inv.getM12() / inv.getScaleM12();</span>
-<span class="fc" id="L170">            final Pair p = GeoMath.sincosd(inv.getAzi1());</span>
-<span class="fc" id="L171">            fwd.setX(rho * p.getFirst());</span>
-<span class="fc" id="L172">            fwd.setY(rho * p.getSecond());</span>
+<span class="pc bpc" id="L166" title="1 of 2 branches missed.">        if (inv.getScaleM12() &gt; 0) {</span>
+<span class="fc" id="L167">            final double rho = inv.getM12() / inv.getScaleM12();</span>
+<span class="fc" id="L168">            final Pair p = GeoMath.sincosd(inv.getAzi1());</span>
+<span class="fc" id="L169">            fwd.setX(rho * p.getFirst());</span>
+<span class="fc" id="L170">            fwd.setY(rho * p.getSecond());</span>
         }
 
-<span class="fc" id="L175">        return fwd;</span>
+<span class="fc" id="L173">        return fwd;</span>
     }
 
     /**
@@ -183,8 +181,8 @@ public class Gnomonic {
      * direction perpendicular to this. Even though all inputs should return a valid &lt;i&gt;lat&lt;/i&gt;
      * and &lt;i&gt;lon&lt;/i&gt;, it's possible that the procedure fails to converge for very large &lt;i&gt;x&lt;/i&gt;
      * or &lt;i&gt;y&lt;/i&gt;; in this case NaNs are returned for very large &lt;i&gt;x&lt;/i&gt; or &lt;i&gt;y&lt;/i&gt;; in this
-     * case NaNs are returned for all the output arguments. A call to rverse followed by a call
-     * to forward will return the original (&lt;i&gt;x&lt;/i&gt;, &lt;i&gt;y&lt;/i&gt;) (to roundoff).
+     * case NaNs are returned for all the output arguments. A call to reverse followed by a call
+     * to forward will return the original (&lt;i&gt;x&lt;/i&gt;, &lt;i&gt;y&lt;/i&gt;) (to round-off).
      *
      * @param lat0 latitude of center point of projection (degrees). &lt;i&gt;lat0&lt;/i&gt; should be in the
      *             range [&amp;minus;90&amp;deg;, 90&amp;deg;]
@@ -198,56 +196,56 @@ public class Gnomonic {
      */
     public GnomonicData reverse(
             final double lat0, final double lon0, final double x, final double y) {
-<span class="fc" id="L201">        final GnomonicData rev = new GnomonicData(lat0, lon0, Double.NaN, Double.NaN, x, y,</span>
+<span class="fc" id="L199">        final GnomonicData rev = new GnomonicData(lat0, lon0, Double.NaN, Double.NaN, x, y,</span>
                 Double.NaN, Double.NaN);
 
         //noinspection all
-<span class="fc" id="L205">        final double azi0 = GeoMath.atan2d(x, y);</span>
-<span class="fc" id="L206">        double rho = Math.hypot(x, y);</span>
-<span class="fc" id="L207">        double s = mA * Math.atan(rho / mA);</span>
-<span class="pc bpc" id="L208" title="1 of 2 branches missed.">        final boolean little = rho &lt;= mA;</span>
+<span class="fc" id="L203">        final double azi0 = GeoMath.atan2d(x, y);</span>
+<span class="fc" id="L204">        double rho = Math.hypot(x, y);</span>
+<span class="fc" id="L205">        double s = mA * Math.atan(rho / mA);</span>
+<span class="pc bpc" id="L206" title="1 of 2 branches missed.">        final boolean little = rho &lt;= mA;</span>
 
-<span class="pc bpc" id="L210" title="1 of 2 branches missed.">        if (!little) {</span>
-<span class="nc" id="L211">            rho = 1 / rho;</span>
+<span class="pc bpc" id="L208" title="1 of 2 branches missed.">        if (!little) {</span>
+<span class="nc" id="L209">            rho = 1 / rho;</span>
         }
 
-<span class="fc" id="L214">        final GeodesicLine line = mEarth.line(lat0, lon0, azi0, GeodesicMask.LATITUDE |</span>
+<span class="fc" id="L212">        final GeodesicLine line = mEarth.line(lat0, lon0, azi0, GeodesicMask.LATITUDE |</span>
                 GeodesicMask.LONGITUDE | GeodesicMask.AZIMUTH | GeodesicMask.DISTANCE_IN |
                 GeodesicMask.REDUCED_LENGTH | GeodesicMask.GEODESIC_SCALE);
 
-<span class="fc" id="L218">        int count = NUMIT;</span>
-<span class="fc" id="L219">        int trip = 0;</span>
-<span class="fc" id="L220">        GeodesicData pos = null;</span>
+<span class="fc" id="L216">        int count = NUMIT;</span>
+<span class="fc" id="L217">        int trip = 0;</span>
+<span class="fc" id="L218">        GeodesicData pos = null;</span>
 
-<span class="pc bpc" id="L222" title="1 of 2 branches missed.">        while (count-- &gt; 0) {</span>
-<span class="fc" id="L223">            pos = line.position(s, GeodesicMask.LONGITUDE | GeodesicMask.LATITUDE |</span>
+<span class="pc bpc" id="L220" title="1 of 2 branches missed.">        while (count-- &gt; 0) {</span>
+<span class="fc" id="L221">            pos = line.position(s, GeodesicMask.LONGITUDE | GeodesicMask.LATITUDE |</span>
                     GeodesicMask.AZIMUTH | GeodesicMask.DISTANCE_IN |
                     GeodesicMask.REDUCED_LENGTH | GeodesicMask.GEODESIC_SCALE);
 
-<span class="fc bfc" id="L227" title="All 2 branches covered.">            if (trip &gt; 0) {</span>
-<span class="fc" id="L228">                break;</span>
+<span class="fc bfc" id="L225" title="All 2 branches covered.">            if (trip &gt; 0) {</span>
+<span class="fc" id="L226">                break;</span>
             }
 
-<span class="pc bpc" id="L231" title="1 of 2 branches missed.">            final double ds = little</span>
-<span class="fc" id="L232">                    ? ((pos.getM12() / pos.getScaleM12()) - rho) * pos.getScaleM12() * pos.getScaleM12()</span>
-<span class="pc" id="L233">                    : (rho - (pos.getScaleM12() / pos.getM12())) * pos.getM12() * pos.getM12();</span>
-<span class="fc" id="L234">            s -= ds;</span>
+<span class="pc bpc" id="L229" title="1 of 2 branches missed.">            final double ds = little</span>
+<span class="fc" id="L230">                    ? ((pos.getM12() / pos.getScaleM12()) - rho) * pos.getScaleM12() * pos.getScaleM12()</span>
+<span class="pc" id="L231">                    : (rho - (pos.getScaleM12() / pos.getM12())) * pos.getM12() * pos.getM12();</span>
+<span class="fc" id="L232">            s -= ds;</span>
 
-<span class="pc bpc" id="L236" title="1 of 2 branches missed.">            if (Math.abs(ds) &lt;= EPS * mA) {</span>
-<span class="fc" id="L237">                trip++;</span>
+<span class="pc bpc" id="L234" title="1 of 2 branches missed.">            if (Math.abs(ds) &lt;= EPS * mA) {</span>
+<span class="fc" id="L235">                trip++;</span>
             }
-<span class="fc" id="L239">        }</span>
+<span class="fc" id="L237">        }</span>
 
-<span class="pc bpc" id="L241" title="1 of 2 branches missed.">        if (trip == 0) {</span>
-<span class="nc" id="L242">            return rev;</span>
+<span class="pc bpc" id="L239" title="1 of 2 branches missed.">        if (trip == 0) {</span>
+<span class="nc" id="L240">            return rev;</span>
         }
 
-<span class="fc" id="L245">        rev.setLat(pos.getLat2());</span>
-<span class="fc" id="L246">        rev.setLon(pos.getLon2());</span>
-<span class="fc" id="L247">        rev.setAzi(pos.getAzi2());</span>
-<span class="fc" id="L248">        rev.setRk(pos.getScaleM12());</span>
+<span class="fc" id="L243">        rev.setLat(pos.getLat2());</span>
+<span class="fc" id="L244">        rev.setLon(pos.getLon2());</span>
+<span class="fc" id="L245">        rev.setAzi(pos.getAzi2());</span>
+<span class="fc" id="L246">        rev.setRk(pos.getScaleM12());</span>
 
-<span class="fc" id="L250">        return rev;</span>
+<span class="fc" id="L248">        return rev;</span>
     }
 
     /**
@@ -257,7 +255,7 @@ public class Gnomonic {
      * @return &lt;i&gt;a&lt;/i&gt; the equatorial radius of the ellipsoid (meters).
      */
     public double getMajorRadius() {
-<span class="fc" id="L260">        return mA;</span>
+<span class="fc" id="L258">        return mA;</span>
     }
 
     /**
@@ -267,7 +265,7 @@ public class Gnomonic {
      * Geodesic object used in the constructor.
      */
     public double getFlattening() {
-<span class="fc" id="L270">        return mF;</span>
+<span class="fc" id="L268">        return mF;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

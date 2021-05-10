@@ -12,12 +12,12 @@ com.irurueta:irurueta-navigation,com.irurueta.navigation.geodesic,PolygonResult,
 com.irurueta:irurueta-navigation,com.irurueta.navigation.geodesic,GeodesicData,0,123,0,0,0,39,0,25,0,25
 com.irurueta:irurueta-navigation,com.irurueta.navigation.geodesic,Geodesic.Lambda12V,0,36,0,0,0,3,0,1,0,1
 com.irurueta:irurueta-navigation,com.irurueta.navigation.geodesic,Accumulator,0,92,0,2,0,28,0,8,0,7
-com.irurueta:irurueta-navigation,com.irurueta.navigation.geodesic,Geodesic,147,4069,35,217,24,559,32,133,0,39
+com.irurueta:irurueta-navigation,com.irurueta.navigation.geodesic,Geodesic,147,4067,35,217,24,559,32,133,0,39
 com.irurueta:irurueta-navigation,com.irurueta.navigation.geodesic,Pair,0,23,0,0,0,10,0,5,0,5
 com.irurueta:irurueta-navigation,com.irurueta.navigation.geodesic,Geodesic.InverseStartV,0,21,0,0,0,3,0,1,0,1
 com.irurueta:irurueta-navigation,com.irurueta.navigation.geodesic,GeodesicException,0,16,0,0,0,8,0,4,0,4
 com.irurueta:irurueta-navigation,com.irurueta.navigation,LockedException,0,16,0,0,0,8,0,4,0,4
-com.irurueta:irurueta-navigation,com.irurueta.navigation,BuildInfo,12,113,2,4,4,30,2,11,0,10
+com.irurueta:irurueta-navigation,com.irurueta.navigation,BuildInfo,6,107,1,3,2,27,1,11,0,10
 com.irurueta:irurueta-navigation,com.irurueta.navigation,Accuracy2D,0,45,0,0,0,15,0,6,0,6
 com.irurueta:irurueta-navigation,com.irurueta.navigation,Accuracy3D,0,58,0,0,0,17,0,8,0,8
 com.irurueta:irurueta-navigation,com.irurueta.navigation,NavigationException,0,16,0,0,0,8,0,4,0,4
@@ -61,7 +61,7 @@ com.irurueta:irurueta-navigation,com.irurueta.navigation.lateration,PROSACRobust
 com.irurueta:irurueta-navigation,com.irurueta.navigation.lateration,MSACRobustLateration3DSolver.new MSACRobustEstimatorListener() {...},0,71,2,2,0,16,2,11,0,11
 com.irurueta:irurueta-navigation,com.irurueta.navigation.gnss,GNSSBiasesGenerator,3,229,0,2,1,42,1,6,1,5
 com.irurueta:irurueta-navigation,com.irurueta.navigation.gnss,GNSSConfig,0,1502,16,42,0,360,16,123,0,110
-com.irurueta:irurueta-navigation,com.irurueta.navigation.gnss,GNSSMeasurementsGenerator,11,823,2,10,5,153,3,27,1,23
+com.irurueta:irurueta-navigation,com.irurueta.navigation.gnss,GNSSMeasurementsGenerator,15,819,5,7,7,151,6,24,1,23
 com.irurueta:irurueta-navigation,com.irurueta.navigation.gnss,GNSSKalmanEpochEstimator,11,756,4,18,3,157,5,14,1,7
 com.irurueta:irurueta-navigation,com.irurueta.navigation.gnss,ECEFPositionAndVelocity,0,696,5,15,0,189,5,75,0,70
 com.irurueta:irurueta-navigation,com.irurueta.navigation.gnss,GNSSKalmanFilteredEstimator,17,545,8,56,5,150,8,62,0,38
@@ -82,7 +82,7 @@ com.irurueta:irurueta-navigation,com.irurueta.navigation.frames.converters,Frame
 com.irurueta:irurueta-navigation,com.irurueta.navigation.frames.converters,NEDtoECEFPositionVelocityConverter,1,145,0,0,1,35,0,5,0,5
 com.irurueta:irurueta-navigation,com.irurueta.navigation.frames,FrameType,0,54,0,0,0,6,0,1,0,1
 com.irurueta:irurueta-navigation,com.irurueta.navigation.frames,ECEFPosition,4,403,3,17,3,104,3,46,0,39
-com.irurueta:irurueta-navigation,com.irurueta.navigation.frames,ECIorECEFFrame,3,560,6,10,2,130,6,54,0,52
+com.irurueta:irurueta-navigation,com.irurueta.navigation.frames,ECIorECEFFrame,3,560,6,10,2,131,6,54,0,52
 com.irurueta:irurueta-navigation,com.irurueta.navigation.frames,NEDFrame,3,929,6,22,2,248,6,96,0,88
 com.irurueta:irurueta-navigation,com.irurueta.navigation.frames,ECIFrame,0,266,0,12,0,84,0,33,0,27
 com.irurueta:irurueta-navigation,com.irurueta.navigation.frames,ECEFFrame,0,520,0,12,0,157,0,58,0,52
