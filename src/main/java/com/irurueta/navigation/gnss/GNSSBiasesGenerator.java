@@ -46,6 +46,13 @@ public class GNSSBiasesGenerator {
     private static final double TROPO_FACTOR = 0.998;
 
     /**
+     * Constructor.
+     * Prevents instantiation of utility class.
+     */
+    private GNSSBiasesGenerator() {
+    }
+
+    /**
      * Generates biases.
      *
      * @param satellitePositions ECEF satellite positions expressed in meters (m).

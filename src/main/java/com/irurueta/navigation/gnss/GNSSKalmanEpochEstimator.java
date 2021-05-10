@@ -51,6 +51,13 @@ public class GNSSKalmanEpochEstimator {
     private static final int MATRIX_SIZE = 8;
 
     /**
+     * Constructor.
+     * Prevents instantiation of utility class.
+     */
+    private GNSSKalmanEpochEstimator() {
+    }
+
+    /**
      * Estimates the update of Kalman filter state and covariance matrix for a single
      * epoch.
      *

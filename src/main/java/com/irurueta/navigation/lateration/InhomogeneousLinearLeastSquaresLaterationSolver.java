@@ -36,7 +36,7 @@ public abstract class InhomogeneousLinearLeastSquaresLaterationSolver<P extends 
     /**
      * Constructor.
      */
-    public InhomogeneousLinearLeastSquaresLaterationSolver() {
+    protected InhomogeneousLinearLeastSquaresLaterationSolver() {
         super();
     }
 
@@ -48,7 +48,7 @@ public abstract class InhomogeneousLinearLeastSquaresLaterationSolver<P extends 
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      *                                  length is smaller than required points.
      */
-    public InhomogeneousLinearLeastSquaresLaterationSolver(
+    protected InhomogeneousLinearLeastSquaresLaterationSolver(
             final P[] positions, final double[] distances) {
         super(positions, distances);
     }
@@ -58,7 +58,7 @@ public abstract class InhomogeneousLinearLeastSquaresLaterationSolver<P extends 
      *
      * @param listener listener to be notified of events raised by this instance.
      */
-    public InhomogeneousLinearLeastSquaresLaterationSolver(
+    protected InhomogeneousLinearLeastSquaresLaterationSolver(
             final LaterationSolverListener<P> listener) {
         super(listener);
     }
@@ -72,7 +72,7 @@ public abstract class InhomogeneousLinearLeastSquaresLaterationSolver<P extends 
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      *                                  length is smaller than required points.
      */
-    public InhomogeneousLinearLeastSquaresLaterationSolver(
+    protected InhomogeneousLinearLeastSquaresLaterationSolver(
             final P[] positions, final double[] distances,
             final LaterationSolverListener<P> listener) {
         super(positions, distances, listener);

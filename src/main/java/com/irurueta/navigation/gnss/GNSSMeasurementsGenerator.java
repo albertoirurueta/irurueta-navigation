@@ -54,6 +54,13 @@ public class GNSSMeasurementsGenerator {
     public static final double EARTH_ROTATION_RATE = Constants.EARTH_ROTATION_RATE;
 
     /**
+     * Constructor.
+     * Prevents instantiation of utility class.
+     */
+    private GNSSMeasurementsGenerator() {
+    }
+
+    /**
      * Generates satellite GNSS measurements.
      *
      * @param time                            current simulation time.

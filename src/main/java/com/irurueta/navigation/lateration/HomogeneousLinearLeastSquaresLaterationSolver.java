@@ -31,7 +31,7 @@ public abstract class HomogeneousLinearLeastSquaresLaterationSolver<P extends Po
     /**
      * Constructor.
      */
-    public HomogeneousLinearLeastSquaresLaterationSolver() {
+    protected HomogeneousLinearLeastSquaresLaterationSolver() {
         super();
     }
 
@@ -43,7 +43,7 @@ public abstract class HomogeneousLinearLeastSquaresLaterationSolver<P extends Po
      * @throws IllegalArgumentException if either positions or distances are null,
      *                                  don't have the same length or their length is smaller than required points.
      */
-    public HomogeneousLinearLeastSquaresLaterationSolver(
+    protected HomogeneousLinearLeastSquaresLaterationSolver(
             final P[] positions, final double[] distances) {
         super(positions, distances);
     }
@@ -53,7 +53,7 @@ public abstract class HomogeneousLinearLeastSquaresLaterationSolver<P extends Po
      *
      * @param listener listener to be notified of events raised by this instance.
      */
-    public HomogeneousLinearLeastSquaresLaterationSolver(
+    protected HomogeneousLinearLeastSquaresLaterationSolver(
             final LaterationSolverListener<P> listener) {
         super(listener);
     }
@@ -67,7 +67,7 @@ public abstract class HomogeneousLinearLeastSquaresLaterationSolver<P extends Po
      * @throws IllegalArgumentException if either position or distances are null,
      *                                  don't have the same length or their length is smaller than required points.
      */
-    public HomogeneousLinearLeastSquaresLaterationSolver(
+    protected HomogeneousLinearLeastSquaresLaterationSolver(
             final P[] positions, final double[] distances,
             final LaterationSolverListener<P> listener) {
         super(positions, distances, listener);

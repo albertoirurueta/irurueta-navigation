@@ -222,7 +222,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
     /**
      * Constructor.
      */
-    public RobustLaterationSolver() {
+    protected RobustLaterationSolver() {
     }
 
     /**
@@ -231,7 +231,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or its progress significantly changes.
      */
-    public RobustLaterationSolver(
+    protected RobustLaterationSolver(
             final RobustLaterationSolverListener<P> listener) {
         mListener = listener;
     }
@@ -244,7 +244,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      *                                  length is smaller than required (3 for 2D points or 4 for 3D points).
      */
-    public RobustLaterationSolver(final P[] positions, final double[] distances) {
+    protected RobustLaterationSolver(final P[] positions, final double[] distances) {
         internalSetPositionsAndDistances(positions, distances);
     }
 
@@ -258,7 +258,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
      *                                  are null, don't have the same length or their length is smaller than required (3 for
      *                                  2D points or 4 for 3D points).
      */
-    public RobustLaterationSolver(
+    protected RobustLaterationSolver(
             final P[] positions, final double[] distances,
             final double[] distanceStandardDeviations) {
         internalSetPositionsDistancesAndStandardDeviations(positions, distances, distanceStandardDeviations);
@@ -275,7 +275,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      *                                  length is smaller than required (3 for 2D points or 4 for 3D points).
      */
-    public RobustLaterationSolver(
+    protected RobustLaterationSolver(
             final P[] positions, final double[] distances,
             final RobustLaterationSolverListener<P> listener) {
         internalSetPositionsAndDistances(positions, distances);
@@ -292,7 +292,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      *                                  length is smaller than required (3 for 2D points or 4 for 3D points).
      */
-    public RobustLaterationSolver(
+    protected RobustLaterationSolver(
             final P[] positions, final double[] distances,
             final double[] distanceStandardDeviations,
             final RobustLaterationSolverListener<P> listener) {

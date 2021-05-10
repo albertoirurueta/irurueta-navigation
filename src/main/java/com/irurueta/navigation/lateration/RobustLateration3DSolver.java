@@ -31,6 +31,7 @@ import java.util.List;
  * Implementations of this class should be able to detect and discard outliers
  * in order to find the best solution.
  */
+@SuppressWarnings("DuplicatedCode")
 public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Point3D> {
 
     /**
@@ -67,7 +68,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
     /**
      * Constructor.
      */
-    public RobustLateration3DSolver() {
+    protected RobustLateration3DSolver() {
         init();
     }
 
@@ -77,7 +78,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or its progress significantly changes.
      */
-    public RobustLateration3DSolver(
+    protected RobustLateration3DSolver(
             final RobustLaterationSolverListener<Point3D> listener) {
         super(listener);
         init();
@@ -92,7 +93,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      * @throws IllegalArgumentException if either positions or distances are null,
      *                                  don't have the same length or their length is smaller than required (4 points).
      */
-    public RobustLateration3DSolver(final Point3D[] positions, final double[] distances) {
+    protected RobustLateration3DSolver(final Point3D[] positions, final double[] distances) {
         super(positions, distances);
         init();
     }
@@ -107,8 +108,8 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      * @throws IllegalArgumentException if either positions or distances are null,
      *                                  don't have the same length or their length is smaller than required (4 points).
      */
-    public RobustLateration3DSolver(final Point3D[] positions, final double[] distances,
-                                    final double[] distanceStandardDeviations) {
+    protected RobustLateration3DSolver(final Point3D[] positions, final double[] distances,
+                                       final double[] distanceStandardDeviations) {
         super(positions, distances, distanceStandardDeviations);
         init();
     }
@@ -124,8 +125,8 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      * @throws IllegalArgumentException if either positions or distances are null,
      *                                  don't have the same length or their length is smaller than required (4 points).
      */
-    public RobustLateration3DSolver(final Point3D[] positions, final double[] distances,
-                                    final RobustLaterationSolverListener<Point3D> listener) {
+    protected RobustLateration3DSolver(final Point3D[] positions, final double[] distances,
+                                       final RobustLaterationSolverListener<Point3D> listener) {
         super(positions, distances, listener);
         init();
     }
@@ -142,9 +143,9 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      *                                  standard deviations are null, don't have the same length or their length is smaller
      *                                  than required (4 points).
      */
-    public RobustLateration3DSolver(final Point3D[] positions, final double[] distances,
-                                    final double[] distanceStandardDeviations,
-                                    final RobustLaterationSolverListener<Point3D> listener) {
+    protected RobustLateration3DSolver(final Point3D[] positions, final double[] distances,
+                                       final double[] distanceStandardDeviations,
+                                       final RobustLaterationSolverListener<Point3D> listener) {
         super(positions, distances, distanceStandardDeviations, listener);
         init();
     }
@@ -156,7 +157,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      * @throws IllegalArgumentException if spheres is null or if length of spheres array
      *                                  is less than required (4 points).
      */
-    public RobustLateration3DSolver(final Sphere[] spheres) {
+    protected RobustLateration3DSolver(final Sphere[] spheres) {
         this();
         internalSetSpheres(spheres);
     }
@@ -169,8 +170,8 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      * @throws IllegalArgumentException if spheres is null, length of spheres array is less
      *                                  than required (4 points) or don't have the same length.
      */
-    public RobustLateration3DSolver(final Sphere[] spheres,
-                                    final double[] distanceStandardDeviations) {
+    protected RobustLateration3DSolver(final Sphere[] spheres,
+                                       final double[] distanceStandardDeviations) {
         this();
         internalSetSpheresAndStandardDeviations(spheres,
                 distanceStandardDeviations);
@@ -185,8 +186,8 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      * @throws IllegalArgumentException if spheres is null or if length of spheres array
      *                                  is less than required (4 points).
      */
-    public RobustLateration3DSolver(final Sphere[] spheres,
-                                    final RobustLaterationSolverListener<Point3D> listener) {
+    protected RobustLateration3DSolver(final Sphere[] spheres,
+                                       final RobustLaterationSolverListener<Point3D> listener) {
         this(listener);
         internalSetSpheres(spheres);
     }
@@ -201,9 +202,9 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      * @throws IllegalArgumentException if spheres is null, length of spheres array is less
      *                                  than required (4 points) or don't have the same length.
      */
-    public RobustLateration3DSolver(final Sphere[] spheres,
-                                    final double[] distanceStandardDeviations,
-                                    final RobustLaterationSolverListener<Point3D> listener) {
+    protected RobustLateration3DSolver(final Sphere[] spheres,
+                                       final double[] distanceStandardDeviations,
+                                       final RobustLaterationSolverListener<Point3D> listener) {
         this(listener);
         internalSetSpheresAndStandardDeviations(spheres,
                 distanceStandardDeviations);

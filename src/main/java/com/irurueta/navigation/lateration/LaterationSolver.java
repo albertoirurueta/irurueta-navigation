@@ -62,7 +62,7 @@ public abstract class LaterationSolver<P extends Point<?>> {
     /**
      * Constructor.
      */
-    public LaterationSolver() {
+    protected LaterationSolver() {
     }
 
     /**
@@ -74,7 +74,7 @@ public abstract class LaterationSolver<P extends Point<?>> {
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      *                                  length is smaller than required (3 for 2D points or 4 for 3D points).
      */
-    public LaterationSolver(final P[] positions, final double[] distances) {
+    protected LaterationSolver(final P[] positions, final double[] distances) {
         internalSetPositionsAndDistances(positions, distances);
     }
 
@@ -83,7 +83,7 @@ public abstract class LaterationSolver<P extends Point<?>> {
      *
      * @param listener listener to be notified of events raised by this instance.
      */
-    public LaterationSolver(final LaterationSolverListener<P> listener) {
+    protected LaterationSolver(final LaterationSolverListener<P> listener) {
         mListener = listener;
     }
 
@@ -97,7 +97,7 @@ public abstract class LaterationSolver<P extends Point<?>> {
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      *                                  length is smaller than required (3 for 2D points or 4 for 3D points).
      */
-    public LaterationSolver(
+    protected LaterationSolver(
             final P[] positions, final double[] distances,
             final LaterationSolverListener<P> listener) {
         this(positions, distances);

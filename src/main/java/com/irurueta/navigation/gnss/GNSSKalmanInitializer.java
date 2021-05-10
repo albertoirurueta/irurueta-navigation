@@ -27,6 +27,13 @@ import com.irurueta.algebra.WrongSizeException;
 public class GNSSKalmanInitializer {
 
     /**
+     * Constructor.
+     * Prevents instantiation of utility class.
+     */
+    private GNSSKalmanInitializer() {
+    }
+
+    /**
      * Initializes GNSS Kalman filter state.
      *
      * @param estimation initial GNSS estimation containing ECEF position and velocity,

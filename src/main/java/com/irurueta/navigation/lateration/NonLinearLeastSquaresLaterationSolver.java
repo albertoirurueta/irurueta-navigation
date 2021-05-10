@@ -75,7 +75,7 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
     /**
      * Constructor.
      */
-    public NonLinearLeastSquaresLaterationSolver() {
+    protected NonLinearLeastSquaresLaterationSolver() {
         super();
     }
 
@@ -87,7 +87,7 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      *                                  length is smaller than required 2 points.
      */
-    public NonLinearLeastSquaresLaterationSolver(
+    protected NonLinearLeastSquaresLaterationSolver(
             final P[] positions, final double[] distances) {
         super();
         internalSetPositionsAndDistances(positions, distances);
@@ -98,7 +98,7 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
      *
      * @param initialPosition initial position to start lateration solving.
      */
-    public NonLinearLeastSquaresLaterationSolver(final P initialPosition) {
+    protected NonLinearLeastSquaresLaterationSolver(final P initialPosition) {
         super();
         mInitialPosition = initialPosition;
     }
@@ -112,7 +112,7 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      *                                  length is smaller than required (3 for 2D points or 4 for 3D points) or fitter is null.
      */
-    public NonLinearLeastSquaresLaterationSolver(
+    protected NonLinearLeastSquaresLaterationSolver(
             final P[] positions, final double[] distances, final P initialPosition) {
         this(initialPosition);
         internalSetPositionsAndDistances(positions, distances);
@@ -123,7 +123,7 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
      *
      * @param listener listener to be notified of events raised by this instance.
      */
-    public NonLinearLeastSquaresLaterationSolver(
+    protected NonLinearLeastSquaresLaterationSolver(
             final LaterationSolverListener<P> listener) {
         super(listener);
     }
@@ -137,7 +137,7 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      *                                  length is smaller than required 2 points.
      */
-    public NonLinearLeastSquaresLaterationSolver(
+    protected NonLinearLeastSquaresLaterationSolver(
             final P[] positions, final double[] distances,
             final LaterationSolverListener<P> listener) {
         super(listener);
@@ -150,7 +150,7 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
      * @param initialPosition initial position to start lateration solving.
      * @param listener        listener to be notified of events raised by this instance.
      */
-    public NonLinearLeastSquaresLaterationSolver(
+    protected NonLinearLeastSquaresLaterationSolver(
             final P initialPosition, final LaterationSolverListener<P> listener) {
         super(listener);
         mInitialPosition = initialPosition;
@@ -166,7 +166,7 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      *                                  length is smaller than required (3 for 2D points or 4 for 3D points) or fitter is null.
      */
-    public NonLinearLeastSquaresLaterationSolver(
+    protected NonLinearLeastSquaresLaterationSolver(
             final P[] positions, final double[] distances, final P initialPosition,
             final LaterationSolverListener<P> listener) {
         this(initialPosition, listener);
@@ -182,7 +182,7 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
      * @throws IllegalArgumentException if either positions, distances or standard deviations
      *                                  are null, don't have the same length of their length is smaller than required (2 points).
      */
-    public NonLinearLeastSquaresLaterationSolver(
+    protected NonLinearLeastSquaresLaterationSolver(
             final P[] positions, final double[] distances,
             final double[] distanceStandardDeviations) {
         super();
@@ -200,7 +200,7 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
      * @throws IllegalArgumentException if either positions, distances or standard deviations
      *                                  are null, don't have the same length of their length is smaller than required (2 points).
      */
-    public NonLinearLeastSquaresLaterationSolver(
+    protected NonLinearLeastSquaresLaterationSolver(
             final P[] positions, final double[] distances,
             final double[] distanceStandardDeviations, final P initialPosition) {
         this(initialPosition);
@@ -218,7 +218,7 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
      * @throws IllegalArgumentException if either positions, distances or standard deviations
      *                                  are null, don't have the same length of their length is smaller than required (2 points).
      */
-    public NonLinearLeastSquaresLaterationSolver(
+    protected NonLinearLeastSquaresLaterationSolver(
             final P[] positions, final double[] distances,
             final double[] distanceStandardDeviations,
             final LaterationSolverListener<P> listener) {
@@ -238,7 +238,7 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
      * @throws IllegalArgumentException if either positions, distances or standard deviations
      *                                  are null, don't have the same length of their length is smaller than required (2 points).
      */
-    public NonLinearLeastSquaresLaterationSolver(
+    protected NonLinearLeastSquaresLaterationSolver(
             final P[] positions, final double[] distances,
             final double[] distanceStandardDeviations, final P initialPosition,
             final LaterationSolverListener<P> listener) {

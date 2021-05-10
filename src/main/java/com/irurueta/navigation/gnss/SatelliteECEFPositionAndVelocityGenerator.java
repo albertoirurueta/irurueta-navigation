@@ -40,6 +40,13 @@ public class SatelliteECEFPositionAndVelocityGenerator {
     public static final double EARTH_ROTATION_RATE = Constants.EARTH_ROTATION_RATE;
 
     /**
+     * Constructor.
+     * Prevents instantiation of utility class.
+     */
+    private SatelliteECEFPositionAndVelocityGenerator() {
+    }
+
+    /**
      * Generates positions and velocities of satellites based on provided configuration.
      *
      * @param time   current time expressed in seconds (s).

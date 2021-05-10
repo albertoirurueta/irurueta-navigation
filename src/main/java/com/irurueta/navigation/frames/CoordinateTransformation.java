@@ -638,6 +638,7 @@ public class CoordinateTransformation implements Serializable, Cloneable {
             try {
                 result.resize(ROWS, COLS);
             } catch (final WrongSizeException ignore) {
+                // never happens
             }
         }
         // Calculate ECEF to NED coordinate transformation matrix using (2.150)
@@ -911,6 +912,7 @@ public class CoordinateTransformation implements Serializable, Cloneable {
             try {
                 result.resize(ROWS, COLS);
             } catch (final WrongSizeException ignore) {
+                // never happens
             }
         }
 

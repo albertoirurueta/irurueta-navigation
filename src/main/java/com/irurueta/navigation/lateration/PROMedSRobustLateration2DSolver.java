@@ -572,10 +572,12 @@ public class PROMedSRobustLateration2DSolver extends RobustLateration2DSolver {
 
                     @Override
                     public void onEstimateStart(final RobustEstimator<Point2D> estimator) {
+                        // no action needed
                     }
 
                     @Override
                     public void onEstimateEnd(final RobustEstimator<Point2D> estimator) {
+                        // no action needed
                     }
 
                     @Override

@@ -68,7 +68,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
     /**
      * Constructor.
      */
-    public RobustLateration2DSolver() {
+    protected RobustLateration2DSolver() {
         init();
     }
 
@@ -78,7 +78,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or its progress significantly changes.
      */
-    public RobustLateration2DSolver(
+    protected RobustLateration2DSolver(
             final RobustLaterationSolverListener<Point2D> listener) {
         super(listener);
         init();
@@ -93,7 +93,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      * @throws IllegalArgumentException if either positions or distances are null,
      *                                  don't have the same length or their length is smaller than required (3 points).
      */
-    public RobustLateration2DSolver(final Point2D[] positions, final double[] distances) {
+    protected RobustLateration2DSolver(final Point2D[] positions, final double[] distances) {
         super(positions, distances);
         init();
     }
@@ -108,8 +108,8 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      * @throws IllegalArgumentException if either positions or distances are null,
      *                                  don't have the same length or their length is smaller than required (3 points).
      */
-    public RobustLateration2DSolver(final Point2D[] positions, final double[] distances,
-                                    final double[] distanceStandardDeviations) {
+    protected RobustLateration2DSolver(final Point2D[] positions, final double[] distances,
+                                       final double[] distanceStandardDeviations) {
         super(positions, distances, distanceStandardDeviations);
         init();
     }
@@ -124,8 +124,8 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      * @throws IllegalArgumentException if either positions or distances are null,
      *                                  don't have the same length or their length is smaller than required (3 points).
      */
-    public RobustLateration2DSolver(final Point2D[] positions, final double[] distances,
-                                    final RobustLaterationSolverListener<Point2D> listener) {
+    protected RobustLateration2DSolver(final Point2D[] positions, final double[] distances,
+                                       final RobustLaterationSolverListener<Point2D> listener) {
         super(positions, distances, listener);
         init();
     }
@@ -142,9 +142,9 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      *                                  standard deviations are null, don't have the same length or their length is smaller
      *                                  than required (3 points).
      */
-    public RobustLateration2DSolver(final Point2D[] positions, final double[] distances,
-                                    final double[] distanceStandardDeviations,
-                                    final RobustLaterationSolverListener<Point2D> listener) {
+    protected RobustLateration2DSolver(final Point2D[] positions, final double[] distances,
+                                       final double[] distanceStandardDeviations,
+                                       final RobustLaterationSolverListener<Point2D> listener) {
         super(positions, distances, distanceStandardDeviations, listener);
         init();
     }
@@ -156,7 +156,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      * @throws IllegalArgumentException if circles is null or if length of circles array
      *                                  is less than required (3 points).
      */
-    public RobustLateration2DSolver(final Circle[] circles) {
+    protected RobustLateration2DSolver(final Circle[] circles) {
         this();
         internalSetCircles(circles);
     }
@@ -169,8 +169,8 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      * @throws IllegalArgumentException if circles is null, length of circles array is less
      *                                  than required (3 points) or don't have the same length.
      */
-    public RobustLateration2DSolver(final Circle[] circles,
-                                    final double[] distanceStandardDeviations) {
+    protected RobustLateration2DSolver(final Circle[] circles,
+                                       final double[] distanceStandardDeviations) {
         this();
         internalSetCirclesAndStandardDeviations(circles,
                 distanceStandardDeviations);
@@ -185,8 +185,8 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      * @throws IllegalArgumentException if circles is null or if length of circles array
      *                                  is less than required (3 points).
      */
-    public RobustLateration2DSolver(final Circle[] circles,
-                                    final RobustLaterationSolverListener<Point2D> listener) {
+    protected RobustLateration2DSolver(final Circle[] circles,
+                                       final RobustLaterationSolverListener<Point2D> listener) {
         this(listener);
         internalSetCircles(circles);
     }
@@ -201,9 +201,9 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      * @throws IllegalArgumentException if circles is null, length of circles array is less
      *                                  than required (3 points) or don't have the same length.
      */
-    public RobustLateration2DSolver(final Circle[] circles,
-                                    final double[] distanceStandardDeviations,
-                                    final RobustLaterationSolverListener<Point2D> listener) {
+    protected RobustLateration2DSolver(final Circle[] circles,
+                                       final double[] distanceStandardDeviations,
+                                       final RobustLaterationSolverListener<Point2D> listener) {
         this(listener);
         internalSetCirclesAndStandardDeviations(circles,
                 distanceStandardDeviations);

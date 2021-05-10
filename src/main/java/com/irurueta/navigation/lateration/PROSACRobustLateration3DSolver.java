@@ -594,10 +594,12 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
 
                     @Override
                     public void onEstimateStart(final RobustEstimator<Point3D> estimator) {
+                        // no action needed
                     }
 
                     @Override
                     public void onEstimateEnd(final RobustEstimator<Point3D> estimator) {
+                        // no action needed
                     }
 
                     @Override
