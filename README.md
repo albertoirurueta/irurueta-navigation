@@ -1,7 +1,7 @@
 # irurueta-navigation
 A GNSS/INS navigation library
 
-[![Build Status](https://travis-ci.org/albertoirurueta/irurueta-navigation.svg?branch=master)](https://travis-ci.org/albertoirurueta/irurueta-navigation)
+[![Build Status](https://travis-ci.com/albertoirurueta/irurueta-navigation.svg?branch=master)](https://travis-ci.com/albertoirurueta/irurueta-navigation)
 
 
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=albertoirurueta_irurueta-navigation&metric=bugs)](https://sonarcloud.io/dashboard?id=albertoirurueta_irurueta-navigation)
