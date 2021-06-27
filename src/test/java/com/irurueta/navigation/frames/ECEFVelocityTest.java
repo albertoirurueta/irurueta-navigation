@@ -2,11 +2,13 @@ package com.irurueta.navigation.frames;
 
 import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.WrongSizeException;
+import com.irurueta.navigation.SerializationHelper;
 import com.irurueta.statistics.UniformRandomizer;
 import com.irurueta.units.Speed;
 import com.irurueta.units.SpeedUnit;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.Random;
 
 import static org.junit.Assert.*;
@@ -24,7 +26,7 @@ public class ECEFVelocityTest {
     public void testConstructor() {
 
         // test empty constructor
-        com.irurueta.navigation.frames.ECEFVelocity velocity = new com.irurueta.navigation.frames.ECEFVelocity();
+        ECEFVelocity velocity = new ECEFVelocity();
 
         // check
         assertEquals(velocity.getVx(), 0.0, 0.0);
@@ -48,7 +50,7 @@ public class ECEFVelocityTest {
         final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
         final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        velocity = new com.irurueta.navigation.frames.ECEFVelocity(vx, vy, vz);
+        velocity = new ECEFVelocity(vx, vy, vz);
 
         // check
         assertEquals(velocity.getVx(), vx, 0.0);
@@ -72,7 +74,7 @@ public class ECEFVelocityTest {
         final Speed speedY2 = new Speed(vy, SpeedUnit.METERS_PER_SECOND);
         final Speed speedZ2 = new Speed(vz, SpeedUnit.METERS_PER_SECOND);
 
-        velocity = new com.irurueta.navigation.frames.ECEFVelocity(speedX2, speedY2, speedZ2);
+        velocity = new ECEFVelocity(speedX2, speedY2, speedZ2);
 
         // check
         assertEquals(velocity.getVx(), vx, 0.0);
@@ -89,7 +91,7 @@ public class ECEFVelocityTest {
 
 
         // test copy constructor
-        final com.irurueta.navigation.frames.ECEFVelocity velocity2 = new com.irurueta.navigation.frames.ECEFVelocity(velocity);
+        final ECEFVelocity velocity2 = new ECEFVelocity(velocity);
 
         // check
         assertEquals(velocity.getVx(), velocity2.getVx(), 0.0);
@@ -103,7 +105,7 @@ public class ECEFVelocityTest {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final com.irurueta.navigation.frames.ECEFVelocity velocity = new com.irurueta.navigation.frames.ECEFVelocity();
+        final ECEFVelocity velocity = new ECEFVelocity();
 
         // check default value
         assertEquals(velocity.getVx(), 0.0, 0.0);
@@ -120,7 +122,7 @@ public class ECEFVelocityTest {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final com.irurueta.navigation.frames.ECEFVelocity velocity = new com.irurueta.navigation.frames.ECEFVelocity();
+        final ECEFVelocity velocity = new ECEFVelocity();
 
         // check default value
         assertEquals(velocity.getVy(), 0.0, 0.0);
@@ -137,7 +139,7 @@ public class ECEFVelocityTest {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final com.irurueta.navigation.frames.ECEFVelocity velocity = new com.irurueta.navigation.frames.ECEFVelocity();
+        final ECEFVelocity velocity = new ECEFVelocity();
 
         // check default value
         assertEquals(velocity.getVz(), 0.0, 0.0);
@@ -156,7 +158,7 @@ public class ECEFVelocityTest {
         final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
         final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final com.irurueta.navigation.frames.ECEFVelocity velocity = new com.irurueta.navigation.frames.ECEFVelocity();
+        final ECEFVelocity velocity = new ECEFVelocity();
 
         // check default values
         assertEquals(velocity.getVx(), 0.0, 0.0);
@@ -177,7 +179,7 @@ public class ECEFVelocityTest {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final com.irurueta.navigation.frames.ECEFVelocity velocity = new com.irurueta.navigation.frames.ECEFVelocity();
+        final ECEFVelocity velocity = new ECEFVelocity();
 
         // check default value
         final Speed speedX1 = velocity.getSpeedX();
@@ -203,7 +205,7 @@ public class ECEFVelocityTest {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final com.irurueta.navigation.frames.ECEFVelocity velocity = new com.irurueta.navigation.frames.ECEFVelocity();
+        final ECEFVelocity velocity = new ECEFVelocity();
 
         // check default value
         final Speed speedY1 = velocity.getSpeedY();
@@ -229,7 +231,7 @@ public class ECEFVelocityTest {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final com.irurueta.navigation.frames.ECEFVelocity velocity = new com.irurueta.navigation.frames.ECEFVelocity();
+        final ECEFVelocity velocity = new ECEFVelocity();
 
         // check default value
         final Speed speedZ1 = velocity.getSpeedZ();
@@ -257,7 +259,7 @@ public class ECEFVelocityTest {
         final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
         final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final com.irurueta.navigation.frames.ECEFVelocity velocity = new com.irurueta.navigation.frames.ECEFVelocity();
+        final ECEFVelocity velocity = new ECEFVelocity();
 
         // check default values
         final Speed speedX = new Speed(vx, SpeedUnit.METERS_PER_SECOND);
@@ -278,7 +280,7 @@ public class ECEFVelocityTest {
         final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
         final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final com.irurueta.navigation.frames.ECEFVelocity velocity = new com.irurueta.navigation.frames.ECEFVelocity(vx, vy, vz);
+        final ECEFVelocity velocity = new ECEFVelocity(vx, vy, vz);
 
         final double norm = Math.sqrt(Math.pow(vx, 2.0) + Math.pow(vy, 2.0)
                 + Math.pow(vz, 2.0));
@@ -300,8 +302,8 @@ public class ECEFVelocityTest {
         final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
         final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final com.irurueta.navigation.frames.ECEFVelocity velocity1 = new com.irurueta.navigation.frames.ECEFVelocity(vx, vy, vz);
-        final com.irurueta.navigation.frames.ECEFVelocity velocity2 = new com.irurueta.navigation.frames.ECEFVelocity();
+        final ECEFVelocity velocity1 = new ECEFVelocity(vx, vy, vz);
+        final ECEFVelocity velocity2 = new ECEFVelocity();
 
         velocity1.copyTo(velocity2);
 
@@ -318,8 +320,8 @@ public class ECEFVelocityTest {
         final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
         final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final com.irurueta.navigation.frames.ECEFVelocity velocity1 = new com.irurueta.navigation.frames.ECEFVelocity(vx, vy, vz);
-        final com.irurueta.navigation.frames.ECEFVelocity velocity2 = new com.irurueta.navigation.frames.ECEFVelocity();
+        final ECEFVelocity velocity1 = new ECEFVelocity(vx, vy, vz);
+        final ECEFVelocity velocity2 = new ECEFVelocity();
 
         velocity2.copyFrom(velocity1);
 
@@ -336,9 +338,9 @@ public class ECEFVelocityTest {
         final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
         final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final com.irurueta.navigation.frames.ECEFVelocity velocity = new com.irurueta.navigation.frames.ECEFVelocity(vx, vy, vz);
+        final ECEFVelocity velocity = new ECEFVelocity(vx, vy, vz);
 
-        final double[] result1 = new double[com.irurueta.navigation.frames.ECEFVelocity.COMPONENTS];
+        final double[] result1 = new double[ECEFVelocity.COMPONENTS];
         velocity.asArray(result1);
 
         final double[] result2 = velocity.asArray();
@@ -364,9 +366,9 @@ public class ECEFVelocityTest {
         final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
         final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final com.irurueta.navigation.frames.ECEFVelocity velocity = new com.irurueta.navigation.frames.ECEFVelocity(vx, vy, vz);
+        final ECEFVelocity velocity = new ECEFVelocity(vx, vy, vz);
 
-        final Matrix result1 = new Matrix(com.irurueta.navigation.frames.ECEFVelocity.COMPONENTS, 1);
+        final Matrix result1 = new Matrix(ECEFVelocity.COMPONENTS, 1);
         velocity.asMatrix(result1);
 
         final Matrix result2 = velocity.asMatrix();
@@ -389,9 +391,9 @@ public class ECEFVelocityTest {
         final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
         final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final com.irurueta.navigation.frames.ECEFVelocity velocity1 = new com.irurueta.navigation.frames.ECEFVelocity(vx, vy, vz);
-        final com.irurueta.navigation.frames.ECEFVelocity velocity2 = new com.irurueta.navigation.frames.ECEFVelocity(vx, vy, vz);
-        final com.irurueta.navigation.frames.ECEFVelocity velocity3 = new com.irurueta.navigation.frames.ECEFVelocity();
+        final ECEFVelocity velocity1 = new ECEFVelocity(vx, vy, vz);
+        final ECEFVelocity velocity2 = new ECEFVelocity(vx, vy, vz);
+        final ECEFVelocity velocity3 = new ECEFVelocity();
 
         assertEquals(velocity1.hashCode(), velocity2.hashCode());
         assertNotEquals(velocity1.hashCode(), velocity3.hashCode());
@@ -404,9 +406,9 @@ public class ECEFVelocityTest {
         final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
         final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final com.irurueta.navigation.frames.ECEFVelocity velocity1 = new com.irurueta.navigation.frames.ECEFVelocity(vx, vy, vz);
-        final com.irurueta.navigation.frames.ECEFVelocity velocity2 = new com.irurueta.navigation.frames.ECEFVelocity(vx, vy, vz);
-        final com.irurueta.navigation.frames.ECEFVelocity velocity3 = new com.irurueta.navigation.frames.ECEFVelocity();
+        final ECEFVelocity velocity1 = new ECEFVelocity(vx, vy, vz);
+        final ECEFVelocity velocity2 = new ECEFVelocity(vx, vy, vz);
+        final ECEFVelocity velocity3 = new ECEFVelocity();
 
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
         assertTrue(velocity1.equals((Object) velocity1));
@@ -428,9 +430,9 @@ public class ECEFVelocityTest {
         final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
         final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final com.irurueta.navigation.frames.ECEFVelocity velocity1 = new com.irurueta.navigation.frames.ECEFVelocity(vx, vy, vz);
-        final com.irurueta.navigation.frames.ECEFVelocity velocity2 = new com.irurueta.navigation.frames.ECEFVelocity(vx, vy, vz);
-        final com.irurueta.navigation.frames.ECEFVelocity velocity3 = new com.irurueta.navigation.frames.ECEFVelocity();
+        final ECEFVelocity velocity1 = new ECEFVelocity(vx, vy, vz);
+        final ECEFVelocity velocity2 = new ECEFVelocity(vx, vy, vz);
+        final ECEFVelocity velocity3 = new ECEFVelocity();
 
         assertTrue(velocity1.equals(velocity1, THRESHOLD));
         assertTrue(velocity1.equals(velocity2, THRESHOLD));
@@ -445,10 +447,28 @@ public class ECEFVelocityTest {
         final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
         final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final com.irurueta.navigation.frames.ECEFVelocity velocity1 = new ECEFVelocity(vx, vy, vz);
+        final ECEFVelocity velocity1 = new ECEFVelocity(vx, vy, vz);
 
         final Object velocity2 = velocity1.clone();
 
         assertEquals(velocity1, velocity2);
+    }
+    
+    @Test
+    public void testSerializeDeserialize() throws IOException, ClassNotFoundException {
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+
+        final ECEFVelocity velocity1 = new ECEFVelocity(vx, vy, vz);
+
+        // serialize and deserialize
+        final byte[] bytes = SerializationHelper.serialize(velocity1);
+        final ECEFVelocity velocity2 = SerializationHelper.deserialize(bytes);
+
+        // check
+        assertEquals(velocity1, velocity2);
+        assertNotSame(velocity1, velocity2);
     }
 }

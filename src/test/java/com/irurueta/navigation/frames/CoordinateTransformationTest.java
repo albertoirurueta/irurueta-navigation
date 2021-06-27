@@ -23,6 +23,7 @@ import com.irurueta.algebra.WrongSizeException;
 import com.irurueta.geometry.InvalidRotationMatrixException;
 import com.irurueta.geometry.Quaternion;
 import com.irurueta.geometry.Rotation3D;
+import com.irurueta.navigation.SerializationHelper;
 import com.irurueta.navigation.geodesic.Constants;
 import com.irurueta.statistics.UniformRandomizer;
 import com.irurueta.units.Angle;
@@ -31,6 +32,7 @@ import com.irurueta.units.Time;
 import com.irurueta.units.TimeUnit;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.Random;
 
 import static org.junit.Assert.*;
@@ -1263,5 +1265,31 @@ public class CoordinateTransformationTest {
         final Object c2 = c1.clone();
 
         assertEquals(c1, c2);
+    }
+
+    @Test
+    public void testSerializeAndDeserialize() throws InvalidRotationMatrixException,
+            IOException, ClassNotFoundException {
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double roll = Math.toRadians(
+                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double pitch = Math.toRadians(
+                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double yaw = Math.toRadians(
+                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final Quaternion q = new Quaternion(roll, pitch, yaw);
+
+        final Matrix m = q.asInhomogeneousMatrix();
+        final CoordinateTransformation c1 = new CoordinateTransformation(m,
+                FrameType.LOCAL_NAVIGATION_FRAME,
+                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME, THRESHOLD);
+
+        // serialize and deserialize
+        final byte[] bytes = SerializationHelper.serialize(c1);
+        final CoordinateTransformation c2 = SerializationHelper.deserialize(bytes);
+
+        // check
+        assertEquals(c1, c2);
+        assertNotSame(c1, c2);
     }
 }

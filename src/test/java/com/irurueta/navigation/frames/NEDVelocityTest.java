@@ -15,11 +15,13 @@
  */
 package com.irurueta.navigation.frames;
 
+import com.irurueta.navigation.SerializationHelper;
 import com.irurueta.statistics.UniformRandomizer;
 import com.irurueta.units.Speed;
 import com.irurueta.units.SpeedUnit;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.Random;
 
 import static org.junit.Assert.*;
@@ -35,7 +37,7 @@ public class NEDVelocityTest {
     public void testConstructor() {
 
         // test empty constructor
-        com.irurueta.navigation.frames.NEDVelocity velocity = new com.irurueta.navigation.frames.NEDVelocity();
+        NEDVelocity velocity = new NEDVelocity();
 
         // check
         assertEquals(velocity.getVn(), 0.0, 0.0);
@@ -53,7 +55,7 @@ public class NEDVelocityTest {
         final double ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
         final double vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        velocity = new com.irurueta.navigation.frames.NEDVelocity(vn, ve, vd);
+        velocity = new NEDVelocity(vn, ve, vd);
 
         // check
         assertEquals(velocity.getVn(), vn, 0.0);
@@ -69,7 +71,7 @@ public class NEDVelocityTest {
         final Speed speedE = new Speed(ve, SpeedUnit.METERS_PER_SECOND);
         final Speed speedD = new Speed(vd, SpeedUnit.METERS_PER_SECOND);
 
-        velocity = new com.irurueta.navigation.frames.NEDVelocity(speedN, speedE, speedD);
+        velocity = new NEDVelocity(speedN, speedE, speedD);
 
         // check
         assertEquals(velocity.getVn(), vn, 0.0);
@@ -82,7 +84,7 @@ public class NEDVelocityTest {
 
 
         // test copy constructor
-        final com.irurueta.navigation.frames.NEDVelocity velocity2 = new com.irurueta.navigation.frames.NEDVelocity(velocity);
+        final NEDVelocity velocity2 = new NEDVelocity(velocity);
 
         // check
         assertEquals(velocity.getVn(), velocity2.getVn(), 0.0);
@@ -96,7 +98,7 @@ public class NEDVelocityTest {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final com.irurueta.navigation.frames.NEDVelocity velocity = new com.irurueta.navigation.frames.NEDVelocity();
+        final NEDVelocity velocity = new NEDVelocity();
 
         // check initial value
         assertEquals(velocity.getVn(), 0.0, 0.0);
@@ -114,7 +116,7 @@ public class NEDVelocityTest {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final com.irurueta.navigation.frames.NEDVelocity velocity = new com.irurueta.navigation.frames.NEDVelocity();
+        final NEDVelocity velocity = new NEDVelocity();
 
         // check initial value
         assertEquals(velocity.getVe(), 0.0, 0.0);
@@ -132,7 +134,7 @@ public class NEDVelocityTest {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final com.irurueta.navigation.frames.NEDVelocity velocity = new com.irurueta.navigation.frames.NEDVelocity();
+        final NEDVelocity velocity = new NEDVelocity();
 
         // check initial value
         assertEquals(velocity.getVd(), 0.0, 0.0);
@@ -152,7 +154,7 @@ public class NEDVelocityTest {
         final double ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
         final double vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final com.irurueta.navigation.frames.NEDVelocity velocity = new com.irurueta.navigation.frames.NEDVelocity();
+        final NEDVelocity velocity = new NEDVelocity();
 
         // check initial values
         assertEquals(velocity.getVn(), 0.0, 0.0);
@@ -177,7 +179,7 @@ public class NEDVelocityTest {
         final double vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
         final double norm = Math.sqrt(vn * vn + ve * ve + vd * vd);
 
-        final com.irurueta.navigation.frames.NEDVelocity velocity = new com.irurueta.navigation.frames.NEDVelocity(vn, ve, vd);
+        final NEDVelocity velocity = new NEDVelocity(vn, ve, vd);
 
         assertEquals(velocity.getNorm(), norm, 0.0);
     }
@@ -191,7 +193,7 @@ public class NEDVelocityTest {
         final double vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
         final double norm = Math.sqrt(vn * vn + ve * ve + vd * vd);
 
-        final com.irurueta.navigation.frames.NEDVelocity velocity = new com.irurueta.navigation.frames.NEDVelocity(vn, ve, vd);
+        final NEDVelocity velocity = new NEDVelocity(vn, ve, vd);
 
         final Speed norm1 = new Speed(0.0, SpeedUnit.KILOMETERS_PER_HOUR);
         velocity.getNormAsSpeed(norm1);
@@ -209,7 +211,7 @@ public class NEDVelocityTest {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final com.irurueta.navigation.frames.NEDVelocity velocity = new com.irurueta.navigation.frames.NEDVelocity();
+        final NEDVelocity velocity = new NEDVelocity();
 
         // check initial values
         assertEquals(velocity.getVn(), 0.0, 0.0);
@@ -236,7 +238,7 @@ public class NEDVelocityTest {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final com.irurueta.navigation.frames.NEDVelocity velocity = new com.irurueta.navigation.frames.NEDVelocity();
+        final NEDVelocity velocity = new NEDVelocity();
 
         // check initial values
         assertEquals(velocity.getVe(), 0.0, 0.0);
@@ -263,7 +265,7 @@ public class NEDVelocityTest {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final com.irurueta.navigation.frames.NEDVelocity velocity = new com.irurueta.navigation.frames.NEDVelocity();
+        final NEDVelocity velocity = new NEDVelocity();
 
         // check initial values
         assertEquals(velocity.getVd(), 0.0, 0.0);
@@ -296,7 +298,7 @@ public class NEDVelocityTest {
         final Speed speedE = new Speed(ve, SpeedUnit.METERS_PER_SECOND);
         final Speed speedD = new Speed(vd, SpeedUnit.METERS_PER_SECOND);
 
-        final com.irurueta.navigation.frames.NEDVelocity velocity = new com.irurueta.navigation.frames.NEDVelocity();
+        final NEDVelocity velocity = new NEDVelocity();
 
         // check initial values
         assertEquals(velocity.getVn(), 0.0, 0.0);
@@ -320,8 +322,8 @@ public class NEDVelocityTest {
         final double ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
         final double vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final com.irurueta.navigation.frames.NEDVelocity velocity1 = new com.irurueta.navigation.frames.NEDVelocity(vn, ve, vd);
-        final com.irurueta.navigation.frames.NEDVelocity velocity2 = new com.irurueta.navigation.frames.NEDVelocity();
+        final NEDVelocity velocity1 = new NEDVelocity(vn, ve, vd);
+        final NEDVelocity velocity2 = new NEDVelocity();
         velocity1.copyTo(velocity2);
 
         // check
@@ -338,8 +340,8 @@ public class NEDVelocityTest {
         final double ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
         final double vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final com.irurueta.navigation.frames.NEDVelocity velocity1 = new com.irurueta.navigation.frames.NEDVelocity(vn, ve, vd);
-        final com.irurueta.navigation.frames.NEDVelocity velocity2 = new com.irurueta.navigation.frames.NEDVelocity();
+        final NEDVelocity velocity1 = new NEDVelocity(vn, ve, vd);
+        final NEDVelocity velocity2 = new NEDVelocity();
         velocity2.copyFrom(velocity1);
 
         // check
@@ -356,9 +358,9 @@ public class NEDVelocityTest {
         final double ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
         final double vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final com.irurueta.navigation.frames.NEDVelocity velocity1 = new com.irurueta.navigation.frames.NEDVelocity(vn, ve, vd);
-        final com.irurueta.navigation.frames.NEDVelocity velocity2 = new com.irurueta.navigation.frames.NEDVelocity(vn, ve, vd);
-        final com.irurueta.navigation.frames.NEDVelocity velocity3 = new com.irurueta.navigation.frames.NEDVelocity();
+        final NEDVelocity velocity1 = new NEDVelocity(vn, ve, vd);
+        final NEDVelocity velocity2 = new NEDVelocity(vn, ve, vd);
+        final NEDVelocity velocity3 = new NEDVelocity();
 
         assertEquals(velocity1.hashCode(), velocity2.hashCode());
         assertNotEquals(velocity1.hashCode(), velocity3.hashCode());
@@ -372,9 +374,9 @@ public class NEDVelocityTest {
         final double ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
         final double vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final com.irurueta.navigation.frames.NEDVelocity velocity1 = new com.irurueta.navigation.frames.NEDVelocity(vn, ve, vd);
-        final com.irurueta.navigation.frames.NEDVelocity velocity2 = new com.irurueta.navigation.frames.NEDVelocity(vn, ve, vd);
-        final com.irurueta.navigation.frames.NEDVelocity velocity3 = new com.irurueta.navigation.frames.NEDVelocity();
+        final NEDVelocity velocity1 = new NEDVelocity(vn, ve, vd);
+        final NEDVelocity velocity2 = new NEDVelocity(vn, ve, vd);
+        final NEDVelocity velocity3 = new NEDVelocity();
 
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
         assertTrue(velocity1.equals((Object) velocity1));
@@ -397,9 +399,9 @@ public class NEDVelocityTest {
         final double ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
         final double vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final com.irurueta.navigation.frames.NEDVelocity velocity1 = new com.irurueta.navigation.frames.NEDVelocity(vn, ve, vd);
-        final com.irurueta.navigation.frames.NEDVelocity velocity2 = new com.irurueta.navigation.frames.NEDVelocity(vn, ve, vd);
-        final com.irurueta.navigation.frames.NEDVelocity velocity3 = new com.irurueta.navigation.frames.NEDVelocity();
+        final NEDVelocity velocity1 = new NEDVelocity(vn, ve, vd);
+        final NEDVelocity velocity2 = new NEDVelocity(vn, ve, vd);
+        final NEDVelocity velocity3 = new NEDVelocity();
 
         assertTrue(velocity1.equals(velocity1, THRESHOLD));
         assertTrue(velocity1.equals(velocity2, THRESHOLD));
@@ -415,10 +417,28 @@ public class NEDVelocityTest {
         final double ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
         final double vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final com.irurueta.navigation.frames.NEDVelocity velocity1 = new NEDVelocity(vn, ve, vd);
+        final NEDVelocity velocity1 = new NEDVelocity(vn, ve, vd);
 
         final Object velocity2 = velocity1.clone();
 
         assertEquals(velocity1, velocity2);
+    }
+
+    @Test
+    public void testSerializeDeserialize() throws IOException, ClassNotFoundException {
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final double ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final double vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+
+        final NEDVelocity velocity1 = new NEDVelocity(vn, ve, vd);
+
+        // serialize and deserialize
+        final byte[] bytes = SerializationHelper.serialize(velocity1);
+        final NEDVelocity velocity2 = SerializationHelper.deserialize(bytes);
+
+        // check
+        assertEquals(velocity1, velocity2);
+        assertNotSame(velocity1, velocity2);
     }
 }

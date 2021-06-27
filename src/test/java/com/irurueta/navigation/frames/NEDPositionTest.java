@@ -1,5 +1,6 @@
 package com.irurueta.navigation.frames;
 
+import com.irurueta.navigation.SerializationHelper;
 import com.irurueta.statistics.UniformRandomizer;
 import com.irurueta.units.Angle;
 import com.irurueta.units.AngleUnit;
@@ -7,6 +8,7 @@ import com.irurueta.units.Distance;
 import com.irurueta.units.DistanceUnit;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.Random;
 
 import static org.junit.Assert.*;
@@ -25,7 +27,7 @@ public class NEDPositionTest {
     public void testConstructor() {
 
         // test empty constructor
-        com.irurueta.navigation.frames.NEDPosition position = new com.irurueta.navigation.frames.NEDPosition();
+        NEDPosition position = new NEDPosition();
 
         // check
         assertEquals(position.getLatitude(), 0.0, 0.0);
@@ -43,7 +45,7 @@ public class NEDPositionTest {
         final double longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
 
-        position = new com.irurueta.navigation.frames.NEDPosition(latitude, longitude, height);
+        position = new NEDPosition(latitude, longitude, height);
 
         // check
         assertEquals(position.getLatitude(), latitude, 0.0);
@@ -65,7 +67,7 @@ public class NEDPositionTest {
         final Angle longitudeAngle = new Angle(longitude, AngleUnit.RADIANS);
         final Distance heightDistance = new Distance(height, DistanceUnit.METER);
 
-        position = new com.irurueta.navigation.frames.NEDPosition(latitudeAngle, longitudeAngle, heightDistance);
+        position = new NEDPosition(latitudeAngle, longitudeAngle, heightDistance);
 
         // check
         assertEquals(position.getLatitude(), latitude, 0.0);
@@ -83,7 +85,7 @@ public class NEDPositionTest {
 
 
         // test copy constructor
-        final com.irurueta.navigation.frames.NEDPosition position2 = new com.irurueta.navigation.frames.NEDPosition(position);
+        final NEDPosition position2 = new NEDPosition(position);
 
         // check
         assertEquals(position2.getLatitude(), latitude, 0.0);
@@ -102,7 +104,7 @@ public class NEDPositionTest {
 
     @Test
     public void testGetSetLatitude() {
-        final com.irurueta.navigation.frames.NEDPosition position = new com.irurueta.navigation.frames.NEDPosition();
+        final NEDPosition position = new NEDPosition();
 
         // check default value
         assertEquals(position.getLatitude(), 0.0, 0.0);
@@ -119,7 +121,7 @@ public class NEDPositionTest {
 
     @Test
     public void testGetSetLongitude() {
-        final com.irurueta.navigation.frames.NEDPosition position = new com.irurueta.navigation.frames.NEDPosition();
+        final NEDPosition position = new NEDPosition();
 
         // check default value
         assertEquals(position.getLongitude(), 0.0, 0.0);
@@ -136,7 +138,7 @@ public class NEDPositionTest {
 
     @Test
     public void testGetSetHeight() {
-        final com.irurueta.navigation.frames.NEDPosition position = new com.irurueta.navigation.frames.NEDPosition();
+        final NEDPosition position = new NEDPosition();
 
         // check default value
         assertEquals(position.getHeight(), 0.0, 0.0);
@@ -153,7 +155,7 @@ public class NEDPositionTest {
 
     @Test
     public void testSetCoordinates() {
-        final com.irurueta.navigation.frames.NEDPosition position = new com.irurueta.navigation.frames.NEDPosition();
+        final NEDPosition position = new NEDPosition();
 
         // check default values
         assertEquals(position.getLatitude(), 0.0, 0.0);
@@ -176,7 +178,7 @@ public class NEDPositionTest {
 
     @Test
     public void testGetSetLatitudeAngle() {
-        final com.irurueta.navigation.frames.NEDPosition position = new com.irurueta.navigation.frames.NEDPosition();
+        final NEDPosition position = new NEDPosition();
 
         // check default values
         assertEquals(position.getLatitudeAngle().getValue().doubleValue(), 0.0, 0.0);
@@ -201,7 +203,7 @@ public class NEDPositionTest {
 
     @Test
     public void testGetSetLongitudeAngle() {
-        final com.irurueta.navigation.frames.NEDPosition position = new com.irurueta.navigation.frames.NEDPosition();
+        final NEDPosition position = new NEDPosition();
 
         // check default values
         assertEquals(position.getLongitudeAngle().getValue().doubleValue(), 0.0, 0.0);
@@ -226,7 +228,7 @@ public class NEDPositionTest {
 
     @Test
     public void testGetSetHeightDistance() {
-        final com.irurueta.navigation.frames.NEDPosition position = new com.irurueta.navigation.frames.NEDPosition();
+        final NEDPosition position = new NEDPosition();
 
         // check default values
         assertEquals(position.getHeightDistance().getValue().doubleValue(), 0.0, 0.0);
@@ -260,7 +262,7 @@ public class NEDPositionTest {
         final Angle longitudeAngle = new Angle(longitude, AngleUnit.RADIANS);
         final Distance heightDistance = new Distance(height, DistanceUnit.METER);
 
-        final com.irurueta.navigation.frames.NEDPosition position = new com.irurueta.navigation.frames.NEDPosition();
+        final NEDPosition position = new NEDPosition();
 
         // check default values
         assertEquals(position.getLatitudeAngle().getValue().doubleValue(), 0.0, 0.0);
@@ -296,9 +298,9 @@ public class NEDPositionTest {
         final double longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
 
-        final com.irurueta.navigation.frames.NEDPosition
-            position1 = new com.irurueta.navigation.frames.NEDPosition(latitude, longitude, height);
-        final com.irurueta.navigation.frames.NEDPosition position2 = new com.irurueta.navigation.frames.NEDPosition();
+        final NEDPosition
+            position1 = new NEDPosition(latitude, longitude, height);
+        final NEDPosition position2 = new NEDPosition();
         position1.copyTo(position2);
 
         // check
@@ -314,9 +316,9 @@ public class NEDPositionTest {
         final double longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
 
-        final com.irurueta.navigation.frames.NEDPosition
-            position1 = new com.irurueta.navigation.frames.NEDPosition(latitude, longitude, height);
-        final com.irurueta.navigation.frames.NEDPosition position2 = new com.irurueta.navigation.frames.NEDPosition();
+        final NEDPosition
+            position1 = new NEDPosition(latitude, longitude, height);
+        final NEDPosition position2 = new NEDPosition();
         position2.copyFrom(position1);
 
         // check
@@ -332,11 +334,11 @@ public class NEDPositionTest {
         final double longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
 
-        final com.irurueta.navigation.frames.NEDPosition
-            position1 = new com.irurueta.navigation.frames.NEDPosition(latitude, longitude, height);
-        final com.irurueta.navigation.frames.NEDPosition
-            position2 = new com.irurueta.navigation.frames.NEDPosition(latitude, longitude, height);
-        final com.irurueta.navigation.frames.NEDPosition position3 = new com.irurueta.navigation.frames.NEDPosition();
+        final NEDPosition
+            position1 = new NEDPosition(latitude, longitude, height);
+        final NEDPosition
+            position2 = new NEDPosition(latitude, longitude, height);
+        final NEDPosition position3 = new NEDPosition();
 
         assertEquals(position1.hashCode(), position2.hashCode());
         assertNotEquals(position1.hashCode(), position3.hashCode());
@@ -349,11 +351,11 @@ public class NEDPositionTest {
         final double longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
 
-        final com.irurueta.navigation.frames.NEDPosition
-            position1 = new com.irurueta.navigation.frames.NEDPosition(latitude, longitude, height);
-        final com.irurueta.navigation.frames.NEDPosition
-            position2 = new com.irurueta.navigation.frames.NEDPosition(latitude, longitude, height);
-        final com.irurueta.navigation.frames.NEDPosition position3 = new com.irurueta.navigation.frames.NEDPosition();
+        final NEDPosition
+            position1 = new NEDPosition(latitude, longitude, height);
+        final NEDPosition
+            position2 = new NEDPosition(latitude, longitude, height);
+        final NEDPosition position3 = new NEDPosition();
 
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
         assertTrue(position1.equals((Object) position1));
@@ -375,11 +377,11 @@ public class NEDPositionTest {
         final double longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
 
-        final com.irurueta.navigation.frames.NEDPosition
-            position1 = new com.irurueta.navigation.frames.NEDPosition(latitude, longitude, height);
-        final com.irurueta.navigation.frames.NEDPosition
-            position2 = new com.irurueta.navigation.frames.NEDPosition(latitude, longitude, height);
-        final com.irurueta.navigation.frames.NEDPosition position3 = new com.irurueta.navigation.frames.NEDPosition();
+        final NEDPosition
+            position1 = new NEDPosition(latitude, longitude, height);
+        final NEDPosition
+            position2 = new NEDPosition(latitude, longitude, height);
+        final NEDPosition position3 = new NEDPosition();
 
         assertTrue(position1.equals(position1, THRESHOLD));
         assertTrue(position1.equals(position2, THRESHOLD));
@@ -394,10 +396,28 @@ public class NEDPositionTest {
         final double longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
 
-        final com.irurueta.navigation.frames.NEDPosition position1 = new NEDPosition(latitude, longitude, height);
+        final NEDPosition position1 = new NEDPosition(latitude, longitude, height);
 
         final Object position2 = position1.clone();
 
         assertEquals(position1, position2);
+    }
+
+    @Test
+    public void testSerializeDeserialize() throws IOException, ClassNotFoundException {
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+
+        final NEDPosition position1 = new NEDPosition(latitude, longitude, height);
+
+        // serialize and deserialize
+        final byte[] bytes = SerializationHelper.serialize(position1);
+        final NEDPosition position2 = SerializationHelper.deserialize(bytes);
+
+        // check
+        assertEquals(position1, position2);
+        assertNotSame(position1, position2);
     }
 }

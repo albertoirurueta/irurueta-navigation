@@ -4,12 +4,14 @@ import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.WrongSizeException;
 import com.irurueta.geometry.InhomogeneousPoint3D;
 import com.irurueta.geometry.Point3D;
+import com.irurueta.navigation.SerializationHelper;
 import com.irurueta.navigation.geodesic.Constants;
 import com.irurueta.statistics.UniformRandomizer;
 import com.irurueta.units.Distance;
 import com.irurueta.units.DistanceUnit;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.Random;
 
 import static org.junit.Assert.*;
@@ -29,7 +31,7 @@ public class ECEFPositionTest {
     public void testConstructor() {
 
         // test empty constructor
-        com.irurueta.navigation.frames.ECEFPosition position = new com.irurueta.navigation.frames.ECEFPosition();
+        ECEFPosition position = new ECEFPosition();
 
         // check
         assertEquals(position.getX(), 0.0, 0.0);
@@ -53,7 +55,7 @@ public class ECEFPositionTest {
         final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
         final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        position = new com.irurueta.navigation.frames.ECEFPosition(x, y, z);
+        position = new ECEFPosition(x, y, z);
 
         // check
         assertEquals(position.getX(), x, 0.0);
@@ -77,7 +79,7 @@ public class ECEFPositionTest {
         final Distance distanceY2 = new Distance(y, DistanceUnit.METER);
         final Distance distanceZ2 = new Distance(z, DistanceUnit.METER);
 
-        position = new com.irurueta.navigation.frames.ECEFPosition(distanceX2, distanceY2, distanceZ2);
+        position = new ECEFPosition(distanceX2, distanceY2, distanceZ2);
 
         // check
         assertEquals(position.getX(), x, 0.0);
@@ -94,7 +96,7 @@ public class ECEFPositionTest {
 
 
         // test copy constructor
-        final com.irurueta.navigation.frames.ECEFPosition position2 = new com.irurueta.navigation.frames.ECEFPosition(position);
+        final ECEFPosition position2 = new ECEFPosition(position);
 
         // check
         assertEquals(position.getX(), position2.getX(), 0.0);
@@ -108,7 +110,7 @@ public class ECEFPositionTest {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final com.irurueta.navigation.frames.ECEFPosition position = new com.irurueta.navigation.frames.ECEFPosition();
+        final ECEFPosition position = new ECEFPosition();
 
         // check default value
         assertEquals(position.getX(), 0.0, 0.0);
@@ -125,7 +127,7 @@ public class ECEFPositionTest {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final com.irurueta.navigation.frames.ECEFPosition position = new com.irurueta.navigation.frames.ECEFPosition();
+        final ECEFPosition position = new ECEFPosition();
 
         // check default value
         assertEquals(position.getY(), 0.0, 0.0);
@@ -142,7 +144,7 @@ public class ECEFPositionTest {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final com.irurueta.navigation.frames.ECEFPosition position = new com.irurueta.navigation.frames.ECEFPosition();
+        final ECEFPosition position = new ECEFPosition();
 
         // check default value
         assertEquals(position.getZ(), 0.0, 0.0);
@@ -161,7 +163,7 @@ public class ECEFPositionTest {
         final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
         final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final com.irurueta.navigation.frames.ECEFPosition position = new com.irurueta.navigation.frames.ECEFPosition();
+        final ECEFPosition position = new ECEFPosition();
 
         // check default values
         assertEquals(position.getX(), 0.0, 0.0);
@@ -184,7 +186,7 @@ public class ECEFPositionTest {
         final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
         final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final com.irurueta.navigation.frames.ECEFPosition position = new com.irurueta.navigation.frames.ECEFPosition();
+        final ECEFPosition position = new ECEFPosition();
 
         // check default value
         assertEquals(position.getPosition(), Point3D.create());
@@ -207,7 +209,7 @@ public class ECEFPositionTest {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final com.irurueta.navigation.frames.ECEFPosition position = new com.irurueta.navigation.frames.ECEFPosition();
+        final ECEFPosition position = new ECEFPosition();
 
         // check default value
         final Distance distanceX1 = position.getDistanceX();
@@ -233,7 +235,7 @@ public class ECEFPositionTest {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final com.irurueta.navigation.frames.ECEFPosition position = new com.irurueta.navigation.frames.ECEFPosition();
+        final ECEFPosition position = new ECEFPosition();
 
         // check default value
         final Distance distanceY1 = position.getDistanceY();
@@ -259,7 +261,7 @@ public class ECEFPositionTest {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final com.irurueta.navigation.frames.ECEFPosition position = new com.irurueta.navigation.frames.ECEFPosition();
+        final ECEFPosition position = new ECEFPosition();
 
         // check default values
         final Distance distanceZ1 = position.getDistanceZ();
@@ -287,7 +289,7 @@ public class ECEFPositionTest {
         final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
         final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final com.irurueta.navigation.frames.ECEFPosition position = new com.irurueta.navigation.frames.ECEFPosition();
+        final ECEFPosition position = new ECEFPosition();
 
         // check default values
         final Distance distanceX = new Distance(x, DistanceUnit.METER);
@@ -308,7 +310,7 @@ public class ECEFPositionTest {
         final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
         final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final com.irurueta.navigation.frames.ECEFPosition position = new com.irurueta.navigation.frames.ECEFPosition(x, y, z);
+        final ECEFPosition position = new ECEFPosition(x, y, z);
 
         final double norm = Math.sqrt(Math.pow(x, 2.0) + Math.pow(y, 2.0)
                 + Math.pow(z, 2.0));
@@ -330,8 +332,8 @@ public class ECEFPositionTest {
         final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
         final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final com.irurueta.navigation.frames.ECEFPosition position1 = new com.irurueta.navigation.frames.ECEFPosition(x, y, z);
-        final com.irurueta.navigation.frames.ECEFPosition position2 = new com.irurueta.navigation.frames.ECEFPosition();
+        final ECEFPosition position1 = new ECEFPosition(x, y, z);
+        final ECEFPosition position2 = new ECEFPosition();
 
         position1.copyTo(position2);
 
@@ -348,8 +350,8 @@ public class ECEFPositionTest {
         final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
         final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final com.irurueta.navigation.frames.ECEFPosition position1 = new com.irurueta.navigation.frames.ECEFPosition(x, y, z);
-        final com.irurueta.navigation.frames.ECEFPosition position2 = new com.irurueta.navigation.frames.ECEFPosition();
+        final ECEFPosition position1 = new ECEFPosition(x, y, z);
+        final ECEFPosition position2 = new ECEFPosition();
 
         position2.copyFrom(position1);
 
@@ -366,9 +368,9 @@ public class ECEFPositionTest {
         final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
         final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final com.irurueta.navigation.frames.ECEFPosition position = new com.irurueta.navigation.frames.ECEFPosition(x, y, z);
+        final ECEFPosition position = new ECEFPosition(x, y, z);
 
-        final double[] result1 = new double[com.irurueta.navigation.frames.ECEFPosition.COMPONENTS];
+        final double[] result1 = new double[ECEFPosition.COMPONENTS];
         position.asArray(result1);
 
         final double[] result2 = position.asArray();
@@ -394,9 +396,9 @@ public class ECEFPositionTest {
         final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
         final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final com.irurueta.navigation.frames.ECEFPosition position = new com.irurueta.navigation.frames.ECEFPosition(x, y, z);
+        final ECEFPosition position = new ECEFPosition(x, y, z);
 
-        final Matrix result1 = new Matrix(com.irurueta.navigation.frames.ECEFPosition.COMPONENTS, 1);
+        final Matrix result1 = new Matrix(ECEFPosition.COMPONENTS, 1);
         position.asMatrix(result1);
 
         final Matrix result2 = position.asMatrix();
@@ -419,9 +421,9 @@ public class ECEFPositionTest {
         final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
         final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final com.irurueta.navigation.frames.ECEFPosition position1 = new com.irurueta.navigation.frames.ECEFPosition(x, y, z);
-        final com.irurueta.navigation.frames.ECEFPosition position2 = new com.irurueta.navigation.frames.ECEFPosition(x, y, z);
-        final com.irurueta.navigation.frames.ECEFPosition position3 = new com.irurueta.navigation.frames.ECEFPosition();
+        final ECEFPosition position1 = new ECEFPosition(x, y, z);
+        final ECEFPosition position2 = new ECEFPosition(x, y, z);
+        final ECEFPosition position3 = new ECEFPosition();
 
         assertEquals(position1.hashCode(), position2.hashCode());
         assertNotEquals(position1.hashCode(), position3.hashCode());
@@ -434,9 +436,9 @@ public class ECEFPositionTest {
         final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
         final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final com.irurueta.navigation.frames.ECEFPosition position1 = new com.irurueta.navigation.frames.ECEFPosition(x, y, z);
-        final com.irurueta.navigation.frames.ECEFPosition position2 = new com.irurueta.navigation.frames.ECEFPosition(x, y, z);
-        final com.irurueta.navigation.frames.ECEFPosition position3 = new com.irurueta.navigation.frames.ECEFPosition();
+        final ECEFPosition position1 = new ECEFPosition(x, y, z);
+        final ECEFPosition position2 = new ECEFPosition(x, y, z);
+        final ECEFPosition position3 = new ECEFPosition();
 
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
         assertTrue(position1.equals((Object) position1));
@@ -458,9 +460,9 @@ public class ECEFPositionTest {
         final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
         final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final com.irurueta.navigation.frames.ECEFPosition position1 = new com.irurueta.navigation.frames.ECEFPosition(x, y, z);
-        final com.irurueta.navigation.frames.ECEFPosition position2 = new com.irurueta.navigation.frames.ECEFPosition(x, y, z);
-        final com.irurueta.navigation.frames.ECEFPosition position3 = new com.irurueta.navigation.frames.ECEFPosition();
+        final ECEFPosition position1 = new ECEFPosition(x, y, z);
+        final ECEFPosition position2 = new ECEFPosition(x, y, z);
+        final ECEFPosition position3 = new ECEFPosition();
 
         assertTrue(position1.equals(position1, THRESHOLD));
         assertTrue(position1.equals(position2, THRESHOLD));
@@ -475,10 +477,28 @@ public class ECEFPositionTest {
         final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
         final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final com.irurueta.navigation.frames.ECEFPosition position1 = new ECEFPosition(x, y, z);
+        final ECEFPosition position1 = new ECEFPosition(x, y, z);
 
         final Object position2 = position1.clone();
 
         assertEquals(position1, position2);
+    }
+
+    @Test
+    public void testSerializeDeserialize() throws IOException, ClassNotFoundException {
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+
+        final ECEFPosition position1 = new ECEFPosition(x, y, z);
+
+        // serialize and deserialize
+        final byte[] bytes = SerializationHelper.serialize(position1);
+        final ECEFPosition position2 = SerializationHelper.deserialize(bytes);
+
+        // check
+        assertEquals(position1, position2);
+        assertNotSame(position1, position2);
     }
 }

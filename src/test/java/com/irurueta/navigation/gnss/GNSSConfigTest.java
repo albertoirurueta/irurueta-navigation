@@ -2,6 +2,7 @@ package com.irurueta.navigation.gnss;
 
 import com.irurueta.geometry.InhomogeneousPoint3D;
 import com.irurueta.geometry.Point3D;
+import com.irurueta.navigation.SerializationHelper;
 import com.irurueta.navigation.frames.ECEFPosition;
 import com.irurueta.statistics.UniformRandomizer;
 import com.irurueta.units.Angle;
@@ -14,6 +15,7 @@ import com.irurueta.units.Time;
 import com.irurueta.units.TimeUnit;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.Random;
 
 import static org.junit.Assert.*;
@@ -3492,5 +3494,58 @@ public class GNSSConfigTest {
         final Object config2 = config1.clone();
 
         assertEquals(config1, config2);
+    }
+
+    @Test
+    public void testSerializeDeserialize() throws IOException, ClassNotFoundException {
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double epochInterval = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double initialEstimatedEcefPositionX = randomizer.nextDouble(MIN_VALUE,
+                MAX_VALUE);
+        final double initialEstimatedEcefPositionY = randomizer.nextDouble(MIN_VALUE,
+                MAX_VALUE);
+        final double initialEstimatedEcefPositionZ = randomizer.nextDouble(MIN_VALUE,
+                MAX_VALUE);
+        final int numberOfSatellites = randomizer.nextInt(MIN_SATELLITES,
+                MAX_SATELLITES);
+        final double orbitalRadiusOfSatellites = randomizer.nextDouble(MIN_VALUE,
+                MAX_VALUE);
+        final double satellitesInclinationDegrees = randomizer.nextDouble(MIN_VALUE,
+                MAX_VALUE);
+        final double constellationLongitudeOffsetDegrees = randomizer.nextDouble(
+                MIN_VALUE, MAX_VALUE);
+        final double constellationTimingOffset = randomizer.nextDouble(MIN_VALUE,
+                MAX_VALUE);
+        final double maskAngleDegrees = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double sisErrorSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double zenithIonosphereErrorSD = randomizer.nextDouble(
+                MIN_VALUE, MAX_VALUE);
+        final double zenithTroposphereErrorSD = randomizer.nextDouble(MIN_VALUE,
+                MAX_VALUE);
+        final double codeTrackingErrorSD = randomizer.nextDouble(MIN_VALUE,
+                MAX_VALUE);
+        final double rangeRateTrackingErrorSD = randomizer.nextDouble(MIN_VALUE,
+                MAX_VALUE);
+        final double initialReceiverClockOffset = randomizer.nextDouble(MIN_VALUE,
+                MAX_VALUE);
+        final double initialReceiverClockDrift = randomizer.nextDouble(MIN_VALUE,
+                MAX_VALUE);
+
+        final GNSSConfig config1 = new GNSSConfig(epochInterval, initialEstimatedEcefPositionX,
+                initialEstimatedEcefPositionY, initialEstimatedEcefPositionZ,
+                numberOfSatellites, orbitalRadiusOfSatellites,
+                satellitesInclinationDegrees, constellationLongitudeOffsetDegrees,
+                constellationTimingOffset, maskAngleDegrees, sisErrorSD,
+                zenithIonosphereErrorSD, zenithTroposphereErrorSD, codeTrackingErrorSD,
+                rangeRateTrackingErrorSD, initialReceiverClockOffset,
+                initialReceiverClockDrift);
+
+        // serialize and deserialize
+        final byte[] bytes = SerializationHelper.serialize(config1);
+        final GNSSConfig config2 = SerializationHelper.deserialize(bytes);
+
+        // check
+        assertEquals(config1, config2);
+        assertNotSame(config1, config2);
     }
 }

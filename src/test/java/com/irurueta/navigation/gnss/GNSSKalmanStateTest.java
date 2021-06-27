@@ -17,9 +17,11 @@ package com.irurueta.navigation.gnss;
 
 import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.WrongSizeException;
+import com.irurueta.navigation.SerializationHelper;
 import com.irurueta.statistics.UniformRandomizer;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.Random;
 
 import static org.junit.Assert.*;
@@ -379,6 +381,32 @@ public class GNSSKalmanStateTest {
 
         final Object state2 = state1.clone();
 
+        assertEquals(state1, state2);
+    }
+
+    @Test
+    public void testSerializeDeserialize() throws WrongSizeException, IOException, ClassNotFoundException {
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double x = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double y = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double z = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double vx = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double vy = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double vz = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double clockOffset = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double clockDrift = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final GNSSEstimation estimation = new GNSSEstimation(x, y, z, vx, vy, vz,
+                clockOffset, clockDrift);
+        final Matrix covariance = Matrix.identity(GNSSEstimation.NUM_PARAMETERS,
+                GNSSEstimation.NUM_PARAMETERS);
+        final GNSSKalmanState state1 = new GNSSKalmanState(estimation, covariance);
+
+        // serialize and deserialize
+        final byte[] bytes = SerializationHelper.serialize(state1);
+        final GNSSKalmanState state2 = SerializationHelper.deserialize(bytes);
+
+        // check
+        assertNotSame(state1, state2);
         assertEquals(state1, state2);
     }
 }

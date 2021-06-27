@@ -15,6 +15,7 @@
  */
 package com.irurueta.navigation.gnss;
 
+import com.irurueta.navigation.SerializationHelper;
 import com.irurueta.statistics.UniformRandomizer;
 import com.irurueta.units.Distance;
 import com.irurueta.units.DistanceUnit;
@@ -22,6 +23,7 @@ import com.irurueta.units.Speed;
 import com.irurueta.units.SpeedUnit;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.Random;
 
 import static org.junit.Assert.*;
@@ -803,5 +805,36 @@ public class GNSSKalmanConfigTest {
         final Object config2 = config1.clone();
 
         assertEquals(config1, config2);
+    }
+
+    @Test
+    public void testSerializeDeserialize() throws IOException, ClassNotFoundException {
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double initialPositionUncertainty = randomizer.nextDouble(
+                MIN_VALUE, MAX_VALUE);
+        final double initialVelocityUncertainty = randomizer.nextDouble(
+                MIN_VALUE, MAX_VALUE);
+        final double initialClockOffsetUncertainty = randomizer.nextDouble(
+                MIN_VALUE, MAX_VALUE);
+        final double initialClockDriftUncertainty = randomizer.nextDouble(
+                MIN_VALUE, MAX_VALUE);
+        final double accelerationPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double clockFrequencyPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double clockPhasePSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double pseudoRangeSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double rangeRateSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+
+        final GNSSKalmanConfig config1 = new GNSSKalmanConfig(initialPositionUncertainty,
+                initialVelocityUncertainty, initialClockOffsetUncertainty,
+                initialClockDriftUncertainty, accelerationPSD, clockFrequencyPSD,
+                clockPhasePSD, pseudoRangeSD, rangeRateSD);
+
+        // serialize and deserialize
+        final byte[] bytes = SerializationHelper.serialize(config1);
+        final GNSSKalmanConfig config2 = SerializationHelper.deserialize(bytes);
+
+        // check
+        assertEquals(config1, config2);
+        assertNotSame(config1, config2);
     }
 }

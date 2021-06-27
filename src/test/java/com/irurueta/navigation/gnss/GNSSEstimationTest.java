@@ -19,6 +19,7 @@ import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.WrongSizeException;
 import com.irurueta.geometry.InhomogeneousPoint3D;
 import com.irurueta.geometry.Point3D;
+import com.irurueta.navigation.SerializationHelper;
 import com.irurueta.navigation.frames.ECEFPosition;
 import com.irurueta.navigation.frames.ECEFVelocity;
 import com.irurueta.navigation.geodesic.Constants;
@@ -29,6 +30,7 @@ import com.irurueta.units.Speed;
 import com.irurueta.units.SpeedUnit;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.Random;
 
 import static org.junit.Assert.*;
@@ -1171,5 +1173,33 @@ public class GNSSEstimationTest {
         final Object estimation2 = estimation1.clone();
 
         assertEquals(estimation1, estimation2);
+    }
+
+    @Test
+    public void testSerializeDeserialize() throws IOException, ClassNotFoundException {
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final double y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final double z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+
+        final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+
+        final double clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET,
+                MAX_CLOCK_OFFSET);
+        final double clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT,
+                MAX_CLOCK_DRIFT);
+
+        final GNSSEstimation estimation1 = new GNSSEstimation(
+                x, y, z, vx, vy, vz, clockOffset, clockDrift);
+
+        // serialize and deserialize
+        final byte[] bytes = SerializationHelper.serialize(estimation1);
+        final GNSSEstimation estimation2 = SerializationHelper.deserialize(bytes);
+
+        // check
+        assertEquals(estimation1, estimation2);
+        assertNotSame(estimation1, estimation2);
     }
 }

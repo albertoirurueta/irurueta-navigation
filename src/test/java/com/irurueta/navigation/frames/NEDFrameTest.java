@@ -19,6 +19,7 @@ import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.WrongSizeException;
 import com.irurueta.geometry.InvalidRotationMatrixException;
 import com.irurueta.geometry.Quaternion;
+import com.irurueta.navigation.SerializationHelper;
 import com.irurueta.statistics.UniformRandomizer;
 import com.irurueta.units.Angle;
 import com.irurueta.units.AngleUnit;
@@ -28,6 +29,7 @@ import com.irurueta.units.Speed;
 import com.irurueta.units.SpeedUnit;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.Random;
 
 import static org.junit.Assert.*;
@@ -1853,6 +1855,51 @@ public class NEDFrameTest {
 
         final Object frame2 = frame1.clone();
 
+        assertEquals(frame1, frame2);
+    }
+
+    @Test
+    public void testSerializeDeserialize() throws InvalidRotationMatrixException, InvalidSourceAndDestinationFrameTypeException, IOException, ClassNotFoundException {
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double roll = Math.toDegrees(
+                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double pitch = Math.toDegrees(
+                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double yaw = Math.toDegrees(
+                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final Quaternion q = new Quaternion(roll, pitch, yaw);
+
+        final Matrix m = q.asInhomogeneousMatrix();
+        final CoordinateTransformation c = new CoordinateTransformation(
+                m, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
+
+        final double latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+
+        final double vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final double ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final double vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+
+        final NEDFrame frame1 = new NEDFrame(
+                latitude, longitude, height, vn, ve, vd, c);
+
+        // check
+        assertEquals(latitude, frame1.getLatitude(), 0.0);
+        assertEquals(longitude, frame1.getLongitude(), 0.0);
+        assertEquals(height, frame1.getHeight(), 0.0);
+        assertEquals(vn, frame1.getVn(), 0.0);
+        assertEquals(ve, frame1.getVe(), 0.0);
+        assertEquals(vd, frame1.getVd(), 0.0);
+        assertNotSame(c, frame1.getCoordinateTransformation());
+        assertEquals(c, frame1.getCoordinateTransformation());
+
+        // serialize and deserialize
+        final byte[] bytes = SerializationHelper.serialize(frame1);
+        final NEDFrame frame2 = SerializationHelper.deserialize(bytes);
+
+        // check
+        assertNotSame(frame1, frame2);
         assertEquals(frame1, frame2);
     }
 }

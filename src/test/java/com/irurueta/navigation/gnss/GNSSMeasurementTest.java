@@ -17,6 +17,7 @@ package com.irurueta.navigation.gnss;
 
 import com.irurueta.geometry.InhomogeneousPoint3D;
 import com.irurueta.geometry.Point3D;
+import com.irurueta.navigation.SerializationHelper;
 import com.irurueta.navigation.frames.ECEFPosition;
 import com.irurueta.navigation.frames.ECEFVelocity;
 import com.irurueta.navigation.geodesic.Constants;
@@ -27,6 +28,7 @@ import com.irurueta.units.Speed;
 import com.irurueta.units.SpeedUnit;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.Random;
 
 import static org.junit.Assert.*;
@@ -949,5 +951,31 @@ public class GNSSMeasurementTest {
         final Object measurement2 = measurement1.clone();
 
         assertEquals(measurement1, measurement2);
+    }
+
+    @Test
+    public void testSerializeDeserialize() throws IOException, ClassNotFoundException {
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double pseudoRange = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final double pseudoRate = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+
+        final double x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final double y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final double z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+
+        final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+
+        final GNSSMeasurement measurement1 = new GNSSMeasurement(
+                pseudoRange, pseudoRate, x, y, z, vx, vy, vz);
+
+        // serialize and deserialize
+        final byte[] bytes = SerializationHelper.serialize(measurement1);
+        final GNSSMeasurement measurement2 = SerializationHelper.deserialize(bytes);
+
+        // check
+        assertEquals(measurement1, measurement2);
+        assertNotSame(measurement1, measurement2);
     }
 }

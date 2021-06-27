@@ -21,6 +21,7 @@ import com.irurueta.geometry.InhomogeneousPoint3D;
 import com.irurueta.geometry.InvalidRotationMatrixException;
 import com.irurueta.geometry.Point3D;
 import com.irurueta.geometry.Quaternion;
+import com.irurueta.navigation.SerializationHelper;
 import com.irurueta.navigation.geodesic.Constants;
 import com.irurueta.statistics.UniformRandomizer;
 import com.irurueta.units.Distance;
@@ -29,6 +30,7 @@ import com.irurueta.units.Speed;
 import com.irurueta.units.SpeedUnit;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.Random;
 
 import static org.junit.Assert.*;
@@ -1468,5 +1470,43 @@ public class ECIFrameTest {
         final Object frame2 = frame1.clone();
 
         assertEquals(frame1, frame2);
+    }
+
+    @Test
+    public void testSerializeDeserialize() throws InvalidRotationMatrixException,
+            InvalidSourceAndDestinationFrameTypeException, IOException,
+            ClassNotFoundException {
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+        final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+
+        final double vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+
+        final double roll = Math.toRadians(
+                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double pitch = Math.toRadians(
+                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double yaw = Math.toRadians(
+                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final Quaternion q = new Quaternion(roll, pitch, yaw);
+
+        final Matrix m = q.asInhomogeneousMatrix();
+        final CoordinateTransformation c = new CoordinateTransformation(
+                m, FrameType.BODY_FRAME,
+                FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+
+        final ECIFrame frame1 = new ECIFrame(x, y, z, vx, vy, vz, c);
+
+        // serialize and deserialize
+        final byte[] bytes = SerializationHelper.serialize(frame1);
+        final ECIFrame frame2 = SerializationHelper.deserialize(bytes);
+
+        // check
+        assertEquals(frame1, frame2);
+        assertNotSame(frame1, frame2);
     }
 }

@@ -17,6 +17,7 @@ package com.irurueta.navigation.gnss;
 
 import com.irurueta.geometry.InhomogeneousPoint3D;
 import com.irurueta.geometry.Point3D;
+import com.irurueta.navigation.SerializationHelper;
 import com.irurueta.navigation.frames.ECEFPosition;
 import com.irurueta.navigation.frames.ECEFVelocity;
 import com.irurueta.navigation.geodesic.Constants;
@@ -27,6 +28,7 @@ import com.irurueta.units.Speed;
 import com.irurueta.units.SpeedUnit;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.Random;
 
 import static org.junit.Assert.*;
@@ -976,5 +978,32 @@ public class ECEFPositionAndVelocityTest {
                 .clone();
 
         assertEquals(positionAndVelocity1, positionAndVelocity2);
+    }
+
+    @Test
+    public void testSerializeDeserialize() throws IOException, ClassNotFoundException {
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double x = randomizer.nextDouble(MIN_POSITION_VALUE,
+                MAX_POSITION_VALUE);
+        final double y = randomizer.nextDouble(MIN_POSITION_VALUE,
+                MAX_POSITION_VALUE);
+        final double z = randomizer.nextDouble(MIN_POSITION_VALUE,
+                MAX_POSITION_VALUE);
+
+        final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+
+        final ECEFPositionAndVelocity positionAndVelocity1 =
+                new ECEFPositionAndVelocity(x, y, z, vx, vy, vz);
+
+        // serialize and deserialize
+        final byte[] bytes = SerializationHelper.serialize(positionAndVelocity1);
+        final ECEFPositionAndVelocity positionAndVelocity2 =
+                SerializationHelper.deserialize(bytes);
+
+        // check
+        assertEquals(positionAndVelocity1, positionAndVelocity2);
+        assertNotSame(positionAndVelocity1, positionAndVelocity2);
     }
 }
