@@ -63,7 +63,7 @@ com.irurueta:irurueta-navigation,com.irurueta.navigation.gnss,GNSSBiasesGenerato
 com.irurueta:irurueta-navigation,com.irurueta.navigation.gnss,GNSSConfig,0,1502,16,42,0,360,16,123,0,110
 com.irurueta:irurueta-navigation,com.irurueta.navigation.gnss,GNSSMeasurementsGenerator,8,823,2,10,4,153,2,27,0,23
 com.irurueta:irurueta-navigation,com.irurueta.navigation.gnss,GNSSKalmanEpochEstimator,8,756,4,18,2,157,4,14,0,7
-com.irurueta:irurueta-navigation,com.irurueta.navigation.gnss,ECEFPositionAndVelocity,0,696,5,15,0,189,5,75,0,70
+com.irurueta:irurueta-navigation,com.irurueta.navigation.gnss,ECEFPositionAndVelocity,0,696,4,16,0,189,4,76,0,70
 com.irurueta:irurueta-navigation,com.irurueta.navigation.gnss,GNSSKalmanFilteredEstimator,17,545,8,56,5,150,8,62,0,38
 com.irurueta:irurueta-navigation,com.irurueta.navigation.gnss,GNSSKalmanConfig,0,580,8,18,0,148,8,54,0,49
 com.irurueta:irurueta-navigation,com.irurueta.navigation.gnss,GNSSException,0,16,0,0,0,8,0,4,0,4
