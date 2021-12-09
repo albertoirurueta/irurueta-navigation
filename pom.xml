@@ -5,7 +5,7 @@
 
     <groupId>com.irurueta</groupId>
     <artifactId>irurueta-navigation</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -70,25 +70,25 @@
         <dependency>
             <groupId>com.irurueta</groupId>
             <artifactId>irurueta-numerical</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.irurueta</groupId>
             <artifactId>irurueta-geometry</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.irurueta</groupId>
             <artifactId>irurueta-units</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.irurueta</groupId>
             <artifactId>irurueta-algebra</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0.0</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
@@ -109,7 +109,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.6</version>
+                        <version>3.0.1</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>
@@ -301,6 +301,9 @@
                     <serverId>ossrh</serverId>
                     <nexusUrl>https://oss.sonatype.org/</nexusUrl>
                     <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                    <keepStagingRepositoryOnFailure>true</keepStagingRepositoryOnFailure>
+                    <stagingProgressTimeoutMinutes>30</stagingProgressTimeoutMinutes>
+                    <stagingProfileId>${env.SONATYPE_STAGING_PROFILE_ID}</stagingProfileId>
                 </configuration>
             </plugin>
         </plugins>

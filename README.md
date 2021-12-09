@@ -1,8 +1,8 @@
 # irurueta-navigation
 A GNSS/INS navigation library
 
-[![Build Status](https://travis-ci.com/albertoirurueta/irurueta-navigation.svg?branch=master)](https://travis-ci.com/albertoirurueta/irurueta-navigation)
-
+[![Build Status](https://github.com/albertoirurueta/irurueta-navigation/actions/workflows/master.yml/badge.svg)](https://github.com/albertoirurueta/irurueta-navigation/actions)
+[![Build Status](https://github.com/albertoirurueta/irurueta-navigation/actions/workflows/develop.yml/badge.svg)](https://github.com/albertoirurueta/irurueta-navigation/actions)
 
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=albertoirurueta_irurueta-navigation&metric=bugs)](https://sonarcloud.io/dashboard?id=albertoirurueta_irurueta-navigation)
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=albertoirurueta_irurueta-navigation&metric=code_smells)](https://sonarcloud.io/dashboard?id=albertoirurueta_irurueta-navigation)
@@ -20,3 +20,17 @@ A GNSS/INS navigation library
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=albertoirurueta_irurueta-navigation&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=albertoirurueta_irurueta-navigation)
 
 [Maven Site Report](http://albertoirurueta.github.io/irurueta-navigation)
+
+## Usage
+
+Add the following dependency to your project:
+
+Latest release:
+```
+<dependency>
+    <groupId>com.irurueta</groupId>
+    <artifactId>irurueta-navigation</artifactId>
+    <version>1.0.0</version>
+    <scope>compile</scope>
+</dependency>
+```
