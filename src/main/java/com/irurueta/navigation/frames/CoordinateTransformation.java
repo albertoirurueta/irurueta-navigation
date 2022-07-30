@@ -38,8 +38,8 @@ import java.util.Objects;
  * and destination frame.
  * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multi-sensor
  * Integrated Navigation Systems, Second Edition" and on the companion software available at:
- * https://github.com/ymjdz/MATLAB-Codes/blob/master/Euler_to_CTM.m
- * https://github.com/ymjdz/MATLAB-Codes/blob/master/CTM_to_Euler.m
+ * <a href="https://github.com/ymjdz/MATLAB-Codes/blob/master/Euler_to_CTM.m">https://github.com/ymjdz/MATLAB-Codes/blob/master/Euler_to_CTM.m</a>
+ * <a href="https://github.com/ymjdz/MATLAB-Codes/blob/master/CTM_to_Euler.m">https://github.com/ymjdz/MATLAB-Codes/blob/master/CTM_to_Euler.m</a>
  */
 public class CoordinateTransformation implements Serializable, Cloneable {
 
@@ -162,6 +162,19 @@ public class CoordinateTransformation implements Serializable, Cloneable {
                                     final FrameType sourceType, final FrameType destinationType) {
         this(sourceType, destinationType);
         setEulerAngles(roll, pitch, yaw);
+    }
+
+    /**
+     * Constructor with 3D rotation.
+     *
+     * @param rotation        3D rotation.
+     * @param sourceType      source frame type.
+     * @param destinationType destination frame type.
+     */
+    public CoordinateTransformation(final Rotation3D rotation,
+                                    final FrameType sourceType, final FrameType destinationType) {
+        this(sourceType, destinationType);
+        fromRotation(rotation);
     }
 
     /**
@@ -473,6 +486,14 @@ public class CoordinateTransformation implements Serializable, Cloneable {
      */
     public void asRotation(final Rotation3D result) throws InvalidRotationMatrixException {
         result.fromMatrix(mMatrix);
+    }
+
+    /**
+     * Sets internal matrix as the inhomogeneous matrix representation of provided 3D rotation.
+     * @param rotation 3D rotation to set matrix from.
+     */
+    public void fromRotation(final Rotation3D rotation) {
+        rotation.asInhomogeneousMatrix(mMatrix);
     }
 
     /**
@@ -1346,7 +1367,7 @@ public class CoordinateTransformation implements Serializable, Cloneable {
      */
     @Override
     protected Object clone() throws CloneNotSupportedException {
-        final CoordinateTransformation result = (CoordinateTransformation)super.clone();
+        final CoordinateTransformation result = (CoordinateTransformation) super.clone();
         copyTo(result);
         return result;
     }

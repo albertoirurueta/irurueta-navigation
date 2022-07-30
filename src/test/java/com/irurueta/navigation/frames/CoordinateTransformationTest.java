@@ -237,6 +237,28 @@ public class CoordinateTransformationTest {
         assertTrue(c.getPitchEulerAngleMeasurement().equals(pitchAngle, THRESHOLD));
         assertTrue(c.getYawEulerAngleMeasurement().equals(yawAngle, THRESHOLD));
 
+        // test constructor from 3D rotation
+        c = new CoordinateTransformation(q, FrameType.LOCAL_NAVIGATION_FRAME,
+                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+
+        // check
+        assertEquals(q, c.asRotation());
+        assertEquals(c.getSourceType(), FrameType.LOCAL_NAVIGATION_FRAME);
+        assertEquals(c.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+
+        // Force NullPointerException
+        c = null;
+        try {
+            c = new CoordinateTransformation(q, null, FrameType.LOCAL_NAVIGATION_FRAME);
+            fail("NullPointerException expected but not thrown");
+        } catch (final NullPointerException ignore) {
+        }
+        try {
+            c = new CoordinateTransformation(q, FrameType.LOCAL_NAVIGATION_FRAME, null);
+            fail("NullPointerException expected but not thrown");
+        } catch (final NullPointerException ignore) {
+        }
+        assertNull(c);
 
         // test constructor from another value
         c = new CoordinateTransformation(m, FrameType.LOCAL_NAVIGATION_FRAME,
@@ -582,6 +604,26 @@ public class CoordinateTransformationTest {
 
         assertEquals(m, rotation1.asInhomogeneousMatrix());
         assertTrue(m.equals(rotation2.asInhomogeneousMatrix(), THRESHOLD));
+    }
+
+    @Test
+    public void testFromRotation() throws InvalidRotationMatrixException {
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double roll = Math.toRadians(
+                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double pitch = Math.toRadians(
+                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double yaw = Math.toRadians(
+                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final Quaternion rotation1 = new Quaternion(roll, pitch, yaw);
+
+        final CoordinateTransformation c = new CoordinateTransformation(
+                FrameType.LOCAL_NAVIGATION_FRAME,
+                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        c.fromRotation(rotation1);
+        final Rotation3D rotation2 = c.asRotation();
+        assertEquals(rotation2, rotation1);
+        assertEquals(rotation1.asInhomogeneousMatrix(), c.getMatrix());
     }
 
     @Test
