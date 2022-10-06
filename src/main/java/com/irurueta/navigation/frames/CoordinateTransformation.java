@@ -941,15 +941,15 @@ public class CoordinateTransformation implements Serializable, Cloneable {
         final double cosAngle = Math.cos(angle);
 
         result.setElementAt(0, 0, cosAngle);
-        result.setElementAt(1, 0, sinAngle);
-        result.setElementAt(2, 0, 0.0);
-
-        result.setElementAt(0, 1, -sinAngle);
-        result.setElementAt(1, 1, cosAngle);
-        result.setElementAt(2, 1, 0.0);
-
+        result.setElementAt(0, 1, sinAngle);
         result.setElementAt(0, 2, 0.0);
+
+        result.setElementAt(1, 0, -sinAngle);
+        result.setElementAt(1, 1, cosAngle);
         result.setElementAt(1, 2, 0.0);
+
+        result.setElementAt(2, 0, 0.0);
+        result.setElementAt(2, 1, 0.0);
         result.setElementAt(2, 2, 1.0);
     }
 

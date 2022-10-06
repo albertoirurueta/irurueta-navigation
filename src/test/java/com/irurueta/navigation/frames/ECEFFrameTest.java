@@ -21,6 +21,7 @@ import com.irurueta.geometry.InhomogeneousPoint3D;
 import com.irurueta.geometry.InvalidRotationMatrixException;
 import com.irurueta.geometry.Point3D;
 import com.irurueta.geometry.Quaternion;
+import com.irurueta.geometry.Rotation3D;
 import com.irurueta.navigation.SerializationHelper;
 import com.irurueta.navigation.geodesic.Constants;
 import com.irurueta.navigation.gnss.ECEFPositionAndVelocity;
@@ -1838,6 +1839,109 @@ public class ECEFFrameTest {
     }
 
     @Test
+    public void testGetSetCoordinateTransformationMatrix2() throws InvalidRotationMatrixException,
+            InvalidSourceAndDestinationFrameTypeException, WrongSizeException {
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double roll = Math.toRadians(
+                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double pitch = Math.toRadians(
+                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double yaw = Math.toRadians(
+                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final Quaternion q = new Quaternion(roll, pitch, yaw);
+
+        final Matrix m1 = q.asInhomogeneousMatrix();
+        final CoordinateTransformation c = new CoordinateTransformation(
+                FrameType.BODY_FRAME,
+                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+
+        final ECEFFrame frame = new ECEFFrame(c);
+
+        // check default value
+        assertEquals(frame.getCoordinateTransformationMatrix(),
+                Matrix.identity(Rotation3D.INHOM_COORDS, Rotation3D.INHOM_COORDS));
+        final Matrix m2 = new Matrix(CoordinateTransformation.ROWS, CoordinateTransformation.COLS);
+        frame.getCoordinateTransformationMatrix(m2);
+        assertEquals(m2, Matrix.identity(Rotation3D.INHOM_COORDS, Rotation3D.INHOM_COORDS));
+
+        // set nw value
+        frame.setCoordinateTransformationMatrix(m1, THRESHOLD);
+
+        // check
+        assertEquals(m1, frame.getCoordinateTransformationMatrix());
+        frame.getCoordinateTransformationMatrix(m2);
+        assertEquals(m1, m2);
+    }
+
+    @Test
+    public void testGetSetCoordinateTransformationMatrix3() throws InvalidRotationMatrixException,
+            InvalidSourceAndDestinationFrameTypeException, WrongSizeException {
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double roll = Math.toRadians(
+                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double pitch = Math.toRadians(
+                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double yaw = Math.toRadians(
+                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final Quaternion q = new Quaternion(roll, pitch, yaw);
+
+        final Matrix m1 = q.asInhomogeneousMatrix();
+        final CoordinateTransformation c = new CoordinateTransformation(
+                FrameType.BODY_FRAME,
+                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+
+        final ECEFFrame frame = new ECEFFrame(c);
+
+        // check default value
+        assertEquals(frame.getCoordinateTransformationMatrix(),
+                Matrix.identity(Rotation3D.INHOM_COORDS, Rotation3D.INHOM_COORDS));
+        final Matrix m2 = new Matrix(CoordinateTransformation.ROWS, CoordinateTransformation.COLS);
+        frame.getCoordinateTransformationMatrix(m2);
+        assertEquals(m2, Matrix.identity(Rotation3D.INHOM_COORDS, Rotation3D.INHOM_COORDS));
+
+        // set nw value
+        frame.setCoordinateTransformationMatrix(m1);
+
+        // check
+        assertEquals(m1, frame.getCoordinateTransformationMatrix());
+        frame.getCoordinateTransformationMatrix(m2);
+        assertEquals(m1, m2);
+    }
+
+    @Test
+    public void testGetSetCoordinateTransformationRotation() throws InvalidSourceAndDestinationFrameTypeException,
+            InvalidRotationMatrixException {
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double roll = Math.toRadians(
+                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double pitch = Math.toRadians(
+                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double yaw = Math.toRadians(
+                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final Quaternion q = new Quaternion(roll, pitch, yaw);
+
+        final CoordinateTransformation c = new CoordinateTransformation(
+                FrameType.BODY_FRAME,
+                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+
+        final ECEFFrame frame = new ECEFFrame(c);
+
+        // check default value
+        assertEquals(new Quaternion(), frame.getCoordinateTransformationRotation());
+        final Quaternion q2 = new Quaternion();
+        frame.getCoordinateTransformationRotation(q2);
+        assertEquals(new Quaternion(), q2);
+
+        // set new value
+        frame.setCoordinateTransformationRotation(q);
+
+        // check
+        assertEquals(q, frame.getCoordinateTransformationRotation());
+        frame.getCoordinateTransformationRotation(q2);
+        assertEquals(q, q2);
+    }
+
+    @Test
     public void testIsValidCoordinateTransformation() {
 
         final CoordinateTransformation c1 = new CoordinateTransformation(
@@ -2085,7 +2189,8 @@ public class ECEFFrameTest {
     }
 
     @Test
-    public void testSerializeDeserialize() throws InvalidRotationMatrixException, InvalidSourceAndDestinationFrameTypeException, IOException, ClassNotFoundException {
+    public void testSerializeDeserialize() throws InvalidRotationMatrixException,
+            InvalidSourceAndDestinationFrameTypeException, IOException, ClassNotFoundException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);

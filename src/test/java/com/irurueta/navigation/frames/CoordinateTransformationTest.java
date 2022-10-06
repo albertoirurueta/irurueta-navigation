@@ -1030,6 +1030,14 @@ public class CoordinateTransformationTest {
         assertEquals(cei1, cei3);
         assertEquals(cei1, cei4);
 
+        final double alpha = CoordinateTransformation.EARTH_ROTATION_RATE * TIME_INTERVAL_SECONDS;
+        final Matrix cei = Matrix.identity(3, 3);
+        cei.setElementAtIndex(0,  Math.cos(alpha));
+        cei.setElementAtIndex(1, -Math.sin(alpha));
+        cei.setElementAtIndex(3, Math.sin(alpha));
+        cei.setElementAtIndex(4, Math.cos(alpha));
+        assertEquals(cei1, cei);
+
         // test when zero time interval is equal to the identity
         final Matrix cei5 = CoordinateTransformation
                 .ecefToEciMatrixFromTimeInterval(0.0);
@@ -1058,6 +1066,13 @@ public class CoordinateTransformationTest {
                 .ecefToEciMatrixFromTimeInterval(TIME_INTERVAL_SECONDS);
 
         assertEquals(cei1, cei5);
+
+        final Matrix cei = Matrix.identity(3, 3);
+        cei.setElementAtIndex(0,  Math.cos(alpha));
+        cei.setElementAtIndex(1, -Math.sin(alpha));
+        cei.setElementAtIndex(3, Math.sin(alpha));
+        cei.setElementAtIndex(4, Math.cos(alpha));
+        assertEquals(cei1, cei);
 
         // test when zero angle is equal to the identity
         final Matrix cei6 = CoordinateTransformation
