@@ -17,6 +17,8 @@ package com.irurueta.navigation.frames;
 
 import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.WrongSizeException;
+import com.irurueta.geometry.InvalidRotationMatrixException;
+import com.irurueta.geometry.Rotation3D;
 import com.irurueta.units.Angle;
 import com.irurueta.units.AngleConverter;
 import com.irurueta.units.AngleUnit;
@@ -1071,6 +1073,74 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
     @Override
     public void getCoordinateTransformationMatrix(final Matrix result) {
         mC.mMatrix.copyTo(result);
+    }
+
+    /**
+     * Sets coordinate transformation matrix keeping current source and destination {@link FrameType}.
+     * This is more efficient than getting a copy of coordinate transformation calling to
+     * {@link #getCoordinateTransformation()}, setting coordinate matrix into copied coordinate transformation and
+     * then setting the coordinate transformation calling {@link #setCoordinateTransformation(CoordinateTransformation)}.
+     *
+     * @param matrix    a 3x3 coordinate transformation matrix to be set.
+     * @param threshold threshold to validate rotation matrix.
+     * @throws InvalidRotationMatrixException if provided matrix is not a valid rotation matrix (3x3 and orthonormal).
+     * @throws IllegalArgumentException       if provided threshold is negative.
+     */
+    @Override
+    public void setCoordinateTransformationMatrix(final Matrix matrix, final double threshold)
+            throws InvalidRotationMatrixException {
+        mC.setMatrix(matrix,threshold);
+    }
+
+    /**
+     * Sts coordinate transformation matrix keeping current source and destination {@link FrameType}.
+     * This is more efficient than getting a copy of coordinate transformation calling to
+     * {@link #getCoordinateTransformation()}, setting coordinate matrix into copied coordinate transformation and
+     * then setting the coordinate transformation calling {@link #setCoordinateTransformation(CoordinateTransformation)}.
+     *
+     * @param matrix a 3x3 coordinate transformation matrix to be set.
+     * @throws InvalidRotationMatrixException if provided matrix is not a valid rotation matrix (3x3 and orthonormal).
+     */
+    @Override
+    public void setCoordinateTransformationMatrix(final Matrix matrix) throws InvalidRotationMatrixException {
+        mC.setMatrix(matrix);
+    }
+
+    /**
+     * Gets coordinate transformation as a new 3D rotation instance.
+     * This is equivalent to calling getCoordinateTransformation().asRotation(), but more efficient.
+     *
+     * @return new coordinate transformation as a 3D rotation.
+     * @throws InvalidRotationMatrixException if internal matrix cannot be converted to a 3D rotation.
+     */
+    @Override
+    public Rotation3D getCoordinateTransformationRotation() throws InvalidRotationMatrixException {
+        return mC.asRotation();
+    }
+
+    /**
+     * Gets coordinate transformation as a 3D rotation.
+     * This is equivalent to calling getCoordinateTransformation().asRotation(), but more efficient.
+     *
+     * @param result instance where coordinate transformation 3D rotation will be copied to.
+     * @throws InvalidRotationMatrixException if internal matrix cannot be converted to a 3D rotation.
+     */
+    @Override
+    public void getCoordinateTransformationRotation(final Rotation3D result) throws InvalidRotationMatrixException {
+        mC.asRotation(result);
+    }
+
+    /**
+     * Sets coordinate transformation from 3D rotation and keeping current source and destination {@link FrameType}.
+     * This is more efficient than getting a copy of coordinate transformation calling to
+     * {@link #getCoordinateTransformation()}, setting rotation into copied coordinate transformation and
+     * then setting the coordinate transformation calling {@link #setCoordinateTransformation(CoordinateTransformation)}.
+     *
+     * @param rotation set rotation into current coordinate rotation.
+     */
+    @Override
+    public void setCoordinateTransformationRotation(final Rotation3D rotation) {
+        mC.fromRotation(rotation);
     }
 
     /**

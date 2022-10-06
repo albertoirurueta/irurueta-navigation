@@ -25,7 +25,7 @@ import com.irurueta.units.Speed;
  * Position and velocity of this frame is expressed along ECEF axes as described here:
  * {@link FrameType#EARTH_CENTERED_EARTH_FIXED_FRAME}.
  */
-public class ECEFFrame extends ECIorECEFFrame<ECEFFrame> {
+public class ECEFFrame extends ECIorECEFFrame<ECEFFrame> implements Cloneable {
 
     /**
      * Constructor.
