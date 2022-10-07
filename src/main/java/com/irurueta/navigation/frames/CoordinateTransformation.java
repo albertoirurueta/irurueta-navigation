@@ -941,10 +941,10 @@ public class CoordinateTransformation implements Serializable, Cloneable {
         final double cosAngle = Math.cos(angle);
 
         result.setElementAt(0, 0, cosAngle);
-        result.setElementAt(0, 1, sinAngle);
+        result.setElementAt(0, 1, -sinAngle);
         result.setElementAt(0, 2, 0.0);
 
-        result.setElementAt(1, 0, -sinAngle);
+        result.setElementAt(1, 0, sinAngle);
         result.setElementAt(1, 1, cosAngle);
         result.setElementAt(1, 2, 0.0);
 
@@ -1176,8 +1176,28 @@ public class CoordinateTransformation implements Serializable, Cloneable {
      * @param result instance where result will be stored.
      */
     public static void eciToEcefMatrixFromAngle(final double angle, final Matrix result) {
-        ecefToEciMatrixFromAngle(angle, result);
-        result.transpose();
+        if (result.getRows() != ROWS || result.getColumns() != COLS) {
+            try {
+                result.resize(ROWS, COLS);
+            } catch (final WrongSizeException ignore) {
+                // never happens
+            }
+        }
+
+        final double sinAngle = Math.sin(angle);
+        final double cosAngle = Math.cos(angle);
+
+        result.setElementAt(0, 0, cosAngle);
+        result.setElementAt(0, 1, sinAngle);
+        result.setElementAt(0, 2, 0.0);
+
+        result.setElementAt(1, 0, -sinAngle);
+        result.setElementAt(1, 1, cosAngle);
+        result.setElementAt(1, 2, 0.0);
+
+        result.setElementAt(2, 0, 0.0);
+        result.setElementAt(2, 1, 0.0);
+        result.setElementAt(2, 2, 1.0);
     }
 
     /**
