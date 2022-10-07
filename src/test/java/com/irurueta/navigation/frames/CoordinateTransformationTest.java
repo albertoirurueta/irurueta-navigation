@@ -1033,8 +1033,8 @@ public class CoordinateTransformationTest {
         final double alpha = CoordinateTransformation.EARTH_ROTATION_RATE * TIME_INTERVAL_SECONDS;
         final Matrix cei = Matrix.identity(3, 3);
         cei.setElementAtIndex(0,  Math.cos(alpha));
-        cei.setElementAtIndex(1, -Math.sin(alpha));
-        cei.setElementAtIndex(3, Math.sin(alpha));
+        cei.setElementAtIndex(1, Math.sin(alpha));
+        cei.setElementAtIndex(3, -Math.sin(alpha));
         cei.setElementAtIndex(4, Math.cos(alpha));
         assertEquals(cei1, cei);
 
@@ -1069,8 +1069,8 @@ public class CoordinateTransformationTest {
 
         final Matrix cei = Matrix.identity(3, 3);
         cei.setElementAtIndex(0,  Math.cos(alpha));
-        cei.setElementAtIndex(1, -Math.sin(alpha));
-        cei.setElementAtIndex(3, Math.sin(alpha));
+        cei.setElementAtIndex(1, Math.sin(alpha));
+        cei.setElementAtIndex(3, -Math.sin(alpha));
         cei.setElementAtIndex(4, Math.cos(alpha));
         assertEquals(cei1, cei);
 
