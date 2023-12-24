@@ -32,6 +32,7 @@ public class ECIFrame extends ECIorECEFFrame<ECIFrame> implements Cloneable {
      * identity.
      */
     public ECIFrame() {
+        super(ECIFrame.class);
         mC = new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_INERTIAL_FRAME);
     }
 
@@ -436,29 +437,6 @@ public class ECIFrame extends ECIorECEFFrame<ECIFrame> implements Cloneable {
     }
 
     /**
-     * Checks if provided object is an ECIFFrame having exactly the same contents as
-     * this instance.
-     *
-     * @param obj Object to be compared.
-     * @return true if both objects are considered to be equal, false otherwise.
-     */
-    @Override
-    public boolean equals(final Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof ECIFrame)) {
-            return false;
-        }
-
-        final ECIFrame other = (ECIFrame) obj;
-        return equals(other);
-    }
-
-    /**
      * Makes a copy of this instance.
      *
      * @return a copy of this instance.
@@ -468,6 +446,7 @@ public class ECIFrame extends ECIorECEFFrame<ECIFrame> implements Cloneable {
     protected Object clone() throws CloneNotSupportedException {
         final ECIFrame result = (ECIFrame)super.clone();
         copyTo(result);
+        mClass = ECIFrame.class;
         return result;
     }
 }
