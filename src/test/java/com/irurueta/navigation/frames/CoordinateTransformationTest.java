@@ -50,39 +50,34 @@ public class CoordinateTransformationTest {
 
     @Test
     public void testConstants() {
-        assertEquals(CoordinateTransformation.ROWS, 3);
-        assertEquals(CoordinateTransformation.COLS, 3);
-        assertEquals(CoordinateTransformation.DEFAULT_THRESHOLD,
-                1e-11, 0.0);
+        assertEquals(3, CoordinateTransformation.ROWS);
+        assertEquals(3, CoordinateTransformation.COLS);
+        assertEquals(1e-11, CoordinateTransformation.DEFAULT_THRESHOLD, 0.0);
         assertEquals(CoordinateTransformation.EARTH_ROTATION_RATE,
                 Constants.EARTH_ROTATION_RATE, 0.0);
     }
 
     @Test
-    public void testConstructor() throws WrongSizeException,
-            InvalidRotationMatrixException {
+    public void testConstructor() throws WrongSizeException, InvalidRotationMatrixException {
 
         // test constructor with source and destination
         CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.LOCAL_NAVIGATION_FRAME,
-                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
         // check
-        assertEquals(c.getSourceType(), FrameType.LOCAL_NAVIGATION_FRAME);
-        assertEquals(c.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
-        assertEquals(c.getMatrix(), Matrix.identity(3, 3));
+        assertEquals(FrameType.LOCAL_NAVIGATION_FRAME, c.getSourceType());
+        assertEquals(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME, c.getDestinationType());
+        assertEquals(Matrix.identity(3, 3), c.getMatrix());
 
         // Force NullPointerException
         c = null;
         try {
-            c = new CoordinateTransformation(null,
-                    FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+            c = new CoordinateTransformation(null, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
             fail("NullPointerException expected but not thrown");
         } catch (final NullPointerException ignore) {
         }
         try {
-            c = new CoordinateTransformation(FrameType.LOCAL_NAVIGATION_FRAME,
-                    null);
+            c = new CoordinateTransformation(FrameType.LOCAL_NAVIGATION_FRAME, null);
             fail("NullPointerException expected but not thrown");
         } catch (final NullPointerException ignore) {
         }
@@ -91,12 +86,9 @@ public class CoordinateTransformationTest {
 
         // test constructor with matrix, source, destination and threshold
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double roll = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
         final Quaternion q = new Quaternion(roll, pitch, yaw);
 
         final Matrix m = q.asInhomogeneousMatrix();
@@ -104,30 +96,27 @@ public class CoordinateTransformationTest {
                 FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME, THRESHOLD);
 
         // check
-        assertEquals(c.getSourceType(), FrameType.LOCAL_NAVIGATION_FRAME);
-        assertEquals(c.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
-        assertEquals(c.getMatrix(), m);
+        assertEquals(FrameType.LOCAL_NAVIGATION_FRAME, c.getSourceType());
+        assertEquals(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME, c.getDestinationType());
+        assertEquals(m, c.getMatrix());
 
         // Force InvalidRotationMatrixException
         c = null;
         try {
             c = new CoordinateTransformation(new Matrix(3, 3),
-                    FrameType.LOCAL_NAVIGATION_FRAME,
-                    FrameType.LOCAL_NAVIGATION_FRAME, THRESHOLD);
+                    FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME, THRESHOLD);
             fail("InvalidRotationMatrixException expected but not thrown");
         } catch (final InvalidRotationMatrixException ignore) {
         }
         try {
             c = new CoordinateTransformation(new Matrix(1, 3),
-                    FrameType.LOCAL_NAVIGATION_FRAME,
-                    FrameType.LOCAL_NAVIGATION_FRAME, THRESHOLD);
+                    FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME, THRESHOLD);
             fail("InvalidRotationMatrixException expected but not thrown");
         } catch (final InvalidRotationMatrixException ignore) {
         }
         try {
             c = new CoordinateTransformation(new Matrix(3, 1),
-                    FrameType.LOCAL_NAVIGATION_FRAME,
-                    FrameType.LOCAL_NAVIGATION_FRAME, THRESHOLD);
+                    FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME, THRESHOLD);
             fail("InvalidRotationMatrixException expected but not thrown");
         } catch (final InvalidRotationMatrixException ignore) {
         }
@@ -163,30 +152,27 @@ public class CoordinateTransformationTest {
                 FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
         // check
-        assertEquals(c.getSourceType(), FrameType.LOCAL_NAVIGATION_FRAME);
-        assertEquals(c.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
-        assertEquals(c.getMatrix(), m);
+        assertEquals(FrameType.LOCAL_NAVIGATION_FRAME, c.getSourceType());
+        assertEquals(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME, c.getDestinationType());
+        assertEquals(m, c.getMatrix());
 
         // Force InvalidRotationMatrixException
         c = null;
         try {
             c = new CoordinateTransformation(new Matrix(3, 3),
-                    FrameType.LOCAL_NAVIGATION_FRAME,
-                    FrameType.LOCAL_NAVIGATION_FRAME);
+                    FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
             fail("InvalidRotationMatrixException expected but not thrown");
         } catch (final InvalidRotationMatrixException ignore) {
         }
         try {
             c = new CoordinateTransformation(new Matrix(1, 3),
-                    FrameType.LOCAL_NAVIGATION_FRAME,
-                    FrameType.LOCAL_NAVIGATION_FRAME);
+                    FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
             fail("InvalidRotationMatrixException expected but not thrown");
         } catch (final InvalidRotationMatrixException ignore) {
         }
         try {
             c = new CoordinateTransformation(new Matrix(3, 1),
-                    FrameType.LOCAL_NAVIGATION_FRAME,
-                    FrameType.LOCAL_NAVIGATION_FRAME);
+                    FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
             fail("InvalidRotationMatrixException expected but not thrown");
         } catch (final InvalidRotationMatrixException ignore) {
         }
@@ -194,14 +180,12 @@ public class CoordinateTransformationTest {
 
         // Force NullPointerException
         try {
-            c = new CoordinateTransformation(m, null,
-                    FrameType.LOCAL_NAVIGATION_FRAME);
+            c = new CoordinateTransformation(m, null, FrameType.LOCAL_NAVIGATION_FRAME);
             fail("NullPointerException expected but not thrown");
         } catch (final NullPointerException ignore) {
         }
         try {
-            c = new CoordinateTransformation(m,
-                    FrameType.LOCAL_NAVIGATION_FRAME, null);
+            c = new CoordinateTransformation(m, FrameType.LOCAL_NAVIGATION_FRAME, null);
             fail("NullPointerException expected but not thrown");
         } catch (final NullPointerException ignore) {
         }
@@ -212,11 +196,11 @@ public class CoordinateTransformationTest {
                 FrameType.LOCAL_NAVIGATION_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
         // check
-        assertEquals(c.getRollEulerAngle(), roll, ABSOLUTE_ERROR);
-        assertEquals(c.getPitchEulerAngle(), pitch, ABSOLUTE_ERROR);
-        assertEquals(c.getYawEulerAngle(), yaw, ABSOLUTE_ERROR);
-        assertEquals(c.getSourceType(), FrameType.LOCAL_NAVIGATION_FRAME);
-        assertEquals(c.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(roll, c.getRollEulerAngle(), ABSOLUTE_ERROR);
+        assertEquals(pitch, c.getPitchEulerAngle(), ABSOLUTE_ERROR);
+        assertEquals(yaw, c.getYawEulerAngle(), ABSOLUTE_ERROR);
+        assertEquals(FrameType.LOCAL_NAVIGATION_FRAME, c.getSourceType());
+        assertEquals(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME, c.getDestinationType());
 
 
         // test constructor from euler angles
@@ -228,11 +212,11 @@ public class CoordinateTransformationTest {
                 FrameType.LOCAL_NAVIGATION_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
         // check
-        assertEquals(c.getRollEulerAngle(), roll, ABSOLUTE_ERROR);
-        assertEquals(c.getPitchEulerAngle(), pitch, ABSOLUTE_ERROR);
-        assertEquals(c.getYawEulerAngle(), yaw, ABSOLUTE_ERROR);
-        assertEquals(c.getSourceType(), FrameType.LOCAL_NAVIGATION_FRAME);
-        assertEquals(c.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(roll, c.getRollEulerAngle(), ABSOLUTE_ERROR);
+        assertEquals(pitch, c.getPitchEulerAngle(), ABSOLUTE_ERROR);
+        assertEquals(yaw, c.getYawEulerAngle(), ABSOLUTE_ERROR);
+        assertEquals(FrameType.LOCAL_NAVIGATION_FRAME, c.getSourceType());
+        assertEquals(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME, c.getDestinationType());
         assertTrue(c.getRollEulerAngleMeasurement().equals(rollAngle, THRESHOLD));
         assertTrue(c.getPitchEulerAngleMeasurement().equals(pitchAngle, THRESHOLD));
         assertTrue(c.getYawEulerAngleMeasurement().equals(yawAngle, THRESHOLD));
@@ -243,8 +227,8 @@ public class CoordinateTransformationTest {
 
         // check
         assertEquals(q, c.asRotation());
-        assertEquals(c.getSourceType(), FrameType.LOCAL_NAVIGATION_FRAME);
-        assertEquals(c.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(FrameType.LOCAL_NAVIGATION_FRAME, c.getSourceType());
+        assertEquals(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME, c.getDestinationType());
 
         // Force NullPointerException
         c = null;
@@ -273,22 +257,17 @@ public class CoordinateTransformationTest {
     }
 
     @Test
-    public void testGetMatrix() throws InvalidRotationMatrixException,
-            WrongSizeException {
+    public void testGetMatrix() throws InvalidRotationMatrixException, WrongSizeException {
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double roll = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
         final Quaternion q = new Quaternion(roll, pitch, yaw);
 
         final Matrix m = q.asInhomogeneousMatrix();
         final CoordinateTransformation c = new CoordinateTransformation(m,
-                FrameType.LOCAL_NAVIGATION_FRAME,
-                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
         Matrix m2 = c.getMatrix();
 
@@ -303,33 +282,28 @@ public class CoordinateTransformationTest {
     }
 
     @Test
-    public void testSetMatrixWithThreshold() throws WrongSizeException,
-            InvalidRotationMatrixException {
+    public void testSetMatrixWithThreshold() throws WrongSizeException, InvalidRotationMatrixException {
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double roll = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
         final Quaternion q = new Quaternion(roll, pitch, yaw);
 
         final Matrix m = q.asInhomogeneousMatrix();
 
         final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.LOCAL_NAVIGATION_FRAME,
-                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
         // check default value
-        assertEquals(c.getMatrix(), Matrix.identity(3, 3));
+        assertEquals(Matrix.identity(3, 3), c.getMatrix());
 
         // set new value
         c.setMatrix(m, THRESHOLD);
 
         // check
-        assertEquals(c.getMatrix(), m);
-        assertNotSame(c.getMatrix(), m);
+        assertEquals(m, c.getMatrix());
+        assertNotSame(m, c.getMatrix());
 
         // Force InvalidRotationMatrixException
         try {
@@ -357,26 +331,21 @@ public class CoordinateTransformationTest {
     }
 
     @Test
-    public void testSetMatrixWithoutThreshold() throws WrongSizeException,
-            InvalidRotationMatrixException {
+    public void testSetMatrixWithoutThreshold() throws WrongSizeException, InvalidRotationMatrixException {
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double roll = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
         final Quaternion q = new Quaternion(roll, pitch, yaw);
 
         final Matrix m = q.asInhomogeneousMatrix();
 
         final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.LOCAL_NAVIGATION_FRAME,
-                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
         // check default value
-        assertEquals(c.getMatrix(), Matrix.identity(3, 3));
+        assertEquals(Matrix.identity(3, 3), c.getMatrix());
 
         // set new value
         c.setMatrix(m);
@@ -407,24 +376,18 @@ public class CoordinateTransformationTest {
     public void testIsValidMatrixWithThreshold() throws WrongSizeException {
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double roll = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
         final Quaternion q = new Quaternion(roll, pitch, yaw);
 
         final Matrix m = q.asInhomogeneousMatrix();
 
         assertTrue(CoordinateTransformation.isValidMatrix(m, THRESHOLD));
 
-        assertFalse(CoordinateTransformation.isValidMatrix(
-                new Matrix(3, 3), THRESHOLD));
-        assertFalse(CoordinateTransformation.isValidMatrix(
-                new Matrix(1, 3), THRESHOLD));
-        assertFalse(CoordinateTransformation.isValidMatrix(
-                new Matrix(3, 1), THRESHOLD));
+        assertFalse(CoordinateTransformation.isValidMatrix(new Matrix(3, 3), THRESHOLD));
+        assertFalse(CoordinateTransformation.isValidMatrix(new Matrix(1, 3), THRESHOLD));
+        assertFalse(CoordinateTransformation.isValidMatrix(new Matrix(3, 1), THRESHOLD));
 
         // test with Nan matrix
         m.initialize(Double.NaN);
@@ -442,24 +405,18 @@ public class CoordinateTransformationTest {
     public void testIsValidMatrixWithoutThreshold() throws WrongSizeException {
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double roll = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
         final Quaternion q = new Quaternion(roll, pitch, yaw);
 
         final Matrix m = q.asInhomogeneousMatrix();
 
         assertTrue(CoordinateTransformation.isValidMatrix(m));
 
-        assertFalse(CoordinateTransformation.isValidMatrix(
-                new Matrix(3, 3)));
-        assertFalse(CoordinateTransformation.isValidMatrix(
-                new Matrix(1, 3)));
-        assertFalse(CoordinateTransformation.isValidMatrix(
-                new Matrix(3, 1)));
+        assertFalse(CoordinateTransformation.isValidMatrix(new Matrix(3, 3)));
+        assertFalse(CoordinateTransformation.isValidMatrix(new Matrix(1, 3)));
+        assertFalse(CoordinateTransformation.isValidMatrix(new Matrix(3, 1)));
 
         // test with Nan matrix
         m.initialize(Double.NaN);
@@ -469,16 +426,12 @@ public class CoordinateTransformationTest {
     @Test
     public void testGetSetEulerAngles() {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double roll1 = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch1 = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw1 = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double roll1 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double pitch1 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double yaw1 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
         final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.LOCAL_NAVIGATION_FRAME,
-                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
         c.setEulerAngles(roll1, pitch1, yaw1);
 
@@ -494,20 +447,16 @@ public class CoordinateTransformationTest {
     @Test
     public void testGetSetEulerAnglesMeasurements() {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double roll = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
         final Angle rollAngle1 = new Angle(roll, AngleUnit.RADIANS);
         final Angle pitchAngle1 = new Angle(pitch, AngleUnit.RADIANS);
         final Angle yawAngle1 = new Angle(yaw, AngleUnit.RADIANS);
 
         final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.LOCAL_NAVIGATION_FRAME,
-                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
         c.setEulerAngles(rollAngle1, pitchAngle1, yawAngle1);
 
@@ -537,17 +486,16 @@ public class CoordinateTransformationTest {
     public void testGetSetSourceType() {
 
         final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.LOCAL_NAVIGATION_FRAME,
-                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
         // check initial value
-        assertEquals(c.getSourceType(), FrameType.LOCAL_NAVIGATION_FRAME);
+        assertEquals(FrameType.LOCAL_NAVIGATION_FRAME, c.getSourceType());
 
         // set new value
         c.setSourceType(FrameType.BODY_FRAME);
 
         // check
-        assertEquals(c.getSourceType(), FrameType.BODY_FRAME);
+        assertEquals(FrameType.BODY_FRAME, c.getSourceType());
 
         // Force NullPointerException
         try {
@@ -561,17 +509,16 @@ public class CoordinateTransformationTest {
     public void testGetSetDestinationType() {
 
         final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.LOCAL_NAVIGATION_FRAME,
-                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
         // check initial value
-        assertEquals(c.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME, c.getDestinationType());
 
         // set new value
         c.setDestinationType(FrameType.BODY_FRAME);
 
         // check
-        assertEquals(c.getDestinationType(), FrameType.BODY_FRAME);
+        assertEquals(FrameType.BODY_FRAME, c.getDestinationType());
 
         // Force NullPointerException
         try {
@@ -585,18 +532,14 @@ public class CoordinateTransformationTest {
     public void testAsRotation() throws InvalidRotationMatrixException {
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double roll = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
         final Quaternion q = new Quaternion(roll, pitch, yaw);
 
         final Matrix m = q.asInhomogeneousMatrix();
         final CoordinateTransformation c = new CoordinateTransformation(m,
-                FrameType.LOCAL_NAVIGATION_FRAME,
-                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
         final Rotation3D rotation1 = c.asRotation();
         Quaternion rotation2 = new Quaternion();
@@ -609,17 +552,13 @@ public class CoordinateTransformationTest {
     @Test
     public void testFromRotation() throws InvalidRotationMatrixException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double roll = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
         final Quaternion rotation1 = new Quaternion(roll, pitch, yaw);
 
         final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.LOCAL_NAVIGATION_FRAME,
-                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
         c.fromRotation(rotation1);
         final Rotation3D rotation2 = c.asRotation();
         assertEquals(rotation2, rotation1);
@@ -630,18 +569,14 @@ public class CoordinateTransformationTest {
     public void testCopyTo() throws InvalidRotationMatrixException {
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double roll = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
         final Quaternion q = new Quaternion(roll, pitch, yaw);
 
         final Matrix m = q.asInhomogeneousMatrix();
         final CoordinateTransformation c1 = new CoordinateTransformation(m,
-                FrameType.LOCAL_NAVIGATION_FRAME,
-                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
         final CoordinateTransformation c2 = new CoordinateTransformation(
                 FrameType.BODY_FRAME, FrameType.BODY_FRAME);
@@ -658,18 +593,14 @@ public class CoordinateTransformationTest {
     public void testCopyFrom() throws InvalidRotationMatrixException {
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double roll = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
         final Quaternion q = new Quaternion(roll, pitch, yaw);
 
         final Matrix m = q.asInhomogeneousMatrix();
         final CoordinateTransformation c1 = new CoordinateTransformation(m,
-                FrameType.LOCAL_NAVIGATION_FRAME,
-                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
         final CoordinateTransformation c2 = new CoordinateTransformation(
                 FrameType.BODY_FRAME, FrameType.BODY_FRAME);
@@ -686,22 +617,17 @@ public class CoordinateTransformationTest {
     public void testHashCode() throws InvalidRotationMatrixException {
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double roll = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
         final Quaternion q = new Quaternion(roll, pitch, yaw);
 
         final Matrix m = q.asInhomogeneousMatrix();
         final CoordinateTransformation c1 = new CoordinateTransformation(m,
-                FrameType.LOCAL_NAVIGATION_FRAME,
-                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
         final CoordinateTransformation c2 = new CoordinateTransformation(m,
-                FrameType.LOCAL_NAVIGATION_FRAME,
-                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
         final CoordinateTransformation c3 = new CoordinateTransformation(
                 FrameType.BODY_FRAME, FrameType.BODY_FRAME);
@@ -714,22 +640,17 @@ public class CoordinateTransformationTest {
     public void testEquals() throws InvalidRotationMatrixException {
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double roll = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
         final Quaternion q = new Quaternion(roll, pitch, yaw);
 
         final Matrix m = q.asInhomogeneousMatrix();
         final CoordinateTransformation c1 = new CoordinateTransformation(m,
-                FrameType.LOCAL_NAVIGATION_FRAME,
-                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
         final CoordinateTransformation c2 = new CoordinateTransformation(m,
-                FrameType.LOCAL_NAVIGATION_FRAME,
-                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
         final CoordinateTransformation c3 = new CoordinateTransformation(
                 FrameType.BODY_FRAME, FrameType.BODY_FRAME);
@@ -751,22 +672,17 @@ public class CoordinateTransformationTest {
     public void testEqualsWithThreshold() throws InvalidRotationMatrixException {
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double roll = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
         final Quaternion q = new Quaternion(roll, pitch, yaw);
 
         final Matrix m = q.asInhomogeneousMatrix();
         final CoordinateTransformation c1 = new CoordinateTransformation(m,
-                FrameType.LOCAL_NAVIGATION_FRAME,
-                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
         final CoordinateTransformation c2 = new CoordinateTransformation(m,
-                FrameType.LOCAL_NAVIGATION_FRAME,
-                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
         final CoordinateTransformation c3 = new CoordinateTransformation(
                 FrameType.BODY_FRAME, FrameType.BODY_FRAME);
@@ -782,26 +698,20 @@ public class CoordinateTransformationTest {
             RankDeficientMatrixException, DecomposerException {
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double roll = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
         final Quaternion q = new Quaternion(roll, pitch, yaw);
 
         final Matrix m = q.asInhomogeneousMatrix();
         final CoordinateTransformation c1 = new CoordinateTransformation(m,
-                FrameType.LOCAL_NAVIGATION_FRAME,
-                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
         final CoordinateTransformation c2 = new CoordinateTransformation(m,
-                FrameType.LOCAL_NAVIGATION_FRAME,
-                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
         final CoordinateTransformation c3 = new CoordinateTransformation(m,
-                FrameType.LOCAL_NAVIGATION_FRAME,
-                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
         // check that initially they are equal
         assertEquals(c1, c2);
@@ -824,18 +734,14 @@ public class CoordinateTransformationTest {
             WrongSizeException, RankDeficientMatrixException, DecomposerException {
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double roll = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
         final Quaternion q = new Quaternion(roll, pitch, yaw);
 
         final Matrix m = q.asInhomogeneousMatrix();
         final CoordinateTransformation c = new CoordinateTransformation(m,
-                FrameType.LOCAL_NAVIGATION_FRAME,
-                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
         final CoordinateTransformation invC = c.inverseAndReturnNew();
 
@@ -886,8 +792,7 @@ public class CoordinateTransformationTest {
 
         final Matrix cen4 = new Matrix(3, 3);
         CoordinateTransformation.ecefToNedMatrix(latitude, longitude, cen4);
-        final Matrix cen5 = CoordinateTransformation.ecefToNedMatrix(
-                latitude, longitude);
+        final Matrix cen5 = CoordinateTransformation.ecefToNedMatrix(latitude, longitude);
 
         assertEquals(cen1, cen4);
         assertEquals(cen1, cen5);
@@ -905,15 +810,14 @@ public class CoordinateTransformationTest {
                         Math.toRadians(LONGITUDE_DEGREES));
 
         final Matrix cen = CoordinateTransformation.ecefToNedMatrix(
-                Math.toRadians(LATITUDE_DEGREES),
-                Math.toRadians(LONGITUDE_DEGREES));
+                Math.toRadians(LATITUDE_DEGREES), Math.toRadians(LONGITUDE_DEGREES));
 
-        assertEquals(c1.getSourceType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
-        assertEquals(c1.getDestinationType(), FrameType.LOCAL_NAVIGATION_FRAME);
+        assertEquals(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME, c1.getSourceType());
+        assertEquals(FrameType.LOCAL_NAVIGATION_FRAME, c1.getDestinationType());
         assertEquals(c1.getMatrix(), cen);
 
-        assertEquals(c2.getSourceType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
-        assertEquals(c2.getDestinationType(), FrameType.LOCAL_NAVIGATION_FRAME);
+        assertEquals(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME, c2.getSourceType());
+        assertEquals(FrameType.LOCAL_NAVIGATION_FRAME, c2.getDestinationType());
         assertEquals(c2.getMatrix(), cen);
 
         final Angle latitude = new Angle(LATITUDE_DEGREES, AngleUnit.DEGREES);
@@ -921,38 +825,33 @@ public class CoordinateTransformationTest {
 
         final CoordinateTransformation c3 = new CoordinateTransformation(
                 FrameType.BODY_FRAME, FrameType.BODY_FRAME);
-        CoordinateTransformation.ecefToNedCoordinateTransformationMatrix(
-                latitude, longitude, c3);
+        CoordinateTransformation.ecefToNedCoordinateTransformationMatrix(latitude, longitude, c3);
         final CoordinateTransformation c4 = CoordinateTransformation
                 .ecefToNedCoordinateTransformationMatrix(latitude, longitude);
 
-        assertEquals(c3.getSourceType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
-        assertEquals(c3.getDestinationType(), FrameType.LOCAL_NAVIGATION_FRAME);
+        assertEquals(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME, c3.getSourceType());
+        assertEquals(FrameType.LOCAL_NAVIGATION_FRAME, c3.getDestinationType());
         assertEquals(c3.getMatrix(), cen);
 
-        assertEquals(c4.getSourceType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
-        assertEquals(c4.getDestinationType(), FrameType.LOCAL_NAVIGATION_FRAME);
+        assertEquals(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME, c4.getSourceType());
+        assertEquals(FrameType.LOCAL_NAVIGATION_FRAME, c4.getDestinationType());
         assertEquals(c4.getMatrix(), cen);
     }
 
     @Test
     public void testNedToEcefMatrix() throws WrongSizeException {
         final Matrix cen = CoordinateTransformation.ecefToNedMatrix(
-                Math.toRadians(LATITUDE_DEGREES),
-                Math.toRadians(LONGITUDE_DEGREES));
+                Math.toRadians(LATITUDE_DEGREES), Math.toRadians(LONGITUDE_DEGREES));
         final Matrix cne = cen.transposeAndReturnNew();
 
         final Matrix cne1 = new Matrix(1, 1);
         final Matrix cne2 = new Matrix(3, 3);
         CoordinateTransformation.nedToEcefMatrix(
-                Math.toRadians(LATITUDE_DEGREES),
-                Math.toRadians(LONGITUDE_DEGREES), cne1);
+                Math.toRadians(LATITUDE_DEGREES), Math.toRadians(LONGITUDE_DEGREES), cne1);
         CoordinateTransformation.nedToEcefMatrix(
-                Math.toRadians(LATITUDE_DEGREES),
-                Math.toRadians(LONGITUDE_DEGREES), cne2);
+                Math.toRadians(LATITUDE_DEGREES), Math.toRadians(LONGITUDE_DEGREES), cne2);
         final Matrix cne3 = CoordinateTransformation.nedToEcefMatrix(
-                Math.toRadians(LATITUDE_DEGREES),
-                Math.toRadians(LONGITUDE_DEGREES));
+                Math.toRadians(LATITUDE_DEGREES), Math.toRadians(LONGITUDE_DEGREES));
 
         assertEquals(cne1, cne2);
         assertEquals(cne1, cne3);
@@ -963,8 +862,7 @@ public class CoordinateTransformationTest {
 
         final Matrix cne4 = new Matrix(3, 3);
         CoordinateTransformation.nedToEcefMatrix(latitude, longitude, cne4);
-        final Matrix cne5 = CoordinateTransformation.nedToEcefMatrix(
-                latitude, longitude);
+        final Matrix cne5 = CoordinateTransformation.nedToEcefMatrix(latitude, longitude);
 
         assertEquals(cne1, cne4);
         assertEquals(cne1, cne5);
@@ -978,19 +876,17 @@ public class CoordinateTransformationTest {
                 Math.toRadians(LATITUDE_DEGREES), Math.toRadians(LONGITUDE_DEGREES), c1);
         final CoordinateTransformation c2 = CoordinateTransformation
                 .nedToEcefCoordinateTransformationMatrix(
-                        Math.toRadians(LATITUDE_DEGREES),
-                        Math.toRadians(LONGITUDE_DEGREES));
+                        Math.toRadians(LATITUDE_DEGREES), Math.toRadians(LONGITUDE_DEGREES));
 
         final Matrix cne = CoordinateTransformation.nedToEcefMatrix(
-                Math.toRadians(LATITUDE_DEGREES),
-                Math.toRadians(LONGITUDE_DEGREES));
+                Math.toRadians(LATITUDE_DEGREES), Math.toRadians(LONGITUDE_DEGREES));
 
-        assertEquals(c1.getSourceType(), FrameType.LOCAL_NAVIGATION_FRAME);
-        assertEquals(c1.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(FrameType.LOCAL_NAVIGATION_FRAME, c1.getSourceType());
+        assertEquals(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME, c1.getDestinationType());
         assertEquals(c1.getMatrix(), cne);
 
-        assertEquals(c2.getSourceType(), FrameType.LOCAL_NAVIGATION_FRAME);
-        assertEquals(c2.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(FrameType.LOCAL_NAVIGATION_FRAME, c2.getSourceType());
+        assertEquals(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME, c2.getDestinationType());
         assertEquals(c2.getMatrix(), cne);
 
         final Angle latitude = new Angle(LATITUDE_DEGREES, AngleUnit.DEGREES);
@@ -998,17 +894,16 @@ public class CoordinateTransformationTest {
 
         final CoordinateTransformation c3 = new CoordinateTransformation(
                 FrameType.BODY_FRAME, FrameType.BODY_FRAME);
-        CoordinateTransformation.nedToEcefCoordinateTransformationMatrix(
-                latitude, longitude, c3);
+        CoordinateTransformation.nedToEcefCoordinateTransformationMatrix(latitude, longitude, c3);
         final CoordinateTransformation c4 = CoordinateTransformation
                 .nedToEcefCoordinateTransformationMatrix(latitude, longitude);
 
-        assertEquals(c3.getSourceType(), FrameType.LOCAL_NAVIGATION_FRAME);
-        assertEquals(c3.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(FrameType.LOCAL_NAVIGATION_FRAME, c3.getSourceType());
+        assertEquals(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME, c3.getDestinationType());
         assertEquals(c3.getMatrix(), cne);
 
-        assertEquals(c4.getSourceType(), FrameType.LOCAL_NAVIGATION_FRAME);
-        assertEquals(c4.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(FrameType.LOCAL_NAVIGATION_FRAME, c4.getSourceType());
+        assertEquals(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME, c4.getDestinationType());
         assertEquals(c4.getMatrix(), cne);
     }
 
@@ -1016,15 +911,12 @@ public class CoordinateTransformationTest {
     public void testEcefToEciMatrixFromTimeInterval() throws WrongSizeException {
         final Time timeInterval = new Time(TIME_INTERVAL_SECONDS, TimeUnit.SECOND);
         final Matrix cei1 = new Matrix(3, 3);
-        CoordinateTransformation.ecefToEciMatrixFromTimeInterval(
-                timeInterval, cei1);
-        final Matrix cei2 = CoordinateTransformation
-                .ecefToEciMatrixFromTimeInterval(timeInterval);
+        CoordinateTransformation.ecefToEciMatrixFromTimeInterval(timeInterval, cei1);
+        final Matrix cei2 = CoordinateTransformation.ecefToEciMatrixFromTimeInterval(timeInterval);
         final Matrix cei3 = new Matrix(3, 3);
-        CoordinateTransformation.ecefToEciMatrixFromTimeInterval(
-                TIME_INTERVAL_SECONDS, cei3);
-        final Matrix cei4 = CoordinateTransformation
-                .ecefToEciMatrixFromTimeInterval(TIME_INTERVAL_SECONDS);
+        CoordinateTransformation.ecefToEciMatrixFromTimeInterval(TIME_INTERVAL_SECONDS, cei3);
+        final Matrix cei4 = CoordinateTransformation.ecefToEciMatrixFromTimeInterval(
+                TIME_INTERVAL_SECONDS);
 
         assertEquals(cei1, cei2);
         assertEquals(cei1, cei3);
@@ -1032,51 +924,46 @@ public class CoordinateTransformationTest {
 
         final double alpha = CoordinateTransformation.EARTH_ROTATION_RATE * TIME_INTERVAL_SECONDS;
         final Matrix cei = Matrix.identity(3, 3);
-        cei.setElementAtIndex(0,  Math.cos(alpha));
+        cei.setElementAtIndex(0, Math.cos(alpha));
         cei.setElementAtIndex(1, Math.sin(alpha));
         cei.setElementAtIndex(3, -Math.sin(alpha));
         cei.setElementAtIndex(4, Math.cos(alpha));
         assertEquals(cei1, cei);
 
         // test when zero time interval is equal to the identity
-        final Matrix cei5 = CoordinateTransformation
-                .ecefToEciMatrixFromTimeInterval(0.0);
+        final Matrix cei5 = CoordinateTransformation.ecefToEciMatrixFromTimeInterval(0.0);
         assertEquals(cei5, Matrix.identity(3, 3));
     }
 
     @Test
     public void testEcefToEciMatrixFromAngle() throws WrongSizeException {
-        final double alpha = CoordinateTransformation.EARTH_ROTATION_RATE
-                * TIME_INTERVAL_SECONDS;
+        final double alpha = CoordinateTransformation.EARTH_ROTATION_RATE * TIME_INTERVAL_SECONDS;
         final Angle angle = new Angle(alpha, AngleUnit.RADIANS);
         final Matrix cei1 = new Matrix(3, 3);
         CoordinateTransformation.ecefToEciMatrixFromAngle(angle, cei1);
-        final Matrix cei2 = CoordinateTransformation
-                .ecefToEciMatrixFromAngle(angle);
+        final Matrix cei2 = CoordinateTransformation.ecefToEciMatrixFromAngle(angle);
         final Matrix cei3 = new Matrix(3, 3);
         CoordinateTransformation.ecefToEciMatrixFromAngle(alpha, cei3);
-        final Matrix cei4 = CoordinateTransformation
-                .ecefToEciMatrixFromAngle(alpha);
+        final Matrix cei4 = CoordinateTransformation.ecefToEciMatrixFromAngle(alpha);
 
         assertEquals(cei1, cei2);
         assertEquals(cei1, cei3);
         assertEquals(cei1, cei4);
 
-        final Matrix cei5 = CoordinateTransformation
-                .ecefToEciMatrixFromTimeInterval(TIME_INTERVAL_SECONDS);
+        final Matrix cei5 = CoordinateTransformation.ecefToEciMatrixFromTimeInterval(
+                TIME_INTERVAL_SECONDS);
 
         assertEquals(cei1, cei5);
 
         final Matrix cei = Matrix.identity(3, 3);
-        cei.setElementAtIndex(0,  Math.cos(alpha));
+        cei.setElementAtIndex(0, Math.cos(alpha));
         cei.setElementAtIndex(1, Math.sin(alpha));
         cei.setElementAtIndex(3, -Math.sin(alpha));
         cei.setElementAtIndex(4, Math.cos(alpha));
         assertEquals(cei1, cei);
 
         // test when zero angle is equal to the identity
-        final Matrix cei6 = CoordinateTransformation
-                .ecefToEciMatrixFromAngle(0.0);
+        final Matrix cei6 = CoordinateTransformation.ecefToEciMatrixFromAngle(0.0);
         assertEquals(cei6, Matrix.identity(3, 3));
     }
 
@@ -1085,47 +972,41 @@ public class CoordinateTransformationTest {
         final Time timeInterval = new Time(TIME_INTERVAL_SECONDS, TimeUnit.SECOND);
         final CoordinateTransformation c1 = new CoordinateTransformation(
                 FrameType.BODY_FRAME, FrameType.BODY_FRAME);
-        CoordinateTransformation
-                .ecefToEciCoordinateTransformationMatrixFromTimeInterval(
-                        timeInterval, c1);
-        final CoordinateTransformation c2 =
-                CoordinateTransformation
-                        .ecefToEciCoordinateTransformationMatrixFromTimeInterval(
-                                timeInterval);
+        CoordinateTransformation.ecefToEciCoordinateTransformationMatrixFromTimeInterval(
+                timeInterval, c1);
+        final CoordinateTransformation c2 = CoordinateTransformation
+                .ecefToEciCoordinateTransformationMatrixFromTimeInterval(timeInterval);
         final CoordinateTransformation c3 = new CoordinateTransformation(
                 FrameType.BODY_FRAME, FrameType.BODY_FRAME);
-        CoordinateTransformation
-                .ecefToEciCoordinateTransformationMatrixFromTimeInterval(
-                        TIME_INTERVAL_SECONDS, c3);
+        CoordinateTransformation.ecefToEciCoordinateTransformationMatrixFromTimeInterval(
+                TIME_INTERVAL_SECONDS, c3);
         final CoordinateTransformation c4 =
-                CoordinateTransformation
-                        .ecefToEciCoordinateTransformationMatrixFromTimeInterval(
-                                TIME_INTERVAL_SECONDS);
+                CoordinateTransformation.ecefToEciCoordinateTransformationMatrixFromTimeInterval(
+                        TIME_INTERVAL_SECONDS);
 
-        final Matrix cei = CoordinateTransformation
-                .ecefToEciMatrixFromTimeInterval(TIME_INTERVAL_SECONDS);
+        final Matrix cei = CoordinateTransformation.ecefToEciMatrixFromTimeInterval(
+                TIME_INTERVAL_SECONDS);
 
-        assertEquals(c1.getSourceType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
-        assertEquals(c1.getDestinationType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+        assertEquals(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME, c1.getSourceType());
+        assertEquals(FrameType.EARTH_CENTERED_INERTIAL_FRAME, c1.getDestinationType());
         assertEquals(c1.getMatrix(), cei);
 
-        assertEquals(c2.getSourceType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
-        assertEquals(c2.getDestinationType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+        assertEquals(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME, c2.getSourceType());
+        assertEquals(FrameType.EARTH_CENTERED_INERTIAL_FRAME, c2.getDestinationType());
         assertEquals(c2.getMatrix(), cei);
 
-        assertEquals(c3.getSourceType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
-        assertEquals(c3.getDestinationType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+        assertEquals(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME, c3.getSourceType());
+        assertEquals(FrameType.EARTH_CENTERED_INERTIAL_FRAME, c3.getDestinationType());
         assertEquals(c3.getMatrix(), cei);
 
-        assertEquals(c4.getSourceType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
-        assertEquals(c4.getDestinationType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+        assertEquals(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME, c4.getSourceType());
+        assertEquals(FrameType.EARTH_CENTERED_INERTIAL_FRAME, c4.getDestinationType());
         assertEquals(c4.getMatrix(), cei);
     }
 
     @Test
     public void testEcefToEciCoordinateTransformationMatrixFromAngle() {
-        final double alpha = CoordinateTransformation.EARTH_ROTATION_RATE
-                * TIME_INTERVAL_SECONDS;
+        final double alpha = CoordinateTransformation.EARTH_ROTATION_RATE * TIME_INTERVAL_SECONDS;
         final Angle angle = new Angle(alpha, AngleUnit.RADIANS);
 
         final CoordinateTransformation c1 = new CoordinateTransformation(
@@ -1136,28 +1017,26 @@ public class CoordinateTransformationTest {
                 .ecefToEciCoordinateTransformationMatrixFromAngle(angle);
         final CoordinateTransformation c3 = new CoordinateTransformation(
                 FrameType.BODY_FRAME, FrameType.BODY_FRAME);
-        CoordinateTransformation
-                .ecefToEciCoordinateTransformationMatrixFromAngle(alpha, c3);
+        CoordinateTransformation.ecefToEciCoordinateTransformationMatrixFromAngle(alpha, c3);
         final CoordinateTransformation c4 = CoordinateTransformation
                 .ecefToEciCoordinateTransformationMatrixFromAngle(alpha);
 
-        final Matrix cei = CoordinateTransformation
-                .ecefToEciMatrixFromAngle(alpha);
+        final Matrix cei = CoordinateTransformation.ecefToEciMatrixFromAngle(alpha);
 
-        assertEquals(c1.getSourceType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
-        assertEquals(c1.getDestinationType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+        assertEquals(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME, c1.getSourceType());
+        assertEquals(FrameType.EARTH_CENTERED_INERTIAL_FRAME, c1.getDestinationType());
         assertEquals(c1.getMatrix(), cei);
 
-        assertEquals(c2.getSourceType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
-        assertEquals(c2.getDestinationType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+        assertEquals(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME, c2.getSourceType());
+        assertEquals(FrameType.EARTH_CENTERED_INERTIAL_FRAME, c2.getDestinationType());
         assertEquals(c2.getMatrix(), cei);
 
-        assertEquals(c3.getSourceType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
-        assertEquals(c3.getDestinationType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+        assertEquals(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME, c3.getSourceType());
+        assertEquals(FrameType.EARTH_CENTERED_INERTIAL_FRAME, c3.getDestinationType());
         assertEquals(c3.getMatrix(), cei);
 
-        assertEquals(c4.getSourceType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
-        assertEquals(c4.getDestinationType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+        assertEquals(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME, c4.getSourceType());
+        assertEquals(FrameType.EARTH_CENTERED_INERTIAL_FRAME, c4.getDestinationType());
         assertEquals(c4.getMatrix(), cei);
     }
 
@@ -1167,57 +1046,48 @@ public class CoordinateTransformationTest {
 
         final Time timeInterval = new Time(TIME_INTERVAL_SECONDS, TimeUnit.SECOND);
         final Matrix cie1 = new Matrix(3, 3);
-        CoordinateTransformation.eciToEcefMatrixFromTimeInterval(
-                timeInterval, cie1);
-        final Matrix cie2 = CoordinateTransformation
-                .eciToEcefMatrixFromTimeInterval(timeInterval);
+        CoordinateTransformation.eciToEcefMatrixFromTimeInterval(timeInterval, cie1);
+        final Matrix cie2 = CoordinateTransformation.eciToEcefMatrixFromTimeInterval(timeInterval);
         final Matrix cie3 = new Matrix(3, 3);
-        CoordinateTransformation.eciToEcefMatrixFromTimeInterval(
-                TIME_INTERVAL_SECONDS, cie3);
-        final Matrix cie4 = CoordinateTransformation
-                .eciToEcefMatrixFromTimeInterval(TIME_INTERVAL_SECONDS);
+        CoordinateTransformation.eciToEcefMatrixFromTimeInterval(TIME_INTERVAL_SECONDS, cie3);
+        final Matrix cie4 = CoordinateTransformation.eciToEcefMatrixFromTimeInterval(
+                TIME_INTERVAL_SECONDS);
 
         assertEquals(cie1, cie2);
         assertEquals(cie1, cie3);
         assertEquals(cie1, cie4);
 
-        final Matrix cei = CoordinateTransformation
-                .ecefToEciMatrixFromTimeInterval(TIME_INTERVAL_SECONDS);
+        final Matrix cei = CoordinateTransformation.ecefToEciMatrixFromTimeInterval(TIME_INTERVAL_SECONDS);
 
         assertTrue(cie1.equals(Utils.inverse(cei), THRESHOLD));
 
         // test when zero time interval is equal to the identity
-        final Matrix cie5 = CoordinateTransformation
-                .eciToEcefMatrixFromTimeInterval(0.0);
+        final Matrix cie5 = CoordinateTransformation.eciToEcefMatrixFromTimeInterval(0.0);
         assertEquals(cie5, Matrix.identity(3, 3));
     }
 
     @Test
     public void testEciToEcefMatrixFromAngle() throws WrongSizeException {
-        final double alpha = CoordinateTransformation.EARTH_ROTATION_RATE
-                * TIME_INTERVAL_SECONDS;
+        final double alpha = CoordinateTransformation.EARTH_ROTATION_RATE * TIME_INTERVAL_SECONDS;
         final Angle angle = new Angle(alpha, AngleUnit.RADIANS);
         final Matrix cie1 = new Matrix(3, 3);
         CoordinateTransformation.eciToEcefMatrixFromAngle(angle, cie1);
-        final Matrix cie2 = CoordinateTransformation
-                .eciToEcefMatrixFromAngle(angle);
+        final Matrix cie2 = CoordinateTransformation.eciToEcefMatrixFromAngle(angle);
         final Matrix cie3 = new Matrix(3, 3);
         CoordinateTransformation.eciToEcefMatrixFromAngle(alpha, cie3);
-        final Matrix cie4 = CoordinateTransformation
-                .eciToEcefMatrixFromAngle(alpha);
+        final Matrix cie4 = CoordinateTransformation.eciToEcefMatrixFromAngle(alpha);
 
         assertEquals(cie1, cie2);
         assertEquals(cie1, cie3);
         assertEquals(cie1, cie4);
 
-        final Matrix cie5 = CoordinateTransformation
-                .eciToEcefMatrixFromTimeInterval(TIME_INTERVAL_SECONDS);
+        final Matrix cie5 = CoordinateTransformation.eciToEcefMatrixFromTimeInterval(
+                TIME_INTERVAL_SECONDS);
 
         assertEquals(cie1, cie5);
 
         // test when zero angle is equal to the identity
-        final Matrix cie6 = CoordinateTransformation
-                .eciToEcefMatrixFromAngle(0.0);
+        final Matrix cie6 = CoordinateTransformation.eciToEcefMatrixFromAngle(0.0);
         assertEquals(cie6, Matrix.identity(3, 3));
     }
 
@@ -1226,98 +1096,85 @@ public class CoordinateTransformationTest {
         final Time timeInterval = new Time(TIME_INTERVAL_SECONDS, TimeUnit.SECOND);
         final CoordinateTransformation c1 = new CoordinateTransformation(
                 FrameType.BODY_FRAME, FrameType.BODY_FRAME);
-        CoordinateTransformation
-                .eciToEcefCoordinateTransformationMatrixFromTimeInterval(
-                        timeInterval, c1);
+        CoordinateTransformation.eciToEcefCoordinateTransformationMatrixFromTimeInterval(timeInterval, c1);
         final CoordinateTransformation c2 =
-                CoordinateTransformation
-                        .eciToEcefCoordinateTransformationMatrixFromTimeInterval(
-                                timeInterval);
+                CoordinateTransformation.eciToEcefCoordinateTransformationMatrixFromTimeInterval(
+                        timeInterval);
         final CoordinateTransformation c3 = new CoordinateTransformation(
                 FrameType.BODY_FRAME, FrameType.BODY_FRAME);
-        CoordinateTransformation
-                .eciToEcefCoordinateTransformationMatrixFromTimeInterval(
-                        TIME_INTERVAL_SECONDS, c3);
+        CoordinateTransformation.eciToEcefCoordinateTransformationMatrixFromTimeInterval(
+                TIME_INTERVAL_SECONDS, c3);
         final CoordinateTransformation c4 =
-                CoordinateTransformation
-                        .eciToEcefCoordinateTransformationMatrixFromInterval(
-                                TIME_INTERVAL_SECONDS);
+                CoordinateTransformation.eciToEcefCoordinateTransformationMatrixFromInterval(
+                        TIME_INTERVAL_SECONDS);
 
-        final Matrix cie = CoordinateTransformation
-                .eciToEcefMatrixFromTimeInterval(TIME_INTERVAL_SECONDS);
+        final Matrix cie = CoordinateTransformation.eciToEcefMatrixFromTimeInterval(
+                TIME_INTERVAL_SECONDS);
 
-        assertEquals(c1.getSourceType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
-        assertEquals(c1.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(FrameType.EARTH_CENTERED_INERTIAL_FRAME, c1.getSourceType());
+        assertEquals(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME, c1.getDestinationType());
         assertEquals(c1.getMatrix(), cie);
 
-        assertEquals(c2.getSourceType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
-        assertEquals(c2.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(FrameType.EARTH_CENTERED_INERTIAL_FRAME, c2.getSourceType());
+        assertEquals(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME, c2.getDestinationType());
         assertEquals(c2.getMatrix(), cie);
 
-        assertEquals(c3.getSourceType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
-        assertEquals(c3.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(FrameType.EARTH_CENTERED_INERTIAL_FRAME, c3.getSourceType());
+        assertEquals(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME, c3.getDestinationType());
         assertEquals(c3.getMatrix(), cie);
 
-        assertEquals(c4.getSourceType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
-        assertEquals(c4.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(FrameType.EARTH_CENTERED_INERTIAL_FRAME, c4.getSourceType());
+        assertEquals(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME, c4.getDestinationType());
         assertEquals(c4.getMatrix(), cie);
     }
 
     @Test
     public void testEciToEcefCoordinateTransformationMatrixFromAngle() {
-        final double alpha = CoordinateTransformation.EARTH_ROTATION_RATE
-                * TIME_INTERVAL_SECONDS;
+        final double alpha = CoordinateTransformation.EARTH_ROTATION_RATE * TIME_INTERVAL_SECONDS;
         final Angle angle = new Angle(alpha, AngleUnit.RADIANS);
 
         final CoordinateTransformation c1 = new CoordinateTransformation(
                 FrameType.BODY_FRAME, FrameType.BODY_FRAME);
-        CoordinateTransformation
-                .eciToEcefCoordinateTransformationMatrixFromAngle(angle, c1);
+        CoordinateTransformation.eciToEcefCoordinateTransformationMatrixFromAngle(angle, c1);
         final CoordinateTransformation c2 = CoordinateTransformation
                 .eciToEcefCoordinateTransformationMatrixFromAngle(angle);
         final CoordinateTransformation c3 = new CoordinateTransformation(
                 FrameType.BODY_FRAME, FrameType.BODY_FRAME);
-        CoordinateTransformation
-                .eciToEcefCoordinateTransformationMatrixFromAngle(alpha, c3);
+        CoordinateTransformation.eciToEcefCoordinateTransformationMatrixFromAngle(alpha, c3);
         final CoordinateTransformation c4 = CoordinateTransformation
                 .eciToEcefCoordinateTransformationMatrixFromAngle(alpha);
 
-        final Matrix cie = CoordinateTransformation
-                .eciToEcefMatrixFromAngle(alpha);
+        final Matrix cie = CoordinateTransformation.eciToEcefMatrixFromAngle(alpha);
 
-        assertEquals(c1.getSourceType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
-        assertEquals(c1.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(FrameType.EARTH_CENTERED_INERTIAL_FRAME, c1.getSourceType());
+        assertEquals(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME, c1.getDestinationType());
         assertEquals(c1.getMatrix(), cie);
 
-        assertEquals(c2.getSourceType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
-        assertEquals(c2.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(FrameType.EARTH_CENTERED_INERTIAL_FRAME, c2.getSourceType());
+        assertEquals(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME, c2.getDestinationType());
         assertEquals(c2.getMatrix(), cie);
 
-        assertEquals(c3.getSourceType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
-        assertEquals(c3.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(FrameType.EARTH_CENTERED_INERTIAL_FRAME, c3.getSourceType());
+        assertEquals(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME, c3.getDestinationType());
         assertEquals(c3.getMatrix(), cie);
 
-        assertEquals(c4.getSourceType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
-        assertEquals(c4.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(FrameType.EARTH_CENTERED_INERTIAL_FRAME, c4.getSourceType());
+        assertEquals(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME, c4.getDestinationType());
         assertEquals(c4.getMatrix(), cie);
     }
 
     @Test
     public void testClone() throws InvalidRotationMatrixException, CloneNotSupportedException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double roll = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
         final Quaternion q = new Quaternion(roll, pitch, yaw);
 
         final Matrix m = q.asInhomogeneousMatrix();
 
         final CoordinateTransformation c1 = new CoordinateTransformation(m,
-                FrameType.LOCAL_NAVIGATION_FRAME,
-                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
         final Object c2 = c1.clone();
 
@@ -1328,18 +1185,14 @@ public class CoordinateTransformationTest {
     public void testSerializeAndDeserialize() throws InvalidRotationMatrixException,
             IOException, ClassNotFoundException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double roll = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
         final Quaternion q = new Quaternion(roll, pitch, yaw);
 
         final Matrix m = q.asInhomogeneousMatrix();
         final CoordinateTransformation c1 = new CoordinateTransformation(m,
-                FrameType.LOCAL_NAVIGATION_FRAME,
-                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME, THRESHOLD);
+                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME, THRESHOLD);
 
         // serialize and deserialize
         final byte[] bytes = SerializationHelper.serialize(c1);

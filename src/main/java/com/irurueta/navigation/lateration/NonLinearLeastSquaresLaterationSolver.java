@@ -28,12 +28,13 @@ import com.irurueta.numerical.fitting.LevenbergMarquardtMultiDimensionFunctionEv
 import java.util.Arrays;
 
 /**
- * Solves a Trilateration problem with an instance of a least squares optimizer.
+ * Solves a Trilateration problem with an instance of the least squares optimizer.
  * By solving the lateration problem linearly, this class is able to estimate
  * the covariance of estimated position.
  * To achieve better results, it is usually better to provide an initial coarse
  * solution.
- * This class is base on the implementation found at: https://github.com/lemmingapex/trilateration
+ * This class is base on the implementation found at:
+ * <a href="https://github.com/lemmingapex/trilateration">https://github.com/lemmingapex/trilateration</a>
  *
  * @param <P> a {@link Point} type.
  */
@@ -110,7 +111,8 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
      * @param distances       euclidean distances from static nodes to mobile node.
      * @param initialPosition initial position to start lateration solving.
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
-     *                                  length is smaller than required (3 for 2D points or 4 for 3D points) or fitter is null.
+     *                                  length is smaller than required (3 for 2D points or 4 for 3D points) or fitter
+     *                                  is null.
      */
     protected NonLinearLeastSquaresLaterationSolver(
             final P[] positions, final double[] distances, final P initialPosition) {
@@ -164,7 +166,8 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
      * @param initialPosition initial position to start lateration solving.
      * @param listener        listener to be notified of events raised by this instance.
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
-     *                                  length is smaller than required (3 for 2D points or 4 for 3D points) or fitter is null.
+     *                                  length is smaller than required (3 for 2D points or 4 for 3D points) or fitter
+     *                                  is null.
      */
     protected NonLinearLeastSquaresLaterationSolver(
             final P[] positions, final double[] distances, final P initialPosition,
@@ -180,7 +183,8 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
      * @param distances                  euclidean distances from static nodes to mobile node.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
      * @throws IllegalArgumentException if either positions, distances or standard deviations
-     *                                  are null, don't have the same length of their length is smaller than required (2 points).
+     *                                  are null, don't have the same length of their length is smaller than required
+     *                                  (2 points).
      */
     protected NonLinearLeastSquaresLaterationSolver(
             final P[] positions, final double[] distances,
@@ -198,7 +202,8 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
      * @param distanceStandardDeviations standard deviations of provided measured distances.
      * @param initialPosition            initial position to start lateration solving.
      * @throws IllegalArgumentException if either positions, distances or standard deviations
-     *                                  are null, don't have the same length of their length is smaller than required (2 points).
+     *                                  are null, don't have the same length of their length is smaller than required
+     *                                  (2 points).
      */
     protected NonLinearLeastSquaresLaterationSolver(
             final P[] positions, final double[] distances,
@@ -216,7 +221,8 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
      * @param distanceStandardDeviations standard deviations of provided measured distances.
      * @param listener                   listener to be notified of events raised by this instance.
      * @throws IllegalArgumentException if either positions, distances or standard deviations
-     *                                  are null, don't have the same length of their length is smaller than required (2 points).
+     *                                  are null, don't have the same length of their length is smaller than required
+     *                                  (2 points).
      */
     protected NonLinearLeastSquaresLaterationSolver(
             final P[] positions, final double[] distances,
@@ -236,7 +242,8 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
      * @param initialPosition            initial position to start lateration solving.
      * @param listener                   listener to be notified of events raised by this instance.
      * @throws IllegalArgumentException if either positions, distances or standard deviations
-     *                                  are null, don't have the same length of their length is smaller than required (2 points).
+     *                                  are null, don't have the same length of their length is smaller than required
+     *                                  (2 points).
      */
     protected NonLinearLeastSquaresLaterationSolver(
             final P[] positions, final double[] distances,
@@ -248,7 +255,7 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
     }
 
     /**
-     * Sets known positions and euclidean distances.
+     * Sets known positions and Euclidean distances.
      * If any distance value is zero or negative, it will be fixed assuming an EPSILON value.
      *
      * @param positions known positions of static nodes.
@@ -267,7 +274,7 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
     }
 
     /**
-     * Sets known positions, euclidean distances and the respective standard deviations of
+     * Sets known positions, Euclidean distances and the respective standard deviations of
      * measured distances.
      * If any distance value is zero or negative, it will be fixed assuming an EPSILON value.
      *
@@ -394,7 +401,7 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
     }
 
     /**
-     * Internally sets known positions and euclidean distances.
+     * Internally sets known positions and Euclidean distances.
      * If any distance value is zero or negative, it will be fixed assuming an EPSILON value.
      *
      * @param positions known positions of static nodes.
@@ -413,7 +420,7 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
     }
 
     /**
-     * Internally sets known positions, euclidean distances and the respective standard deviations of
+     * Internally sets known positions, Euclidean distances and the respective standard deviations of
      * measured distances.
      * If any distance value is zero or negative, it will be fixed assuming an EPSILON value.
      *
@@ -421,7 +428,8 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
      * @param distances                  euclidean distances from static nodes to mobile node.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
      * @throws IllegalArgumentException if either positions, distances or standard deviations
-     *                                  are null, don't have the same length of their length is smaller than required (2 points).
+     *                                  are null, don't have the same length of their length is smaller than required
+     *                                  (2 points).
      */
     protected void internalSetPositionsDistancesAndStandardDeviations(
             final P[] positions, final double[] distances,
@@ -462,7 +470,7 @@ public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> 
                             for (int i = 0; i < dims; i++) {
                                 initial[i] = 0.0;
                                 for (final P position : mPositions) {
-                                    initial[i] += position.getInhomogeneousCoordinate(i) / (double) numSamples;
+                                    initial[i] += position.getInhomogeneousCoordinate(i) / numSamples;
                                 }
                             }
                         } else {

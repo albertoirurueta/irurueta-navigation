@@ -44,15 +44,11 @@ public class GNSSBiasesGeneratorTest {
     private static final int MIN_SATELLITES = 4;
     private static final int MAX_SATELLITES = 10;
 
-    private static final double MIN_USER_POSITION_VALUE =
-            Constants.EARTH_EQUATORIAL_RADIUS_WGS84 - 50.0;
-    private static final double MAX_USER_POSITION_VALUE =
-            Constants.EARTH_EQUATORIAL_RADIUS_WGS84 + 50.0;
+    private static final double MIN_USER_POSITION_VALUE = Constants.EARTH_EQUATORIAL_RADIUS_WGS84 - 50.0;
+    private static final double MAX_USER_POSITION_VALUE = Constants.EARTH_EQUATORIAL_RADIUS_WGS84 + 50.0;
 
-    private static final double MIN_SAT_POSITION_VALUE =
-            Constants.EARTH_EQUATORIAL_RADIUS_WGS84 + 150000.0;
-    private static final double MAX_SAT_POSITION_VALUE =
-            Constants.EARTH_EQUATORIAL_RADIUS_WGS84 + 800000.0;
+    private static final double MIN_SAT_POSITION_VALUE = Constants.EARTH_EQUATORIAL_RADIUS_WGS84 + 150000.0;
+    private static final double MAX_SAT_POSITION_VALUE = Constants.EARTH_EQUATORIAL_RADIUS_WGS84 + 800000.0;
 
     private static final double ABSOLUTE_ERROR = 1e-8;
 
@@ -106,8 +102,7 @@ public class GNSSBiasesGeneratorTest {
         }
 
         final List<Double> biases2 = new ArrayList<>();
-        GNSSBiasesGenerator.generateBiases(
-                satellitePositions, userPosition, config, random, biases2);
+        GNSSBiasesGenerator.generateBiases(satellitePositions, userPosition, config, random, biases2);
         final List<Double> biases3 = GNSSBiasesGenerator.generateBiases(
                 satellitePositions, userPosition, config, random);
 
@@ -120,10 +115,9 @@ public class GNSSBiasesGeneratorTest {
         }
     }
 
-    private static double generateBias(final ECEFPosition satellitePosition,
-                                       final ECEFPosition userPosition,
-                                       final GNSSConfig config, final Random random)
-            throws WrongSizeException {
+    private static double generateBias(
+            final ECEFPosition satellitePosition, final ECEFPosition userPosition,
+            final GNSSConfig config, final Random random) throws WrongSizeException {
         final NEDPosition userNedPosition = new NEDPosition();
         final NEDVelocity userNedVelocity = new NEDVelocity();
         ECEFtoNEDPositionVelocityConverter.convertECEFtoNED(userPosition, new ECEFVelocity(),
@@ -157,36 +151,22 @@ public class GNSSBiasesGeneratorTest {
     private static GNSSConfig generateConfig() {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double epochInterval = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        final double initialEstimatedEcefPositionX = randomizer.nextDouble(MIN_VALUE,
-                MAX_VALUE);
-        final double initialEstimatedEcefPositionY = randomizer.nextDouble(MIN_VALUE,
-                MAX_VALUE);
-        final double initialEstimatedEcefPositionZ = randomizer.nextDouble(MIN_VALUE,
-                MAX_VALUE);
-        final int numberOfSatellites = randomizer.nextInt(MIN_SATELLITES,
-                MAX_SATELLITES);
-        final double orbitalRadiusOfSatellites = randomizer.nextDouble(MIN_VALUE,
-                MAX_VALUE);
-        final double satellitesInclinationDegrees = randomizer.nextDouble(MIN_VALUE,
-                MAX_VALUE);
-        final double constellationLongitudeOffsetDegrees = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double constellationTimingOffset = randomizer.nextDouble(MIN_VALUE,
-                MAX_VALUE);
+        final double initialEstimatedEcefPositionX = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double initialEstimatedEcefPositionY = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double initialEstimatedEcefPositionZ = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final int numberOfSatellites = randomizer.nextInt(MIN_SATELLITES, MAX_SATELLITES);
+        final double orbitalRadiusOfSatellites = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double satellitesInclinationDegrees = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double constellationLongitudeOffsetDegrees = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double constellationTimingOffset = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double maskAngleDegrees = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double sisErrorSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        final double zenithIonosphereErrorSD = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double zenithTroposphereErrorSD = randomizer.nextDouble(MIN_VALUE,
-                MAX_VALUE);
-        final double codeTrackingErrorSD = randomizer.nextDouble(MIN_VALUE,
-                MAX_VALUE);
-        final double rangeRateTrackingErrorSD = randomizer.nextDouble(MIN_VALUE,
-                MAX_VALUE);
-        final double initialReceiverClockOffset = randomizer.nextDouble(MIN_VALUE,
-                MAX_VALUE);
-        final double initialReceiverClockDrift = randomizer.nextDouble(MIN_VALUE,
-                MAX_VALUE);
+        final double zenithIonosphereErrorSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double zenithTroposphereErrorSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double codeTrackingErrorSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double rangeRateTrackingErrorSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double initialReceiverClockOffset = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double initialReceiverClockDrift = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
         return new GNSSConfig(epochInterval, initialEstimatedEcefPositionX,
                 initialEstimatedEcefPositionY, initialEstimatedEcefPositionZ,

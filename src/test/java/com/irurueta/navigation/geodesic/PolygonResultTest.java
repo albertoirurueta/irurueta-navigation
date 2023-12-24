@@ -32,9 +32,9 @@ public class PolygonResultTest {
         final PolygonResult result = new PolygonResult(num, perimeter, area);
 
         //check
-        assertEquals(result.getNum(), num);
-        assertEquals(result.getPerimeter(), perimeter, 0.0);
-        assertEquals(result.getArea(), area, 0.0);
+        assertEquals(num, result.getNum());
+        assertEquals(perimeter, result.getPerimeter(), 0.0);
+        assertEquals(area, result.getArea(), 0.0);
     }
 
     @Test
@@ -47,13 +47,13 @@ public class PolygonResultTest {
         final PolygonResult result = new PolygonResult(num1, perimeter, area);
 
         //check
-        assertEquals(result.getNum(), num1);
+        assertEquals(num1, result.getNum());
 
         //set new value
         result.setNum(num2);
 
         //check
-        assertEquals(result.getNum(), num2);
+        assertEquals(num2, result.getNum());
     }
 
     @Test
@@ -66,13 +66,13 @@ public class PolygonResultTest {
         final PolygonResult result = new PolygonResult(num, perimeter1, area);
 
         //check
-        assertEquals(result.getPerimeter(), perimeter1, 0.0);
+        assertEquals(perimeter1, result.getPerimeter(), 0.0);
 
         //set new value
         result.setPerimeter(perimeter2);
 
         //check
-        assertEquals(result.getPerimeter(), perimeter2, 0.0);
+        assertEquals(perimeter2, result.getPerimeter(), 0.0);
     }
 
     @Test
@@ -85,12 +85,12 @@ public class PolygonResultTest {
         final PolygonResult result = new PolygonResult(num, perimeter, area1);
 
         //check
-        assertEquals(result.getArea(), area1, 0.0);
+        assertEquals(area1, result.getArea(), 0.0);
 
         //set new value
         result.setArea(area2);
 
         //check
-        assertEquals(result.getArea(), area2, 0.0);
+        assertEquals(area2, result.getArea(), 0.0);
     }
 }

@@ -28,7 +28,7 @@ public class FrameExceptionTest {
 
         ex = new FrameException("message");
         assertNotNull(ex);
-        assertEquals(ex.getMessage(), "message");
+        assertEquals("message", ex.getMessage());
 
         final Exception cause = new Exception();
         ex = new FrameException(cause);
@@ -37,7 +37,7 @@ public class FrameExceptionTest {
 
         ex = new FrameException("message", cause);
         assertNotNull(ex);
-        assertEquals(ex.getMessage(), "message");
+        assertEquals("message", ex.getMessage());
         assertSame(ex.getCause(), cause);
     }
 }

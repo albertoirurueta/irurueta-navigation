@@ -24,7 +24,8 @@ import com.irurueta.navigation.NotReadyException;
 
 /**
  * Linearly solves the lateration problem using an inhomogeneous solution.
- * This class is base on the implementation found at: https://github.com/lemmingapex/trilateration
+ * This class is base on the implementation found at:
+ * <a href="https://github.com/lemmingapex/trilateration">https://github.com/lemmingapex/trilateration</a>
  * Further information and algorithms can be found at Willy Hereman and William S. Murphy Jr. Determination of a
  * Position in Three Dimensions Using Trilateration and Approximate Distances.
  *

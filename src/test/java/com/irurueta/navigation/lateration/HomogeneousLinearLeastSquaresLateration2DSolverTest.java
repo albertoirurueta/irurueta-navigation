@@ -60,11 +60,10 @@ public class HomogeneousLinearLeastSquaresLateration2DSolverTest implements Late
         assertFalse(solver.isReady());
         assertNull(solver.getEstimatedPositionCoordinates());
         assertNull(solver.getEstimatedPosition());
-        assertEquals(solver.getNumberOfDimensions(), 2);
+        assertEquals(2, solver.getNumberOfDimensions());
         assertNull(solver.getCircles());
-        assertEquals(solver.getType(),
-                LaterationSolverType.HOMOGENEOUS_LINEAR_TRILATERATION_SOLVER);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
+        assertEquals(LaterationSolverType.HOMOGENEOUS_LINEAR_TRILATERATION_SOLVER, solver.getType());
+        assertEquals(3, solver.getMinRequiredPositionsAndDistances());
 
         // constructor with positions and distances
         final Point2D[] positions = new Point2D[3];
@@ -76,15 +75,15 @@ public class HomogeneousLinearLeastSquaresLateration2DSolverTest implements Late
 
         // check correctness
         assertNull(solver.getListener());
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
         assertTrue(solver.isReady());
         assertNull(solver.getEstimatedPositionCoordinates());
         assertNull(solver.getEstimatedPosition());
-        assertEquals(solver.getNumberOfDimensions(), 2);
+        assertEquals(2, solver.getNumberOfDimensions());
         assertNotNull(solver.getCircles());
-        assertEquals(solver.getType(), LaterationSolverType.HOMOGENEOUS_LINEAR_TRILATERATION_SOLVER);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
+        assertEquals(LaterationSolverType.HOMOGENEOUS_LINEAR_TRILATERATION_SOLVER, solver.getType());
+        assertEquals(3, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
         final double[] wrong = new double[4];
@@ -120,32 +119,32 @@ public class HomogeneousLinearLeastSquaresLateration2DSolverTest implements Late
         solver = new HomogeneousLinearLeastSquaresLateration2DSolver(listener);
 
         // check correctness
-        assertSame(solver.getListener(), listener);
+        assertSame(listener, solver.getListener());
         assertNull(solver.getPositions());
         assertNull(solver.getDistances());
         assertFalse(solver.isReady());
         assertNull(solver.getEstimatedPositionCoordinates());
         assertNull(solver.getEstimatedPosition());
-        assertEquals(solver.getNumberOfDimensions(), 2);
+        assertEquals(2, solver.getNumberOfDimensions());
         assertNull(solver.getCircles());
-        assertEquals(solver.getType(), LaterationSolverType.HOMOGENEOUS_LINEAR_TRILATERATION_SOLVER);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
+        assertEquals(LaterationSolverType.HOMOGENEOUS_LINEAR_TRILATERATION_SOLVER, solver.getType());
+        assertEquals(3, solver.getMinRequiredPositionsAndDistances());
 
 
         // constructor with positions, distances and listener
         solver = new HomogeneousLinearLeastSquaresLateration2DSolver(positions, distances, listener);
 
         // check correctness
-        assertSame(solver.getListener(), listener);
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
+        assertSame(listener, solver.getListener());
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
         assertTrue(solver.isReady());
         assertNull(solver.getEstimatedPositionCoordinates());
         assertNull(solver.getEstimatedPosition());
-        assertEquals(solver.getNumberOfDimensions(), 2);
+        assertEquals(2, solver.getNumberOfDimensions());
         assertNotNull(solver.getCircles());
-        assertEquals(solver.getType(), LaterationSolverType.HOMOGENEOUS_LINEAR_TRILATERATION_SOLVER);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
+        assertEquals(LaterationSolverType.HOMOGENEOUS_LINEAR_TRILATERATION_SOLVER, solver.getType());
+        assertEquals(3, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
         solver = null;
@@ -165,7 +164,8 @@ public class HomogeneousLinearLeastSquaresLateration2DSolverTest implements Late
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new HomogeneousLinearLeastSquaresLateration2DSolver(shortPositions, shortDistances, listener);
+            solver = new HomogeneousLinearLeastSquaresLateration2DSolver(
+                    shortPositions, shortDistances, listener);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -186,10 +186,10 @@ public class HomogeneousLinearLeastSquaresLateration2DSolverTest implements Late
         assertTrue(solver.isReady());
         assertNull(solver.getEstimatedPositionCoordinates());
         assertNull(solver.getEstimatedPosition());
-        assertEquals(solver.getNumberOfDimensions(), 2);
+        assertEquals(2, solver.getNumberOfDimensions());
         assertNotNull(solver.getCircles());
-        assertEquals(solver.getType(), LaterationSolverType.HOMOGENEOUS_LINEAR_TRILATERATION_SOLVER);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
+        assertEquals(LaterationSolverType.HOMOGENEOUS_LINEAR_TRILATERATION_SOLVER, solver.getType());
+        assertEquals(3, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
         final Circle[] shortCircles = new Circle[1];
@@ -211,16 +211,16 @@ public class HomogeneousLinearLeastSquaresLateration2DSolverTest implements Late
         solver = new HomogeneousLinearLeastSquaresLateration2DSolver(circles, listener);
 
         // check correctness
-        assertSame(solver.getListener(), listener);
+        assertSame(listener, solver.getListener());
         assertNotNull(solver.getPositions());
         assertNotNull(solver.getDistances());
         assertTrue(solver.isReady());
         assertNull(solver.getEstimatedPositionCoordinates());
         assertNull(solver.getEstimatedPosition());
-        assertEquals(solver.getNumberOfDimensions(), 2);
+        assertEquals(2, solver.getNumberOfDimensions());
         assertNotNull(solver.getCircles());
-        assertEquals(solver.getType(), LaterationSolverType.HOMOGENEOUS_LINEAR_TRILATERATION_SOLVER);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
+        assertEquals(LaterationSolverType.HOMOGENEOUS_LINEAR_TRILATERATION_SOLVER, solver.getType());
+        assertEquals(3, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
         solver = null;
@@ -298,7 +298,7 @@ public class HomogeneousLinearLeastSquaresLateration2DSolverTest implements Late
         solver.setListener(listener);
 
         // check
-        assertSame(solver.getListener(), listener);
+        assertSame(listener, solver.getListener());
     }
 
     @Test
@@ -321,8 +321,8 @@ public class HomogeneousLinearLeastSquaresLateration2DSolverTest implements Late
         solver.setPositionsAndDistances(positions, distances);
 
         // check
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
         assertTrue(solver.isReady());
 
         // Force IllegalArgumentException
@@ -371,12 +371,11 @@ public class HomogeneousLinearLeastSquaresLateration2DSolverTest implements Late
             }
 
             final HomogeneousLinearLeastSquaresLateration2DSolver solver =
-                    new HomogeneousLinearLeastSquaresLateration2DSolver(
-                            circles, this);
+                    new HomogeneousLinearLeastSquaresLateration2DSolver(circles, this);
 
             reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
+            assertEquals(0, solveStart);
+            assertEquals(0, solveEnd);
             assertTrue(solver.isReady());
             assertNull(solver.getEstimatedPosition());
             assertNull(solver.getEstimatedPositionCoordinates());
@@ -447,12 +446,11 @@ public class HomogeneousLinearLeastSquaresLateration2DSolverTest implements Late
             }
 
             final HomogeneousLinearLeastSquaresLateration2DSolver solver =
-                    new HomogeneousLinearLeastSquaresLateration2DSolver(
-                            positions, distances, this);
+                    new HomogeneousLinearLeastSquaresLateration2DSolver(positions, distances, this);
 
             reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
+            assertEquals(0, solveStart);
+            assertEquals(0, solveEnd);
             assertTrue(solver.isReady());
             assertNull(solver.getEstimatedPosition());
             assertNull(solver.getEstimatedPositionCoordinates());
@@ -495,12 +493,11 @@ public class HomogeneousLinearLeastSquaresLateration2DSolverTest implements Late
             }
 
             final HomogeneousLinearLeastSquaresLateration2DSolver solver =
-                    new HomogeneousLinearLeastSquaresLateration2DSolver(
-                            circles, this);
+                    new HomogeneousLinearLeastSquaresLateration2DSolver(circles, this);
 
             reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
+            assertEquals(0, solveStart);
+            assertEquals(0, solveEnd);
             assertTrue(solver.isReady());
             assertNull(solver.getEstimatedPosition());
             assertNull(solver.getEstimatedPositionCoordinates());

@@ -21,7 +21,7 @@ import com.irurueta.geometry.Point2D;
 import com.irurueta.navigation.LockedException;
 
 /**
- * Solves a Trilateration problem with an instance of a least squares optimizer.
+ * Solves a Trilateration problem with an instance of the least squares optimizer.
  */
 public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquaresLaterationSolver<Point2D> {
 
@@ -183,7 +183,8 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
      * @param distances                  euclidean distances from static nodes to mobile node.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
      * @throws IllegalArgumentException if either positions, distances or standard deviations
-     *                                  are null, don't have the same length of their length is smaller than required (2 points).
+     *                                  are null, don't have the same length of their length is smaller than required
+     *                                  (2 points).
      */
     public NonLinearLeastSquaresLateration2DSolver(
             final Point2D[] positions, final double[] distances,
@@ -199,7 +200,8 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
      * @param distanceStandardDeviations standard deviations of provided measured distances.
      * @param initialPosition            initial position to start lateration solving.
      * @throws IllegalArgumentException if either positions, distances or standard deviations
-     *                                  are null, don't have the same length of their length is smaller than required (2 points).
+     *                                  are null, don't have the same length of their length is smaller than required
+     *                                  (2 points).
      */
     public NonLinearLeastSquaresLateration2DSolver(
             final Point2D[] positions, final double[] distances,
@@ -215,7 +217,8 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
      * @param distanceStandardDeviations standard deviations of provided measured distances.
      * @param listener                   listener to be notified of events raised by this instance.
      * @throws IllegalArgumentException if either positions, distances or standard deviations
-     *                                  are null, don't have the same length of their length is smaller than required (2 points).
+     *                                  are null, don't have the same length of their length is smaller than required
+     *                                  (2 points).
      */
     public NonLinearLeastSquaresLateration2DSolver(
             final Point2D[] positions, final double[] distances,
@@ -233,7 +236,8 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
      * @param initialPosition            initial position to start lateration solving.
      * @param listener                   listener to be notified of events raised by this instance.
      * @throws IllegalArgumentException if either positions, distances or standard deviations
-     *                                  are null, don't have the same length of their length is smaller than required (2 points).
+     *                                  are null, don't have the same length of their length is smaller than required
+     *                                  (2 points).
      */
     public NonLinearLeastSquaresLateration2DSolver(
             final Point2D[] positions, final double[] distances,
@@ -338,7 +342,7 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
     }
 
     /**
-     * Sets circles defining positions and euclidean distances along with the standard
+     * Sets circles defining positions and Euclidean distances along with the standard
      * deviations of provided circles radii.
      *
      * @param circles                  circles defining positions and distances.
@@ -394,7 +398,7 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
     }
 
     /**
-     * Internally sets circles defining positions and euclidean distances.
+     * Internally sets circles defining positions and Euclidean distances.
      *
      * @param circles circles defining positions and distances.
      * @throws IllegalArgumentException if circles is null or length of array of circles
@@ -417,7 +421,7 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
     }
 
     /**
-     * Internally sets circles defining positions and euclidean distances along with the standard
+     * Internally sets circles defining positions and Euclidean distances along with the standard
      * deviations of provided circles radii.
      *
      * @param circles                  circles defining positions and distances.

@@ -54,7 +54,7 @@ public class GeoMathTest {
         assertEquals(GeoMath.hypot(-x, -y), Math.hypot(x, y), ABSOLUTE_ERROR);
 
         //test for zero
-        assertEquals(GeoMath.hypot(0.0, 0.0), 0.0, 0.0);
+        assertEquals(0.0, GeoMath.hypot(0.0, 0.0), 0.0);
     }
 
     @Test
@@ -65,7 +65,7 @@ public class GeoMathTest {
         assertEquals(GeoMath.log1p(x), Math.log1p(x), ABSOLUTE_ERROR);
 
         //test for zero
-        assertEquals(GeoMath.log1p(0.0), 0.0, 0.0);
+        assertEquals(0.0, GeoMath.log1p(0.0), 0.0);
     }
 
     @Test
@@ -76,10 +76,10 @@ public class GeoMathTest {
 
         double y = Math.abs(x);
         y = Math.log1p(2 * y / (1 - y)) / 2;
-        assertEquals(GeoMath.atanh(x), y, 0.0);
+        assertEquals(y, GeoMath.atanh(x), 0.0);
 
         //test for negative value
-        assertEquals(GeoMath.atanh(-x), -y, 0.0);
+        assertEquals(-y, GeoMath.atanh(-x), 0.0);
     }
 
     @Test
@@ -89,8 +89,8 @@ public class GeoMathTest {
         final double x = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double y = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        assertEquals(GeoMath.copysign(x, y), x, 0.0);
-        assertEquals(GeoMath.copysign(x, -y), -x, 0.0);
+        assertEquals(x, GeoMath.copysign(x, y), 0.0);
+        assertEquals(-x, GeoMath.copysign(x, -y), 0.0);
     }
 
     @Test
@@ -100,7 +100,7 @@ public class GeoMathTest {
         final double x = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double x3 = x * x * x;
 
-        assertEquals(GeoMath.cbrt(x3), x, ABSOLUTE_ERROR);
+        assertEquals(x, GeoMath.cbrt(x3), ABSOLUTE_ERROR);
     }
 
     @Test
@@ -115,8 +115,8 @@ public class GeoMathTest {
 
         final Pair p = GeoMath.norm(r * sinX, r * cosX);
 
-        assertEquals(p.getFirst(), sinX, ABSOLUTE_ERROR);
-        assertEquals(p.getSecond(), cosX, ABSOLUTE_ERROR);
+        assertEquals(sinX, p.getFirst(), ABSOLUTE_ERROR);
+        assertEquals(cosX, p.getSecond(), ABSOLUTE_ERROR);
 
         //force IllegalArgumentException
         try {
@@ -134,7 +134,7 @@ public class GeoMathTest {
 
         final Pair p = GeoMath.sum(u, v);
 
-        assertEquals(p.getFirst(), u + v, ABSOLUTE_ERROR);
+        assertEquals(u + v, p.getFirst(), ABSOLUTE_ERROR);
     }
 
     @Test
@@ -147,39 +147,40 @@ public class GeoMathTest {
 
         final Polynomial polynomial = new Polynomial(p);
         assertEquals(polynomial.evaluate(x),
-                GeoMath.polyval(p.length - 1, ArrayUtils.reverseAndReturnNew(p), 0, x), ABSOLUTE_ERROR);
+                GeoMath.polyval(p.length - 1, ArrayUtils.reverseAndReturnNew(p), 0, x),
+                ABSOLUTE_ERROR);
     }
 
     @Test
     public void testAngRound() {
-        assertEquals(GeoMath.angRound(0.0), 0.0, 0.0);
+        assertEquals(0.0, GeoMath.angRound(0.0), 0.0);
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         double value = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        assertEquals(GeoMath.angRound(value), value, 0.0);
-        assertEquals(GeoMath.angRound(-value), -value, 0.0);
+        assertEquals(value, GeoMath.angRound(value), 0.0);
+        assertEquals(-value, GeoMath.angRound(-value), 0.0);
 
         value = 1 / 32.0;
-        assertEquals(GeoMath.angRound(value), value, ABSOLUTE_ERROR);
+        assertEquals(value, GeoMath.angRound(value), ABSOLUTE_ERROR);
     }
 
     @Test
     public void testAngNormalize() {
-        assertEquals(GeoMath.angNormalize(360.0), 0.0, ABSOLUTE_ERROR);
-        assertEquals(GeoMath.angNormalize(720.0), 0.0, ABSOLUTE_ERROR);
-        assertEquals(GeoMath.angNormalize(180.0), 180.0, ABSOLUTE_ERROR);
-        assertEquals(GeoMath.angNormalize(-180.0), 180.0, ABSOLUTE_ERROR);
-        assertEquals(GeoMath.angNormalize(270.0), -90.0, ABSOLUTE_ERROR);
+        assertEquals(0.0, GeoMath.angNormalize(360.0), ABSOLUTE_ERROR);
+        assertEquals(0.0, GeoMath.angNormalize(720.0), ABSOLUTE_ERROR);
+        assertEquals(180.0, GeoMath.angNormalize(180.0), ABSOLUTE_ERROR);
+        assertEquals(180.0, GeoMath.angNormalize(-180.0), ABSOLUTE_ERROR);
+        assertEquals(-90.0, GeoMath.angNormalize(270.0), ABSOLUTE_ERROR);
     }
 
     @Test
     public void testLatFix() {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        assertEquals(GeoMath.latFix(91.0), Double.NaN, 0.0);
+        assertEquals(Double.NaN, GeoMath.latFix(91.0), 0.0);
 
         final double value = randomizer.nextDouble(0.0, 90.0);
-        assertEquals(GeoMath.latFix(value), value, 0.0);
+        assertEquals(value, GeoMath.latFix(value), 0.0);
     }
 
     @Test
@@ -190,7 +191,7 @@ public class GeoMathTest {
         final double y = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final Pair p = GeoMath.angDiff(x, y);
 
-        assertEquals(p.getFirst(), y - x, ABSOLUTE_ERROR);
+        assertEquals(y - x, p.getFirst(), ABSOLUTE_ERROR);
     }
 
     @Test
@@ -201,8 +202,8 @@ public class GeoMathTest {
 
         final Pair p = GeoMath.sincosd(x);
 
-        assertEquals(p.getFirst(), Math.sin(Math.toRadians(x)), ABSOLUTE_ERROR);
-        assertEquals(p.getSecond(), Math.cos(Math.toRadians(x)), ABSOLUTE_ERROR);
+        assertEquals(Math.sin(Math.toRadians(x)), p.getFirst(), ABSOLUTE_ERROR);
+        assertEquals(Math.cos(Math.toRadians(x)), p.getSecond(), ABSOLUTE_ERROR);
     }
 
     @Test
@@ -212,7 +213,8 @@ public class GeoMathTest {
         final double y = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double x = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        assertEquals(GeoMath.angNormalize(Math.toDegrees(Math.atan2(y, x))), GeoMath.atan2d(y, x), ABSOLUTE_ERROR);
+        assertEquals(GeoMath.atan2d(y, x), GeoMath.angNormalize(Math.toDegrees(Math.atan2(y, x))),
+                ABSOLUTE_ERROR);
     }
 
     @Test

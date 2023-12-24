@@ -61,9 +61,8 @@ public class NEDtoECEFFrameConverterTest {
         final NEDtoECEFFrameConverter converter = new NEDtoECEFFrameConverter();
 
         // check
-        assertEquals(converter.getSourceType(), FrameType.LOCAL_NAVIGATION_FRAME);
-        assertEquals(converter.getDestinationType(),
-                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(FrameType.LOCAL_NAVIGATION_FRAME, converter.getSourceType());
+        assertEquals(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME, converter.getDestinationType());
     }
 
     @Test
@@ -74,26 +73,25 @@ public class NEDtoECEFFrameConverterTest {
         for (int t = 0; t < TIMES; t++) {
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-            final double latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double latitude = Math.toRadians(
+                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double longitude = Math.toRadians(
+                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
             final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
 
             final double vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
             final double ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
             final double vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-            final double roll = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
             final double pitch = Math.toRadians(
                     randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
             final Quaternion q = new Quaternion(roll, pitch, yaw);
 
             final Matrix m = q.asInhomogeneousMatrix();
             final CoordinateTransformation c = new CoordinateTransformation(
-                    m, FrameType.BODY_FRAME,
-                    FrameType.LOCAL_NAVIGATION_FRAME);
+                    m, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
 
             final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height, vn, ve, vd, c);
 
@@ -128,13 +126,12 @@ public class NEDtoECEFFrameConverterTest {
             assertTrue(q1.equals(q2, ABSOLUTE_ERROR));
 
             // velocity norm is the same either on ECEF or NED frame
-            assertEquals(nedFrame1.getVelocityNorm(), ecefFrame.getVelocityNorm(),
-                    ABSOLUTE_ERROR);
+            assertEquals(nedFrame1.getVelocityNorm(), ecefFrame.getVelocityNorm(), ABSOLUTE_ERROR);
 
             numValid++;
         }
 
-        assertEquals(numValid, TIMES);
+        assertEquals(TIMES, numValid);
     }
 
     @Test
@@ -145,26 +142,25 @@ public class NEDtoECEFFrameConverterTest {
         for (int t = 0; t < TIMES; t++) {
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-            final double latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double latitude = Math.toRadians(
+                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double longitude = Math.toRadians(
+                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
             final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
 
             final double vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
             final double ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
             final double vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-            final double roll = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
             final double pitch = Math.toRadians(
                     randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
             final Quaternion q = new Quaternion(roll, pitch, yaw);
 
             final Matrix m = q.asInhomogeneousMatrix();
             final CoordinateTransformation c = new CoordinateTransformation(
-                    m, FrameType.BODY_FRAME,
-                    FrameType.LOCAL_NAVIGATION_FRAME);
+                    m, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
 
             final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height, vn, ve, vd, c);
 
@@ -201,13 +197,12 @@ public class NEDtoECEFFrameConverterTest {
             assertTrue(q1.equals(q2, ABSOLUTE_ERROR));
 
             // velocity norm is the same either on ECEF or NED frame
-            assertEquals(nedFrame1.getVelocityNorm(), ecefFrame.getVelocityNorm(),
-                    ABSOLUTE_ERROR);
+            assertEquals(nedFrame1.getVelocityNorm(), ecefFrame.getVelocityNorm(), ABSOLUTE_ERROR);
 
             numValid++;
         }
 
-        assertEquals(numValid, TIMES);
+        assertEquals(TIMES, numValid);
     }
 
     @Test
@@ -218,26 +213,25 @@ public class NEDtoECEFFrameConverterTest {
         for (int t = 0; t < TIMES; t++) {
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-            final double latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double latitude = Math.toRadians(
+                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double longitude = Math.toRadians(
+                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
             final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
 
             final double vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
             final double ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
             final double vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-            final double roll = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
             final double pitch = Math.toRadians(
                     randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
             final Quaternion q = new Quaternion(roll, pitch, yaw);
 
             final Matrix m = q.asInhomogeneousMatrix();
             final CoordinateTransformation c = new CoordinateTransformation(
-                    m, FrameType.BODY_FRAME,
-                    FrameType.LOCAL_NAVIGATION_FRAME);
+                    m, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
 
             final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height, vn, ve, vd, c);
 
@@ -268,13 +262,12 @@ public class NEDtoECEFFrameConverterTest {
             assertTrue(q1.equals(q2, ABSOLUTE_ERROR));
 
             // velocity norm is the same either on ECEF or NED frame
-            assertEquals(nedFrame1.getVelocityNorm(), ecefFrame.getVelocityNorm(),
-                    ABSOLUTE_ERROR);
+            assertEquals(nedFrame1.getVelocityNorm(), ecefFrame.getVelocityNorm(), ABSOLUTE_ERROR);
 
             numValid++;
         }
 
-        assertEquals(numValid, TIMES);
+        assertEquals(TIMES, numValid);
     }
 
     @Test
@@ -285,26 +278,25 @@ public class NEDtoECEFFrameConverterTest {
         for (int t = 0; t < TIMES; t++) {
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-            final double latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double latitude = Math.toRadians(
+                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double longitude = Math.toRadians(
+                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
             final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
 
             final double vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
             final double ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
             final double vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-            final double roll = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
             final double pitch = Math.toRadians(
                     randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
             final Quaternion q = new Quaternion(roll, pitch, yaw);
 
             final Matrix m = q.asInhomogeneousMatrix();
             final CoordinateTransformation c = new CoordinateTransformation(
-                    m, FrameType.BODY_FRAME,
-                    FrameType.LOCAL_NAVIGATION_FRAME);
+                    m, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
 
             final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height, vn, ve, vd, c);
 
@@ -337,13 +329,11 @@ public class NEDtoECEFFrameConverterTest {
             assertTrue(q1.equals(q2, ABSOLUTE_ERROR));
 
             // velocity norm is the same either on ECEF or NED frame
-            assertEquals(nedFrame1.getVelocityNorm(), ecefFrame.getVelocityNorm(),
-                    ABSOLUTE_ERROR);
+            assertEquals(nedFrame1.getVelocityNorm(), ecefFrame.getVelocityNorm(), ABSOLUTE_ERROR);
 
             numValid++;
         }
 
-        assertEquals(numValid, TIMES);
+        assertEquals(TIMES, numValid);
     }
-
 }

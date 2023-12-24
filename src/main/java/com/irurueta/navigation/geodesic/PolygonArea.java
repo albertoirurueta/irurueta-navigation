@@ -404,7 +404,7 @@ public class PolygonArea {
 
     private static int transit(double lon1, double lon2) {
         // return 1 or -1 if crossing prime meridian in east or west direction.
-        // Otherwise return zero.
+        // Otherwise, return zero.
         // Compute lon12 the same way as Geodesic.inverse.
         lon1 = GeoMath.angNormalize(lon1);
         lon2 = GeoMath.angNormalize(lon2);

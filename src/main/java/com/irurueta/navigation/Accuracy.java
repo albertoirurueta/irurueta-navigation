@@ -65,8 +65,8 @@ public abstract class Accuracy<A extends com.irurueta.geometry.Accuracy> {
      * @param covarianceMatrix covariance matrix representing the accuracy of an estimated
      *                         point or measure.
      * @throws IllegalArgumentException                    if provided matrix is not square (it must also be
-     *                                                     positive definite to be properly converted to a geometric figure - e.g. an ellipse
-     *                                                     or an ellipsoid).
+     *                                                     positive definite to be properly converted to a geometric
+     *                                                     figure - e.g. an ellipse or an ellipsoid).
      * @throws NonSymmetricPositiveDefiniteMatrixException if provided matrix is not symmetric
      *                                                     and positive definite.
      */
@@ -77,7 +77,7 @@ public abstract class Accuracy<A extends com.irurueta.geometry.Accuracy> {
 
     /**
      * Gets standard deviation factor to account for a given accuracy confidence.
-     * Typically a factor of 2.0 will be used, which means that accuracy can be drawn as
+     * Typically, a factor of 2.0 will be used, which means that accuracy can be drawn as
      * a geometric figure of size equal to 2 times the standard deviation. Assuming a
      * Gaussian distribution this is equivalent to providing a 95.44% confidence on provided
      * accuracy.
@@ -90,7 +90,7 @@ public abstract class Accuracy<A extends com.irurueta.geometry.Accuracy> {
 
     /**
      * Sets standard deviation factor to account for a given accuracy confidence.
-     * Typically a factor of 2.0 will be used, which means that accuracy can be drawn as
+     * Typically, a factor of 2.0 will be used, which means that accuracy can be drawn as
      * a geometric figure of size equal to 2 times the standard deviation. Assuming a
      * Gaussian distribution this is equivalent to providing a 95.44% confidence on provided
      * accuracy.
@@ -147,7 +147,7 @@ public abstract class Accuracy<A extends com.irurueta.geometry.Accuracy> {
     }
 
     /**
-     * Gets largest (worse) accuracy in any direction (i.e either 2D or 3D).
+     * Gets largest (worse) accuracy in any direction (i.e. either 2D or 3D).
      * This value is represented by the largest semi axis representing the ellipse or ellipsoid of accuracy.
      *
      * @return largest accuracy in any direction.

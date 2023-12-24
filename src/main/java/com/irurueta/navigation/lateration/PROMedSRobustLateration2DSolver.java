@@ -139,8 +139,8 @@ public class PROMedSRobustLateration2DSolver extends RobustLateration2DSolver {
      * @param listener                   listener to be notified of events such as when estimation stats,
      *                                   ends or its progress significantly changes.
      * @throws IllegalArgumentException if either positions, distances or
-     *                                  standard deviations are null, don't have the same length or their length is smaller
-     *                                  than required (3 points).
+     *                                  standard deviations are null, don't have the same length or their length is
+     *                                  smaller than required (3 points).
      */
     public PROMedSRobustLateration2DSolver(
             final Point2D[] positions, final double[] distances,
@@ -303,8 +303,8 @@ public class PROMedSRobustLateration2DSolver extends RobustLateration2DSolver {
      * @param listener                   listener to be notified of events such as when estimation starts,
      *                                   ends or its progress significantly changes.
      * @throws IllegalArgumentException if either positions, distances or
-     *                                  standard deviations are null, don't have the same length or their length is smaller
-     *                                  than required (3 points).
+     *                                  standard deviations are null, don't have the same length or their length is
+     *                                  smaller than required (3 points).
      */
     public PROMedSRobustLateration2DSolver(
             final double[] qualityScores, final Point2D[] positions, final double[] distances,
@@ -637,7 +637,7 @@ public class PROMedSRobustLateration2DSolver extends RobustLateration2DSolver {
      */
     @Override
     public RobustEstimatorMethod getMethod() {
-        return RobustEstimatorMethod.PROMedS;
+        return RobustEstimatorMethod.PROMEDS;
     }
 
     /**

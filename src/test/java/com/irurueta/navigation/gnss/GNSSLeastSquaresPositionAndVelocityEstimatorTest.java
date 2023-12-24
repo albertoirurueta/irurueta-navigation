@@ -102,9 +102,8 @@ public class GNSSLeastSquaresPositionAndVelocityEstimatorTest implements
         assertNull(estimator.getMeasurements());
         assertNull(estimator.getPriorPositionAndVelocity());
         assertNull(estimator.getListener());
-        assertEquals(estimator.getConvergenceThreshold(),
-                GNSSLeastSquaresPositionAndVelocityEstimator.CONVERGENCE_THRESHOLD,
-                0.0);
+        assertEquals(GNSSLeastSquaresPositionAndVelocityEstimator.CONVERGENCE_THRESHOLD,
+                estimator.getConvergenceThreshold(), 0.0);
         assertFalse(estimator.isReady());
         assertFalse(estimator.isRunning());
 
@@ -123,12 +122,11 @@ public class GNSSLeastSquaresPositionAndVelocityEstimatorTest implements
         estimator = new GNSSLeastSquaresPositionAndVelocityEstimator(measurements);
 
         // check default values
-        assertSame(estimator.getMeasurements(), measurements);
+        assertSame(measurements, estimator.getMeasurements());
         assertNull(estimator.getPriorPositionAndVelocity());
         assertNull(estimator.getListener());
-        assertEquals(estimator.getConvergenceThreshold(),
-                GNSSLeastSquaresPositionAndVelocityEstimator.CONVERGENCE_THRESHOLD,
-                0.0);
+        assertEquals(GNSSLeastSquaresPositionAndVelocityEstimator.CONVERGENCE_THRESHOLD,
+                estimator.getConvergenceThreshold(), 0.0);
         assertTrue(estimator.isReady());
         assertFalse(estimator.isRunning());
 
@@ -144,19 +142,16 @@ public class GNSSLeastSquaresPositionAndVelocityEstimatorTest implements
 
 
         // test constructor with measurements and prior position and velocity
-        final ECEFPositionAndVelocity priorPositionAndVelocity =
-                new ECEFPositionAndVelocity();
+        final ECEFPositionAndVelocity priorPositionAndVelocity = new ECEFPositionAndVelocity();
 
-        estimator = new GNSSLeastSquaresPositionAndVelocityEstimator(measurements,
-                priorPositionAndVelocity);
+        estimator = new GNSSLeastSquaresPositionAndVelocityEstimator(measurements, priorPositionAndVelocity);
 
         // check default values
-        assertSame(estimator.getMeasurements(), measurements);
-        assertSame(estimator.getPriorPositionAndVelocity(), priorPositionAndVelocity);
+        assertSame(measurements, estimator.getMeasurements());
+        assertSame(priorPositionAndVelocity, estimator.getPriorPositionAndVelocity());
         assertNull(estimator.getListener());
-        assertEquals(estimator.getConvergenceThreshold(),
-                GNSSLeastSquaresPositionAndVelocityEstimator.CONVERGENCE_THRESHOLD,
-                0.0);
+        assertEquals(GNSSLeastSquaresPositionAndVelocityEstimator.CONVERGENCE_THRESHOLD,
+                estimator.getConvergenceThreshold(), 0.0);
         assertTrue(estimator.isReady());
         assertFalse(estimator.isRunning());
 
@@ -164,8 +159,7 @@ public class GNSSLeastSquaresPositionAndVelocityEstimatorTest implements
         estimator = null;
         try {
             estimator = new GNSSLeastSquaresPositionAndVelocityEstimator(
-                    Collections.<GNSSMeasurement>emptyList(),
-                    priorPositionAndVelocity);
+                    Collections.<GNSSMeasurement>emptyList(), priorPositionAndVelocity);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -174,16 +168,14 @@ public class GNSSLeastSquaresPositionAndVelocityEstimatorTest implements
 
         // test constructor with measurements and prior result
         final GNSSEstimation priorEstimation = new GNSSEstimation();
-        estimator = new GNSSLeastSquaresPositionAndVelocityEstimator(measurements,
-                priorEstimation);
+        estimator = new GNSSLeastSquaresPositionAndVelocityEstimator(measurements, priorEstimation);
 
         // check default values
-        assertSame(estimator.getMeasurements(), measurements);
+        assertSame(measurements, estimator.getMeasurements());
         assertNotNull(estimator.getPriorPositionAndVelocity());
         assertNull(estimator.getListener());
-        assertEquals(estimator.getConvergenceThreshold(),
-                GNSSLeastSquaresPositionAndVelocityEstimator.CONVERGENCE_THRESHOLD,
-                0.0);
+        assertEquals(GNSSLeastSquaresPositionAndVelocityEstimator.CONVERGENCE_THRESHOLD,
+                estimator.getConvergenceThreshold(), 0.0);
         assertTrue(estimator.isReady());
         assertFalse(estimator.isRunning());
 
@@ -191,8 +183,7 @@ public class GNSSLeastSquaresPositionAndVelocityEstimatorTest implements
         estimator = null;
         try {
             estimator = new GNSSLeastSquaresPositionAndVelocityEstimator(
-                    Collections.<GNSSMeasurement>emptyList(),
-                    priorEstimation);
+                    Collections.<GNSSMeasurement>emptyList(), priorEstimation);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -205,25 +196,22 @@ public class GNSSLeastSquaresPositionAndVelocityEstimatorTest implements
         // check default values
         assertNull(estimator.getMeasurements());
         assertNull(estimator.getPriorPositionAndVelocity());
-        assertSame(estimator.getListener(), this);
-        assertEquals(estimator.getConvergenceThreshold(),
-                GNSSLeastSquaresPositionAndVelocityEstimator.CONVERGENCE_THRESHOLD,
-                0.0);
+        assertSame(this, estimator.getListener());
+        assertEquals(GNSSLeastSquaresPositionAndVelocityEstimator.CONVERGENCE_THRESHOLD,
+                estimator.getConvergenceThreshold(), 0.0);
         assertFalse(estimator.isReady());
         assertFalse(estimator.isRunning());
 
 
         // test constructor with measurements and listener
-        estimator = new GNSSLeastSquaresPositionAndVelocityEstimator(
-                measurements, this);
+        estimator = new GNSSLeastSquaresPositionAndVelocityEstimator(measurements, this);
 
         // check default values
-        assertSame(estimator.getMeasurements(), measurements);
+        assertSame(measurements, estimator.getMeasurements());
         assertNull(estimator.getPriorPositionAndVelocity());
-        assertSame(estimator.getListener(), this);
-        assertEquals(estimator.getConvergenceThreshold(),
-                GNSSLeastSquaresPositionAndVelocityEstimator.CONVERGENCE_THRESHOLD,
-                0.0);
+        assertSame(this, estimator.getListener());
+        assertEquals(GNSSLeastSquaresPositionAndVelocityEstimator.CONVERGENCE_THRESHOLD,
+                estimator.getConvergenceThreshold(), 0.0);
         assertTrue(estimator.isReady());
         assertFalse(estimator.isRunning());
 
@@ -243,12 +231,11 @@ public class GNSSLeastSquaresPositionAndVelocityEstimatorTest implements
                 priorPositionAndVelocity, this);
 
         // check default values
-        assertSame(estimator.getMeasurements(), measurements);
-        assertSame(estimator.getPriorPositionAndVelocity(), priorPositionAndVelocity);
-        assertSame(estimator.getListener(), this);
-        assertEquals(estimator.getConvergenceThreshold(),
-                GNSSLeastSquaresPositionAndVelocityEstimator.CONVERGENCE_THRESHOLD,
-                0.0);
+        assertSame(measurements, estimator.getMeasurements());
+        assertSame(priorPositionAndVelocity, estimator.getPriorPositionAndVelocity());
+        assertSame(this, estimator.getListener());
+        assertEquals(GNSSLeastSquaresPositionAndVelocityEstimator.CONVERGENCE_THRESHOLD,
+                estimator.getConvergenceThreshold(), 0.0);
         assertTrue(estimator.isReady());
         assertFalse(estimator.isRunning());
 
@@ -256,8 +243,7 @@ public class GNSSLeastSquaresPositionAndVelocityEstimatorTest implements
         estimator = null;
         try {
             estimator = new GNSSLeastSquaresPositionAndVelocityEstimator(
-                    Collections.<GNSSMeasurement>emptyList(),
-                    priorPositionAndVelocity, this);
+                    Collections.<GNSSMeasurement>emptyList(), priorPositionAndVelocity, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -265,16 +251,14 @@ public class GNSSLeastSquaresPositionAndVelocityEstimatorTest implements
 
 
         // test constructor with measurements and prior result
-        estimator = new GNSSLeastSquaresPositionAndVelocityEstimator(measurements,
-                priorEstimation, this);
+        estimator = new GNSSLeastSquaresPositionAndVelocityEstimator(measurements, priorEstimation, this);
 
         // check default values
-        assertSame(estimator.getMeasurements(), measurements);
+        assertSame(measurements, estimator.getMeasurements());
         assertNotNull(estimator.getPriorPositionAndVelocity());
-        assertSame(estimator.getListener(), this);
-        assertEquals(estimator.getConvergenceThreshold(),
-                GNSSLeastSquaresPositionAndVelocityEstimator.CONVERGENCE_THRESHOLD,
-                0.0);
+        assertSame(this, estimator.getListener());
+        assertEquals(GNSSLeastSquaresPositionAndVelocityEstimator.CONVERGENCE_THRESHOLD,
+                estimator.getConvergenceThreshold(), 0.0);
         assertTrue(estimator.isReady());
         assertFalse(estimator.isRunning());
 
@@ -282,8 +266,7 @@ public class GNSSLeastSquaresPositionAndVelocityEstimatorTest implements
         estimator = null;
         try {
             estimator = new GNSSLeastSquaresPositionAndVelocityEstimator(
-                    Collections.<GNSSMeasurement>emptyList(),
-                    priorEstimation, this);
+                    Collections.<GNSSMeasurement>emptyList(), priorEstimation, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -312,7 +295,7 @@ public class GNSSLeastSquaresPositionAndVelocityEstimatorTest implements
         estimator.setMeasurements(measurements);
 
         // check
-        assertSame(estimator.getMeasurements(), measurements);
+        assertSame(measurements, estimator.getMeasurements());
 
         // Force IllegalArgumentException
         try {
@@ -331,13 +314,12 @@ public class GNSSLeastSquaresPositionAndVelocityEstimatorTest implements
         assertNull(estimator.getPriorPositionAndVelocity());
 
         // set new value
-        final ECEFPositionAndVelocity priorPositionAndVelocity =
-                new ECEFPositionAndVelocity();
+        final ECEFPositionAndVelocity priorPositionAndVelocity = new ECEFPositionAndVelocity();
 
         estimator.setPriorPositionAndVelocity(priorPositionAndVelocity);
 
         // check
-        assertSame(estimator.getPriorPositionAndVelocity(), priorPositionAndVelocity);
+        assertSame(priorPositionAndVelocity, estimator.getPriorPositionAndVelocity());
     }
 
     @Test
@@ -347,15 +329,14 @@ public class GNSSLeastSquaresPositionAndVelocityEstimatorTest implements
 
         // set new value
         final GNSSEstimation priorEstimation = new GNSSEstimation();
-        final ECEFPositionAndVelocity priorPositionAndVelocity =
-                new ECEFPositionAndVelocity();
+        final ECEFPositionAndVelocity priorPositionAndVelocity = new ECEFPositionAndVelocity();
         priorPositionAndVelocity.setPositionCoordinates(1.0, 2.0, 3.0);
         priorEstimation.setPositionAndVelocity(priorPositionAndVelocity);
 
         estimator.setPriorPositionAndVelocityFromEstimation(priorEstimation);
 
         // check
-        assertEquals(estimator.getPriorPositionAndVelocity(), priorPositionAndVelocity);
+        assertEquals(priorPositionAndVelocity, estimator.getPriorPositionAndVelocity());
 
 
         estimator.setPriorPositionAndVelocityFromEstimation(null);
@@ -376,7 +357,7 @@ public class GNSSLeastSquaresPositionAndVelocityEstimatorTest implements
         estimator.setListener(this);
 
         // check
-        assertSame(estimator.getListener(), this);
+        assertSame(this, estimator.getListener());
     }
 
     @Test
@@ -385,18 +366,16 @@ public class GNSSLeastSquaresPositionAndVelocityEstimatorTest implements
                 new GNSSLeastSquaresPositionAndVelocityEstimator();
 
         // check default value
-        assertEquals(estimator.getConvergenceThreshold(),
-                GNSSLeastSquaresPositionAndVelocityEstimator.CONVERGENCE_THRESHOLD,
-                0.0);
+        assertEquals(GNSSLeastSquaresPositionAndVelocityEstimator.CONVERGENCE_THRESHOLD,
+                estimator.getConvergenceThreshold(), 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double threshold = randomizer.nextDouble(
-                MIN_CONVERGENCE, MAX_CONVERGENCE);
+        final double threshold = randomizer.nextDouble(MIN_CONVERGENCE, MAX_CONVERGENCE);
         estimator.setConvergenceThreshold(threshold);
 
         // check
-        assertEquals(estimator.getConvergenceThreshold(), threshold, 0.0);
+        assertEquals(threshold, estimator.getConvergenceThreshold(), 0.0);
     }
 
     @Test
@@ -414,8 +393,7 @@ public class GNSSLeastSquaresPositionAndVelocityEstimatorTest implements
         measurements.add(measurement3);
         measurements.add(measurement4);
 
-        assertTrue(GNSSLeastSquaresPositionAndVelocityEstimator.isValidMeasurements(
-                measurements));
+        assertTrue(GNSSLeastSquaresPositionAndVelocityEstimator.isValidMeasurements(measurements));
     }
 
     @Test
@@ -434,15 +412,11 @@ public class GNSSLeastSquaresPositionAndVelocityEstimatorTest implements
             final double userLongitude = Math.toRadians(
                     randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
             final double userHeight = randomizer.nextDouble(MIN_USER_HEIGHT, MAX_USER_HEIGHT);
-            final NEDPosition nedUserPosition =
-                    new NEDPosition(userLatitude, userLongitude, userHeight);
+            final NEDPosition nedUserPosition = new NEDPosition(userLatitude, userLongitude, userHeight);
 
-            final double userVn = randomizer.nextDouble(MIN_USER_VELOCITY_VALUE,
-                    MAX_USER_VELOCITY_VALUE);
-            final double userVe = randomizer.nextDouble(MIN_USER_VELOCITY_VALUE,
-                    MAX_USER_VELOCITY_VALUE);
-            final double userVd = randomizer.nextDouble(MIN_USER_VELOCITY_VALUE,
-                    MAX_USER_VELOCITY_VALUE);
+            final double userVn = randomizer.nextDouble(MIN_USER_VELOCITY_VALUE, MAX_USER_VELOCITY_VALUE);
+            final double userVe = randomizer.nextDouble(MIN_USER_VELOCITY_VALUE, MAX_USER_VELOCITY_VALUE);
+            final double userVd = randomizer.nextDouble(MIN_USER_VELOCITY_VALUE, MAX_USER_VELOCITY_VALUE);
             final NEDVelocity nedUserVelocity = new NEDVelocity(userVn, userVe, userVd);
 
             final ECEFPosition ecefUserPosition = new ECEFPosition();
@@ -458,26 +432,16 @@ public class GNSSLeastSquaresPositionAndVelocityEstimatorTest implements
             final double delta = maskAngle / 3.0;
 
             final List<Double> biases = new ArrayList<>();
-            final List<ECEFPositionAndVelocity> satellitePositionsAndVelocities =
-                    new ArrayList<>();
+            final List<ECEFPositionAndVelocity> satellitePositionsAndVelocities = new ArrayList<>();
             for (int n = 0; n < numSatellites; n++) {
-                final double satLatitude = randomizer.nextDouble(
-                        userLatitude - delta,
-                        userLatitude + delta);
-                final double satLongitude = randomizer.nextDouble(
-                        userLongitude - delta,
-                        userLongitude + delta);
-                final double satHeight = randomizer.nextDouble(MIN_SAT_HEIGHT,
-                        MAX_SAT_HEIGHT);
-                final NEDPosition nedSatPosition =
-                        new NEDPosition(satLatitude, satLongitude, satHeight);
+                final double satLatitude = randomizer.nextDouble(userLatitude - delta, userLatitude + delta);
+                final double satLongitude = randomizer.nextDouble(userLongitude - delta, userLongitude + delta);
+                final double satHeight = randomizer.nextDouble(MIN_SAT_HEIGHT, MAX_SAT_HEIGHT);
+                final NEDPosition nedSatPosition = new NEDPosition(satLatitude, satLongitude, satHeight);
 
-                final double satVn = randomizer.nextDouble(MIN_SAT_VELOCITY_VALUE,
-                        MAX_SAT_VELOCITY_VALUE);
-                final double satVe = randomizer.nextDouble(MIN_SAT_VELOCITY_VALUE,
-                        MAX_SAT_VELOCITY_VALUE);
-                final double satVd = randomizer.nextDouble(MIN_SAT_VELOCITY_VALUE,
-                        MAX_SAT_VELOCITY_VALUE);
+                final double satVn = randomizer.nextDouble(MIN_SAT_VELOCITY_VALUE, MAX_SAT_VELOCITY_VALUE);
+                final double satVe = randomizer.nextDouble(MIN_SAT_VELOCITY_VALUE, MAX_SAT_VELOCITY_VALUE);
+                final double satVd = randomizer.nextDouble(MIN_SAT_VELOCITY_VALUE, MAX_SAT_VELOCITY_VALUE);
                 final NEDVelocity nedSatVelocity = new NEDVelocity(satVn, satVe, satVd);
 
                 final ECEFPosition ecefSatPosition = new ECEFPosition();
@@ -495,12 +459,11 @@ public class GNSSLeastSquaresPositionAndVelocityEstimatorTest implements
                 satellitePositionsAndVelocities.add(ecefSatPositionAndVelocity);
             }
 
-            final Collection<GNSSMeasurement> measurements = GNSSMeasurementsGenerator
-                    .generate(timeSeconds, satellitePositionsAndVelocities,
-                            ecefUserPositionAndVelocity, biases, config, random);
+            final Collection<GNSSMeasurement> measurements = GNSSMeasurementsGenerator.generate(
+                    timeSeconds, satellitePositionsAndVelocities, ecefUserPositionAndVelocity,
+                    biases, config, random);
 
-            if (measurements.size() <
-                    GNSSLeastSquaresPositionAndVelocityEstimator.MIN_MEASUREMENTS) {
+            if (measurements.size() < GNSSLeastSquaresPositionAndVelocityEstimator.MIN_MEASUREMENTS) {
                 continue;
             }
 
@@ -510,8 +473,8 @@ public class GNSSLeastSquaresPositionAndVelocityEstimatorTest implements
             // check initial values
             reset();
             assertFalse(estimator.isRunning());
-            assertEquals(mEstimateStart, 0);
-            assertEquals(mEstimateEnd, 0);
+            assertEquals(0, mEstimateStart);
+            assertEquals(0, mEstimateEnd);
 
             GNSSEstimation estimation;
             try {
@@ -523,32 +486,26 @@ public class GNSSLeastSquaresPositionAndVelocityEstimatorTest implements
             final ECEFPosition estimatedPosition = estimation.getEcefPosition();
             final ECEFVelocity estimatedVelocity = estimation.getEcefVelocity();
 
-            final double diffX = Math.abs(ecefUserPosition.getX()
-                    - estimatedPosition.getX());
-            final double diffY = Math.abs(ecefUserPosition.getY()
-                    - estimatedPosition.getY());
-            final double diffZ = Math.abs(ecefUserPosition.getZ()
-                    - estimatedPosition.getZ());
+            final double diffX = Math.abs(ecefUserPosition.getX() - estimatedPosition.getX());
+            final double diffY = Math.abs(ecefUserPosition.getY() - estimatedPosition.getY());
+            final double diffZ = Math.abs(ecefUserPosition.getZ() - estimatedPosition.getZ());
             final double posError = Math.max(diffX, Math.max(diffY, diffZ));
             if (posError > POSITION_ERROR) {
                 continue;
             }
             assertTrue(ecefUserPosition.equals(estimatedPosition, POSITION_ERROR));
 
-            final double diffVx = Math.abs(ecefUserVelocity.getVx()
-                    - estimatedVelocity.getVx());
-            final double diffVy = Math.abs(ecefUserVelocity.getVy()
-                    - estimatedVelocity.getVy());
-            final double diffVz = Math.abs(ecefUserVelocity.getVz()
-                    - estimatedVelocity.getVz());
+            final double diffVx = Math.abs(ecefUserVelocity.getVx() - estimatedVelocity.getVx());
+            final double diffVy = Math.abs(ecefUserVelocity.getVy() - estimatedVelocity.getVy());
+            final double diffVz = Math.abs(ecefUserVelocity.getVz() - estimatedVelocity.getVz());
             final double velError = Math.max(diffVx, Math.max(diffVy, diffVz));
             if (velError > VELOCITY_ERROR) {
                 continue;
             }
             assertTrue(ecefUserVelocity.equals(estimatedVelocity, VELOCITY_ERROR));
 
-            assertEquals(mEstimateStart, 1);
-            assertEquals(mEstimateEnd, 1);
+            assertEquals(1, mEstimateStart);
+            assertEquals(1, mEstimateEnd);
             assertFalse(estimator.isRunning());
 
             numValid++;
@@ -574,15 +531,11 @@ public class GNSSLeastSquaresPositionAndVelocityEstimatorTest implements
             final double userLongitude = Math.toRadians(
                     randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
             final double userHeight = randomizer.nextDouble(MIN_USER_HEIGHT, MAX_USER_HEIGHT);
-            final NEDPosition nedUserPosition =
-                    new NEDPosition(userLatitude, userLongitude, userHeight);
+            final NEDPosition nedUserPosition = new NEDPosition(userLatitude, userLongitude, userHeight);
 
-            final double userVn = randomizer.nextDouble(MIN_USER_VELOCITY_VALUE,
-                    MAX_USER_VELOCITY_VALUE);
-            final double userVe = randomizer.nextDouble(MIN_USER_VELOCITY_VALUE,
-                    MAX_USER_VELOCITY_VALUE);
-            final double userVd = randomizer.nextDouble(MIN_USER_VELOCITY_VALUE,
-                    MAX_USER_VELOCITY_VALUE);
+            final double userVn = randomizer.nextDouble(MIN_USER_VELOCITY_VALUE, MAX_USER_VELOCITY_VALUE);
+            final double userVe = randomizer.nextDouble(MIN_USER_VELOCITY_VALUE, MAX_USER_VELOCITY_VALUE);
+            final double userVd = randomizer.nextDouble(MIN_USER_VELOCITY_VALUE, MAX_USER_VELOCITY_VALUE);
             final NEDVelocity nedUserVelocity = new NEDVelocity(userVn, userVe, userVd);
 
             final ECEFPosition ecefUserPosition = new ECEFPosition();
@@ -598,26 +551,16 @@ public class GNSSLeastSquaresPositionAndVelocityEstimatorTest implements
             final double delta = maskAngle / 3.0;
 
             final List<Double> biases = new ArrayList<>();
-            final List<ECEFPositionAndVelocity> satellitePositionsAndVelocities =
-                    new ArrayList<>();
+            final List<ECEFPositionAndVelocity> satellitePositionsAndVelocities = new ArrayList<>();
             for (int n = 0; n < numSatellites; n++) {
-                final double satLatitude = randomizer.nextDouble(
-                        userLatitude - delta,
-                        userLatitude + delta);
-                final double satLongitude = randomizer.nextDouble(
-                        userLongitude - delta,
-                        userLongitude + delta);
-                final double satHeight = randomizer.nextDouble(MIN_SAT_HEIGHT,
-                        MAX_SAT_HEIGHT);
-                final NEDPosition nedSatPosition =
-                        new NEDPosition(satLatitude, satLongitude, satHeight);
+                final double satLatitude = randomizer.nextDouble(userLatitude - delta, userLatitude + delta);
+                final double satLongitude = randomizer.nextDouble(userLongitude - delta, userLongitude + delta);
+                final double satHeight = randomizer.nextDouble(MIN_SAT_HEIGHT, MAX_SAT_HEIGHT);
+                final NEDPosition nedSatPosition = new NEDPosition(satLatitude, satLongitude, satHeight);
 
-                final double satVn = randomizer.nextDouble(MIN_SAT_VELOCITY_VALUE,
-                        MAX_SAT_VELOCITY_VALUE);
-                final double satVe = randomizer.nextDouble(MIN_SAT_VELOCITY_VALUE,
-                        MAX_SAT_VELOCITY_VALUE);
-                final double satVd = randomizer.nextDouble(MIN_SAT_VELOCITY_VALUE,
-                        MAX_SAT_VELOCITY_VALUE);
+                final double satVn = randomizer.nextDouble(MIN_SAT_VELOCITY_VALUE, MAX_SAT_VELOCITY_VALUE);
+                final double satVe = randomizer.nextDouble(MIN_SAT_VELOCITY_VALUE, MAX_SAT_VELOCITY_VALUE);
+                final double satVd = randomizer.nextDouble(MIN_SAT_VELOCITY_VALUE, MAX_SAT_VELOCITY_VALUE);
                 final NEDVelocity nedSatVelocity = new NEDVelocity(satVn, satVe, satVd);
 
                 final ECEFPosition ecefSatPosition = new ECEFPosition();
@@ -635,12 +578,11 @@ public class GNSSLeastSquaresPositionAndVelocityEstimatorTest implements
                 satellitePositionsAndVelocities.add(ecefSatPositionAndVelocity);
             }
 
-            final Collection<GNSSMeasurement> measurements = GNSSMeasurementsGenerator
-                    .generate(timeSeconds, satellitePositionsAndVelocities,
-                            ecefUserPositionAndVelocity, biases, config, random);
+            final Collection<GNSSMeasurement> measurements = GNSSMeasurementsGenerator.generate(
+                    timeSeconds, satellitePositionsAndVelocities, ecefUserPositionAndVelocity,
+                    biases, config, random);
 
-            if (measurements.size() <
-                    GNSSLeastSquaresPositionAndVelocityEstimator.MIN_MEASUREMENTS) {
+            if (measurements.size() < GNSSLeastSquaresPositionAndVelocityEstimator.MIN_MEASUREMENTS) {
                 continue;
             }
 
@@ -657,19 +599,18 @@ public class GNSSLeastSquaresPositionAndVelocityEstimatorTest implements
             final double priorVz = ecefUserVelocity.getVz()
                     + randomizer.nextDouble(MIN_PRIOR_VELOCITY_ERROR, MAX_PRIOR_VELOCITY_ERROR);
 
-            final ECEFPositionAndVelocity priorPositionAndVelocity =
-                    new ECEFPositionAndVelocity(priorX, priorY, priorZ,
-                            priorVx, priorVy, priorVz);
+            final ECEFPositionAndVelocity priorPositionAndVelocity = new ECEFPositionAndVelocity(
+                    priorX, priorY, priorZ, priorVx, priorVy, priorVz);
 
             final GNSSLeastSquaresPositionAndVelocityEstimator estimator =
-                    new GNSSLeastSquaresPositionAndVelocityEstimator(measurements,
-                            priorPositionAndVelocity, this);
+                    new GNSSLeastSquaresPositionAndVelocityEstimator(measurements, priorPositionAndVelocity,
+                            this);
 
             // check initial values
             reset();
             assertFalse(estimator.isRunning());
-            assertEquals(mEstimateStart, 0);
-            assertEquals(mEstimateEnd, 0);
+            assertEquals(0, mEstimateStart);
+            assertEquals(0, mEstimateEnd);
 
             GNSSEstimation estimation;
             try {
@@ -681,32 +622,26 @@ public class GNSSLeastSquaresPositionAndVelocityEstimatorTest implements
             final ECEFPosition estimatedPosition = estimation.getEcefPosition();
             final ECEFVelocity estimatedVelocity = estimation.getEcefVelocity();
 
-            final double diffX = Math.abs(ecefUserPosition.getX()
-                    - estimatedPosition.getX());
-            final double diffY = Math.abs(ecefUserPosition.getY()
-                    - estimatedPosition.getY());
-            final double diffZ = Math.abs(ecefUserPosition.getZ()
-                    - estimatedPosition.getZ());
+            final double diffX = Math.abs(ecefUserPosition.getX() - estimatedPosition.getX());
+            final double diffY = Math.abs(ecefUserPosition.getY() - estimatedPosition.getY());
+            final double diffZ = Math.abs(ecefUserPosition.getZ() - estimatedPosition.getZ());
             final double posError = Math.max(diffX, Math.max(diffY, diffZ));
             if (posError > POSITION_ERROR) {
                 continue;
             }
             assertTrue(ecefUserPosition.equals(estimatedPosition, POSITION_ERROR));
 
-            final double diffVx = Math.abs(ecefUserVelocity.getVx()
-                    - estimatedVelocity.getVx());
-            final double diffVy = Math.abs(ecefUserVelocity.getVy()
-                    - estimatedVelocity.getVy());
-            final double diffVz = Math.abs(ecefUserVelocity.getVz()
-                    - estimatedVelocity.getVz());
+            final double diffVx = Math.abs(ecefUserVelocity.getVx() - estimatedVelocity.getVx());
+            final double diffVy = Math.abs(ecefUserVelocity.getVy() - estimatedVelocity.getVy());
+            final double diffVz = Math.abs(ecefUserVelocity.getVz() - estimatedVelocity.getVz());
             final double velError = Math.max(diffVx, Math.max(diffVy, diffVz));
             if (velError > VELOCITY_ERROR) {
                 continue;
             }
             assertTrue(ecefUserVelocity.equals(estimatedVelocity, VELOCITY_ERROR));
 
-            assertEquals(mEstimateStart, 1);
-            assertEquals(mEstimateEnd, 1);
+            assertEquals(1, mEstimateStart);
+            assertEquals(1, mEstimateEnd);
             assertFalse(estimator.isRunning());
 
             numValid++;
@@ -772,37 +707,22 @@ public class GNSSLeastSquaresPositionAndVelocityEstimatorTest implements
     private static GNSSConfig generateConfig() {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double epochInterval = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        final double initialEstimatedEcefPositionX = randomizer.nextDouble(MIN_VALUE,
-                MAX_VALUE);
-        final double initialEstimatedEcefPositionY = randomizer.nextDouble(MIN_VALUE,
-                MAX_VALUE);
-        final double initialEstimatedEcefPositionZ = randomizer.nextDouble(MIN_VALUE,
-                MAX_VALUE);
-        final int numberOfSatellites = randomizer.nextInt(MIN_SATELLITES,
-                MAX_SATELLITES);
-        final double orbitalRadiusOfSatellites = randomizer.nextDouble(MIN_VALUE,
-                MAX_VALUE);
-        final double satellitesInclinationDegrees = randomizer.nextDouble(MIN_VALUE,
-                MAX_VALUE);
-        final double constellationLongitudeOffsetDegrees = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double constellationTimingOffset = randomizer.nextDouble(MIN_VALUE,
-                MAX_VALUE);
-        final double maskAngleDegrees = randomizer.nextDouble(
-                MIN_MASK_ANGLE_DEGREES, MAX_MASK_ANGLE_DEGREES);
+        final double initialEstimatedEcefPositionX = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double initialEstimatedEcefPositionY = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double initialEstimatedEcefPositionZ = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final int numberOfSatellites = randomizer.nextInt(MIN_SATELLITES, MAX_SATELLITES);
+        final double orbitalRadiusOfSatellites = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double satellitesInclinationDegrees = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double constellationLongitudeOffsetDegrees = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double constellationTimingOffset = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double maskAngleDegrees = randomizer.nextDouble(MIN_MASK_ANGLE_DEGREES, MAX_MASK_ANGLE_DEGREES);
         final double sisErrorSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        final double zenithIonosphereErrorSD = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double zenithTroposphereErrorSD = randomizer.nextDouble(MIN_VALUE,
-                MAX_VALUE);
-        final double codeTrackingErrorSD = randomizer.nextDouble(MIN_VALUE,
-                MAX_VALUE);
-        final double rangeRateTrackingErrorSD = randomizer.nextDouble(MIN_VALUE,
-                MAX_VALUE);
-        final double initialReceiverClockOffset = randomizer.nextDouble(MIN_VALUE,
-                MAX_VALUE);
-        final double initialReceiverClockDrift = randomizer.nextDouble(MIN_VALUE,
-                MAX_VALUE);
+        final double zenithIonosphereErrorSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double zenithTroposphereErrorSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double codeTrackingErrorSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double rangeRateTrackingErrorSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double initialReceiverClockOffset = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double initialReceiverClockDrift = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
         return new GNSSConfig(epochInterval, initialEstimatedEcefPositionX,
                 initialEstimatedEcefPositionY, initialEstimatedEcefPositionZ,

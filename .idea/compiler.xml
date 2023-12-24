@@ -10,8 +10,5 @@
         <module name="irurueta-navigation" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="irurueta-navigation" target="1.7" />
-    </bytecodeTargetLevel>
   </component>
 </project>

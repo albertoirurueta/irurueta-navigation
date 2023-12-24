@@ -40,13 +40,13 @@ public class NEDVelocityTest {
         NEDVelocity velocity = new NEDVelocity();
 
         // check
-        assertEquals(velocity.getVn(), 0.0, 0.0);
-        assertEquals(velocity.getVe(), 0.0, 0.0);
-        assertEquals(velocity.getVd(), 0.0, 0.0);
+        assertEquals(0.0, velocity.getVn(), 0.0);
+        assertEquals(0.0, velocity.getVe(), 0.0);
+        assertEquals(0.0, velocity.getVd(), 0.0);
 
-        assertEquals(velocity.getSpeedN().getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(velocity.getSpeedE().getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(velocity.getSpeedD().getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(0.0, velocity.getSpeedN().getValue().doubleValue(), 0.0);
+        assertEquals(0.0, velocity.getSpeedE().getValue().doubleValue(), 0.0);
+        assertEquals(0.0, velocity.getSpeedD().getValue().doubleValue(), 0.0);
 
 
         // test constructor with coordinates
@@ -58,13 +58,13 @@ public class NEDVelocityTest {
         velocity = new NEDVelocity(vn, ve, vd);
 
         // check
-        assertEquals(velocity.getVn(), vn, 0.0);
-        assertEquals(velocity.getVe(), ve, 0.0);
-        assertEquals(velocity.getVd(), vd, 0.0);
+        assertEquals(vn, velocity.getVn(), 0.0);
+        assertEquals(ve, velocity.getVe(), 0.0);
+        assertEquals(vd, velocity.getVd(), 0.0);
 
-        assertEquals(velocity.getSpeedN().getValue().doubleValue(), vn, 0.0);
-        assertEquals(velocity.getSpeedE().getValue().doubleValue(), ve, 0.0);
-        assertEquals(velocity.getSpeedD().getValue().doubleValue(), vd, 0.0);
+        assertEquals(vn, velocity.getSpeedN().getValue().doubleValue(), 0.0);
+        assertEquals(ve, velocity.getSpeedE().getValue().doubleValue(), 0.0);
+        assertEquals(vd, velocity.getSpeedD().getValue().doubleValue(), 0.0);
 
 
         final Speed speedN = new Speed(vn, SpeedUnit.METERS_PER_SECOND);
@@ -74,13 +74,13 @@ public class NEDVelocityTest {
         velocity = new NEDVelocity(speedN, speedE, speedD);
 
         // check
-        assertEquals(velocity.getVn(), vn, 0.0);
-        assertEquals(velocity.getVe(), ve, 0.0);
-        assertEquals(velocity.getVd(), vd, 0.0);
+        assertEquals(vn, velocity.getVn(), 0.0);
+        assertEquals(ve, velocity.getVe(), 0.0);
+        assertEquals(vd, velocity.getVd(), 0.0);
 
-        assertEquals(velocity.getSpeedN().getValue().doubleValue(), vn, 0.0);
-        assertEquals(velocity.getSpeedE().getValue().doubleValue(), ve, 0.0);
-        assertEquals(velocity.getSpeedD().getValue().doubleValue(), vd, 0.0);
+        assertEquals(vn, velocity.getSpeedN().getValue().doubleValue(), 0.0);
+        assertEquals(ve, velocity.getSpeedE().getValue().doubleValue(), 0.0);
+        assertEquals(vd, velocity.getSpeedD().getValue().doubleValue(), 0.0);
 
 
         // test copy constructor
@@ -101,13 +101,13 @@ public class NEDVelocityTest {
         final NEDVelocity velocity = new NEDVelocity();
 
         // check initial value
-        assertEquals(velocity.getVn(), 0.0, 0.0);
+        assertEquals(0.0, velocity.getVn(), 0.0);
 
         // set new value
         velocity.setVn(vn);
 
         // check
-        assertEquals(velocity.getVn(), vn, 0.0);
+        assertEquals(vn, velocity.getVn(), 0.0);
     }
 
     @Test
@@ -119,13 +119,13 @@ public class NEDVelocityTest {
         final NEDVelocity velocity = new NEDVelocity();
 
         // check initial value
-        assertEquals(velocity.getVe(), 0.0, 0.0);
+        assertEquals(0.0, velocity.getVe(), 0.0);
 
         // set new value
         velocity.setVe(ve);
 
         // check
-        assertEquals(velocity.getVe(), ve, 0.0);
+        assertEquals(ve, velocity.getVe(), 0.0);
     }
 
     @Test
@@ -137,13 +137,13 @@ public class NEDVelocityTest {
         final NEDVelocity velocity = new NEDVelocity();
 
         // check initial value
-        assertEquals(velocity.getVd(), 0.0, 0.0);
+        assertEquals(0.0, velocity.getVd(), 0.0);
 
         // set new value
         velocity.setVd(vd);
 
         // check
-        assertEquals(velocity.getVd(), vd, 0.0);
+        assertEquals(vd, velocity.getVd(), 0.0);
     }
 
     @Test
@@ -157,17 +157,17 @@ public class NEDVelocityTest {
         final NEDVelocity velocity = new NEDVelocity();
 
         // check initial values
-        assertEquals(velocity.getVn(), 0.0, 0.0);
-        assertEquals(velocity.getVe(), 0.0, 0.0);
-        assertEquals(velocity.getVd(), 0.0, 0.0);
+        assertEquals(0.0, velocity.getVn(), 0.0);
+        assertEquals(0.0, velocity.getVe(), 0.0);
+        assertEquals(0.0, velocity.getVd(), 0.0);
 
         // set new values
         velocity.setCoordinates(vn, ve, vd);
 
         // check
-        assertEquals(velocity.getVn(), vn, 0.0);
-        assertEquals(velocity.getVe(), ve, 0.0);
-        assertEquals(velocity.getVd(), vd, 0.0);
+        assertEquals(vn, velocity.getVn(), 0.0);
+        assertEquals(ve, velocity.getVe(), 0.0);
+        assertEquals(vd, velocity.getVd(), 0.0);
     }
 
     @Test
@@ -181,7 +181,7 @@ public class NEDVelocityTest {
 
         final NEDVelocity velocity = new NEDVelocity(vn, ve, vd);
 
-        assertEquals(velocity.getNorm(), norm, 0.0);
+        assertEquals(norm, velocity.getNorm(), 0.0);
     }
 
     @Test
@@ -199,8 +199,8 @@ public class NEDVelocityTest {
         velocity.getNormAsSpeed(norm1);
         final Speed norm2 = velocity.getNormAsSpeed();
 
-        assertEquals(norm1.getValue().doubleValue(), norm, 0.0);
-        assertEquals(norm1.getUnit(), SpeedUnit.METERS_PER_SECOND);
+        assertEquals(norm, norm1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, norm1.getUnit());
 
         assertEquals(norm1, norm2);
     }
@@ -214,9 +214,9 @@ public class NEDVelocityTest {
         final NEDVelocity velocity = new NEDVelocity();
 
         // check initial values
-        assertEquals(velocity.getVn(), 0.0, 0.0);
-        assertEquals(velocity.getSpeedN().getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(velocity.getSpeedN().getUnit(), SpeedUnit.METERS_PER_SECOND);
+        assertEquals(0.0, velocity.getVn(), 0.0);
+        assertEquals(0.0, velocity.getSpeedN().getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocity.getSpeedN().getUnit());
 
         // set new value
         final Speed speedN1 = new Speed(vn, SpeedUnit.METERS_PER_SECOND);
@@ -227,8 +227,8 @@ public class NEDVelocityTest {
         velocity.getSpeedN(speedN2);
         final Speed speedN3 = velocity.getSpeedN();
 
-        assertEquals(speedN2.getValue().doubleValue(), vn, 0.0);
-        assertEquals(speedN2.getUnit(), SpeedUnit.METERS_PER_SECOND);
+        assertEquals(vn, speedN2.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, speedN2.getUnit());
         assertEquals(speedN2, speedN3);
     }
 
@@ -241,9 +241,9 @@ public class NEDVelocityTest {
         final NEDVelocity velocity = new NEDVelocity();
 
         // check initial values
-        assertEquals(velocity.getVe(), 0.0, 0.0);
-        assertEquals(velocity.getSpeedE().getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(velocity.getSpeedE().getUnit(), SpeedUnit.METERS_PER_SECOND);
+        assertEquals(0.0, velocity.getVe(), 0.0);
+        assertEquals(0.0, velocity.getSpeedE().getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocity.getSpeedE().getUnit());
 
         // set new value
         final Speed speedE1 = new Speed(ve, SpeedUnit.METERS_PER_SECOND);
@@ -254,8 +254,8 @@ public class NEDVelocityTest {
         velocity.getSpeedE(speedE2);
         final Speed speedE3 = velocity.getSpeedE();
 
-        assertEquals(speedE2.getValue().doubleValue(), ve, 0.0);
-        assertEquals(speedE2.getUnit(), SpeedUnit.METERS_PER_SECOND);
+        assertEquals(ve, speedE2.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, speedE2.getUnit());
         assertEquals(speedE2, speedE3);
     }
 
@@ -268,9 +268,9 @@ public class NEDVelocityTest {
         final NEDVelocity velocity = new NEDVelocity();
 
         // check initial values
-        assertEquals(velocity.getVd(), 0.0, 0.0);
-        assertEquals(velocity.getSpeedD().getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(velocity.getSpeedD().getUnit(), SpeedUnit.METERS_PER_SECOND);
+        assertEquals(0.0, velocity.getVd(), 0.0);
+        assertEquals(0.0, velocity.getSpeedD().getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, velocity.getSpeedD().getUnit());
 
         // set new value
         final Speed speedD1 = new Speed(vd, SpeedUnit.METERS_PER_SECOND);
@@ -281,8 +281,8 @@ public class NEDVelocityTest {
         velocity.getSpeedD(speedD2);
         final Speed speedD3 = velocity.getSpeedD();
 
-        assertEquals(speedD2.getValue().doubleValue(), vd, 0.0);
-        assertEquals(speedD2.getUnit(), SpeedUnit.METERS_PER_SECOND);
+        assertEquals(vd, speedD2.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, speedD2.getUnit());
         assertEquals(speedD2, speedD3);
     }
 
@@ -301,17 +301,17 @@ public class NEDVelocityTest {
         final NEDVelocity velocity = new NEDVelocity();
 
         // check initial values
-        assertEquals(velocity.getVn(), 0.0, 0.0);
-        assertEquals(velocity.getVe(), 0.0, 0.0);
-        assertEquals(velocity.getVd(), 0.0, 0.0);
+        assertEquals(0.0, velocity.getVn(), 0.0);
+        assertEquals(0.0, velocity.getVe(), 0.0);
+        assertEquals(0.0, velocity.getVd(), 0.0);
 
         // set new values
         velocity.setCoordinates(speedN, speedE, speedD);
 
         // check
-        assertEquals(velocity.getVn(), vn, 0.0);
-        assertEquals(velocity.getVe(), ve, 0.0);
-        assertEquals(velocity.getVd(), vd, 0.0);
+        assertEquals(vn, velocity.getVn(), 0.0);
+        assertEquals(ve, velocity.getVe(), 0.0);
+        assertEquals(vd, velocity.getVd(), 0.0);
     }
 
     @Test

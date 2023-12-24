@@ -45,7 +45,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
     protected HomogeneousLinearLeastSquaresLateration2DSolver mHomogeneousLinearSolver;
 
     /**
-     * Non linear lateration solver internally used to refine solution
+     * Non-linear lateration solver internally used to refine solution
      * found by robust algorithm.
      */
     protected NonLinearLeastSquaresLateration2DSolver mNonLinearSolver;
@@ -139,8 +139,8 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      * @param listener                   listener to be notified of events such as when estimation starts,
      *                                   ends or its progress significantly changes.
      * @throws IllegalArgumentException if either positions, distances or
-     *                                  standard deviations are null, don't have the same length or their length is smaller
-     *                                  than required (3 points).
+     *                                  standard deviations are null, don't have the same length or their length is
+     *                                  smaller than required (3 points).
      */
     protected RobustLateration2DSolver(final Point2D[] positions, final double[] distances,
                                        final double[] distanceStandardDeviations,
@@ -281,7 +281,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
     }
 
     /**
-     * Sets circles defining positions and euclidean distances along with the standard
+     * Sets circles defining positions and Euclidean distances along with the standard
      * deviations of provided circles radii.
      *
      * @param circles                  circles defining positions and distances.
@@ -309,13 +309,13 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration2DSolver();
-            case LMedS:
+            case LMEDS:
                 return new LMedSRobustLateration2DSolver();
             case MSAC:
                 return new MSACRobustLateration2DSolver();
             case PROSAC:
                 return new PROSACRobustLateration2DSolver();
-            case PROMedS:
+            case PROMEDS:
             default:
                 return new PROMedSRobustLateration2DSolver();
         }
@@ -335,13 +335,13 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration2DSolver(listener);
-            case LMedS:
+            case LMEDS:
                 return new LMedSRobustLateration2DSolver(listener);
             case MSAC:
                 return new MSACRobustLateration2DSolver(listener);
             case PROSAC:
                 return new PROSACRobustLateration2DSolver(listener);
-            case PROMedS:
+            case PROMEDS:
             default:
                 return new PROMedSRobustLateration2DSolver(listener);
         }
@@ -365,13 +365,13 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration2DSolver(positions, distances);
-            case LMedS:
+            case LMEDS:
                 return new LMedSRobustLateration2DSolver(positions, distances);
             case MSAC:
                 return new MSACRobustLateration2DSolver(positions, distances);
             case PROSAC:
                 return new PROSACRobustLateration2DSolver(positions, distances);
-            case PROMedS:
+            case PROMEDS:
             default:
                 return new PROMedSRobustLateration2DSolver(positions, distances);
         }
@@ -399,7 +399,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
             case RANSAC:
                 return new RANSACRobustLateration2DSolver(positions, distances,
                         distanceStandardDeviations);
-            case LMedS:
+            case LMEDS:
                 return new LMedSRobustLateration2DSolver(positions, distances,
                         distanceStandardDeviations);
             case MSAC:
@@ -408,7 +408,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
             case PROSAC:
                 return new PROSACRobustLateration2DSolver(positions, distances,
                         distanceStandardDeviations);
-            case PROMedS:
+            case PROMEDS:
             default:
                 return new PROMedSRobustLateration2DSolver(positions, distances,
                         distanceStandardDeviations);
@@ -436,7 +436,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
             case RANSAC:
                 return new RANSACRobustLateration2DSolver(positions, distances,
                         listener);
-            case LMedS:
+            case LMEDS:
                 return new LMedSRobustLateration2DSolver(positions, distances,
                         listener);
             case MSAC:
@@ -445,7 +445,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
             case PROSAC:
                 return new PROSACRobustLateration2DSolver(positions, distances,
                         listener);
-            case PROMedS:
+            case PROMEDS:
             default:
                 return new PROMedSRobustLateration2DSolver(positions, distances,
                         listener);
@@ -477,7 +477,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
             case RANSAC:
                 return new RANSACRobustLateration2DSolver(positions, distances,
                         distanceStandardDeviations, listener);
-            case LMedS:
+            case LMEDS:
                 return new LMedSRobustLateration2DSolver(positions, distances,
                         distanceStandardDeviations, listener);
             case MSAC:
@@ -486,7 +486,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
             case PROSAC:
                 return new PROSACRobustLateration2DSolver(positions, distances,
                         distanceStandardDeviations, listener);
-            case PROMedS:
+            case PROMEDS:
             default:
                 return new PROMedSRobustLateration2DSolver(positions, distances,
                         distanceStandardDeviations, listener);
@@ -507,13 +507,13 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration2DSolver(circles);
-            case LMedS:
+            case LMEDS:
                 return new LMedSRobustLateration2DSolver(circles);
             case MSAC:
                 return new MSACRobustLateration2DSolver(circles);
             case PROSAC:
                 return new PROSACRobustLateration2DSolver(circles);
-            case PROMedS:
+            case PROMEDS:
             default:
                 return new PROMedSRobustLateration2DSolver(circles);
         }
@@ -537,7 +537,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
             case RANSAC:
                 return new RANSACRobustLateration2DSolver(circles,
                         distanceStandardDeviations);
-            case LMedS:
+            case LMEDS:
                 return new LMedSRobustLateration2DSolver(circles,
                         distanceStandardDeviations);
             case MSAC:
@@ -546,7 +546,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
             case PROSAC:
                 return new PROSACRobustLateration2DSolver(circles,
                         distanceStandardDeviations);
-            case PROMedS:
+            case PROMEDS:
             default:
                 return new PROMedSRobustLateration2DSolver(circles,
                         distanceStandardDeviations);
@@ -570,13 +570,13 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration2DSolver(circles, listener);
-            case LMedS:
+            case LMEDS:
                 return new LMedSRobustLateration2DSolver(circles, listener);
             case MSAC:
                 return new MSACRobustLateration2DSolver(circles, listener);
             case PROSAC:
                 return new PROSACRobustLateration2DSolver(circles, listener);
-            case PROMedS:
+            case PROMEDS:
             default:
                 return new PROMedSRobustLateration2DSolver(circles, listener);
         }
@@ -603,7 +603,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
             case RANSAC:
                 return new RANSACRobustLateration2DSolver(circles,
                         distanceStandardDeviations, listener);
-            case LMedS:
+            case LMEDS:
                 return new LMedSRobustLateration2DSolver(circles,
                         distanceStandardDeviations, listener);
             case MSAC:
@@ -612,7 +612,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
             case PROSAC:
                 return new PROSACRobustLateration2DSolver(circles,
                         distanceStandardDeviations, listener);
-            case PROMedS:
+            case PROMEDS:
             default:
                 return new PROMedSRobustLateration2DSolver(circles,
                         distanceStandardDeviations, listener);
@@ -635,13 +635,13 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration2DSolver();
-            case LMedS:
+            case LMEDS:
                 return new LMedSRobustLateration2DSolver();
             case MSAC:
                 return new MSACRobustLateration2DSolver();
             case PROSAC:
                 return new PROSACRobustLateration2DSolver(qualityScores);
-            case PROMedS:
+            case PROMEDS:
             default:
                 return new PROMedSRobustLateration2DSolver(qualityScores);
         }
@@ -667,14 +667,14 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration2DSolver(listener);
-            case LMedS:
+            case LMEDS:
                 return new LMedSRobustLateration2DSolver(listener);
             case MSAC:
                 return new MSACRobustLateration2DSolver(listener);
             case PROSAC:
                 return new PROSACRobustLateration2DSolver(qualityScores,
                         listener);
-            case PROMedS:
+            case PROMEDS:
             default:
                 return new PROMedSRobustLateration2DSolver(qualityScores,
                         listener);
@@ -702,14 +702,14 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration2DSolver(positions, distances);
-            case LMedS:
+            case LMEDS:
                 return new LMedSRobustLateration2DSolver(positions, distances);
             case MSAC:
                 return new MSACRobustLateration2DSolver(positions, distances);
             case PROSAC:
                 return new PROSACRobustLateration2DSolver(qualityScores,
                         positions, distances);
-            case PROMedS:
+            case PROMEDS:
             default:
                 return new PROMedSRobustLateration2DSolver(qualityScores,
                         positions, distances);
@@ -740,7 +740,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
             case RANSAC:
                 return new RANSACRobustLateration2DSolver(positions, distances,
                         distanceStandardDeviations);
-            case LMedS:
+            case LMEDS:
                 return new LMedSRobustLateration2DSolver(positions, distances,
                         distanceStandardDeviations);
             case MSAC:
@@ -749,7 +749,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
             case PROSAC:
                 return new PROSACRobustLateration2DSolver(qualityScores,
                         positions, distances, distanceStandardDeviations);
-            case PROMedS:
+            case PROMEDS:
             default:
                 return new PROMedSRobustLateration2DSolver(qualityScores,
                         positions, distances, distanceStandardDeviations);
@@ -783,7 +783,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
             case RANSAC:
                 return new RANSACRobustLateration2DSolver(positions, distances,
                         distanceStandardDeviations, listener);
-            case LMedS:
+            case LMEDS:
                 return new LMedSRobustLateration2DSolver(positions, distances,
                         distanceStandardDeviations, listener);
             case MSAC:
@@ -792,7 +792,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
             case PROSAC:
                 return new PROSACRobustLateration2DSolver(qualityScores,
                         positions, distances, distanceStandardDeviations, listener);
-            case PROMedS:
+            case PROMEDS:
             default:
                 return new PROMedSRobustLateration2DSolver(qualityScores,
                         positions, distances, distanceStandardDeviations, listener);
@@ -823,7 +823,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
             case RANSAC:
                 return new RANSACRobustLateration2DSolver(positions, distances,
                         listener);
-            case LMedS:
+            case LMEDS:
                 return new LMedSRobustLateration2DSolver(positions, distances,
                         listener);
             case MSAC:
@@ -832,7 +832,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
             case PROSAC:
                 return new PROSACRobustLateration2DSolver(qualityScores,
                         positions, distances, listener);
-            case PROMedS:
+            case PROMEDS:
             default:
                 return new PROMedSRobustLateration2DSolver(qualityScores,
                         positions, distances, listener);
@@ -858,14 +858,14 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration2DSolver(circles);
-            case LMedS:
+            case LMEDS:
                 return new LMedSRobustLateration2DSolver(circles);
             case MSAC:
                 return new MSACRobustLateration2DSolver(circles);
             case PROSAC:
                 return new PROSACRobustLateration2DSolver(qualityScores,
                         circles);
-            case PROMedS:
+            case PROMEDS:
             default:
                 return new PROMedSRobustLateration2DSolver(qualityScores,
                         circles);
@@ -894,7 +894,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
             case RANSAC:
                 return new RANSACRobustLateration2DSolver(circles,
                         distanceStandardDeviations);
-            case LMedS:
+            case LMEDS:
                 return new LMedSRobustLateration2DSolver(circles,
                         distanceStandardDeviations);
             case MSAC:
@@ -903,7 +903,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
             case PROSAC:
                 return new PROSACRobustLateration2DSolver(qualityScores,
                         circles, distanceStandardDeviations);
-            case PROMedS:
+            case PROMEDS:
             default:
                 return new PROMedSRobustLateration2DSolver(qualityScores,
                         circles, distanceStandardDeviations);
@@ -936,7 +936,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
             case RANSAC:
                 return new RANSACRobustLateration2DSolver(circles,
                         distanceStandardDeviations, listener);
-            case LMedS:
+            case LMEDS:
                 return new LMedSRobustLateration2DSolver(circles,
                         distanceStandardDeviations, listener);
             case MSAC:
@@ -945,7 +945,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
             case PROSAC:
                 return new PROSACRobustLateration2DSolver(qualityScores,
                         circles, distanceStandardDeviations, listener);
-            case PROMedS:
+            case PROMEDS:
             default:
                 return new PROMedSRobustLateration2DSolver(qualityScores,
                         circles, distanceStandardDeviations, listener);
@@ -1302,7 +1302,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      * Attempts to refine estimated position if refinement is requested.
      * This method returns a refined solution or provided input if refinement is not
      * requested or has failed.
-     * If refinement is enabled and it is requested to keep covariance, this method
+     * If refinement is enabled, and it is requested to keep covariance, this method
      * will also keep covariance of refined position.
      *
      * @param position position estimated by a robust estimator without refinement.
@@ -1417,7 +1417,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
     }
 
     /**
-     * Internally sets circles defining positions and euclidean distances.
+     * Internally sets circles defining positions and Euclidean distances.
      *
      * @param circles circles defining positions and distances.
      * @throws IllegalArgumentException if circles is null or length of array of circles
@@ -1440,7 +1440,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
     }
 
     /**
-     * Internally sets circles defining positions and euclidean distances along with the standard
+     * Internally sets circles defining positions and Euclidean distances along with the standard
      * deviations of provided circles radii.
      *
      * @param circles                  circles defining positions and distances.

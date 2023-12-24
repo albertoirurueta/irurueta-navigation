@@ -108,8 +108,8 @@ public class MSACRobustLateration3DSolver extends RobustLateration3DSolver {
      * @param listener                   listener to be notified of events such as when estimation starts,
      *                                   ends or its progress significantly changes.
      * @throws IllegalArgumentException if either positions, distances or
-     *                                  standard deviations are null, don't have the same length or their length is smaller
-     *                                  than required (4 points).
+     *                                  standard deviations are null, don't have the same length or their length is
+     *                                  smaller than required (4 points).
      */
     public MSACRobustLateration3DSolver(
             final Point3D[] positions, final double[] distances,

@@ -21,6 +21,7 @@ import com.irurueta.geometry.InvalidRotationMatrixException;
 import com.irurueta.navigation.frames.CoordinateTransformation;
 import com.irurueta.navigation.frames.ECEFFrame;
 import com.irurueta.navigation.frames.ECIFrame;
+import com.irurueta.navigation.frames.ECIorECEFFrame;
 import com.irurueta.navigation.frames.FrameType;
 import com.irurueta.navigation.frames.InvalidSourceAndDestinationFrameTypeException;
 import com.irurueta.navigation.geodesic.Constants;
@@ -32,7 +33,9 @@ import com.irurueta.units.TimeUnit;
  * Converts from ECI frame to ECEF frame.
  * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multi-sensor
  * Integrated Navigation Systems, Second Edition" and on the companion software available at:
- * https://github.com/ymjdz/MATLAB-Codes/blob/master/ECI_to_ECEF.m
+ * <a href="https://github.com/ymjdz/MATLAB-Codes/blob/master/ECI_to_ECEF.m">
+ *     https://github.com/ymjdz/MATLAB-Codes/blob/master/ECI_to_ECEF.m
+ * </a>
  */
 @SuppressWarnings("WeakerAccess")
 public class ECItoECEFFrameConverter implements TimeIntervalFrameConverter<ECIFrame, ECEFFrame> {
@@ -143,14 +146,15 @@ public class ECItoECEFFrameConverter implements TimeIntervalFrameConverter<ECIFr
      * @param destination  destination frame instance to convert to.
      */
     @SuppressWarnings("DuplicatedCode")
-    public static void convertECItoECEF(final double timeInterval, final ECIFrame source, final ECEFFrame destination) {
+    public static void convertECItoECEF(final double timeInterval, final ECIFrame source,
+                                        final ECEFFrame destination) {
         try {
             // Calculate ECEF to ECI coordinate transformation matrix using (2.145)
             final double alpha = EARTH_ROTATION_RATE * timeInterval;
             final Matrix cie = CoordinateTransformation.eciToEcefMatrixFromAngle(alpha);
 
             // Transform position using (2.146)
-            final Matrix rIbi = new Matrix(ECIFrame.NUM_POSITION_COORDINATES, 1);
+            final Matrix rIbi = new Matrix(ECIorECEFFrame.NUM_POSITION_COORDINATES, 1);
             rIbi.setElementAtIndex(0, source.getX());
             rIbi.setElementAtIndex(1, source.getY());
             rIbi.setElementAtIndex(2, source.getZ());
@@ -161,13 +165,13 @@ public class ECItoECEFFrameConverter implements TimeIntervalFrameConverter<ECIFr
                     rEbe.getElementAtIndex(1), rEbe.getElementAtIndex(2));
 
             // Transform velocity using (2.145)
-            final Matrix tmp = new Matrix(ECIFrame.NUM_POSITION_COORDINATES, 1);
+            final Matrix tmp = new Matrix(ECIorECEFFrame.NUM_POSITION_COORDINATES, 1);
             tmp.setElementAtIndex(0, -source.getY());
             tmp.setElementAtIndex(1, source.getX());
             tmp.setElementAtIndex(2, 0.0);
             tmp.multiplyByScalar(-EARTH_ROTATION_RATE);
 
-            final Matrix vIbi = new Matrix(ECIFrame.NUM_VELOCITY_COORDINATES, 1);
+            final Matrix vIbi = new Matrix(ECIorECEFFrame.NUM_VELOCITY_COORDINATES, 1);
             vIbi.setElementAtIndex(0, source.getVx());
             vIbi.setElementAtIndex(1, source.getVy());
             vIbi.setElementAtIndex(2, source.getVz());
@@ -201,7 +205,8 @@ public class ECItoECEFFrameConverter implements TimeIntervalFrameConverter<ECIFr
      * @param source       source frame to convert from.
      * @param destination  destination frame instance to convert to.
      */
-    public static void convertECItoECEF(final Time timeInterval, final ECIFrame source, final ECEFFrame destination) {
+    public static void convertECItoECEF(final Time timeInterval, final ECIFrame source,
+                                        final ECEFFrame destination) {
         convertECItoECEF(TimeConverter.convert(timeInterval.getValue().doubleValue(),
                 timeInterval.getUnit(), TimeUnit.SECOND), source, destination);
     }

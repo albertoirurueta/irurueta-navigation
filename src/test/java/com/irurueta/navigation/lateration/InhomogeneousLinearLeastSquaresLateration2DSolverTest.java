@@ -60,12 +60,10 @@ public class InhomogeneousLinearLeastSquaresLateration2DSolverTest implements La
         assertFalse(solver.isReady());
         assertNull(solver.getEstimatedPositionCoordinates());
         assertNull(solver.getEstimatedPosition());
-        assertEquals(solver.getNumberOfDimensions(), 2);
+        assertEquals(2, solver.getNumberOfDimensions());
         assertNull(solver.getCircles());
-        assertEquals(solver.getType(),
-                LaterationSolverType.INHOMOGENEOUS_LINEAR_TRILATERATION_SOLVER);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
-
+        assertEquals(LaterationSolverType.INHOMOGENEOUS_LINEAR_TRILATERATION_SOLVER, solver.getType());
+        assertEquals(3, solver.getMinRequiredPositionsAndDistances());
 
         // constructor with positions and distances
         final Point2D[] positions = new Point2D[3];
@@ -77,15 +75,15 @@ public class InhomogeneousLinearLeastSquaresLateration2DSolverTest implements La
 
         // check correctness
         assertNull(solver.getListener());
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
         assertTrue(solver.isReady());
         assertNull(solver.getEstimatedPositionCoordinates());
         assertNull(solver.getEstimatedPosition());
-        assertEquals(solver.getNumberOfDimensions(), 2);
+        assertEquals(2, solver.getNumberOfDimensions());
         assertNotNull(solver.getCircles());
-        assertEquals(solver.getType(), LaterationSolverType.INHOMOGENEOUS_LINEAR_TRILATERATION_SOLVER);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
+        assertEquals(LaterationSolverType.INHOMOGENEOUS_LINEAR_TRILATERATION_SOLVER, solver.getType());
+        assertEquals(3, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
         final double[] wrong = new double[4];
@@ -121,32 +119,31 @@ public class InhomogeneousLinearLeastSquaresLateration2DSolverTest implements La
         solver = new InhomogeneousLinearLeastSquaresLateration2DSolver(listener);
 
         // check correctness
-        assertSame(solver.getListener(), listener);
+        assertSame(listener, solver.getListener());
         assertNull(solver.getPositions());
         assertNull(solver.getDistances());
         assertFalse(solver.isReady());
         assertNull(solver.getEstimatedPositionCoordinates());
         assertNull(solver.getEstimatedPosition());
-        assertEquals(solver.getNumberOfDimensions(), 2);
+        assertEquals(2, solver.getNumberOfDimensions());
         assertNull(solver.getCircles());
-        assertEquals(solver.getType(), LaterationSolverType.INHOMOGENEOUS_LINEAR_TRILATERATION_SOLVER);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
-
+        assertEquals(LaterationSolverType.INHOMOGENEOUS_LINEAR_TRILATERATION_SOLVER, solver.getType());
+        assertEquals(3, solver.getMinRequiredPositionsAndDistances());
 
         // constructor with positions, distances and listener
         solver = new InhomogeneousLinearLeastSquaresLateration2DSolver(positions, distances, listener);
 
         // check correctness
-        assertSame(solver.getListener(), listener);
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
+        assertSame(listener, solver.getListener());
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
         assertTrue(solver.isReady());
         assertNull(solver.getEstimatedPositionCoordinates());
         assertNull(solver.getEstimatedPosition());
-        assertEquals(solver.getNumberOfDimensions(), 2);
+        assertEquals(2, solver.getNumberOfDimensions());
         assertNotNull(solver.getCircles());
-        assertEquals(solver.getType(), LaterationSolverType.INHOMOGENEOUS_LINEAR_TRILATERATION_SOLVER);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
+        assertEquals(LaterationSolverType.INHOMOGENEOUS_LINEAR_TRILATERATION_SOLVER, solver.getType());
+        assertEquals(3, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
         solver = null;
@@ -166,7 +163,8 @@ public class InhomogeneousLinearLeastSquaresLateration2DSolverTest implements La
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new InhomogeneousLinearLeastSquaresLateration2DSolver(shortPositions, shortDistances, listener);
+            solver = new InhomogeneousLinearLeastSquaresLateration2DSolver(shortPositions, shortDistances,
+                    listener);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -187,10 +185,10 @@ public class InhomogeneousLinearLeastSquaresLateration2DSolverTest implements La
         assertTrue(solver.isReady());
         assertNull(solver.getEstimatedPositionCoordinates());
         assertNull(solver.getEstimatedPosition());
-        assertEquals(solver.getNumberOfDimensions(), 2);
+        assertEquals(2, solver.getNumberOfDimensions());
         assertNotNull(solver.getCircles());
-        assertEquals(solver.getType(), LaterationSolverType.INHOMOGENEOUS_LINEAR_TRILATERATION_SOLVER);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
+        assertEquals(LaterationSolverType.INHOMOGENEOUS_LINEAR_TRILATERATION_SOLVER, solver.getType());
+        assertEquals(3, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
         final Circle[] shortCircles = new Circle[1];
@@ -213,16 +211,16 @@ public class InhomogeneousLinearLeastSquaresLateration2DSolverTest implements La
         solver = new InhomogeneousLinearLeastSquaresLateration2DSolver(circles, listener);
 
         // check correctness
-        assertSame(solver.getListener(), listener);
+        assertSame(listener, solver.getListener());
         assertNotNull(solver.getPositions());
         assertNotNull(solver.getDistances());
         assertTrue(solver.isReady());
         assertNull(solver.getEstimatedPositionCoordinates());
         assertNull(solver.getEstimatedPosition());
-        assertEquals(solver.getNumberOfDimensions(), 2);
+        assertEquals(2, solver.getNumberOfDimensions());
         assertNotNull(solver.getCircles());
-        assertEquals(solver.getType(), LaterationSolverType.INHOMOGENEOUS_LINEAR_TRILATERATION_SOLVER);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
+        assertEquals(LaterationSolverType.INHOMOGENEOUS_LINEAR_TRILATERATION_SOLVER, solver.getType());
+        assertEquals(3, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
         solver = null;
@@ -300,7 +298,7 @@ public class InhomogeneousLinearLeastSquaresLateration2DSolverTest implements La
         solver.setListener(listener);
 
         // check
-        assertSame(solver.getListener(), listener);
+        assertSame(listener, solver.getListener());
     }
 
     @Test
@@ -323,8 +321,8 @@ public class InhomogeneousLinearLeastSquaresLateration2DSolverTest implements La
         solver.setPositionsAndDistances(positions, distances);
 
         // check
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
         assertTrue(solver.isReady());
 
         // Force IllegalArgumentException
@@ -373,12 +371,11 @@ public class InhomogeneousLinearLeastSquaresLateration2DSolverTest implements La
             }
 
             final InhomogeneousLinearLeastSquaresLateration2DSolver solver =
-                    new InhomogeneousLinearLeastSquaresLateration2DSolver(
-                            circles, this);
+                    new InhomogeneousLinearLeastSquaresLateration2DSolver(circles, this);
 
             reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
+            assertEquals(0, solveStart);
+            assertEquals(0, solveEnd);
             assertTrue(solver.isReady());
             assertNull(solver.getEstimatedPosition());
             assertNull(solver.getEstimatedPositionCoordinates());
@@ -449,12 +446,11 @@ public class InhomogeneousLinearLeastSquaresLateration2DSolverTest implements La
             }
 
             final InhomogeneousLinearLeastSquaresLateration2DSolver solver =
-                    new InhomogeneousLinearLeastSquaresLateration2DSolver(
-                            positions, distances, this);
+                    new InhomogeneousLinearLeastSquaresLateration2DSolver(positions, distances, this);
 
             reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
+            assertEquals(0, solveStart);
+            assertEquals(0, solveEnd);
             assertTrue(solver.isReady());
             assertNull(solver.getEstimatedPosition());
             assertNull(solver.getEstimatedPositionCoordinates());
@@ -497,12 +493,11 @@ public class InhomogeneousLinearLeastSquaresLateration2DSolverTest implements La
             }
 
             final InhomogeneousLinearLeastSquaresLateration2DSolver solver =
-                    new InhomogeneousLinearLeastSquaresLateration2DSolver(
-                            circles, this);
+                    new InhomogeneousLinearLeastSquaresLateration2DSolver(circles, this);
 
             reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
+            assertEquals(0, solveStart);
+            assertEquals(0, solveEnd);
             assertTrue(solver.isReady());
             assertNull(solver.getEstimatedPosition());
             assertNull(solver.getEstimatedPositionCoordinates());

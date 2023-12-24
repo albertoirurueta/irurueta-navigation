@@ -116,7 +116,7 @@ public class HomogeneousLinearLeastSquaresLateration3DSolver extends
     }
 
     /**
-     * Sets spheres defining positions and euclidean distances.
+     * Sets spheres defining positions and Euclidean distances.
      *
      * @param spheres spheres defining positions and distances.
      * @throws IllegalArgumentException if spheres is null or length of array of spheres
@@ -168,7 +168,7 @@ public class HomogeneousLinearLeastSquaresLateration3DSolver extends
     }
 
     /**
-     * Internally sets spheres defining positions and euclidean distances.
+     * Internally sets spheres defining positions and Euclidean distances.
      *
      * @param spheres spheres defining positions and distances.
      * @throws IllegalArgumentException if spheres is null or length of array of spheres

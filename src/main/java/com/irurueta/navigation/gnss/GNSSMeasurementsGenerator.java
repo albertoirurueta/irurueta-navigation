@@ -38,7 +38,9 @@ import java.util.Random;
  * Generates satellite GNSS measurement data.
  * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multi-sensor
  * Integrated Navigation Systems, Second Edition" and on the companion software available at:
- * https://github.com/ymjdz/MATLAB-Codes/blob/master/Generate_GNSS_measurements.m
+ * <a href="https://github.com/ymjdz/MATLAB-Codes/blob/master/Generate_GNSS_measurements.m">
+ *     https://github.com/ymjdz/MATLAB-Codes/blob/master/Generate_GNSS_measurements.m
+ * </a>
  */
 @SuppressWarnings("DuplicatedCode")
 public class GNSSMeasurementsGenerator {

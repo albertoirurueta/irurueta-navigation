@@ -31,7 +31,9 @@ import java.util.Random;
  * errors based on the elevation angles.
  * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multi-sensor
  * Integrated Navigation Systems, Second Edition" and on the companion software available at:
- * https://github.com/ymjdz/MATLAB-Codes/blob/master/Initialize_GNSS_biases.m
+ * <a href="https://github.com/ymjdz/MATLAB-Codes/blob/master/Initialize_GNSS_biases.m">
+ *     https://github.com/ymjdz/MATLAB-Codes/blob/master/Initialize_GNSS_biases.m
+ * </a>
  */
 public class GNSSBiasesGenerator {
 

@@ -168,7 +168,7 @@ public class InhomogeneousLinearLeastSquaresLateration2DSolver extends
     }
 
     /**
-     * Internally sets circles defining positions and euclidean distances.
+     * Internally sets circles defining positions and Euclidean distances.
      *
      * @param circles circles defining positions and distances.
      * @throws IllegalArgumentException if circles is null or length of array of circles

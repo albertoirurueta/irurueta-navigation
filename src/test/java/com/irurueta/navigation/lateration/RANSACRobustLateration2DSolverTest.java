@@ -29,8 +29,7 @@ import java.util.Random;
 
 import static org.junit.Assert.*;
 
-public class RANSACRobustLateration2DSolverTest implements
-        RobustLaterationSolverListener<Point2D> {
+public class RANSACRobustLateration2DSolverTest implements RobustLaterationSolverListener<Point2D> {
 
     private static final int MIN_CIRCLES = 100;
     private static final int MAX_CIRCLES = 500;
@@ -61,16 +60,15 @@ public class RANSACRobustLateration2DSolverTest implements
         RANSACRobustLateration2DSolver solver = new RANSACRobustLateration2DSolver();
 
         // check correctness
-        assertEquals(solver.getThreshold(),
-                RANSACRobustLateration2DSolver.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(solver.isComputeAndKeepInliersEnabled(),
-                RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(solver.isComputeAndKeepResiduals(),
-                RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(solver.getMethod(), RobustEstimatorMethod.RANSAC);
-        assertEquals(solver.getNumberOfDimensions(), 2);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
-        assertEquals(solver.getPreliminarySubsetSize(), 3);
+        assertEquals(RANSACRobustLateration2DSolver.DEFAULT_THRESHOLD, solver.getThreshold(), 0.0);
+        assertEquals(RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS,
+                solver.isComputeAndKeepInliersEnabled());
+        assertEquals(RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS,
+                solver.isComputeAndKeepResiduals());
+        assertEquals(RobustEstimatorMethod.RANSAC, solver.getMethod());
+        assertEquals(2, solver.getNumberOfDimensions());
+        assertEquals(3, solver.getMinRequiredPositionsAndDistances());
+        assertEquals(3, solver.getPreliminarySubsetSize());
         assertNull(solver.getCircles());
         assertNull(solver.getListener());
         assertNull(solver.getInitialPosition());
@@ -78,17 +76,12 @@ public class RANSACRobustLateration2DSolverTest implements
         assertFalse(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
-        assertEquals(solver.getProgressDelta(),
-                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(solver.getConfidence(),
-                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(solver.getMaxIterations(),
-                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
+        assertEquals(RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, solver.getProgressDelta(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_CONFIDENCE, solver.getConfidence(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_MAX_ITERATIONS, solver.getMaxIterations());
         assertNull(solver.getInliersData());
-        assertEquals(solver.isResultRefined(),
-                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
-        assertEquals(solver.isCovarianceKept(),
-                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertEquals(RobustLaterationSolver.DEFAULT_REFINE_RESULT, solver.isResultRefined());
+        assertEquals(RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE, solver.isCovarianceKept());
         assertNull(solver.getPositions());
         assertNull(solver.getDistances());
         assertNull(solver.getDistanceStandardDeviations());
@@ -96,40 +89,33 @@ public class RANSACRobustLateration2DSolverTest implements
         assertNull(solver.getQualityScores());
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
-
 
         // constructor with listener
         solver = new RANSACRobustLateration2DSolver(this);
 
         // check correctness
-        assertEquals(solver.getThreshold(),
-                RANSACRobustLateration2DSolver.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(solver.isComputeAndKeepInliersEnabled(),
-                RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(solver.isComputeAndKeepResiduals(),
-                RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(solver.getMethod(), RobustEstimatorMethod.RANSAC);
-        assertEquals(solver.getNumberOfDimensions(), 2);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
-        assertEquals(solver.getPreliminarySubsetSize(), 3);
+        assertEquals(RANSACRobustLateration2DSolver.DEFAULT_THRESHOLD, solver.getThreshold(), 0.0);
+        assertEquals(RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS,
+                solver.isComputeAndKeepInliersEnabled());
+        assertEquals(RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS,
+                solver.isComputeAndKeepResiduals());
+        assertEquals(RobustEstimatorMethod.RANSAC, solver.getMethod());
+        assertEquals(2, solver.getNumberOfDimensions());
+        assertEquals(3, solver.getMinRequiredPositionsAndDistances());
+        assertEquals(3, solver.getPreliminarySubsetSize());
         assertNull(solver.getCircles());
-        assertSame(solver.getListener(), this);
+        assertSame(this, solver.getListener());
         assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
         assertFalse(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
-        assertEquals(solver.getProgressDelta(),
-                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(solver.getConfidence(),
-                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(solver.getMaxIterations(),
-                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
+        assertEquals(RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, solver.getProgressDelta(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_CONFIDENCE, solver.getConfidence(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_MAX_ITERATIONS, solver.getMaxIterations());
         assertNull(solver.getInliersData());
-        assertEquals(solver.isResultRefined(),
-                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
-        assertEquals(solver.isCovarianceKept(),
-                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertEquals(RobustLaterationSolver.DEFAULT_REFINE_RESULT, solver.isResultRefined());
+        assertEquals(RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE, solver.isCovarianceKept());
         assertNull(solver.getPositions());
         assertNull(solver.getDistances());
         assertNull(solver.getDistanceStandardDeviations());
@@ -137,7 +123,6 @@ public class RANSACRobustLateration2DSolverTest implements
         assertNull(solver.getQualityScores());
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
-
 
         // constructor with positions and distances
         final Point2D[] positions = new Point2D[3];
@@ -148,16 +133,15 @@ public class RANSACRobustLateration2DSolverTest implements
         solver = new RANSACRobustLateration2DSolver(positions, distances);
 
         // check correctness
-        assertEquals(solver.getThreshold(),
-                RANSACRobustLateration2DSolver.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(solver.isComputeAndKeepInliersEnabled(),
-                RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(solver.isComputeAndKeepResiduals(),
-                RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(solver.getMethod(), RobustEstimatorMethod.RANSAC);
-        assertEquals(solver.getNumberOfDimensions(), 2);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
-        assertEquals(solver.getPreliminarySubsetSize(), 3);
+        assertEquals(RANSACRobustLateration2DSolver.DEFAULT_THRESHOLD, solver.getThreshold(), 0.0);
+        assertEquals(RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS,
+                solver.isComputeAndKeepInliersEnabled());
+        assertEquals(RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS,
+                solver.isComputeAndKeepResiduals());
+        assertEquals(RobustEstimatorMethod.RANSAC, solver.getMethod());
+        assertEquals(2, solver.getNumberOfDimensions());
+        assertEquals(3, solver.getMinRequiredPositionsAndDistances());
+        assertEquals(3, solver.getPreliminarySubsetSize());
         assertNotNull(solver.getCircles());
         assertNull(solver.getListener());
         assertNull(solver.getInitialPosition());
@@ -165,19 +149,14 @@ public class RANSACRobustLateration2DSolverTest implements
         assertFalse(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
-        assertEquals(solver.getProgressDelta(),
-                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(solver.getConfidence(),
-                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(solver.getMaxIterations(),
-                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
+        assertEquals(RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, solver.getProgressDelta(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_CONFIDENCE, solver.getConfidence(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_MAX_ITERATIONS, solver.getMaxIterations());
         assertNull(solver.getInliersData());
-        assertEquals(solver.isResultRefined(),
-                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
-        assertEquals(solver.isCovarianceKept(),
-                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
+        assertEquals(RobustLaterationSolver.DEFAULT_REFINE_RESULT, solver.isResultRefined());
+        assertEquals(RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE, solver.isCovarianceKept());
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
         assertNull(solver.getDistanceStandardDeviations());
         assertTrue(solver.isReady());
         assertNull(solver.getQualityScores());
@@ -214,38 +193,31 @@ public class RANSACRobustLateration2DSolverTest implements
 
         // constructor with positions, distances and standard deviations
         final double[] standardDeviations = new double[3];
-        solver = new RANSACRobustLateration2DSolver(positions, distances,
-                standardDeviations);
+        solver = new RANSACRobustLateration2DSolver(positions, distances, standardDeviations);
 
         // check correctness
-        assertEquals(solver.getThreshold(),
-                RANSACRobustLateration2DSolver.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(solver.isComputeAndKeepInliersEnabled(),
-                RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(solver.isComputeAndKeepResiduals(),
-                RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(solver.getMethod(), RobustEstimatorMethod.RANSAC);
-        assertEquals(solver.getNumberOfDimensions(), 2);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
-        assertEquals(solver.getPreliminarySubsetSize(), 3);
+        assertEquals(RANSACRobustLateration2DSolver.DEFAULT_THRESHOLD, solver.getThreshold(), 0.0);
+        assertEquals(RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS,
+                solver.isComputeAndKeepInliersEnabled());
+        assertEquals(RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS,
+                solver.isComputeAndKeepResiduals());
+        assertEquals(RobustEstimatorMethod.RANSAC, solver.getMethod());
+        assertEquals(2, solver.getNumberOfDimensions());
+        assertEquals(3, solver.getMinRequiredPositionsAndDistances());
+        assertEquals(3, solver.getPreliminarySubsetSize());
         assertNotNull(solver.getCircles());
         assertNull(solver.getListener());
         assertNull(solver.getInitialPosition());
         assertFalse(solver.isLocked());
-        assertEquals(solver.getProgressDelta(),
-                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(solver.getConfidence(),
-                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(solver.getMaxIterations(),
-                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
+        assertEquals(RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, solver.getProgressDelta(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_CONFIDENCE, solver.getConfidence(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_MAX_ITERATIONS, solver.getMaxIterations());
         assertNull(solver.getInliersData());
-        assertEquals(solver.isResultRefined(),
-                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
-        assertEquals(solver.isCovarianceKept(),
-                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
+        assertEquals(RobustLaterationSolver.DEFAULT_REFINE_RESULT, solver.isResultRefined());
+        assertEquals(RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE, solver.isCovarianceKept());
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
         assertTrue(solver.isReady());
         assertNull(solver.getQualityScores());
         assertNull(solver.getCovariance());
@@ -254,38 +226,32 @@ public class RANSACRobustLateration2DSolverTest implements
         // force IllegalArgumentException
         solver = null;
         try {
-            solver = new RANSACRobustLateration2DSolver(null, distances,
-                    standardDeviations);
+            solver = new RANSACRobustLateration2DSolver(null, distances, standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new RANSACRobustLateration2DSolver(positions, null,
-                    standardDeviations);
+            solver = new RANSACRobustLateration2DSolver(positions, null, standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new RANSACRobustLateration2DSolver(positions, distances,
-                    (double[]) null);
+            solver = new RANSACRobustLateration2DSolver(positions, distances, (double[]) null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new RANSACRobustLateration2DSolver(positions, wrong,
-                    standardDeviations);
+            solver = new RANSACRobustLateration2DSolver(positions, wrong, standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new RANSACRobustLateration2DSolver(positions, distances,
-                    wrong);
+            solver = new RANSACRobustLateration2DSolver(positions, distances, wrong);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new RANSACRobustLateration2DSolver(shortPositions,
-                    shortDistances, standardDeviations);
+            solver = new RANSACRobustLateration2DSolver(shortPositions, shortDistances, standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -293,41 +259,34 @@ public class RANSACRobustLateration2DSolverTest implements
 
 
         // constructor with positions, distances, standard deviations and listener
-        solver = new RANSACRobustLateration2DSolver(positions, distances,
-                standardDeviations, this);
+        solver = new RANSACRobustLateration2DSolver(positions, distances, standardDeviations, this);
 
         // check correctness
-        assertEquals(solver.getThreshold(),
-                RANSACRobustLateration2DSolver.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(solver.isComputeAndKeepInliersEnabled(),
-                RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(solver.isComputeAndKeepResiduals(),
-                RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(solver.getMethod(), RobustEstimatorMethod.RANSAC);
-        assertEquals(solver.getNumberOfDimensions(), 2);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
-        assertEquals(solver.getPreliminarySubsetSize(), 3);
+        assertEquals(RANSACRobustLateration2DSolver.DEFAULT_THRESHOLD, solver.getThreshold(), 0.0);
+        assertEquals(RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS,
+                solver.isComputeAndKeepInliersEnabled());
+        assertEquals(RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS,
+                solver.isComputeAndKeepResiduals());
+        assertEquals(RobustEstimatorMethod.RANSAC, solver.getMethod());
+        assertEquals(2, solver.getNumberOfDimensions());
+        assertEquals(3, solver.getMinRequiredPositionsAndDistances());
+        assertEquals(3, solver.getPreliminarySubsetSize());
         assertNotNull(solver.getCircles());
-        assertSame(solver.getListener(), this);
+        assertSame(this, solver.getListener());
         assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
         assertFalse(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
-        assertEquals(solver.getProgressDelta(),
-                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(solver.getConfidence(),
-                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(solver.getMaxIterations(),
-                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
+        assertEquals(RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, solver.getProgressDelta(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_CONFIDENCE, solver.getConfidence(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_MAX_ITERATIONS, solver.getMaxIterations());
         assertNull(solver.getInliersData());
-        assertEquals(solver.isResultRefined(),
-                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
-        assertEquals(solver.isCovarianceKept(),
-                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
+        assertEquals(RobustLaterationSolver.DEFAULT_REFINE_RESULT, solver.isResultRefined());
+        assertEquals(RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE, solver.isCovarianceKept());
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
         assertTrue(solver.isReady());
         assertNull(solver.getQualityScores());
         assertNull(solver.getCovariance());
@@ -354,14 +313,12 @@ public class RANSACRobustLateration2DSolverTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new RANSACRobustLateration2DSolver(positions, wrong,
-                    standardDeviations, this);
+            solver = new RANSACRobustLateration2DSolver(positions, wrong, standardDeviations, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new RANSACRobustLateration2DSolver(positions, distances,
-                    wrong, this);
+            solver = new RANSACRobustLateration2DSolver(positions, distances, wrong, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -375,40 +332,33 @@ public class RANSACRobustLateration2DSolverTest implements
 
 
         // constructor with positions, distances and listener
-        solver = new RANSACRobustLateration2DSolver(positions, distances,
-                this);
+        solver = new RANSACRobustLateration2DSolver(positions, distances, this);
 
         // check correctness
-        assertEquals(solver.getThreshold(),
-                RANSACRobustLateration2DSolver.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(solver.isComputeAndKeepInliersEnabled(),
-                RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(solver.isComputeAndKeepResiduals(),
-                RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(solver.getMethod(), RobustEstimatorMethod.RANSAC);
-        assertEquals(solver.getNumberOfDimensions(), 2);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
-        assertEquals(solver.getPreliminarySubsetSize(), 3);
+        assertEquals(RANSACRobustLateration2DSolver.DEFAULT_THRESHOLD, solver.getThreshold(), 0.0);
+        assertEquals(RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS,
+                solver.isComputeAndKeepInliersEnabled());
+        assertEquals(RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS,
+                solver.isComputeAndKeepResiduals());
+        assertEquals(RobustEstimatorMethod.RANSAC, solver.getMethod());
+        assertEquals(2, solver.getNumberOfDimensions());
+        assertEquals(3, solver.getMinRequiredPositionsAndDistances());
+        assertEquals(3, solver.getPreliminarySubsetSize());
         assertNotNull(solver.getCircles());
-        assertSame(solver.getListener(), this);
+        assertSame(this, solver.getListener());
         assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
         assertFalse(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
-        assertEquals(solver.getProgressDelta(),
-                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(solver.getConfidence(),
-                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(solver.getMaxIterations(),
-                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
+        assertEquals(RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, solver.getProgressDelta(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_CONFIDENCE, solver.getConfidence(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_MAX_ITERATIONS, solver.getMaxIterations());
         assertNull(solver.getInliersData());
-        assertEquals(solver.isResultRefined(),
-                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
-        assertEquals(solver.isCovarianceKept(),
-                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
+        assertEquals(RobustLaterationSolver.DEFAULT_REFINE_RESULT, solver.isResultRefined());
+        assertEquals(RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE, solver.isCovarianceKept());
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
         assertNull(solver.getDistanceStandardDeviations());
         assertTrue(solver.isReady());
         assertNull(solver.getQualityScores());
@@ -418,31 +368,26 @@ public class RANSACRobustLateration2DSolverTest implements
         // force IllegalArgumentException
         solver = null;
         try {
-            solver = new RANSACRobustLateration2DSolver((Point2D[]) null, distances,
-                    this);
+            solver = new RANSACRobustLateration2DSolver((Point2D[]) null, distances, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new RANSACRobustLateration2DSolver(positions, null,
-                    this);
+            solver = new RANSACRobustLateration2DSolver(positions, null, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new RANSACRobustLateration2DSolver(positions, wrong,
-                    this);
+            solver = new RANSACRobustLateration2DSolver(positions, wrong, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new RANSACRobustLateration2DSolver(shortPositions,
-                    shortDistances, this);
+            solver = new RANSACRobustLateration2DSolver(shortPositions, shortDistances, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(solver);
-
 
         // constructor with circles
         final Circle[] circles = new Circle[3];
@@ -452,16 +397,15 @@ public class RANSACRobustLateration2DSolverTest implements
         solver = new RANSACRobustLateration2DSolver(circles);
 
         // check correctness
-        assertEquals(solver.getThreshold(),
-                RANSACRobustLateration2DSolver.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(solver.isComputeAndKeepInliersEnabled(),
-                RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(solver.isComputeAndKeepResiduals(),
-                RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(solver.getMethod(), RobustEstimatorMethod.RANSAC);
-        assertEquals(solver.getNumberOfDimensions(), 2);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
-        assertEquals(solver.getPreliminarySubsetSize(), 3);
+        assertEquals(RANSACRobustLateration2DSolver.DEFAULT_THRESHOLD, solver.getThreshold(), 0.0);
+        assertEquals(RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS,
+                solver.isComputeAndKeepInliersEnabled());
+        assertEquals(RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS,
+                solver.isComputeAndKeepResiduals());
+        assertEquals(RobustEstimatorMethod.RANSAC, solver.getMethod());
+        assertEquals(2, solver.getNumberOfDimensions());
+        assertEquals(3, solver.getMinRequiredPositionsAndDistances());
+        assertEquals(3, solver.getPreliminarySubsetSize());
         assertNotNull(solver.getCircles());
         assertNull(solver.getListener());
         assertNull(solver.getInitialPosition());
@@ -469,17 +413,12 @@ public class RANSACRobustLateration2DSolverTest implements
         assertFalse(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
-        assertEquals(solver.getProgressDelta(),
-                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(solver.getConfidence(),
-                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(solver.getMaxIterations(),
-                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
+        assertEquals(RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, solver.getProgressDelta(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_CONFIDENCE, solver.getConfidence(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_MAX_ITERATIONS, solver.getMaxIterations());
         assertNull(solver.getInliersData());
-        assertEquals(solver.isResultRefined(),
-                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
-        assertEquals(solver.isCovarianceKept(),
-                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertEquals(RobustLaterationSolver.DEFAULT_REFINE_RESULT, solver.isResultRefined());
+        assertEquals(RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE, solver.isCovarianceKept());
         assertNotNull(solver.getPositions());
         assertNotNull(solver.getDistances());
         assertNull(solver.getDistanceStandardDeviations());
@@ -504,22 +443,19 @@ public class RANSACRobustLateration2DSolverTest implements
         }
         assertNull(solver);
 
-
         // constructor with circles and standard deviations
-        solver = new RANSACRobustLateration2DSolver(circles,
-                standardDeviations);
+        solver = new RANSACRobustLateration2DSolver(circles, standardDeviations);
 
         // check correctness
-        assertEquals(solver.getThreshold(),
-                RANSACRobustLateration2DSolver.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(solver.isComputeAndKeepInliersEnabled(),
-                RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(solver.isComputeAndKeepResiduals(),
-                RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(solver.getMethod(), RobustEstimatorMethod.RANSAC);
-        assertEquals(solver.getNumberOfDimensions(), 2);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
-        assertEquals(solver.getPreliminarySubsetSize(), 3);
+        assertEquals(RANSACRobustLateration2DSolver.DEFAULT_THRESHOLD, solver.getThreshold(), 0.0);
+        assertEquals(RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS,
+                solver.isComputeAndKeepInliersEnabled());
+        assertEquals(RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS,
+                solver.isComputeAndKeepResiduals());
+        assertEquals(RobustEstimatorMethod.RANSAC, solver.getMethod());
+        assertEquals(2, solver.getNumberOfDimensions());
+        assertEquals(3, solver.getMinRequiredPositionsAndDistances());
+        assertEquals(3, solver.getPreliminarySubsetSize());
         assertNotNull(solver.getCircles());
         assertNull(solver.getListener());
         assertNull(solver.getInitialPosition());
@@ -527,21 +463,15 @@ public class RANSACRobustLateration2DSolverTest implements
         assertFalse(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
-        assertEquals(solver.getProgressDelta(),
-                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(solver.getConfidence(),
-                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(solver.getMaxIterations(),
-                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
+        assertEquals(RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, solver.getProgressDelta(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_CONFIDENCE, solver.getConfidence(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_MAX_ITERATIONS, solver.getMaxIterations());
         assertNull(solver.getInliersData());
-        assertEquals(solver.isResultRefined(),
-                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
-        assertEquals(solver.isCovarianceKept(),
-                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertEquals(RobustLaterationSolver.DEFAULT_REFINE_RESULT, solver.isResultRefined());
+        assertEquals(RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE, solver.isCovarianceKept());
         assertNotNull(solver.getPositions());
         assertNotNull(solver.getDistances());
-        assertSame(solver.getDistanceStandardDeviations(),
-                standardDeviations);
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
         assertTrue(solver.isReady());
         assertNull(solver.getQualityScores());
         assertNull(solver.getCovariance());
@@ -550,20 +480,17 @@ public class RANSACRobustLateration2DSolverTest implements
         // force IllegalArgumentException
         solver = null;
         try {
-            solver = new RANSACRobustLateration2DSolver((Circle[]) null,
-                    standardDeviations);
+            solver = new RANSACRobustLateration2DSolver((Circle[]) null, standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new RANSACRobustLateration2DSolver(circles,
-                    (double[]) null);
+            solver = new RANSACRobustLateration2DSolver(circles, (double[]) null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new RANSACRobustLateration2DSolver(shortCircles,
-                    standardDeviations);
+            solver = new RANSACRobustLateration2DSolver(shortCircles, standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -574,39 +501,32 @@ public class RANSACRobustLateration2DSolverTest implements
         }
         assertNull(solver);
 
-
         // constructor with circles and listener
         solver = new RANSACRobustLateration2DSolver(circles, this);
 
         // check correctness
-        assertEquals(solver.getThreshold(),
-                RANSACRobustLateration2DSolver.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(solver.isComputeAndKeepInliersEnabled(),
-                RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(solver.isComputeAndKeepResiduals(),
-                RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(solver.getMethod(), RobustEstimatorMethod.RANSAC);
-        assertEquals(solver.getNumberOfDimensions(), 2);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
-        assertEquals(solver.getPreliminarySubsetSize(), 3);
+        assertEquals(RANSACRobustLateration2DSolver.DEFAULT_THRESHOLD, solver.getThreshold(), 0.0);
+        assertEquals(RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS,
+                solver.isComputeAndKeepInliersEnabled());
+        assertEquals(RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS,
+                solver.isComputeAndKeepResiduals());
+        assertEquals(RobustEstimatorMethod.RANSAC, solver.getMethod());
+        assertEquals(2, solver.getNumberOfDimensions());
+        assertEquals(3, solver.getMinRequiredPositionsAndDistances());
+        assertEquals(3, solver.getPreliminarySubsetSize());
         assertNotNull(solver.getCircles());
-        assertSame(solver.getListener(), this);
+        assertSame(this, solver.getListener());
         assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
         assertFalse(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
-        assertEquals(solver.getProgressDelta(),
-                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(solver.getConfidence(),
-                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(solver.getMaxIterations(),
-                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
+        assertEquals(RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, solver.getProgressDelta(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_CONFIDENCE, solver.getConfidence(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_MAX_ITERATIONS, solver.getMaxIterations());
         assertNull(solver.getInliersData());
-        assertEquals(solver.isResultRefined(),
-                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
-        assertEquals(solver.isCovarianceKept(),
-                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertEquals(RobustLaterationSolver.DEFAULT_REFINE_RESULT, solver.isResultRefined());
+        assertEquals(RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE, solver.isCovarianceKept());
         assertNotNull(solver.getPositions());
         assertNotNull(solver.getDistances());
         assertNull(solver.getDistanceStandardDeviations());
@@ -618,57 +538,46 @@ public class RANSACRobustLateration2DSolverTest implements
         // force IllegalArgumentException
         solver = null;
         try {
-            solver = new RANSACRobustLateration2DSolver(null,
-                    this);
+            solver = new RANSACRobustLateration2DSolver(null, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new RANSACRobustLateration2DSolver(shortCircles,
-                    this);
+            solver = new RANSACRobustLateration2DSolver(shortCircles, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(solver);
 
-
         // constructor with circles, standard deviation and listener
-        solver = new RANSACRobustLateration2DSolver(circles,
-                standardDeviations, this);
+        solver = new RANSACRobustLateration2DSolver(circles, standardDeviations, this);
 
         // check correctness
-        assertEquals(solver.getThreshold(),
-                RANSACRobustLateration2DSolver.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(solver.isComputeAndKeepInliersEnabled(),
-                RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(solver.isComputeAndKeepResiduals(),
-                RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(solver.getMethod(), RobustEstimatorMethod.RANSAC);
-        assertEquals(solver.getNumberOfDimensions(), 2);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
-        assertEquals(solver.getPreliminarySubsetSize(), 3);
+        assertEquals(RANSACRobustLateration2DSolver.DEFAULT_THRESHOLD, solver.getThreshold(), 0.0);
+        assertEquals(RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS,
+                solver.isComputeAndKeepInliersEnabled());
+        assertEquals(RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS,
+                solver.isComputeAndKeepResiduals());
+        assertEquals(RobustEstimatorMethod.RANSAC, solver.getMethod());
+        assertEquals(2, solver.getNumberOfDimensions());
+        assertEquals(3, solver.getMinRequiredPositionsAndDistances());
+        assertEquals(3, solver.getPreliminarySubsetSize());
         assertNotNull(solver.getCircles());
-        assertSame(solver.getListener(), this);
+        assertSame(this, solver.getListener());
         assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
         assertFalse(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
-        assertEquals(solver.getProgressDelta(),
-                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(solver.getConfidence(),
-                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(solver.getMaxIterations(),
-                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
+        assertEquals(RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, solver.getProgressDelta(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_CONFIDENCE, solver.getConfidence(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_MAX_ITERATIONS, solver.getMaxIterations());
         assertNull(solver.getInliersData());
-        assertEquals(solver.isResultRefined(),
-                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
-        assertEquals(solver.isCovarianceKept(),
-                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertEquals(RobustLaterationSolver.DEFAULT_REFINE_RESULT, solver.isResultRefined());
+        assertEquals(RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE, solver.isCovarianceKept());
         assertNotNull(solver.getPositions());
         assertNotNull(solver.getDistances());
-        assertSame(solver.getDistanceStandardDeviations(),
-                standardDeviations);
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
         assertTrue(solver.isReady());
         assertNull(solver.getQualityScores());
         assertNull(solver.getCovariance());
@@ -677,26 +586,22 @@ public class RANSACRobustLateration2DSolverTest implements
         // force IllegalArgumentException
         solver = null;
         try {
-            solver = new RANSACRobustLateration2DSolver((Circle[]) null,
-                    standardDeviations, this);
+            solver = new RANSACRobustLateration2DSolver((Circle[]) null, standardDeviations, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new RANSACRobustLateration2DSolver(circles,
-                    null, this);
+            solver = new RANSACRobustLateration2DSolver(circles, null, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new RANSACRobustLateration2DSolver(shortCircles,
-                    standardDeviations, this);
+            solver = new RANSACRobustLateration2DSolver(shortCircles, standardDeviations, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new RANSACRobustLateration2DSolver(circles, wrong,
-                    this);
+            solver = new RANSACRobustLateration2DSolver(circles, wrong, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -705,18 +610,16 @@ public class RANSACRobustLateration2DSolverTest implements
 
     @Test
     public void testGetSetThreshold() throws LockedException {
-        final RANSACRobustLateration2DSolver solver =
-                new RANSACRobustLateration2DSolver();
+        final RANSACRobustLateration2DSolver solver = new RANSACRobustLateration2DSolver();
 
         // check initial value
-        assertEquals(solver.getThreshold(),
-                RANSACRobustLateration2DSolver.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(RANSACRobustLateration2DSolver.DEFAULT_THRESHOLD, solver.getThreshold(), 0.0);
 
         // set new value
         solver.setThreshold(1.0);
 
         // check
-        assertEquals(solver.getThreshold(), 1.0, 0.0);
+        assertEquals(1.0, solver.getThreshold(), 0.0);
 
         // force IllegalArgumentException
         try {
@@ -728,46 +631,42 @@ public class RANSACRobustLateration2DSolverTest implements
 
     @Test
     public void testIsSetComputeAndKeepInliersEnabled() throws LockedException {
-        final RANSACRobustLateration2DSolver solver =
-                new RANSACRobustLateration2DSolver();
+        final RANSACRobustLateration2DSolver solver = new RANSACRobustLateration2DSolver();
 
         // check initial value
-        assertEquals(solver.isComputeAndKeepInliersEnabled(),
-                RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS,
+                solver.isComputeAndKeepInliersEnabled());
 
         // set new value
-        solver.setComputeAndKeepInliersEnabled(
-                !RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        solver.setComputeAndKeepInliersEnabled(!RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
 
         // check
-        assertEquals(solver.isComputeAndKeepInliersEnabled(),
-                !RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(!RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS,
+                solver.isComputeAndKeepInliersEnabled());
     }
 
     @Test
     public void testIsSetComputeAndKeepResidualsEnabled() throws LockedException {
-        final RANSACRobustLateration2DSolver solver =
-                new RANSACRobustLateration2DSolver();
+        final RANSACRobustLateration2DSolver solver = new RANSACRobustLateration2DSolver();
 
         // check initial value
-        assertEquals(solver.isComputeAndKeepResiduals(),
-                RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS,
+                solver.isComputeAndKeepResiduals());
 
         // set new value
         solver.setComputeAndKeepResidualsEnabled(
                 !RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
 
         // check
-        assertEquals(solver.isComputeAndKeepResiduals(),
-                !RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(!RANSACRobustLateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS,
+                solver.isComputeAndKeepResiduals());
     }
 
     @Test
     public void testGetSetCircles() throws LockedException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        final RANSACRobustLateration2DSolver solver =
-                new RANSACRobustLateration2DSolver();
+        final RANSACRobustLateration2DSolver solver = new RANSACRobustLateration2DSolver();
 
         // check initial value
         assertNull(solver.getCircles());
@@ -812,8 +711,7 @@ public class RANSACRobustLateration2DSolverTest implements
     public void testGetSetCirclesAndStandardDeviations() throws LockedException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        final RANSACRobustLateration2DSolver solver =
-                new RANSACRobustLateration2DSolver();
+        final RANSACRobustLateration2DSolver solver = new RANSACRobustLateration2DSolver();
 
         // check initial value
         assertNull(solver.getCircles());
@@ -844,31 +742,26 @@ public class RANSACRobustLateration2DSolverTest implements
             assertSame(circles[i].getCenter(), circles2[i].getCenter());
             assertEquals(circles[i].getRadius(), circles2[i].getRadius(), 0.0);
         }
-        assertSame(solver.getDistanceStandardDeviations(),
-                standardDeviations);
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
 
         // force IllegalArgumentException
         try {
-            solver.setCirclesAndStandardDeviations(null,
-                    standardDeviations);
+            solver.setCirclesAndStandardDeviations(null, standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver.setCirclesAndStandardDeviations(circles,
-                    null);
+            solver.setCirclesAndStandardDeviations(circles, null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver.setCirclesAndStandardDeviations(new Circle[1],
-                    standardDeviations);
+            solver.setCirclesAndStandardDeviations(new Circle[1], standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver.setCirclesAndStandardDeviations(circles,
-                    new double[1]);
+            solver.setCirclesAndStandardDeviations(circles, new double[1]);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -876,17 +769,16 @@ public class RANSACRobustLateration2DSolverTest implements
 
     @Test
     public void testGetSetPreliminarySubsetSize() throws LockedException {
-        final RANSACRobustLateration2DSolver solver =
-                new RANSACRobustLateration2DSolver();
+        final RANSACRobustLateration2DSolver solver = new RANSACRobustLateration2DSolver();
 
         // check initial value
-        assertEquals(solver.getPreliminarySubsetSize(), 3);
+        assertEquals(3, solver.getPreliminarySubsetSize());
 
         // set new value
         solver.setPreliminarySubsetSize(4);
 
         // check
-        assertEquals(solver.getPreliminarySubsetSize(), 4);
+        assertEquals(4, solver.getPreliminarySubsetSize());
 
         // force IllegalArgumentException
         try {
@@ -898,8 +790,7 @@ public class RANSACRobustLateration2DSolverTest implements
 
     @Test
     public void testGetSetListener() throws LockedException {
-        final RANSACRobustLateration2DSolver solver =
-                new RANSACRobustLateration2DSolver();
+        final RANSACRobustLateration2DSolver solver = new RANSACRobustLateration2DSolver();
 
         // check default value
         assertNull(solver.getListener());
@@ -908,13 +799,12 @@ public class RANSACRobustLateration2DSolverTest implements
         solver.setListener(this);
 
         // check
-        assertSame(solver.getListener(), this);
+        assertSame(this, solver.getListener());
     }
 
     @Test
     public void testGetSetInitialPosition() throws LockedException {
-        final RANSACRobustLateration2DSolver solver =
-                new RANSACRobustLateration2DSolver();
+        final RANSACRobustLateration2DSolver solver = new RANSACRobustLateration2DSolver();
 
         // check default value
         assertNull(solver.getInitialPosition());
@@ -924,13 +814,12 @@ public class RANSACRobustLateration2DSolverTest implements
         solver.setInitialPosition(p);
 
         // check
-        assertSame(solver.getInitialPosition(), p);
+        assertSame(p, solver.getInitialPosition());
     }
 
     @Test
     public void testIsSetLinearSolverUsed() throws LockedException {
-        final RANSACRobustLateration2DSolver solver =
-                new RANSACRobustLateration2DSolver();
+        final RANSACRobustLateration2DSolver solver = new RANSACRobustLateration2DSolver();
 
         // check default value
         assertTrue(solver.isLinearSolverUsed());
@@ -944,8 +833,7 @@ public class RANSACRobustLateration2DSolverTest implements
 
     @Test
     public void testIsSetHomogeneousLinearSolverUsed() throws LockedException {
-        final RANSACRobustLateration2DSolver solver =
-                new RANSACRobustLateration2DSolver();
+        final RANSACRobustLateration2DSolver solver = new RANSACRobustLateration2DSolver();
 
         // check default value
         assertFalse(solver.isHomogeneousLinearSolverUsed());
@@ -959,8 +847,7 @@ public class RANSACRobustLateration2DSolverTest implements
 
     @Test
     public void testIsSetPreliminarySolutionRefined() throws LockedException {
-        final RANSACRobustLateration2DSolver solver =
-                new RANSACRobustLateration2DSolver();
+        final RANSACRobustLateration2DSolver solver = new RANSACRobustLateration2DSolver();
 
         // check default value
         assertTrue(solver.isPreliminarySolutionRefined());
@@ -974,18 +861,16 @@ public class RANSACRobustLateration2DSolverTest implements
 
     @Test
     public void testGetSetProgressDelta() throws LockedException {
-        final RANSACRobustLateration2DSolver solver =
-                new RANSACRobustLateration2DSolver();
+        final RANSACRobustLateration2DSolver solver = new RANSACRobustLateration2DSolver();
 
         // check default value
-        assertEquals(solver.getProgressDelta(),
-                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, solver.getProgressDelta(), 0.0);
 
         // set new value
         solver.setProgressDelta(0.5f);
 
         // check
-        assertEquals(solver.getProgressDelta(), 0.5f, 0.0);
+        assertEquals(0.5f, solver.getProgressDelta(), 0.0);
 
         // force IllegalArgumentException
         try {
@@ -1002,18 +887,16 @@ public class RANSACRobustLateration2DSolverTest implements
 
     @Test
     public void testGetSetConfidence() throws LockedException {
-        final RANSACRobustLateration2DSolver solver =
-                new RANSACRobustLateration2DSolver();
+        final RANSACRobustLateration2DSolver solver = new RANSACRobustLateration2DSolver();
 
         // check default value
-        assertEquals(solver.getConfidence(),
-                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_CONFIDENCE, solver.getConfidence(), 0.0);
 
         // set new value
         solver.setConfidence(0.8);
 
         // check
-        assertEquals(solver.getConfidence(), 0.8, 0.0);
+        assertEquals(0.8, solver.getConfidence(), 0.0);
 
         // force IllegalArgumentException
         try {
@@ -1030,18 +913,16 @@ public class RANSACRobustLateration2DSolverTest implements
 
     @Test
     public void testGetSetMaxIterations() throws LockedException {
-        final RANSACRobustLateration2DSolver solver =
-                new RANSACRobustLateration2DSolver();
+        final RANSACRobustLateration2DSolver solver = new RANSACRobustLateration2DSolver();
 
         // check default value
-        assertEquals(solver.getMaxIterations(),
-                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
+        assertEquals(RobustLaterationSolver.DEFAULT_MAX_ITERATIONS, solver.getMaxIterations());
 
         // set new value
         solver.setMaxIterations(10);
 
         // check
-        assertEquals(solver.getMaxIterations(), 10);
+        assertEquals(10, solver.getMaxIterations());
 
         // force IllegalArgumentException
         try {
@@ -1053,44 +934,35 @@ public class RANSACRobustLateration2DSolverTest implements
 
     @Test
     public void testIsSetResultRefined() throws LockedException {
-        final RANSACRobustLateration2DSolver solver =
-                new RANSACRobustLateration2DSolver();
+        final RANSACRobustLateration2DSolver solver = new RANSACRobustLateration2DSolver();
 
         // check default value
-        assertEquals(solver.isResultRefined(),
-                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
+        assertEquals(RobustLaterationSolver.DEFAULT_REFINE_RESULT, solver.isResultRefined());
 
         // set new value
-        solver.setResultRefined(
-                !RobustLaterationSolver.DEFAULT_REFINE_RESULT);
+        solver.setResultRefined(!RobustLaterationSolver.DEFAULT_REFINE_RESULT);
 
         // check
-        assertEquals(solver.isResultRefined(),
-                !RobustLaterationSolver.DEFAULT_REFINE_RESULT);
+        assertEquals(!RobustLaterationSolver.DEFAULT_REFINE_RESULT, solver.isResultRefined());
     }
 
     @Test
     public void testIsSetCovarianceKept() throws LockedException {
-        final RANSACRobustLateration2DSolver solver =
-                new RANSACRobustLateration2DSolver();
+        final RANSACRobustLateration2DSolver solver = new RANSACRobustLateration2DSolver();
 
         // check default value
-        assertEquals(solver.isCovarianceKept(),
-                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertEquals(RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE, solver.isCovarianceKept());
 
         // set new value
-        solver.setCovarianceKept(
-                !RobustLaterationSolver.DEFAULT_REFINE_RESULT);
+        solver.setCovarianceKept(!RobustLaterationSolver.DEFAULT_REFINE_RESULT);
 
         // check
-        assertEquals(solver.isCovarianceKept(),
-                !RobustLaterationSolver.DEFAULT_REFINE_RESULT);
+        assertEquals(!RobustLaterationSolver.DEFAULT_REFINE_RESULT, solver.isCovarianceKept());
     }
 
     @Test
     public void testGetSetQualityScores() throws LockedException {
-        final RANSACRobustLateration2DSolver solver =
-                new RANSACRobustLateration2DSolver();
+        final RANSACRobustLateration2DSolver solver = new RANSACRobustLateration2DSolver();
 
         // check default value
         assertNull(solver.getQualityScores());
@@ -1106,8 +978,7 @@ public class RANSACRobustLateration2DSolverTest implements
     public void testGetSetPositionsAndDistances() throws LockedException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        final RANSACRobustLateration2DSolver solver =
-                new RANSACRobustLateration2DSolver();
+        final RANSACRobustLateration2DSolver solver = new RANSACRobustLateration2DSolver();
 
         // check default value
         assertNull(solver.getPositions());
@@ -1159,8 +1030,7 @@ public class RANSACRobustLateration2DSolverTest implements
     public void testGetSetPositionsDistancesAndStandardDeviations() throws LockedException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        final RANSACRobustLateration2DSolver solver =
-                new RANSACRobustLateration2DSolver();
+        final RANSACRobustLateration2DSolver solver = new RANSACRobustLateration2DSolver();
 
         // check default value
         assertNull(solver.getPositions());
@@ -1180,14 +1050,12 @@ public class RANSACRobustLateration2DSolverTest implements
         standardDeviations[1] = randomizer.nextDouble();
         standardDeviations[2] = randomizer.nextDouble();
 
-        solver.setPositionsDistancesAndStandardDeviations(
-                positions, distances, standardDeviations);
+        solver.setPositionsDistancesAndStandardDeviations(positions, distances, standardDeviations);
 
         // check
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
-        assertSame(solver.getDistanceStandardDeviations(),
-                standardDeviations);
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
 
         // force IllegalArgumentException
         final double[] wrong = new double[4];
@@ -1195,32 +1063,27 @@ public class RANSACRobustLateration2DSolverTest implements
         final double[] shortDistances = new double[1];
         final double[] shortStandardDeviations = new double[1];
         try {
-            solver.setPositionsDistancesAndStandardDeviations(
-                    null, distances, standardDeviations);
+            solver.setPositionsDistancesAndStandardDeviations(null, distances, standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver.setPositionsDistancesAndStandardDeviations(
-                    positions, null, standardDeviations);
+            solver.setPositionsDistancesAndStandardDeviations(positions, null, standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver.setPositionsDistancesAndStandardDeviations(
-                    positions, distances, null);
+            solver.setPositionsDistancesAndStandardDeviations(positions, distances, null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver.setPositionsDistancesAndStandardDeviations(
-                    positions, wrong, standardDeviations);
+            solver.setPositionsDistancesAndStandardDeviations(positions, wrong, standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver.setPositionsDistancesAndStandardDeviations(
-                    positions, distances, wrong);
+            solver.setPositionsDistancesAndStandardDeviations(positions, distances, wrong);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -1261,22 +1124,20 @@ public class RANSACRobustLateration2DSolverTest implements
                     // inlier
                     error = 0.0;
                 }
-                radius = Math.max(RobustLaterationSolver.EPSILON,
-                        radius + error);
+                radius = Math.max(RobustLaterationSolver.EPSILON, radius + error);
                 circles[i] = new Circle(center, radius);
             }
 
-            RANSACRobustLateration2DSolver solver =
-                    new RANSACRobustLateration2DSolver(circles, this);
+            RANSACRobustLateration2DSolver solver = new RANSACRobustLateration2DSolver(circles, this);
             solver.setResultRefined(false);
             solver.setComputeAndKeepInliersEnabled(false);
             solver.setComputeAndKeepResidualsEnabled(false);
 
             reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
-            assertEquals(solveNextIteration, 0);
-            assertEquals(solveProgressChange, 0);
+            assertEquals(0, solveStart);
+            assertEquals(0, solveEnd);
+            assertEquals(0, solveNextIteration);
+            assertEquals(0, solveProgressChange);
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
@@ -1291,8 +1152,8 @@ public class RANSACRobustLateration2DSolverTest implements
             assertNull(solver.getCovariance());
             assertNull(solver.getInliersData());
 
-            assertEquals(solveStart, 1);
-            assertEquals(solveEnd, 1);
+            assertEquals(1, solveStart);
+            assertEquals(1, solveEnd);
             assertTrue(solveNextIteration > 0);
             assertTrue(solveProgressChange > 0);
             assertTrue(solver.isReady());
@@ -1344,22 +1205,20 @@ public class RANSACRobustLateration2DSolverTest implements
                     // inlier
                     error = 0.0;
                 }
-                radius = Math.max(RobustLaterationSolver.EPSILON,
-                        radius + error);
+                radius = Math.max(RobustLaterationSolver.EPSILON, radius + error);
                 circles[i] = new Circle(center, radius);
             }
 
-            RANSACRobustLateration2DSolver solver =
-                    new RANSACRobustLateration2DSolver(circles, this);
+            RANSACRobustLateration2DSolver solver = new RANSACRobustLateration2DSolver(circles, this);
             solver.setResultRefined(false);
             solver.setComputeAndKeepInliersEnabled(false);
             solver.setComputeAndKeepResidualsEnabled(true);
 
             reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
-            assertEquals(solveNextIteration, 0);
-            assertEquals(solveProgressChange, 0);
+            assertEquals(0, solveStart);
+            assertEquals(0, solveEnd);
+            assertEquals(0, solveNextIteration);
+            assertEquals(0, solveProgressChange);
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
@@ -1376,8 +1235,8 @@ public class RANSACRobustLateration2DSolverTest implements
             assertNull(solver.getInliersData().getInliers());
             assertNotNull(solver.getInliersData().getResiduals());
 
-            assertEquals(solveStart, 1);
-            assertEquals(solveEnd, 1);
+            assertEquals(1, solveStart);
+            assertEquals(1, solveEnd);
             assertTrue(solveNextIteration > 0);
             assertTrue(solveProgressChange > 0);
             assertTrue(solver.isReady());
@@ -1429,22 +1288,20 @@ public class RANSACRobustLateration2DSolverTest implements
                     // inlier
                     error = 0.0;
                 }
-                radius = Math.max(RobustLaterationSolver.EPSILON,
-                        radius + error);
+                radius = Math.max(RobustLaterationSolver.EPSILON, radius + error);
                 circles[i] = new Circle(center, radius);
             }
 
-            RANSACRobustLateration2DSolver solver =
-                    new RANSACRobustLateration2DSolver(circles, this);
+            RANSACRobustLateration2DSolver solver = new RANSACRobustLateration2DSolver(circles, this);
             solver.setResultRefined(false);
             solver.setComputeAndKeepInliersEnabled(true);
             solver.setComputeAndKeepResidualsEnabled(false);
 
             reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
-            assertEquals(solveNextIteration, 0);
-            assertEquals(solveProgressChange, 0);
+            assertEquals(0, solveStart);
+            assertEquals(0, solveEnd);
+            assertEquals(0, solveNextIteration);
+            assertEquals(0, solveProgressChange);
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
@@ -1460,8 +1317,8 @@ public class RANSACRobustLateration2DSolverTest implements
             assertNotNull(solver.getInliersData());
             assertNull(solver.getInliersData().getResiduals());
 
-            assertEquals(solveStart, 1);
-            assertEquals(solveEnd, 1);
+            assertEquals(1, solveStart);
+            assertEquals(1, solveEnd);
             assertTrue(solveNextIteration > 0);
             assertTrue(solveProgressChange > 0);
             assertTrue(solver.isReady());
@@ -1513,22 +1370,20 @@ public class RANSACRobustLateration2DSolverTest implements
                     // inlier
                     error = 0.0;
                 }
-                radius = Math.max(RobustLaterationSolver.EPSILON,
-                        radius + error);
+                radius = Math.max(RobustLaterationSolver.EPSILON, radius + error);
                 circles[i] = new Circle(center, radius);
             }
 
-            RANSACRobustLateration2DSolver solver =
-                    new RANSACRobustLateration2DSolver(circles, this);
+            RANSACRobustLateration2DSolver solver = new RANSACRobustLateration2DSolver(circles, this);
             solver.setResultRefined(false);
             solver.setComputeAndKeepInliersEnabled(true);
             solver.setComputeAndKeepResidualsEnabled(true);
 
             reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
-            assertEquals(solveNextIteration, 0);
-            assertEquals(solveProgressChange, 0);
+            assertEquals(0, solveStart);
+            assertEquals(0, solveEnd);
+            assertEquals(0, solveNextIteration);
+            assertEquals(0, solveProgressChange);
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
@@ -1544,8 +1399,8 @@ public class RANSACRobustLateration2DSolverTest implements
             assertNotNull(solver.getInliersData());
             assertNotNull(solver.getInliersData().getResiduals());
 
-            assertEquals(solveStart, 1);
-            assertEquals(solveEnd, 1);
+            assertEquals(1, solveStart);
+            assertEquals(1, solveEnd);
             assertTrue(solveNextIteration > 0);
             assertTrue(solveProgressChange > 0);
             assertTrue(solver.isReady());
@@ -1597,22 +1452,20 @@ public class RANSACRobustLateration2DSolverTest implements
                     // inlier
                     error = 0.0;
                 }
-                radius = Math.max(RobustLaterationSolver.EPSILON,
-                        radius + error);
+                radius = Math.max(RobustLaterationSolver.EPSILON, radius + error);
                 circles[i] = new Circle(center, radius);
             }
 
-            RANSACRobustLateration2DSolver solver =
-                    new RANSACRobustLateration2DSolver(circles, this);
+            RANSACRobustLateration2DSolver solver = new RANSACRobustLateration2DSolver(circles, this);
             solver.setResultRefined(true);
             solver.setComputeAndKeepInliersEnabled(false);
             solver.setComputeAndKeepResidualsEnabled(false);
 
             reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
-            assertEquals(solveNextIteration, 0);
-            assertEquals(solveProgressChange, 0);
+            assertEquals(0, solveStart);
+            assertEquals(0, solveEnd);
+            assertEquals(0, solveNextIteration);
+            assertEquals(0, solveProgressChange);
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
@@ -1629,8 +1482,8 @@ public class RANSACRobustLateration2DSolverTest implements
             assertNotNull(solver.getInliersData().getInliers());
             assertNotNull(solver.getInliersData().getResiduals());
 
-            assertEquals(solveStart, 1);
-            assertEquals(solveEnd, 1);
+            assertEquals(1, solveStart);
+            assertEquals(1, solveEnd);
             assertTrue(solveNextIteration > 0);
             assertTrue(solveProgressChange > 0);
             assertTrue(solver.isReady());
@@ -1682,22 +1535,20 @@ public class RANSACRobustLateration2DSolverTest implements
                     // inlier
                     error = 0.0;
                 }
-                radius = Math.max(RobustLaterationSolver.EPSILON,
-                        radius + error);
+                radius = Math.max(RobustLaterationSolver.EPSILON, radius + error);
                 circles[i] = new Circle(center, radius);
             }
 
-            RANSACRobustLateration2DSolver solver =
-                    new RANSACRobustLateration2DSolver(circles, this);
+            RANSACRobustLateration2DSolver solver = new RANSACRobustLateration2DSolver(circles, this);
             solver.setResultRefined(true);
             solver.setComputeAndKeepInliersEnabled(false);
             solver.setComputeAndKeepResidualsEnabled(true);
 
             reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
-            assertEquals(solveNextIteration, 0);
-            assertEquals(solveProgressChange, 0);
+            assertEquals(0, solveStart);
+            assertEquals(0, solveEnd);
+            assertEquals(0, solveNextIteration);
+            assertEquals(0, solveProgressChange);
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
@@ -1714,8 +1565,8 @@ public class RANSACRobustLateration2DSolverTest implements
             assertNotNull(solver.getInliersData().getInliers());
             assertNotNull(solver.getInliersData().getResiduals());
 
-            assertEquals(solveStart, 1);
-            assertEquals(solveEnd, 1);
+            assertEquals(1, solveStart);
+            assertEquals(1, solveEnd);
             assertTrue(solveNextIteration > 0);
             assertTrue(solveProgressChange > 0);
             assertTrue(solver.isReady());
@@ -1767,22 +1618,20 @@ public class RANSACRobustLateration2DSolverTest implements
                     // inlier
                     error = 0.0;
                 }
-                radius = Math.max(RobustLaterationSolver.EPSILON,
-                        radius + error);
+                radius = Math.max(RobustLaterationSolver.EPSILON, radius + error);
                 circles[i] = new Circle(center, radius);
             }
 
-            RANSACRobustLateration2DSolver solver =
-                    new RANSACRobustLateration2DSolver(circles, this);
+            RANSACRobustLateration2DSolver solver = new RANSACRobustLateration2DSolver(circles, this);
             solver.setResultRefined(true);
             solver.setComputeAndKeepInliersEnabled(true);
             solver.setComputeAndKeepResidualsEnabled(true);
 
             reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
-            assertEquals(solveNextIteration, 0);
-            assertEquals(solveProgressChange, 0);
+            assertEquals(0, solveStart);
+            assertEquals(0, solveEnd);
+            assertEquals(0, solveNextIteration);
+            assertEquals(0, solveProgressChange);
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
@@ -1799,8 +1648,8 @@ public class RANSACRobustLateration2DSolverTest implements
             assertNotNull(solver.getInliersData().getInliers());
             assertNotNull(solver.getInliersData().getResiduals());
 
-            assertEquals(solveStart, 1);
-            assertEquals(solveEnd, 1);
+            assertEquals(1, solveStart);
+            assertEquals(1, solveEnd);
             assertTrue(solveNextIteration > 0);
             assertTrue(solveProgressChange > 0);
             assertTrue(solver.isReady());
@@ -1853,23 +1702,21 @@ public class RANSACRobustLateration2DSolverTest implements
                     error = 0.0;
                 }
                 error += randomizer.nextDouble(MIN_DISTANCE_ERROR, MAX_DISTANCE_ERROR);
-                radius = Math.max(RobustLaterationSolver.EPSILON,
-                        radius + error);
+                radius = Math.max(RobustLaterationSolver.EPSILON, radius + error);
                 circles[i] = new Circle(center, radius);
             }
 
-            RANSACRobustLateration2DSolver solver =
-                    new RANSACRobustLateration2DSolver(circles, this);
+            RANSACRobustLateration2DSolver solver = new RANSACRobustLateration2DSolver(circles, this);
             solver.setResultRefined(true);
             solver.setComputeAndKeepInliersEnabled(true);
             solver.setComputeAndKeepResidualsEnabled(true);
             solver.setCovarianceKept(true);
 
             reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
-            assertEquals(solveNextIteration, 0);
-            assertEquals(solveProgressChange, 0);
+            assertEquals(0, solveStart);
+            assertEquals(0, solveEnd);
+            assertEquals(0, solveNextIteration);
+            assertEquals(0, solveProgressChange);
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
@@ -1886,8 +1733,8 @@ public class RANSACRobustLateration2DSolverTest implements
             assertNotNull(solver.getInliersData().getInliers());
             assertNotNull(solver.getInliersData().getResiduals());
 
-            assertEquals(solveStart, 1);
-            assertEquals(solveEnd, 1);
+            assertEquals(1, solveStart);
+            assertEquals(1, solveEnd);
             assertTrue(solveNextIteration > 0);
             assertTrue(solveProgressChange > 0);
             assertTrue(solver.isReady());
@@ -1948,24 +1795,23 @@ public class RANSACRobustLateration2DSolverTest implements
                 standardDeviations[i] = Math.sqrt(standardDeviations[i]);
                 // add inlier error
                 error += randomizer.nextDouble(MIN_DISTANCE_ERROR, MAX_DISTANCE_ERROR);
-                radius = Math.max(RobustLaterationSolver.EPSILON,
-                        radius + error);
+                radius = Math.max(RobustLaterationSolver.EPSILON, radius + error);
                 circles[i] = new Circle(center, radius);
             }
 
 
-            RANSACRobustLateration2DSolver solver =
-                    new RANSACRobustLateration2DSolver(circles, standardDeviations, this);
+            RANSACRobustLateration2DSolver solver = new RANSACRobustLateration2DSolver(circles,
+                    standardDeviations, this);
             solver.setResultRefined(true);
             solver.setComputeAndKeepInliersEnabled(true);
             solver.setComputeAndKeepResidualsEnabled(true);
             solver.setCovarianceKept(true);
 
             reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
-            assertEquals(solveNextIteration, 0);
-            assertEquals(solveProgressChange, 0);
+            assertEquals(0, solveStart);
+            assertEquals(0, solveEnd);
+            assertEquals(0, solveNextIteration);
+            assertEquals(0, solveProgressChange);
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
@@ -1982,8 +1828,8 @@ public class RANSACRobustLateration2DSolverTest implements
             assertNotNull(solver.getInliersData().getInliers());
             assertNotNull(solver.getInliersData().getResiduals());
 
-            assertEquals(solveStart, 1);
-            assertEquals(solveEnd, 1);
+            assertEquals(1, solveStart);
+            assertEquals(1, solveEnd);
             assertTrue(solveNextIteration > 0);
             assertTrue(solveProgressChange > 0);
             assertTrue(solver.isReady());
@@ -2035,23 +1881,21 @@ public class RANSACRobustLateration2DSolverTest implements
                     // inlier
                     error = 0.0;
                 }
-                radius = Math.max(RobustLaterationSolver.EPSILON,
-                        radius + error);
+                radius = Math.max(RobustLaterationSolver.EPSILON, radius + error);
                 circles[i] = new Circle(center, radius);
             }
 
-            RANSACRobustLateration2DSolver solver =
-                    new RANSACRobustLateration2DSolver(circles, this);
+            RANSACRobustLateration2DSolver solver = new RANSACRobustLateration2DSolver(circles, this);
             solver.setResultRefined(true);
             solver.setComputeAndKeepInliersEnabled(true);
             solver.setComputeAndKeepResidualsEnabled(true);
             solver.setLinearSolverUsed(false);
 
             reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
-            assertEquals(solveNextIteration, 0);
-            assertEquals(solveProgressChange, 0);
+            assertEquals(0, solveStart);
+            assertEquals(0, solveEnd);
+            assertEquals(0, solveNextIteration);
+            assertEquals(0, solveProgressChange);
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
@@ -2068,8 +1912,8 @@ public class RANSACRobustLateration2DSolverTest implements
             assertNotNull(solver.getInliersData().getInliers());
             assertNotNull(solver.getInliersData().getResiduals());
 
-            assertEquals(solveStart, 1);
-            assertEquals(solveEnd, 1);
+            assertEquals(1, solveStart);
+            assertEquals(1, solveEnd);
             assertTrue(solveNextIteration > 0);
             assertTrue(solveProgressChange > 0);
             assertTrue(solver.isReady());
@@ -2121,13 +1965,11 @@ public class RANSACRobustLateration2DSolverTest implements
                     // inlier
                     error = 0.0;
                 }
-                radius = Math.max(RobustLaterationSolver.EPSILON,
-                        radius + error);
+                radius = Math.max(RobustLaterationSolver.EPSILON, radius + error);
                 circles[i] = new Circle(center, radius);
             }
 
-            RANSACRobustLateration2DSolver solver =
-                    new RANSACRobustLateration2DSolver(circles, this);
+            RANSACRobustLateration2DSolver solver = new RANSACRobustLateration2DSolver(circles, this);
             solver.setResultRefined(true);
             solver.setComputeAndKeepInliersEnabled(true);
             solver.setComputeAndKeepResidualsEnabled(true);
@@ -2135,10 +1977,10 @@ public class RANSACRobustLateration2DSolverTest implements
             solver.setHomogeneousLinearSolverUsed(false);
 
             reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
-            assertEquals(solveNextIteration, 0);
-            assertEquals(solveProgressChange, 0);
+            assertEquals(0, solveStart);
+            assertEquals(0, solveEnd);
+            assertEquals(0, solveNextIteration);
+            assertEquals(0, solveProgressChange);
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
@@ -2155,8 +1997,8 @@ public class RANSACRobustLateration2DSolverTest implements
             assertNotNull(solver.getInliersData().getInliers());
             assertNotNull(solver.getInliersData().getResiduals());
 
-            assertEquals(solveStart, 1);
-            assertEquals(solveEnd, 1);
+            assertEquals(1, solveStart);
+            assertEquals(1, solveEnd);
             assertTrue(solveNextIteration > 0);
             assertTrue(solveProgressChange > 0);
             assertTrue(solver.isReady());
@@ -2208,13 +2050,11 @@ public class RANSACRobustLateration2DSolverTest implements
                     // inlier
                     error = 0.0;
                 }
-                radius = Math.max(RobustLaterationSolver.EPSILON,
-                        radius + error);
+                radius = Math.max(RobustLaterationSolver.EPSILON, radius + error);
                 circles[i] = new Circle(center, radius);
             }
 
-            RANSACRobustLateration2DSolver solver =
-                    new RANSACRobustLateration2DSolver(circles, this);
+            RANSACRobustLateration2DSolver solver = new RANSACRobustLateration2DSolver(circles, this);
             solver.setResultRefined(true);
             solver.setComputeAndKeepInliersEnabled(true);
             solver.setComputeAndKeepResidualsEnabled(true);
@@ -2222,10 +2062,10 @@ public class RANSACRobustLateration2DSolverTest implements
             solver.setHomogeneousLinearSolverUsed(true);
 
             reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
-            assertEquals(solveNextIteration, 0);
-            assertEquals(solveProgressChange, 0);
+            assertEquals(0, solveStart);
+            assertEquals(0, solveEnd);
+            assertEquals(0, solveNextIteration);
+            assertEquals(0, solveProgressChange);
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
@@ -2242,8 +2082,8 @@ public class RANSACRobustLateration2DSolverTest implements
             assertNotNull(solver.getInliersData().getInliers());
             assertNotNull(solver.getInliersData().getResiduals());
 
-            assertEquals(solveStart, 1);
-            assertEquals(solveEnd, 1);
+            assertEquals(1, solveStart);
+            assertEquals(1, solveEnd);
             assertTrue(solveNextIteration > 0);
             assertTrue(solveProgressChange > 0);
             assertTrue(solver.isReady());
@@ -2295,13 +2135,11 @@ public class RANSACRobustLateration2DSolverTest implements
                     // inlier
                     error = 0.0;
                 }
-                radius = Math.max(RobustLaterationSolver.EPSILON,
-                        radius + error);
+                radius = Math.max(RobustLaterationSolver.EPSILON, radius + error);
                 circles[i] = new Circle(center, radius);
             }
 
-            RANSACRobustLateration2DSolver solver =
-                    new RANSACRobustLateration2DSolver(circles, this);
+            RANSACRobustLateration2DSolver solver = new RANSACRobustLateration2DSolver(circles, this);
             solver.setResultRefined(true);
             solver.setComputeAndKeepInliersEnabled(true);
             solver.setComputeAndKeepResidualsEnabled(true);
@@ -2309,10 +2147,10 @@ public class RANSACRobustLateration2DSolverTest implements
             solver.setPreliminarySolutionRefined(true);
 
             reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
-            assertEquals(solveNextIteration, 0);
-            assertEquals(solveProgressChange, 0);
+            assertEquals(0, solveStart);
+            assertEquals(0, solveEnd);
+            assertEquals(0, solveNextIteration);
+            assertEquals(0, solveProgressChange);
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
@@ -2329,8 +2167,8 @@ public class RANSACRobustLateration2DSolverTest implements
             assertNotNull(solver.getInliersData().getInliers());
             assertNotNull(solver.getInliersData().getResiduals());
 
-            assertEquals(solveStart, 1);
-            assertEquals(solveEnd, 1);
+            assertEquals(1, solveStart);
+            assertEquals(1, solveEnd);
             assertTrue(solveNextIteration > 0);
             assertTrue(solveProgressChange > 0);
             assertTrue(solver.isReady());
@@ -2382,13 +2220,11 @@ public class RANSACRobustLateration2DSolverTest implements
                     // inlier
                     error = 0.0;
                 }
-                radius = Math.max(RobustLaterationSolver.EPSILON,
-                        radius + error);
+                radius = Math.max(RobustLaterationSolver.EPSILON, radius + error);
                 circles[i] = new Circle(center, radius);
             }
 
-            RANSACRobustLateration2DSolver solver =
-                    new RANSACRobustLateration2DSolver(circles, this);
+            RANSACRobustLateration2DSolver solver = new RANSACRobustLateration2DSolver(circles, this);
             solver.setResultRefined(true);
             solver.setComputeAndKeepInliersEnabled(true);
             solver.setComputeAndKeepResidualsEnabled(true);
@@ -2396,10 +2232,10 @@ public class RANSACRobustLateration2DSolverTest implements
             solver.setPreliminarySolutionRefined(false);
 
             reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
-            assertEquals(solveNextIteration, 0);
-            assertEquals(solveProgressChange, 0);
+            assertEquals(0, solveStart);
+            assertEquals(0, solveEnd);
+            assertEquals(0, solveNextIteration);
+            assertEquals(0, solveProgressChange);
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
@@ -2416,8 +2252,8 @@ public class RANSACRobustLateration2DSolverTest implements
             assertNotNull(solver.getInliersData().getInliers());
             assertNotNull(solver.getInliersData().getResiduals());
 
-            assertEquals(solveStart, 1);
-            assertEquals(solveEnd, 1);
+            assertEquals(1, solveStart);
+            assertEquals(1, solveEnd);
             assertTrue(solveNextIteration > 0);
             assertTrue(solveProgressChange > 0);
             assertTrue(solver.isReady());
@@ -2469,13 +2305,11 @@ public class RANSACRobustLateration2DSolverTest implements
                     // inlier
                     error = 0.0;
                 }
-                radius = Math.max(RobustLaterationSolver.EPSILON,
-                        radius + error);
+                radius = Math.max(RobustLaterationSolver.EPSILON, radius + error);
                 circles[i] = new Circle(center, radius);
             }
 
-            RANSACRobustLateration2DSolver solver =
-                    new RANSACRobustLateration2DSolver(circles, this);
+            RANSACRobustLateration2DSolver solver = new RANSACRobustLateration2DSolver(circles, this);
             solver.setResultRefined(true);
             solver.setComputeAndKeepInliersEnabled(true);
             solver.setComputeAndKeepResidualsEnabled(true);
@@ -2483,10 +2317,10 @@ public class RANSACRobustLateration2DSolverTest implements
             solver.setPreliminarySolutionRefined(false);
 
             reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
-            assertEquals(solveNextIteration, 0);
-            assertEquals(solveProgressChange, 0);
+            assertEquals(0, solveStart);
+            assertEquals(0, solveEnd);
+            assertEquals(0, solveNextIteration);
+            assertEquals(0, solveProgressChange);
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
@@ -2503,8 +2337,8 @@ public class RANSACRobustLateration2DSolverTest implements
             assertNotNull(solver.getInliersData().getInliers());
             assertNotNull(solver.getInliersData().getResiduals());
 
-            assertEquals(solveStart, 1);
-            assertEquals(solveEnd, 1);
+            assertEquals(1, solveStart);
+            assertEquals(1, solveEnd);
             assertTrue(solveNextIteration > 0);
             assertTrue(solveProgressChange > 0);
             assertTrue(solver.isReady());
@@ -2556,13 +2390,11 @@ public class RANSACRobustLateration2DSolverTest implements
                     // inlier
                     error = 0.0;
                 }
-                radius = Math.max(RobustLaterationSolver.EPSILON,
-                        radius + error);
+                radius = Math.max(RobustLaterationSolver.EPSILON, radius + error);
                 circles[i] = new Circle(center, radius);
             }
 
-            RANSACRobustLateration2DSolver solver =
-                    new RANSACRobustLateration2DSolver(circles, this);
+            RANSACRobustLateration2DSolver solver = new RANSACRobustLateration2DSolver(circles, this);
             solver.setResultRefined(true);
             solver.setComputeAndKeepInliersEnabled(true);
             solver.setComputeAndKeepResidualsEnabled(true);
@@ -2570,10 +2402,10 @@ public class RANSACRobustLateration2DSolverTest implements
             solver.setInitialPosition(position);
 
             reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
-            assertEquals(solveNextIteration, 0);
-            assertEquals(solveProgressChange, 0);
+            assertEquals(0, solveStart);
+            assertEquals(0, solveEnd);
+            assertEquals(0, solveNextIteration);
+            assertEquals(0, solveProgressChange);
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
@@ -2590,8 +2422,8 @@ public class RANSACRobustLateration2DSolverTest implements
             assertNotNull(solver.getInliersData().getInliers());
             assertNotNull(solver.getInliersData().getResiduals());
 
-            assertEquals(solveStart, 1);
-            assertEquals(solveEnd, 1);
+            assertEquals(1, solveStart);
+            assertEquals(1, solveEnd);
             assertTrue(solveNextIteration > 0);
             assertTrue(solveProgressChange > 0);
             assertTrue(solver.isReady());
@@ -2643,23 +2475,21 @@ public class RANSACRobustLateration2DSolverTest implements
                     // inlier
                     error = 0.0;
                 }
-                radius = Math.max(RobustLaterationSolver.EPSILON,
-                        radius + error);
+                radius = Math.max(RobustLaterationSolver.EPSILON, radius + error);
                 circles[i] = new Circle(center, radius);
             }
 
-            RANSACRobustLateration2DSolver solver =
-                    new RANSACRobustLateration2DSolver(circles, this);
+            RANSACRobustLateration2DSolver solver = new RANSACRobustLateration2DSolver(circles, this);
             solver.setResultRefined(false);
             solver.setComputeAndKeepInliersEnabled(false);
             solver.setComputeAndKeepResidualsEnabled(false);
             solver.setPreliminarySubsetSize(4);
 
             reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
-            assertEquals(solveNextIteration, 0);
-            assertEquals(solveProgressChange, 0);
+            assertEquals(0, solveStart);
+            assertEquals(0, solveEnd);
+            assertEquals(0, solveNextIteration);
+            assertEquals(0, solveProgressChange);
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
@@ -2674,8 +2504,8 @@ public class RANSACRobustLateration2DSolverTest implements
             assertNull(solver.getCovariance());
             assertNull(solver.getInliersData());
 
-            assertEquals(solveStart, 1);
-            assertEquals(solveEnd, 1);
+            assertEquals(1, solveStart);
+            assertEquals(1, solveEnd);
             assertTrue(solveNextIteration > 0);
             assertTrue(solveProgressChange > 0);
             assertTrue(solver.isReady());
@@ -2723,8 +2553,7 @@ public class RANSACRobustLateration2DSolverTest implements
     }
 
     private void reset() {
-        solveStart = solveEnd = solveNextIteration =
-                solveProgressChange = 0;
+        solveStart = solveEnd = solveNextIteration = solveProgressChange = 0;
     }
 
     private void checkLocked(final RANSACRobustLateration2DSolver solver) {

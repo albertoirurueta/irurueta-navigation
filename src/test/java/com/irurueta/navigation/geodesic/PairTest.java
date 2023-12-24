@@ -32,8 +32,8 @@ public class PairTest {
         final Pair p = new Pair(first, second);
 
         //check
-        assertEquals(p.getFirst(), first, 0.0);
-        assertEquals(p.getSecond(), second, 0.0);
+        assertEquals(first, p.getFirst(), 0.0);
+        assertEquals(second, p.getSecond(), 0.0);
     }
 
     @Test
@@ -45,13 +45,13 @@ public class PairTest {
         final Pair p = new Pair(value1, 0.0);
 
         //check
-        assertEquals(p.getFirst(), value1, 0.0);
+        assertEquals(value1, p.getFirst(), 0.0);
 
         //set new value
         p.setFirst(value2);
 
         //check
-        assertEquals(p.getFirst(), value2, 0.0);
+        assertEquals(value2, p.getFirst(), 0.0);
     }
 
     @Test
@@ -63,12 +63,12 @@ public class PairTest {
         final Pair p = new Pair(0.0, value1);
 
         //check
-        assertEquals(p.getSecond(), value1, 0.0);
+        assertEquals(value1, p.getSecond(), 0.0);
 
         //set new value
         p.setSecond(value2);
 
         //check
-        assertEquals(p.getSecond(), value2, 0.0);
+        assertEquals(value2, p.getSecond(), 0.0);
     }
 }

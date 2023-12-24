@@ -2062,7 +2062,8 @@ public class GNSSConfig implements Serializable, Cloneable {
                 && Math.abs(mNumberOfSatellites - other.mNumberOfSatellites) <= threshold
                 && Math.abs(mOrbitalRadiusOfSatellites - other.mOrbitalRadiusOfSatellites) <= threshold
                 && Math.abs(mSatellitesInclinationDegrees - other.mSatellitesInclinationDegrees) <= threshold
-                && Math.abs(mConstellationLongitudeOffsetDegrees - other.mConstellationLongitudeOffsetDegrees) <= threshold
+                && Math.abs(mConstellationLongitudeOffsetDegrees - other.mConstellationLongitudeOffsetDegrees)
+                <= threshold
                 && Math.abs(mConstellationTimingOffset - other.mConstellationTimingOffset) <= threshold
                 && Math.abs(mMaskAngleDegrees - other.mMaskAngleDegrees) <= threshold
                 && Math.abs(mSISErrorSD - other.mSISErrorSD) <= threshold

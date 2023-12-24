@@ -23,12 +23,13 @@ public class InvalidSourceAndDestinationFrameTypeExceptionTest {
 
     @Test
     public void testConstructor() {
-        InvalidSourceAndDestinationFrameTypeException ex = new InvalidSourceAndDestinationFrameTypeException();
+        InvalidSourceAndDestinationFrameTypeException ex =
+                new InvalidSourceAndDestinationFrameTypeException();
         assertNotNull(ex);
 
         ex = new InvalidSourceAndDestinationFrameTypeException("message");
         assertNotNull(ex);
-        assertEquals(ex.getMessage(), "message");
+        assertEquals("message", ex.getMessage());
 
         final Exception cause = new Exception();
         ex = new InvalidSourceAndDestinationFrameTypeException(cause);
@@ -37,7 +38,7 @@ public class InvalidSourceAndDestinationFrameTypeExceptionTest {
 
         ex = new InvalidSourceAndDestinationFrameTypeException("message", cause);
         assertNotNull(ex);
-        assertEquals(ex.getMessage(), "message");
+        assertEquals("message", ex.getMessage());
         assertSame(ex.getCause(), cause);
     }
 }

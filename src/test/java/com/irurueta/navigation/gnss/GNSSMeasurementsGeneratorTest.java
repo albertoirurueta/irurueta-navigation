@@ -47,15 +47,11 @@ public class GNSSMeasurementsGeneratorTest {
     private static final int MIN_SATELLITES = 4;
     private static final int MAX_SATELLITES = 10;
 
-    private static final double MIN_USER_POSITION_VALUE =
-            Constants.EARTH_EQUATORIAL_RADIUS_WGS84 - 50.0;
-    private static final double MAX_USER_POSITION_VALUE =
-            Constants.EARTH_EQUATORIAL_RADIUS_WGS84 + 50.0;
+    private static final double MIN_USER_POSITION_VALUE = Constants.EARTH_EQUATORIAL_RADIUS_WGS84 - 50.0;
+    private static final double MAX_USER_POSITION_VALUE = Constants.EARTH_EQUATORIAL_RADIUS_WGS84 + 50.0;
 
-    private static final double MIN_SAT_POSITION_VALUE =
-            Constants.EARTH_EQUATORIAL_RADIUS_WGS84 + 150000.0;
-    private static final double MAX_SAT_POSITION_VALUE =
-            Constants.EARTH_EQUATORIAL_RADIUS_WGS84 + 800000.0;
+    private static final double MIN_SAT_POSITION_VALUE = Constants.EARTH_EQUATORIAL_RADIUS_WGS84 + 150000.0;
+    private static final double MAX_SAT_POSITION_VALUE = Constants.EARTH_EQUATORIAL_RADIUS_WGS84 + 800000.0;
 
     private static final double MIN_USER_VELOCITY_VALUE = -2.0;
     private static final double MAX_USER_VELOCITY_VALUE = 2.0;
@@ -126,31 +122,26 @@ public class GNSSMeasurementsGeneratorTest {
 
             final GNSSConfig config = generateConfig();
 
-            final double bias = GNSSBiasesGenerator.generateBias(satellitePosition,
-                    userPosition, config, random);
+            final double bias = GNSSBiasesGenerator.generateBias(satellitePosition, userPosition, config, random);
 
             final GNSSMeasurement measurement1 = new GNSSMeasurement();
-            assertTrue(GNSSMeasurementsGenerator.generate(timeSeconds,
-                    satelliteX, satelliteY, satelliteZ,
-                    satelliteVx, satelliteVy, satelliteVz,
-                    userX, userY, userZ,
-                    userVx, userVy, userVz, bias, config, random, measurement1));
+            assertTrue(GNSSMeasurementsGenerator.generate(timeSeconds, satelliteX, satelliteY, satelliteZ,
+                    satelliteVx, satelliteVy, satelliteVz, userX, userY, userZ, userVx, userVy, userVz,
+                    bias, config, random, measurement1));
 
-            final GNSSMeasurement measurement2 = GNSSMeasurementsGenerator
-                    .generate(timeSeconds, satelliteX, satelliteY, satelliteZ,
-                            satelliteVx, satelliteVy, satelliteVz,
-                            userX, userY, userZ,
-                            userVx, userVy, userVz, bias, config, random);
+            final GNSSMeasurement measurement2 = GNSSMeasurementsGenerator.generate(
+                    timeSeconds, satelliteX, satelliteY, satelliteZ, satelliteVx, satelliteVy, satelliteVz,
+                    userX, userY, userZ, userVx, userVy, userVz, bias, config, random);
             assertNotNull(measurement2);
 
             final GNSSMeasurement measurement3 = new GNSSMeasurement();
             assertTrue(GNSSMeasurementsGenerator.generate(timeSeconds,
-                    satellitePosition, satelliteVelocity, userPosition,
-                    userVelocity, bias, config, random, measurement3));
+                    satellitePosition, satelliteVelocity, userPosition, userVelocity,
+                    bias, config, random, measurement3));
 
-            final GNSSMeasurement measurement4 = GNSSMeasurementsGenerator
-                    .generate(timeSeconds, satellitePosition, satelliteVelocity,
-                            userPosition, userVelocity, bias, config, random);
+            final GNSSMeasurement measurement4 = GNSSMeasurementsGenerator.generate(
+                    timeSeconds, satellitePosition, satelliteVelocity,
+                    userPosition, userVelocity, bias, config, random);
             assertNotNull(measurement4);
 
             final GNSSMeasurement measurement5 = new GNSSMeasurement();
@@ -158,28 +149,24 @@ public class GNSSMeasurementsGeneratorTest {
                     satelliteVelocity, userPosition, userVelocity, bias,
                     config, random, measurement5));
 
-            final GNSSMeasurement measurement6 = GNSSMeasurementsGenerator
-                    .generate(time, satellitePosition, satelliteVelocity,
-                            userPosition, userVelocity, bias, config, random);
+            final GNSSMeasurement measurement6 = GNSSMeasurementsGenerator.generate(
+                    time, satellitePosition, satelliteVelocity, userPosition, userVelocity, bias, config, random);
             assertNotNull(measurement6);
 
             final GNSSMeasurement measurement7 = new GNSSMeasurement();
             assertTrue(GNSSMeasurementsGenerator.generate(timeSeconds,
-                    satellitePositionAndVelocity, userPositionAndVelocity,
-                    bias, config, random, measurement7));
+                    satellitePositionAndVelocity, userPositionAndVelocity, bias, config, random, measurement7));
 
-            final GNSSMeasurement measurement8 = GNSSMeasurementsGenerator
-                    .generate(timeSeconds, satellitePositionAndVelocity,
-                            userPositionAndVelocity, bias, config, random);
+            final GNSSMeasurement measurement8 = GNSSMeasurementsGenerator.generate(
+                    timeSeconds, satellitePositionAndVelocity, userPositionAndVelocity, bias, config, random);
             assertNotNull(measurement8);
 
             final GNSSMeasurement measurement9 = new GNSSMeasurement();
             assertTrue(GNSSMeasurementsGenerator.generate(time, satellitePositionAndVelocity,
                     userPositionAndVelocity, bias, config, random, measurement9));
 
-            final GNSSMeasurement measurement10 = GNSSMeasurementsGenerator
-                    .generate(time, satellitePositionAndVelocity,
-                            userPositionAndVelocity, bias, config, random);
+            final GNSSMeasurement measurement10 = GNSSMeasurementsGenerator.generate(
+                    time, satellitePositionAndVelocity, userPositionAndVelocity, bias, config, random);
             assertNotNull(measurement10);
 
             assertEquals(measurement1, measurement2);
@@ -192,9 +179,8 @@ public class GNSSMeasurementsGeneratorTest {
             assertEquals(measurement1, measurement9);
             assertEquals(measurement1, measurement10);
 
-            final GNSSMeasurement measurement = generate(timeSeconds,
-                    satellitePositionAndVelocity, userPositionAndVelocity,
-                    bias, config, random);
+            final GNSSMeasurement measurement = generate(timeSeconds, satellitePositionAndVelocity,
+                    userPositionAndVelocity, bias, config, random);
 
             assertNotNull(measurement);
             assertTrue(measurement.equals(measurement1, ABSOLUTE_ERROR));
@@ -237,8 +223,7 @@ public class GNSSMeasurementsGeneratorTest {
         final GNSSConfig config = generateConfig();
 
         final List<Double> biases = new ArrayList<>();
-        final List<ECEFPositionAndVelocity> satellitePositionsAndVelocities =
-                new ArrayList<>();
+        final List<ECEFPositionAndVelocity> satellitePositionsAndVelocities = new ArrayList<>();
         final List<GNSSMeasurement> expectedResult = new ArrayList<>();
         for (int n = 0; n < numSatellites; n++) {
             final ECEFPosition satellitePosition = new ECEFPosition(
@@ -253,63 +238,52 @@ public class GNSSMeasurementsGeneratorTest {
             final ECEFPositionAndVelocity satellitePositionAndVelocity =
                     new ECEFPositionAndVelocity(satellitePosition, satelliteVelocity);
 
-            final double bias = GNSSBiasesGenerator.generateBias(satellitePosition,
-                    userPosition, config, random);
+            final double bias = GNSSBiasesGenerator.generateBias(satellitePosition, userPosition, config, random);
 
             biases.add(bias);
             satellitePositionsAndVelocities.add(satellitePositionAndVelocity);
 
-            final GNSSMeasurement measurement = generate(timeSeconds,
-                    satellitePositionAndVelocity, userPositionAndVelocity,
-                    bias, config, random);
+            final GNSSMeasurement measurement = generate(timeSeconds, satellitePositionAndVelocity,
+                    userPositionAndVelocity, bias, config, random);
 
             expectedResult.add(measurement);
         }
 
         final List<GNSSMeasurement> result1 = new ArrayList<>();
-        GNSSMeasurementsGenerator.generate(timeSeconds,
-                satellitePositionsAndVelocities, userX, userY, userZ,
+        GNSSMeasurementsGenerator.generate(timeSeconds, satellitePositionsAndVelocities, userX, userY, userZ,
                 userVx, userVy, userVz, biases, config, random, result1);
 
-        final Collection<GNSSMeasurement> result2 =
-                GNSSMeasurementsGenerator.generate(timeSeconds,
-                        satellitePositionsAndVelocities, userX, userY, userZ,
-                        userVx, userVy, userVz, biases, config, random);
+        final Collection<GNSSMeasurement> result2 = GNSSMeasurementsGenerator.generate(timeSeconds,
+                satellitePositionsAndVelocities, userX, userY, userZ, userVx, userVy, userVz,
+                biases, config, random);
 
         final List<GNSSMeasurement> result3 = new ArrayList<>();
-        GNSSMeasurementsGenerator.generate(timeSeconds,
-                satellitePositionsAndVelocities, userPosition, userVelocity,
-                biases, config, random, result3);
+        GNSSMeasurementsGenerator.generate(timeSeconds, satellitePositionsAndVelocities, userPosition,
+                userVelocity, biases, config, random, result3);
 
-        final Collection<GNSSMeasurement> result4 =
-                GNSSMeasurementsGenerator.generate(timeSeconds,
-                        satellitePositionsAndVelocities, userPosition, userVelocity,
-                        biases, config, random);
+        final Collection<GNSSMeasurement> result4 = GNSSMeasurementsGenerator.generate(timeSeconds,
+                satellitePositionsAndVelocities, userPosition, userVelocity, biases, config, random);
 
         final List<GNSSMeasurement> result5 = new ArrayList<>();
         GNSSMeasurementsGenerator.generate(time, satellitePositionsAndVelocities,
                 userPosition, userVelocity, biases, config, random, result5);
 
-        final Collection<GNSSMeasurement> result6 =
-                GNSSMeasurementsGenerator.generate(time, satellitePositionsAndVelocities,
-                        userPosition, userVelocity, biases, config, random);
+        final Collection<GNSSMeasurement> result6 = GNSSMeasurementsGenerator.generate(time,
+                satellitePositionsAndVelocities, userPosition, userVelocity, biases, config, random);
 
         final List<GNSSMeasurement> result7 = new ArrayList<>();
         GNSSMeasurementsGenerator.generate(timeSeconds, satellitePositionsAndVelocities,
                 userPositionAndVelocity, biases, config, random, result7);
 
-        final Collection<GNSSMeasurement> result8 =
-                GNSSMeasurementsGenerator.generate(timeSeconds,
-                        satellitePositionsAndVelocities, userPositionAndVelocity,
-                        biases, config, random);
+        final Collection<GNSSMeasurement> result8 = GNSSMeasurementsGenerator.generate(timeSeconds,
+                satellitePositionsAndVelocities, userPositionAndVelocity, biases, config, random);
 
         final List<GNSSMeasurement> result9 = new ArrayList<>();
-        GNSSMeasurementsGenerator.generate(time, satellitePositionsAndVelocities,
-                userPositionAndVelocity, biases, config, random, result9);
+        GNSSMeasurementsGenerator.generate(time, satellitePositionsAndVelocities, userPositionAndVelocity,
+                biases, config, random, result9);
 
-        final Collection<GNSSMeasurement> result10 =
-                GNSSMeasurementsGenerator.generate(time, satellitePositionsAndVelocities,
-                        userPositionAndVelocity, biases, config, random);
+        final Collection<GNSSMeasurement> result10 = GNSSMeasurementsGenerator.generate(time,
+                satellitePositionsAndVelocities, userPositionAndVelocity, biases, config, random);
 
         assertEquals(result1.size(), numSatellites);
         assertEquals(result1, result2);
@@ -334,36 +308,22 @@ public class GNSSMeasurementsGeneratorTest {
     private static GNSSConfig generateConfig() {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double epochInterval = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        final double initialEstimatedEcefPositionX = randomizer.nextDouble(MIN_VALUE,
-                MAX_VALUE);
-        final double initialEstimatedEcefPositionY = randomizer.nextDouble(MIN_VALUE,
-                MAX_VALUE);
-        final double initialEstimatedEcefPositionZ = randomizer.nextDouble(MIN_VALUE,
-                MAX_VALUE);
-        final int numberOfSatellites = randomizer.nextInt(MIN_SATELLITES,
-                MAX_SATELLITES);
-        final double orbitalRadiusOfSatellites = randomizer.nextDouble(MIN_VALUE,
-                MAX_VALUE);
-        final double satellitesInclinationDegrees = randomizer.nextDouble(MIN_VALUE,
-                MAX_VALUE);
-        final double constellationLongitudeOffsetDegrees = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double constellationTimingOffset = randomizer.nextDouble(MIN_VALUE,
-                MAX_VALUE);
+        final double initialEstimatedEcefPositionX = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double initialEstimatedEcefPositionY = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double initialEstimatedEcefPositionZ = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final int numberOfSatellites = randomizer.nextInt(MIN_SATELLITES, MAX_SATELLITES);
+        final double orbitalRadiusOfSatellites = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double satellitesInclinationDegrees = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double constellationLongitudeOffsetDegrees = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double constellationTimingOffset = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double maskAngleDegrees = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double sisErrorSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        final double zenithIonosphereErrorSD = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double zenithTroposphereErrorSD = randomizer.nextDouble(MIN_VALUE,
-                MAX_VALUE);
-        final double codeTrackingErrorSD = randomizer.nextDouble(MIN_VALUE,
-                MAX_VALUE);
-        final double rangeRateTrackingErrorSD = randomizer.nextDouble(MIN_VALUE,
-                MAX_VALUE);
-        final double initialReceiverClockOffset = randomizer.nextDouble(MIN_VALUE,
-                MAX_VALUE);
-        final double initialReceiverClockDrift = randomizer.nextDouble(MIN_VALUE,
-                MAX_VALUE);
+        final double zenithIonosphereErrorSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double zenithTroposphereErrorSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double codeTrackingErrorSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double rangeRateTrackingErrorSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double initialReceiverClockOffset = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double initialReceiverClockDrift = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
         return new GNSSConfig(epochInterval, initialEstimatedEcefPositionX,
                 initialEstimatedEcefPositionY, initialEstimatedEcefPositionZ,
@@ -377,8 +337,8 @@ public class GNSSMeasurementsGeneratorTest {
 
     private static GNSSMeasurement generate(
             final double time, final ECEFPositionAndVelocity satPosAndVel,
-            final ECEFPositionAndVelocity userPosAndVel, final double bias,
-            final GNSSConfig config, final Random random) throws WrongSizeException {
+            final ECEFPositionAndVelocity userPosAndVel, final double bias, final GNSSConfig config,
+            final Random random) throws WrongSizeException {
 
         final ECEFPosition satPosition = satPosAndVel.getEcefPosition();
         final ECEFVelocity satVelocity = satPosAndVel.getEcefVelocity();
@@ -388,14 +348,13 @@ public class GNSSMeasurementsGeneratorTest {
 
         final NEDPosition userNedPosition = new NEDPosition();
         final NEDVelocity userNedVelocity = new NEDVelocity();
-        ECEFtoNEDPositionVelocityConverter.convertECEFtoNED(userPosition, userVelocity,
-                userNedPosition, userNedVelocity);
+        ECEFtoNEDPositionVelocityConverter.convertECEFtoNED(userPosition, userVelocity, userNedPosition,
+                userNedVelocity);
 
         final Matrix cen = CoordinateTransformation.ecefToNedMatrix(
                 userNedPosition.getLatitude(), userNedPosition.getLongitude());
 
-        final Matrix omegaIe = Utils.skewMatrix(
-                new double[]{0.0, 0.0, Constants.EARTH_ROTATION_RATE});
+        final Matrix omegaIe = Utils.skewMatrix(new double[]{0.0, 0.0, Constants.EARTH_ROTATION_RATE});
 
         final Matrix satRese = satPosition.asMatrix();
         final Matrix rEae = userPosition.asMatrix();
@@ -425,13 +384,11 @@ public class GNSSMeasurementsGeneratorTest {
                             .subtractAndReturnNew(veae.addAndReturnNew(omegaIe.multiplyAndReturnNew(rEae))))
                     .getElementAtIndex(0);
 
-            final double pseudoRange = range + bias
-                    + config.getInitialReceiverClockOffset()
+            final double pseudoRange = range + bias + config.getInitialReceiverClockOffset()
                     + config.getInitialReceiverClockDrift() * time
                     + config.getCodeTrackingErrorSD() * random.nextGaussian();
 
-            final double pseudoRangeRate = rangeRate
-                    + config.getInitialReceiverClockDrift()
+            final double pseudoRangeRate = rangeRate + config.getInitialReceiverClockDrift()
                     + config.getRangeRateTrackingErrorSD() * random.nextGaussian();
 
             return new GNSSMeasurement(pseudoRange, pseudoRangeRate, satPosAndVel);

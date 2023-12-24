@@ -411,12 +411,12 @@ public class ECEFFrame extends ECIorECEFFrame<ECEFFrame> implements Cloneable {
     /**
      * Constructor.
      *
-     * @param x        cartesian x coordinate of body position expressed in meters (m) with respect ECEF frame, resolved along
-     *                 ECEF-frame axes.
-     * @param y        cartesian y coordinate of body position expressed in meters (m) with respect ECEF frame, resolved along
-     *                 ECEF-frame axes.
-     * @param z        cartesian z coordinate of body position expressed in meters (m) with respect ECEF frame, resolved along
-     *                 ECEF-frame axes.
+     * @param x        cartesian x coordinate of body position expressed in meters (m) with respect ECEF frame,
+     *                 resolved along ECEF-frame axes.
+     * @param y        cartesian y coordinate of body position expressed in meters (m) with respect ECEF frame,
+     *                 resolved along ECEF-frame axes.
+     * @param z        cartesian z coordinate of body position expressed in meters (m) with respect ECEF frame,
+     *                 resolved along ECEF-frame axes.
      * @param velocity velocity to be set resolved along ECEF-frame axes.
      * @param c        Body to ECEF coordinate transformation matrix to be set.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.

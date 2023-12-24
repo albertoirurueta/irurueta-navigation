@@ -62,8 +62,7 @@ public class BuildInfoTest {
         assertNotNull(artifactId);
         assertNotNull(version);
 
-        Logger.getGlobal().log(Level.INFO, "Build timestamp: {0}",
-                buildTimestamp);
+        Logger.getGlobal().log(Level.INFO, "Build timestamp: {0}", buildTimestamp);
         Logger.getGlobal().log(Level.INFO, "Group ID: {0}", groupId);
         Logger.getGlobal().log(Level.INFO, "Artifact ID: {0}", artifactId);
         Logger.getGlobal().log(Level.INFO, "Version: {0}", version);

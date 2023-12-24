@@ -38,10 +38,10 @@ package com.irurueta.navigation.geodesic;
  * For a sphere, &rho; reduces to <i>a</i> tan (<i>s12</i>/<i>a</i>), where <i>s12</i> is the length
  * of the geodesic from <i>C</i> to <i>P</i>, and the gnomonic projection has the property that all
  * geodesics appear as straight lines. For an ellipsoid, this property holds only for geodesics
- * interesting the centers. However geodesic segments close to the center are approximately straight.
+ * interesting the centers. However, geodesic segments close to the center are approximately straight.
  * Consider a geodesic segment of length <i>1</i>. Let <i>T</i> be the point on the geodesic
  * (extended if necessary) closest to <i>C</i>, the center of the projection, and <i>t</i>, be the
- * distance <i>CT</i>. To lowest order, the maximum deviation (as a true distance) of the corresponding
+ * distance <i>CT</i>. To the lowest order, the maximum deviation (as a true distance) of the corresponding
  * gnomonic line segment (i.e., with the same end points) from the geodesic is
  * (<i>K</i>(<i>T</i> &minus; <i>K</i>(<i>C</i>))
  * <i>l</i><sup>2</sup> <i>t</i> / 32.
@@ -49,7 +49,7 @@ package com.irurueta.navigation.geodesic;
  * This result applies for any surface. For an ellipsoid of revolution, consider all geodesics whose end
  * points are within a distance <i>r</i> of <i>C</i>. For a given <i>r</i>, the deviation is maximum
  * when the latitude of <i>C</i> is 46&deg;, when endpoints are a distance <i>r</i> away, and when
- * their azimuths from the center are &plusmn; 45&deg; or &plusmn; 135&deg;. To lowest order in
+ * their azimuths from the center are &plusmn; 45&deg; or &plusmn; 135&deg;. To the lowest order in
  * <i>r</i> and the flattening <i>f</i>, the deviation is <i>f</i> (<i>r</i>/2<i>a</i>)<sup>3</sup>
  * <i>r</i>.
  * <b>CAUTION:</b> The definition of this projection for a sphere is standard. However, there is no

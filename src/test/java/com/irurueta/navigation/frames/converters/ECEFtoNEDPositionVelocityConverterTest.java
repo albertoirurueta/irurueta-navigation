@@ -43,10 +43,8 @@ public class ECEFtoNEDPositionVelocityConverterTest {
     private static final double MIN_ANGLE_DEGREES = -45.0;
     private static final double MAX_ANGLE_DEGREES = 45.0;
 
-    private static final double MIN_POSITION_VALUE =
-            Constants.EARTH_EQUATORIAL_RADIUS_WGS84 - 50.0;
-    private static final double MAX_POSITION_VALUE =
-            Constants.EARTH_EQUATORIAL_RADIUS_WGS84 + 50.0;
+    private static final double MIN_POSITION_VALUE = Constants.EARTH_EQUATORIAL_RADIUS_WGS84 - 50.0;
+    private static final double MAX_POSITION_VALUE = Constants.EARTH_EQUATORIAL_RADIUS_WGS84 + 50.0;
 
     private static final double MIN_VELOCITY_VALUE = -2.0;
     private static final double MAX_VELOCITY_VALUE = 2.0;
@@ -77,26 +75,22 @@ public class ECEFtoNEDPositionVelocityConverterTest {
             final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
             final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-            final double roll = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
             final double pitch = Math.toRadians(
                     randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
             final Quaternion q = new Quaternion(roll, pitch, yaw);
 
             final Matrix m = q.asInhomogeneousMatrix();
             final CoordinateTransformation c = new CoordinateTransformation(
-                    m, FrameType.BODY_FRAME,
-                    FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+                    m, FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
             final ECEFFrame ecefFrame = new ECEFFrame(x, y, z, vx, vy, vz, c);
             final ECEFPosition ecefPosition1 = ecefFrame.getECEFPosition();
             final ECEFVelocity ecefVelocity1 = ecefFrame.getECEFVelocity();
 
             // convert
-            final ECEFtoNEDPositionVelocityConverter converter =
-                    new ECEFtoNEDPositionVelocityConverter();
+            final ECEFtoNEDPositionVelocityConverter converter = new ECEFtoNEDPositionVelocityConverter();
             final NEDPosition nedPosition1 = new NEDPosition();
             final NEDVelocity nedVelocity1 = new NEDVelocity();
             converter.convert(x, y, z, vx, vy, vz, nedPosition1, nedVelocity1);
@@ -105,8 +99,7 @@ public class ECEFtoNEDPositionVelocityConverterTest {
             final NEDVelocity nedVelocity2 = new NEDVelocity();
             converter.convert(ecefPosition1, ecefVelocity1, nedPosition2, nedVelocity2);
 
-            final NEDFrame nedFrame = ECEFtoNEDFrameConverter
-                    .convertECEFtoNEDAndReturnNew(ecefFrame);
+            final NEDFrame nedFrame = ECEFtoNEDFrameConverter.convertECEFtoNEDAndReturnNew(ecefFrame);
             final NEDPosition nedPosition3 = nedFrame.getPosition();
             final NEDVelocity nedVelocity3 = nedFrame.getVelocity();
 
@@ -119,8 +112,7 @@ public class ECEFtoNEDPositionVelocityConverterTest {
             // convert back
             final ECEFPosition ecefPosition2 = new ECEFPosition();
             final ECEFVelocity ecefVelocity2 = new ECEFVelocity();
-            NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(
-                    nedPosition1, nedVelocity1,
+            NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition1, nedVelocity1,
                     ecefPosition2, ecefVelocity2);
 
             // check
@@ -130,7 +122,7 @@ public class ECEFtoNEDPositionVelocityConverterTest {
             numValid++;
         }
 
-        assertEquals(numValid, TIMES);
+        assertEquals(TIMES, numValid);
     }
 
     @Test
@@ -148,18 +140,15 @@ public class ECEFtoNEDPositionVelocityConverterTest {
             final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
             final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-            final double roll = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
             final double pitch = Math.toRadians(
                     randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
             final Quaternion q = new Quaternion(roll, pitch, yaw);
 
             final Matrix m = q.asInhomogeneousMatrix();
             final CoordinateTransformation c = new CoordinateTransformation(
-                    m, FrameType.BODY_FRAME,
-                    FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+                    m, FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
             final ECEFFrame ecefFrame = new ECEFFrame(x, y, z, vx, vy, vz, c);
             final ECEFPosition ecefPosition1 = ecefFrame.getECEFPosition();
@@ -190,8 +179,7 @@ public class ECEFtoNEDPositionVelocityConverterTest {
             // convert back
             final ECEFPosition ecefPosition2 = new ECEFPosition();
             final ECEFVelocity ecefVelocity2 = new ECEFVelocity();
-            NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(
-                    nedPosition1, nedVelocity1,
+            NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition1, nedVelocity1,
                     ecefPosition2, ecefVelocity2);
 
             // check
@@ -201,6 +189,6 @@ public class ECEFtoNEDPositionVelocityConverterTest {
             numValid++;
         }
 
-        assertEquals(numValid, TIMES);
+        assertEquals(TIMES, numValid);
     }
 }

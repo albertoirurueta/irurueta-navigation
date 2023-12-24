@@ -30,14 +30,13 @@ public class RobustLateration2DSolverTest implements RobustLaterationSolverListe
         // create with method
 
         // RANSAC
-        RobustLateration2DSolver solver = RobustLateration2DSolver.create(
-                RobustEstimatorMethod.RANSAC);
+        RobustLateration2DSolver solver = RobustLateration2DSolver.create(RobustEstimatorMethod.RANSAC);
 
         // check
         assertTrue(solver instanceof RANSACRobustLateration2DSolver);
 
         // LMedS
-        solver = RobustLateration2DSolver.create(RobustEstimatorMethod.LMedS);
+        solver = RobustLateration2DSolver.create(RobustEstimatorMethod.LMEDS);
 
         // check
         assertTrue(solver instanceof LMedSRobustLateration2DSolver);
@@ -55,54 +54,47 @@ public class RobustLateration2DSolverTest implements RobustLaterationSolverListe
         assertTrue(solver instanceof PROSACRobustLateration2DSolver);
 
         // PROMedS
-        solver = RobustLateration2DSolver.create(RobustEstimatorMethod.PROMedS);
+        solver = RobustLateration2DSolver.create(RobustEstimatorMethod.PROMEDS);
 
         // check
         assertTrue(solver instanceof PROMedSRobustLateration2DSolver);
-
 
         // create with listener and method
 
         // RANSAC
-        solver = RobustLateration2DSolver.create(this,
-                RobustEstimatorMethod.RANSAC);
+        solver = RobustLateration2DSolver.create(this, RobustEstimatorMethod.RANSAC);
 
         // check
-        assertSame(solver.getListener(), this);
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof RANSACRobustLateration2DSolver);
 
         // LMedS
-        solver = RobustLateration2DSolver.create(this,
-                RobustEstimatorMethod.LMedS);
+        solver = RobustLateration2DSolver.create(this, RobustEstimatorMethod.LMEDS);
 
         // check
-        assertSame(solver.getListener(), this);
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof LMedSRobustLateration2DSolver);
 
         // MSAC
-        solver = RobustLateration2DSolver.create(this,
-                RobustEstimatorMethod.MSAC);
+        solver = RobustLateration2DSolver.create(this, RobustEstimatorMethod.MSAC);
 
         // check
-        assertSame(solver.getListener(), this);
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof MSACRobustLateration2DSolver);
 
         // PROSAC
-        solver = RobustLateration2DSolver.create(this,
-                RobustEstimatorMethod.PROSAC);
+        solver = RobustLateration2DSolver.create(this, RobustEstimatorMethod.PROSAC);
 
         // check
-        assertSame(solver.getListener(), this);
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof PROSACRobustLateration2DSolver);
 
         // PROMedS
-        solver = RobustLateration2DSolver.create(this,
-                RobustEstimatorMethod.PROMedS);
+        solver = RobustLateration2DSolver.create(this, RobustEstimatorMethod.PROMEDS);
 
         // check
-        assertSame(solver.getListener(), this);
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof PROMedSRobustLateration2DSolver);
-
 
         // create with positions, distances and method
         final Point2D[] positions = {
@@ -113,125 +105,118 @@ public class RobustLateration2DSolverTest implements RobustLaterationSolverListe
         final double[] distances = {1.0, 1.0, 1.0};
 
         // RANSAC
-        solver = RobustLateration2DSolver.create(positions, distances,
-                RobustEstimatorMethod.RANSAC);
+        solver = RobustLateration2DSolver.create(positions, distances, RobustEstimatorMethod.RANSAC);
 
         // check
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
         assertTrue(solver instanceof RANSACRobustLateration2DSolver);
 
         // LMedS
-        solver = RobustLateration2DSolver.create(positions, distances,
-                RobustEstimatorMethod.LMedS);
+        solver = RobustLateration2DSolver.create(positions, distances, RobustEstimatorMethod.LMEDS);
 
         // check
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
         assertTrue(solver instanceof LMedSRobustLateration2DSolver);
 
         // MSAC
-        solver = RobustLateration2DSolver.create(positions, distances,
-                RobustEstimatorMethod.MSAC);
+        solver = RobustLateration2DSolver.create(positions, distances, RobustEstimatorMethod.MSAC);
 
         // check
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
         assertTrue(solver instanceof MSACRobustLateration2DSolver);
 
         // PROSAC
-        solver = RobustLateration2DSolver.create(positions, distances,
-                RobustEstimatorMethod.PROSAC);
+        solver = RobustLateration2DSolver.create(positions, distances, RobustEstimatorMethod.PROSAC);
 
         // check
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
         assertTrue(solver instanceof PROSACRobustLateration2DSolver);
 
         // PROMedS
-        solver = RobustLateration2DSolver.create(positions, distances,
-                RobustEstimatorMethod.PROMedS);
+        solver = RobustLateration2DSolver.create(positions, distances, RobustEstimatorMethod.PROMEDS);
 
         // check
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
         assertTrue(solver instanceof PROMedSRobustLateration2DSolver);
-
 
         // create with positions, distances, standard deviations and method
         final double[] standardDeviations = new double[3];
 
         // RANSAC
-        solver = RobustLateration2DSolver.create(positions, distances,
-                standardDeviations, RobustEstimatorMethod.RANSAC);
+        solver = RobustLateration2DSolver.create(positions, distances, standardDeviations,
+                RobustEstimatorMethod.RANSAC);
 
         // check
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
         assertTrue(solver instanceof RANSACRobustLateration2DSolver);
 
         // LMedS
-        solver = RobustLateration2DSolver.create(positions, distances,
-                standardDeviations, RobustEstimatorMethod.LMedS);
+        solver = RobustLateration2DSolver.create(positions, distances, standardDeviations,
+                RobustEstimatorMethod.LMEDS);
 
         // check
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
         assertTrue(solver instanceof LMedSRobustLateration2DSolver);
 
         // MSAC
-        solver = RobustLateration2DSolver.create(positions, distances,
-                standardDeviations, RobustEstimatorMethod.MSAC);
+        solver = RobustLateration2DSolver.create(positions, distances, standardDeviations,
+                RobustEstimatorMethod.MSAC);
 
         // check
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
         assertTrue(solver instanceof MSACRobustLateration2DSolver);
 
         // PROSAC
-        solver = RobustLateration2DSolver.create(positions, distances,
-                standardDeviations, RobustEstimatorMethod.PROSAC);
+        solver = RobustLateration2DSolver.create(positions, distances, standardDeviations,
+                RobustEstimatorMethod.PROSAC);
 
         // check
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
         assertTrue(solver instanceof PROSACRobustLateration2DSolver);
 
         // PROMedS
-        solver = RobustLateration2DSolver.create(positions, distances,
-                standardDeviations, RobustEstimatorMethod.PROMedS);
+        solver = RobustLateration2DSolver.create(positions, distances, standardDeviations,
+                RobustEstimatorMethod.PROMEDS);
 
         // check
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
         assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
         assertTrue(solver instanceof PROMedSRobustLateration2DSolver);
-
 
         // create with positions, distances, listener and method
 
         // RANSAC
-        solver = RobustLateration2DSolver.create(positions, distances,
-                this, RobustEstimatorMethod.RANSAC);
+        solver = RobustLateration2DSolver.create(positions, distances, this,
+                RobustEstimatorMethod.RANSAC);
 
         // check
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
-        assertSame(solver.getListener(), this);
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof RANSACRobustLateration2DSolver);
 
         // LMedS
-        solver = RobustLateration2DSolver.create(positions, distances,
-                this, RobustEstimatorMethod.LMedS);
+        solver = RobustLateration2DSolver.create(positions, distances, this,
+                RobustEstimatorMethod.LMEDS);
 
         // check
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
-        assertSame(solver.getListener(), this);
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof LMedSRobustLateration2DSolver);
 
         // MSAC
@@ -239,90 +224,88 @@ public class RobustLateration2DSolverTest implements RobustLaterationSolverListe
                 this, RobustEstimatorMethod.MSAC);
 
         // check
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
-        assertSame(solver.getListener(), this);
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof MSACRobustLateration2DSolver);
 
         // PROSAC
-        solver = RobustLateration2DSolver.create(positions, distances,
-                this, RobustEstimatorMethod.PROSAC);
+        solver = RobustLateration2DSolver.create(positions, distances, this,
+                RobustEstimatorMethod.PROSAC);
 
         // check
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
-        assertSame(solver.getListener(), this);
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof PROSACRobustLateration2DSolver);
 
         // PROMedS
-        solver = RobustLateration2DSolver.create(positions, distances,
-                this, RobustEstimatorMethod.PROMedS);
+        solver = RobustLateration2DSolver.create(positions, distances, this,
+                RobustEstimatorMethod.PROMEDS);
 
         // check
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
-        assertSame(solver.getListener(), this);
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof PROMedSRobustLateration2DSolver);
-
 
         // create with positions, distances, standard deviations, listener and
         // method
 
         // RANSAC
-        solver = RobustLateration2DSolver.create(positions, distances,
-                standardDeviations, this, RobustEstimatorMethod.RANSAC);
+        solver = RobustLateration2DSolver.create(positions, distances, standardDeviations, this,
+                RobustEstimatorMethod.RANSAC);
 
         // check
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
-        assertSame(solver.getListener(), this);
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof RANSACRobustLateration2DSolver);
 
         // LMedS
-        solver = RobustLateration2DSolver.create(positions, distances,
-                standardDeviations, this, RobustEstimatorMethod.LMedS);
+        solver = RobustLateration2DSolver.create(positions, distances, standardDeviations, this,
+                RobustEstimatorMethod.LMEDS);
 
         // check
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
-        assertSame(solver.getListener(), this);
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof LMedSRobustLateration2DSolver);
 
         // MSAC
-        solver = RobustLateration2DSolver.create(positions, distances,
-                standardDeviations, this, RobustEstimatorMethod.MSAC);
+        solver = RobustLateration2DSolver.create(positions, distances, standardDeviations, this,
+                RobustEstimatorMethod.MSAC);
 
         // check
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
-        assertSame(solver.getListener(), this);
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof MSACRobustLateration2DSolver);
 
         // PROSAC
-        solver = RobustLateration2DSolver.create(positions, distances,
-                standardDeviations, this, RobustEstimatorMethod.PROSAC);
+        solver = RobustLateration2DSolver.create(positions, distances, standardDeviations, this,
+                RobustEstimatorMethod.PROSAC);
 
         // check
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
-        assertSame(solver.getListener(), this);
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof PROSACRobustLateration2DSolver);
 
         // PROMedS
-        solver = RobustLateration2DSolver.create(positions, distances,
-                standardDeviations, this, RobustEstimatorMethod.PROMedS);
+        solver = RobustLateration2DSolver.create(positions, distances, standardDeviations, this,
+                RobustEstimatorMethod.PROMEDS);
 
         // check
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
-        assertSame(solver.getListener(), this);
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof PROMedSRobustLateration2DSolver);
-
 
         // create with circles and method
         final Circle[] circles = {
@@ -332,434 +315,402 @@ public class RobustLateration2DSolverTest implements RobustLaterationSolverListe
         };
 
         // RANSAC
-        solver = RobustLateration2DSolver.create(circles,
-                RobustEstimatorMethod.RANSAC);
+        solver = RobustLateration2DSolver.create(circles, RobustEstimatorMethod.RANSAC);
 
         // check
         for (int i = 0; i < circles.length; i++) {
-            assertEquals(solver.getPositions()[i], circles[i].getCenter());
-            assertEquals(solver.getDistances()[i], circles[i].getRadius(), 0.0);
+            assertEquals(circles[i].getCenter(), solver.getPositions()[i]);
+            assertEquals(circles[i].getRadius(), solver.getDistances()[i], 0.0);
         }
         assertTrue(solver instanceof RANSACRobustLateration2DSolver);
 
         // LMedS
-        solver = RobustLateration2DSolver.create(circles,
-                RobustEstimatorMethod.LMedS);
+        solver = RobustLateration2DSolver.create(circles, RobustEstimatorMethod.LMEDS);
 
         // check
         for (int i = 0; i < circles.length; i++) {
-            assertEquals(solver.getPositions()[i], circles[i].getCenter());
-            assertEquals(solver.getDistances()[i], circles[i].getRadius(), 0.0);
+            assertEquals(circles[i].getCenter(), solver.getPositions()[i]);
+            assertEquals(circles[i].getRadius(), solver.getDistances()[i], 0.0);
         }
         assertTrue(solver instanceof LMedSRobustLateration2DSolver);
 
         // MSAC
-        solver = RobustLateration2DSolver.create(circles,
-                RobustEstimatorMethod.MSAC);
+        solver = RobustLateration2DSolver.create(circles, RobustEstimatorMethod.MSAC);
 
         // check
         for (int i = 0; i < circles.length; i++) {
-            assertEquals(solver.getPositions()[i], circles[i].getCenter());
-            assertEquals(solver.getDistances()[i], circles[i].getRadius(), 0.0);
+            assertEquals(circles[i].getCenter(), solver.getPositions()[i]);
+            assertEquals(circles[i].getRadius(), solver.getDistances()[i], 0.0);
         }
         assertTrue(solver instanceof MSACRobustLateration2DSolver);
 
         // PROSAC
-        solver = RobustLateration2DSolver.create(circles,
-                RobustEstimatorMethod.PROSAC);
+        solver = RobustLateration2DSolver.create(circles, RobustEstimatorMethod.PROSAC);
 
         // check
         for (int i = 0; i < circles.length; i++) {
-            assertEquals(solver.getPositions()[i], circles[i].getCenter());
-            assertEquals(solver.getDistances()[i], circles[i].getRadius(), 0.0);
+            assertEquals(circles[i].getCenter(), solver.getPositions()[i]);
+            assertEquals(circles[i].getRadius(), solver.getDistances()[i], 0.0);
         }
         assertTrue(solver instanceof PROSACRobustLateration2DSolver);
 
         // PROMedS
-        solver = RobustLateration2DSolver.create(circles,
-                RobustEstimatorMethod.PROMedS);
+        solver = RobustLateration2DSolver.create(circles, RobustEstimatorMethod.PROMEDS);
 
         // check
         for (int i = 0; i < circles.length; i++) {
-            assertEquals(solver.getPositions()[i], circles[i].getCenter());
-            assertEquals(solver.getDistances()[i], circles[i].getRadius(), 0.0);
+            assertEquals(circles[i].getCenter(), solver.getPositions()[i]);
+            assertEquals(circles[i].getRadius(), solver.getDistances()[i], 0.0);
         }
         assertTrue(solver instanceof PROMedSRobustLateration2DSolver);
-
 
         // create with circles, standard deviations and method
 
         // RANSAC
-        solver = RobustLateration2DSolver.create(circles, standardDeviations,
-                RobustEstimatorMethod.RANSAC);
+        solver = RobustLateration2DSolver.create(circles, standardDeviations, RobustEstimatorMethod.RANSAC);
 
         // check
         for (int i = 0; i < circles.length; i++) {
-            assertEquals(solver.getPositions()[i], circles[i].getCenter());
-            assertEquals(solver.getDistances()[i], circles[i].getRadius(), 0.0);
+            assertEquals(circles[i].getCenter(), solver.getPositions()[i]);
+            assertEquals(circles[i].getRadius(), solver.getDistances()[i], 0.0);
         }
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
         assertTrue(solver instanceof RANSACRobustLateration2DSolver);
 
         // LMedS
-        solver = RobustLateration2DSolver.create(circles, standardDeviations,
-                RobustEstimatorMethod.LMedS);
+        solver = RobustLateration2DSolver.create(circles, standardDeviations, RobustEstimatorMethod.LMEDS);
 
         // check
         for (int i = 0; i < circles.length; i++) {
-            assertEquals(solver.getPositions()[i], circles[i].getCenter());
-            assertEquals(solver.getDistances()[i], circles[i].getRadius(), 0.0);
+            assertEquals(circles[i].getCenter(), solver.getPositions()[i]);
+            assertEquals(circles[i].getRadius(), solver.getDistances()[i], 0.0);
         }
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
         assertTrue(solver instanceof LMedSRobustLateration2DSolver);
 
         // MSAC
-        solver = RobustLateration2DSolver.create(circles, standardDeviations,
-                RobustEstimatorMethod.MSAC);
+        solver = RobustLateration2DSolver.create(circles, standardDeviations, RobustEstimatorMethod.MSAC);
 
         // check
         for (int i = 0; i < circles.length; i++) {
-            assertEquals(solver.getPositions()[i], circles[i].getCenter());
-            assertEquals(solver.getDistances()[i], circles[i].getRadius(), 0.0);
+            assertEquals(circles[i].getCenter(), solver.getPositions()[i]);
+            assertEquals(circles[i].getRadius(), solver.getDistances()[i], 0.0);
         }
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
         assertTrue(solver instanceof MSACRobustLateration2DSolver);
 
         // PROSAC
-        solver = RobustLateration2DSolver.create(circles, standardDeviations,
-                RobustEstimatorMethod.PROSAC);
+        solver = RobustLateration2DSolver.create(circles, standardDeviations, RobustEstimatorMethod.PROSAC);
 
         // check
         for (int i = 0; i < circles.length; i++) {
-            assertEquals(solver.getPositions()[i], circles[i].getCenter());
-            assertEquals(solver.getDistances()[i], circles[i].getRadius(), 0.0);
+            assertEquals(circles[i].getCenter(), solver.getPositions()[i]);
+            assertEquals(circles[i].getRadius(), solver.getDistances()[i], 0.0);
         }
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
         assertTrue(solver instanceof PROSACRobustLateration2DSolver);
 
         // PROMedS
-        solver = RobustLateration2DSolver.create(circles, standardDeviations,
-                RobustEstimatorMethod.PROMedS);
+        solver = RobustLateration2DSolver.create(circles, standardDeviations, RobustEstimatorMethod.PROMEDS);
 
         // check
         for (int i = 0; i < circles.length; i++) {
-            assertEquals(solver.getPositions()[i], circles[i].getCenter());
-            assertEquals(solver.getDistances()[i], circles[i].getRadius(), 0.0);
+            assertEquals(circles[i].getCenter(), solver.getPositions()[i]);
+            assertEquals(circles[i].getRadius(), solver.getDistances()[i], 0.0);
         }
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
         assertTrue(solver instanceof PROMedSRobustLateration2DSolver);
-
 
         // create with circles, listener and method
 
         // RANSAC
-        solver = RobustLateration2DSolver.create(circles, this,
-                RobustEstimatorMethod.RANSAC);
+        solver = RobustLateration2DSolver.create(circles, this, RobustEstimatorMethod.RANSAC);
 
         // check
         for (int i = 0; i < circles.length; i++) {
-            assertEquals(solver.getPositions()[i], circles[i].getCenter());
-            assertEquals(solver.getDistances()[i], circles[i].getRadius(), 0.0);
+            assertEquals(circles[i].getCenter(), solver.getPositions()[i]);
+            assertEquals(circles[i].getRadius(), solver.getDistances()[i], 0.0);
         }
-        assertSame(solver.getListener(), this);
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof RANSACRobustLateration2DSolver);
 
         // LMedS
-        solver = RobustLateration2DSolver.create(circles, this,
-                RobustEstimatorMethod.LMedS);
+        solver = RobustLateration2DSolver.create(circles, this, RobustEstimatorMethod.LMEDS);
 
         // check
         for (int i = 0; i < circles.length; i++) {
-            assertEquals(solver.getPositions()[i], circles[i].getCenter());
-            assertEquals(solver.getDistances()[i], circles[i].getRadius(), 0.0);
+            assertEquals(circles[i].getCenter(), solver.getPositions()[i]);
+            assertEquals(circles[i].getRadius(), solver.getDistances()[i], 0.0);
         }
-        assertSame(solver.getListener(), this);
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof LMedSRobustLateration2DSolver);
 
         // MSAC
-        solver = RobustLateration2DSolver.create(circles, this,
-                RobustEstimatorMethod.MSAC);
+        solver = RobustLateration2DSolver.create(circles, this, RobustEstimatorMethod.MSAC);
 
         // check
         for (int i = 0; i < circles.length; i++) {
-            assertEquals(solver.getPositions()[i], circles[i].getCenter());
-            assertEquals(solver.getDistances()[i], circles[i].getRadius(), 0.0);
+            assertEquals(circles[i].getCenter(), solver.getPositions()[i]);
+            assertEquals(circles[i].getRadius(), solver.getDistances()[i], 0.0);
         }
-        assertSame(solver.getListener(), this);
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof MSACRobustLateration2DSolver);
 
         // PROSAC
-        solver = RobustLateration2DSolver.create(circles, this,
-                RobustEstimatorMethod.PROSAC);
+        solver = RobustLateration2DSolver.create(circles, this, RobustEstimatorMethod.PROSAC);
 
         // check
         for (int i = 0; i < circles.length; i++) {
-            assertEquals(solver.getPositions()[i], circles[i].getCenter());
-            assertEquals(solver.getDistances()[i], circles[i].getRadius(), 0.0);
+            assertEquals(circles[i].getCenter(), solver.getPositions()[i]);
+            assertEquals(circles[i].getRadius(), solver.getDistances()[i], 0.0);
         }
-        assertSame(solver.getListener(), this);
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof PROSACRobustLateration2DSolver);
 
         // PROMedS
-        solver = RobustLateration2DSolver.create(circles, this,
-                RobustEstimatorMethod.PROMedS);
+        solver = RobustLateration2DSolver.create(circles, this, RobustEstimatorMethod.PROMEDS);
 
         // check
         for (int i = 0; i < circles.length; i++) {
-            assertEquals(solver.getPositions()[i], circles[i].getCenter());
-            assertEquals(solver.getDistances()[i], circles[i].getRadius(), 0.0);
+            assertEquals(circles[i].getCenter(), solver.getPositions()[i]);
+            assertEquals(circles[i].getRadius(), solver.getDistances()[i], 0.0);
         }
-        assertSame(solver.getListener(), this);
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof PROMedSRobustLateration2DSolver);
-
 
         // create with circles, standard deviations, listener and method
 
         // RANSAC
-        solver = RobustLateration2DSolver.create(circles, standardDeviations,
-                this, RobustEstimatorMethod.RANSAC);
+        solver = RobustLateration2DSolver.create(circles, standardDeviations, this,
+                RobustEstimatorMethod.RANSAC);
 
         // check
         for (int i = 0; i < circles.length; i++) {
-            assertEquals(solver.getPositions()[i], circles[i].getCenter());
-            assertEquals(solver.getDistances()[i], circles[i].getRadius(), 0.0);
+            assertEquals(circles[i].getCenter(), solver.getPositions()[i]);
+            assertEquals(circles[i].getRadius(), solver.getDistances()[i], 0.0);
         }
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
-        assertSame(solver.getListener(), this);
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof RANSACRobustLateration2DSolver);
 
         // LMedS
-        solver = RobustLateration2DSolver.create(circles, standardDeviations,
-                this, RobustEstimatorMethod.LMedS);
+        solver = RobustLateration2DSolver.create(circles, standardDeviations, this,
+                RobustEstimatorMethod.LMEDS);
 
         // check
         for (int i = 0; i < circles.length; i++) {
-            assertEquals(solver.getPositions()[i], circles[i].getCenter());
-            assertEquals(solver.getDistances()[i], circles[i].getRadius(), 0.0);
+            assertEquals(circles[i].getCenter(), solver.getPositions()[i]);
+            assertEquals(circles[i].getRadius(), solver.getDistances()[i], 0.0);
         }
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
-        assertSame(solver.getListener(), this);
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof LMedSRobustLateration2DSolver);
 
         // MSAC
-        solver = RobustLateration2DSolver.create(circles, standardDeviations,
-                this, RobustEstimatorMethod.MSAC);
+        solver = RobustLateration2DSolver.create(circles, standardDeviations, this,
+                RobustEstimatorMethod.MSAC);
 
         // check
         for (int i = 0; i < circles.length; i++) {
-            assertEquals(solver.getPositions()[i], circles[i].getCenter());
-            assertEquals(solver.getDistances()[i], circles[i].getRadius(), 0.0);
+            assertEquals(circles[i].getCenter(), solver.getPositions()[i]);
+            assertEquals(circles[i].getRadius(), solver.getDistances()[i], 0.0);
         }
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
-        assertSame(solver.getListener(), this);
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof MSACRobustLateration2DSolver);
 
         // PROSAC
-        solver = RobustLateration2DSolver.create(circles, standardDeviations,
-                this, RobustEstimatorMethod.PROSAC);
+        solver = RobustLateration2DSolver.create(circles, standardDeviations, this,
+                RobustEstimatorMethod.PROSAC);
 
         // check
         for (int i = 0; i < circles.length; i++) {
-            assertEquals(solver.getPositions()[i], circles[i].getCenter());
-            assertEquals(solver.getDistances()[i], circles[i].getRadius(), 0.0);
+            assertEquals(circles[i].getCenter(), solver.getPositions()[i]);
+            assertEquals(circles[i].getRadius(), solver.getDistances()[i], 0.0);
         }
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
-        assertSame(solver.getListener(), this);
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof PROSACRobustLateration2DSolver);
 
         // PROMedS
-        solver = RobustLateration2DSolver.create(circles, standardDeviations,
-                this, RobustEstimatorMethod.PROMedS);
+        solver = RobustLateration2DSolver.create(circles, standardDeviations, this,
+                RobustEstimatorMethod.PROMEDS);
 
         // check
         for (int i = 0; i < circles.length; i++) {
-            assertEquals(solver.getPositions()[i], circles[i].getCenter());
-            assertEquals(solver.getDistances()[i], circles[i].getRadius(), 0.0);
+            assertEquals(circles[i].getCenter(), solver.getPositions()[i]);
+            assertEquals(circles[i].getRadius(), solver.getDistances()[i], 0.0);
         }
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
-        assertSame(solver.getListener(), this);
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof PROMedSRobustLateration2DSolver);
-
 
         // create with quality scores and method
         final double[] qualityScores = new double[3];
 
         // RANSAC
-        solver = RobustLateration2DSolver.create(qualityScores,
-                RobustEstimatorMethod.RANSAC);
+        solver = RobustLateration2DSolver.create(qualityScores, RobustEstimatorMethod.RANSAC);
 
         // check
         assertNull(solver.getQualityScores());
         assertTrue(solver instanceof RANSACRobustLateration2DSolver);
 
         // LMedS
-        solver = RobustLateration2DSolver.create(qualityScores,
-                RobustEstimatorMethod.LMedS);
+        solver = RobustLateration2DSolver.create(qualityScores, RobustEstimatorMethod.LMEDS);
 
         // check
         assertNull(solver.getQualityScores());
         assertTrue(solver instanceof LMedSRobustLateration2DSolver);
 
         // MSAC
-        solver = RobustLateration2DSolver.create(qualityScores,
-                RobustEstimatorMethod.MSAC);
+        solver = RobustLateration2DSolver.create(qualityScores, RobustEstimatorMethod.MSAC);
 
         // check
         assertNull(solver.getQualityScores());
         assertTrue(solver instanceof MSACRobustLateration2DSolver);
 
         // PROSAC
-        solver = RobustLateration2DSolver.create(qualityScores,
-                RobustEstimatorMethod.PROSAC);
+        solver = RobustLateration2DSolver.create(qualityScores, RobustEstimatorMethod.PROSAC);
 
         // check
-        assertSame(solver.getQualityScores(), qualityScores);
+        assertSame(qualityScores, solver.getQualityScores());
         assertTrue(solver instanceof PROSACRobustLateration2DSolver);
 
         // PROMedS
-        solver = RobustLateration2DSolver.create(qualityScores,
-                RobustEstimatorMethod.PROMedS);
+        solver = RobustLateration2DSolver.create(qualityScores, RobustEstimatorMethod.PROMEDS);
 
         // check
-        assertSame(solver.getQualityScores(), qualityScores);
+        assertSame(qualityScores, solver.getQualityScores());
         assertTrue(solver instanceof PROMedSRobustLateration2DSolver);
 
 
         // create with quality scores, listener and method
 
         // ANSAC
-        solver = RobustLateration2DSolver.create(qualityScores, this,
-                RobustEstimatorMethod.RANSAC);
+        solver = RobustLateration2DSolver.create(qualityScores, this, RobustEstimatorMethod.RANSAC);
 
         // check
         assertNull(solver.getQualityScores());
-        assertSame(solver.getListener(), this);
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof RANSACRobustLateration2DSolver);
 
         // LMedS
-        solver = RobustLateration2DSolver.create(qualityScores, this,
-                RobustEstimatorMethod.LMedS);
+        solver = RobustLateration2DSolver.create(qualityScores, this, RobustEstimatorMethod.LMEDS);
 
         // check
         assertNull(solver.getQualityScores());
-        assertSame(solver.getListener(), this);
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof LMedSRobustLateration2DSolver);
 
         // MSAC
-        solver = RobustLateration2DSolver.create(qualityScores, this,
-                RobustEstimatorMethod.MSAC);
+        solver = RobustLateration2DSolver.create(qualityScores, this, RobustEstimatorMethod.MSAC);
 
         // check
         assertNull(solver.getQualityScores());
-        assertSame(solver.getListener(), this);
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof MSACRobustLateration2DSolver);
 
         // PROSAC
-        solver = RobustLateration2DSolver.create(qualityScores, this,
-                RobustEstimatorMethod.PROSAC);
+        solver = RobustLateration2DSolver.create(qualityScores, this, RobustEstimatorMethod.PROSAC);
 
         // check
-        assertSame(solver.getQualityScores(), qualityScores);
-        assertSame(solver.getListener(), this);
+        assertSame(qualityScores, solver.getQualityScores());
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof PROSACRobustLateration2DSolver);
 
         // PROMedS
-        solver = RobustLateration2DSolver.create(qualityScores, this,
-                RobustEstimatorMethod.PROMedS);
+        solver = RobustLateration2DSolver.create(qualityScores, this, RobustEstimatorMethod.PROMEDS);
 
         // check
-        assertSame(solver.getQualityScores(), qualityScores);
-        assertSame(solver.getListener(), this);
+        assertSame(qualityScores, solver.getQualityScores());
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof PROMedSRobustLateration2DSolver);
-
 
         // create with quality scores, positions, distances and method
 
         // RANSAC
-        solver = RobustLateration2DSolver.create(qualityScores, positions,
-                distances, RobustEstimatorMethod.RANSAC);
+        solver = RobustLateration2DSolver.create(qualityScores, positions, distances,
+                RobustEstimatorMethod.RANSAC);
 
         // check
         assertNull(solver.getQualityScores());
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
         assertTrue(solver instanceof RANSACRobustLateration2DSolver);
 
         // LMedS
-        solver = RobustLateration2DSolver.create(qualityScores, positions,
-                distances, RobustEstimatorMethod.LMedS);
+        solver = RobustLateration2DSolver.create(qualityScores, positions, distances,
+                RobustEstimatorMethod.LMEDS);
 
         // check
         assertNull(solver.getQualityScores());
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
         assertTrue(solver instanceof LMedSRobustLateration2DSolver);
 
         // MSAC
-        solver = RobustLateration2DSolver.create(qualityScores, positions,
-                distances, RobustEstimatorMethod.MSAC);
+        solver = RobustLateration2DSolver.create(qualityScores, positions, distances,
+                RobustEstimatorMethod.MSAC);
 
         // check
         assertNull(solver.getQualityScores());
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
         assertTrue(solver instanceof MSACRobustLateration2DSolver);
 
         // PROSAC
-        solver = RobustLateration2DSolver.create(qualityScores, positions,
-                distances, RobustEstimatorMethod.PROSAC);
+        solver = RobustLateration2DSolver.create(qualityScores, positions, distances,
+                RobustEstimatorMethod.PROSAC);
 
         // check
-        assertSame(solver.getQualityScores(), qualityScores);
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
+        assertSame(qualityScores, solver.getQualityScores());
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
         assertTrue(solver instanceof PROSACRobustLateration2DSolver);
 
         // PROMedS
-        solver = RobustLateration2DSolver.create(qualityScores, positions,
-                distances, RobustEstimatorMethod.PROMedS);
+        solver = RobustLateration2DSolver.create(qualityScores, positions, distances,
+                RobustEstimatorMethod.PROMEDS);
 
         // check
-        assertSame(solver.getQualityScores(), qualityScores);
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
+        assertSame(qualityScores, solver.getQualityScores());
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
         assertTrue(solver instanceof PROMedSRobustLateration2DSolver);
 
-
-        // create with quality scores, positions, distances, standard deviations
-        // and method
+        // create with quality scores, positions, distances, standard deviations and method
 
         // RANSAC
-        solver = RobustLateration2DSolver.create(qualityScores, positions,
-                distances, standardDeviations, RobustEstimatorMethod.RANSAC);
+        solver = RobustLateration2DSolver.create(qualityScores, positions, distances, standardDeviations,
+                RobustEstimatorMethod.RANSAC);
 
         // check
         assertNull(solver.getQualityScores());
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
         assertTrue(solver instanceof RANSACRobustLateration2DSolver);
 
         // LMedS
-        solver = RobustLateration2DSolver.create(qualityScores, positions,
-                distances, standardDeviations, RobustEstimatorMethod.LMedS);
+        solver = RobustLateration2DSolver.create(qualityScores, positions, distances, standardDeviations,
+                RobustEstimatorMethod.LMEDS);
 
         // check
         assertNull(solver.getQualityScores());
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
         assertTrue(solver instanceof LMedSRobustLateration2DSolver);
 
         // MSAC
-        solver = RobustLateration2DSolver.create(qualityScores, positions,
-                distances, standardDeviations, RobustEstimatorMethod.MSAC);
+        solver = RobustLateration2DSolver.create(qualityScores, positions, distances, standardDeviations,
+                RobustEstimatorMethod.MSAC);
 
         // check
         assertNull(solver.getQualityScores());
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
         assertTrue(solver instanceof MSACRobustLateration2DSolver);
 
         // PROSAC
@@ -767,355 +718,337 @@ public class RobustLateration2DSolverTest implements RobustLaterationSolverListe
                 distances, standardDeviations, RobustEstimatorMethod.PROSAC);
 
         // check
-        assertSame(solver.getQualityScores(), qualityScores);
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
+        assertSame(qualityScores, solver.getQualityScores());
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
         assertTrue(solver instanceof PROSACRobustLateration2DSolver);
 
         // PROMedS
-        solver = RobustLateration2DSolver.create(qualityScores, positions,
-                distances, standardDeviations, RobustEstimatorMethod.PROMedS);
+        solver = RobustLateration2DSolver.create(qualityScores, positions, distances, standardDeviations,
+                RobustEstimatorMethod.PROMEDS);
 
         // check
-        assertSame(solver.getQualityScores(), qualityScores);
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
+        assertSame(qualityScores, solver.getQualityScores());
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
         assertTrue(solver instanceof PROMedSRobustLateration2DSolver);
 
-
-        // create with quality scores, positions, distance, standard deviations,
-        // listener and method
+        // create with quality scores, positions, distance, standard deviations, listener and method
 
         // RANSAC
-        solver = RobustLateration2DSolver.create(qualityScores, positions,
-                distances, standardDeviations, this,
-                RobustEstimatorMethod.RANSAC);
+        solver = RobustLateration2DSolver.create(qualityScores, positions, distances, standardDeviations,
+                this, RobustEstimatorMethod.RANSAC);
 
         // check
         assertNull(solver.getQualityScores());
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
-        assertSame(solver.getListener(), this);
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof RANSACRobustLateration2DSolver);
 
         // LMedS
-        solver = RobustLateration2DSolver.create(qualityScores, positions,
-                distances, standardDeviations, this,
-                RobustEstimatorMethod.LMedS);
+        solver = RobustLateration2DSolver.create(qualityScores, positions, distances, standardDeviations,
+                this, RobustEstimatorMethod.LMEDS);
 
         // check
         assertNull(solver.getQualityScores());
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
-        assertSame(solver.getListener(), this);
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof LMedSRobustLateration2DSolver);
 
         // MSAC
-        solver = RobustLateration2DSolver.create(qualityScores, positions,
-                distances, standardDeviations, this,
-                RobustEstimatorMethod.MSAC);
+        solver = RobustLateration2DSolver.create(qualityScores, positions, distances, standardDeviations,
+                this, RobustEstimatorMethod.MSAC);
 
         // check
         assertNull(solver.getQualityScores());
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
-        assertSame(solver.getListener(), this);
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof MSACRobustLateration2DSolver);
 
         // PROSAC
-        solver = RobustLateration2DSolver.create(qualityScores, positions,
-                distances, standardDeviations, this,
-                RobustEstimatorMethod.PROSAC);
+        solver = RobustLateration2DSolver.create(qualityScores, positions, distances, standardDeviations,
+                this, RobustEstimatorMethod.PROSAC);
 
         // check
-        assertSame(solver.getQualityScores(), qualityScores);
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
-        assertSame(solver.getListener(), this);
+        assertSame(qualityScores, solver.getQualityScores());
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof PROSACRobustLateration2DSolver);
 
         // PROMedS
-        solver = RobustLateration2DSolver.create(qualityScores, positions,
-                distances, standardDeviations, this,
-                RobustEstimatorMethod.PROMedS);
+        solver = RobustLateration2DSolver.create(qualityScores, positions, distances, standardDeviations,
+                this, RobustEstimatorMethod.PROMEDS);
 
         // check
-        assertSame(solver.getQualityScores(), qualityScores);
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
-        assertSame(solver.getListener(), this);
+        assertSame(qualityScores, solver.getQualityScores());
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof PROMedSRobustLateration2DSolver);
-
 
         // create with quality scores, positions, distances, listener and method
 
         // RANSAC
-        solver = RobustLateration2DSolver.create(qualityScores, positions,
-                distances, this, RobustEstimatorMethod.RANSAC);
+        solver = RobustLateration2DSolver.create(qualityScores, positions, distances, this,
+                RobustEstimatorMethod.RANSAC);
 
         // check
         assertNull(solver.getQualityScores());
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
-        assertSame(solver.getListener(), this);
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof RANSACRobustLateration2DSolver);
 
         // LMedS
-        solver = RobustLateration2DSolver.create(qualityScores, positions,
-                distances, this, RobustEstimatorMethod.LMedS);
+        solver = RobustLateration2DSolver.create(qualityScores, positions, distances, this,
+                RobustEstimatorMethod.LMEDS);
 
         // check
         assertNull(solver.getQualityScores());
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
-        assertSame(solver.getListener(), this);
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof LMedSRobustLateration2DSolver);
 
         // MSAC
-        solver = RobustLateration2DSolver.create(qualityScores, positions,
-                distances, this, RobustEstimatorMethod.MSAC);
+        solver = RobustLateration2DSolver.create(qualityScores, positions, distances, this,
+                RobustEstimatorMethod.MSAC);
 
         // check
         assertNull(solver.getQualityScores());
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
-        assertSame(solver.getListener(), this);
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof MSACRobustLateration2DSolver);
 
         // PROSAC
-        solver = RobustLateration2DSolver.create(qualityScores, positions,
-                distances, this, RobustEstimatorMethod.PROSAC);
+        solver = RobustLateration2DSolver.create(qualityScores, positions, distances, this,
+                RobustEstimatorMethod.PROSAC);
 
         // check
-        assertSame(solver.getQualityScores(), qualityScores);
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
-        assertSame(solver.getListener(), this);
+        assertSame(qualityScores, solver.getQualityScores());
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof PROSACRobustLateration2DSolver);
 
         // PROMedS
-        solver = RobustLateration2DSolver.create(qualityScores, positions,
-                distances, this, RobustEstimatorMethod.PROMedS);
+        solver = RobustLateration2DSolver.create(qualityScores, positions, distances, this,
+                RobustEstimatorMethod.PROMEDS);
 
         // check
-        assertSame(solver.getQualityScores(), qualityScores);
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
-        assertSame(solver.getListener(), this);
+        assertSame(qualityScores, solver.getQualityScores());
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof PROMedSRobustLateration2DSolver);
-
 
         // create with quality scores, circles and method
 
         // RANSAC
-        solver = RobustLateration2DSolver.create(qualityScores, circles,
+        solver = RobustLateration2DSolver.create(qualityScores, circles, RobustEstimatorMethod.RANSAC);
+
+        // check
+        assertNull(solver.getQualityScores());
+        for (int i = 0; i < circles.length; i++) {
+            assertEquals(circles[i].getCenter(), solver.getPositions()[i]);
+            assertEquals(circles[i].getRadius(), solver.getDistances()[i], 0.0);
+        }
+        assertTrue(solver instanceof RANSACRobustLateration2DSolver);
+
+        // LMedS
+        solver = RobustLateration2DSolver.create(qualityScores, circles, RobustEstimatorMethod.LMEDS);
+
+        // check
+        assertNull(solver.getQualityScores());
+        for (int i = 0; i < circles.length; i++) {
+            assertEquals(circles[i].getCenter(), solver.getPositions()[i]);
+            assertEquals(circles[i].getRadius(), solver.getDistances()[i], 0.0);
+        }
+        assertTrue(solver instanceof LMedSRobustLateration2DSolver);
+
+        // MSAC
+        solver = RobustLateration2DSolver.create(qualityScores, circles, RobustEstimatorMethod.MSAC);
+
+        // check
+        assertNull(solver.getQualityScores());
+        for (int i = 0; i < circles.length; i++) {
+            assertEquals(circles[i].getCenter(), solver.getPositions()[i]);
+            assertEquals(circles[i].getRadius(), solver.getDistances()[i], 0.0);
+        }
+        assertTrue(solver instanceof MSACRobustLateration2DSolver);
+
+        // PROSAC
+        solver = RobustLateration2DSolver.create(qualityScores, circles, RobustEstimatorMethod.PROSAC);
+
+        // check
+        assertSame(solver.getQualityScores(), qualityScores);
+        for (int i = 0; i < circles.length; i++) {
+            assertEquals(circles[i].getCenter(), solver.getPositions()[i]);
+            assertEquals(circles[i].getRadius(), solver.getDistances()[i], 0.0);
+        }
+        assertTrue(solver instanceof PROSACRobustLateration2DSolver);
+
+        // PROMedS
+        solver = RobustLateration2DSolver.create(qualityScores, circles, RobustEstimatorMethod.PROMEDS);
+
+        // check
+        assertSame(solver.getQualityScores(), qualityScores);
+        for (int i = 0; i < circles.length; i++) {
+            assertEquals(circles[i].getCenter(), solver.getPositions()[i]);
+            assertEquals(circles[i].getRadius(), solver.getDistances()[i], 0.0);
+        }
+        assertTrue(solver instanceof PROMedSRobustLateration2DSolver);
+
+        // create with quality scores, circles, standard deviations and method
+
+        // RANSAC
+        solver = RobustLateration2DSolver.create(qualityScores, circles, standardDeviations,
                 RobustEstimatorMethod.RANSAC);
 
         // check
         assertNull(solver.getQualityScores());
         for (int i = 0; i < circles.length; i++) {
-            assertEquals(solver.getPositions()[i], circles[i].getCenter());
-            assertEquals(solver.getDistances()[i], circles[i].getRadius(), 0.0);
+            assertEquals(circles[i].getCenter(), solver.getPositions()[i]);
+            assertEquals(circles[i].getRadius(), solver.getDistances()[i], 0.0);
         }
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
         assertTrue(solver instanceof RANSACRobustLateration2DSolver);
 
         // LMedS
-        solver = RobustLateration2DSolver.create(qualityScores, circles,
-                RobustEstimatorMethod.LMedS);
+        solver = RobustLateration2DSolver.create(qualityScores, circles, standardDeviations,
+                RobustEstimatorMethod.LMEDS);
 
         // check
         assertNull(solver.getQualityScores());
         for (int i = 0; i < circles.length; i++) {
-            assertEquals(solver.getPositions()[i], circles[i].getCenter());
-            assertEquals(solver.getDistances()[i], circles[i].getRadius(), 0.0);
+            assertEquals(circles[i].getCenter(), solver.getPositions()[i]);
+            assertEquals(circles[i].getRadius(), solver.getDistances()[i], 0.0);
         }
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
         assertTrue(solver instanceof LMedSRobustLateration2DSolver);
 
         // MSAC
-        solver = RobustLateration2DSolver.create(qualityScores, circles,
+        solver = RobustLateration2DSolver.create(qualityScores, circles, standardDeviations,
                 RobustEstimatorMethod.MSAC);
 
         // check
         assertNull(solver.getQualityScores());
         for (int i = 0; i < circles.length; i++) {
-            assertEquals(solver.getPositions()[i], circles[i].getCenter());
-            assertEquals(solver.getDistances()[i], circles[i].getRadius(), 0.0);
+            assertEquals(circles[i].getCenter(), solver.getPositions()[i]);
+            assertEquals(circles[i].getRadius(), solver.getDistances()[i], 0.0);
         }
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
         assertTrue(solver instanceof MSACRobustLateration2DSolver);
 
         // PROSAC
-        solver = RobustLateration2DSolver.create(qualityScores, circles,
+        solver = RobustLateration2DSolver.create(qualityScores, circles, standardDeviations,
                 RobustEstimatorMethod.PROSAC);
 
         // check
         assertSame(solver.getQualityScores(), qualityScores);
         for (int i = 0; i < circles.length; i++) {
-            assertEquals(solver.getPositions()[i], circles[i].getCenter());
-            assertEquals(solver.getDistances()[i], circles[i].getRadius(), 0.0);
+            assertEquals(circles[i].getCenter(), solver.getPositions()[i]);
+            assertEquals(circles[i].getRadius(), solver.getDistances()[i], 0.0);
         }
+        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
         assertTrue(solver instanceof PROSACRobustLateration2DSolver);
 
         // PROMedS
-        solver = RobustLateration2DSolver.create(qualityScores, circles,
-                RobustEstimatorMethod.PROMedS);
+        solver = RobustLateration2DSolver.create(qualityScores, circles, standardDeviations,
+                RobustEstimatorMethod.PROMEDS);
 
         // check
         assertSame(solver.getQualityScores(), qualityScores);
         for (int i = 0; i < circles.length; i++) {
-            assertEquals(solver.getPositions()[i], circles[i].getCenter());
-            assertEquals(solver.getDistances()[i], circles[i].getRadius(), 0.0);
+            assertEquals(circles[i].getCenter(), solver.getPositions()[i]);
+            assertEquals(circles[i].getRadius(), solver.getDistances()[i], 0.0);
         }
+        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
         assertTrue(solver instanceof PROMedSRobustLateration2DSolver);
 
-
-        // create with quality scores, circles, standard deviations and method
+        // create with quality scores, circles, standard deviations, listener and method
 
         // RANSAC
-        solver = RobustLateration2DSolver.create(qualityScores, circles,
-                standardDeviations, RobustEstimatorMethod.RANSAC);
+        solver = RobustLateration2DSolver.create(qualityScores, circles, standardDeviations, this,
+                RobustEstimatorMethod.RANSAC);
 
         // check
         assertNull(solver.getQualityScores());
         for (int i = 0; i < circles.length; i++) {
-            assertEquals(solver.getPositions()[i], circles[i].getCenter());
-            assertEquals(solver.getDistances()[i], circles[i].getRadius(), 0.0);
+            assertEquals(circles[i].getCenter(), solver.getPositions()[i]);
+            assertEquals(circles[i].getRadius(), solver.getDistances()[i], 0.0);
         }
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof RANSACRobustLateration2DSolver);
 
         // LMedS
-        solver = RobustLateration2DSolver.create(qualityScores, circles,
-                standardDeviations, RobustEstimatorMethod.LMedS);
+        solver = RobustLateration2DSolver.create(qualityScores, circles, standardDeviations, this,
+                RobustEstimatorMethod.LMEDS);
 
         // check
         assertNull(solver.getQualityScores());
         for (int i = 0; i < circles.length; i++) {
-            assertEquals(solver.getPositions()[i], circles[i].getCenter());
-            assertEquals(solver.getDistances()[i], circles[i].getRadius(), 0.0);
+            assertEquals(circles[i].getCenter(), solver.getPositions()[i]);
+            assertEquals(circles[i].getRadius(), solver.getDistances()[i], 0.0);
         }
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof LMedSRobustLateration2DSolver);
 
         // MSAC
-        solver = RobustLateration2DSolver.create(qualityScores, circles,
-                standardDeviations, RobustEstimatorMethod.MSAC);
+        solver = RobustLateration2DSolver.create(qualityScores, circles, standardDeviations, this,
+                RobustEstimatorMethod.MSAC);
 
         // check
         assertNull(solver.getQualityScores());
         for (int i = 0; i < circles.length; i++) {
-            assertEquals(solver.getPositions()[i], circles[i].getCenter());
-            assertEquals(solver.getDistances()[i], circles[i].getRadius(), 0.0);
+            assertEquals(circles[i].getCenter(), solver.getPositions()[i]);
+            assertEquals(circles[i].getRadius(), solver.getDistances()[i], 0.0);
         }
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof MSACRobustLateration2DSolver);
 
         // PROSAC
-        solver = RobustLateration2DSolver.create(qualityScores, circles,
-                standardDeviations, RobustEstimatorMethod.PROSAC);
+        solver = RobustLateration2DSolver.create(qualityScores, circles, standardDeviations, this,
+                RobustEstimatorMethod.PROSAC);
 
         // check
         assertSame(solver.getQualityScores(), qualityScores);
         for (int i = 0; i < circles.length; i++) {
-            assertEquals(solver.getPositions()[i], circles[i].getCenter());
-            assertEquals(solver.getDistances()[i], circles[i].getRadius(), 0.0);
+            assertEquals(circles[i].getCenter(), solver.getPositions()[i]);
+            assertEquals(circles[i].getRadius(), solver.getDistances()[i], 0.0);
         }
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof PROSACRobustLateration2DSolver);
 
         // PROMedS
-        solver = RobustLateration2DSolver.create(qualityScores, circles,
-                standardDeviations, RobustEstimatorMethod.PROMedS);
+        solver = RobustLateration2DSolver.create(qualityScores, circles, standardDeviations, this,
+                RobustEstimatorMethod.PROMEDS);
 
         // check
         assertSame(solver.getQualityScores(), qualityScores);
         for (int i = 0; i < circles.length; i++) {
-            assertEquals(solver.getPositions()[i], circles[i].getCenter());
-            assertEquals(solver.getDistances()[i], circles[i].getRadius(), 0.0);
+            assertEquals(circles[i].getCenter(), solver.getPositions()[i]);
+            assertEquals(circles[i].getRadius(), solver.getDistances()[i], 0.0);
         }
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof PROMedSRobustLateration2DSolver);
-
-
-        // create with quality scores, circles, standard deviations, listener
-        // and method
-
-        // RANSAC
-        solver = RobustLateration2DSolver.create(qualityScores, circles,
-                standardDeviations, this, RobustEstimatorMethod.RANSAC);
-
-        // check
-        assertNull(solver.getQualityScores());
-        for (int i = 0; i < circles.length; i++) {
-            assertEquals(solver.getPositions()[i], circles[i].getCenter());
-            assertEquals(solver.getDistances()[i], circles[i].getRadius(), 0.0);
-        }
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
-        assertSame(solver.getListener(), this);
-        assertTrue(solver instanceof RANSACRobustLateration2DSolver);
-
-        // LMedS
-        solver = RobustLateration2DSolver.create(qualityScores, circles,
-                standardDeviations, this, RobustEstimatorMethod.LMedS);
-
-        // check
-        assertNull(solver.getQualityScores());
-        for (int i = 0; i < circles.length; i++) {
-            assertEquals(solver.getPositions()[i], circles[i].getCenter());
-            assertEquals(solver.getDistances()[i], circles[i].getRadius(), 0.0);
-        }
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
-        assertSame(solver.getListener(), this);
-        assertTrue(solver instanceof LMedSRobustLateration2DSolver);
-
-        // MSAC
-        solver = RobustLateration2DSolver.create(qualityScores, circles,
-                standardDeviations, this, RobustEstimatorMethod.MSAC);
-
-        // check
-        assertNull(solver.getQualityScores());
-        for (int i = 0; i < circles.length; i++) {
-            assertEquals(solver.getPositions()[i], circles[i].getCenter());
-            assertEquals(solver.getDistances()[i], circles[i].getRadius(), 0.0);
-        }
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
-        assertSame(solver.getListener(), this);
-        assertTrue(solver instanceof MSACRobustLateration2DSolver);
-
-        // PROSAC
-        solver = RobustLateration2DSolver.create(qualityScores, circles,
-                standardDeviations, this, RobustEstimatorMethod.PROSAC);
-
-        // check
-        assertSame(solver.getQualityScores(), qualityScores);
-        for (int i = 0; i < circles.length; i++) {
-            assertEquals(solver.getPositions()[i], circles[i].getCenter());
-            assertEquals(solver.getDistances()[i], circles[i].getRadius(), 0.0);
-        }
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
-        assertSame(solver.getListener(), this);
-        assertTrue(solver instanceof PROSACRobustLateration2DSolver);
-
-        // PROMedS
-        solver = RobustLateration2DSolver.create(qualityScores, circles,
-                standardDeviations, this, RobustEstimatorMethod.PROMedS);
-
-        // check
-        assertSame(solver.getQualityScores(), qualityScores);
-        for (int i = 0; i < circles.length; i++) {
-            assertEquals(solver.getPositions()[i], circles[i].getCenter());
-            assertEquals(solver.getDistances()[i], circles[i].getRadius(), 0.0);
-        }
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
-        assertSame(solver.getListener(), this);
-        assertTrue(solver instanceof PROMedSRobustLateration2DSolver);
-
 
         // create with default method
         solver = RobustLateration2DSolver.create();
@@ -1127,46 +1060,44 @@ public class RobustLateration2DSolverTest implements RobustLaterationSolverListe
         solver = RobustLateration2DSolver.create(this);
 
         // check
-        assertSame(solver.getListener(), this);
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof PROMedSRobustLateration2DSolver);
 
         // create with positions, distances and default method
         solver = RobustLateration2DSolver.create(positions, distances);
 
         // check
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
         assertTrue(solver instanceof PROMedSRobustLateration2DSolver);
 
         // create with positions, distances, standard deviations and default method
-        solver = RobustLateration2DSolver.create(positions, distances,
-                standardDeviations);
+        solver = RobustLateration2DSolver.create(positions, distances, standardDeviations);
 
         // check
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
         assertTrue(solver instanceof PROMedSRobustLateration2DSolver);
 
         // create with positions, distances, listener and default method
         solver = RobustLateration2DSolver.create(positions, distances, this);
 
         // check
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
-        assertSame(solver.getListener(), this);
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof PROMedSRobustLateration2DSolver);
 
         // create with positions, distances, standard deviations, listener and
         // default method
-        solver = RobustLateration2DSolver.create(positions, distances,
-                standardDeviations, this);
+        solver = RobustLateration2DSolver.create(positions, distances, standardDeviations, this);
 
         // check
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
-        assertSame(solver.getListener(), this);
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof PROMedSRobustLateration2DSolver);
 
         // create with circles and default method
@@ -1174,8 +1105,8 @@ public class RobustLateration2DSolverTest implements RobustLaterationSolverListe
 
         // check
         for (int i = 0; i < circles.length; i++) {
-            assertEquals(solver.getPositions()[i], circles[i].getCenter());
-            assertEquals(solver.getDistances()[i], circles[i].getRadius(), 0.0);
+            assertEquals(circles[i].getCenter(), solver.getPositions()[i]);
+            assertEquals(circles[i].getRadius(), solver.getDistances()[i], 0.0);
         }
         assertTrue(solver instanceof PROMedSRobustLateration2DSolver);
 
@@ -1184,10 +1115,10 @@ public class RobustLateration2DSolverTest implements RobustLaterationSolverListe
 
         // check
         for (int i = 0; i < circles.length; i++) {
-            assertEquals(solver.getPositions()[i], circles[i].getCenter());
-            assertEquals(solver.getDistances()[i], circles[i].getRadius(), 0.0);
+            assertEquals(circles[i].getCenter(), solver.getPositions()[i]);
+            assertEquals(circles[i].getRadius(), solver.getDistances()[i], 0.0);
         }
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
         assertTrue(solver instanceof PROMedSRobustLateration2DSolver);
 
         // create with circles, listener and default method
@@ -1195,85 +1126,79 @@ public class RobustLateration2DSolverTest implements RobustLaterationSolverListe
 
         // check
         for (int i = 0; i < circles.length; i++) {
-            assertEquals(solver.getPositions()[i], circles[i].getCenter());
-            assertEquals(solver.getDistances()[i], circles[i].getRadius(), 0.0);
+            assertEquals(circles[i].getCenter(), solver.getPositions()[i]);
+            assertEquals(circles[i].getRadius(), solver.getDistances()[i], 0.0);
         }
-        assertSame(solver.getListener(), this);
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof PROMedSRobustLateration2DSolver);
 
         // create with circles, standard deviations, listener and default method
-        solver = RobustLateration2DSolver.create(circles, standardDeviations,
-                this);
+        solver = RobustLateration2DSolver.create(circles, standardDeviations, this);
 
         // check
         for (int i = 0; i < circles.length; i++) {
-            assertEquals(solver.getPositions()[i], circles[i].getCenter());
-            assertEquals(solver.getDistances()[i], circles[i].getRadius(), 0.0);
+            assertEquals(circles[i].getCenter(), solver.getPositions()[i]);
+            assertEquals(circles[i].getRadius(), solver.getDistances()[i], 0.0);
         }
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
-        assertSame(solver.getListener(), this);
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof PROMedSRobustLateration2DSolver);
 
         // create with quality scores
         solver = RobustLateration2DSolver.create(qualityScores);
 
         // check
-        assertSame(solver.getQualityScores(), qualityScores);
+        assertSame(qualityScores, solver.getQualityScores());
         assertTrue(solver instanceof PROMedSRobustLateration2DSolver);
 
         // create with quality scores, listener and default method
         solver = RobustLateration2DSolver.create(qualityScores, this);
 
         // check
-        assertSame(solver.getQualityScores(), qualityScores);
-        assertSame(solver.getListener(), this);
+        assertSame(qualityScores, solver.getQualityScores());
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof PROMedSRobustLateration2DSolver);
 
         // create with quality scores, positions, distances and default method
-        solver = RobustLateration2DSolver.create(qualityScores, positions,
-                distances);
+        solver = RobustLateration2DSolver.create(qualityScores, positions, distances);
 
         // check
-        assertSame(solver.getQualityScores(), qualityScores);
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
+        assertSame(qualityScores, solver.getQualityScores());
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
         assertTrue(solver instanceof PROMedSRobustLateration2DSolver);
 
-        // create with quality scores, positions, distances, standard deviations
-        // and default method
-        solver = RobustLateration2DSolver.create(qualityScores, positions,
-                distances, standardDeviations);
+        // create with quality scores, positions, distances, standard deviations and default method
+        solver = RobustLateration2DSolver.create(qualityScores, positions, distances, standardDeviations);
 
         // check
-        assertSame(solver.getQualityScores(), qualityScores);
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
+        assertSame(qualityScores, solver.getQualityScores());
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
         assertTrue(solver instanceof PROMedSRobustLateration2DSolver);
 
         // create with quality scores, positions, distances, standard deviations,
         // listener and default method
-        solver = RobustLateration2DSolver.create(qualityScores, positions,
-                distances, standardDeviations, this);
+        solver = RobustLateration2DSolver.create(qualityScores, positions, distances, standardDeviations,
+                this);
 
         // check
-        assertSame(solver.getQualityScores(), qualityScores);
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
-        assertSame(solver.getListener(), this);
+        assertSame(qualityScores, solver.getQualityScores());
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof PROMedSRobustLateration2DSolver);
 
-        // create with quality scores, positions, distances, listener and
-        // default method
-        solver = RobustLateration2DSolver.create(qualityScores, positions,
-                distances, this);
+        // create with quality scores, positions, distances, listener and default method
+        solver = RobustLateration2DSolver.create(qualityScores, positions, distances, this);
 
         // check
-        assertSame(solver.getQualityScores(), qualityScores);
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
-        assertSame(solver.getListener(), this);
+        assertSame(qualityScores, solver.getQualityScores());
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof PROMedSRobustLateration2DSolver);
 
         // create with quality scores, circles and default method
@@ -1282,38 +1207,36 @@ public class RobustLateration2DSolverTest implements RobustLaterationSolverListe
         // check
         assertSame(solver.getQualityScores(), qualityScores);
         for (int i = 0; i < circles.length; i++) {
-            assertEquals(solver.getPositions()[i], circles[i].getCenter());
-            assertEquals(solver.getDistances()[i], circles[i].getRadius(), 0.0);
+            assertEquals(circles[i].getCenter(), solver.getPositions()[i]);
+            assertEquals(circles[i].getRadius(), solver.getDistances()[i], 0.0);
         }
         assertTrue(solver instanceof PROMedSRobustLateration2DSolver);
 
         // create with quality scores, circles, standard deviations and default
         // method
-        solver = RobustLateration2DSolver.create(qualityScores, circles,
-                standardDeviations);
+        solver = RobustLateration2DSolver.create(qualityScores, circles, standardDeviations);
 
         // check
         assertSame(solver.getQualityScores(), qualityScores);
         for (int i = 0; i < circles.length; i++) {
-            assertEquals(solver.getPositions()[i], circles[i].getCenter());
-            assertEquals(solver.getDistances()[i], circles[i].getRadius(), 0.0);
+            assertEquals(circles[i].getCenter(), solver.getPositions()[i]);
+            assertEquals(circles[i].getRadius(), solver.getDistances()[i], 0.0);
         }
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
         assertTrue(solver instanceof PROMedSRobustLateration2DSolver);
 
         // create with quality scores, circles, standard deviations, listener and
         // default method
-        solver = RobustLateration2DSolver.create(qualityScores, circles,
-                standardDeviations, this);
+        solver = RobustLateration2DSolver.create(qualityScores, circles, standardDeviations, this);
 
         // check
         assertSame(solver.getQualityScores(), qualityScores);
         for (int i = 0; i < circles.length; i++) {
-            assertEquals(solver.getPositions()[i], circles[i].getCenter());
-            assertEquals(solver.getDistances()[i], circles[i].getRadius(), 0.0);
+            assertEquals(circles[i].getCenter(), solver.getPositions()[i]);
+            assertEquals(circles[i].getRadius(), solver.getDistances()[i], 0.0);
         }
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
-        assertSame(solver.getListener(), this);
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
+        assertSame(this, solver.getListener());
         assertTrue(solver instanceof PROMedSRobustLateration2DSolver);
     }
 
@@ -1326,14 +1249,10 @@ public class RobustLateration2DSolverTest implements RobustLaterationSolverListe
     }
 
     @Override
-    public void onSolveNextIteration(
-            final RobustLaterationSolver<Point2D> solver,
-            final int iteration) {
+    public void onSolveNextIteration(final RobustLaterationSolver<Point2D> solver, final int iteration) {
     }
 
     @Override
-    public void onSolveProgressChange(
-            final RobustLaterationSolver<Point2D> solver,
-            final float progress) {
+    public void onSolveProgressChange(final RobustLaterationSolver<Point2D> solver, final float progress) {
     }
 }

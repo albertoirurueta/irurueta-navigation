@@ -61,45 +61,29 @@ public class SatelliteECEFPositionAndVelocityGeneratorTest {
         for (int t = 0; t < TIMES; t++) {
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
             final double epochInterval = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-            final double initialEstimatedEcefPositionX = randomizer.nextDouble(MIN_VALUE,
-                    MAX_VALUE);
-            final double initialEstimatedEcefPositionY = randomizer.nextDouble(MIN_VALUE,
-                    MAX_VALUE);
-            final double initialEstimatedEcefPositionZ = randomizer.nextDouble(MIN_VALUE,
-                    MAX_VALUE);
-            final int numberOfSatellites = randomizer.nextInt(MIN_SATELLITES,
-                    MAX_SATELLITES);
-            final double orbitalRadiusOfSatellites = randomizer.nextDouble(MIN_VALUE,
-                    MAX_VALUE);
-            final double satellitesInclinationDegrees = randomizer.nextDouble(MIN_VALUE,
-                    MAX_VALUE);
-            final double constellationLongitudeOffsetDegrees = randomizer.nextDouble(
-                    MIN_VALUE, MAX_VALUE);
-            final double constellationTimingOffset = randomizer.nextDouble(MIN_VALUE,
-                    MAX_VALUE);
+            final double initialEstimatedEcefPositionX = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+            final double initialEstimatedEcefPositionY = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+            final double initialEstimatedEcefPositionZ = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+            final int numberOfSatellites = randomizer.nextInt(MIN_SATELLITES, MAX_SATELLITES);
+            final double orbitalRadiusOfSatellites = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+            final double satellitesInclinationDegrees = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+            final double constellationLongitudeOffsetDegrees = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+            final double constellationTimingOffset = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
             final double maskAngleDegrees = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
             final double sisErrorSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-            final double zenithIonosphereErrorSD = randomizer.nextDouble(
-                    MIN_VALUE, MAX_VALUE);
-            final double zenithTroposphereErrorSD = randomizer.nextDouble(MIN_VALUE,
-                    MAX_VALUE);
-            final double codeTrackingErrorSD = randomizer.nextDouble(MIN_VALUE,
-                    MAX_VALUE);
-            final double rangeRateTrackingErrorSD = randomizer.nextDouble(MIN_VALUE,
-                    MAX_VALUE);
-            final double initialReceiverClockOffset = randomizer.nextDouble(MIN_VALUE,
-                    MAX_VALUE);
-            final double initialReceiverClockDrift = randomizer.nextDouble(MIN_VALUE,
-                    MAX_VALUE);
+            final double zenithIonosphereErrorSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+            final double zenithTroposphereErrorSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+            final double codeTrackingErrorSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+            final double rangeRateTrackingErrorSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+            final double initialReceiverClockOffset = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+            final double initialReceiverClockDrift = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
             final GNSSConfig config = new GNSSConfig(epochInterval, initialEstimatedEcefPositionX,
-                    initialEstimatedEcefPositionY, initialEstimatedEcefPositionZ,
-                    numberOfSatellites, orbitalRadiusOfSatellites,
-                    satellitesInclinationDegrees, constellationLongitudeOffsetDegrees,
-                    constellationTimingOffset, maskAngleDegrees, sisErrorSD,
-                    zenithIonosphereErrorSD, zenithTroposphereErrorSD, codeTrackingErrorSD,
-                    rangeRateTrackingErrorSD, initialReceiverClockOffset,
-                    initialReceiverClockDrift);
+                    initialEstimatedEcefPositionY, initialEstimatedEcefPositionZ, numberOfSatellites,
+                    orbitalRadiusOfSatellites, satellitesInclinationDegrees, constellationLongitudeOffsetDegrees,
+                    constellationTimingOffset, maskAngleDegrees, sisErrorSD, zenithIonosphereErrorSD,
+                    zenithTroposphereErrorSD, codeTrackingErrorSD, rangeRateTrackingErrorSD,
+                    initialReceiverClockOffset, initialReceiverClockDrift);
 
             final double time = randomizer.nextDouble(MIN_TIME_SECONDS, MAX_TIME_SECONDS);
 
@@ -108,9 +92,8 @@ public class SatelliteECEFPositionAndVelocityGeneratorTest {
                 result1.add(computeSatellitePositionAndVelocity(time, config, j));
             }
 
-            final Collection<ECEFPositionAndVelocity> result2 =
-                    SatelliteECEFPositionAndVelocityGenerator
-                            .generateSatellitesPositionAndVelocity(time, config);
+            final Collection<ECEFPositionAndVelocity> result2 = SatelliteECEFPositionAndVelocityGenerator
+                    .generateSatellitesPositionAndVelocity(time, config);
             final Collection<ECEFPositionAndVelocity> result3 = new ArrayList<>();
             SatelliteECEFPositionAndVelocityGenerator.generateSatellitesPositionAndVelocity(
                     time, config, result3);
@@ -147,52 +130,37 @@ public class SatelliteECEFPositionAndVelocityGeneratorTest {
         for (int t = 0; t < TIMES; t++) {
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
             final double epochInterval = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-            final double initialEstimatedEcefPositionX = randomizer.nextDouble(MIN_VALUE,
-                    MAX_VALUE);
-            final double initialEstimatedEcefPositionY = randomizer.nextDouble(MIN_VALUE,
-                    MAX_VALUE);
-            final double initialEstimatedEcefPositionZ = randomizer.nextDouble(MIN_VALUE,
-                    MAX_VALUE);
-            final int numberOfSatellites = randomizer.nextInt(MIN_SATELLITES,
-                    MAX_SATELLITES);
-            final double orbitalRadiusOfSatellites = randomizer.nextDouble(MIN_VALUE,
-                    MAX_VALUE);
-            final double satellitesInclinationDegrees = randomizer.nextDouble(MIN_VALUE,
-                    MAX_VALUE);
-            final double constellationLongitudeOffsetDegrees = randomizer.nextDouble(
-                    MIN_VALUE, MAX_VALUE);
-            final double constellationTimingOffset = randomizer.nextDouble(MIN_VALUE,
-                    MAX_VALUE);
+            final double initialEstimatedEcefPositionX = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+            final double initialEstimatedEcefPositionY = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+            final double initialEstimatedEcefPositionZ = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+            final int numberOfSatellites = randomizer.nextInt(MIN_SATELLITES, MAX_SATELLITES);
+            final double orbitalRadiusOfSatellites = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+            final double satellitesInclinationDegrees = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+            final double constellationLongitudeOffsetDegrees = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+            final double constellationTimingOffset = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
             final double maskAngleDegrees = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
             final double sisErrorSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-            final double zenithIonosphereErrorSD = randomizer.nextDouble(
-                    MIN_VALUE, MAX_VALUE);
-            final double zenithTroposphereErrorSD = randomizer.nextDouble(MIN_VALUE,
-                    MAX_VALUE);
-            final double codeTrackingErrorSD = randomizer.nextDouble(MIN_VALUE,
-                    MAX_VALUE);
-            final double rangeRateTrackingErrorSD = randomizer.nextDouble(MIN_VALUE,
-                    MAX_VALUE);
-            final double initialReceiverClockOffset = randomizer.nextDouble(MIN_VALUE,
-                    MAX_VALUE);
-            final double initialReceiverClockDrift = randomizer.nextDouble(MIN_VALUE,
-                    MAX_VALUE);
+            final double zenithIonosphereErrorSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+            final double zenithTroposphereErrorSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+            final double codeTrackingErrorSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+            final double rangeRateTrackingErrorSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+            final double initialReceiverClockOffset = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+            final double initialReceiverClockDrift = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
             final GNSSConfig config = new GNSSConfig(epochInterval, initialEstimatedEcefPositionX,
-                    initialEstimatedEcefPositionY, initialEstimatedEcefPositionZ,
-                    numberOfSatellites, orbitalRadiusOfSatellites,
-                    satellitesInclinationDegrees, constellationLongitudeOffsetDegrees,
-                    constellationTimingOffset, maskAngleDegrees, sisErrorSD,
-                    zenithIonosphereErrorSD, zenithTroposphereErrorSD, codeTrackingErrorSD,
-                    rangeRateTrackingErrorSD, initialReceiverClockOffset,
-                    initialReceiverClockDrift);
+                    initialEstimatedEcefPositionY, initialEstimatedEcefPositionZ, numberOfSatellites,
+                    orbitalRadiusOfSatellites, satellitesInclinationDegrees, constellationLongitudeOffsetDegrees,
+                    constellationTimingOffset, maskAngleDegrees, sisErrorSD, zenithIonosphereErrorSD,
+                    zenithTroposphereErrorSD, codeTrackingErrorSD, rangeRateTrackingErrorSD,
+                    initialReceiverClockOffset, initialReceiverClockDrift);
 
             final double time = randomizer.nextDouble(MIN_TIME_SECONDS, MAX_TIME_SECONDS);
 
             boolean failed = false;
             for (int j = 0; j < numberOfSatellites; j++) {
                 final ECEFPositionAndVelocity result1 = new ECEFPositionAndVelocity();
-                SatelliteECEFPositionAndVelocityGenerator.generateSatellitePositionAndVelocity(time, config, j, result1);
+                SatelliteECEFPositionAndVelocityGenerator.generateSatellitePositionAndVelocity(
+                        time, config, j, result1);
                 final ECEFPositionAndVelocity result2 = SatelliteECEFPositionAndVelocityGenerator
                         .generateSatellitePositionAndVelocity(time, config, j);
 
@@ -221,8 +189,8 @@ public class SatelliteECEFPositionAndVelocityGeneratorTest {
         assertTrue(numValid > 0);
     }
 
-    private ECEFPositionAndVelocity computeSatellitePositionAndVelocity(final double time,
-                                                                                 final GNSSConfig config, final int j) {
+    private ECEFPositionAndVelocity computeSatellitePositionAndVelocity(
+            final double time, final GNSSConfig config, final int j) {
         final double inclination = Math.toRadians(config.getSatellitesInclinationDegrees());
 
         final double omegaIs = Math.sqrt(Constants.EARTH_GRAVITATIONAL_CONSTANT /

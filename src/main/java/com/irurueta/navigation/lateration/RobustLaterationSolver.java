@@ -54,7 +54,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
      * Default robust estimator method when none is provided.
      */
     public static final RobustEstimatorMethod DEFAULT_ROBUST_METHOD =
-            RobustEstimatorMethod.PROMedS;
+            RobustEstimatorMethod.PROMEDS;
 
     /**
      * Indicates that result is refined by default using a non-linear lateration solver
@@ -69,7 +69,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
 
     /**
      * Default amount of progress variation before notifying a change in estimation progress.
-     * By default this is set to 5%.
+     * By default, this is set to 5%.
      */
     public static final float DEFAULT_PROGRESS_DELTA = 0.05f;
 
@@ -139,7 +139,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
     protected P mInitialPosition;
 
     /**
-     * Indicates whether a linear solver is used or not (either homogeneous or inomogeneous)
+     * Indicates whether a linear solver is used or not (either homogeneous or inhomogeneous)
      * for preliminary solutions.
      */
     protected boolean mUseLinearSolver = DEFAULT_USE_LINEAR_SOLVER;
@@ -190,7 +190,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
     protected InliersData mInliersData;
 
     /**
-     * Indicates whether result must be refined using a non linear lateration solver over
+     * Indicates whether result must be refined using a non-linear lateration solver over
      * found inliers.
      * If true, inliers will be computed and kept in any implementation regardless of the
      * settings.
@@ -255,8 +255,8 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
      * @param distances                  euclidean distances from static nodes to mobile node.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
      * @throws IllegalArgumentException if either positions, distances or standard deviations
-     *                                  are null, don't have the same length or their length is smaller than required (3 for
-     *                                  2D points or 4 for 3D points).
+     *                                  are null, don't have the same length or their length is smaller than required
+     *                                  (3 for 2D points or 4 for 3D points).
      */
     protected RobustLaterationSolver(
             final P[] positions, final double[] distances,
@@ -404,7 +404,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
 
     /**
      * Indicates whether preliminary solutions must be refined after an initial linear solution is found.
-     * If no initial solution is found using a linear solver, a non linear solver will be
+     * If no initial solution is found using a linear solver, a non-linear solver will be
      * used regardless of this value using an average solution as the initial value to be
      * refined.
      *
@@ -417,7 +417,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
 
     /**
      * Specifies whether preliminary solutions must be refined after an initial linear solution is found.
-     * If no initial solution is found using a linear solver, a non linear solver will be
+     * If no initial solution is found using a linear solver, a non-linear solver will be
      * used regardless of this value using an average solution as the initial value to be
      * refined.
      *
@@ -677,7 +677,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
     }
 
     /**
-     * Sets known positions and euclidean distances.
+     * Sets known positions and Euclidean distances.
      * If any distance value is zero or negative, it will be fixed assuming an EPSILON value.
      *
      * @param positions known positions of static nodes.
@@ -695,7 +695,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
     }
 
     /**
-     * Sets known positions, euclidean distances and the respective standard deviations of
+     * Sets known positions, Euclidean distances and the respective standard deviations of
      * measured distances.
      * If any distance value is zero or negative, it will be fixed assuming an EPSILON value.
      *
@@ -703,7 +703,8 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
      * @param distances                  euclidean distances from static nodes to mobile node.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
      * @throws IllegalArgumentException if either positions, distances or standard deviations
-     *                                  are null, don't have the same length of their length is smaller than required (2 points).
+     *                                  are null, don't have the same length of their length is smaller than required
+     *                                 (2 points).
      * @throws LockedException          if instance is busy solving the lateration problem.
      */
     public void setPositionsDistancesAndStandardDeviations(
@@ -790,7 +791,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
     public abstract RobustEstimatorMethod getMethod();
 
     /**
-     * Internally sets known positions and euclidean distances.
+     * Internally sets known positions and Euclidean distances.
      * If any distance value is zero or negative, it will be fixed assuming an EPSILON value.
      *
      * @param positions known positions of static nodes.
@@ -824,7 +825,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
     }
 
     /**
-     * Internally sets known positions, euclidean distances and the respective standard
+     * Internally sets known positions, Euclidean distances and the respective standard
      * deviations of measured distances.
      * If any distance value is zero or negative, it will be fixed assuming an EPSILON value.
      *

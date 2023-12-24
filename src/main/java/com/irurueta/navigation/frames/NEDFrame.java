@@ -166,12 +166,12 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param latitude  latitude expressed in radians.
      * @param longitude longitude expressed in radians.
      * @param height    height expressed in meters.
-     * @param vn        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame
-     *                  and resolved along North axis.
-     * @param ve        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame
-     *                  and resolved along East axis.
-     * @param vd        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame
-     *                  and resolved along Down axis.
+     * @param vn        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF
+     *                  frame and resolved along North axis.
+     * @param ve        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF
+     *                  frame and resolved along East axis.
+     * @param vd        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF
+     *                  frame and resolved along Down axis.
      */
     public NEDFrame(final double latitude, final double longitude, final double height,
                     final double vn, final double ve, final double vd) {
@@ -185,12 +185,12 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param latitude  latitude expressed in radians to be set.
      * @param longitude longitude expressed in radians to be set.
      * @param height    height to be set.
-     * @param vn        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame
-     *                  and resolved along North axis.
-     * @param ve        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame
-     *                  and resolved along East axis.
-     * @param vd        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame
-     *                  and resolved along Down axis.
+     * @param vn        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF
+     *                  frame and resolved along North axis.
+     * @param ve        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF
+     *                  frame and resolved along East axis.
+     * @param vd        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF
+     *                  frame and resolved along Down axis.
      */
     public NEDFrame(final double latitude, final double longitude, final Distance height,
                     final double vn, final double ve, final double vd) {
@@ -204,12 +204,12 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param latitude  latitude to be set.
      * @param longitude longitude to be set.
      * @param height    height expressed in meters to be set.
-     * @param vn        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame
-     *                  and resolved along North axis.
-     * @param ve        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame
-     *                  and resolved along East axis.
-     * @param vd        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame
-     *                  and resolved along Down axis.
+     * @param vn        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF
+     *                  frame and resolved along North axis.
+     * @param ve        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF
+     *                  frame and resolved along East axis.
+     * @param vd        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF
+     *                  frame and resolved along Down axis.
      */
     public NEDFrame(final Angle latitude, final Angle longitude, final double height,
                     final double vn, final double ve, final double vd) {
@@ -375,12 +375,12 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param latitude  latitude expressed in radians.
      * @param longitude longitude expressed in radians.
      * @param height    height expressed in meters.
-     * @param vn        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame
-     *                  and resolved along North axis.
-     * @param ve        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame
-     *                  and resolved along East axis.
-     * @param vd        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame
-     *                  and resolved along Down axis.
+     * @param vn        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF
+     *                  frame and resolved along North axis.
+     * @param ve        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF
+     *                  frame and resolved along East axis.
+     * @param vd        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF
+     *                  frame and resolved along Down axis.
      * @param c         Body to NED (Local Navigation frame) coordinate transformation matrix to be set.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
      */
@@ -397,12 +397,12 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param latitude  latitude expressed in radians to be set.
      * @param longitude longitude expressed in radians to be set.
      * @param height    height to be set.
-     * @param vn        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame
-     *                  and resolved along North axis.
-     * @param ve        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame
-     *                  and resolved along East axis.
-     * @param vd        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame
-     *                  and resolved along Down axis.
+     * @param vn        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF
+     *                  frame and resolved along North axis.
+     * @param ve        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF
+     *                  frame and resolved along East axis.
+     * @param vd        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF
+     *                  frame and resolved along Down axis.
      * @param c         Body to NED (Local Navigation frame) coordinate transformation matrix to be set.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
      */
@@ -419,12 +419,12 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param latitude  latitude to be set.
      * @param longitude longitude to be set.
      * @param height    height expressed in meters to be set.
-     * @param vn        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame
-     *                  and resolved along North axis.
-     * @param ve        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame
-     *                  and resolved along East axis.
-     * @param vd        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame
-     *                  and resolved along Down axis.
+     * @param vn        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF
+     *                  frame and resolved along North axis.
+     * @param ve        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF
+     *                  frame and resolved along East axis.
+     * @param vd        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF
+     *                  frame and resolved along Down axis.
      * @param c         Body to NED (Local Navigation frame) coordinate transformation matrix to be set.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
      */
@@ -441,12 +441,12 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param latitude  latitude to be set.
      * @param longitude longitude to be set.
      * @param height    height to be set.
-     * @param vn        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame
-     *                  and resolved along North axis.
-     * @param ve        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame
-     *                  and resolved along East axis.
-     * @param vd        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame
-     *                  and resolved along Down axis.
+     * @param vn        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF
+     *                  frame and resolved along North axis.
+     * @param ve        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF
+     *                  frame and resolved along East axis.
+     * @param vd        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF
+     *                  frame and resolved along Down axis.
      * @param c         Body to NED (Local Navigation frame) coordinate transformation matrix to be set.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
      */
@@ -1079,7 +1079,8 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * Sets coordinate transformation matrix keeping current source and destination {@link FrameType}.
      * This is more efficient than getting a copy of coordinate transformation calling to
      * {@link #getCoordinateTransformation()}, setting coordinate matrix into copied coordinate transformation and
-     * then setting the coordinate transformation calling {@link #setCoordinateTransformation(CoordinateTransformation)}.
+     * then setting the coordinate transformation calling
+     * {@link #setCoordinateTransformation(CoordinateTransformation)}.
      *
      * @param matrix    a 3x3 coordinate transformation matrix to be set.
      * @param threshold threshold to validate rotation matrix.
@@ -1096,7 +1097,8 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * Sts coordinate transformation matrix keeping current source and destination {@link FrameType}.
      * This is more efficient than getting a copy of coordinate transformation calling to
      * {@link #getCoordinateTransformation()}, setting coordinate matrix into copied coordinate transformation and
-     * then setting the coordinate transformation calling {@link #setCoordinateTransformation(CoordinateTransformation)}.
+     * then setting the coordinate transformation calling
+     * {@link #setCoordinateTransformation(CoordinateTransformation)}.
      *
      * @param matrix a 3x3 coordinate transformation matrix to be set.
      * @throws InvalidRotationMatrixException if provided matrix is not a valid rotation matrix (3x3 and orthonormal).
@@ -1134,7 +1136,8 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * Sets coordinate transformation from 3D rotation and keeping current source and destination {@link FrameType}.
      * This is more efficient than getting a copy of coordinate transformation calling to
      * {@link #getCoordinateTransformation()}, setting rotation into copied coordinate transformation and
-     * then setting the coordinate transformation calling {@link #setCoordinateTransformation(CoordinateTransformation)}.
+     * then setting the coordinate transformation calling
+     * {@link #setCoordinateTransformation(CoordinateTransformation)}.
      *
      * @param rotation set rotation into current coordinate rotation.
      */

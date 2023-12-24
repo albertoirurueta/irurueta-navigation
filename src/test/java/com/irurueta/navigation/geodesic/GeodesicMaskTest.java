@@ -28,9 +28,8 @@ public class GeodesicMaskTest {
         assertEquals(GeodesicMask.LONGITUDE, 1 << 8 | 1 << 3);
         assertEquals(GeodesicMask.AZIMUTH, 1 << 9);
         assertEquals(GeodesicMask.DISTANCE, 1 << 10 | 1);
-        assertEquals(GeodesicMask.STANDARD,
-                GeodesicMask.LATITUDE | GeodesicMask.LONGITUDE |
-                        GeodesicMask.AZIMUTH | GeodesicMask.DISTANCE);
+        assertEquals(GeodesicMask.STANDARD, GeodesicMask.LATITUDE | GeodesicMask.LONGITUDE |
+                GeodesicMask.AZIMUTH | GeodesicMask.DISTANCE);
         assertEquals(GeodesicMask.DISTANCE_IN, 1 << 11 | 1 | 1 << 1);
         assertEquals(GeodesicMask.REDUCED_LENGTH, 1 << 12 | 1 | 1 << 2);
         assertEquals(GeodesicMask.GEODESIC_SCALE, 1 << 13 | 1 | 1 << 2);

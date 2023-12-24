@@ -68,7 +68,8 @@ public interface Frame {
      * Sets coordinate transformation matrix keeping current source and destination {@link FrameType}.
      * This is more efficient than getting a copy of coordinate transformation calling to
      * {@link #getCoordinateTransformation()}, setting coordinate matrix into copied coordinate transformation and
-     * then setting the coordinate transformation calling {@link #setCoordinateTransformation(CoordinateTransformation)}.
+     * then setting the coordinate transformation calling
+     * {@link #setCoordinateTransformation(CoordinateTransformation)}.
      *
      * @param matrix    a 3x3 coordinate transformation matrix to be set.
      * @param threshold threshold to validate rotation matrix.
@@ -82,7 +83,8 @@ public interface Frame {
      * Sts coordinate transformation matrix keeping current source and destination {@link FrameType}.
      * This is more efficient than getting a copy of coordinate transformation calling to
      * {@link #getCoordinateTransformation()}, setting coordinate matrix into copied coordinate transformation and
-     * then setting the coordinate transformation calling {@link #setCoordinateTransformation(CoordinateTransformation)}.
+     * then setting the coordinate transformation calling
+     * {@link #setCoordinateTransformation(CoordinateTransformation)}.
      *
      * @param matrix a 3x3 coordinate transformation matrix to be set.
      * @throws InvalidRotationMatrixException if provided matrix is not a valid rotation matrix (3x3 and orthonormal).
@@ -111,7 +113,8 @@ public interface Frame {
      * Sets coordinate transformation from 3D rotation and keeping current source and destination {@link FrameType}.
      * This is more efficient than getting a copy of coordinate transformation calling to
      * {@link #getCoordinateTransformation()}, setting rotation into copied coordinate transformation and
-     * then setting the coordinate transformation calling {@link #setCoordinateTransformation(CoordinateTransformation)}.
+     * then setting the coordinate transformation calling
+     * {@link #setCoordinateTransformation(CoordinateTransformation)}.
      *
      * @param rotation set rotation into current coordinate rotation.
      */

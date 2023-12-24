@@ -38,8 +38,12 @@ import java.util.Objects;
  * and destination frame.
  * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multi-sensor
  * Integrated Navigation Systems, Second Edition" and on the companion software available at:
- * <a href="https://github.com/ymjdz/MATLAB-Codes/blob/master/Euler_to_CTM.m">https://github.com/ymjdz/MATLAB-Codes/blob/master/Euler_to_CTM.m</a>
- * <a href="https://github.com/ymjdz/MATLAB-Codes/blob/master/CTM_to_Euler.m">https://github.com/ymjdz/MATLAB-Codes/blob/master/CTM_to_Euler.m</a>
+ * <a href="https://github.com/ymjdz/MATLAB-Codes/blob/master/Euler_to_CTM.m">
+ *     https://github.com/ymjdz/MATLAB-Codes/blob/master/Euler_to_CTM.m
+ * </a>
+ * <a href="https://github.com/ymjdz/MATLAB-Codes/blob/master/CTM_to_Euler.m">
+ *     https://github.com/ymjdz/MATLAB-Codes/blob/master/CTM_to_Euler.m
+ * </a>
  */
 public class CoordinateTransformation implements Serializable, Cloneable {
 
@@ -80,7 +84,7 @@ public class CoordinateTransformation implements Serializable, Cloneable {
 
     /**
      * Constructor.
-     * Initializes rotation as the identify (no rotation).
+     * Initializes rotation as the identity (no rotation).
      *
      * @param sourceType      source frame type.
      * @param destinationType destination frame type.
