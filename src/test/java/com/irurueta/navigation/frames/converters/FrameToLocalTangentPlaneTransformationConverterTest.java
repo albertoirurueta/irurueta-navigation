@@ -456,8 +456,10 @@ public class FrameToLocalTangentPlaneTransformationConverterTest {
 
         final Rotation3D inputR = inputFrame.getCoordinateTransformation().asRotation();
         final Rotation3D r = rotation.combineAndReturnNew(inputR);
+        final Quaternion q = r.toQuaternion();
+        q.normalize();
 
-        final Matrix rotationMatrix = r.asInhomogeneousMatrix();
+        final Matrix rotationMatrix = q.asInhomogeneousMatrix();
         final CoordinateTransformation c = new CoordinateTransformation(
                 rotationMatrix, FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
