@@ -42,17 +42,12 @@ public class GNSSKalmanInitializerTest {
         final double clockOffset = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double clockDrift = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        final GNSSEstimation estimation = new GNSSEstimation(x, y, z, vx, vy, vz,
-                clockOffset, clockDrift);
+        final GNSSEstimation estimation = new GNSSEstimation(x, y, z, vx, vy, vz, clockOffset, clockDrift);
 
-        final double initialPositionUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialVelocityUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialClockOffsetUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialClockDriftUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
+        final double initialPositionUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double initialVelocityUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double initialClockOffsetUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double initialClockDriftUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double accelerationPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double clockFrequencyPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double clockPhasePSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
@@ -80,8 +75,7 @@ public class GNSSKalmanInitializerTest {
         final GNSSKalmanState result1 = new GNSSKalmanState();
         GNSSKalmanInitializer.initialize(estimation, config, result1);
 
-        final GNSSKalmanState result2 = GNSSKalmanInitializer.initialize(
-                estimation, config);
+        final GNSSKalmanState result2 = GNSSKalmanInitializer.initialize(estimation, config);
 
         assertEquals(expected, result1);
         assertEquals(expected, result2);

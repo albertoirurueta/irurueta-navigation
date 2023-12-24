@@ -22,7 +22,8 @@ import com.irurueta.navigation.NotReadyException;
 /**
  * Solves the lateration problem.
  * This is a formulation for a nonlinear least squares optimizer.
- * This class is base on the implementation found at: https://github.com/lemmingapex/trilateration
+ * This class is base on the implementation found at:
+ * <a href="https://github.com/lemmingapex/trilateration">https://github.com/lemmingapex/trilateration</a>
  *
  * @param <P> a {@link Point} type.
  */
@@ -67,7 +68,7 @@ public abstract class LaterationSolver<P extends Point<?>> {
 
     /**
      * Constructor.
-     * Sets known positions and euclidean distances.
+     * Sets known positions and Euclidean distances.
      *
      * @param positions known positions of static nodes.
      * @param distances euclidean distances from static nodes to mobile node.
@@ -89,7 +90,7 @@ public abstract class LaterationSolver<P extends Point<?>> {
 
     /**
      * Constructor.
-     * Sets known positions and euclidean distances.
+     * Sets known positions and Euclidean distances.
      *
      * @param positions known positions of static nodes.
      * @param distances euclidean distances from static nodes to mobile node.
@@ -166,7 +167,7 @@ public abstract class LaterationSolver<P extends Point<?>> {
     }
 
     /**
-     * Sets known positions and euclidean distances.
+     * Sets known positions and Euclidean distances.
      * If any distance value is zero or negative, it will be fixed assuming an EPSILON value.
      *
      * @param positions known positions of static nodes.
@@ -193,9 +194,9 @@ public abstract class LaterationSolver<P extends Point<?>> {
     }
 
     /**
-     * Gets estimated estimated position and stores result into provided instance.
+     * Gets estimated position and stores result into provided instance.
      *
-     * @param estimatedPosition instance where estimated estimated position will be stored.
+     * @param estimatedPosition instance where estimated position will be stored.
      */
     public void getEstimatedPosition(final P estimatedPosition) {
         if (mEstimatedPositionCoordinates != null) {
@@ -246,7 +247,7 @@ public abstract class LaterationSolver<P extends Point<?>> {
     public abstract int getMinRequiredPositionsAndDistances();
 
     /**
-     * Internally sets known positions and euclidean distances.
+     * Internally sets known positions and Euclidean distances.
      * If any distance value is zero or negative, it will be fixed assuming an EPSILON value.
      *
      * @param positions known positions of static nodes.

@@ -65,8 +65,8 @@ public class Accuracy2D extends Accuracy<com.irurueta.geometry.Accuracy2D> {
      *                         definite.
      * @param confidence       confidence of provided accuracy of an estimated position.
      * @throws IllegalArgumentException                    if provided matrix is not square (it must also be
-     *                                                     positive definite to be properly converted to an ellipse), or if provided
-     *                                                     confidence value is not within 0 and 1.
+     *                                                     positive definite to be properly converted to an ellipse),
+     *                                                     or if provided confidence value is not within 0 and 1.
      * @throws NonSymmetricPositiveDefiniteMatrixException if provided matrix is not
      *                                                     symmetric and positive definite.
      */

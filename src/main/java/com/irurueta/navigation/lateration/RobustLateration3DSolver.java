@@ -45,7 +45,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
     protected HomogeneousLinearLeastSquaresLateration3DSolver mHomogeneousLinearSolver;
 
     /**
-     * Non linear lateration solver internally used to refine solution
+     * Non-linear lateration solver internally used to refine solution
      * found by robust algorithm.
      */
     protected NonLinearLeastSquaresLateration3DSolver mNonLinearSolver;
@@ -140,8 +140,8 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      * @param listener                   listener to be notified of events such as when estimation starts,
      *                                   ends or its progress significantly changes.
      * @throws IllegalArgumentException if either positions, distances or
-     *                                  standard deviations are null, don't have the same length or their length is smaller
-     *                                  than required (4 points).
+     *                                  standard deviations are null, don't have the same length or their length is
+     *                                  smaller than required (4 points).
      */
     protected RobustLateration3DSolver(final Point3D[] positions, final double[] distances,
                                        final double[] distanceStandardDeviations,
@@ -268,7 +268,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
     }
 
     /**
-     * Sets spheres defining positions and euclidean distances.
+     * Sets spheres defining positions and Euclidean distances.
      *
      * @param spheres spheres defining positions and distances.
      * @throws IllegalArgumentException if sphere is null or length of array of spheres
@@ -283,7 +283,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
     }
 
     /**
-     * Sets spheres defining positions and euclidean distances along with the standard
+     * Sets spheres defining positions and Euclidean distances along with the standard
      * deviations of provided spheres radii.
      *
      * @param spheres                  spheres defining positions and distances.
@@ -311,13 +311,13 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration3DSolver();
-            case LMedS:
+            case LMEDS:
                 return new LMedSRobustLateration3DSolver();
             case MSAC:
                 return new MSACRobustLateration3DSolver();
             case PROSAC:
                 return new PROSACRobustLateration3DSolver();
-            case PROMedS:
+            case PROMEDS:
             default:
                 return new PROMedSRobustLateration3DSolver();
         }
@@ -337,13 +337,13 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration3DSolver(listener);
-            case LMedS:
+            case LMEDS:
                 return new LMedSRobustLateration3DSolver(listener);
             case MSAC:
                 return new MSACRobustLateration3DSolver(listener);
             case PROSAC:
                 return new PROSACRobustLateration3DSolver(listener);
-            case PROMedS:
+            case PROMEDS:
             default:
                 return new PROMedSRobustLateration3DSolver(listener);
         }
@@ -366,13 +366,13 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration3DSolver(positions, distances);
-            case LMedS:
+            case LMEDS:
                 return new LMedSRobustLateration3DSolver(positions, distances);
             case MSAC:
                 return new MSACRobustLateration3DSolver(positions, distances);
             case PROSAC:
                 return new PROSACRobustLateration3DSolver(positions, distances);
-            case PROMedS:
+            case PROMEDS:
             default:
                 return new PROMedSRobustLateration3DSolver(positions, distances);
         }
@@ -400,7 +400,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
             case RANSAC:
                 return new RANSACRobustLateration3DSolver(positions, distances,
                         distanceStandardDeviations);
-            case LMedS:
+            case LMEDS:
                 return new LMedSRobustLateration3DSolver(positions, distances,
                         distanceStandardDeviations);
             case MSAC:
@@ -409,7 +409,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
             case PROSAC:
                 return new PROSACRobustLateration3DSolver(positions, distances,
                         distanceStandardDeviations);
-            case PROMedS:
+            case PROMEDS:
             default:
                 return new PROMedSRobustLateration3DSolver(positions, distances,
                         distanceStandardDeviations);
@@ -437,7 +437,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
             case RANSAC:
                 return new RANSACRobustLateration3DSolver(positions, distances,
                         listener);
-            case LMedS:
+            case LMEDS:
                 return new LMedSRobustLateration3DSolver(positions, distances,
                         listener);
             case MSAC:
@@ -446,7 +446,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
             case PROSAC:
                 return new PROSACRobustLateration3DSolver(positions, distances,
                         listener);
-            case PROMedS:
+            case PROMEDS:
             default:
                 return new PROMedSRobustLateration3DSolver(positions, distances,
                         listener);
@@ -478,7 +478,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
             case RANSAC:
                 return new RANSACRobustLateration3DSolver(positions, distances,
                         distanceStandardDeviations, listener);
-            case LMedS:
+            case LMEDS:
                 return new LMedSRobustLateration3DSolver(positions, distances,
                         distanceStandardDeviations, listener);
             case MSAC:
@@ -487,7 +487,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
             case PROSAC:
                 return new PROSACRobustLateration3DSolver(positions, distances,
                         distanceStandardDeviations, listener);
-            case PROMedS:
+            case PROMEDS:
             default:
                 return new PROMedSRobustLateration3DSolver(positions, distances,
                         distanceStandardDeviations, listener);
@@ -508,13 +508,13 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration3DSolver(spheres);
-            case LMedS:
+            case LMEDS:
                 return new LMedSRobustLateration3DSolver(spheres);
             case MSAC:
                 return new MSACRobustLateration3DSolver(spheres);
             case PROSAC:
                 return new PROSACRobustLateration3DSolver(spheres);
-            case PROMedS:
+            case PROMEDS:
             default:
                 return new PROMedSRobustLateration3DSolver(spheres);
         }
@@ -538,7 +538,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
             case RANSAC:
                 return new RANSACRobustLateration3DSolver(spheres,
                         distanceStandardDeviations);
-            case LMedS:
+            case LMEDS:
                 return new LMedSRobustLateration3DSolver(spheres,
                         distanceStandardDeviations);
             case MSAC:
@@ -547,7 +547,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
             case PROSAC:
                 return new PROSACRobustLateration3DSolver(spheres,
                         distanceStandardDeviations);
-            case PROMedS:
+            case PROMEDS:
             default:
                 return new PROMedSRobustLateration3DSolver(spheres,
                         distanceStandardDeviations);
@@ -571,13 +571,13 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration3DSolver(spheres, listener);
-            case LMedS:
+            case LMEDS:
                 return new LMedSRobustLateration3DSolver(spheres, listener);
             case MSAC:
                 return new MSACRobustLateration3DSolver(spheres, listener);
             case PROSAC:
                 return new PROSACRobustLateration3DSolver(spheres, listener);
-            case PROMedS:
+            case PROMEDS:
             default:
                 return new PROMedSRobustLateration3DSolver(spheres, listener);
         }
@@ -604,7 +604,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
             case RANSAC:
                 return new RANSACRobustLateration3DSolver(spheres,
                         distanceStandardDeviations, listener);
-            case LMedS:
+            case LMEDS:
                 return new LMedSRobustLateration3DSolver(spheres,
                         distanceStandardDeviations, listener);
             case MSAC:
@@ -613,7 +613,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
             case PROSAC:
                 return new PROSACRobustLateration3DSolver(spheres,
                         distanceStandardDeviations, listener);
-            case PROMedS:
+            case PROMEDS:
             default:
                 return new PROMedSRobustLateration3DSolver(spheres,
                         distanceStandardDeviations, listener);
@@ -636,13 +636,13 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration3DSolver();
-            case LMedS:
+            case LMEDS:
                 return new LMedSRobustLateration3DSolver();
             case MSAC:
                 return new MSACRobustLateration3DSolver();
             case PROSAC:
                 return new PROSACRobustLateration3DSolver(qualityScores);
-            case PROMedS:
+            case PROMEDS:
             default:
                 return new PROMedSRobustLateration3DSolver(qualityScores);
         }
@@ -668,14 +668,14 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration3DSolver(listener);
-            case LMedS:
+            case LMEDS:
                 return new LMedSRobustLateration3DSolver(listener);
             case MSAC:
                 return new MSACRobustLateration3DSolver(listener);
             case PROSAC:
                 return new PROSACRobustLateration3DSolver(qualityScores,
                         listener);
-            case PROMedS:
+            case PROMEDS:
             default:
                 return new PROMedSRobustLateration3DSolver(qualityScores,
                         listener);
@@ -703,14 +703,14 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration3DSolver(positions, distances);
-            case LMedS:
+            case LMEDS:
                 return new LMedSRobustLateration3DSolver(positions, distances);
             case MSAC:
                 return new MSACRobustLateration3DSolver(positions, distances);
             case PROSAC:
                 return new PROSACRobustLateration3DSolver(qualityScores,
                         positions, distances);
-            case PROMedS:
+            case PROMEDS:
             default:
                 return new PROMedSRobustLateration3DSolver(qualityScores,
                         positions, distances);
@@ -741,7 +741,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
             case RANSAC:
                 return new RANSACRobustLateration3DSolver(positions, distances,
                         distanceStandardDeviations);
-            case LMedS:
+            case LMEDS:
                 return new LMedSRobustLateration3DSolver(positions, distances,
                         distanceStandardDeviations);
             case MSAC:
@@ -750,7 +750,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
             case PROSAC:
                 return new PROSACRobustLateration3DSolver(qualityScores,
                         positions, distances, distanceStandardDeviations);
-            case PROMedS:
+            case PROMEDS:
             default:
                 return new PROMedSRobustLateration3DSolver(qualityScores,
                         positions, distances, distanceStandardDeviations);
@@ -784,7 +784,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
             case RANSAC:
                 return new RANSACRobustLateration3DSolver(positions, distances,
                         distanceStandardDeviations, listener);
-            case LMedS:
+            case LMEDS:
                 return new LMedSRobustLateration3DSolver(positions, distances,
                         distanceStandardDeviations, listener);
             case MSAC:
@@ -793,7 +793,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
             case PROSAC:
                 return new PROSACRobustLateration3DSolver(qualityScores,
                         positions, distances, distanceStandardDeviations, listener);
-            case PROMedS:
+            case PROMEDS:
             default:
                 return new PROMedSRobustLateration3DSolver(qualityScores,
                         positions, distances, distanceStandardDeviations, listener);
@@ -824,7 +824,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
             case RANSAC:
                 return new RANSACRobustLateration3DSolver(positions, distances,
                         listener);
-            case LMedS:
+            case LMEDS:
                 return new LMedSRobustLateration3DSolver(positions, distances,
                         listener);
             case MSAC:
@@ -833,7 +833,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
             case PROSAC:
                 return new PROSACRobustLateration3DSolver(qualityScores,
                         positions, distances, listener);
-            case PROMedS:
+            case PROMEDS:
             default:
                 return new PROMedSRobustLateration3DSolver(qualityScores,
                         positions, distances, listener);
@@ -859,14 +859,14 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration3DSolver(spheres);
-            case LMedS:
+            case LMEDS:
                 return new LMedSRobustLateration3DSolver(spheres);
             case MSAC:
                 return new MSACRobustLateration3DSolver(spheres);
             case PROSAC:
                 return new PROSACRobustLateration3DSolver(qualityScores,
                         spheres);
-            case PROMedS:
+            case PROMEDS:
             default:
                 return new PROMedSRobustLateration3DSolver(qualityScores,
                         spheres);
@@ -895,7 +895,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
             case RANSAC:
                 return new RANSACRobustLateration3DSolver(spheres,
                         distanceStandardDeviations);
-            case LMedS:
+            case LMEDS:
                 return new LMedSRobustLateration3DSolver(spheres,
                         distanceStandardDeviations);
             case MSAC:
@@ -904,7 +904,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
             case PROSAC:
                 return new PROSACRobustLateration3DSolver(qualityScores,
                         spheres, distanceStandardDeviations);
-            case PROMedS:
+            case PROMEDS:
             default:
                 return new PROMedSRobustLateration3DSolver(qualityScores,
                         spheres, distanceStandardDeviations);
@@ -937,7 +937,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
             case RANSAC:
                 return new RANSACRobustLateration3DSolver(spheres,
                         distanceStandardDeviations, listener);
-            case LMedS:
+            case LMEDS:
                 return new LMedSRobustLateration3DSolver(spheres,
                         distanceStandardDeviations, listener);
             case MSAC:
@@ -946,7 +946,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
             case PROSAC:
                 return new PROSACRobustLateration3DSolver(qualityScores,
                         spheres, distanceStandardDeviations, listener);
-            case PROMedS:
+            case PROMEDS:
             default:
                 return new PROMedSRobustLateration3DSolver(qualityScores,
                         spheres, distanceStandardDeviations, listener);
@@ -1304,7 +1304,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      * Attempts to refine estimated position if refinement is requested.
      * This method returns a refined solution or provided input if refinement is not
      * requested or has failed.
-     * If refinement is enabled and it is requested to keep covariance, this method
+     * If refinement is enabled, and it is requested to keep covariance, this method
      * will also keep covariance of refined position.
      *
      * @param position position estimated by a robust estimator without refinement.
@@ -1419,7 +1419,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
     }
 
     /**
-     * Internally sets spheres defining positions and euclidean distances.
+     * Internally sets spheres defining positions and Euclidean distances.
      *
      * @param spheres spheres defining positions and distances.
      * @throws IllegalArgumentException if spheres is null or length of array of spheres
@@ -1442,7 +1442,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
     }
 
     /**
-     * Internally sets spheres defining positions and euclidean distances along
+     * Internally sets spheres defining positions and Euclidean distances along
      * with the standard deviations of provided spheres radii.
      *
      * @param spheres                  spheres defining positions and distances.

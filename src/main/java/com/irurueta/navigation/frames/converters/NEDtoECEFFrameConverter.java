@@ -29,7 +29,9 @@ import com.irurueta.navigation.geodesic.Constants;
  * Converts from NED frame to ECEF frame.
  * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multi-sensor
  * Integrated Navigation Systems, Second Edition" and on the companion software available at:
- * https://github.com/ymjdz/MATLAB-Codes/blob/master/NED_to_ECEF.m
+ * <a href="https://github.com/ymjdz/MATLAB-Codes/blob/master/NED_to_ECEF.m">
+ *     https://github.com/ymjdz/MATLAB-Codes/blob/master/NED_to_ECEF.m
+ * </a>
  */
 public class NEDtoECEFFrameConverter implements FrameConverter<NEDFrame, ECEFFrame> {
 

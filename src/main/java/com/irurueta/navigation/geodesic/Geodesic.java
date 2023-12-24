@@ -33,10 +33,10 @@ package com.irurueta.navigation.geodesic;
  * there are multiple solutions (all with the same <i>s12</i>, of course), all the solutions can be
  * easily generated once a particular solution is provided.
  * The standard way of specifying the direct problem is to specify the distance <i>s12</i> to the
- * second point. However it is sometimes useful instead to specify the arc length <i>a12</i> (in
+ * second point. However, it is sometimes useful instead to specify the arc length <i>a12</i> (in
  * degrees) on the auxiliary sphere. This is a mathematical construct used in solving the geodesic
  * problems. The solution of the direct problem in this form is provided by {@link #arcDirect}. An
- * arc length in excess of 180&deg; indicates that the geodesic is not a shortest path. In addition,
+ * arc length in excess of 180&deg; indicates that the geodesic is not the shortest path. In addition,
  * the arc length between an equatorial crossing and the next extremum of latitude for a geodesic is
  * 90&deg;.
  * This class can also calculate several other quantities related to geodesics. These are:
@@ -93,7 +93,7 @@ package com.irurueta.navigation.geodesic;
  * <i>lon2</i>, <i>azi2</i>, <i>s12</i>, <i>a12</i>, <i>m12</i>, <i>M12</i>, <i>M21</i>, <i>S12</i>.
  * The functions {@link #direct(double, double, double, double, int)},
  * {@link #arcDirect(double, double, double, double, int)} and {@link #inverse(double, double, double, double, int)}
- * include an optional final argument <i>outmask</i> which allows you specify which results should be computed and
+ * include an optional final argument <i>outmask</i> which allows you to specify which results should be computed and
  * returned. If you omit <i>outmask</i>, then the "standard" geodesic results are computed (latitudes,  longitudes,
  * azimuths, and distance). <i>outmask</i> is bitor'ed combination of {@link GeodesicMask} values. For example, if
  * you wish just to compute the distance between two points you would call, e.g.,
@@ -266,7 +266,8 @@ public class Geodesic {
      * Constructor for an ellipsoid with.
      *
      * @param a equatorial radius (meters).
-     * @param f flattening of ellipsoid. Setting <i>f</i> = 0 gives a sphere. Negative <i>f</i> gives a prolate ellipsoid.
+     * @param f flattening of ellipsoid. Setting <i>f</i> = 0 gives a sphere. Negative <i>f</i> gives a prolate
+     *          ellipsoid.
      * @throws GeodesicException if <i>a</i> or (1 &minus; <i>f</i>) <i>a</i> is not positive.
      */
     public Geodesic(final double a, final double f) throws GeodesicException {
@@ -314,8 +315,8 @@ public class Geodesic {
      * Solve the direct geodesic problem where the length of the geodesic is specified in terms of distance.
      * If either point is at a pole, the azimuth is defined by keeping the longitude fixed, writing
      * <i>lat</i> = &plusmn;(90&deg; &minus; &epsilon;), and taking the limit &epsilon; &rarr; 0+. An arc length greater
-     * than 180&deg; signifies a geodesic which is not a shortest path. (For a prolate ellipsoid, an additional
-     * condition is necessary for a shortest path: the longitudinal extent must not exceed of 180&deg;.)
+     * than 180&deg; signifies a geodesic which is not the shortest path. (For a prolate ellipsoid, an additional
+     * condition is necessary for the shortest path: the longitudinal extent must not exceed of 180&deg;.)
      *
      * @param lat1 latitude of point 1 (degrees). <i>lat1</i> should be in the range [&minus;90&deg;, 90&deg;].
      * @param lon1 longitude of point 1 (degrees).
@@ -354,8 +355,8 @@ public class Geodesic {
      * Solve the direct geodesic problem where the length of the geodesic is specified in terms of arc length.
      * If either point is at a pole, the azimuth is defined by keeping the longitude fixed, writing
      * <i>lat</i> = &plusmn;(90&deg; &minus; &epsilon;), and taking the limit &epsilon; &rarr; 0+. An arc length
-     * greater than 180&deg; signifies a geodesic which is not a shortest path. (For a prolate ellipsoid, an additional
-     * condition is necessary for a shortest path: the longitudinal extent must not exceed of 180&deg;.)
+     * greater than 180&deg; signifies a geodesic which is not the shortest path. (For a prolate ellipsoid, an additional
+     * condition is necessary for the shortest path: the longitudinal extent must not exceed of 180&deg;.)
      *
      * @param lat1 latitude of point 1 (degrees). <i>lat1</i> should be in the range [&minus;90&deg;, 90&deg;].
      * @param lon1 longitude of point 1 (degrees).
@@ -431,8 +432,8 @@ public class Geodesic {
      * @param lon1    longitude of point 1 (degrees).
      * @param azi1    azimuth at point 1 (degrees).
      * @param arcmode boolean flag determining the meaning of the <i>s12A12</i>.
-     * @param s12A12  <i>arcmode</i> is false, this is the distance between point 1 and point 2 (meters); otherwise it is
-     *                the arc length between point 1 and point 2 (degrees); it can be negative.
+     * @param s12A12  <i>arcmode</i> is false, this is the distance between point 1 and point 2 (meters); otherwise it
+     *                is the arc length between point 1 and point 2 (degrees); it can be negative.
      * @param outmask a bitor'ed combination of {@link GeodesicMask} values specifying which results should be returned.
      * @return a {@link GeodesicData} object with the fields specified by <i>outmask</i> computed.
      */
@@ -1296,7 +1297,7 @@ public class Geodesic {
 
             // add the check for sig12 since zero length geodesics might yield m12 < 0. Test case was
             // echo 20.001 0 20.001 0 | GeodSolve -i
-            // in fact, we will have sig12 > pi/2 for meridional geodesic which is not a shortest path.
+            // in fact, we will have sig12 > pi/2 for meridional geodesic which is not the shortest path.
             if (sig12 < 1 || m12x >= 0) {
                 // need at least 2, to handle 90 0 90 180
                 if (sig12 < 3 * TINY) {
@@ -1331,7 +1332,7 @@ public class Geodesic {
 
         } else if (!meridian) {
             // now point1 and point2 belong within a hemisphere bounded by a
-            // meridian and geodesic is neither meridional or equatorial
+            // meridian and geodesic is neither meridional nor equatorial
 
             // figure a starting point for Newton's method
             final double dnm;
@@ -1547,8 +1548,8 @@ public class Geodesic {
                 double salp12 = salp2 * calp1 - calp2 * salp1;
                 double calp12 = calp2 * calp1 + salp2 * salp1;
 
-                // the right thing appears to happed if alp1 = +/-180 and alp2 = 0, viz
-                // salp12 = -0 and alp12 = -180. However this depends on the sign
+                // the right thing appears to happen if alp1 = +/-180 and alp2 = 0, viz
+                // salp12 = -0 and alp12 = -180. However, this depends on the sign
                 // being attached to 0 correctly. The following ensures the correct
                 // behavior.
                 if (salp12 == 0 && calp12 < 0) {
@@ -1599,7 +1600,8 @@ public class Geodesic {
      * Safely creates an ellipsoid with.
      *
      * @param a equatorial radius (meters).
-     * @param f flattening of ellipsoid. Setting <i>f</i> = 0 gives a sphere. Negative <i>f</i> gives a prolate ellipsoid.
+     * @param f flattening of ellipsoid. Setting <i>f</i> = 0 gives a sphere. Negative <i>f</i> gives a prolate
+     *          ellipsoid.
      * @return a new Geodesic instance or null if something fails.
      */
     @SuppressWarnings("SameParameterValue")

@@ -21,7 +21,7 @@ import com.irurueta.geometry.Sphere;
 import com.irurueta.navigation.LockedException;
 
 /**
- * Solves a Trilateration problem with an instance of a least squares optimizer.
+ * Solves a Trilateration problem with an instance of the least squares optimizer.
  */
 public class NonLinearLeastSquaresLateration3DSolver extends NonLinearLeastSquaresLaterationSolver<Point3D> {
 
@@ -38,7 +38,8 @@ public class NonLinearLeastSquaresLateration3DSolver extends NonLinearLeastSquar
      * @param positions known positions of static nodes.
      * @param distances euclidean distances from static nodes to mobile node.
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
-     *                                  length is smaller than required (3 for 2D points or 4 for 3D points) or fitter is null.
+     *                                  length is smaller than required (3 for 2D points or 4 for 3D points) or fitter
+     *                                  is null.
      */
     public NonLinearLeastSquaresLateration3DSolver(
             final Point3D[] positions, final double[] distances) {
@@ -61,7 +62,8 @@ public class NonLinearLeastSquaresLateration3DSolver extends NonLinearLeastSquar
      * @param distances       euclidean distances from static nodes to mobile node.
      * @param initialPosition initial position to start lateration solving.
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
-     *                                  length is smaller than required (3 for 2D points or 4 for 3D points) or fitter is null.
+     *                                  length is smaller than required (3 for 2D points or 4 for 3D points) or fitter
+     *                                  is null.
      */
     public NonLinearLeastSquaresLateration3DSolver(
             final Point3D[] positions,
@@ -86,7 +88,8 @@ public class NonLinearLeastSquaresLateration3DSolver extends NonLinearLeastSquar
      * @param distances euclidean distances from static nodes to mobile node.
      * @param listener  listener to be notified of events raised by this instance.
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
-     *                                  length is smaller than required (3 for 2D points or 4 for 3D points) or fitter is null.
+     *                                  length is smaller than required (3 for 2D points or 4 for 3D points) or fitter
+     *                                  is null.
      */
     public NonLinearLeastSquaresLateration3DSolver(
             final Point3D[] positions, final double[] distances,
@@ -114,7 +117,8 @@ public class NonLinearLeastSquaresLateration3DSolver extends NonLinearLeastSquar
      * @param initialPosition initial position to start lateration solving.
      * @param listener        listener to be notified of events raised by this instance.
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
-     *                                  length is smaller than required (3 for 2D points or 4 for 3D points) or fitter is null.
+     *                                  length is smaller than required (3 for 2D points or 4 for 3D points) or fitter
+     *                                  is null.
      */
     public NonLinearLeastSquaresLateration3DSolver(
             final Point3D[] positions,
@@ -183,7 +187,8 @@ public class NonLinearLeastSquaresLateration3DSolver extends NonLinearLeastSquar
      * @param distances                  euclidean distances from static nodes to mobile node.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
      * @throws IllegalArgumentException if either positions, distances or standard deviations
-     *                                  are null, don't have the same length of their length is smaller than required (2 points).
+     *                                  are null, don't have the same length of their length is smaller than required
+     *                                  (2 points).
      */
     public NonLinearLeastSquaresLateration3DSolver(
             final Point3D[] positions, final double[] distances,
@@ -199,7 +204,8 @@ public class NonLinearLeastSquaresLateration3DSolver extends NonLinearLeastSquar
      * @param distanceStandardDeviations standard deviations of provided measured distances.
      * @param initialPosition            initial position to start lateration solving.
      * @throws IllegalArgumentException if either positions, distances or standard deviations
-     *                                  are null, don't have the same length of their length is smaller than required (2 points).
+     *                                  are null, don't have the same length of their length is smaller than required
+     *                                  (2 points).
      */
     public NonLinearLeastSquaresLateration3DSolver(
             final Point3D[] positions, final double[] distances,
@@ -215,7 +221,8 @@ public class NonLinearLeastSquaresLateration3DSolver extends NonLinearLeastSquar
      * @param distanceStandardDeviations standard deviations of provided measured distances.
      * @param listener                   listener to be notified of events raised by this instance.
      * @throws IllegalArgumentException if either positions, distances or standard deviations
-     *                                  are null, don't have the same length of their length is smaller than required (2 points).
+     *                                  are null, don't have the same length of their length is smaller than required
+     *                                  (2 points).
      */
     public NonLinearLeastSquaresLateration3DSolver(
             final Point3D[] positions, final double[] distances,
@@ -233,7 +240,8 @@ public class NonLinearLeastSquaresLateration3DSolver extends NonLinearLeastSquar
      * @param initialPosition            initial position to start lateration solving.
      * @param listener                   listener to be notified of events raised by this instance.
      * @throws IllegalArgumentException if either positions, distances or standard deviations
-     *                                  are null, don't have the same length of their length is smaller than required (2 points).
+     *                                  are null, don't have the same length of their length is smaller than required
+     *                                  (2 points).
      */
     public NonLinearLeastSquaresLateration3DSolver(
             final Point3D[] positions, final double[] distances,
@@ -323,7 +331,7 @@ public class NonLinearLeastSquaresLateration3DSolver extends NonLinearLeastSquar
     }
 
     /**
-     * Sets spheres defining positions and euclidean distances.
+     * Sets spheres defining positions and Euclidean distances.
      *
      * @param spheres spheres defining positions and distances.
      * @throws IllegalArgumentException if spheres is null or length of array of spheres
@@ -338,7 +346,7 @@ public class NonLinearLeastSquaresLateration3DSolver extends NonLinearLeastSquar
     }
 
     /**
-     * Sets spheres defining positions and euclidean distances along with the standard
+     * Sets spheres defining positions and Euclidean distances along with the standard
      * deviations of provided spheres radii.
      *
      * @param spheres                  spheres defining positions and distances.
@@ -394,7 +402,7 @@ public class NonLinearLeastSquaresLateration3DSolver extends NonLinearLeastSquar
     }
 
     /**
-     * Internally sets spheres defining positions and euclidean distances.
+     * Internally sets spheres defining positions and Euclidean distances.
      *
      * @param spheres spheres defining positions and distances.
      * @throws IllegalArgumentException if spheres is null or length of array of spheres
@@ -417,7 +425,7 @@ public class NonLinearLeastSquaresLateration3DSolver extends NonLinearLeastSquar
     }
 
     /**
-     * Internally sets spheres defining positions and euclidean distances along with the standard
+     * Internally sets spheres defining positions and Euclidean distances along with the standard
      * deviations of provided spheres radii.
      *
      * @param spheres                  spheres defining positions and distances.

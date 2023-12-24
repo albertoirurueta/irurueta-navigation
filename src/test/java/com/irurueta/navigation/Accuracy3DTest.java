@@ -49,28 +49,27 @@ public class Accuracy3DTest {
 
             // check default values
             assertNull(accuracy.getCovarianceMatrix());
-            assertEquals(accuracy.getStandardDeviationFactor(), 2.0, 0.0);
-            assertEquals(accuracy.getConfidence(), 0.9544, 1e-2);
-            assertEquals(accuracy.getConfidence(),
-                    2.0 * NormalDist.cdf(2.0, 0.0, 1.0) - 1.0, 0.0);
+            assertEquals(2.0, accuracy.getStandardDeviationFactor(), 0.0);
+            assertEquals(0.9544, accuracy.getConfidence(), 1e-2);
+            assertEquals(2.0 * NormalDist.cdf(2.0, 0.0, 1.0) - 1.0,
+                    accuracy.getConfidence(), 0.0);
 
-            assertEquals(accuracy.getSmallestAccuracy().getUnit(), DistanceUnit.METER);
-            assertEquals(accuracy.getSmallestAccuracy().getValue().doubleValue(),
-                    Double.POSITIVE_INFINITY, 0.0);
-            assertEquals(accuracy.getSmallestAccuracyMeters(), Double.POSITIVE_INFINITY, 0.0);
+            assertEquals(DistanceUnit.METER, accuracy.getSmallestAccuracy().getUnit());
+            assertEquals(Double.POSITIVE_INFINITY, accuracy.getSmallestAccuracy().getValue().doubleValue(),
+                    0.0);
+            assertEquals(Double.POSITIVE_INFINITY, accuracy.getSmallestAccuracyMeters(), 0.0);
 
-            assertEquals(accuracy.getLargestAccuracy().getUnit(), DistanceUnit.METER);
-            assertEquals(accuracy.getLargestAccuracy().getValue().doubleValue(),
-                    Double.POSITIVE_INFINITY, 0.0);
-            assertEquals(accuracy.getLargestAccuracyMeters(), Double.POSITIVE_INFINITY, 0.0);
+            assertEquals(DistanceUnit.METER, accuracy.getLargestAccuracy().getUnit());
+            assertEquals(Double.POSITIVE_INFINITY, accuracy.getLargestAccuracy().getValue().doubleValue(),
+                    0.0);
+            assertEquals(Double.POSITIVE_INFINITY, accuracy.getLargestAccuracyMeters(), 0.0);
 
-            assertEquals(accuracy.getAverageAccuracy().getUnit(), DistanceUnit.METER);
-            assertEquals(accuracy.getAverageAccuracy().getValue().doubleValue(),
-                    Double.POSITIVE_INFINITY, 0.0);
-            assertEquals(accuracy.getAverageAccuracyMeters(), Double.POSITIVE_INFINITY, 0.0);
+            assertEquals(DistanceUnit.METER, accuracy.getAverageAccuracy().getUnit());
+            assertEquals(Double.POSITIVE_INFINITY, accuracy.getAverageAccuracy().getValue().doubleValue(),
+                    0.0);
+            assertEquals(Double.POSITIVE_INFINITY, accuracy.getAverageAccuracyMeters(), 0.0);
 
-            assertEquals(accuracy.getNumberOfDimensions(), 3);
-
+            assertEquals(3, accuracy.getNumberOfDimensions());
 
             // constructor with covariance matrix
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -104,32 +103,31 @@ public class Accuracy3DTest {
 
             // check
             assertSame(accuracy.getCovarianceMatrix(), covarianceMatrix);
-            assertEquals(accuracy.getStandardDeviationFactor(), 2.0, 0.0);
-            assertEquals(accuracy.getConfidence(), 0.9544, 1e-2);
-            assertEquals(accuracy.getConfidence(),
-                    2.0 * NormalDist.cdf(2.0, 0.0, 1.0) - 1.0, 0.0);
+            assertEquals(2.0, accuracy.getStandardDeviationFactor(), 0.0);
+            assertEquals(0.9544, accuracy.getConfidence(), 1e-2);
+            assertEquals(2.0 * NormalDist.cdf(2.0, 0.0, 1.0) - 1.0,
+                    accuracy.getConfidence(), 0.0);
 
-            assertEquals(accuracy.getSmallestAccuracy().getUnit(), DistanceUnit.METER);
+            assertEquals(DistanceUnit.METER, accuracy.getSmallestAccuracy().getUnit());
             assertEquals(accuracy.getSmallestAccuracy().getValue().doubleValue(),
                     accuracy.getSmallestAccuracyMeters(), 0.0);
-            assertEquals(accuracy.getSmallestAccuracyMeters(),
-                    accuracy.getStandardDeviationFactor() * semiAxesLengths[2],
-                    ABSOLUTE_ERROR);
+            assertEquals(accuracy.getStandardDeviationFactor() * semiAxesLengths[2],
+                    accuracy.getSmallestAccuracyMeters(), ABSOLUTE_ERROR);
 
-            assertEquals(accuracy.getLargestAccuracy().getUnit(), DistanceUnit.METER);
-            assertEquals(accuracy.getLargestAccuracy().getValue().doubleValue(),
-                    accuracy.getLargestAccuracyMeters(), 0.0);
+            assertEquals(DistanceUnit.METER, accuracy.getLargestAccuracy().getUnit());
             assertEquals(accuracy.getLargestAccuracyMeters(),
-                    accuracy.getStandardDeviationFactor() * semiAxesLengths[0],
-                    ABSOLUTE_ERROR);
+                    accuracy.getLargestAccuracy().getValue().doubleValue(), 0.0);
+            assertEquals(accuracy.getStandardDeviationFactor() * semiAxesLengths[0],
+                    accuracy.getLargestAccuracyMeters(), ABSOLUTE_ERROR);
 
-            assertEquals(accuracy.getAverageAccuracy().getUnit(), DistanceUnit.METER);
+            assertEquals(DistanceUnit.METER, accuracy.getAverageAccuracy().getUnit());
             assertEquals(accuracy.getAverageAccuracy().getValue().doubleValue(),
                     accuracy.getAverageAccuracyMeters(), 0.0);
-            assertEquals(accuracy.getAverageAccuracyMeters(), accuracy.getStandardDeviationFactor() *
-                    (semiAxesLengths[0] + semiAxesLengths[1] + semiAxesLengths[2]) / 3.0, ABSOLUTE_ERROR);
+            assertEquals(accuracy.getStandardDeviationFactor() *
+                    (semiAxesLengths[0] + semiAxesLengths[1] + semiAxesLengths[2]) / 3.0,
+                    accuracy.getAverageAccuracyMeters(), ABSOLUTE_ERROR);
 
-            assertEquals(accuracy.getNumberOfDimensions(), 3);
+            assertEquals(3, accuracy.getNumberOfDimensions());
 
             Ellipsoid ellipsoid2 = accuracy.toEllipsoid();
             assertEquals(ellipsoid.getCenter(), ellipsoid2.getCenter());
@@ -137,9 +135,8 @@ public class Accuracy3DTest {
                     ellipsoid.getSemiAxesLengths(), accuracy.getStandardDeviationFactor()),
                     ellipsoid2.getSemiAxesLengths(), ABSOLUTE_ERROR);
             assertTrue(ellipsoid.getRotation().equals(ellipsoid2.getRotation(), ABSOLUTE_ERROR));
-            assertArrayEquals(ellipsoid2.getSemiAxesLengths(),
-                    ArrayUtils.multiplyByScalarAndReturnNew(semiAxesLengths,
-                            accuracy.getStandardDeviationFactor()), ABSOLUTE_ERROR);
+            assertArrayEquals(ArrayUtils.multiplyByScalarAndReturnNew(semiAxesLengths,
+                    accuracy.getStandardDeviationFactor()), ellipsoid2.getSemiAxesLengths(), ABSOLUTE_ERROR);
             assertTrue(ellipsoid2.getRotation().equals(rotation, ABSOLUTE_ERROR));
 
             // force IllegalArgumentException
@@ -162,7 +159,6 @@ public class Accuracy3DTest {
             }
             assertNull(accuracy);
 
-
             // constructor with confidence
             final double conf = randomizer.nextDouble(0.0, 1.0);
             accuracy = new Accuracy3D(conf);
@@ -170,26 +166,26 @@ public class Accuracy3DTest {
             // check default values
             assertNull(accuracy.getCovarianceMatrix());
             assertTrue(accuracy.getStandardDeviationFactor() > 0.0);
-            assertEquals(accuracy.getStandardDeviationFactor(),
-                    NormalDist.invcdf((conf + 1.0) / 2.0, 0.0, 1.0), 0.0);
-            assertEquals(accuracy.getConfidence(), conf, 0.0);
+            assertEquals(NormalDist.invcdf((conf + 1.0) / 2.0, 0.0, 1.0),
+                    accuracy.getStandardDeviationFactor(), 0.0);
+            assertEquals(conf, accuracy.getConfidence(), 0.0);
 
-            assertEquals(accuracy.getSmallestAccuracy().getUnit(), DistanceUnit.METER);
-            assertEquals(accuracy.getSmallestAccuracy().getValue().doubleValue(),
-                    Double.POSITIVE_INFINITY, 0.0);
-            assertEquals(accuracy.getSmallestAccuracyMeters(), Double.POSITIVE_INFINITY, 0.0);
+            assertEquals(DistanceUnit.METER, accuracy.getSmallestAccuracy().getUnit());
+            assertEquals(Double.POSITIVE_INFINITY, accuracy.getSmallestAccuracy().getValue().doubleValue(),
+                    0.0);
+            assertEquals(Double.POSITIVE_INFINITY, accuracy.getSmallestAccuracyMeters(), 0.0);
 
-            assertEquals(accuracy.getLargestAccuracy().getUnit(), DistanceUnit.METER);
-            assertEquals(accuracy.getLargestAccuracy().getValue().doubleValue(),
-                    Double.POSITIVE_INFINITY, 0.0);
-            assertEquals(accuracy.getLargestAccuracyMeters(), Double.POSITIVE_INFINITY, 0.0);
+            assertEquals(DistanceUnit.METER, accuracy.getLargestAccuracy().getUnit());
+            assertEquals(Double.POSITIVE_INFINITY, accuracy.getLargestAccuracy().getValue().doubleValue(),
+                    0.0);
+            assertEquals(Double.POSITIVE_INFINITY, accuracy.getLargestAccuracyMeters(), 0.0);
 
-            assertEquals(accuracy.getAverageAccuracy().getUnit(), DistanceUnit.METER);
-            assertEquals(accuracy.getAverageAccuracy().getValue().doubleValue(),
-                    Double.POSITIVE_INFINITY, 0.0);
-            assertEquals(accuracy.getAverageAccuracyMeters(), Double.POSITIVE_INFINITY, 0.0);
+            assertEquals(DistanceUnit.METER, accuracy.getAverageAccuracy().getUnit());
+            assertEquals(Double.POSITIVE_INFINITY, accuracy.getAverageAccuracy().getValue().doubleValue(),
+                    0.0);
+            assertEquals(Double.POSITIVE_INFINITY, accuracy.getAverageAccuracyMeters(), 0.0);
 
-            assertEquals(accuracy.getNumberOfDimensions(), 3);
+            assertEquals(3, accuracy.getNumberOfDimensions());
 
             // force IllegalArgumentException
             accuracy = null;
@@ -205,7 +201,6 @@ public class Accuracy3DTest {
             }
             assertNull(accuracy);
 
-
             // constructor with covariance matrix and confidence
             accuracy = new Accuracy3D(covarianceMatrix, conf);
 
@@ -216,28 +211,26 @@ public class Accuracy3DTest {
                     NormalDist.invcdf((conf + 1.0) / 2.0, 0.0, 1.0), 0.0);
             assertEquals(accuracy.getConfidence(), conf, 0.0);
 
-            assertEquals(accuracy.getSmallestAccuracy().getUnit(), DistanceUnit.METER);
+            assertEquals(DistanceUnit.METER, accuracy.getSmallestAccuracy().getUnit());
             assertEquals(accuracy.getSmallestAccuracy().getValue().doubleValue(),
                     accuracy.getSmallestAccuracyMeters(), 0.0);
-            assertEquals(accuracy.getSmallestAccuracyMeters(),
-                    accuracy.getStandardDeviationFactor() * semiAxesLengths[2],
-                    ABSOLUTE_ERROR);
+            assertEquals(accuracy.getStandardDeviationFactor() * semiAxesLengths[2],
+                    accuracy.getSmallestAccuracyMeters(), ABSOLUTE_ERROR);
 
-            assertEquals(accuracy.getLargestAccuracy().getUnit(), DistanceUnit.METER);
+            assertEquals(DistanceUnit.METER, accuracy.getLargestAccuracy().getUnit());
             assertEquals(accuracy.getLargestAccuracy().getValue().doubleValue(),
                     accuracy.getLargestAccuracyMeters(), 0.0);
-            assertEquals(accuracy.getLargestAccuracyMeters(),
-                    accuracy.getStandardDeviationFactor() * semiAxesLengths[0],
-                    ABSOLUTE_ERROR);
+            assertEquals(accuracy.getStandardDeviationFactor() * semiAxesLengths[0],
+                    accuracy.getLargestAccuracyMeters(), ABSOLUTE_ERROR);
 
-            assertEquals(accuracy.getAverageAccuracy().getUnit(), DistanceUnit.METER);
+            assertEquals(DistanceUnit.METER, accuracy.getAverageAccuracy().getUnit());
             assertEquals(accuracy.getAverageAccuracy().getValue().doubleValue(),
                     accuracy.getAverageAccuracyMeters(), 0.0);
-            assertEquals(accuracy.getAverageAccuracyMeters(), accuracy.getStandardDeviationFactor() *
-                            (semiAxesLengths[0] + semiAxesLengths[1] + semiAxesLengths[2]) / 3.0,
-                    ABSOLUTE_ERROR);
+            assertEquals(accuracy.getStandardDeviationFactor()
+                            * (semiAxesLengths[0] + semiAxesLengths[1] + semiAxesLengths[2]) / 3.0,
+                    accuracy.getAverageAccuracyMeters(), ABSOLUTE_ERROR);
 
-            assertEquals(accuracy.getNumberOfDimensions(), 3);
+            assertEquals(3, accuracy.getNumberOfDimensions());
 
             ellipsoid2 = accuracy.toEllipsoid();
             assertEquals(ellipsoid.getCenter(), ellipsoid2.getCenter());
@@ -245,9 +238,8 @@ public class Accuracy3DTest {
                     ellipsoid.getSemiAxesLengths(), accuracy.getStandardDeviationFactor()),
                     ellipsoid2.getSemiAxesLengths(), ABSOLUTE_ERROR);
             assertTrue(ellipsoid.getRotation().equals(ellipsoid2.getRotation(), ABSOLUTE_ERROR));
-            assertArrayEquals(ellipsoid2.getSemiAxesLengths(),
-                    ArrayUtils.multiplyByScalarAndReturnNew(semiAxesLengths,
-                            accuracy.getStandardDeviationFactor()), ABSOLUTE_ERROR);
+            assertArrayEquals(ArrayUtils.multiplyByScalarAndReturnNew(semiAxesLengths,
+                    accuracy.getStandardDeviationFactor()), ellipsoid2.getSemiAxesLengths(), ABSOLUTE_ERROR);
             assertTrue(ellipsoid2.getRotation().equals(rotation, ABSOLUTE_ERROR));
 
 
@@ -278,33 +270,32 @@ public class Accuracy3DTest {
             }
             assertNull(accuracy);
 
-
             // test constructor with internal accuracy
             accuracy = new Accuracy3D(new com.irurueta.geometry.Accuracy3D(conf));
 
             // check default values
             assertNull(accuracy.getCovarianceMatrix());
             assertTrue(accuracy.getStandardDeviationFactor() > 0.0);
-            assertEquals(accuracy.getStandardDeviationFactor(),
-                    NormalDist.invcdf((conf + 1.0) / 2.0, 0.0, 1.0), 0.0);
-            assertEquals(accuracy.getConfidence(), conf, 0.0);
+            assertEquals(NormalDist.invcdf((conf + 1.0) / 2.0, 0.0, 1.0),
+                    accuracy.getStandardDeviationFactor(), 0.0);
+            assertEquals(conf, accuracy.getConfidence(), 0.0);
 
-            assertEquals(accuracy.getSmallestAccuracy().getUnit(), DistanceUnit.METER);
-            assertEquals(accuracy.getSmallestAccuracy().getValue().doubleValue(),
-                    Double.POSITIVE_INFINITY, 0.0);
-            assertEquals(accuracy.getSmallestAccuracyMeters(), Double.POSITIVE_INFINITY, 0.0);
+            assertEquals(DistanceUnit.METER, accuracy.getSmallestAccuracy().getUnit());
+            assertEquals(Double.POSITIVE_INFINITY, accuracy.getSmallestAccuracy().getValue().doubleValue(),
+                    0.0);
+            assertEquals(Double.POSITIVE_INFINITY, accuracy.getSmallestAccuracyMeters(), 0.0);
 
-            assertEquals(accuracy.getLargestAccuracy().getUnit(), DistanceUnit.METER);
-            assertEquals(accuracy.getLargestAccuracy().getValue().doubleValue(),
-                    Double.POSITIVE_INFINITY, 0.0);
-            assertEquals(accuracy.getLargestAccuracyMeters(), Double.POSITIVE_INFINITY, 0.0);
+            assertEquals(DistanceUnit.METER, accuracy.getLargestAccuracy().getUnit());
+            assertEquals(Double.POSITIVE_INFINITY, accuracy.getLargestAccuracy().getValue().doubleValue(),
+                    0.0);
+            assertEquals(Double.POSITIVE_INFINITY, accuracy.getLargestAccuracyMeters(), 0.0);
 
-            assertEquals(accuracy.getAverageAccuracy().getUnit(), DistanceUnit.METER);
-            assertEquals(accuracy.getAverageAccuracy().getValue().doubleValue(),
-                    Double.POSITIVE_INFINITY, 0.0);
-            assertEquals(accuracy.getAverageAccuracyMeters(), Double.POSITIVE_INFINITY, 0.0);
+            assertEquals(DistanceUnit.METER, accuracy.getAverageAccuracy().getUnit());
+            assertEquals(Double.POSITIVE_INFINITY, accuracy.getAverageAccuracy().getValue().doubleValue(),
+                    0.0);
+            assertEquals(Double.POSITIVE_INFINITY, accuracy.getAverageAccuracyMeters(), 0.0);
 
-            assertEquals(accuracy.getNumberOfDimensions(), 3);
+            assertEquals(3, accuracy.getNumberOfDimensions());
         }
     }
 
@@ -344,7 +335,7 @@ public class Accuracy3DTest {
         final Accuracy3D accuracy = new Accuracy3D();
 
         //check default value
-        assertEquals(accuracy.getStandardDeviationFactor(), 2.0, 0.0);
+        assertEquals(2.0, accuracy.getStandardDeviationFactor(), 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -352,9 +343,9 @@ public class Accuracy3DTest {
         accuracy.setStandardDeviationFactor(factor);
 
         // check
-        assertEquals(accuracy.getStandardDeviationFactor(), factor, 0.0);
-        assertEquals(accuracy.getConfidence(),
-                2.0 * NormalDist.cdf(factor, 0.0, 1.0) - 1.0, 0.0);
+        assertEquals(factor, accuracy.getStandardDeviationFactor(), 0.0);
+        assertEquals(2.0 * NormalDist.cdf(factor, 0.0, 1.0) - 1.0,
+                accuracy.getConfidence(), 0.0);
 
         // force IllegalArgumentException
         try {
@@ -369,9 +360,9 @@ public class Accuracy3DTest {
         final Accuracy3D accuracy = new Accuracy3D();
 
         // check default value
-        assertEquals(accuracy.getConfidence(), 0.9544, 1e-2);
-        assertEquals(accuracy.getConfidence(),
-                2.0 * NormalDist.cdf(2.0, 0.0, 1.0) - 1.0, 0.0);
+        assertEquals(0.9544, accuracy.getConfidence(), 1e-2);
+        assertEquals(2.0 * NormalDist.cdf(2.0, 0.0, 1.0) - 1.0,
+                accuracy.getConfidence(), 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -379,9 +370,9 @@ public class Accuracy3DTest {
         accuracy.setConfidence(conf);
 
         // check
-        assertEquals(accuracy.getConfidence(), conf, 0.0);
-        assertEquals(accuracy.getStandardDeviationFactor(),
-                NormalDist.invcdf((conf + 1.0) / 2.0, 0.0, 1.0), 0.0);
+        assertEquals(conf, accuracy.getConfidence(), 0.0);
+        assertEquals(NormalDist.invcdf((conf + 1.0) / 2.0, 0.0, 1.0),
+                accuracy.getStandardDeviationFactor(), 0.0);
 
         // force IllegalArgumentException
         try {
@@ -411,12 +402,9 @@ public class Accuracy3DTest {
             sqrSemiAxesLengths[i] = semiAxesLengths[i] * semiAxesLengths[i];
         }
 
-        final double roll = Utils.convertToRadians(randomizer.nextDouble(
-                MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Utils.convertToRadians(randomizer.nextDouble(
-                MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Utils.convertToRadians(randomizer.nextDouble(
-                MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double roll = Utils.convertToRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double pitch = Utils.convertToRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double yaw = Utils.convertToRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
         final Rotation3D rotation = new MatrixRotation3D(new Quaternion(roll, pitch, yaw));
 
         final Matrix rotationMatrix = rotation.asInhomogeneousMatrix();
@@ -430,24 +418,23 @@ public class Accuracy3DTest {
         final Ellipse ellipse = accuracy.intersectWithPlane();
         final Ellipse flattenedEllipse = flattenedAccuracy.toEllipse();
 
-        assertEquals(ellipse.getSemiMajorAxis(),
-                flattenedEllipse.getSemiMajorAxis(), ABSOLUTE_ERROR);
-        assertEquals(ellipse.getSemiMinorAxis(),
-                flattenedEllipse.getSemiMinorAxis(), ABSOLUTE_ERROR);
+        assertEquals(ellipse.getSemiMajorAxis(), flattenedEllipse.getSemiMajorAxis(), ABSOLUTE_ERROR);
+        assertEquals(ellipse.getSemiMinorAxis(), flattenedEllipse.getSemiMinorAxis(), ABSOLUTE_ERROR);
         // because ellipses are symmetric, there is a rotation ambiguity
-        assertTrue(Math.abs(ellipse.getRotationAngle() - flattenedEllipse.getRotationAngle()) <= ABSOLUTE_ERROR ||
-                Math.abs(Math.abs(ellipse.getRotationAngle() - flattenedEllipse.getRotationAngle()) - Math.PI) <= ABSOLUTE_ERROR);
+        assertTrue(Math.abs(ellipse.getRotationAngle()
+                - flattenedEllipse.getRotationAngle()) <= ABSOLUTE_ERROR
+                || Math.abs(Math.abs(ellipse.getRotationAngle()
+                - flattenedEllipse.getRotationAngle()) - Math.PI) <= ABSOLUTE_ERROR);
 
-        assertEquals(ellipse.getCenter(), Point2D.create());
-        assertEquals(flattenedEllipse.getCenter(), Point2D.create());
+        assertEquals(Point2D.create(), ellipse.getCenter());
+        assertEquals(Point2D.create(), flattenedEllipse.getCenter());
     }
 
     @Test
     public void testIntersectWithPlaneSphere() throws AlgebraException, GeometryException {
         for (int t = 0; t < TIMES; t++) {
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double radius = Math.abs(randomizer.nextDouble(MIN_RANDOM_VALUE,
-                    MAX_RANDOM_VALUE));
+            final double radius = Math.abs(randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
             final double[] sqrSemiAxesLengths = new double[Ellipsoid.DIMENSIONS];
             Arrays.fill(sqrSemiAxesLengths, radius * radius);
 
@@ -463,16 +450,17 @@ public class Accuracy3DTest {
             final Matrix covarianceMatrix = rotationMatrix.multiplyAndReturnNew(
                     Matrix.diagonal(sqrSemiAxesLengths).multiplyAndReturnNew(rotationMatrix));
 
-            final com.irurueta.geometry.Accuracy3D accuracy = new com.irurueta.geometry.Accuracy3D(covarianceMatrix);
+            final com.irurueta.geometry.Accuracy3D accuracy =
+                    new com.irurueta.geometry.Accuracy3D(covarianceMatrix);
 
             final Ellipse ellipse = accuracy.intersectWithPlane();
 
             // check
-            assertEquals(ellipse.getCenter(), Point2D.create());
-            assertEquals(ellipse.getSemiMajorAxis(),
-                    radius * accuracy.getStandardDeviationFactor(), ABSOLUTE_ERROR);
-            assertEquals(ellipse.getSemiMinorAxis(),
-                    radius * accuracy.getStandardDeviationFactor(), ABSOLUTE_ERROR);
+            assertEquals(Point2D.create(), ellipse.getCenter());
+            assertEquals(radius * accuracy.getStandardDeviationFactor(),
+                    ellipse.getSemiMajorAxis(), ABSOLUTE_ERROR);
+            assertEquals(radius * accuracy.getStandardDeviationFactor(),
+                    ellipse.getSemiMinorAxis(), ABSOLUTE_ERROR);
         }
     }
 
@@ -492,7 +480,6 @@ public class Accuracy3DTest {
                 sqrSemiAxesLengths[i] = semiAxesLengths[i] * semiAxesLengths[i];
             }
 
-
             final double roll = Utils.convertToRadians(randomizer.nextDouble(
                     MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
             final double pitch = Utils.convertToRadians(randomizer.nextDouble(
@@ -511,7 +498,7 @@ public class Accuracy3DTest {
             final Ellipse ellipse = accuracy.intersectWithPlane();
 
             // check
-            assertEquals(ellipse.getCenter(), Point2D.create());
+            assertEquals(Point2D.create(), ellipse.getCenter());
             assertTrue(ellipse.getSemiMajorAxis() <= semiAxesLengths[0] &&
                     ellipse.getSemiMajorAxis() >= semiAxesLengths[2]);
             assertTrue(ellipse.getSemiMinorAxis() <= semiAxesLengths[0] &&
@@ -536,7 +523,6 @@ public class Accuracy3DTest {
                 sqrSemiAxesLengths[i] = semiAxesLengths[i] * semiAxesLengths[i];
             }
 
-
             final double angle = Utils.convertToRadians(randomizer.nextDouble(
                     MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
             final double[] axis = new double[]{0.0, 0.0, 1.0};
@@ -552,9 +538,9 @@ public class Accuracy3DTest {
             final Ellipse ellipse = accuracy.intersectWithPlane();
 
             // check
-            assertEquals(ellipse.getCenter(), Point2D.create());
-            assertEquals(ellipse.getSemiMajorAxis(), semiAxesLengths[0], ABSOLUTE_ERROR);
-            assertEquals(ellipse.getSemiMinorAxis(), semiAxesLengths[1], ABSOLUTE_ERROR);
+            assertEquals(Point2D.create(), ellipse.getCenter());
+            assertEquals(semiAxesLengths[0], ellipse.getSemiMajorAxis(), ABSOLUTE_ERROR);
+            assertEquals(semiAxesLengths[1], ellipse.getSemiMinorAxis(), ABSOLUTE_ERROR);
 
             // because ellipses are symmetric, there is a rotation ambiguity
             assertTrue(Math.abs(ellipse.getRotationAngle() - angle) <= ABSOLUTE_ERROR ||

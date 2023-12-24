@@ -30,8 +30,8 @@ public class GnomonicTest {
 
         //check
         assertNotNull(Geodesic.WGS84);
-        assertEquals(g.getMajorRadius(), Geodesic.WGS84.getMajorRadius(), 0.0);
-        assertEquals(g.getFlattening(), Geodesic.WGS84.getFlattening(), 0.0);
+        assertEquals(Geodesic.WGS84.getMajorRadius(), g.getMajorRadius(), 0.0);
+        assertEquals(Geodesic.WGS84.getFlattening(), g.getFlattening(), 0.0);
     }
 
     @Test
@@ -48,14 +48,14 @@ public class GnomonicTest {
         final GnomonicData data1 = g.forward(lat1, lon1, lat2, lon2);
         final GnomonicData data2 = g.reverse(data1.getLat0(), data1.getLon0(), data1.getX(), data1.getY());
 
-        assertEquals(data1.getLat0(), lat1, 0.0);
-        assertEquals(data1.getLon0(), lon1, 0.0);
-        assertEquals(data1.getLat(), lat2, 0.0);
-        assertEquals(data1.getLon(), lon2, 0.0);
+        assertEquals(lat1, data1.getLat0(), 0.0);
+        assertEquals(lon1, data1.getLon0(), 0.0);
+        assertEquals(lat2, data1.getLat(), 0.0);
+        assertEquals(lon2, data1.getLon(), 0.0);
 
-        assertEquals(data2.getLat0(), lat1, 0.0);
-        assertEquals(data2.getLon0(), lon1, 0.0);
-        assertEquals(data2.getLat(), lat2, ABSOLUTE_ERROR);
-        assertEquals(data2.getLon(), lon2, ABSOLUTE_ERROR);
+        assertEquals(lat1, data2.getLat0(), 0.0);
+        assertEquals(lon1, data2.getLon0(), 0.0);
+        assertEquals(lat2, data2.getLat(), ABSOLUTE_ERROR);
+        assertEquals(lon2, data2.getLon(), ABSOLUTE_ERROR);
     }
 }

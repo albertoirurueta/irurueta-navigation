@@ -29,20 +29,20 @@ public class ECEFVelocityTest {
         ECEFVelocity velocity = new ECEFVelocity();
 
         // check
-        assertEquals(velocity.getVx(), 0.0, 0.0);
-        assertEquals(velocity.getVy(), 0.0, 0.0);
-        assertEquals(velocity.getVz(), 0.0, 0.0);
+        assertEquals(0.0, velocity.getVx(), 0.0);
+        assertEquals(0.0, velocity.getVy(), 0.0);
+        assertEquals(0.0, velocity.getVz(), 0.0);
 
         Speed speedX = velocity.getSpeedX();
         Speed speedY = velocity.getSpeedY();
         Speed speedZ = velocity.getSpeedZ();
 
-        assertEquals(speedX.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(speedX.getUnit(), SpeedUnit.METERS_PER_SECOND);
-        assertEquals(speedY.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(speedY.getUnit(), SpeedUnit.METERS_PER_SECOND);
-        assertEquals(speedZ.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(speedZ.getUnit(), SpeedUnit.METERS_PER_SECOND);
+        assertEquals(0.0, speedX.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, speedX.getUnit());
+        assertEquals(0.0, speedY.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, speedY.getUnit());
+        assertEquals(0.0, speedZ.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, speedZ.getUnit());
 
         // test constructor with coordinates
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -53,20 +53,20 @@ public class ECEFVelocityTest {
         velocity = new ECEFVelocity(vx, vy, vz);
 
         // check
-        assertEquals(velocity.getVx(), vx, 0.0);
-        assertEquals(velocity.getVy(), vy, 0.0);
-        assertEquals(velocity.getVz(), vz, 0.0);
+        assertEquals(vx, velocity.getVx(), 0.0);
+        assertEquals(vy, velocity.getVy(), 0.0);
+        assertEquals(vz, velocity.getVz(), 0.0);
 
         speedX = velocity.getSpeedX();
         speedY = velocity.getSpeedY();
         speedZ = velocity.getSpeedZ();
 
-        assertEquals(speedX.getValue().doubleValue(), vx, 0.0);
-        assertEquals(speedX.getUnit(), SpeedUnit.METERS_PER_SECOND);
-        assertEquals(speedY.getValue().doubleValue(), vy, 0.0);
-        assertEquals(speedY.getUnit(), SpeedUnit.METERS_PER_SECOND);
-        assertEquals(speedZ.getValue().doubleValue(), vz, 0.0);
-        assertEquals(speedZ.getUnit(), SpeedUnit.METERS_PER_SECOND);
+        assertEquals(vx, speedX.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, speedX.getUnit());
+        assertEquals(vy, speedY.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, speedY.getUnit());
+        assertEquals(vz, speedZ.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, speedZ.getUnit());
 
 
         // test constructor with coordinate distances
@@ -77,9 +77,9 @@ public class ECEFVelocityTest {
         velocity = new ECEFVelocity(speedX2, speedY2, speedZ2);
 
         // check
-        assertEquals(velocity.getVx(), vx, 0.0);
-        assertEquals(velocity.getVy(), vy, 0.0);
-        assertEquals(velocity.getVz(), vz, 0.0);
+        assertEquals(vx, velocity.getVx(), 0.0);
+        assertEquals(vy, velocity.getVy(), 0.0);
+        assertEquals(vz, velocity.getVz(), 0.0);
 
         speedX = velocity.getSpeedX();
         speedY = velocity.getSpeedY();
@@ -108,13 +108,13 @@ public class ECEFVelocityTest {
         final ECEFVelocity velocity = new ECEFVelocity();
 
         // check default value
-        assertEquals(velocity.getVx(), 0.0, 0.0);
+        assertEquals(0.0, velocity.getVx(), 0.0);
 
         // set new value
         velocity.setVx(vx);
 
         // check
-        assertEquals(velocity.getVx(), vx, 0.0);
+        assertEquals(vx, velocity.getVx(), 0.0);
     }
 
     @Test
@@ -125,13 +125,13 @@ public class ECEFVelocityTest {
         final ECEFVelocity velocity = new ECEFVelocity();
 
         // check default value
-        assertEquals(velocity.getVy(), 0.0, 0.0);
+        assertEquals(0.0, velocity.getVy(), 0.0);
 
         // set new value
         velocity.setVy(vy);
 
         // check
-        assertEquals(velocity.getVy(), vy, 0.0);
+        assertEquals(vy, velocity.getVy(), 0.0);
     }
 
     @Test
@@ -142,13 +142,13 @@ public class ECEFVelocityTest {
         final ECEFVelocity velocity = new ECEFVelocity();
 
         // check default value
-        assertEquals(velocity.getVz(), 0.0, 0.0);
+        assertEquals(0.0, velocity.getVz(), 0.0);
 
         // set new value
         velocity.setVz(vz);
 
         // check
-        assertEquals(velocity.getVz(), vz, 0.0);
+        assertEquals(vz, velocity.getVz(), 0.0);
     }
 
     @Test
@@ -161,17 +161,17 @@ public class ECEFVelocityTest {
         final ECEFVelocity velocity = new ECEFVelocity();
 
         // check default values
-        assertEquals(velocity.getVx(), 0.0, 0.0);
-        assertEquals(velocity.getVy(), 0.0, 0.0);
-        assertEquals(velocity.getVz(), 0.0, 0.0);
+        assertEquals(0.0, velocity.getVx(), 0.0);
+        assertEquals(0.0, velocity.getVy(), 0.0);
+        assertEquals(0.0, velocity.getVz(), 0.0);
 
         // set new values
         velocity.setCoordinates(vx, vy, vz);
 
         // check
-        assertEquals(velocity.getVx(), vx, 0.0);
-        assertEquals(velocity.getVy(), vy, 0.0);
-        assertEquals(velocity.getVz(), vz, 0.0);
+        assertEquals(vx, velocity.getVx(), 0.0);
+        assertEquals(vy, velocity.getVy(), 0.0);
+        assertEquals(vz, velocity.getVz(), 0.0);
     }
 
     @Test
@@ -184,8 +184,8 @@ public class ECEFVelocityTest {
         // check default value
         final Speed speedX1 = velocity.getSpeedX();
 
-        assertEquals(speedX1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(speedX1.getUnit(), SpeedUnit.METERS_PER_SECOND);
+        assertEquals(0.0, speedX1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, speedX1.getUnit());
 
         // set new value
         final Speed speedX2 = new Speed(vx, SpeedUnit.METERS_PER_SECOND);
@@ -210,8 +210,8 @@ public class ECEFVelocityTest {
         // check default value
         final Speed speedY1 = velocity.getSpeedY();
 
-        assertEquals(speedY1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(speedY1.getUnit(), SpeedUnit.METERS_PER_SECOND);
+        assertEquals(0.0, speedY1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, speedY1.getUnit());
 
         // set new value
         final Speed speedY2 = new Speed(vy, SpeedUnit.METERS_PER_SECOND);
@@ -236,8 +236,8 @@ public class ECEFVelocityTest {
         // check default value
         final Speed speedZ1 = velocity.getSpeedZ();
 
-        assertEquals(speedZ1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(speedZ1.getUnit(), SpeedUnit.METERS_PER_SECOND);
+        assertEquals(0.0, speedZ1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, speedZ1.getUnit());
 
         // set new value
         final Speed speedZ2 = new Speed(vz, SpeedUnit.METERS_PER_SECOND);
@@ -268,9 +268,9 @@ public class ECEFVelocityTest {
         velocity.setCoordinates(speedX, speedY, speedZ);
 
         // check
-        assertEquals(velocity.getSpeedX(), speedX);
-        assertEquals(velocity.getSpeedY(), speedY);
-        assertEquals(velocity.getSpeedZ(), speedZ);
+        assertEquals(speedX, velocity.getSpeedX());
+        assertEquals(speedY, velocity.getSpeedY());
+        assertEquals(speedZ, velocity.getSpeedZ());
     }
 
     @Test
@@ -282,16 +282,15 @@ public class ECEFVelocityTest {
 
         final ECEFVelocity velocity = new ECEFVelocity(vx, vy, vz);
 
-        final double norm = Math.sqrt(Math.pow(vx, 2.0) + Math.pow(vy, 2.0)
-                + Math.pow(vz, 2.0));
+        final double norm = Math.sqrt(Math.pow(vx, 2.0) + Math.pow(vy, 2.0) + Math.pow(vz, 2.0));
         assertEquals(velocity.getNorm(), norm, ABSOLUTE_ERROR);
 
         final Speed normSpeed1 = new Speed(0.0, SpeedUnit.METERS_PER_SECOND);
         velocity.getNormAsSpeed(normSpeed1);
         final Speed normSpeed2 = velocity.getNormAsSpeed();
 
-        assertEquals(normSpeed1.getValue().doubleValue(), norm, ABSOLUTE_ERROR);
-        assertEquals(normSpeed1.getUnit(), SpeedUnit.METERS_PER_SECOND);
+        assertEquals(norm, normSpeed1.getValue().doubleValue(), ABSOLUTE_ERROR);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, normSpeed1.getUnit());
         assertEquals(normSpeed1, normSpeed2);
     }
 
@@ -308,9 +307,9 @@ public class ECEFVelocityTest {
         velocity1.copyTo(velocity2);
 
         // check
-        assertEquals(velocity2.getVx(), vx, 0.0);
-        assertEquals(velocity2.getVy(), vy, 0.0);
-        assertEquals(velocity2.getVz(), vz, 0.0);
+        assertEquals(vx, velocity2.getVx(), 0.0);
+        assertEquals(vy, velocity2.getVy(), 0.0);
+        assertEquals(vz, velocity2.getVz(), 0.0);
     }
 
     @Test
@@ -326,9 +325,9 @@ public class ECEFVelocityTest {
         velocity2.copyFrom(velocity1);
 
         // check
-        assertEquals(velocity2.getVx(), vx, 0.0);
-        assertEquals(velocity2.getVy(), vy, 0.0);
-        assertEquals(velocity2.getVz(), vz, 0.0);
+        assertEquals(vx, velocity2.getVx(), 0.0);
+        assertEquals(vy, velocity2.getVy(), 0.0);
+        assertEquals(vz, velocity2.getVz(), 0.0);
     }
 
     @Test
@@ -345,9 +344,9 @@ public class ECEFVelocityTest {
 
         final double[] result2 = velocity.asArray();
 
-        assertEquals(result1[0], vx, 0.0);
-        assertEquals(result1[1], vy, 0.0);
-        assertEquals(result1[2], vz, 0.0);
+        assertEquals(vx, result1[0], 0.0);
+        assertEquals(vy, result1[1], 0.0);
+        assertEquals(vz, result1[2], 0.0);
 
         assertArrayEquals(result1, result2, 0.0);
 
@@ -376,9 +375,9 @@ public class ECEFVelocityTest {
         final Matrix result3 = new Matrix(1, 1);
         velocity.asMatrix(result3);
 
-        assertEquals(result1.getElementAtIndex(0), vx, 0.0);
-        assertEquals(result1.getElementAtIndex(1), vy, 0.0);
-        assertEquals(result1.getElementAtIndex(2), vz, 0.0);
+        assertEquals(vx, result1.getElementAtIndex(0), 0.0);
+        assertEquals(vy, result1.getElementAtIndex(1), 0.0);
+        assertEquals(vz, result1.getElementAtIndex(2), 0.0);
 
         assertEquals(result1, result2);
         assertEquals(result1, result3);

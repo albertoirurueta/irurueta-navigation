@@ -342,7 +342,8 @@ public class GeoMath {
         // here x >= 0 and x >= abs(y), so angle is in [-pi/4, pi/4]
         double ang = Math.toDegrees(Math.atan2(y, x));
         switch (q) {
-            // Note that atan2d(-0.0, 1.0) will return -0. However, we expect that atan2d will not be called with y = -0.
+            // Note that atan2d(-0.0, 1.0) will return -0. However, we expect that atan2d will not be called with y =
+            // -0.
             // If need be, include case 0: ang = 0 + ang; break
             // and handle mpfr as in angRound.
             case 1:

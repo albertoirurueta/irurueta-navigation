@@ -66,10 +66,8 @@ public class ECEFtoECIFrameConverterTest {
         final ECEFtoECIFrameConverter converter = new ECEFtoECIFrameConverter();
 
         // check
-        assertEquals(converter.getSourceType(),
-                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
-        assertEquals(converter.getDestinationType(),
-                FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+        assertEquals(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME, converter.getSourceType());
+        assertEquals(FrameType.EARTH_CENTERED_INERTIAL_FRAME, converter.getDestinationType());
     }
 
     @Test
@@ -88,12 +86,10 @@ public class ECEFtoECIFrameConverterTest {
             final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
             final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-            final double roll = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
             final double pitch = Math.toRadians(
                     randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
             final Quaternion q = new Quaternion(roll, pitch, yaw);
 
             final Matrix m = q.asInhomogeneousMatrix();
@@ -140,7 +136,7 @@ public class ECEFtoECIFrameConverterTest {
             numValid++;
         }
 
-        assertEquals(numValid, TIMES);
+        assertEquals(TIMES, numValid);
     }
 
     @Test
@@ -169,8 +165,7 @@ public class ECEFtoECIFrameConverterTest {
 
             final Matrix m = q.asInhomogeneousMatrix();
             final CoordinateTransformation c = new CoordinateTransformation(
-                    m, FrameType.BODY_FRAME,
-                    FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+                    m, FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
             final ECEFFrame ecefFrame1 = new ECEFFrame(x, y, z, vx, vy, vz, c);
 
@@ -213,12 +208,13 @@ public class ECEFtoECIFrameConverterTest {
             numValid++;
         }
 
-        assertEquals(numValid, TIMES);
+        assertEquals(TIMES, numValid);
     }
 
     @Test
-    public void testConvertECEFtoECIAndReturnNewWithSecondsTimeInterval() throws InvalidRotationMatrixException,
-            InvalidSourceAndDestinationFrameTypeException, RotationException {
+    public void testConvertECEFtoECIAndReturnNewWithSecondsTimeInterval()
+            throws InvalidRotationMatrixException, InvalidSourceAndDestinationFrameTypeException,
+            RotationException {
 
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
@@ -232,18 +228,15 @@ public class ECEFtoECIFrameConverterTest {
             final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
             final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-            final double roll = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
             final double pitch = Math.toRadians(
                     randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
             final Quaternion q = new Quaternion(roll, pitch, yaw);
 
             final Matrix m = q.asInhomogeneousMatrix();
             final CoordinateTransformation c = new CoordinateTransformation(
-                    m, FrameType.BODY_FRAME,
-                    FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+                    m, FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
             final ECEFFrame ecefFrame1 = new ECEFFrame(x, y, z, vx, vy, vz, c);
 
@@ -282,7 +275,7 @@ public class ECEFtoECIFrameConverterTest {
             numValid++;
         }
 
-        assertEquals(numValid, TIMES);
+        assertEquals(TIMES, numValid);
     }
 
     @Test
@@ -301,18 +294,15 @@ public class ECEFtoECIFrameConverterTest {
             final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
             final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-            final double roll = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
             final double pitch = Math.toRadians(
                     randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
             final Quaternion q = new Quaternion(roll, pitch, yaw);
 
             final Matrix m = q.asInhomogeneousMatrix();
             final CoordinateTransformation c = new CoordinateTransformation(
-                    m, FrameType.BODY_FRAME,
-                    FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+                    m, FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
             final ECEFFrame ecefFrame1 = new ECEFFrame(x, y, z, vx, vy, vz, c);
 
@@ -351,7 +341,7 @@ public class ECEFtoECIFrameConverterTest {
             numValid++;
         }
 
-        assertEquals(numValid, TIMES);
+        assertEquals(TIMES, numValid);
     }
 
     @Test
@@ -372,18 +362,15 @@ public class ECEFtoECIFrameConverterTest {
             final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
             final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-            final double roll = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
             final double pitch = Math.toRadians(
                     randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
             final Quaternion q = new Quaternion(roll, pitch, yaw);
 
             final Matrix m = q.asInhomogeneousMatrix();
             final CoordinateTransformation c = new CoordinateTransformation(
-                    m, FrameType.BODY_FRAME,
-                    FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+                    m, FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
             final ECEFFrame ecefFrame1 = new ECEFFrame(x, y, z, vx, vy, vz, c);
 
@@ -424,7 +411,7 @@ public class ECEFtoECIFrameConverterTest {
             numValid++;
         }
 
-        assertEquals(numValid, TIMES);
+        assertEquals(TIMES, numValid);
     }
 
     @Test
@@ -445,18 +432,15 @@ public class ECEFtoECIFrameConverterTest {
             final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
             final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-            final double roll = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
             final double pitch = Math.toRadians(
                     randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
             final Quaternion q = new Quaternion(roll, pitch, yaw);
 
             final Matrix m = q.asInhomogeneousMatrix();
             final CoordinateTransformation c = new CoordinateTransformation(
-                    m, FrameType.BODY_FRAME,
-                    FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+                    m, FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
             final ECEFFrame ecefFrame1 = new ECEFFrame(x, y, z, vx, vy, vz, c);
 
@@ -499,7 +483,7 @@ public class ECEFtoECIFrameConverterTest {
             numValid++;
         }
 
-        assertEquals(numValid, TIMES);
+        assertEquals(TIMES, numValid);
     }
 
     @Test
@@ -530,8 +514,7 @@ public class ECEFtoECIFrameConverterTest {
 
             final Matrix m = q.asInhomogeneousMatrix();
             final CoordinateTransformation c = new CoordinateTransformation(
-                    m, FrameType.BODY_FRAME,
-                    FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+                    m, FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
             final ECEFFrame ecefFrame1 = new ECEFFrame(x, y, z, vx, vy, vz, c);
 
@@ -570,7 +553,7 @@ public class ECEFtoECIFrameConverterTest {
             numValid++;
         }
 
-        assertEquals(numValid, TIMES);
+        assertEquals(TIMES, numValid);
     }
 
     @Test
@@ -591,18 +574,15 @@ public class ECEFtoECIFrameConverterTest {
             final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
             final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-            final double roll = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
             final double pitch = Math.toRadians(
                     randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
             final Quaternion q = new Quaternion(roll, pitch, yaw);
 
             final Matrix m = q.asInhomogeneousMatrix();
             final CoordinateTransformation c = new CoordinateTransformation(
-                    m, FrameType.BODY_FRAME,
-                    FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+                    m, FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
             final ECEFFrame ecefFrame1 = new ECEFFrame(x, y, z, vx, vy, vz, c);
 
@@ -641,6 +621,6 @@ public class ECEFtoECIFrameConverterTest {
             numValid++;
         }
 
-        assertEquals(numValid, TIMES);
+        assertEquals(TIMES, numValid);
     }
 }

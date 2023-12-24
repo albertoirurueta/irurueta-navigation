@@ -20,10 +20,8 @@ public class ECEFPositionTest {
 
     private static final double THRESHOLD = 1e-6;
 
-    private static final double MIN_POSITION_VALUE =
-            Constants.EARTH_EQUATORIAL_RADIUS_WGS84 - 50.0;
-    private static final double MAX_POSITION_VALUE =
-            Constants.EARTH_EQUATORIAL_RADIUS_WGS84 + 50.0;
+    private static final double MIN_POSITION_VALUE = Constants.EARTH_EQUATORIAL_RADIUS_WGS84 - 50.0;
+    private static final double MAX_POSITION_VALUE = Constants.EARTH_EQUATORIAL_RADIUS_WGS84 + 50.0;
 
     private static final double ABSOLUTE_ERROR = 1e-8;
 
@@ -34,20 +32,20 @@ public class ECEFPositionTest {
         ECEFPosition position = new ECEFPosition();
 
         // check
-        assertEquals(position.getX(), 0.0, 0.0);
-        assertEquals(position.getY(), 0.0, 0.0);
-        assertEquals(position.getZ(), 0.0, 0.0);
+        assertEquals(0.0, position.getX(), 0.0);
+        assertEquals(0.0, position.getY(), 0.0);
+        assertEquals(0.0, position.getZ(), 0.0);
 
         Distance distanceX = position.getDistanceX();
         Distance distanceY = position.getDistanceY();
         Distance distanceZ = position.getDistanceZ();
 
-        assertEquals(distanceX.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(distanceX.getUnit(), DistanceUnit.METER);
-        assertEquals(distanceY.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(distanceY.getUnit(), DistanceUnit.METER);
-        assertEquals(distanceZ.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(distanceZ.getUnit(), DistanceUnit.METER);
+        assertEquals(0.0, distanceX.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, distanceX.getUnit());
+        assertEquals(0.0, distanceY.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, distanceY.getUnit());
+        assertEquals(0.0, distanceZ.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, distanceZ.getUnit());
 
         // test constructor with coordinates
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -58,20 +56,20 @@ public class ECEFPositionTest {
         position = new ECEFPosition(x, y, z);
 
         // check
-        assertEquals(position.getX(), x, 0.0);
-        assertEquals(position.getY(), y, 0.0);
-        assertEquals(position.getZ(), z, 0.0);
+        assertEquals(x, position.getX(), 0.0);
+        assertEquals(y, position.getY(), 0.0);
+        assertEquals(z, position.getZ(), 0.0);
 
         distanceX = position.getDistanceX();
         distanceY = position.getDistanceY();
         distanceZ = position.getDistanceZ();
 
-        assertEquals(distanceX.getValue().doubleValue(), x, 0.0);
-        assertEquals(distanceX.getUnit(), DistanceUnit.METER);
-        assertEquals(distanceY.getValue().doubleValue(), y, 0.0);
-        assertEquals(distanceY.getUnit(), DistanceUnit.METER);
-        assertEquals(distanceZ.getValue().doubleValue(), z, 0.0);
-        assertEquals(distanceZ.getUnit(), DistanceUnit.METER);
+        assertEquals(x, distanceX.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, distanceX.getUnit());
+        assertEquals(y, distanceY.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, distanceY.getUnit());
+        assertEquals(z, distanceZ.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, distanceZ.getUnit());
 
 
         // test constructor with coordinate distances
@@ -82,9 +80,9 @@ public class ECEFPositionTest {
         position = new ECEFPosition(distanceX2, distanceY2, distanceZ2);
 
         // check
-        assertEquals(position.getX(), x, 0.0);
-        assertEquals(position.getY(), y, 0.0);
-        assertEquals(position.getZ(), z, 0.0);
+        assertEquals(x, position.getX(), 0.0);
+        assertEquals(y, position.getY(), 0.0);
+        assertEquals(z, position.getZ(), 0.0);
 
         distanceX = position.getDistanceX();
         distanceY = position.getDistanceY();
@@ -113,13 +111,13 @@ public class ECEFPositionTest {
         final ECEFPosition position = new ECEFPosition();
 
         // check default value
-        assertEquals(position.getX(), 0.0, 0.0);
+        assertEquals(0.0, position.getX(), 0.0);
 
         // set new value
         position.setX(x);
 
         // check
-        assertEquals(position.getX(), x, 0.0);
+        assertEquals(x, position.getX(), 0.0);
     }
 
     @Test
@@ -130,13 +128,13 @@ public class ECEFPositionTest {
         final ECEFPosition position = new ECEFPosition();
 
         // check default value
-        assertEquals(position.getY(), 0.0, 0.0);
+        assertEquals(0.0, position.getY(), 0.0);
 
         // set new value
         position.setY(y);
 
         // check
-        assertEquals(position.getY(), y, 0.0);
+        assertEquals(y, position.getY(), 0.0);
     }
 
     @Test
@@ -147,13 +145,13 @@ public class ECEFPositionTest {
         final ECEFPosition position = new ECEFPosition();
 
         // check default value
-        assertEquals(position.getZ(), 0.0, 0.0);
+        assertEquals(0.0, position.getZ(), 0.0);
 
         // set new value
         position.setZ(z);
 
         // check
-        assertEquals(position.getZ(), z, 0.0);
+        assertEquals(z, position.getZ(), 0.0);
     }
 
     @Test
@@ -166,17 +164,17 @@ public class ECEFPositionTest {
         final ECEFPosition position = new ECEFPosition();
 
         // check default values
-        assertEquals(position.getX(), 0.0, 0.0);
-        assertEquals(position.getY(), 0.0, 0.0);
-        assertEquals(position.getZ(), 0.0, 0.0);
+        assertEquals(0.0, position.getX(), 0.0);
+        assertEquals(0.0, position.getY(), 0.0);
+        assertEquals(0.0, position.getZ(), 0.0);
 
         // set new values
         position.setCoordinates(x, y, z);
 
         // check
-        assertEquals(position.getX(), x, 0.0);
-        assertEquals(position.getY(), y, 0.0);
-        assertEquals(position.getZ(), z, 0.0);
+        assertEquals(x, position.getX(), 0.0);
+        assertEquals(y, position.getY(), 0.0);
+        assertEquals(z, position.getZ(), 0.0);
     }
 
     @Test
@@ -189,7 +187,7 @@ public class ECEFPositionTest {
         final ECEFPosition position = new ECEFPosition();
 
         // check default value
-        assertEquals(position.getPosition(), Point3D.create());
+        assertEquals(Point3D.create(), position.getPosition());
 
         // set new vale
         final Point3D pos1 = new InhomogeneousPoint3D(x, y, z);
@@ -214,8 +212,8 @@ public class ECEFPositionTest {
         // check default value
         final Distance distanceX1 = position.getDistanceX();
 
-        assertEquals(distanceX1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(distanceX1.getUnit(), DistanceUnit.METER);
+        assertEquals(0.0, distanceX1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, distanceX1.getUnit());
 
         // set new value
         final Distance distanceX2 = new Distance(x, DistanceUnit.METER);
@@ -240,8 +238,8 @@ public class ECEFPositionTest {
         // check default value
         final Distance distanceY1 = position.getDistanceY();
 
-        assertEquals(distanceY1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(distanceY1.getUnit(), DistanceUnit.METER);
+        assertEquals(0.0, distanceY1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, distanceY1.getUnit());
 
         // set new value
         final Distance distanceY2 = new Distance(y, DistanceUnit.METER);
@@ -266,8 +264,8 @@ public class ECEFPositionTest {
         // check default values
         final Distance distanceZ1 = position.getDistanceZ();
 
-        assertEquals(distanceZ1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(distanceZ1.getUnit(), DistanceUnit.METER);
+        assertEquals(0.0, distanceZ1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, distanceZ1.getUnit());
 
         // set new value
         final Distance distanceZ2 = new Distance(z, DistanceUnit.METER);
@@ -298,9 +296,9 @@ public class ECEFPositionTest {
         position.setCoordinates(distanceX, distanceY, distanceZ);
 
         // check
-        assertEquals(position.getDistanceX(), distanceX);
-        assertEquals(position.getDistanceY(), distanceY);
-        assertEquals(position.getDistanceZ(), distanceZ);
+        assertEquals(distanceX, position.getDistanceX());
+        assertEquals(distanceY, position.getDistanceY());
+        assertEquals(distanceZ, position.getDistanceZ());
     }
 
     @Test
@@ -312,16 +310,15 @@ public class ECEFPositionTest {
 
         final ECEFPosition position = new ECEFPosition(x, y, z);
 
-        final double norm = Math.sqrt(Math.pow(x, 2.0) + Math.pow(y, 2.0)
-                + Math.pow(z, 2.0));
+        final double norm = Math.sqrt(Math.pow(x, 2.0) + Math.pow(y, 2.0) + Math.pow(z, 2.0));
         assertEquals(position.getNorm(), norm, ABSOLUTE_ERROR);
 
         final Distance normDistance1 = new Distance(0.0, DistanceUnit.KILOMETER);
         position.getNormAsDistance(normDistance1);
         final Distance normDistance2 = position.getNormAsDistance();
 
-        assertEquals(normDistance1.getValue().doubleValue(), norm, ABSOLUTE_ERROR);
-        assertEquals(normDistance1.getUnit(), DistanceUnit.METER);
+        assertEquals(norm, normDistance1.getValue().doubleValue(), ABSOLUTE_ERROR);
+        assertEquals(DistanceUnit.METER, normDistance1.getUnit());
         assertEquals(normDistance1, normDistance2);
     }
 
@@ -338,9 +335,9 @@ public class ECEFPositionTest {
         position1.copyTo(position2);
 
         // check
-        assertEquals(position2.getX(), x, 0.0);
-        assertEquals(position2.getY(), y, 0.0);
-        assertEquals(position2.getZ(), z, 0.0);
+        assertEquals(x, position2.getX(), 0.0);
+        assertEquals(y, position2.getY(), 0.0);
+        assertEquals(z, position2.getZ(), 0.0);
     }
 
     @Test
@@ -356,9 +353,9 @@ public class ECEFPositionTest {
         position2.copyFrom(position1);
 
         // check
-        assertEquals(position2.getX(), x, 0.0);
-        assertEquals(position2.getY(), y, 0.0);
-        assertEquals(position2.getZ(), z, 0.0);
+        assertEquals(x, position2.getX(), 0.0);
+        assertEquals(y, position2.getY(), 0.0);
+        assertEquals(z, position2.getZ(), 0.0);
     }
 
     @Test
@@ -375,9 +372,9 @@ public class ECEFPositionTest {
 
         final double[] result2 = position.asArray();
 
-        assertEquals(result1[0], x, 0.0);
-        assertEquals(result1[1], y, 0.0);
-        assertEquals(result1[2], z, 0.0);
+        assertEquals(x, result1[0], 0.0);
+        assertEquals(y, result1[1], 0.0);
+        assertEquals(z, result1[2], 0.0);
 
         assertArrayEquals(result1, result2, 0.0);
 
@@ -406,9 +403,9 @@ public class ECEFPositionTest {
         final Matrix result3 = new Matrix(1, 1);
         position.asMatrix(result3);
 
-        assertEquals(result1.getElementAtIndex(0), x, 0.0);
-        assertEquals(result1.getElementAtIndex(1), y, 0.0);
-        assertEquals(result1.getElementAtIndex(2), z, 0.0);
+        assertEquals(x, result1.getElementAtIndex(0), 0.0);
+        assertEquals(y, result1.getElementAtIndex(1), 0.0);
+        assertEquals(z, result1.getElementAtIndex(2), 0.0);
 
         assertEquals(result1, result2);
         assertEquals(result1, result3);

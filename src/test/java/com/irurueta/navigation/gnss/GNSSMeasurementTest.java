@@ -49,15 +49,14 @@ public class GNSSMeasurementTest {
         GNSSMeasurement measurement = new GNSSMeasurement();
 
         // check default values
-        assertEquals(measurement.getPseudoRange(), 0.0, 0.0);
-        assertEquals(measurement.getPseudoRate(), 0.0, 0.0);
-        assertEquals(measurement.getX(), 0.0, 0.0);
-        assertEquals(measurement.getY(), 0.0, 0.0);
-        assertEquals(measurement.getZ(), 0.0, 0.0);
-        assertEquals(measurement.getVx(), 0.0, 0.0);
-        assertEquals(measurement.getVy(), 0.0, 0.0);
-        assertEquals(measurement.getVz(), 0.0, 0.0);
-
+        assertEquals(0.0, measurement.getPseudoRange(), 0.0);
+        assertEquals(0.0, measurement.getPseudoRate(), 0.0);
+        assertEquals(0.0, measurement.getX(), 0.0);
+        assertEquals(0.0, measurement.getY(), 0.0);
+        assertEquals(0.0, measurement.getZ(), 0.0);
+        assertEquals(0.0, measurement.getVx(), 0.0);
+        assertEquals(0.0, measurement.getVy(), 0.0);
+        assertEquals(0.0, measurement.getVz(), 0.0);
 
         // test constructor with values
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -72,18 +71,17 @@ public class GNSSMeasurementTest {
         final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        measurement = new GNSSMeasurement(pseudoRange, pseudoRate, x, y, z,
-                vx, vy, vz);
+        measurement = new GNSSMeasurement(pseudoRange, pseudoRate, x, y, z, vx, vy, vz);
 
         // check default values
-        assertEquals(measurement.getPseudoRange(), pseudoRange, 0.0);
-        assertEquals(measurement.getPseudoRate(), pseudoRate, 0.0);
-        assertEquals(measurement.getX(), x, 0.0);
-        assertEquals(measurement.getY(), y, 0.0);
-        assertEquals(measurement.getZ(), z, 0.0);
-        assertEquals(measurement.getVx(), vx, 0.0);
-        assertEquals(measurement.getVy(), vy, 0.0);
-        assertEquals(measurement.getVz(), vz, 0.0);
+        assertEquals(pseudoRange, measurement.getPseudoRange(), 0.0);
+        assertEquals(pseudoRate, measurement.getPseudoRate(), 0.0);
+        assertEquals(x, measurement.getX(), 0.0);
+        assertEquals(y, measurement.getY(), 0.0);
+        assertEquals(z, measurement.getZ(), 0.0);
+        assertEquals(vx, measurement.getVx(), 0.0);
+        assertEquals(vy, measurement.getVy(), 0.0);
+        assertEquals(vz, measurement.getVz(), 0.0);
 
 
         // test constructor with measurement values
@@ -100,48 +98,45 @@ public class GNSSMeasurementTest {
                 distanceX, distanceY, distanceZ, speedX, speedY, speedZ);
 
         // check default values
-        assertEquals(measurement.getPseudoRange(), pseudoRange, 0.0);
-        assertEquals(measurement.getPseudoRate(), pseudoRate, 0.0);
-        assertEquals(measurement.getX(), x, 0.0);
-        assertEquals(measurement.getY(), y, 0.0);
-        assertEquals(measurement.getZ(), z, 0.0);
-        assertEquals(measurement.getVx(), vx, 0.0);
-        assertEquals(measurement.getVy(), vy, 0.0);
-        assertEquals(measurement.getVz(), vz, 0.0);
+        assertEquals(pseudoRange, measurement.getPseudoRange(), 0.0);
+        assertEquals(pseudoRate, measurement.getPseudoRate(), 0.0);
+        assertEquals(x, measurement.getX(), 0.0);
+        assertEquals(y, measurement.getY(), 0.0);
+        assertEquals(z, measurement.getZ(), 0.0);
+        assertEquals(vx, measurement.getVx(), 0.0);
+        assertEquals(vy, measurement.getVy(), 0.0);
+        assertEquals(vz, measurement.getVz(), 0.0);
 
 
         // test constructor with measurement values and position
         final Point3D position = new InhomogeneousPoint3D(x, y, z);
 
-        measurement = new GNSSMeasurement(pseudoRangeDistance, pseudoRateSpeed,
-                position, speedX, speedY, speedZ);
+        measurement = new GNSSMeasurement(pseudoRangeDistance, pseudoRateSpeed, position, speedX, speedY, speedZ);
 
         // check default values
-        assertEquals(measurement.getPseudoRange(), pseudoRange, 0.0);
-        assertEquals(measurement.getPseudoRate(), pseudoRate, 0.0);
-        assertEquals(measurement.getX(), x, 0.0);
-        assertEquals(measurement.getY(), y, 0.0);
-        assertEquals(measurement.getZ(), z, 0.0);
-        assertEquals(measurement.getVx(), vx, 0.0);
-        assertEquals(measurement.getVy(), vy, 0.0);
-        assertEquals(measurement.getVz(), vz, 0.0);
-
+        assertEquals(pseudoRange, measurement.getPseudoRange(), 0.0);
+        assertEquals(pseudoRate, measurement.getPseudoRate(), 0.0);
+        assertEquals(x, measurement.getX(), 0.0);
+        assertEquals(y, measurement.getY(), 0.0);
+        assertEquals(z, measurement.getZ(), 0.0);
+        assertEquals(vx, measurement.getVx(), 0.0);
+        assertEquals(vy, measurement.getVy(), 0.0);
+        assertEquals(vz, measurement.getVz(), 0.0);
 
         // test constructor with ECEF position and velocity
         final ECEFPosition ecefPosition = new ECEFPosition(x, y, z);
         final ECEFVelocity ecefVelocity = new ECEFVelocity(vx, vy, vz);
-        measurement = new GNSSMeasurement(pseudoRange, pseudoRate,
-                ecefPosition, ecefVelocity);
+        measurement = new GNSSMeasurement(pseudoRange, pseudoRate, ecefPosition, ecefVelocity);
 
         // check default values
-        assertEquals(measurement.getPseudoRange(), pseudoRange, 0.0);
-        assertEquals(measurement.getPseudoRate(), pseudoRate, 0.0);
-        assertEquals(measurement.getX(), x, 0.0);
-        assertEquals(measurement.getY(), y, 0.0);
-        assertEquals(measurement.getZ(), z, 0.0);
-        assertEquals(measurement.getVx(), vx, 0.0);
-        assertEquals(measurement.getVy(), vy, 0.0);
-        assertEquals(measurement.getVz(), vz, 0.0);
+        assertEquals(pseudoRange, measurement.getPseudoRange(), 0.0);
+        assertEquals(pseudoRate, measurement.getPseudoRate(), 0.0);
+        assertEquals(x, measurement.getX(), 0.0);
+        assertEquals(y, measurement.getY(), 0.0);
+        assertEquals(z, measurement.getZ(), 0.0);
+        assertEquals(vx, measurement.getVx(), 0.0);
+        assertEquals(vy, measurement.getVy(), 0.0);
+        assertEquals(vz, measurement.getVz(), 0.0);
 
 
         final ECEFPositionAndVelocity positionAndVelocity =
@@ -149,56 +144,53 @@ public class GNSSMeasurementTest {
         measurement = new GNSSMeasurement(pseudoRange, pseudoRate, positionAndVelocity);
 
         // check default values
-        assertEquals(measurement.getPseudoRange(), pseudoRange, 0.0);
-        assertEquals(measurement.getPseudoRate(), pseudoRate, 0.0);
-        assertEquals(measurement.getX(), x, 0.0);
-        assertEquals(measurement.getY(), y, 0.0);
-        assertEquals(measurement.getZ(), z, 0.0);
-        assertEquals(measurement.getVx(), vx, 0.0);
-        assertEquals(measurement.getVy(), vy, 0.0);
-        assertEquals(measurement.getVz(), vz, 0.0);
+        assertEquals(pseudoRange, measurement.getPseudoRange(), 0.0);
+        assertEquals(pseudoRate, measurement.getPseudoRate(), 0.0);
+        assertEquals(x, measurement.getX(), 0.0);
+        assertEquals(y, measurement.getY(), 0.0);
+        assertEquals(z, measurement.getZ(), 0.0);
+        assertEquals(vx, measurement.getVx(), 0.0);
+        assertEquals(vy, measurement.getVy(), 0.0);
+        assertEquals(vz, measurement.getVz(), 0.0);
 
 
-        measurement = new GNSSMeasurement(pseudoRangeDistance, pseudoRateSpeed,
-                ecefPosition, ecefVelocity);
-
-        // check default values
-        assertEquals(measurement.getPseudoRange(), pseudoRange, 0.0);
-        assertEquals(measurement.getPseudoRate(), pseudoRate, 0.0);
-        assertEquals(measurement.getX(), x, 0.0);
-        assertEquals(measurement.getY(), y, 0.0);
-        assertEquals(measurement.getZ(), z, 0.0);
-        assertEquals(measurement.getVx(), vx, 0.0);
-        assertEquals(measurement.getVy(), vy, 0.0);
-        assertEquals(measurement.getVz(), vz, 0.0);
-
-
-        measurement = new GNSSMeasurement(pseudoRangeDistance, pseudoRateSpeed,
-                positionAndVelocity);
+        measurement = new GNSSMeasurement(pseudoRangeDistance, pseudoRateSpeed, ecefPosition, ecefVelocity);
 
         // check default values
-        assertEquals(measurement.getPseudoRange(), pseudoRange, 0.0);
-        assertEquals(measurement.getPseudoRate(), pseudoRate, 0.0);
-        assertEquals(measurement.getX(), x, 0.0);
-        assertEquals(measurement.getY(), y, 0.0);
-        assertEquals(measurement.getZ(), z, 0.0);
-        assertEquals(measurement.getVx(), vx, 0.0);
-        assertEquals(measurement.getVy(), vy, 0.0);
-        assertEquals(measurement.getVz(), vz, 0.0);
+        assertEquals(pseudoRange, measurement.getPseudoRange(), 0.0);
+        assertEquals(pseudoRate, measurement.getPseudoRate(), 0.0);
+        assertEquals(x, measurement.getX(), 0.0);
+        assertEquals(y, measurement.getY(), 0.0);
+        assertEquals(z, measurement.getZ(), 0.0);
+        assertEquals(vx, measurement.getVx(), 0.0);
+        assertEquals(vy, measurement.getVy(), 0.0);
+        assertEquals(vz, measurement.getVz(), 0.0);
 
+
+        measurement = new GNSSMeasurement(pseudoRangeDistance, pseudoRateSpeed, positionAndVelocity);
+
+        // check default values
+        assertEquals(pseudoRange, measurement.getPseudoRange(), 0.0);
+        assertEquals(pseudoRate, measurement.getPseudoRate(), 0.0);
+        assertEquals(x, measurement.getX(), 0.0);
+        assertEquals(y, measurement.getY(), 0.0);
+        assertEquals(z, measurement.getZ(), 0.0);
+        assertEquals(vx, measurement.getVx(), 0.0);
+        assertEquals(vy, measurement.getVy(), 0.0);
+        assertEquals(vz, measurement.getVz(), 0.0);
 
         // test copy constructor
         final GNSSMeasurement measurement2 = new GNSSMeasurement(measurement);
 
         // check default values
-        assertEquals(measurement2.getPseudoRange(), measurement.getPseudoRange(), 0.0);
-        assertEquals(measurement2.getPseudoRate(), measurement.getPseudoRate(), 0.0);
-        assertEquals(measurement2.getX(), measurement.getX(), 0.0);
-        assertEquals(measurement2.getY(), measurement.getY(), 0.0);
-        assertEquals(measurement2.getZ(), measurement.getZ(), 0.0);
-        assertEquals(measurement2.getVx(), measurement.getVx(), 0.0);
-        assertEquals(measurement2.getVy(), measurement.getVy(), 0.0);
-        assertEquals(measurement2.getVz(), measurement.getVz(), 0.0);
+        assertEquals(measurement.getPseudoRange(), measurement2.getPseudoRange(), 0.0);
+        assertEquals(measurement.getPseudoRate(), measurement2.getPseudoRate(), 0.0);
+        assertEquals(measurement.getX(), measurement2.getX(), 0.0);
+        assertEquals(measurement.getY(), measurement2.getY(), 0.0);
+        assertEquals(measurement.getZ(), measurement2.getZ(), 0.0);
+        assertEquals(measurement.getVx(), measurement2.getVx(), 0.0);
+        assertEquals(measurement.getVy(), measurement2.getVy(), 0.0);
+        assertEquals(measurement.getVz(), measurement2.getVz(), 0.0);
     }
 
     @Test
@@ -206,7 +198,7 @@ public class GNSSMeasurementTest {
         final GNSSMeasurement measurement = new GNSSMeasurement();
 
         // check default value
-        assertEquals(measurement.getPseudoRange(), 0.0, 0.0);
+        assertEquals(0.0, measurement.getPseudoRange(), 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -215,7 +207,7 @@ public class GNSSMeasurementTest {
         measurement.setPseudoRange(pseudoRange);
 
         // check
-        assertEquals(measurement.getPseudoRange(), pseudoRange, 0.0);
+        assertEquals(pseudoRange, measurement.getPseudoRange(), 0.0);
     }
 
     @Test
@@ -225,8 +217,8 @@ public class GNSSMeasurementTest {
         // check default value
         final Distance distance1 = measurement.getPseudoRangeDistance();
 
-        assertEquals(distance1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(distance1.getUnit(), DistanceUnit.METER);
+        assertEquals(0.0, distance1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, distance1.getUnit());
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -249,7 +241,7 @@ public class GNSSMeasurementTest {
         final GNSSMeasurement measurement = new GNSSMeasurement();
 
         // check default value
-        assertEquals(measurement.getPseudoRate(), 0.0, 0.0);
+        assertEquals(0.0, measurement.getPseudoRate(), 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -258,7 +250,7 @@ public class GNSSMeasurementTest {
         measurement.setPseudoRate(pseudoRate);
 
         // check
-        assertEquals(measurement.getPseudoRate(), pseudoRate, 0.0);
+        assertEquals(pseudoRate, measurement.getPseudoRate(), 0.0);
     }
 
     @Test
@@ -268,8 +260,8 @@ public class GNSSMeasurementTest {
         // check default value
         final Speed speed1 = measurement.getPseudoRateSpeed();
 
-        assertEquals(speed1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(speed1.getUnit(), SpeedUnit.METERS_PER_SECOND);
+        assertEquals(0.0, speed1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, speed1.getUnit());
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -292,7 +284,7 @@ public class GNSSMeasurementTest {
         final GNSSMeasurement measurement = new GNSSMeasurement();
 
         // check default value
-        assertEquals(measurement.getX(), 0.0, 0.0);
+        assertEquals(0.0, measurement.getX(), 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -300,7 +292,7 @@ public class GNSSMeasurementTest {
         measurement.setX(x);
 
         // check
-        assertEquals(measurement.getX(), x, 0.0);
+        assertEquals(x, measurement.getX(), 0.0);
     }
 
     @Test
@@ -310,8 +302,8 @@ public class GNSSMeasurementTest {
         // check default value
         final Distance distanceX1 = measurement.getDistanceX();
 
-        assertEquals(distanceX1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(distanceX1.getUnit(), DistanceUnit.METER);
+        assertEquals(0.0, distanceX1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, distanceX1.getUnit());
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -334,7 +326,7 @@ public class GNSSMeasurementTest {
         final GNSSMeasurement measurement = new GNSSMeasurement();
 
         // check default value
-        assertEquals(measurement.getY(), 0.0, 0.0);
+        assertEquals(0.0, measurement.getY(), 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -342,7 +334,7 @@ public class GNSSMeasurementTest {
         measurement.setY(y);
 
         // check
-        assertEquals(measurement.getY(), y, 0.0);
+        assertEquals(y, measurement.getY(), 0.0);
     }
 
     @Test
@@ -352,8 +344,8 @@ public class GNSSMeasurementTest {
         // check default value
         final Distance distanceY1 = measurement.getDistanceY();
 
-        assertEquals(distanceY1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(distanceY1.getUnit(), DistanceUnit.METER);
+        assertEquals(0.0, distanceY1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, distanceY1.getUnit());
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -376,7 +368,7 @@ public class GNSSMeasurementTest {
         final GNSSMeasurement measurement = new GNSSMeasurement();
 
         // check default value
-        assertEquals(measurement.getZ(), 0.0, 0.0);
+        assertEquals(0.0, measurement.getZ(), 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -384,7 +376,7 @@ public class GNSSMeasurementTest {
         measurement.setZ(z);
 
         // check
-        assertEquals(measurement.getZ(), z, 0.0);
+        assertEquals(z, measurement.getZ(), 0.0);
     }
 
     @Test
@@ -394,8 +386,8 @@ public class GNSSMeasurementTest {
         // check default value
         final Distance distanceZ1 = measurement.getDistanceZ();
 
-        assertEquals(distanceZ1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(distanceZ1.getUnit(), DistanceUnit.METER);
+        assertEquals(0.0, distanceZ1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, distanceZ1.getUnit());
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -418,9 +410,9 @@ public class GNSSMeasurementTest {
         final GNSSMeasurement measurement = new GNSSMeasurement();
 
         // check default values
-        assertEquals(measurement.getX(), 0.0, 0.0);
-        assertEquals(measurement.getY(), 0.0, 0.0);
-        assertEquals(measurement.getZ(), 0.0, 0.0);
+        assertEquals(0.0, measurement.getX(), 0.0);
+        assertEquals(0.0, measurement.getY(), 0.0);
+        assertEquals(0.0, measurement.getZ(), 0.0);
 
         // set new values
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -431,9 +423,9 @@ public class GNSSMeasurementTest {
         measurement.setPositionCoordinates(x, y, z);
 
         // check
-        assertEquals(measurement.getX(), x, 0.0);
-        assertEquals(measurement.getY(), y, 0.0);
-        assertEquals(measurement.getZ(), z, 0.0);
+        assertEquals(x, measurement.getX(), 0.0);
+        assertEquals(y, measurement.getY(), 0.0);
+        assertEquals(z, measurement.getZ(), 0.0);
     }
 
     @Test
@@ -445,12 +437,12 @@ public class GNSSMeasurementTest {
         final Distance distanceY1 = measurement.getDistanceY();
         final Distance distanceZ1 = measurement.getDistanceZ();
 
-        assertEquals(distanceX1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(distanceX1.getUnit(), DistanceUnit.METER);
-        assertEquals(distanceY1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(distanceY1.getUnit(), DistanceUnit.METER);
-        assertEquals(distanceZ1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(distanceZ1.getUnit(), DistanceUnit.METER);
+        assertEquals(0.0, distanceX1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, distanceX1.getUnit());
+        assertEquals(0.0, distanceY1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, distanceY1.getUnit());
+        assertEquals(0.0, distanceZ1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, distanceZ1.getUnit());
 
         // set new values
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -509,9 +501,9 @@ public class GNSSMeasurementTest {
         final ECEFPosition position1 = measurement.getEcefPosition();
 
         // check
-        assertEquals(position1.getX(), 0.0, 0.0);
-        assertEquals(position1.getY(), 0.0, 0.0);
-        assertEquals(position1.getZ(), 0.0, 0.0);
+        assertEquals(0.0, position1.getX(), 0.0);
+        assertEquals(0.0, position1.getY(), 0.0);
+        assertEquals(0.0, position1.getZ(), 0.0);
 
         // set new values
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -536,7 +528,7 @@ public class GNSSMeasurementTest {
         final GNSSMeasurement measurement = new GNSSMeasurement();
 
         // check default value
-        assertEquals(measurement.getVx(), 0.0, 0.0);
+        assertEquals(0.0, measurement.getVx(), 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -544,7 +536,7 @@ public class GNSSMeasurementTest {
         measurement.setVx(vx);
 
         // check
-        assertEquals(measurement.getVx(), vx, 0.0);
+        assertEquals(vx, measurement.getVx(), 0.0);
     }
 
     @Test
@@ -554,8 +546,8 @@ public class GNSSMeasurementTest {
         // check default value
         final Speed speedX1 = measurement.getSpeedX();
 
-        assertEquals(speedX1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(speedX1.getUnit(), SpeedUnit.METERS_PER_SECOND);
+        assertEquals(0.0, speedX1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, speedX1.getUnit());
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -578,7 +570,7 @@ public class GNSSMeasurementTest {
         final GNSSMeasurement measurement = new GNSSMeasurement();
 
         // check default value
-        assertEquals(measurement.getVy(), 0.0, 0.0);
+        assertEquals(0.0, measurement.getVy(), 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -586,7 +578,7 @@ public class GNSSMeasurementTest {
         measurement.setVy(vy);
 
         // check
-        assertEquals(measurement.getVy(), vy, 0.0);
+        assertEquals(vy, measurement.getVy(), 0.0);
     }
 
     @Test
@@ -596,8 +588,8 @@ public class GNSSMeasurementTest {
         // check default value
         final Speed speedY1 = measurement.getSpeedY();
 
-        assertEquals(speedY1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(speedY1.getUnit(), SpeedUnit.METERS_PER_SECOND);
+        assertEquals(0.0, speedY1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, speedY1.getUnit());
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -620,7 +612,7 @@ public class GNSSMeasurementTest {
         final GNSSMeasurement measurement = new GNSSMeasurement();
 
         // check default value
-        assertEquals(measurement.getVz(), 0.0, 0.0);
+        assertEquals(0.0, measurement.getVz(), 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -628,7 +620,7 @@ public class GNSSMeasurementTest {
         measurement.setVz(vz);
 
         // check
-        assertEquals(measurement.getVz(), vz, 0.0);
+        assertEquals(vz, measurement.getVz(), 0.0);
     }
 
     @Test
@@ -638,8 +630,8 @@ public class GNSSMeasurementTest {
         // check default value
         final Speed speedZ1 = measurement.getSpeedZ();
 
-        assertEquals(speedZ1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(speedZ1.getUnit(), SpeedUnit.METERS_PER_SECOND);
+        assertEquals(0.0, speedZ1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, speedZ1.getUnit());
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -662,9 +654,9 @@ public class GNSSMeasurementTest {
         final GNSSMeasurement measurement = new GNSSMeasurement();
 
         // check default values
-        assertEquals(measurement.getVx(), 0.0, 0.0);
-        assertEquals(measurement.getVy(), 0.0, 0.0);
-        assertEquals(measurement.getVz(), 0.0, 0.0);
+        assertEquals(0.0, measurement.getVx(), 0.0);
+        assertEquals(0.0, measurement.getVy(), 0.0);
+        assertEquals(0.0, measurement.getVz(), 0.0);
 
         // set new values
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -674,9 +666,9 @@ public class GNSSMeasurementTest {
         measurement.setVelocityCoordinates(vx, vy, vz);
 
         // check
-        assertEquals(measurement.getVx(), vx, 0.0);
-        assertEquals(measurement.getVy(), vy, 0.0);
-        assertEquals(measurement.getVz(), vz, 0.0);
+        assertEquals(vx, measurement.getVx(), 0.0);
+        assertEquals(vy, measurement.getVy(), 0.0);
+        assertEquals(vz, measurement.getVz(), 0.0);
     }
 
     @Test
@@ -688,12 +680,12 @@ public class GNSSMeasurementTest {
         final Speed speedY1 = measurement.getSpeedY();
         final Speed speedZ1 = measurement.getSpeedZ();
 
-        assertEquals(speedX1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(speedX1.getUnit(), SpeedUnit.METERS_PER_SECOND);
-        assertEquals(speedY1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(speedY1.getUnit(), SpeedUnit.METERS_PER_SECOND);
-        assertEquals(speedZ1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(speedZ1.getUnit(), SpeedUnit.METERS_PER_SECOND);
+        assertEquals(0.0, speedX1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, speedX1.getUnit());
+        assertEquals(0.0, speedY1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, speedY1.getUnit());
+        assertEquals(0.0, speedZ1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, speedZ1.getUnit());
 
         // set new values
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -723,9 +715,9 @@ public class GNSSMeasurementTest {
         // check default value
         final ECEFVelocity velocity1 = measurement.getEcefVelocity();
 
-        assertEquals(velocity1.getVx(), 0.0, 0.0);
-        assertEquals(velocity1.getVy(), 0.0, 0.0);
-        assertEquals(velocity1.getVz(), 0.0, 0.0);
+        assertEquals(0.0, velocity1.getVx(), 0.0);
+        assertEquals(0.0, velocity1.getVy(), 0.0);
+        assertEquals(0.0, velocity1.getVz(), 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -753,12 +745,12 @@ public class GNSSMeasurementTest {
         // check default value
         final ECEFPositionAndVelocity positionAndVelocity1 = measurement.getPositionAndVelocity();
 
-        assertEquals(positionAndVelocity1.getX(), 0.0, 0.0);
-        assertEquals(positionAndVelocity1.getY(), 0.0, 0.0);
-        assertEquals(positionAndVelocity1.getZ(), 0.0, 0.0);
-        assertEquals(positionAndVelocity1.getVx(), 0.0, 0.0);
-        assertEquals(positionAndVelocity1.getVy(), 0.0, 0.0);
-        assertEquals(positionAndVelocity1.getVz(), 0.0, 0.0);
+        assertEquals(0.0, positionAndVelocity1.getX(), 0.0);
+        assertEquals(0.0, positionAndVelocity1.getY(), 0.0);
+        assertEquals(0.0, positionAndVelocity1.getZ(), 0.0);
+        assertEquals(0.0, positionAndVelocity1.getVx(), 0.0);
+        assertEquals(0.0, positionAndVelocity1.getVy(), 0.0);
+        assertEquals(0.0, positionAndVelocity1.getVz(), 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -770,8 +762,7 @@ public class GNSSMeasurementTest {
         final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final ECEFPositionAndVelocity positionAndVelocity2 =
-                new ECEFPositionAndVelocity(x, y, z, vx, vy, vz);
+        final ECEFPositionAndVelocity positionAndVelocity2 = new ECEFPositionAndVelocity(x, y, z, vx, vy, vz);
 
         measurement.setPositionAndVelocity(positionAndVelocity2);
 
@@ -798,21 +789,20 @@ public class GNSSMeasurementTest {
         final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final GNSSMeasurement measurement1 = new GNSSMeasurement(pseudoRange, pseudoRate,
-                x, y, z, vx, vy, vz);
+        final GNSSMeasurement measurement1 = new GNSSMeasurement(pseudoRange, pseudoRate, x, y, z, vx, vy, vz);
 
         final GNSSMeasurement measurement2 = new GNSSMeasurement();
         measurement1.copyTo(measurement2);
 
         // check
-        assertEquals(measurement2.getPseudoRange(), pseudoRange, 0.0);
-        assertEquals(measurement2.getPseudoRate(), pseudoRate, 0.0);
-        assertEquals(measurement2.getX(), x, 0.0);
-        assertEquals(measurement2.getY(), y, 0.0);
-        assertEquals(measurement2.getZ(), z, 0.0);
-        assertEquals(measurement2.getVx(), vx, 0.0);
-        assertEquals(measurement2.getVy(), vy, 0.0);
-        assertEquals(measurement2.getVz(), vz, 0.0);
+        assertEquals(pseudoRange, measurement2.getPseudoRange(), 0.0);
+        assertEquals(pseudoRate, measurement2.getPseudoRate(), 0.0);
+        assertEquals(x, measurement2.getX(), 0.0);
+        assertEquals(y, measurement2.getY(), 0.0);
+        assertEquals(z, measurement2.getZ(), 0.0);
+        assertEquals(vx, measurement2.getVx(), 0.0);
+        assertEquals(vy, measurement2.getVy(), 0.0);
+        assertEquals(vz, measurement2.getVz(), 0.0);
         assertEquals(measurement1, measurement2);
     }
 
@@ -830,21 +820,20 @@ public class GNSSMeasurementTest {
         final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final GNSSMeasurement measurement1 = new GNSSMeasurement(pseudoRange, pseudoRate,
-                x, y, z, vx, vy, vz);
+        final GNSSMeasurement measurement1 = new GNSSMeasurement(pseudoRange, pseudoRate, x, y, z, vx, vy, vz);
 
         final GNSSMeasurement measurement2 = new GNSSMeasurement();
         measurement2.copyFrom(measurement1);
 
         // check
-        assertEquals(measurement2.getPseudoRange(), pseudoRange, 0.0);
-        assertEquals(measurement2.getPseudoRate(), pseudoRate, 0.0);
-        assertEquals(measurement2.getX(), x, 0.0);
-        assertEquals(measurement2.getY(), y, 0.0);
-        assertEquals(measurement2.getZ(), z, 0.0);
-        assertEquals(measurement2.getVx(), vx, 0.0);
-        assertEquals(measurement2.getVy(), vy, 0.0);
-        assertEquals(measurement2.getVz(), vz, 0.0);
+        assertEquals(pseudoRange, measurement2.getPseudoRange(), 0.0);
+        assertEquals(pseudoRate, measurement2.getPseudoRate(), 0.0);
+        assertEquals(x, measurement2.getX(), 0.0);
+        assertEquals(y, measurement2.getY(), 0.0);
+        assertEquals(z, measurement2.getZ(), 0.0);
+        assertEquals(vx, measurement2.getVx(), 0.0);
+        assertEquals(vy, measurement2.getVy(), 0.0);
+        assertEquals(vz, measurement2.getVz(), 0.0);
         assertEquals(measurement1, measurement2);
     }
 
@@ -862,10 +851,8 @@ public class GNSSMeasurementTest {
         final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final GNSSMeasurement measurement1 = new GNSSMeasurement(pseudoRange, pseudoRate,
-                x, y, z, vx, vy, vz);
-        final GNSSMeasurement measurement2 = new GNSSMeasurement(pseudoRange, pseudoRate,
-                x, y, z, vx, vy, vz);
+        final GNSSMeasurement measurement1 = new GNSSMeasurement(pseudoRange, pseudoRate, x, y, z, vx, vy, vz);
+        final GNSSMeasurement measurement2 = new GNSSMeasurement(pseudoRange, pseudoRate, x, y, z, vx, vy, vz);
         final GNSSMeasurement measurement3 = new GNSSMeasurement();
 
         assertEquals(measurement1.hashCode(), measurement2.hashCode());
@@ -886,10 +873,8 @@ public class GNSSMeasurementTest {
         final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final GNSSMeasurement measurement1 = new GNSSMeasurement(pseudoRange, pseudoRate,
-                x, y, z, vx, vy, vz);
-        final GNSSMeasurement measurement2 = new GNSSMeasurement(pseudoRange, pseudoRate,
-                x, y, z, vx, vy, vz);
+        final GNSSMeasurement measurement1 = new GNSSMeasurement(pseudoRange, pseudoRate, x, y, z, vx, vy, vz);
+        final GNSSMeasurement measurement2 = new GNSSMeasurement(pseudoRange, pseudoRate, x, y, z, vx, vy, vz);
         final GNSSMeasurement measurement3 = new GNSSMeasurement();
 
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
@@ -919,10 +904,8 @@ public class GNSSMeasurementTest {
         final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final GNSSMeasurement measurement1 = new GNSSMeasurement(pseudoRange, pseudoRate,
-                x, y, z, vx, vy, vz);
-        final GNSSMeasurement measurement2 = new GNSSMeasurement(pseudoRange, pseudoRate,
-                x, y, z, vx, vy, vz);
+        final GNSSMeasurement measurement1 = new GNSSMeasurement(pseudoRange, pseudoRate, x, y, z, vx, vy, vz);
+        final GNSSMeasurement measurement2 = new GNSSMeasurement(pseudoRange, pseudoRate, x, y, z, vx, vy, vz);
         final GNSSMeasurement measurement3 = new GNSSMeasurement();
 
         assertTrue(measurement1.equals(measurement1, THRESHOLD));
@@ -945,8 +928,7 @@ public class GNSSMeasurementTest {
         final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final GNSSMeasurement measurement1 = new GNSSMeasurement(pseudoRange, pseudoRate,
-                x, y, z, vx, vy, vz);
+        final GNSSMeasurement measurement1 = new GNSSMeasurement(pseudoRange, pseudoRate, x, y, z, vx, vy, vz);
 
         final Object measurement2 = measurement1.clone();
 
@@ -967,8 +949,7 @@ public class GNSSMeasurementTest {
         final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final GNSSMeasurement measurement1 = new GNSSMeasurement(
-                pseudoRange, pseudoRate, x, y, z, vx, vy, vz);
+        final GNSSMeasurement measurement1 = new GNSSMeasurement(pseudoRange, pseudoRate, x, y, z, vx, vy, vz);
 
         // serialize and deserialize
         final byte[] bytes = SerializationHelper.serialize(measurement1);

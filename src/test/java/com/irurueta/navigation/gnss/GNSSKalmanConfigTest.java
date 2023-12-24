@@ -41,59 +41,48 @@ public class GNSSKalmanConfigTest {
         GNSSKalmanConfig config = new GNSSKalmanConfig();
 
         // check default values
-        assertEquals(config.getInitialPositionUncertainty(), 0.0, 0.0);
-        assertEquals(config.getInitialVelocityUncertainty(), 0.0, 0.0);
-        assertEquals(config.getInitialClockOffsetUncertainty(), 0.0, 0.0);
-        assertEquals(config.getInitialClockDriftUncertainty(), 0.0, 0.0);
-        assertEquals(config.getAccelerationPSD(), 0.0, 0.0);
-        assertEquals(config.getClockFrequencyPSD(), 0.0, 0.0);
-        assertEquals(config.getClockPhasePSD(), 0.0, 0.0);
-        assertEquals(config.getPseudoRangeSD(), 0.0, 0.0);
-        assertEquals(config.getRangeRateSD(), 0.0, 0.0);
+        assertEquals(0.0, config.getInitialPositionUncertainty(), 0.0);
+        assertEquals(0.0, config.getInitialVelocityUncertainty(), 0.0);
+        assertEquals(0.0, config.getInitialClockOffsetUncertainty(), 0.0);
+        assertEquals(0.0, config.getInitialClockDriftUncertainty(), 0.0);
+        assertEquals(0.0, config.getAccelerationPSD(), 0.0);
+        assertEquals(0.0, config.getClockFrequencyPSD(), 0.0);
+        assertEquals(0.0, config.getClockPhasePSD(), 0.0);
+        assertEquals(0.0, config.getPseudoRangeSD(), 0.0);
+        assertEquals(0.0, config.getRangeRateSD(), 0.0);
 
 
         // test constructor with values
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double initialPositionUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialVelocityUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialClockOffsetUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialClockDriftUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
+        final double initialPositionUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double initialVelocityUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double initialClockOffsetUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double initialClockDriftUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double accelerationPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double clockFrequencyPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double clockPhasePSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double pseudoRangeSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double rangeRateSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        config = new GNSSKalmanConfig(initialPositionUncertainty,
-                initialVelocityUncertainty, initialClockOffsetUncertainty,
-                initialClockDriftUncertainty, accelerationPSD, clockFrequencyPSD,
+        config = new GNSSKalmanConfig(initialPositionUncertainty, initialVelocityUncertainty,
+                initialClockOffsetUncertainty, initialClockDriftUncertainty, accelerationPSD, clockFrequencyPSD,
                 clockPhasePSD, pseudoRangeSD, rangeRateSD);
 
         // check default values
-        assertEquals(config.getInitialPositionUncertainty(),
-                initialPositionUncertainty, 0.0);
-        assertEquals(config.getInitialVelocityUncertainty(),
-                initialVelocityUncertainty, 0.0);
-        assertEquals(config.getInitialClockOffsetUncertainty(),
-                initialClockOffsetUncertainty, 0.0);
-        assertEquals(config.getInitialClockDriftUncertainty(),
-                initialClockDriftUncertainty, 0.0);
-        assertEquals(config.getAccelerationPSD(), accelerationPSD, 0.0);
-        assertEquals(config.getClockFrequencyPSD(), clockFrequencyPSD, 0.0);
-        assertEquals(config.getClockPhasePSD(), clockPhasePSD, 0.0);
-        assertEquals(config.getPseudoRangeSD(), pseudoRangeSD, 0.0);
-        assertEquals(config.getRangeRateSD(), rangeRateSD, 0.0);
+        assertEquals(initialPositionUncertainty, config.getInitialPositionUncertainty(), 0.0);
+        assertEquals(initialVelocityUncertainty, config.getInitialVelocityUncertainty(), 0.0);
+        assertEquals(initialClockOffsetUncertainty, config.getInitialClockOffsetUncertainty(), 0.0);
+        assertEquals(initialClockDriftUncertainty, config.getInitialClockDriftUncertainty(), 0.0);
+        assertEquals(accelerationPSD, config.getAccelerationPSD(), 0.0);
+        assertEquals(clockFrequencyPSD, config.getClockFrequencyPSD(), 0.0);
+        assertEquals(clockPhasePSD, config.getClockPhasePSD(), 0.0);
+        assertEquals(pseudoRangeSD, config.getPseudoRangeSD(), 0.0);
+        assertEquals(rangeRateSD, config.getRangeRateSD(), 0.0);
 
 
         //test other constructor with values
-        final Distance distancePseudoRangeSD = new Distance(pseudoRangeSD,
-                DistanceUnit.METER);
-        final Speed speedRangeRateSD = new Speed(rangeRateSD,
-                SpeedUnit.METERS_PER_SECOND);
+        final Distance distancePseudoRangeSD = new Distance(pseudoRangeSD, DistanceUnit.METER);
+        final Speed speedRangeRateSD = new Speed(rangeRateSD, SpeedUnit.METERS_PER_SECOND);
 
         final Distance distanceInitialPositionUncertainty = new Distance(
                 initialPositionUncertainty, DistanceUnit.METER);
@@ -104,44 +93,34 @@ public class GNSSKalmanConfigTest {
         final Speed speedInitialClockDriftUncertainty = new Speed(
                 initialClockDriftUncertainty, SpeedUnit.METERS_PER_SECOND);
 
-        config = new GNSSKalmanConfig(distanceInitialPositionUncertainty,
-                speedInitialVelocityUncertainty, distanceInitialClockOffsetUncertainty,
-                speedInitialClockDriftUncertainty, accelerationPSD, clockFrequencyPSD,
-                clockPhasePSD, distancePseudoRangeSD, speedRangeRateSD);
+        config = new GNSSKalmanConfig(distanceInitialPositionUncertainty, speedInitialVelocityUncertainty,
+                distanceInitialClockOffsetUncertainty, speedInitialClockDriftUncertainty, accelerationPSD,
+                clockFrequencyPSD, clockPhasePSD, distancePseudoRangeSD, speedRangeRateSD);
 
         // check default values
-        assertEquals(config.getInitialPositionUncertainty(),
-                initialPositionUncertainty, 0.0);
-        assertEquals(config.getInitialVelocityUncertainty(),
-                initialVelocityUncertainty, 0.0);
-        assertEquals(config.getInitialClockOffsetUncertainty(),
-                initialClockOffsetUncertainty, 0.0);
-        assertEquals(config.getInitialClockDriftUncertainty(),
-                initialClockDriftUncertainty, 0.0);
-        assertEquals(config.getAccelerationPSD(), accelerationPSD, 0.0);
-        assertEquals(config.getClockFrequencyPSD(), clockFrequencyPSD, 0.0);
-        assertEquals(config.getClockPhasePSD(), clockPhasePSD, 0.0);
-        assertEquals(config.getPseudoRangeSD(), pseudoRangeSD, 0.0);
-        assertEquals(config.getRangeRateSD(), rangeRateSD, 0.0);
-
+        assertEquals(initialPositionUncertainty, config.getInitialPositionUncertainty(), 0.0);
+        assertEquals(initialVelocityUncertainty, config.getInitialVelocityUncertainty(), 0.0);
+        assertEquals(initialClockOffsetUncertainty, config.getInitialClockOffsetUncertainty(), 0.0);
+        assertEquals(initialClockDriftUncertainty, config.getInitialClockDriftUncertainty(), 0.0);
+        assertEquals(accelerationPSD, config.getAccelerationPSD(), 0.0);
+        assertEquals(clockFrequencyPSD, config.getClockFrequencyPSD(), 0.0);
+        assertEquals(clockPhasePSD, config.getClockPhasePSD(), 0.0);
+        assertEquals(pseudoRangeSD, config.getPseudoRangeSD(), 0.0);
+        assertEquals(rangeRateSD, config.getRangeRateSD(), 0.0);
 
         // test copy constructor
         final GNSSKalmanConfig config2 = new GNSSKalmanConfig(config);
 
         // check default values
-        assertEquals(config2.getInitialPositionUncertainty(),
-                initialPositionUncertainty, 0.0);
-        assertEquals(config2.getInitialVelocityUncertainty(),
-                initialVelocityUncertainty, 0.0);
-        assertEquals(config2.getInitialClockOffsetUncertainty(),
-                initialClockOffsetUncertainty, 0.0);
-        assertEquals(config2.getInitialClockDriftUncertainty(),
-                initialClockDriftUncertainty, 0.0);
-        assertEquals(config2.getAccelerationPSD(), accelerationPSD, 0.0);
-        assertEquals(config2.getClockFrequencyPSD(), clockFrequencyPSD, 0.0);
-        assertEquals(config2.getClockPhasePSD(), clockPhasePSD, 0.0);
-        assertEquals(config2.getPseudoRangeSD(), pseudoRangeSD, 0.0);
-        assertEquals(config2.getRangeRateSD(), rangeRateSD, 0.0);
+        assertEquals(initialPositionUncertainty, config2.getInitialPositionUncertainty(), 0.0);
+        assertEquals(initialVelocityUncertainty, config2.getInitialVelocityUncertainty(), 0.0);
+        assertEquals(initialClockOffsetUncertainty, config2.getInitialClockOffsetUncertainty(), 0.0);
+        assertEquals(initialClockDriftUncertainty, config2.getInitialClockDriftUncertainty(), 0.0);
+        assertEquals(accelerationPSD, config2.getAccelerationPSD(), 0.0);
+        assertEquals(clockFrequencyPSD, config2.getClockFrequencyPSD(), 0.0);
+        assertEquals(clockPhasePSD, config2.getClockPhasePSD(), 0.0);
+        assertEquals(pseudoRangeSD, config2.getPseudoRangeSD(), 0.0);
+        assertEquals(rangeRateSD, config2.getRangeRateSD(), 0.0);
     }
 
     @Test
@@ -149,17 +128,15 @@ public class GNSSKalmanConfigTest {
         final GNSSKalmanConfig config = new GNSSKalmanConfig();
 
         // check default value
-        assertEquals(config.getInitialPositionUncertainty(), 0.0, 0.0);
+        assertEquals(0.0, config.getInitialPositionUncertainty(), 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double initialPositionUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
+        final double initialPositionUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         config.setInitialPositionUncertainty(initialPositionUncertainty);
 
         // check
-        assertEquals(config.getInitialPositionUncertainty(),
-                initialPositionUncertainty, 0.0);
+        assertEquals(initialPositionUncertainty, config.getInitialPositionUncertainty(), 0.0);
     }
 
     @Test
@@ -167,27 +144,21 @@ public class GNSSKalmanConfigTest {
         final GNSSKalmanConfig config = new GNSSKalmanConfig();
 
         // check default value
-        final Distance initialPositionUncertainty1 = config
-                .getDistanceInitialPositionUncertainty();
-        assertEquals(initialPositionUncertainty1.getValue().doubleValue(),
-                0.0, 0.0);
-        assertEquals(initialPositionUncertainty1.getUnit(), DistanceUnit.METER);
+        final Distance initialPositionUncertainty1 = config.getDistanceInitialPositionUncertainty();
+        assertEquals(0.0, initialPositionUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, initialPositionUncertainty1.getUnit());
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double initialPositionUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
+        final double initialPositionUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        final Distance initialPositionUncertainty2 = new Distance(
-                initialPositionUncertainty, DistanceUnit.METER);
+        final Distance initialPositionUncertainty2 = new Distance(initialPositionUncertainty, DistanceUnit.METER);
         config.setInitialPositionUncertainty(initialPositionUncertainty2);
 
         // check
-        final Distance initialPositionUncertainty3 = new Distance(
-                0.0, DistanceUnit.KILOMETER);
+        final Distance initialPositionUncertainty3 = new Distance(0.0, DistanceUnit.KILOMETER);
         config.getDistanceInitialPositionUncertainty(initialPositionUncertainty3);
-        final Distance initialPositionUncertainty4 = config
-                .getDistanceInitialPositionUncertainty();
+        final Distance initialPositionUncertainty4 = config.getDistanceInitialPositionUncertainty();
 
         assertEquals(initialPositionUncertainty2, initialPositionUncertainty3);
         assertEquals(initialPositionUncertainty2, initialPositionUncertainty4);
@@ -198,17 +169,15 @@ public class GNSSKalmanConfigTest {
         final GNSSKalmanConfig config = new GNSSKalmanConfig();
 
         // check default value
-        assertEquals(config.getInitialVelocityUncertainty(), 0.0, 0.0);
+        assertEquals(0.0, config.getInitialVelocityUncertainty(), 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double initialVelocityUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
+        final double initialVelocityUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         config.setInitialVelocityUncertainty(initialVelocityUncertainty);
 
         // check
-        assertEquals(config.getInitialVelocityUncertainty(),
-                initialVelocityUncertainty, 0.0);
+        assertEquals(initialVelocityUncertainty, config.getInitialVelocityUncertainty(), 0.0);
     }
 
     @Test
@@ -216,28 +185,22 @@ public class GNSSKalmanConfigTest {
         final GNSSKalmanConfig config = new GNSSKalmanConfig();
 
         // check default value
-        final Speed initialVelocityUncertainty1 = config
-                .getSpeedInitialVelocityUncertainty();
-        assertEquals(initialVelocityUncertainty1.getValue().doubleValue(),
-                0.0, 0.0);
-        assertEquals(initialVelocityUncertainty1.getUnit(),
-                SpeedUnit.METERS_PER_SECOND);
+        final Speed initialVelocityUncertainty1 = config.getSpeedInitialVelocityUncertainty();
+        assertEquals(0.0,
+                initialVelocityUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, initialVelocityUncertainty1.getUnit());
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double initialVelocityUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
+        final double initialVelocityUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        final Speed initialVelocityUncertainty2 = new Speed(
-                initialVelocityUncertainty, SpeedUnit.METERS_PER_SECOND);
+        final Speed initialVelocityUncertainty2 = new Speed(initialVelocityUncertainty, SpeedUnit.METERS_PER_SECOND);
         config.setInitialVelocityUncertainty(initialVelocityUncertainty2);
 
         // check
-        final Speed initialVelocityUncertainty3 = new Speed(
-                0.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        final Speed initialVelocityUncertainty3 = new Speed(0.0, SpeedUnit.KILOMETERS_PER_HOUR);
         config.getSpeedInitialVelocityUncertainty(initialVelocityUncertainty3);
-        final Speed initialVelocityUncertainty4 = config
-                .getSpeedInitialVelocityUncertainty();
+        final Speed initialVelocityUncertainty4 = config.getSpeedInitialVelocityUncertainty();
 
         assertEquals(initialVelocityUncertainty2, initialVelocityUncertainty3);
         assertEquals(initialVelocityUncertainty2, initialVelocityUncertainty4);
@@ -248,18 +211,15 @@ public class GNSSKalmanConfigTest {
         final GNSSKalmanConfig config = new GNSSKalmanConfig();
 
         // check default value
-        assertEquals(config.getInitialClockOffsetUncertainty(),
-                0.0, 0.0);
+        assertEquals(0.0, config.getInitialClockOffsetUncertainty(), 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double initialClockOffsetUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
+        final double initialClockOffsetUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         config.setInitialClockOffsetUncertainty(initialClockOffsetUncertainty);
 
         // check
-        assertEquals(config.getInitialClockOffsetUncertainty(),
-                initialClockOffsetUncertainty, 0.0);
+        assertEquals(initialClockOffsetUncertainty, config.getInitialClockOffsetUncertainty(), 0.0);
     }
 
     @Test
@@ -267,28 +227,22 @@ public class GNSSKalmanConfigTest {
         final GNSSKalmanConfig config = new GNSSKalmanConfig();
 
         // check default value
-        final Distance initialClockOffsetUncertainty1 = config
-                .getDistanceInitialClockOffsetUncertainty();
-        assertEquals(initialClockOffsetUncertainty1.getValue().doubleValue(),
-                0.0, 0.0);
-        assertEquals(initialClockOffsetUncertainty1.getUnit(), DistanceUnit.METER);
+        final Distance initialClockOffsetUncertainty1 = config.getDistanceInitialClockOffsetUncertainty();
+        assertEquals(0.0, initialClockOffsetUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, initialClockOffsetUncertainty1.getUnit());
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double initialClockOffsetUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
+        final double initialClockOffsetUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
         final Distance initialClockOffsetUncertainty2 = new Distance(
                 initialClockOffsetUncertainty, DistanceUnit.METER);
         config.setInitialClockOffsetUncertainty(initialClockOffsetUncertainty2);
 
         // check
-        final Distance initialClockOffsetUncertainty3 = new Distance(
-                0.0, DistanceUnit.KILOMETER);
-        config.getDistanceInitialClockOffsetUncertainty(
-                initialClockOffsetUncertainty3);
-        final Distance initialClockOffsetUncertainty4 = config
-                .getDistanceInitialClockOffsetUncertainty();
+        final Distance initialClockOffsetUncertainty3 = new Distance(0.0, DistanceUnit.KILOMETER);
+        config.getDistanceInitialClockOffsetUncertainty(initialClockOffsetUncertainty3);
+        final Distance initialClockOffsetUncertainty4 = config.getDistanceInitialClockOffsetUncertainty();
 
         assertEquals(initialClockOffsetUncertainty2, initialClockOffsetUncertainty3);
         assertEquals(initialClockOffsetUncertainty2, initialClockOffsetUncertainty4);
@@ -299,18 +253,15 @@ public class GNSSKalmanConfigTest {
         final GNSSKalmanConfig config = new GNSSKalmanConfig();
 
         // check default value
-        assertEquals(config.getInitialClockDriftUncertainty(),
-                0.0, 0.0);
+        assertEquals(0.0, config.getInitialClockDriftUncertainty(), 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double initialClockDriftUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
+        final double initialClockDriftUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         config.setInitialClockDriftUncertainty(initialClockDriftUncertainty);
 
         // check
-        assertEquals(config.getInitialClockDriftUncertainty(),
-                initialClockDriftUncertainty, 0.0);
+        assertEquals(initialClockDriftUncertainty, config.getInitialClockDriftUncertainty(), 0.0);
     }
 
     @Test
@@ -318,28 +269,22 @@ public class GNSSKalmanConfigTest {
         final GNSSKalmanConfig config = new GNSSKalmanConfig();
 
         // check default value
-        final Speed initialClockDriftUncertainty1 = config
-                .getSpeedInitialClockDriftUncertainty();
-        assertEquals(initialClockDriftUncertainty1.getValue().doubleValue(),
-                0.0, 0.0);
-        assertEquals(initialClockDriftUncertainty1.getUnit(),
-                SpeedUnit.METERS_PER_SECOND);
+        final Speed initialClockDriftUncertainty1 = config.getSpeedInitialClockDriftUncertainty();
+        assertEquals(0.0, initialClockDriftUncertainty1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, initialClockDriftUncertainty1.getUnit());
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double initialClockDriftUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
+        final double initialClockDriftUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
         final Speed initialClockDriftUncertainty2 = new Speed(
                 initialClockDriftUncertainty, SpeedUnit.METERS_PER_SECOND);
         config.setInitialClockDriftUncertainty(initialClockDriftUncertainty2);
 
         // check
-        final Speed initialClockDriftUncertainty3 = new Speed(
-                0.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        final Speed initialClockDriftUncertainty3 = new Speed(0.0, SpeedUnit.KILOMETERS_PER_HOUR);
         config.getSpeedInitialClockDriftUncertainty(initialClockDriftUncertainty3);
-        final Speed initialClockDriftUncertainty4 = config
-                .getSpeedInitialClockDriftUncertainty();
+        final Speed initialClockDriftUncertainty4 = config.getSpeedInitialClockDriftUncertainty();
 
         assertEquals(initialClockDriftUncertainty2, initialClockDriftUncertainty3);
         assertEquals(initialClockDriftUncertainty2, initialClockDriftUncertainty4);
@@ -350,7 +295,7 @@ public class GNSSKalmanConfigTest {
         final GNSSKalmanConfig config = new GNSSKalmanConfig();
 
         // check default value
-        assertEquals(config.getAccelerationPSD(), 0.0, 0.0);
+        assertEquals(0.0, config.getAccelerationPSD(), 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -358,7 +303,7 @@ public class GNSSKalmanConfigTest {
         config.setAccelerationPSD(accelerationPSD);
 
         // check
-        assertEquals(config.getAccelerationPSD(), accelerationPSD, 0.0);
+        assertEquals(accelerationPSD, config.getAccelerationPSD(), 0.0);
     }
 
     @Test
@@ -366,7 +311,7 @@ public class GNSSKalmanConfigTest {
         final GNSSKalmanConfig config = new GNSSKalmanConfig();
 
         // check default value
-        assertEquals(config.getClockFrequencyPSD(), 0.0, 0.0);
+        assertEquals(0.0, config.getClockFrequencyPSD(), 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -374,7 +319,7 @@ public class GNSSKalmanConfigTest {
         config.setClockFrequencyPSD(clockFrequencyPSD);
 
         // check
-        assertEquals(config.getClockFrequencyPSD(), clockFrequencyPSD, 0.0);
+        assertEquals(clockFrequencyPSD, config.getClockFrequencyPSD(), 0.0);
     }
 
     @Test
@@ -382,7 +327,7 @@ public class GNSSKalmanConfigTest {
         final GNSSKalmanConfig config = new GNSSKalmanConfig();
 
         // check default value
-        assertEquals(config.getClockPhasePSD(), 0.0, 0.0);
+        assertEquals(0.0, config.getClockPhasePSD(), 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -390,7 +335,7 @@ public class GNSSKalmanConfigTest {
         config.setClockPhasePSD(clockPhasePSD);
 
         // check
-        assertEquals(config.getClockPhasePSD(), clockPhasePSD, 0.0);
+        assertEquals(clockPhasePSD, config.getClockPhasePSD(), 0.0);
     }
 
     @Test
@@ -398,7 +343,7 @@ public class GNSSKalmanConfigTest {
         final GNSSKalmanConfig config = new GNSSKalmanConfig();
 
         // check default value
-        assertEquals(config.getPseudoRangeSD(), 0.0, 0.0);
+        assertEquals(0.0, config.getPseudoRangeSD(), 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -406,7 +351,7 @@ public class GNSSKalmanConfigTest {
         config.setPseudoRangeSD(pseudoRangeSD);
 
         // check
-        assertEquals(config.getPseudoRangeSD(), pseudoRangeSD, 0.0);
+        assertEquals(pseudoRangeSD, config.getPseudoRangeSD(), 0.0);
     }
 
     @Test
@@ -416,8 +361,8 @@ public class GNSSKalmanConfigTest {
         // check default value
         final Distance pseudoRangeSD1 = config.getDistancePseudoRangeSD();
 
-        assertEquals(pseudoRangeSD1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(pseudoRangeSD1.getUnit(), DistanceUnit.METER);
+        assertEquals(0.0, pseudoRangeSD1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, pseudoRangeSD1.getUnit());
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -440,7 +385,7 @@ public class GNSSKalmanConfigTest {
         final GNSSKalmanConfig config = new GNSSKalmanConfig();
 
         // check default value
-        assertEquals(config.getRangeRateSD(), 0.0, 0.0);
+        assertEquals(0.0, config.getRangeRateSD(), 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -448,7 +393,7 @@ public class GNSSKalmanConfigTest {
         config.setRangeRateSD(rangeRateSD);
 
         // check
-        assertEquals(config.getRangeRateSD(), rangeRateSD, 0.0);
+        assertEquals(rangeRateSD, config.getRangeRateSD(), 0.0);
     }
 
     @Test
@@ -458,8 +403,8 @@ public class GNSSKalmanConfigTest {
         // check default value
         final Speed rangeRateSD1 = config.getSpeedRangeRateSD();
 
-        assertEquals(rangeRateSD1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(rangeRateSD1.getUnit(), SpeedUnit.METERS_PER_SECOND);
+        assertEquals(0.0, rangeRateSD1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, rangeRateSD1.getUnit());
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -481,47 +426,38 @@ public class GNSSKalmanConfigTest {
         final GNSSKalmanConfig config = new GNSSKalmanConfig();
 
         // check default values
-        assertEquals(config.getAccelerationPSD(), 0.0, 0.0);
-        assertEquals(config.getClockFrequencyPSD(), 0.0, 0.0);
-        assertEquals(config.getClockPhasePSD(), 0.0, 0.0);
-        assertEquals(config.getPseudoRangeSD(), 0.0, 0.0);
-        assertEquals(config.getRangeRateSD(), 0.0, 0.0);
+        assertEquals(0.0, config.getAccelerationPSD(), 0.0);
+        assertEquals(0.0, config.getClockFrequencyPSD(), 0.0);
+        assertEquals(0.0, config.getClockPhasePSD(), 0.0);
+        assertEquals(0.0, config.getPseudoRangeSD(), 0.0);
+        assertEquals(0.0, config.getRangeRateSD(), 0.0);
 
         // set values
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double initialPositionUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialVelocityUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialClockOffsetUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialClockDriftUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
+        final double initialPositionUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double initialVelocityUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double initialClockOffsetUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double initialClockDriftUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double accelerationPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double clockFrequencyPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double clockPhasePSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double pseudoRangeSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double rangeRateSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        config.setValues(initialPositionUncertainty,
-                initialVelocityUncertainty, initialClockOffsetUncertainty,
-                initialClockDriftUncertainty, accelerationPSD, clockFrequencyPSD,
-                clockPhasePSD, pseudoRangeSD, rangeRateSD);
+        config.setValues(initialPositionUncertainty, initialVelocityUncertainty, initialClockOffsetUncertainty,
+                initialClockDriftUncertainty, accelerationPSD, clockFrequencyPSD, clockPhasePSD, pseudoRangeSD,
+                rangeRateSD);
 
         // check
-        assertEquals(config.getInitialPositionUncertainty(),
-                initialPositionUncertainty, 0.0);
-        assertEquals(config.getInitialVelocityUncertainty(),
-                initialVelocityUncertainty, 0.0);
-        assertEquals(config.getInitialClockOffsetUncertainty(),
-                initialClockOffsetUncertainty, 0.0);
-        assertEquals(config.getInitialClockDriftUncertainty(),
-                initialClockDriftUncertainty, 0.0);
-        assertEquals(config.getAccelerationPSD(), accelerationPSD, 0.0);
-        assertEquals(config.getClockFrequencyPSD(), clockFrequencyPSD, 0.0);
-        assertEquals(config.getClockPhasePSD(), clockPhasePSD, 0.0);
-        assertEquals(config.getPseudoRangeSD(), pseudoRangeSD, 0.0);
-        assertEquals(config.getRangeRateSD(), rangeRateSD, 0.0);
+        assertEquals(initialPositionUncertainty, config.getInitialPositionUncertainty(), 0.0);
+        assertEquals(initialVelocityUncertainty, config.getInitialVelocityUncertainty(), 0.0);
+        assertEquals(initialClockOffsetUncertainty, config.getInitialClockOffsetUncertainty(), 0.0);
+        assertEquals(initialClockDriftUncertainty, config.getInitialClockDriftUncertainty(), 0.0);
+        assertEquals(accelerationPSD, config.getAccelerationPSD(), 0.0);
+        assertEquals(clockFrequencyPSD, config.getClockFrequencyPSD(), 0.0);
+        assertEquals(clockPhasePSD, config.getClockPhasePSD(), 0.0);
+        assertEquals(pseudoRangeSD, config.getPseudoRangeSD(), 0.0);
+        assertEquals(rangeRateSD, config.getRangeRateSD(), 0.0);
     }
 
     @Test
@@ -529,31 +465,25 @@ public class GNSSKalmanConfigTest {
         final GNSSKalmanConfig config = new GNSSKalmanConfig();
 
         // check default values
-        assertEquals(config.getAccelerationPSD(), 0.0, 0.0);
-        assertEquals(config.getClockFrequencyPSD(), 0.0, 0.0);
-        assertEquals(config.getClockPhasePSD(), 0.0, 0.0);
-        assertEquals(config.getPseudoRangeSD(), 0.0, 0.0);
-        assertEquals(config.getRangeRateSD(), 0.0, 0.0);
+        assertEquals(0.0, config.getAccelerationPSD(), 0.0);
+        assertEquals(0.0, config.getClockFrequencyPSD(), 0.0);
+        assertEquals(0.0, config.getClockPhasePSD(), 0.0);
+        assertEquals(0.0, config.getPseudoRangeSD(), 0.0);
+        assertEquals(0.0, config.getRangeRateSD(), 0.0);
 
         // set values
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double initialPositionUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialVelocityUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialClockOffsetUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialClockDriftUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
+        final double initialPositionUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double initialVelocityUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double initialClockOffsetUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double initialClockDriftUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double accelerationPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double clockFrequencyPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double clockPhasePSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double pseudoRangeSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double rangeRateSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        final Distance distancePseudoRangeSD = new Distance(pseudoRangeSD,
-                DistanceUnit.METER);
-        final Speed speedRangeRateSD = new Speed(rangeRateSD,
-                SpeedUnit.METERS_PER_SECOND);
+        final Distance distancePseudoRangeSD = new Distance(pseudoRangeSD, DistanceUnit.METER);
+        final Speed speedRangeRateSD = new Speed(rangeRateSD, SpeedUnit.METERS_PER_SECOND);
 
         final Distance distanceInitialPositionUncertainty = new Distance(
                 initialPositionUncertainty, DistanceUnit.METER);
@@ -564,138 +494,105 @@ public class GNSSKalmanConfigTest {
         final Speed speedInitialClockDriftUncertainty = new Speed(
                 initialClockDriftUncertainty, SpeedUnit.METERS_PER_SECOND);
 
-        config.setValues(distanceInitialPositionUncertainty,
-                speedInitialVelocityUncertainty, distanceInitialClockOffsetUncertainty,
-                speedInitialClockDriftUncertainty, accelerationPSD, clockFrequencyPSD,
-                clockPhasePSD, distancePseudoRangeSD, speedRangeRateSD);
+        config.setValues(distanceInitialPositionUncertainty, speedInitialVelocityUncertainty,
+                distanceInitialClockOffsetUncertainty, speedInitialClockDriftUncertainty, accelerationPSD,
+                clockFrequencyPSD, clockPhasePSD, distancePseudoRangeSD, speedRangeRateSD);
 
         // check
-        assertEquals(config.getInitialPositionUncertainty(),
-                initialPositionUncertainty, 0.0);
-        assertEquals(config.getInitialVelocityUncertainty(),
-                initialVelocityUncertainty, 0.0);
-        assertEquals(config.getInitialClockOffsetUncertainty(),
-                initialClockOffsetUncertainty, 0.0);
-        assertEquals(config.getInitialClockDriftUncertainty(),
-                initialClockDriftUncertainty, 0.0);
-        assertEquals(config.getAccelerationPSD(), accelerationPSD, 0.0);
-        assertEquals(config.getClockFrequencyPSD(), clockFrequencyPSD, 0.0);
-        assertEquals(config.getClockPhasePSD(), clockPhasePSD, 0.0);
-        assertEquals(config.getPseudoRangeSD(), pseudoRangeSD, 0.0);
-        assertEquals(config.getRangeRateSD(), rangeRateSD, 0.0);
+        assertEquals(initialPositionUncertainty, config.getInitialPositionUncertainty(), 0.0);
+        assertEquals(initialVelocityUncertainty, config.getInitialVelocityUncertainty(), 0.0);
+        assertEquals(initialClockOffsetUncertainty, config.getInitialClockOffsetUncertainty(), 0.0);
+        assertEquals(initialClockDriftUncertainty, config.getInitialClockDriftUncertainty(), 0.0);
+        assertEquals(accelerationPSD, config.getAccelerationPSD(), 0.0);
+        assertEquals(clockFrequencyPSD, config.getClockFrequencyPSD(), 0.0);
+        assertEquals(clockPhasePSD, config.getClockPhasePSD(), 0.0);
+        assertEquals(pseudoRangeSD, config.getPseudoRangeSD(), 0.0);
+        assertEquals(rangeRateSD, config.getRangeRateSD(), 0.0);
     }
 
     @Test
     public void testCopyTo() {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double initialPositionUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialVelocityUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialClockOffsetUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialClockDriftUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
+        final double initialPositionUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double initialVelocityUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double initialClockOffsetUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double initialClockDriftUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double accelerationPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double clockFrequencyPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double clockPhasePSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double pseudoRangeSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double rangeRateSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        final GNSSKalmanConfig config1 = new GNSSKalmanConfig(
-                initialPositionUncertainty,
-                initialVelocityUncertainty, initialClockOffsetUncertainty,
-                initialClockDriftUncertainty, accelerationPSD,
-                clockFrequencyPSD, clockPhasePSD, pseudoRangeSD, rangeRateSD);
+        final GNSSKalmanConfig config1 = new GNSSKalmanConfig(initialPositionUncertainty,
+                initialVelocityUncertainty, initialClockOffsetUncertainty, initialClockDriftUncertainty,
+                accelerationPSD, clockFrequencyPSD, clockPhasePSD, pseudoRangeSD, rangeRateSD);
         final GNSSKalmanConfig config2 = new GNSSKalmanConfig();
 
         config1.copyTo(config2);
 
         // check
-        assertEquals(config2.getInitialPositionUncertainty(),
-                initialPositionUncertainty, 0.0);
-        assertEquals(config2.getInitialVelocityUncertainty(),
-                initialVelocityUncertainty, 0.0);
-        assertEquals(config2.getInitialClockOffsetUncertainty(),
-                initialClockOffsetUncertainty, 0.0);
-        assertEquals(config2.getInitialClockDriftUncertainty(),
-                initialClockDriftUncertainty, 0.0);
-        assertEquals(config2.getAccelerationPSD(), accelerationPSD, 0.0);
-        assertEquals(config2.getClockFrequencyPSD(), clockFrequencyPSD, 0.0);
-        assertEquals(config2.getClockPhasePSD(), clockPhasePSD, 0.0);
-        assertEquals(config2.getPseudoRangeSD(), pseudoRangeSD, 0.0);
-        assertEquals(config2.getRangeRateSD(), rangeRateSD, 0.0);
+        assertEquals(initialPositionUncertainty, config2.getInitialPositionUncertainty(), 0.0);
+        assertEquals(initialVelocityUncertainty, config2.getInitialVelocityUncertainty(), 0.0);
+        assertEquals(initialClockOffsetUncertainty, config2.getInitialClockOffsetUncertainty(), 0.0);
+        assertEquals(initialClockDriftUncertainty, config2.getInitialClockDriftUncertainty(), 0.0);
+        assertEquals(accelerationPSD, config2.getAccelerationPSD(), 0.0);
+        assertEquals(clockFrequencyPSD, config2.getClockFrequencyPSD(), 0.0);
+        assertEquals(clockPhasePSD, config2.getClockPhasePSD(), 0.0);
+        assertEquals(pseudoRangeSD, config2.getPseudoRangeSD(), 0.0);
+        assertEquals(rangeRateSD, config2.getRangeRateSD(), 0.0);
     }
 
     @Test
     public void testCopyFrom() {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double initialPositionUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialVelocityUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialClockOffsetUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialClockDriftUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
+        final double initialPositionUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double initialVelocityUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double initialClockOffsetUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double initialClockDriftUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double accelerationPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double clockFrequencyPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double clockPhasePSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double pseudoRangeSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double rangeRateSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        final GNSSKalmanConfig config1 = new GNSSKalmanConfig(
-                initialPositionUncertainty, initialVelocityUncertainty,
-                initialClockOffsetUncertainty, initialClockDriftUncertainty,
-                accelerationPSD, clockFrequencyPSD, clockPhasePSD,
-                pseudoRangeSD, rangeRateSD);
+        final GNSSKalmanConfig config1 = new GNSSKalmanConfig(initialPositionUncertainty,
+                initialVelocityUncertainty, initialClockOffsetUncertainty, initialClockDriftUncertainty,
+                accelerationPSD, clockFrequencyPSD, clockPhasePSD, pseudoRangeSD, rangeRateSD);
         final GNSSKalmanConfig config2 = new GNSSKalmanConfig();
 
         config2.copyFrom(config1);
 
         // check
-        assertEquals(config2.getInitialPositionUncertainty(),
-                initialPositionUncertainty, 0.0);
-        assertEquals(config2.getInitialVelocityUncertainty(),
-                initialVelocityUncertainty, 0.0);
-        assertEquals(config2.getInitialClockOffsetUncertainty(),
-                initialClockOffsetUncertainty, 0.0);
-        assertEquals(config2.getInitialClockDriftUncertainty(),
-                initialClockDriftUncertainty, 0.0);
-        assertEquals(config2.getAccelerationPSD(), accelerationPSD, 0.0);
-        assertEquals(config2.getClockFrequencyPSD(), clockFrequencyPSD, 0.0);
-        assertEquals(config2.getClockPhasePSD(), clockPhasePSD, 0.0);
-        assertEquals(config2.getPseudoRangeSD(), pseudoRangeSD, 0.0);
-        assertEquals(config2.getRangeRateSD(), rangeRateSD, 0.0);
+        assertEquals(initialPositionUncertainty, config2.getInitialPositionUncertainty(), 0.0);
+        assertEquals(initialVelocityUncertainty, config2.getInitialVelocityUncertainty(), 0.0);
+        assertEquals(initialClockOffsetUncertainty, config2.getInitialClockOffsetUncertainty(), 0.0);
+        assertEquals(initialClockDriftUncertainty, config2.getInitialClockDriftUncertainty(), 0.0);
+        assertEquals(accelerationPSD, config2.getAccelerationPSD(), 0.0);
+        assertEquals(clockFrequencyPSD, config2.getClockFrequencyPSD(), 0.0);
+        assertEquals(clockPhasePSD, config2.getClockPhasePSD(), 0.0);
+        assertEquals(pseudoRangeSD, config2.getPseudoRangeSD(), 0.0);
+        assertEquals(rangeRateSD, config2.getRangeRateSD(), 0.0);
     }
 
     @Test
     public void testHashCode() {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double initialPositionUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialVelocityUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialClockOffsetUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialClockDriftUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
+        final double initialPositionUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double initialVelocityUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double initialClockOffsetUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double initialClockDriftUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double accelerationPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double clockFrequencyPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double clockPhasePSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double pseudoRangeSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double rangeRateSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        final GNSSKalmanConfig config1 = new GNSSKalmanConfig(
-                initialPositionUncertainty, initialVelocityUncertainty,
-                initialClockOffsetUncertainty, initialClockDriftUncertainty,
-                accelerationPSD, clockFrequencyPSD, clockPhasePSD,
-                pseudoRangeSD, rangeRateSD);
-        final GNSSKalmanConfig config2 = new GNSSKalmanConfig(
-                initialPositionUncertainty, initialVelocityUncertainty,
-                initialClockOffsetUncertainty, initialClockDriftUncertainty,
-                accelerationPSD, clockFrequencyPSD, clockPhasePSD,
-                pseudoRangeSD, rangeRateSD);
+        final GNSSKalmanConfig config1 = new GNSSKalmanConfig(initialPositionUncertainty,
+                initialVelocityUncertainty, initialClockOffsetUncertainty, initialClockDriftUncertainty,
+                accelerationPSD, clockFrequencyPSD, clockPhasePSD, pseudoRangeSD, rangeRateSD);
+        final GNSSKalmanConfig config2 = new GNSSKalmanConfig(initialPositionUncertainty,
+                initialVelocityUncertainty, initialClockOffsetUncertainty, initialClockDriftUncertainty,
+                accelerationPSD, clockFrequencyPSD, clockPhasePSD, pseudoRangeSD, rangeRateSD);
         final GNSSKalmanConfig config3 = new GNSSKalmanConfig();
 
         assertEquals(config1.hashCode(), config2.hashCode());
@@ -705,30 +602,22 @@ public class GNSSKalmanConfigTest {
     @Test
     public void testEquals() {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double initialPositionUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialVelocityUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialClockOffsetUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialClockDriftUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
+        final double initialPositionUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double initialVelocityUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double initialClockOffsetUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double initialClockDriftUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double accelerationPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double clockFrequencyPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double clockPhasePSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double pseudoRangeSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double rangeRateSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        final GNSSKalmanConfig config1 = new GNSSKalmanConfig(
-                initialPositionUncertainty, initialVelocityUncertainty,
-                initialClockOffsetUncertainty, initialClockDriftUncertainty,
-                accelerationPSD, clockFrequencyPSD, clockPhasePSD,
-                pseudoRangeSD, rangeRateSD);
-        final GNSSKalmanConfig config2 = new GNSSKalmanConfig(
-                initialPositionUncertainty, initialVelocityUncertainty,
-                initialClockOffsetUncertainty, initialClockDriftUncertainty,
-                accelerationPSD, clockFrequencyPSD, clockPhasePSD,
-                pseudoRangeSD, rangeRateSD);
+        final GNSSKalmanConfig config1 = new GNSSKalmanConfig(initialPositionUncertainty,
+                initialVelocityUncertainty, initialClockOffsetUncertainty, initialClockDriftUncertainty,
+                accelerationPSD, clockFrequencyPSD, clockPhasePSD, pseudoRangeSD, rangeRateSD);
+        final GNSSKalmanConfig config2 = new GNSSKalmanConfig(initialPositionUncertainty,
+                initialVelocityUncertainty, initialClockOffsetUncertainty, initialClockDriftUncertainty,
+                accelerationPSD, clockFrequencyPSD, clockPhasePSD, pseudoRangeSD, rangeRateSD);
         final GNSSKalmanConfig config3 = new GNSSKalmanConfig();
 
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
@@ -747,30 +636,22 @@ public class GNSSKalmanConfigTest {
     @Test
     public void testEqualsWithThreshold() {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double initialPositionUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialVelocityUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialClockOffsetUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialClockDriftUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
+        final double initialPositionUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double initialVelocityUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double initialClockOffsetUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double initialClockDriftUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double accelerationPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double clockFrequencyPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double clockPhasePSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double pseudoRangeSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double rangeRateSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        final GNSSKalmanConfig config1 = new GNSSKalmanConfig(
-                initialPositionUncertainty, initialVelocityUncertainty,
-                initialClockOffsetUncertainty, initialClockDriftUncertainty,
-                accelerationPSD, clockFrequencyPSD, clockPhasePSD,
-                pseudoRangeSD, rangeRateSD);
-        final GNSSKalmanConfig config2 = new GNSSKalmanConfig(
-                initialPositionUncertainty, initialVelocityUncertainty,
-                initialClockOffsetUncertainty, initialClockDriftUncertainty,
-                accelerationPSD, clockFrequencyPSD, clockPhasePSD,
-                pseudoRangeSD, rangeRateSD);
+        final GNSSKalmanConfig config1 = new GNSSKalmanConfig(initialPositionUncertainty,
+                initialVelocityUncertainty, initialClockOffsetUncertainty, initialClockDriftUncertainty,
+                accelerationPSD, clockFrequencyPSD, clockPhasePSD, pseudoRangeSD, rangeRateSD);
+        final GNSSKalmanConfig config2 = new GNSSKalmanConfig(initialPositionUncertainty,
+                initialVelocityUncertainty, initialClockOffsetUncertainty, initialClockDriftUncertainty,
+                accelerationPSD, clockFrequencyPSD, clockPhasePSD, pseudoRangeSD, rangeRateSD);
         final GNSSKalmanConfig config3 = new GNSSKalmanConfig();
 
         assertTrue(config1.equals(config1, THRESHOLD));
@@ -782,25 +663,19 @@ public class GNSSKalmanConfigTest {
     @Test
     public void testClone() throws CloneNotSupportedException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double initialPositionUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialVelocityUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialClockOffsetUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialClockDriftUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
+        final double initialPositionUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double initialVelocityUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double initialClockOffsetUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double initialClockDriftUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double accelerationPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double clockFrequencyPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double clockPhasePSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double pseudoRangeSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double rangeRateSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        final GNSSKalmanConfig config1 = new GNSSKalmanConfig(
-                initialPositionUncertainty, initialVelocityUncertainty,
-                initialClockOffsetUncertainty, initialClockDriftUncertainty,
-                accelerationPSD, clockFrequencyPSD, clockPhasePSD,
-                pseudoRangeSD, rangeRateSD);
+        final GNSSKalmanConfig config1 = new GNSSKalmanConfig(initialPositionUncertainty,
+                initialVelocityUncertainty, initialClockOffsetUncertainty, initialClockDriftUncertainty,
+                accelerationPSD, clockFrequencyPSD, clockPhasePSD, pseudoRangeSD, rangeRateSD);
 
         final Object config2 = config1.clone();
 
@@ -810,14 +685,10 @@ public class GNSSKalmanConfigTest {
     @Test
     public void testSerializeDeserialize() throws IOException, ClassNotFoundException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double initialPositionUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialVelocityUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialClockOffsetUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialClockDriftUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
+        final double initialPositionUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double initialVelocityUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double initialClockOffsetUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double initialClockDriftUncertainty = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double accelerationPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double clockFrequencyPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double clockPhasePSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
@@ -825,9 +696,8 @@ public class GNSSKalmanConfigTest {
         final double rangeRateSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
         final GNSSKalmanConfig config1 = new GNSSKalmanConfig(initialPositionUncertainty,
-                initialVelocityUncertainty, initialClockOffsetUncertainty,
-                initialClockDriftUncertainty, accelerationPSD, clockFrequencyPSD,
-                clockPhasePSD, pseudoRangeSD, rangeRateSD);
+                initialVelocityUncertainty, initialClockOffsetUncertainty, initialClockDriftUncertainty,
+                accelerationPSD, clockFrequencyPSD, clockPhasePSD, pseudoRangeSD, rangeRateSD);
 
         // serialize and deserialize
         final byte[] bytes = SerializationHelper.serialize(config1);

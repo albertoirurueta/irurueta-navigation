@@ -392,7 +392,7 @@ public class GNSSEstimation implements Serializable, Cloneable {
     /**
      * Gets estimated receiver clock offset expressed in meters (m).
      * Notice that clock offset is estimated in terms of distance, since timing errors
-     * will ultimately propagated as distance errors.
+     * will ultimately be propagated as distance errors.
      *
      * @return estimated receiver clock offset.
      */
@@ -639,7 +639,7 @@ public class GNSSEstimation implements Serializable, Cloneable {
     /**
      * Gets estimated receiver clock offset.
      * Notice that clock offset is estimated in terms of distance, since timing errors
-     * will ultimately propagated as distance errors.
+     * will ultimately be propagated as distance errors.
      *
      * @param result instance where estimated receiver clock offset will be stored.
      */
@@ -651,7 +651,7 @@ public class GNSSEstimation implements Serializable, Cloneable {
     /**
      * Gets estimated receiver clock offset.
      * Notice that clock offset is estimated in terms of distance, since timing errors
-     * will ultimately propagated as distance errors.
+     * will ultimately be propagated as distance errors.
      *
      * @return estimated receiver clock offset.
      */

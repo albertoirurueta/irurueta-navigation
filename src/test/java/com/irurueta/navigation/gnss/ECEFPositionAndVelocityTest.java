@@ -48,32 +48,22 @@ public class ECEFPositionAndVelocityTest {
     @Test
     public void testConstructor() {
         // test empty constructor
-        ECEFPositionAndVelocity positionAndVelocity =
-                new ECEFPositionAndVelocity();
+        ECEFPositionAndVelocity positionAndVelocity = new ECEFPositionAndVelocity();
 
         // check default values
-        assertEquals(positionAndVelocity.getX(),
-                0.0, 0.0);
-        assertEquals(positionAndVelocity.getY(),
-                0.0, 0.0);
-        assertEquals(positionAndVelocity.getZ(),
-                0.0, 0.0);
-        assertEquals(positionAndVelocity.getVx(),
-                0.0, 0.0);
-        assertEquals(positionAndVelocity.getVy(),
-                0.0, 0.0);
-        assertEquals(positionAndVelocity.getVz(),
-                0.0, 0.0);
+        assertEquals(0.0, positionAndVelocity.getX(), 0.0);
+        assertEquals(0.0, positionAndVelocity.getY(), 0.0);
+        assertEquals(0.0, positionAndVelocity.getZ(), 0.0);
+        assertEquals(0.0, positionAndVelocity.getVx(), 0.0);
+        assertEquals(0.0, positionAndVelocity.getVy(), 0.0);
+        assertEquals(0.0, positionAndVelocity.getVz(), 0.0);
 
 
         // test constructor with position coordinates
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POSITION_VALUE,
-                MAX_POSITION_VALUE);
-        final double y = randomizer.nextDouble(MIN_POSITION_VALUE,
-                MAX_POSITION_VALUE);
-        final double z = randomizer.nextDouble(MIN_POSITION_VALUE,
-                MAX_POSITION_VALUE);
+        final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
         positionAndVelocity = new ECEFPositionAndVelocity(x, y, z);
 
@@ -81,12 +71,9 @@ public class ECEFPositionAndVelocityTest {
         assertEquals(positionAndVelocity.getX(), x, 0.0);
         assertEquals(positionAndVelocity.getY(), y, 0.0);
         assertEquals(positionAndVelocity.getZ(), z, 0.0);
-        assertEquals(positionAndVelocity.getVx(),
-                0.0, 0.0);
-        assertEquals(positionAndVelocity.getVy(),
-                0.0, 0.0);
-        assertEquals(positionAndVelocity.getVz(),
-                0.0, 0.0);
+        assertEquals(0.0, positionAndVelocity.getVx(), 0.0);
+        assertEquals(0.0, positionAndVelocity.getVy(), 0.0);
+        assertEquals(0.0, positionAndVelocity.getVz(), 0.0);
 
 
         // test constructor with position distance
@@ -94,145 +81,120 @@ public class ECEFPositionAndVelocityTest {
         final Distance distanceY = new Distance(y, DistanceUnit.METER);
         final Distance distanceZ = new Distance(z, DistanceUnit.METER);
 
-        positionAndVelocity = new ECEFPositionAndVelocity(
-                distanceX, distanceY, distanceZ);
+        positionAndVelocity = new ECEFPositionAndVelocity(distanceX, distanceY, distanceZ);
 
         // check default values
-        assertEquals(positionAndVelocity.getX(), x, 0.0);
-        assertEquals(positionAndVelocity.getY(), y, 0.0);
-        assertEquals(positionAndVelocity.getZ(), z, 0.0);
-        assertEquals(positionAndVelocity.getVx(),
-                0.0, 0.0);
-        assertEquals(positionAndVelocity.getVy(),
-                0.0, 0.0);
-        assertEquals(positionAndVelocity.getVz(),
-                0.0, 0.0);
-
+        assertEquals(x, positionAndVelocity.getX(), 0.0);
+        assertEquals(y, positionAndVelocity.getY(), 0.0);
+        assertEquals(z, positionAndVelocity.getZ(), 0.0);
+        assertEquals(0.0, positionAndVelocity.getVx(), 0.0);
+        assertEquals(0.0, positionAndVelocity.getVy(), 0.0);
+        assertEquals(0.0, positionAndVelocity.getVz(), 0.0);
 
         // test constructor with ECEF position
         final ECEFPosition ecefPosition = new ECEFPosition(x, y, z);
-        positionAndVelocity = new ECEFPositionAndVelocity(
-                ecefPosition);
+        positionAndVelocity = new ECEFPositionAndVelocity(ecefPosition);
 
         // check default values
-        assertEquals(positionAndVelocity.getX(), x, 0.0);
-        assertEquals(positionAndVelocity.getY(), y, 0.0);
-        assertEquals(positionAndVelocity.getZ(), z, 0.0);
-        assertEquals(positionAndVelocity.getVx(),
-                0.0, 0.0);
-        assertEquals(positionAndVelocity.getVy(),
-                0.0, 0.0);
-        assertEquals(positionAndVelocity.getVz(),
-                0.0, 0.0);
-
+        assertEquals(x, positionAndVelocity.getX(), 0.0);
+        assertEquals(y, positionAndVelocity.getY(), 0.0);
+        assertEquals(z, positionAndVelocity.getZ(), 0.0);
+        assertEquals(0.0, positionAndVelocity.getVx(), 0.0);
+        assertEquals(0.0, positionAndVelocity.getVy(), 0.0);
+        assertEquals(0.0, positionAndVelocity.getVz(), 0.0);
 
         // test constructor with position
         final Point3D position = new InhomogeneousPoint3D(x, y, z);
-        positionAndVelocity = new ECEFPositionAndVelocity(
-                position);
+        positionAndVelocity = new ECEFPositionAndVelocity(position);
 
         // check default values
-        assertEquals(positionAndVelocity.getX(), x, 0.0);
-        assertEquals(positionAndVelocity.getY(), y, 0.0);
-        assertEquals(positionAndVelocity.getZ(), z, 0.0);
-        assertEquals(positionAndVelocity.getVx(),
-                0.0, 0.0);
-        assertEquals(positionAndVelocity.getVy(),
-                0.0, 0.0);
-        assertEquals(positionAndVelocity.getVz(),
-                0.0, 0.0);
-
+        assertEquals(x, positionAndVelocity.getX(), 0.0);
+        assertEquals(y,positionAndVelocity.getY(), 0.0);
+        assertEquals(z, positionAndVelocity.getZ(), 0.0);
+        assertEquals(0.0, positionAndVelocity.getVx(), 0.0);
+        assertEquals(0.0, positionAndVelocity.getVy(), 0.0);
+        assertEquals(0.0, positionAndVelocity.getVz(), 0.0);
 
         // test constructor with speed coordinates
         final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final Speed speedX = new Speed(vx,
-                SpeedUnit.METERS_PER_SECOND);
-        final Speed speedY = new Speed(vy,
-                SpeedUnit.METERS_PER_SECOND);
-        final Speed speedZ = new Speed(vz,
-                SpeedUnit.METERS_PER_SECOND);
+        final Speed speedX = new Speed(vx, SpeedUnit.METERS_PER_SECOND);
+        final Speed speedY = new Speed(vy, SpeedUnit.METERS_PER_SECOND);
+        final Speed speedZ = new Speed(vz, SpeedUnit.METERS_PER_SECOND);
 
-        positionAndVelocity = new ECEFPositionAndVelocity(
-                speedX, speedY, speedZ);
+        positionAndVelocity = new ECEFPositionAndVelocity(speedX, speedY, speedZ);
 
         // check default values
-        assertEquals(positionAndVelocity.getX(), 0.0, 0.0);
-        assertEquals(positionAndVelocity.getY(), 0.0, 0.0);
-        assertEquals(positionAndVelocity.getZ(), 0.0, 0.0);
-        assertEquals(positionAndVelocity.getVx(), vx, 0.0);
-        assertEquals(positionAndVelocity.getVy(), vy, 0.0);
-        assertEquals(positionAndVelocity.getVz(), vz, 0.0);
+        assertEquals(0.0, positionAndVelocity.getX(), 0.0);
+        assertEquals(0.0, positionAndVelocity.getY(), 0.0);
+        assertEquals(0.0, positionAndVelocity.getZ(), 0.0);
+        assertEquals(vx, positionAndVelocity.getVx(), 0.0);
+        assertEquals(vy, positionAndVelocity.getVy(), 0.0);
+        assertEquals(vz, positionAndVelocity.getVz(), 0.0);
 
 
         // test constructor with ECEF velocity
-        final ECEFVelocity ecefVelocity = new ECEFVelocity(
-                vx, vy, vz);
+        final ECEFVelocity ecefVelocity = new ECEFVelocity(vx, vy, vz);
 
-        positionAndVelocity = new ECEFPositionAndVelocity(
-                ecefVelocity);
+        positionAndVelocity = new ECEFPositionAndVelocity(ecefVelocity);
 
         // check default values
-        assertEquals(positionAndVelocity.getX(), 0.0, 0.0);
-        assertEquals(positionAndVelocity.getY(), 0.0, 0.0);
-        assertEquals(positionAndVelocity.getZ(), 0.0, 0.0);
-        assertEquals(positionAndVelocity.getVx(), vx, 0.0);
-        assertEquals(positionAndVelocity.getVy(), vy, 0.0);
-        assertEquals(positionAndVelocity.getVz(), vz, 0.0);
+        assertEquals(0.0, positionAndVelocity.getX(), 0.0);
+        assertEquals(0.0, positionAndVelocity.getY(), 0.0);
+        assertEquals(0.0, positionAndVelocity.getZ(), 0.0);
+        assertEquals(vx, positionAndVelocity.getVx(), 0.0);
+        assertEquals(vy, positionAndVelocity.getVy(), 0.0);
+        assertEquals(vz, positionAndVelocity.getVz(), 0.0);
 
 
         // test constructor with position and speed coordinates
-        positionAndVelocity = new ECEFPositionAndVelocity(x, y, z,
-                vx, vy, vz);
+        positionAndVelocity = new ECEFPositionAndVelocity(x, y, z, vx, vy, vz);
 
         // check default values
-        assertEquals(positionAndVelocity.getX(), x, 0.0);
-        assertEquals(positionAndVelocity.getY(), y, 0.0);
-        assertEquals(positionAndVelocity.getZ(), z, 0.0);
-        assertEquals(positionAndVelocity.getVx(), vx, 0.0);
-        assertEquals(positionAndVelocity.getVy(), vy, 0.0);
-        assertEquals(positionAndVelocity.getVz(), vz, 0.0);
+        assertEquals(x, positionAndVelocity.getX(), 0.0);
+        assertEquals(y, positionAndVelocity.getY(), 0.0);
+        assertEquals(z, positionAndVelocity.getZ(), 0.0);
+        assertEquals(vx, positionAndVelocity.getVx(), 0.0);
+        assertEquals(vy, positionAndVelocity.getVy(), 0.0);
+        assertEquals(vz, positionAndVelocity.getVz(), 0.0);
 
 
         // test constructor with position and speed coordinates
-        positionAndVelocity = new ECEFPositionAndVelocity(x, y, z,
-                speedX, speedY, speedZ);
+        positionAndVelocity = new ECEFPositionAndVelocity(x, y, z, speedX, speedY, speedZ);
 
         // check default values
-        assertEquals(positionAndVelocity.getX(), x, 0.0);
-        assertEquals(positionAndVelocity.getY(), y, 0.0);
-        assertEquals(positionAndVelocity.getZ(), z, 0.0);
-        assertEquals(positionAndVelocity.getVx(), vx, 0.0);
-        assertEquals(positionAndVelocity.getVy(), vy, 0.0);
-        assertEquals(positionAndVelocity.getVz(), vz, 0.0);
+        assertEquals(x, positionAndVelocity.getX(), 0.0);
+        assertEquals(y, positionAndVelocity.getY(), 0.0);
+        assertEquals(z, positionAndVelocity.getZ(), 0.0);
+        assertEquals(vx, positionAndVelocity.getVx(), 0.0);
+        assertEquals(vy, positionAndVelocity.getVy(), 0.0);
+        assertEquals(vz, positionAndVelocity.getVz(), 0.0);
 
 
         // test constructor with position coordinates and ECEF velocity
-        positionAndVelocity = new ECEFPositionAndVelocity(x, y, z,
-                ecefVelocity);
+        positionAndVelocity = new ECEFPositionAndVelocity(x, y, z, ecefVelocity);
 
         // check default values
-        assertEquals(positionAndVelocity.getX(), x, 0.0);
-        assertEquals(positionAndVelocity.getY(), y, 0.0);
-        assertEquals(positionAndVelocity.getZ(), z, 0.0);
-        assertEquals(positionAndVelocity.getVx(), vx, 0.0);
-        assertEquals(positionAndVelocity.getVy(), vy, 0.0);
-        assertEquals(positionAndVelocity.getVz(), vz, 0.0);
+        assertEquals(x, positionAndVelocity.getX(), 0.0);
+        assertEquals(y, positionAndVelocity.getY(), 0.0);
+        assertEquals(z, positionAndVelocity.getZ(), 0.0);
+        assertEquals(vx, positionAndVelocity.getVx(), 0.0);
+        assertEquals(vy, positionAndVelocity.getVy(), 0.0);
+        assertEquals(vz, positionAndVelocity.getVz(), 0.0);
 
 
         // test constructor with position distance and speed coordinates
-        positionAndVelocity = new ECEFPositionAndVelocity(
-                distanceX, distanceY, distanceZ, vx, vy, vz);
+        positionAndVelocity = new ECEFPositionAndVelocity(distanceX, distanceY, distanceZ, vx, vy, vz);
 
         // check default values
-        assertEquals(positionAndVelocity.getX(), x, 0.0);
-        assertEquals(positionAndVelocity.getY(), y, 0.0);
-        assertEquals(positionAndVelocity.getZ(), z, 0.0);
-        assertEquals(positionAndVelocity.getVx(), vx, 0.0);
-        assertEquals(positionAndVelocity.getVy(), vy, 0.0);
-        assertEquals(positionAndVelocity.getVz(), vz, 0.0);
+        assertEquals(x, positionAndVelocity.getX(), 0.0);
+        assertEquals(y, positionAndVelocity.getY(), 0.0);
+        assertEquals(z, positionAndVelocity.getZ(), 0.0);
+        assertEquals(vx, positionAndVelocity.getVx(), 0.0);
+        assertEquals(vy, positionAndVelocity.getVy(), 0.0);
+        assertEquals(vz, positionAndVelocity.getVz(), 0.0);
 
 
         // test constructor with position distance and speed coordinates
@@ -240,128 +202,119 @@ public class ECEFPositionAndVelocityTest {
                 distanceX, distanceY, distanceZ, speedX, speedY, speedZ);
 
         // check default values
-        assertEquals(positionAndVelocity.getX(), x, 0.0);
-        assertEquals(positionAndVelocity.getY(), y, 0.0);
-        assertEquals(positionAndVelocity.getZ(), z, 0.0);
-        assertEquals(positionAndVelocity.getVx(), vx, 0.0);
-        assertEquals(positionAndVelocity.getVy(), vy, 0.0);
-        assertEquals(positionAndVelocity.getVz(), vz, 0.0);
+        assertEquals(x, positionAndVelocity.getX(), 0.0);
+        assertEquals(y, positionAndVelocity.getY(), 0.0);
+        assertEquals(z, positionAndVelocity.getZ(), 0.0);
+        assertEquals(vx, positionAndVelocity.getVx(), 0.0);
+        assertEquals(vy, positionAndVelocity.getVy(), 0.0);
+        assertEquals(vz, positionAndVelocity.getVz(), 0.0);
 
 
         // test constructor with position distance and ECEF velocity
-        positionAndVelocity = new ECEFPositionAndVelocity(
-                distanceX, distanceY, distanceZ, ecefVelocity);
+        positionAndVelocity = new ECEFPositionAndVelocity(distanceX, distanceY, distanceZ, ecefVelocity);
 
         // check default values
-        assertEquals(positionAndVelocity.getX(), x, 0.0);
-        assertEquals(positionAndVelocity.getY(), y, 0.0);
-        assertEquals(positionAndVelocity.getZ(), z, 0.0);
-        assertEquals(positionAndVelocity.getVx(), vx, 0.0);
-        assertEquals(positionAndVelocity.getVy(), vy, 0.0);
-        assertEquals(positionAndVelocity.getVz(), vz, 0.0);
+        assertEquals(x, positionAndVelocity.getX(), 0.0);
+        assertEquals(y, positionAndVelocity.getY(), 0.0);
+        assertEquals(z, positionAndVelocity.getZ(), 0.0);
+        assertEquals(vx, positionAndVelocity.getVx(), 0.0);
+        assertEquals(vy, positionAndVelocity.getVy(), 0.0);
+        assertEquals(vz, positionAndVelocity.getVz(), 0.0);
 
 
         // test constructor with ECEF position and speed coordinates
-        positionAndVelocity = new ECEFPositionAndVelocity(ecefPosition,
-                vx, vy, vz);
+        positionAndVelocity = new ECEFPositionAndVelocity(ecefPosition, vx, vy, vz);
 
         // check default values
-        assertEquals(positionAndVelocity.getX(), x, 0.0);
-        assertEquals(positionAndVelocity.getY(), y, 0.0);
-        assertEquals(positionAndVelocity.getZ(), z, 0.0);
-        assertEquals(positionAndVelocity.getVx(), vx, 0.0);
-        assertEquals(positionAndVelocity.getVy(), vy, 0.0);
-        assertEquals(positionAndVelocity.getVz(), vz, 0.0);
+        assertEquals(x, positionAndVelocity.getX(), 0.0);
+        assertEquals(y, positionAndVelocity.getY(), 0.0);
+        assertEquals(z, positionAndVelocity.getZ(), 0.0);
+        assertEquals(vx, positionAndVelocity.getVx(), 0.0);
+        assertEquals(vy, positionAndVelocity.getVy(), 0.0);
+        assertEquals(vz, positionAndVelocity.getVz(), 0.0);
 
 
         // test constructor with ECEF position and speed coordinates
-        positionAndVelocity = new ECEFPositionAndVelocity(ecefPosition,
-                speedX, speedY, speedZ);
+        positionAndVelocity = new ECEFPositionAndVelocity(ecefPosition, speedX, speedY, speedZ);
 
         // check default values
-        assertEquals(positionAndVelocity.getX(), x, 0.0);
-        assertEquals(positionAndVelocity.getY(), y, 0.0);
-        assertEquals(positionAndVelocity.getZ(), z, 0.0);
-        assertEquals(positionAndVelocity.getVx(), vx, 0.0);
-        assertEquals(positionAndVelocity.getVy(), vy, 0.0);
-        assertEquals(positionAndVelocity.getVz(), vz, 0.0);
+        assertEquals(x, positionAndVelocity.getX(), 0.0);
+        assertEquals(y, positionAndVelocity.getY(), 0.0);
+        assertEquals(z, positionAndVelocity.getZ(), 0.0);
+        assertEquals(vx, positionAndVelocity.getVx(), 0.0);
+        assertEquals(vy, positionAndVelocity.getVy(), 0.0);
+        assertEquals(vz, positionAndVelocity.getVz(), 0.0);
 
 
         // test constructor with ECEF position and velocity
-        positionAndVelocity = new ECEFPositionAndVelocity(ecefPosition,
-                ecefVelocity);
+        positionAndVelocity = new ECEFPositionAndVelocity(ecefPosition, ecefVelocity);
 
         // check default values
-        assertEquals(positionAndVelocity.getX(), x, 0.0);
-        assertEquals(positionAndVelocity.getY(), y, 0.0);
-        assertEquals(positionAndVelocity.getZ(), z, 0.0);
-        assertEquals(positionAndVelocity.getVx(), vx, 0.0);
-        assertEquals(positionAndVelocity.getVy(), vy, 0.0);
-        assertEquals(positionAndVelocity.getVz(), vz, 0.0);
+        assertEquals(x, positionAndVelocity.getX(), 0.0);
+        assertEquals(y, positionAndVelocity.getY(), 0.0);
+        assertEquals(z, positionAndVelocity.getZ(), 0.0);
+        assertEquals(vx, positionAndVelocity.getVx(), 0.0);
+        assertEquals(vy, positionAndVelocity.getVy(), 0.0);
+        assertEquals(vz, positionAndVelocity.getVz(), 0.0);
 
 
         // test constructor with position and speed coordinates
-        positionAndVelocity = new ECEFPositionAndVelocity(position,
-                vx, vy, vz);
+        positionAndVelocity = new ECEFPositionAndVelocity(position, vx, vy, vz);
 
         // check default values
-        assertEquals(positionAndVelocity.getX(), x, 0.0);
-        assertEquals(positionAndVelocity.getY(), y, 0.0);
-        assertEquals(positionAndVelocity.getZ(), z, 0.0);
-        assertEquals(positionAndVelocity.getVx(), vx, 0.0);
-        assertEquals(positionAndVelocity.getVy(), vy, 0.0);
-        assertEquals(positionAndVelocity.getVz(), vz, 0.0);
+        assertEquals(x, positionAndVelocity.getX(), 0.0);
+        assertEquals(y, positionAndVelocity.getY(), 0.0);
+        assertEquals(z, positionAndVelocity.getZ(), 0.0);
+        assertEquals(vx, positionAndVelocity.getVx(), 0.0);
+        assertEquals(vy, positionAndVelocity.getVy(), 0.0);
+        assertEquals(vz, positionAndVelocity.getVz(), 0.0);
 
 
         // test constructor with position and speed coordinates
-        positionAndVelocity = new ECEFPositionAndVelocity(position,
-                speedX, speedY, speedZ);
+        positionAndVelocity = new ECEFPositionAndVelocity(position, speedX, speedY, speedZ);
 
         // check default values
-        assertEquals(positionAndVelocity.getX(), x, 0.0);
-        assertEquals(positionAndVelocity.getY(), y, 0.0);
-        assertEquals(positionAndVelocity.getZ(), z, 0.0);
-        assertEquals(positionAndVelocity.getVx(), vx, 0.0);
-        assertEquals(positionAndVelocity.getVy(), vy, 0.0);
-        assertEquals(positionAndVelocity.getVz(), vz, 0.0);
+        assertEquals(x, positionAndVelocity.getX(), 0.0);
+        assertEquals(y, positionAndVelocity.getY(), 0.0);
+        assertEquals(z, positionAndVelocity.getZ(), 0.0);
+        assertEquals(vx, positionAndVelocity.getVx(), 0.0);
+        assertEquals(vy, positionAndVelocity.getVy(), 0.0);
+        assertEquals(vz, positionAndVelocity.getVz(), 0.0);
 
 
         // test constructor with position and ECEF velocity
-        positionAndVelocity = new ECEFPositionAndVelocity(position,
-                ecefVelocity);
+        positionAndVelocity = new ECEFPositionAndVelocity(position, ecefVelocity);
 
         // check default values
-        assertEquals(positionAndVelocity.getX(), x, 0.0);
-        assertEquals(positionAndVelocity.getY(), y, 0.0);
-        assertEquals(positionAndVelocity.getZ(), z, 0.0);
-        assertEquals(positionAndVelocity.getVx(), vx, 0.0);
-        assertEquals(positionAndVelocity.getVy(), vy, 0.0);
-        assertEquals(positionAndVelocity.getVz(), vz, 0.0);
+        assertEquals(x, positionAndVelocity.getX(), 0.0);
+        assertEquals(y, positionAndVelocity.getY(), 0.0);
+        assertEquals(z, positionAndVelocity.getZ(), 0.0);
+        assertEquals(vx, positionAndVelocity.getVx(), 0.0);
+        assertEquals(vy, positionAndVelocity.getVy(), 0.0);
+        assertEquals(vz, positionAndVelocity.getVz(), 0.0);
 
 
         // test copy constructor
-        positionAndVelocity = new ECEFPositionAndVelocity(x, y, z,
-                vx, vy, vz);
+        positionAndVelocity = new ECEFPositionAndVelocity(x, y, z, vx, vy, vz);
 
         final ECEFPositionAndVelocity positionAndVelocity2 =
                 new ECEFPositionAndVelocity(positionAndVelocity);
 
         // check default values
-        assertEquals(positionAndVelocity2.getX(), x, 0.0);
-        assertEquals(positionAndVelocity2.getY(), y, 0.0);
-        assertEquals(positionAndVelocity2.getZ(), z, 0.0);
-        assertEquals(positionAndVelocity2.getVx(), vx, 0.0);
-        assertEquals(positionAndVelocity2.getVy(), vy, 0.0);
-        assertEquals(positionAndVelocity2.getVz(), vz, 0.0);
+        assertEquals(x, positionAndVelocity2.getX(), 0.0);
+        assertEquals(y, positionAndVelocity2.getY(), 0.0);
+        assertEquals(z, positionAndVelocity2.getZ(), 0.0);
+        assertEquals(vx, positionAndVelocity2.getVx(), 0.0);
+        assertEquals(vy, positionAndVelocity2.getVy(), 0.0);
+        assertEquals(vz, positionAndVelocity2.getVz(), 0.0);
     }
 
     @Test
     public void testGetSetX() {
-        final ECEFPositionAndVelocity positionAndVelocity =
-                new ECEFPositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity = new ECEFPositionAndVelocity();
 
         // check default value
-        assertEquals(positionAndVelocity.getX(), 0.0, 0.0);
+        assertEquals(0.0, positionAndVelocity.getX(), 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -369,16 +322,15 @@ public class ECEFPositionAndVelocityTest {
         positionAndVelocity.setX(x);
 
         // check
-        assertEquals(positionAndVelocity.getX(), x, 0.0);
+        assertEquals(x, positionAndVelocity.getX(), 0.0);
     }
 
     @Test
     public void testGetSetY() {
-        final ECEFPositionAndVelocity positionAndVelocity =
-                new ECEFPositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity = new ECEFPositionAndVelocity();
 
         // check default value
-        assertEquals(positionAndVelocity.getY(), 0.0, 0.0);
+        assertEquals(0.0, positionAndVelocity.getY(), 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -386,16 +338,15 @@ public class ECEFPositionAndVelocityTest {
         positionAndVelocity.setY(y);
 
         // check
-        assertEquals(positionAndVelocity.getY(), y, 0.0);
+        assertEquals(y, positionAndVelocity.getY(), 0.0);
     }
 
     @Test
     public void testGetSetZ() {
-        final ECEFPositionAndVelocity positionAndVelocity =
-                new ECEFPositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity = new ECEFPositionAndVelocity();
 
         // check default value
-        assertEquals(positionAndVelocity.getZ(), 0.0, 0.0);
+        assertEquals(0.0, positionAndVelocity.getZ(), 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -403,18 +354,17 @@ public class ECEFPositionAndVelocityTest {
         positionAndVelocity.setZ(z);
 
         // check
-        assertEquals(positionAndVelocity.getZ(), z, 0.0);
+        assertEquals(z, positionAndVelocity.getZ(), 0.0);
     }
 
     @Test
     public void testSetPositionCoordinates() {
-        final ECEFPositionAndVelocity positionAndVelocity =
-                new ECEFPositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity = new ECEFPositionAndVelocity();
 
         // check default values
-        assertEquals(positionAndVelocity.getX(), 0.0, 0.0);
-        assertEquals(positionAndVelocity.getY(), 0.0, 0.0);
-        assertEquals(positionAndVelocity.getZ(), 0.0, 0.0);
+        assertEquals(0.0, positionAndVelocity.getX(), 0.0);
+        assertEquals(0.0, positionAndVelocity.getY(), 0.0);
+        assertEquals(0.0, positionAndVelocity.getZ(), 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -424,21 +374,20 @@ public class ECEFPositionAndVelocityTest {
         positionAndVelocity.setPositionCoordinates(x, y, z);
 
         // check
-        assertEquals(positionAndVelocity.getX(), x, 0.0);
-        assertEquals(positionAndVelocity.getY(), y, 0.0);
-        assertEquals(positionAndVelocity.getZ(), z, 0.0);
+        assertEquals(x, positionAndVelocity.getX(), 0.0);
+        assertEquals(y, positionAndVelocity.getY(), 0.0);
+        assertEquals(z, positionAndVelocity.getZ(), 0.0);
     }
 
     @Test
     public void testGetSetXDistance() {
-        final ECEFPositionAndVelocity positionAndVelocity =
-                new ECEFPositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity = new ECEFPositionAndVelocity();
 
         // check default value
         final Distance distanceX1 = positionAndVelocity.getXDistance();
 
-        assertEquals(distanceX1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(distanceX1.getUnit(), DistanceUnit.METER);
+        assertEquals(0.0, distanceX1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, distanceX1.getUnit());
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -458,14 +407,13 @@ public class ECEFPositionAndVelocityTest {
 
     @Test
     public void testGetSetYDistance() {
-        final ECEFPositionAndVelocity positionAndVelocity =
-                new ECEFPositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity = new ECEFPositionAndVelocity();
 
         // check default value
         final Distance distanceY1 = positionAndVelocity.getYDistance();
 
-        assertEquals(distanceY1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(distanceY1.getUnit(), DistanceUnit.METER);
+        assertEquals(0.0, distanceY1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, distanceY1.getUnit());
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -485,14 +433,13 @@ public class ECEFPositionAndVelocityTest {
 
     @Test
     public void testGetSetZDistance() {
-        final ECEFPositionAndVelocity positionAndVelocity =
-                new ECEFPositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity = new ECEFPositionAndVelocity();
 
         // check default value
         final Distance distanceZ1 = positionAndVelocity.getZDistance();
 
-        assertEquals(distanceZ1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(distanceZ1.getUnit(), DistanceUnit.METER);
+        assertEquals(0.0, distanceZ1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, distanceZ1.getUnit());
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -512,13 +459,12 @@ public class ECEFPositionAndVelocityTest {
 
     @Test
     public void testSetPositionDistanceCoordinates() {
-        final ECEFPositionAndVelocity positionAndVelocity =
-                new ECEFPositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity = new ECEFPositionAndVelocity();
 
         // check default value
-        assertEquals(positionAndVelocity.getX(), 0.0, 0.0);
-        assertEquals(positionAndVelocity.getY(), 0.0, 0.0);
-        assertEquals(positionAndVelocity.getZ(), 0.0, 0.0);
+        assertEquals(0.0, positionAndVelocity.getX(), 0.0);
+        assertEquals(0.0, positionAndVelocity.getY(), 0.0);
+        assertEquals(0.0, positionAndVelocity.getZ(), 0.0);
 
         // set new values
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -530,27 +476,24 @@ public class ECEFPositionAndVelocityTest {
         final Distance distanceY = new Distance(y, DistanceUnit.METER);
         final Distance distanceZ = new Distance(z, DistanceUnit.METER);
 
-        positionAndVelocity.setPositionDistanceCoordinates(
-                distanceX, distanceY, distanceZ);
+        positionAndVelocity.setPositionDistanceCoordinates(distanceX, distanceY, distanceZ);
 
         // check
-        assertEquals(positionAndVelocity.getX(), x, 0.0);
-        assertEquals(positionAndVelocity.getY(), y, 0.0);
-        assertEquals(positionAndVelocity.getZ(), z, 0.0);
+        assertEquals(x, positionAndVelocity.getX(), 0.0);
+        assertEquals(y, positionAndVelocity.getY(), 0.0);
+        assertEquals(z, positionAndVelocity.getZ(), 0.0);
     }
 
     @Test
     public void testGetSetEcefPosition() {
-        final ECEFPositionAndVelocity positionAndVelocity =
-                new ECEFPositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity = new ECEFPositionAndVelocity();
 
         // check default value
-        final ECEFPosition ecefPosition1 = positionAndVelocity
-                .getEcefPosition();
+        final ECEFPosition ecefPosition1 = positionAndVelocity.getEcefPosition();
 
-        assertEquals(ecefPosition1.getX(), 0.0, 0.0);
-        assertEquals(ecefPosition1.getY(), 0.0, 0.0);
-        assertEquals(ecefPosition1.getZ(), 0.0, 0.0);
+        assertEquals(0.0, ecefPosition1.getX(), 0.0);
+        assertEquals(0.0, ecefPosition1.getY(), 0.0);
+        assertEquals(0.0, ecefPosition1.getZ(), 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -563,8 +506,7 @@ public class ECEFPositionAndVelocityTest {
         // check
         final ECEFPosition ecefPosition3 = new ECEFPosition();
         positionAndVelocity.getEcefPosition(ecefPosition3);
-        final ECEFPosition ecefPosition4 = positionAndVelocity
-                .getEcefPosition();
+        final ECEFPosition ecefPosition4 = positionAndVelocity.getEcefPosition();
 
         assertEquals(ecefPosition2, ecefPosition3);
         assertEquals(ecefPosition2, ecefPosition4);
@@ -572,15 +514,14 @@ public class ECEFPositionAndVelocityTest {
 
     @Test
     public void testGetSetPosition() {
-        final ECEFPositionAndVelocity positionAndVelocity =
-                new ECEFPositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity = new ECEFPositionAndVelocity();
 
         // check default value
         final Point3D position1 = positionAndVelocity.getPosition();
 
-        assertEquals(position1.getInhomX(), 0.0, 0.0);
-        assertEquals(position1.getInhomY(), 0.0, 0.0);
-        assertEquals(position1.getInhomZ(), 0.0, 0.0);
+        assertEquals(0.0, position1.getInhomX(), 0.0);
+        assertEquals(0.0, position1.getInhomY(), 0.0);
+        assertEquals(0.0, position1.getInhomZ(), 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -601,11 +542,10 @@ public class ECEFPositionAndVelocityTest {
 
     @Test
     public void testGetSetVx() {
-        final ECEFPositionAndVelocity positionAndVelocity =
-                new ECEFPositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity = new ECEFPositionAndVelocity();
 
         // check default value
-        assertEquals(positionAndVelocity.getVx(), 0.0, 0.0);
+        assertEquals(0.0, positionAndVelocity.getVx(), 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -613,16 +553,15 @@ public class ECEFPositionAndVelocityTest {
         positionAndVelocity.setVx(vx);
 
         // check
-        assertEquals(positionAndVelocity.getVx(), vx, 0.0);
+        assertEquals(vx, positionAndVelocity.getVx(), 0.0);
     }
 
     @Test
     public void testGetSetVy() {
-        final ECEFPositionAndVelocity positionAndVelocity =
-                new ECEFPositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity = new ECEFPositionAndVelocity();
 
         // check default value
-        assertEquals(positionAndVelocity.getVy(), 0.0, 0.0);
+        assertEquals(0.0, positionAndVelocity.getVy(), 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -630,16 +569,15 @@ public class ECEFPositionAndVelocityTest {
         positionAndVelocity.setVy(vy);
 
         // check
-        assertEquals(positionAndVelocity.getVy(), vy, 0.0);
+        assertEquals(vy, positionAndVelocity.getVy(), 0.0);
     }
 
     @Test
     public void testGetSetVz() {
-        final ECEFPositionAndVelocity positionAndVelocity =
-                new ECEFPositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity = new ECEFPositionAndVelocity();
 
         // check default value
-        assertEquals(positionAndVelocity.getVz(), 0.0, 0.0);
+        assertEquals(0.0, positionAndVelocity.getVz(), 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -647,18 +585,17 @@ public class ECEFPositionAndVelocityTest {
         positionAndVelocity.setVz(vz);
 
         // check
-        assertEquals(positionAndVelocity.getVz(), vz, 0.0);
+        assertEquals(vz, positionAndVelocity.getVz(), 0.0);
     }
 
     @Test
     public void testSetVelocityCoordinates() {
-        final ECEFPositionAndVelocity positionAndVelocity =
-                new ECEFPositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity = new ECEFPositionAndVelocity();
 
         // check default values
-        assertEquals(positionAndVelocity.getVx(), 0.0, 0.0);
-        assertEquals(positionAndVelocity.getVy(), 0.0, 0.0);
-        assertEquals(positionAndVelocity.getVz(), 0.0, 0.0);
+        assertEquals(0.0, positionAndVelocity.getVx(), 0.0);
+        assertEquals(0.0, positionAndVelocity.getVy(), 0.0);
+        assertEquals(0.0, positionAndVelocity.getVz(), 0.0);
 
         // set new values
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -668,21 +605,20 @@ public class ECEFPositionAndVelocityTest {
         positionAndVelocity.setVelocityCoordinates(vx, vy, vz);
 
         // check
-        assertEquals(positionAndVelocity.getVx(), vx, 0.0);
-        assertEquals(positionAndVelocity.getVy(), vy, 0.0);
-        assertEquals(positionAndVelocity.getVz(), vz, 0.0);
+        assertEquals(vx, positionAndVelocity.getVx(), 0.0);
+        assertEquals(vy, positionAndVelocity.getVy(), 0.0);
+        assertEquals(vz, positionAndVelocity.getVz(), 0.0);
     }
 
     @Test
     public void testGetSetSpeedX() {
-        final ECEFPositionAndVelocity positionAndVelocity =
-                new ECEFPositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity = new ECEFPositionAndVelocity();
 
         // check default value
         final Speed speedX1 = positionAndVelocity.getSpeedX();
 
-        assertEquals(speedX1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(speedX1.getUnit(), SpeedUnit.METERS_PER_SECOND);
+        assertEquals(0.0, speedX1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, speedX1.getUnit());
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -701,14 +637,13 @@ public class ECEFPositionAndVelocityTest {
 
     @Test
     public void testGetSetSpeedY() {
-        final ECEFPositionAndVelocity positionAndVelocity =
-                new ECEFPositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity = new ECEFPositionAndVelocity();
 
         // check default value
         final Speed speedY1 = positionAndVelocity.getSpeedY();
 
-        assertEquals(speedY1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(speedY1.getUnit(), SpeedUnit.METERS_PER_SECOND);
+        assertEquals(0.0, speedY1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, speedY1.getUnit());
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -727,14 +662,13 @@ public class ECEFPositionAndVelocityTest {
 
     @Test
     public void testGetSetSpeedZ() {
-        final ECEFPositionAndVelocity positionAndVelocity =
-                new ECEFPositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity = new ECEFPositionAndVelocity();
 
         // check default value
         final Speed speedZ1 = positionAndVelocity.getSpeedZ();
 
-        assertEquals(speedZ1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(speedZ1.getUnit(), SpeedUnit.METERS_PER_SECOND);
+        assertEquals(0.0, speedZ1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, speedZ1.getUnit());
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -753,13 +687,12 @@ public class ECEFPositionAndVelocityTest {
 
     @Test
     public void testSetSpeedCoordinates() {
-        final ECEFPositionAndVelocity positionAndVelocity =
-                new ECEFPositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity = new ECEFPositionAndVelocity();
 
         // check default value
-        assertEquals(positionAndVelocity.getVx(), 0.0, 0.0);
-        assertEquals(positionAndVelocity.getVy(), 0.0, 0.0);
-        assertEquals(positionAndVelocity.getVz(), 0.0, 0.0);
+        assertEquals(0.0, positionAndVelocity.getVx(), 0.0);
+        assertEquals(0.0, positionAndVelocity.getVy(), 0.0);
+        assertEquals(0.0, positionAndVelocity.getVz(), 0.0);
 
         // set new values
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -774,23 +707,21 @@ public class ECEFPositionAndVelocityTest {
         positionAndVelocity.setSpeedCoordinates(speedX, speedY, speedZ);
 
         // check
-        assertEquals(positionAndVelocity.getVx(), vx, 0.0);
-        assertEquals(positionAndVelocity.getVy(), vy, 0.0);
-        assertEquals(positionAndVelocity.getVz(), vz, 0.0);
+        assertEquals(vx, positionAndVelocity.getVx(), 0.0);
+        assertEquals(vy, positionAndVelocity.getVy(), 0.0);
+        assertEquals(vz, positionAndVelocity.getVz(), 0.0);
     }
 
     @Test
     public void testGetSetEcefVelocity() {
-        final ECEFPositionAndVelocity positionAndVelocity =
-                new ECEFPositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity = new ECEFPositionAndVelocity();
 
         // check default value
-        final ECEFVelocity ecefVelocity1 = positionAndVelocity
-                .getEcefVelocity();
+        final ECEFVelocity ecefVelocity1 = positionAndVelocity.getEcefVelocity();
 
-        assertEquals(ecefVelocity1.getVx(), 0.0, 0.0);
-        assertEquals(ecefVelocity1.getVy(), 0.0, 0.0);
-        assertEquals(ecefVelocity1.getVz(), 0.0, 0.0);
+        assertEquals(0.0, ecefVelocity1.getVx(), 0.0);
+        assertEquals(0.0, ecefVelocity1.getVy(), 0.0);
+        assertEquals(0.0, ecefVelocity1.getVz(), 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -804,8 +735,7 @@ public class ECEFPositionAndVelocityTest {
         // check
         final ECEFVelocity ecefVelocity3 = new ECEFVelocity();
         positionAndVelocity.getEcefVelocity(ecefVelocity3);
-        final ECEFVelocity ecefVelocity4 = positionAndVelocity
-                .getEcefVelocity();
+        final ECEFVelocity ecefVelocity4 = positionAndVelocity.getEcefVelocity();
 
         assertEquals(ecefVelocity2, ecefVelocity3);
         assertEquals(ecefVelocity2, ecefVelocity4);
@@ -814,70 +744,59 @@ public class ECEFPositionAndVelocityTest {
     @Test
     public void testCopyTo() {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POSITION_VALUE,
-                MAX_POSITION_VALUE);
-        final double y = randomizer.nextDouble(MIN_POSITION_VALUE,
-                MAX_POSITION_VALUE);
-        final double z = randomizer.nextDouble(MIN_POSITION_VALUE,
-                MAX_POSITION_VALUE);
+        final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
         final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
         final ECEFPositionAndVelocity positionAndVelocity1 =
                 new ECEFPositionAndVelocity(x, y, z, vx, vy, vz);
-        final ECEFPositionAndVelocity positionAndVelocity2 =
-                new ECEFPositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity2 = new ECEFPositionAndVelocity();
 
         positionAndVelocity1.copyTo(positionAndVelocity2);
 
         // check
-        assertEquals(positionAndVelocity2.getX(), x, 0.0);
-        assertEquals(positionAndVelocity2.getY(), y, 0.0);
-        assertEquals(positionAndVelocity2.getZ(), z, 0.0);
-        assertEquals(positionAndVelocity2.getVx(), vx, 0.0);
-        assertEquals(positionAndVelocity2.getVy(), vy, 0.0);
-        assertEquals(positionAndVelocity2.getVz(), vz, 0.0);
+        assertEquals(x, positionAndVelocity2.getX(), 0.0);
+        assertEquals(y, positionAndVelocity2.getY(), 0.0);
+        assertEquals(z, positionAndVelocity2.getZ(), 0.0);
+        assertEquals(vx, positionAndVelocity2.getVx(), 0.0);
+        assertEquals(vy, positionAndVelocity2.getVy(), 0.0);
+        assertEquals(vz, positionAndVelocity2.getVz(), 0.0);
     }
 
     @Test
     public void testCopyFrom() {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POSITION_VALUE,
-                MAX_POSITION_VALUE);
-        final double y = randomizer.nextDouble(MIN_POSITION_VALUE,
-                MAX_POSITION_VALUE);
-        final double z = randomizer.nextDouble(MIN_POSITION_VALUE,
-                MAX_POSITION_VALUE);
+        final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
         final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
         final ECEFPositionAndVelocity positionAndVelocity1 =
                 new ECEFPositionAndVelocity(x, y, z, vx, vy, vz);
-        final ECEFPositionAndVelocity positionAndVelocity2 =
-                new ECEFPositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity2 = new ECEFPositionAndVelocity();
 
         positionAndVelocity2.copyFrom(positionAndVelocity1);
 
         // check
-        assertEquals(positionAndVelocity2.getX(), x, 0.0);
-        assertEquals(positionAndVelocity2.getY(), y, 0.0);
-        assertEquals(positionAndVelocity2.getZ(), z, 0.0);
-        assertEquals(positionAndVelocity2.getVx(), vx, 0.0);
-        assertEquals(positionAndVelocity2.getVy(), vy, 0.0);
-        assertEquals(positionAndVelocity2.getVz(), vz, 0.0);
+        assertEquals(x, positionAndVelocity2.getX(), 0.0);
+        assertEquals(y, positionAndVelocity2.getY(), 0.0);
+        assertEquals(z, positionAndVelocity2.getZ(), 0.0);
+        assertEquals(vx, positionAndVelocity2.getVx(), 0.0);
+        assertEquals(vy, positionAndVelocity2.getVy(), 0.0);
+        assertEquals(vz, positionAndVelocity2.getVz(), 0.0);
     }
 
     @Test
     public void testHashCode() {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POSITION_VALUE,
-                MAX_POSITION_VALUE);
-        final double y = randomizer.nextDouble(MIN_POSITION_VALUE,
-                MAX_POSITION_VALUE);
-        final double z = randomizer.nextDouble(MIN_POSITION_VALUE,
-                MAX_POSITION_VALUE);
+        final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
         final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
@@ -886,25 +805,19 @@ public class ECEFPositionAndVelocityTest {
                 new ECEFPositionAndVelocity(x, y, z, vx, vy, vz);
         final ECEFPositionAndVelocity positionAndVelocity2 =
                 new ECEFPositionAndVelocity(x, y, z, vx, vy, vz);
-        final ECEFPositionAndVelocity positionAndVelocity3 =
-                new ECEFPositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity3 = new ECEFPositionAndVelocity();
 
         // check
-        assertEquals(positionAndVelocity1.hashCode(),
-                positionAndVelocity2.hashCode());
-        assertNotEquals(positionAndVelocity1.hashCode(),
-                positionAndVelocity3.hashCode());
+        assertEquals(positionAndVelocity1.hashCode(), positionAndVelocity2.hashCode());
+        assertNotEquals(positionAndVelocity1.hashCode(), positionAndVelocity3.hashCode());
     }
 
     @Test
     public void testEquals() {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POSITION_VALUE,
-                MAX_POSITION_VALUE);
-        final double y = randomizer.nextDouble(MIN_POSITION_VALUE,
-                MAX_POSITION_VALUE);
-        final double z = randomizer.nextDouble(MIN_POSITION_VALUE,
-                MAX_POSITION_VALUE);
+        final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
         final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
@@ -913,8 +826,7 @@ public class ECEFPositionAndVelocityTest {
                 new ECEFPositionAndVelocity(x, y, z, vx, vy, vz);
         final ECEFPositionAndVelocity positionAndVelocity2 =
                 new ECEFPositionAndVelocity(x, y, z, vx, vy, vz);
-        final ECEFPositionAndVelocity positionAndVelocity3 =
-                new ECEFPositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity3 = new ECEFPositionAndVelocity();
 
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
         assertTrue(positionAndVelocity1.equals((Object)positionAndVelocity1));
@@ -932,12 +844,9 @@ public class ECEFPositionAndVelocityTest {
     @Test
     public void testEqualsWithThreshold() {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POSITION_VALUE,
-                MAX_POSITION_VALUE);
-        final double y = randomizer.nextDouble(MIN_POSITION_VALUE,
-                MAX_POSITION_VALUE);
-        final double z = randomizer.nextDouble(MIN_POSITION_VALUE,
-                MAX_POSITION_VALUE);
+        final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
         final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
@@ -946,27 +855,20 @@ public class ECEFPositionAndVelocityTest {
                 new ECEFPositionAndVelocity(x, y, z, vx, vy, vz);
         final ECEFPositionAndVelocity positionAndVelocity2 =
                 new ECEFPositionAndVelocity(x, y, z, vx, vy, vz);
-        final ECEFPositionAndVelocity positionAndVelocity3 =
-                new ECEFPositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity3 = new ECEFPositionAndVelocity();
 
-        assertTrue(positionAndVelocity1.equals(positionAndVelocity1,
-                THRESHOLD));
-        assertTrue(positionAndVelocity1.equals(positionAndVelocity2,
-                THRESHOLD));
-        assertFalse(positionAndVelocity1.equals(positionAndVelocity3,
-                THRESHOLD));
+        assertTrue(positionAndVelocity1.equals(positionAndVelocity1, THRESHOLD));
+        assertTrue(positionAndVelocity1.equals(positionAndVelocity2, THRESHOLD));
+        assertFalse(positionAndVelocity1.equals(positionAndVelocity3, THRESHOLD));
         assertFalse(positionAndVelocity1.equals(null, THRESHOLD));
     }
 
     @Test
     public void testClone() throws CloneNotSupportedException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POSITION_VALUE,
-                MAX_POSITION_VALUE);
-        final double y = randomizer.nextDouble(MIN_POSITION_VALUE,
-                MAX_POSITION_VALUE);
-        final double z = randomizer.nextDouble(MIN_POSITION_VALUE,
-                MAX_POSITION_VALUE);
+        final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
         final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
@@ -974,8 +876,7 @@ public class ECEFPositionAndVelocityTest {
         final ECEFPositionAndVelocity positionAndVelocity1 =
                 new ECEFPositionAndVelocity(x, y, z, vx, vy, vz);
 
-        final Object positionAndVelocity2 = positionAndVelocity1
-                .clone();
+        final Object positionAndVelocity2 = positionAndVelocity1.clone();
 
         assertEquals(positionAndVelocity1, positionAndVelocity2);
     }
@@ -983,12 +884,9 @@ public class ECEFPositionAndVelocityTest {
     @Test
     public void testSerializeDeserialize() throws IOException, ClassNotFoundException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POSITION_VALUE,
-                MAX_POSITION_VALUE);
-        final double y = randomizer.nextDouble(MIN_POSITION_VALUE,
-                MAX_POSITION_VALUE);
-        final double z = randomizer.nextDouble(MIN_POSITION_VALUE,
-                MAX_POSITION_VALUE);
+        final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
         final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
@@ -999,8 +897,7 @@ public class ECEFPositionAndVelocityTest {
 
         // serialize and deserialize
         final byte[] bytes = SerializationHelper.serialize(positionAndVelocity1);
-        final ECEFPositionAndVelocity positionAndVelocity2 =
-                SerializationHelper.deserialize(bytes);
+        final ECEFPositionAndVelocity positionAndVelocity2 = SerializationHelper.deserialize(bytes);
 
         // check
         assertEquals(positionAndVelocity1, positionAndVelocity2);

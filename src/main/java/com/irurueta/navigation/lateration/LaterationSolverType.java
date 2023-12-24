@@ -30,7 +30,7 @@ public enum LaterationSolverType {
     HOMOGENEOUS_LINEAR_TRILATERATION_SOLVER,
 
     /**
-     * Non linear lateration solver.
+     * Non-linear lateration solver.
      */
     NON_LINEAR_TRILATERATION_SOLVER
 }

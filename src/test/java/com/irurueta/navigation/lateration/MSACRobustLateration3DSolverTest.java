@@ -29,8 +29,7 @@ import java.util.Random;
 
 import static org.junit.Assert.*;
 
-public class MSACRobustLateration3DSolverTest implements
-        RobustLaterationSolverListener<Point3D> {
+public class MSACRobustLateration3DSolverTest implements RobustLaterationSolverListener<Point3D> {
 
     private static final int MIN_SPHERES = 100;
     private static final int MAX_SPHERES = 500;
@@ -61,12 +60,11 @@ public class MSACRobustLateration3DSolverTest implements
         MSACRobustLateration3DSolver solver = new MSACRobustLateration3DSolver();
 
         // check correctness
-        assertEquals(solver.getThreshold(),
-                MSACRobustLateration3DSolver.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(solver.getMethod(), RobustEstimatorMethod.MSAC);
-        assertEquals(solver.getNumberOfDimensions(), 3);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
-        assertEquals(solver.getPreliminarySubsetSize(), 4);
+        assertEquals(MSACRobustLateration3DSolver.DEFAULT_THRESHOLD, solver.getThreshold(), 0.0);
+        assertEquals(RobustEstimatorMethod.MSAC, solver.getMethod());
+        assertEquals(3, solver.getNumberOfDimensions());
+        assertEquals(4, solver.getMinRequiredPositionsAndDistances());
+        assertEquals(4, solver.getPreliminarySubsetSize());
         assertNull(solver.getSpheres());
         assertNull(solver.getListener());
         assertNull(solver.getInitialPosition());
@@ -74,17 +72,12 @@ public class MSACRobustLateration3DSolverTest implements
         assertFalse(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
-        assertEquals(solver.getProgressDelta(),
-                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(solver.getConfidence(),
-                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(solver.getMaxIterations(),
-                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
+        assertEquals(RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, solver.getProgressDelta(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_CONFIDENCE, solver.getConfidence(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_MAX_ITERATIONS, solver.getMaxIterations());
         assertNull(solver.getInliersData());
-        assertEquals(solver.isResultRefined(),
-                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
-        assertEquals(solver.isCovarianceKept(),
-                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertEquals(RobustLaterationSolver.DEFAULT_REFINE_RESULT, solver.isResultRefined());
+        assertEquals(RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE, solver.isCovarianceKept());
         assertNull(solver.getPositions());
         assertNull(solver.getDistances());
         assertNull(solver.getDistanceStandardDeviations());
@@ -97,30 +90,24 @@ public class MSACRobustLateration3DSolverTest implements
         solver = new MSACRobustLateration3DSolver(this);
 
         // check correctness
-        assertEquals(solver.getThreshold(),
-                MSACRobustLateration3DSolver.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(solver.getMethod(), RobustEstimatorMethod.MSAC);
-        assertEquals(solver.getNumberOfDimensions(), 3);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
-        assertEquals(solver.getPreliminarySubsetSize(), 4);
+        assertEquals(MSACRobustLateration3DSolver.DEFAULT_THRESHOLD, solver.getThreshold(), 0.0);
+        assertEquals(RobustEstimatorMethod.MSAC, solver.getMethod());
+        assertEquals(3, solver.getNumberOfDimensions());
+        assertEquals(4, solver.getMinRequiredPositionsAndDistances());
+        assertEquals(4, solver.getPreliminarySubsetSize());
         assertNull(solver.getSpheres());
-        assertSame(solver.getListener(), this);
+        assertSame(this, solver.getListener());
         assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
         assertFalse(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
-        assertEquals(solver.getProgressDelta(),
-                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(solver.getConfidence(),
-                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(solver.getMaxIterations(),
-                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
+        assertEquals(RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, solver.getProgressDelta(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_CONFIDENCE, solver.getConfidence(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_MAX_ITERATIONS, solver.getMaxIterations());
         assertNull(solver.getInliersData());
-        assertEquals(solver.isResultRefined(),
-                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
-        assertEquals(solver.isCovarianceKept(),
-                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertEquals(RobustLaterationSolver.DEFAULT_REFINE_RESULT, solver.isResultRefined());
+        assertEquals(RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE, solver.isCovarianceKept());
         assertNull(solver.getPositions());
         assertNull(solver.getDistances());
         assertNull(solver.getDistanceStandardDeviations());
@@ -128,7 +115,6 @@ public class MSACRobustLateration3DSolverTest implements
         assertNull(solver.getQualityScores());
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
-
 
         // constructor with positions and distances
         final Point3D[] positions = new Point3D[4];
@@ -140,12 +126,11 @@ public class MSACRobustLateration3DSolverTest implements
         solver = new MSACRobustLateration3DSolver(positions, distances);
 
         // check correctness
-        assertEquals(solver.getThreshold(),
-                MSACRobustLateration3DSolver.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(solver.getMethod(), RobustEstimatorMethod.MSAC);
-        assertEquals(solver.getNumberOfDimensions(), 3);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
-        assertEquals(solver.getPreliminarySubsetSize(), 4);
+        assertEquals(MSACRobustLateration3DSolver.DEFAULT_THRESHOLD, solver.getThreshold(), 0.0);
+        assertEquals(RobustEstimatorMethod.MSAC, solver.getMethod());
+        assertEquals(3, solver.getNumberOfDimensions());
+        assertEquals(4, solver.getMinRequiredPositionsAndDistances());
+        assertEquals(4, solver.getPreliminarySubsetSize());
         assertNotNull(solver.getSpheres());
         assertNull(solver.getListener());
         assertNull(solver.getInitialPosition());
@@ -153,19 +138,14 @@ public class MSACRobustLateration3DSolverTest implements
         assertFalse(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
-        assertEquals(solver.getProgressDelta(),
-                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(solver.getConfidence(),
-                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(solver.getMaxIterations(),
-                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
+        assertEquals(RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, solver.getProgressDelta(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_CONFIDENCE, solver.getConfidence(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_MAX_ITERATIONS, solver.getMaxIterations());
         assertNull(solver.getInliersData());
-        assertEquals(solver.isResultRefined(),
-                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
-        assertEquals(solver.isCovarianceKept(),
-                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
+        assertEquals(RobustLaterationSolver.DEFAULT_REFINE_RESULT, solver.isResultRefined());
+        assertEquals(RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE, solver.isCovarianceKept());
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
         assertNull(solver.getDistanceStandardDeviations());
         assertTrue(solver.isReady());
         assertNull(solver.getQualityScores());
@@ -202,16 +182,14 @@ public class MSACRobustLateration3DSolverTest implements
 
         // constructor with positions, distances and standard deviations
         final double[] standardDeviations = new double[4];
-        solver = new MSACRobustLateration3DSolver(positions, distances,
-                standardDeviations);
+        solver = new MSACRobustLateration3DSolver(positions, distances, standardDeviations);
 
         // check correctness
-        assertEquals(solver.getThreshold(),
-                MSACRobustLateration3DSolver.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(solver.getMethod(), RobustEstimatorMethod.MSAC);
-        assertEquals(solver.getNumberOfDimensions(), 3);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
-        assertEquals(solver.getPreliminarySubsetSize(), 4);
+        assertEquals(MSACRobustLateration3DSolver.DEFAULT_THRESHOLD, solver.getThreshold(), 0.0);
+        assertEquals(RobustEstimatorMethod.MSAC, solver.getMethod());
+        assertEquals(3, solver.getNumberOfDimensions());
+        assertEquals(4, solver.getMinRequiredPositionsAndDistances());
+        assertEquals(4, solver.getPreliminarySubsetSize());
         assertNotNull(solver.getSpheres());
         assertNull(solver.getListener());
         assertNull(solver.getInitialPosition());
@@ -219,20 +197,15 @@ public class MSACRobustLateration3DSolverTest implements
         assertFalse(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
-        assertEquals(solver.getProgressDelta(),
-                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(solver.getConfidence(),
-                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(solver.getMaxIterations(),
-                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
+        assertEquals(RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, solver.getProgressDelta(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_CONFIDENCE, solver.getConfidence(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_MAX_ITERATIONS, solver.getMaxIterations());
         assertNull(solver.getInliersData());
-        assertEquals(solver.isResultRefined(),
-                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
-        assertEquals(solver.isCovarianceKept(),
-                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
+        assertEquals(RobustLaterationSolver.DEFAULT_REFINE_RESULT, solver.isResultRefined());
+        assertEquals(RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE, solver.isCovarianceKept());
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
         assertTrue(solver.isReady());
         assertNull(solver.getQualityScores());
         assertNull(solver.getCovariance());
@@ -241,38 +214,32 @@ public class MSACRobustLateration3DSolverTest implements
         // force IllegalArgumentException
         solver = null;
         try {
-            solver = new MSACRobustLateration3DSolver(null, distances,
-                    standardDeviations);
+            solver = new MSACRobustLateration3DSolver(null, distances, standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new MSACRobustLateration3DSolver(positions, null,
-                    standardDeviations);
+            solver = new MSACRobustLateration3DSolver(positions, null, standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new MSACRobustLateration3DSolver(positions, distances,
-                    (double[]) null);
+            solver = new MSACRobustLateration3DSolver(positions, distances, (double[]) null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new MSACRobustLateration3DSolver(positions, wrong,
-                    standardDeviations);
+            solver = new MSACRobustLateration3DSolver(positions, wrong, standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new MSACRobustLateration3DSolver(positions, distances,
-                    wrong);
+            solver = new MSACRobustLateration3DSolver(positions, distances, wrong);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new MSACRobustLateration3DSolver(shortPositions,
-                    shortDistances, standardDeviations);
+            solver = new MSACRobustLateration3DSolver(shortPositions, shortDistances, standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -280,36 +247,29 @@ public class MSACRobustLateration3DSolverTest implements
 
 
         // constructor with positions, distances, standard deviations and listener
-        solver = new MSACRobustLateration3DSolver(positions, distances,
-                standardDeviations, this);
+        solver = new MSACRobustLateration3DSolver(positions, distances, standardDeviations, this);
 
         // check correctness
-        assertEquals(solver.getThreshold(),
-                MSACRobustLateration3DSolver.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(solver.getMethod(), RobustEstimatorMethod.MSAC);
-        assertEquals(solver.getNumberOfDimensions(), 3);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
-        assertEquals(solver.getPreliminarySubsetSize(), 4);
+        assertEquals(MSACRobustLateration3DSolver.DEFAULT_THRESHOLD, solver.getThreshold(), 0.0);
+        assertEquals(RobustEstimatorMethod.MSAC, solver.getMethod());
+        assertEquals(3, solver.getNumberOfDimensions());
+        assertEquals(4, solver.getMinRequiredPositionsAndDistances());
+        assertEquals(4, solver.getPreliminarySubsetSize());
         assertNotNull(solver.getSpheres());
-        assertSame(solver.getListener(), this);
+        assertSame(this, solver.getListener());
         assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
         assertFalse(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
-        assertEquals(solver.getProgressDelta(),
-                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(solver.getConfidence(),
-                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(solver.getMaxIterations(),
-                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
+        assertEquals(RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, solver.getProgressDelta(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_CONFIDENCE, solver.getConfidence(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_MAX_ITERATIONS, solver.getMaxIterations());
         assertNull(solver.getInliersData());
-        assertEquals(solver.isResultRefined(),
-                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
-        assertEquals(solver.isCovarianceKept(),
-                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
+        assertEquals(RobustLaterationSolver.DEFAULT_REFINE_RESULT, solver.isResultRefined());
+        assertEquals(RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE, solver.isCovarianceKept());
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
         assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
         assertTrue(solver.isReady());
         assertNull(solver.getQualityScores());
@@ -319,8 +279,8 @@ public class MSACRobustLateration3DSolverTest implements
         // force IllegalArgumentException
         solver = null;
         try {
-            solver = new MSACRobustLateration3DSolver(null, distances,
-                    standardDeviations, this);
+            solver = new MSACRobustLateration3DSolver(null, distances, standardDeviations,
+                    this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -337,14 +297,12 @@ public class MSACRobustLateration3DSolverTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new MSACRobustLateration3DSolver(positions, wrong,
-                    standardDeviations, this);
+            solver = new MSACRobustLateration3DSolver(positions, wrong, standardDeviations, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new MSACRobustLateration3DSolver(positions, distances,
-                    wrong, this);
+            solver = new MSACRobustLateration3DSolver(positions, distances, wrong, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -358,16 +316,14 @@ public class MSACRobustLateration3DSolverTest implements
 
 
         // constructor with positions, distances and listener
-        solver = new MSACRobustLateration3DSolver(positions, distances,
-                this);
+        solver = new MSACRobustLateration3DSolver(positions, distances, this);
 
         // check correctness
-        assertEquals(solver.getThreshold(),
-                MSACRobustLateration3DSolver.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(solver.getMethod(), RobustEstimatorMethod.MSAC);
-        assertEquals(solver.getNumberOfDimensions(), 3);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
-        assertEquals(solver.getPreliminarySubsetSize(), 4);
+        assertEquals(MSACRobustLateration3DSolver.DEFAULT_THRESHOLD, solver.getThreshold(), 0.0);
+        assertEquals(RobustEstimatorMethod.MSAC, solver.getMethod());
+        assertEquals(3, solver.getNumberOfDimensions());
+        assertEquals(4, solver.getMinRequiredPositionsAndDistances());
+        assertEquals(4, solver.getPreliminarySubsetSize());
         assertNotNull(solver.getSpheres());
         assertSame(solver.getListener(), this);
         assertNull(solver.getInitialPosition());
@@ -375,19 +331,14 @@ public class MSACRobustLateration3DSolverTest implements
         assertFalse(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
-        assertEquals(solver.getProgressDelta(),
-                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(solver.getConfidence(),
-                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(solver.getMaxIterations(),
-                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
+        assertEquals(RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, solver.getProgressDelta(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_CONFIDENCE, solver.getConfidence(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_MAX_ITERATIONS, solver.getMaxIterations());
         assertNull(solver.getInliersData());
-        assertEquals(solver.isResultRefined(),
-                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
-        assertEquals(solver.isCovarianceKept(),
-                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
+        assertEquals(RobustLaterationSolver.DEFAULT_REFINE_RESULT, solver.isResultRefined());
+        assertEquals(RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE, solver.isCovarianceKept());
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
         assertNull(solver.getDistanceStandardDeviations());
         assertTrue(solver.isReady());
         assertNull(solver.getQualityScores());
@@ -397,26 +348,22 @@ public class MSACRobustLateration3DSolverTest implements
         // force IllegalArgumentException
         solver = null;
         try {
-            solver = new MSACRobustLateration3DSolver((Point3D[]) null, distances,
-                    this);
+            solver = new MSACRobustLateration3DSolver((Point3D[]) null, distances, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new MSACRobustLateration3DSolver(positions, null,
-                    this);
+            solver = new MSACRobustLateration3DSolver(positions, null, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new MSACRobustLateration3DSolver(positions, wrong,
-                    this);
+            solver = new MSACRobustLateration3DSolver(positions, wrong, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new MSACRobustLateration3DSolver(shortPositions,
-                    shortDistances, this);
+            solver = new MSACRobustLateration3DSolver(shortPositions, shortDistances, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -432,12 +379,11 @@ public class MSACRobustLateration3DSolverTest implements
         solver = new MSACRobustLateration3DSolver(spheres);
 
         // check correctness
-        assertEquals(solver.getThreshold(),
-                MSACRobustLateration3DSolver.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(solver.getMethod(), RobustEstimatorMethod.MSAC);
-        assertEquals(solver.getNumberOfDimensions(), 3);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
-        assertEquals(solver.getPreliminarySubsetSize(), 4);
+        assertEquals(MSACRobustLateration3DSolver.DEFAULT_THRESHOLD, solver.getThreshold(), 0.0);
+        assertEquals(RobustEstimatorMethod.MSAC, solver.getMethod());
+        assertEquals(3, solver.getNumberOfDimensions());
+        assertEquals(4, solver.getMinRequiredPositionsAndDistances());
+        assertEquals(4, solver.getPreliminarySubsetSize());
         assertNotNull(solver.getSpheres());
         assertNull(solver.getListener());
         assertNull(solver.getInitialPosition());
@@ -445,17 +391,12 @@ public class MSACRobustLateration3DSolverTest implements
         assertFalse(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
-        assertEquals(solver.getProgressDelta(),
-                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(solver.getConfidence(),
-                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(solver.getMaxIterations(),
-                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
+        assertEquals(RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, solver.getProgressDelta(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_CONFIDENCE, solver.getConfidence(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_MAX_ITERATIONS, solver.getMaxIterations());
         assertNull(solver.getInliersData());
-        assertEquals(solver.isResultRefined(),
-                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
-        assertEquals(solver.isCovarianceKept(),
-                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertEquals(RobustLaterationSolver.DEFAULT_REFINE_RESULT, solver.isResultRefined());
+        assertEquals(RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE, solver.isCovarianceKept());
         assertNotNull(solver.getPositions());
         assertNotNull(solver.getDistances());
         assertNull(solver.getDistanceStandardDeviations());
@@ -482,16 +423,14 @@ public class MSACRobustLateration3DSolverTest implements
 
 
         // constructor with circles and standard deviations
-        solver = new MSACRobustLateration3DSolver(spheres,
-                standardDeviations);
+        solver = new MSACRobustLateration3DSolver(spheres, standardDeviations);
 
         // check correctness
-        assertEquals(solver.getThreshold(),
-                MSACRobustLateration3DSolver.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(solver.getMethod(), RobustEstimatorMethod.MSAC);
-        assertEquals(solver.getNumberOfDimensions(), 3);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
-        assertEquals(solver.getPreliminarySubsetSize(), 4);
+        assertEquals(MSACRobustLateration3DSolver.DEFAULT_THRESHOLD, solver.getThreshold(), 0.0);
+        assertEquals(RobustEstimatorMethod.MSAC, solver.getMethod());
+        assertEquals(3, solver.getNumberOfDimensions());
+        assertEquals(4, solver.getMinRequiredPositionsAndDistances());
+        assertEquals(4, solver.getPreliminarySubsetSize());
         assertNotNull(solver.getSpheres());
         assertNull(solver.getListener());
         assertNull(solver.getInitialPosition());
@@ -499,21 +438,15 @@ public class MSACRobustLateration3DSolverTest implements
         assertFalse(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
-        assertEquals(solver.getProgressDelta(),
-                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(solver.getConfidence(),
-                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(solver.getMaxIterations(),
-                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
+        assertEquals(RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, solver.getProgressDelta(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_CONFIDENCE, solver.getConfidence(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_MAX_ITERATIONS, solver.getMaxIterations());
         assertNull(solver.getInliersData());
-        assertEquals(solver.isResultRefined(),
-                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
-        assertEquals(solver.isCovarianceKept(),
-                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertEquals(RobustLaterationSolver.DEFAULT_REFINE_RESULT, solver.isResultRefined());
+        assertEquals(RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE, solver.isCovarianceKept());
         assertNotNull(solver.getPositions());
         assertNotNull(solver.getDistances());
-        assertSame(solver.getDistanceStandardDeviations(),
-                standardDeviations);
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
         assertTrue(solver.isReady());
         assertNull(solver.getQualityScores());
         assertNull(solver.getCovariance());
@@ -522,20 +455,17 @@ public class MSACRobustLateration3DSolverTest implements
         // force IllegalArgumentException
         solver = null;
         try {
-            solver = new MSACRobustLateration3DSolver((Sphere[]) null,
-                    standardDeviations);
+            solver = new MSACRobustLateration3DSolver((Sphere[]) null, standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new MSACRobustLateration3DSolver(spheres,
-                    (double[]) null);
+            solver = new MSACRobustLateration3DSolver(spheres, (double[]) null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new MSACRobustLateration3DSolver(shortSpheres,
-                    standardDeviations);
+            solver = new MSACRobustLateration3DSolver(shortSpheres, standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -551,30 +481,24 @@ public class MSACRobustLateration3DSolverTest implements
         solver = new MSACRobustLateration3DSolver(spheres, this);
 
         // check correctness
-        assertEquals(solver.getThreshold(),
-                MSACRobustLateration3DSolver.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(solver.getMethod(), RobustEstimatorMethod.MSAC);
-        assertEquals(solver.getNumberOfDimensions(), 3);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
-        assertEquals(solver.getPreliminarySubsetSize(), 4);
+        assertEquals(MSACRobustLateration3DSolver.DEFAULT_THRESHOLD, solver.getThreshold(), 0.0);
+        assertEquals(RobustEstimatorMethod.MSAC, solver.getMethod());
+        assertEquals(3, solver.getNumberOfDimensions());
+        assertEquals(4, solver.getMinRequiredPositionsAndDistances());
+        assertEquals(4, solver.getPreliminarySubsetSize());
         assertNotNull(solver.getSpheres());
-        assertSame(solver.getListener(), this);
+        assertSame(this, solver.getListener());
         assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
         assertFalse(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
-        assertEquals(solver.getProgressDelta(),
-                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(solver.getConfidence(),
-                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(solver.getMaxIterations(),
-                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
+        assertEquals(RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, solver.getProgressDelta(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_CONFIDENCE, solver.getConfidence(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_MAX_ITERATIONS, solver.getMaxIterations());
         assertNull(solver.getInliersData());
-        assertEquals(solver.isResultRefined(),
-                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
-        assertEquals(solver.isCovarianceKept(),
-                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertEquals(RobustLaterationSolver.DEFAULT_REFINE_RESULT, solver.isResultRefined());
+        assertEquals(RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE, solver.isCovarianceKept());
         assertNotNull(solver.getPositions());
         assertNotNull(solver.getDistances());
         assertNull(solver.getDistanceStandardDeviations());
@@ -586,14 +510,12 @@ public class MSACRobustLateration3DSolverTest implements
         // force IllegalArgumentException
         solver = null;
         try {
-            solver = new MSACRobustLateration3DSolver(null,
-                    this);
+            solver = new MSACRobustLateration3DSolver(null, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new MSACRobustLateration3DSolver(shortSpheres,
-                    this);
+            solver = new MSACRobustLateration3DSolver(shortSpheres, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -601,38 +523,30 @@ public class MSACRobustLateration3DSolverTest implements
 
 
         // constructor with circles, standard deviation and listener
-        solver = new MSACRobustLateration3DSolver(spheres,
-                standardDeviations, this);
+        solver = new MSACRobustLateration3DSolver(spheres, standardDeviations, this);
 
         // check correctness
-        assertEquals(solver.getThreshold(),
-                MSACRobustLateration3DSolver.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(solver.getMethod(), RobustEstimatorMethod.MSAC);
-        assertEquals(solver.getNumberOfDimensions(), 3);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
-        assertEquals(solver.getPreliminarySubsetSize(), 4);
+        assertEquals(MSACRobustLateration3DSolver.DEFAULT_THRESHOLD, solver.getThreshold(), 0.0);
+        assertEquals(RobustEstimatorMethod.MSAC, solver.getMethod());
+        assertEquals(3, solver.getNumberOfDimensions());
+        assertEquals(4, solver.getMinRequiredPositionsAndDistances());
+        assertEquals(4, solver.getPreliminarySubsetSize());
         assertNotNull(solver.getSpheres());
-        assertSame(solver.getListener(), this);
+        assertSame(this, solver.getListener());
         assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
         assertFalse(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
-        assertEquals(solver.getProgressDelta(),
-                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(solver.getConfidence(),
-                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(solver.getMaxIterations(),
-                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
+        assertEquals(RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, solver.getProgressDelta(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_CONFIDENCE, solver.getConfidence(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_MAX_ITERATIONS, solver.getMaxIterations());
         assertNull(solver.getInliersData());
-        assertEquals(solver.isResultRefined(),
-                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
-        assertEquals(solver.isCovarianceKept(),
-                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertEquals(RobustLaterationSolver.DEFAULT_REFINE_RESULT, solver.isResultRefined());
+        assertEquals(RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE, solver.isCovarianceKept());
         assertNotNull(solver.getPositions());
         assertNotNull(solver.getDistances());
-        assertSame(solver.getDistanceStandardDeviations(),
-                standardDeviations);
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
         assertTrue(solver.isReady());
         assertNull(solver.getQualityScores());
         assertNull(solver.getCovariance());
@@ -641,26 +555,22 @@ public class MSACRobustLateration3DSolverTest implements
         // force IllegalArgumentException
         solver = null;
         try {
-            solver = new MSACRobustLateration3DSolver((Sphere[]) null,
-                    standardDeviations, this);
+            solver = new MSACRobustLateration3DSolver((Sphere[]) null, standardDeviations, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new MSACRobustLateration3DSolver(spheres,
-                    null, this);
+            solver = new MSACRobustLateration3DSolver(spheres, null, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new MSACRobustLateration3DSolver(shortSpheres,
-                    standardDeviations, this);
+            solver = new MSACRobustLateration3DSolver(shortSpheres, standardDeviations, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new MSACRobustLateration3DSolver(spheres, wrong,
-                    this);
+            solver = new MSACRobustLateration3DSolver(spheres, wrong, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -669,18 +579,16 @@ public class MSACRobustLateration3DSolverTest implements
 
     @Test
     public void testGetSetThreshold() throws LockedException {
-        final MSACRobustLateration3DSolver solver =
-                new MSACRobustLateration3DSolver();
+        final MSACRobustLateration3DSolver solver = new MSACRobustLateration3DSolver();
 
         // check initial value
-        assertEquals(solver.getThreshold(),
-                MSACRobustLateration3DSolver.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(MSACRobustLateration3DSolver.DEFAULT_THRESHOLD, solver.getThreshold(), 0.0);
 
         // set new value
         solver.setThreshold(1.0);
 
         // check
-        assertEquals(solver.getThreshold(), 1.0, 0.0);
+        assertEquals(1.0, solver.getThreshold(), 0.0);
 
         // force IllegalArgumentException
         try {
@@ -694,8 +602,7 @@ public class MSACRobustLateration3DSolverTest implements
     public void testGetSetCircles() throws LockedException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        final MSACRobustLateration3DSolver solver =
-                new MSACRobustLateration3DSolver();
+        final MSACRobustLateration3DSolver solver = new MSACRobustLateration3DSolver();
 
         // check initial value
         assertNull(solver.getSpheres());
@@ -747,8 +654,7 @@ public class MSACRobustLateration3DSolverTest implements
     public void testGetSetCirclesAndStandardDeviations() throws LockedException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        final MSACRobustLateration3DSolver solver =
-                new MSACRobustLateration3DSolver();
+        final MSACRobustLateration3DSolver solver = new MSACRobustLateration3DSolver();
 
         // check initial value
         assertNull(solver.getSpheres());
@@ -787,31 +693,26 @@ public class MSACRobustLateration3DSolverTest implements
             assertSame(spheres[i].getCenter(), spheres2[i].getCenter());
             assertEquals(spheres[i].getRadius(), spheres2[i].getRadius(), 0.0);
         }
-        assertSame(solver.getDistanceStandardDeviations(),
-                standardDeviations);
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
 
         // force IllegalArgumentException
         try {
-            solver.setSpheresAndStandardDeviations(null,
-                    standardDeviations);
+            solver.setSpheresAndStandardDeviations(null, standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver.setSpheresAndStandardDeviations(spheres,
-                    null);
+            solver.setSpheresAndStandardDeviations(spheres, null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver.setSpheresAndStandardDeviations(new Sphere[1],
-                    standardDeviations);
+            solver.setSpheresAndStandardDeviations(new Sphere[1], standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver.setSpheresAndStandardDeviations(spheres,
-                    new double[1]);
+            solver.setSpheresAndStandardDeviations(spheres, new double[1]);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -819,17 +720,16 @@ public class MSACRobustLateration3DSolverTest implements
 
     @Test
     public void testGetSetPreliminarySubsetSize() throws LockedException {
-        final MSACRobustLateration3DSolver solver =
-                new MSACRobustLateration3DSolver();
+        final MSACRobustLateration3DSolver solver = new MSACRobustLateration3DSolver();
 
         // check initial value
-        assertEquals(solver.getPreliminarySubsetSize(), 4);
+        assertEquals(4, solver.getPreliminarySubsetSize());
 
         // set new value
         solver.setPreliminarySubsetSize(5);
 
         // check
-        assertEquals(solver.getPreliminarySubsetSize(), 5);
+        assertEquals(5, solver.getPreliminarySubsetSize());
 
         // force IllegalArgumentException
         try {
@@ -841,8 +741,7 @@ public class MSACRobustLateration3DSolverTest implements
 
     @Test
     public void testGetSetListener() throws LockedException {
-        final MSACRobustLateration3DSolver solver =
-                new MSACRobustLateration3DSolver();
+        final MSACRobustLateration3DSolver solver = new MSACRobustLateration3DSolver();
 
         // check default value
         assertNull(solver.getListener());
@@ -851,13 +750,12 @@ public class MSACRobustLateration3DSolverTest implements
         solver.setListener(this);
 
         // check
-        assertSame(solver.getListener(), this);
+        assertSame(this, solver.getListener());
     }
 
     @Test
     public void testGetSetInitialPosition() throws LockedException {
-        final MSACRobustLateration3DSolver solver =
-                new MSACRobustLateration3DSolver();
+        final MSACRobustLateration3DSolver solver = new MSACRobustLateration3DSolver();
 
         // check default value
         assertNull(solver.getInitialPosition());
@@ -867,13 +765,12 @@ public class MSACRobustLateration3DSolverTest implements
         solver.setInitialPosition(p);
 
         // check
-        assertSame(solver.getInitialPosition(), p);
+        assertSame(p, solver.getInitialPosition());
     }
 
     @Test
     public void testIsSetLinearSolverUsed() throws LockedException {
-        final MSACRobustLateration3DSolver solver =
-                new MSACRobustLateration3DSolver();
+        final MSACRobustLateration3DSolver solver = new MSACRobustLateration3DSolver();
 
         // check default value
         assertTrue(solver.isLinearSolverUsed());
@@ -887,8 +784,7 @@ public class MSACRobustLateration3DSolverTest implements
 
     @Test
     public void testIsSetHomogeneousLinearSolverUsed() throws LockedException {
-        final MSACRobustLateration3DSolver solver =
-                new MSACRobustLateration3DSolver();
+        final MSACRobustLateration3DSolver solver = new MSACRobustLateration3DSolver();
 
         // check default value
         assertFalse(solver.isHomogeneousLinearSolverUsed());
@@ -902,8 +798,7 @@ public class MSACRobustLateration3DSolverTest implements
 
     @Test
     public void testIsSetPreliminarySolutionRefined() throws LockedException {
-        final MSACRobustLateration3DSolver solver =
-                new MSACRobustLateration3DSolver();
+        final MSACRobustLateration3DSolver solver = new MSACRobustLateration3DSolver();
 
         // check default value
         assertTrue(solver.isPreliminarySolutionRefined());
@@ -917,18 +812,16 @@ public class MSACRobustLateration3DSolverTest implements
 
     @Test
     public void testGetSetProgressDelta() throws LockedException {
-        final MSACRobustLateration3DSolver solver =
-                new MSACRobustLateration3DSolver();
+        final MSACRobustLateration3DSolver solver = new MSACRobustLateration3DSolver();
 
         // check default value
-        assertEquals(solver.getProgressDelta(),
-                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, solver.getProgressDelta(), 0.0);
 
         // set new value
         solver.setProgressDelta(0.5f);
 
         // check
-        assertEquals(solver.getProgressDelta(), 0.5f, 0.0);
+        assertEquals(0.5f, solver.getProgressDelta(), 0.0);
 
         // force IllegalArgumentException
         try {
@@ -945,18 +838,16 @@ public class MSACRobustLateration3DSolverTest implements
 
     @Test
     public void testGetSetConfidence() throws LockedException {
-        final MSACRobustLateration3DSolver solver =
-                new MSACRobustLateration3DSolver();
+        final MSACRobustLateration3DSolver solver = new MSACRobustLateration3DSolver();
 
         // check default value
-        assertEquals(solver.getConfidence(),
-                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_CONFIDENCE, solver.getConfidence(), 0.0);
 
         // set new value
         solver.setConfidence(0.8);
 
         // check
-        assertEquals(solver.getConfidence(), 0.8, 0.0);
+        assertEquals(0.8, solver.getConfidence(), 0.0);
 
         // force IllegalArgumentException
         try {
@@ -973,18 +864,16 @@ public class MSACRobustLateration3DSolverTest implements
 
     @Test
     public void testGetSetMaxIterations() throws LockedException {
-        final MSACRobustLateration3DSolver solver =
-                new MSACRobustLateration3DSolver();
+        final MSACRobustLateration3DSolver solver = new MSACRobustLateration3DSolver();
 
         // check default value
-        assertEquals(solver.getMaxIterations(),
-                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
+        assertEquals(RobustLaterationSolver.DEFAULT_MAX_ITERATIONS, solver.getMaxIterations());
 
         // set new value
         solver.setMaxIterations(10);
 
         // check
-        assertEquals(solver.getMaxIterations(), 10);
+        assertEquals(10, solver.getMaxIterations());
 
         // force IllegalArgumentException
         try {
@@ -996,44 +885,37 @@ public class MSACRobustLateration3DSolverTest implements
 
     @Test
     public void testIsSetResultRefined() throws LockedException {
-        final MSACRobustLateration3DSolver solver =
-                new MSACRobustLateration3DSolver();
+        final MSACRobustLateration3DSolver solver = new MSACRobustLateration3DSolver();
 
         // check default value
-        assertEquals(solver.isResultRefined(),
-                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
+        assertEquals(RobustLaterationSolver.DEFAULT_REFINE_RESULT, solver.isResultRefined());
 
         // set new value
-        solver.setResultRefined(
-                !RobustLaterationSolver.DEFAULT_REFINE_RESULT);
+        solver.setResultRefined(!RobustLaterationSolver.DEFAULT_REFINE_RESULT);
 
         // check
-        assertEquals(solver.isResultRefined(),
-                !RobustLaterationSolver.DEFAULT_REFINE_RESULT);
+        assertEquals(!RobustLaterationSolver.DEFAULT_REFINE_RESULT, solver.isResultRefined());
     }
 
     @Test
     public void testIsSetCovarianceKept() throws LockedException {
         final MSACRobustLateration3DSolver solver =
+
                 new MSACRobustLateration3DSolver();
 
         // check default value
-        assertEquals(solver.isCovarianceKept(),
-                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertEquals(RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE, solver.isCovarianceKept());
 
         // set new value
-        solver.setCovarianceKept(
-                !RobustLaterationSolver.DEFAULT_REFINE_RESULT);
+        solver.setCovarianceKept(!RobustLaterationSolver.DEFAULT_REFINE_RESULT);
 
         // check
-        assertEquals(solver.isCovarianceKept(),
-                !RobustLaterationSolver.DEFAULT_REFINE_RESULT);
+        assertEquals(!RobustLaterationSolver.DEFAULT_REFINE_RESULT, solver.isCovarianceKept());
     }
 
     @Test
     public void testGetSetQualityScores() throws LockedException {
-        final MSACRobustLateration3DSolver solver =
-                new MSACRobustLateration3DSolver();
+        final MSACRobustLateration3DSolver solver = new MSACRobustLateration3DSolver();
 
         // check default value
         assertNull(solver.getQualityScores());
@@ -1049,8 +931,7 @@ public class MSACRobustLateration3DSolverTest implements
     public void testGetSetPositionsAndDistances() throws LockedException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        final MSACRobustLateration3DSolver solver =
-                new MSACRobustLateration3DSolver();
+        final MSACRobustLateration3DSolver solver = new MSACRobustLateration3DSolver();
 
         // check default value
         assertNull(solver.getPositions());
@@ -1075,8 +956,8 @@ public class MSACRobustLateration3DSolverTest implements
         solver.setPositionsAndDistances(positions, distances);
 
         // check
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
 
         // force IllegalArgumentException
         final double[] wrong = new double[5];
@@ -1108,8 +989,7 @@ public class MSACRobustLateration3DSolverTest implements
     public void testGetSetPositionsDistancesAndStandardDeviations() throws LockedException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        final MSACRobustLateration3DSolver solver =
-                new MSACRobustLateration3DSolver();
+        final MSACRobustLateration3DSolver solver = new MSACRobustLateration3DSolver();
 
         // check default value
         assertNull(solver.getPositions());
@@ -1136,14 +1016,12 @@ public class MSACRobustLateration3DSolverTest implements
         standardDeviations[2] = randomizer.nextDouble();
         standardDeviations[3] = randomizer.nextDouble();
 
-        solver.setPositionsDistancesAndStandardDeviations(
-                positions, distances, standardDeviations);
+        solver.setPositionsDistancesAndStandardDeviations(positions, distances, standardDeviations);
 
         // check
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
-        assertSame(solver.getDistanceStandardDeviations(),
-                standardDeviations);
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
 
         // force IllegalArgumentException
         final double[] wrong = new double[5];
@@ -1157,26 +1035,22 @@ public class MSACRobustLateration3DSolverTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver.setPositionsDistancesAndStandardDeviations(
-                    positions, null, standardDeviations);
+            solver.setPositionsDistancesAndStandardDeviations(positions, null, standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver.setPositionsDistancesAndStandardDeviations(
-                    positions, distances, null);
+            solver.setPositionsDistancesAndStandardDeviations(positions, distances, null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver.setPositionsDistancesAndStandardDeviations(
-                    positions, wrong, standardDeviations);
+            solver.setPositionsDistancesAndStandardDeviations(positions, wrong, standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver.setPositionsDistancesAndStandardDeviations(
-                    positions, distances, wrong);
+            solver.setPositionsDistancesAndStandardDeviations(positions, distances, wrong);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -1219,20 +1093,18 @@ public class MSACRobustLateration3DSolverTest implements
                     // inlier
                     error = 0.0;
                 }
-                radius = Math.max(RobustLaterationSolver.EPSILON,
-                        radius + error);
+                radius = Math.max(RobustLaterationSolver.EPSILON, radius + error);
                 spheres[i] = new Sphere(center, radius);
             }
 
-            MSACRobustLateration3DSolver solver =
-                    new MSACRobustLateration3DSolver(spheres, this);
+            MSACRobustLateration3DSolver solver = new MSACRobustLateration3DSolver(spheres, this);
             solver.setResultRefined(false);
 
             reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
-            assertEquals(solveNextIteration, 0);
-            assertEquals(solveProgressChange, 0);
+            assertEquals(0, solveStart);
+            assertEquals(0, solveEnd);
+            assertEquals(0, solveNextIteration);
+            assertEquals(0, solveProgressChange);
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
@@ -1249,8 +1121,8 @@ public class MSACRobustLateration3DSolverTest implements
             assertNotNull(solver.getInliersData().getInliers());
             assertNotNull(solver.getInliersData().getResiduals());
 
-            assertEquals(solveStart, 1);
-            assertEquals(solveEnd, 1);
+            assertEquals(1, solveStart);
+            assertEquals(1, solveEnd);
             assertTrue(solveNextIteration > 0);
             assertTrue(solveProgressChange >= 0);
             assertTrue(solver.isReady());
@@ -1304,8 +1176,7 @@ public class MSACRobustLateration3DSolverTest implements
                     // inlier
                     error = 0.0;
                 }
-                radius = Math.max(RobustLaterationSolver.EPSILON,
-                        radius + error);
+                radius = Math.max(RobustLaterationSolver.EPSILON, radius + error);
                 spheres[i] = new Sphere(center, radius);
             }
 
@@ -1314,10 +1185,10 @@ public class MSACRobustLateration3DSolverTest implements
             solver.setResultRefined(true);
 
             reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
-            assertEquals(solveNextIteration, 0);
-            assertEquals(solveProgressChange, 0);
+            assertEquals(0, solveStart);
+            assertEquals(0, solveEnd);
+            assertEquals(0, solveNextIteration);
+            assertEquals(0, solveProgressChange);
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
@@ -1334,8 +1205,8 @@ public class MSACRobustLateration3DSolverTest implements
             assertNotNull(solver.getInliersData().getInliers());
             assertNotNull(solver.getInliersData().getResiduals());
 
-            assertEquals(solveStart, 1);
-            assertEquals(solveEnd, 1);
+            assertEquals(1, solveStart);
+            assertEquals(1, solveEnd);
             assertTrue(solveNextIteration > 0);
             assertTrue(solveProgressChange >= 0);
             assertTrue(solver.isReady());
@@ -1390,20 +1261,18 @@ public class MSACRobustLateration3DSolverTest implements
                     error = 0.0;
                 }
                 error += randomizer.nextDouble(MIN_DISTANCE_ERROR, MAX_DISTANCE_ERROR);
-                radius = Math.max(RobustLaterationSolver.EPSILON,
-                        radius + error);
+                radius = Math.max(RobustLaterationSolver.EPSILON, radius + error);
                 spheres[i] = new Sphere(center, radius);
             }
 
-            MSACRobustLateration3DSolver solver =
-                    new MSACRobustLateration3DSolver(spheres, this);
+            MSACRobustLateration3DSolver solver = new MSACRobustLateration3DSolver(spheres, this);
             solver.setResultRefined(true);
 
             reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
-            assertEquals(solveNextIteration, 0);
-            assertEquals(solveProgressChange, 0);
+            assertEquals(0, solveStart);
+            assertEquals(0, solveEnd);
+            assertEquals(0, solveNextIteration);
+            assertEquals(0, solveProgressChange);
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
@@ -1420,8 +1289,8 @@ public class MSACRobustLateration3DSolverTest implements
             assertNotNull(solver.getInliersData().getInliers());
             assertNotNull(solver.getInliersData().getResiduals());
 
-            assertEquals(solveStart, 1);
-            assertEquals(solveEnd, 1);
+            assertEquals(1, solveStart);
+            assertEquals(1, solveEnd);
             assertTrue(solveNextIteration > 0);
             assertTrue(solveProgressChange >= 0);
             assertTrue(solver.isReady());
@@ -1484,20 +1353,18 @@ public class MSACRobustLateration3DSolverTest implements
                 standardDeviations[i] = Math.sqrt(standardDeviations[i]);
                 // add inlier error
                 error += randomizer.nextDouble(MIN_DISTANCE_ERROR, MAX_DISTANCE_ERROR);
-                radius = Math.max(RobustLaterationSolver.EPSILON,
-                        radius + error);
+                radius = Math.max(RobustLaterationSolver.EPSILON, radius + error);
                 spheres[i] = new Sphere(center, radius);
             }
 
-            MSACRobustLateration3DSolver solver =
-                    new MSACRobustLateration3DSolver(spheres, this);
+            MSACRobustLateration3DSolver solver = new MSACRobustLateration3DSolver(spheres, this);
             solver.setResultRefined(true);
 
             reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
-            assertEquals(solveNextIteration, 0);
-            assertEquals(solveProgressChange, 0);
+            assertEquals(0, solveStart);
+            assertEquals(0, solveEnd);
+            assertEquals(0, solveNextIteration);
+            assertEquals(0, solveProgressChange);
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
@@ -1514,8 +1381,8 @@ public class MSACRobustLateration3DSolverTest implements
             assertNotNull(solver.getInliersData().getInliers());
             assertNotNull(solver.getInliersData().getResiduals());
 
-            assertEquals(solveStart, 1);
-            assertEquals(solveEnd, 1);
+            assertEquals(1, solveStart);
+            assertEquals(1, solveEnd);
             assertTrue(solveNextIteration > 0);
             assertTrue(solveProgressChange >= 0);
             assertTrue(solver.isReady());
@@ -1569,20 +1436,18 @@ public class MSACRobustLateration3DSolverTest implements
                     // inlier
                     error = 0.0;
                 }
-                radius = Math.max(RobustLaterationSolver.EPSILON,
-                        radius + error);
+                radius = Math.max(RobustLaterationSolver.EPSILON, radius + error);
                 spheres[i] = new Sphere(center, radius);
             }
 
-            MSACRobustLateration3DSolver solver =
-                    new MSACRobustLateration3DSolver(spheres, this);
+            MSACRobustLateration3DSolver solver = new MSACRobustLateration3DSolver(spheres, this);
             solver.setLinearSolverUsed(false);
 
             reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
-            assertEquals(solveNextIteration, 0);
-            assertEquals(solveProgressChange, 0);
+            assertEquals(0, solveStart);
+            assertEquals(0, solveEnd);
+            assertEquals(0, solveNextIteration);
+            assertEquals(0, solveProgressChange);
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
@@ -1599,8 +1464,8 @@ public class MSACRobustLateration3DSolverTest implements
             assertNotNull(solver.getInliersData().getInliers());
             assertNotNull(solver.getInliersData().getResiduals());
 
-            assertEquals(solveStart, 1);
-            assertEquals(solveEnd, 1);
+            assertEquals(1, solveStart);
+            assertEquals(1, solveEnd);
             assertTrue(solveNextIteration > 0);
             assertTrue(solveProgressChange >= 0);
             assertTrue(solver.isReady());
@@ -1654,21 +1519,19 @@ public class MSACRobustLateration3DSolverTest implements
                     // inlier
                     error = 0.0;
                 }
-                radius = Math.max(RobustLaterationSolver.EPSILON,
-                        radius + error);
+                radius = Math.max(RobustLaterationSolver.EPSILON, radius + error);
                 spheres[i] = new Sphere(center, radius);
             }
 
-            MSACRobustLateration3DSolver solver =
-                    new MSACRobustLateration3DSolver(spheres, this);
+            MSACRobustLateration3DSolver solver = new MSACRobustLateration3DSolver(spheres, this);
             solver.setLinearSolverUsed(true);
             solver.setHomogeneousLinearSolverUsed(false);
 
             reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
-            assertEquals(solveNextIteration, 0);
-            assertEquals(solveProgressChange, 0);
+            assertEquals(0, solveStart);
+            assertEquals(0, solveEnd);
+            assertEquals(0, solveNextIteration);
+            assertEquals(0, solveProgressChange);
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
@@ -1685,8 +1548,8 @@ public class MSACRobustLateration3DSolverTest implements
             assertNotNull(solver.getInliersData().getInliers());
             assertNotNull(solver.getInliersData().getResiduals());
 
-            assertEquals(solveStart, 1);
-            assertEquals(solveEnd, 1);
+            assertEquals(1, solveStart);
+            assertEquals(1, solveEnd);
             assertTrue(solveNextIteration > 0);
             assertTrue(solveProgressChange >= 0);
             assertTrue(solver.isReady());
@@ -1740,21 +1603,19 @@ public class MSACRobustLateration3DSolverTest implements
                     // inlier
                     error = 0.0;
                 }
-                radius = Math.max(RobustLaterationSolver.EPSILON,
-                        radius + error);
+                radius = Math.max(RobustLaterationSolver.EPSILON, radius + error);
                 spheres[i] = new Sphere(center, radius);
             }
 
-            MSACRobustLateration3DSolver solver =
-                    new MSACRobustLateration3DSolver(spheres, this);
+            MSACRobustLateration3DSolver solver = new MSACRobustLateration3DSolver(spheres, this);
             solver.setLinearSolverUsed(true);
             solver.setHomogeneousLinearSolverUsed(true);
 
             reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
-            assertEquals(solveNextIteration, 0);
-            assertEquals(solveProgressChange, 0);
+            assertEquals(0, solveStart);
+            assertEquals(0, solveEnd);
+            assertEquals(0, solveNextIteration);
+            assertEquals(0, solveProgressChange);
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
@@ -1771,8 +1632,8 @@ public class MSACRobustLateration3DSolverTest implements
             assertNotNull(solver.getInliersData().getInliers());
             assertNotNull(solver.getInliersData().getResiduals());
 
-            assertEquals(solveStart, 1);
-            assertEquals(solveEnd, 1);
+            assertEquals(1, solveStart);
+            assertEquals(1, solveEnd);
             assertTrue(solveNextIteration > 0);
             assertTrue(solveProgressChange >= 0);
             assertTrue(solver.isReady());
@@ -1826,21 +1687,19 @@ public class MSACRobustLateration3DSolverTest implements
                     // inlier
                     error = 0.0;
                 }
-                radius = Math.max(RobustLaterationSolver.EPSILON,
-                        radius + error);
+                radius = Math.max(RobustLaterationSolver.EPSILON, radius + error);
                 spheres[i] = new Sphere(center, radius);
             }
 
-            MSACRobustLateration3DSolver solver =
-                    new MSACRobustLateration3DSolver(spheres, this);
+            MSACRobustLateration3DSolver solver = new MSACRobustLateration3DSolver(spheres, this);
             solver.setLinearSolverUsed(true);
             solver.setPreliminarySolutionRefined(true);
 
             reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
-            assertEquals(solveNextIteration, 0);
-            assertEquals(solveProgressChange, 0);
+            assertEquals(0, solveStart);
+            assertEquals(0, solveEnd);
+            assertEquals(0, solveNextIteration);
+            assertEquals(0, solveProgressChange);
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
@@ -1857,8 +1716,8 @@ public class MSACRobustLateration3DSolverTest implements
             assertNotNull(solver.getInliersData().getInliers());
             assertNotNull(solver.getInliersData().getResiduals());
 
-            assertEquals(solveStart, 1);
-            assertEquals(solveEnd, 1);
+            assertEquals(1, solveStart);
+            assertEquals(1, solveEnd);
             assertTrue(solveNextIteration > 0);
             assertTrue(solveProgressChange >= 0);
             assertTrue(solver.isReady());
@@ -1912,21 +1771,19 @@ public class MSACRobustLateration3DSolverTest implements
                     // inlier
                     error = 0.0;
                 }
-                radius = Math.max(RobustLaterationSolver.EPSILON,
-                        radius + error);
+                radius = Math.max(RobustLaterationSolver.EPSILON, radius + error);
                 spheres[i] = new Sphere(center, radius);
             }
 
-            MSACRobustLateration3DSolver solver =
-                    new MSACRobustLateration3DSolver(spheres, this);
+            MSACRobustLateration3DSolver solver = new MSACRobustLateration3DSolver(spheres, this);
             solver.setLinearSolverUsed(true);
             solver.setPreliminarySolutionRefined(false);
 
             reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
-            assertEquals(solveNextIteration, 0);
-            assertEquals(solveProgressChange, 0);
+            assertEquals(0, solveStart);
+            assertEquals(0, solveEnd);
+            assertEquals(0, solveNextIteration);
+            assertEquals(0, solveProgressChange);
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
@@ -1943,8 +1800,8 @@ public class MSACRobustLateration3DSolverTest implements
             assertNotNull(solver.getInliersData().getInliers());
             assertNotNull(solver.getInliersData().getResiduals());
 
-            assertEquals(solveStart, 1);
-            assertEquals(solveEnd, 1);
+            assertEquals(1, solveStart);
+            assertEquals(1, solveEnd);
             assertTrue(solveNextIteration > 0);
             assertTrue(solveProgressChange >= 0);
             assertTrue(solver.isReady());
@@ -1999,21 +1856,19 @@ public class MSACRobustLateration3DSolverTest implements
                     // inlier
                     error = 0.0;
                 }
-                radius = Math.max(RobustLaterationSolver.EPSILON,
-                        radius + error);
+                radius = Math.max(RobustLaterationSolver.EPSILON, radius + error);
                 spheres[i] = new Sphere(center, radius);
             }
 
-            MSACRobustLateration3DSolver solver =
-                    new MSACRobustLateration3DSolver(spheres, this);
+            MSACRobustLateration3DSolver solver = new MSACRobustLateration3DSolver(spheres, this);
             solver.setLinearSolverUsed(false);
             solver.setPreliminarySolutionRefined(false);
 
             reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
-            assertEquals(solveNextIteration, 0);
-            assertEquals(solveProgressChange, 0);
+            assertEquals(0, solveStart);
+            assertEquals(0, solveEnd);
+            assertEquals(0, solveNextIteration);
+            assertEquals(0, solveProgressChange);
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
@@ -2030,8 +1885,8 @@ public class MSACRobustLateration3DSolverTest implements
             assertNotNull(solver.getInliersData().getInliers());
             assertNotNull(solver.getInliersData().getResiduals());
 
-            assertEquals(solveStart, 1);
-            assertEquals(solveEnd, 1);
+            assertEquals(1, solveStart);
+            assertEquals(1, solveEnd);
             assertTrue(solveNextIteration > 0);
             assertTrue(solveProgressChange >= 0);
             assertTrue(solver.isReady());
@@ -2085,21 +1940,19 @@ public class MSACRobustLateration3DSolverTest implements
                     // inlier
                     error = 0.0;
                 }
-                radius = Math.max(RobustLaterationSolver.EPSILON,
-                        radius + error);
+                radius = Math.max(RobustLaterationSolver.EPSILON, radius + error);
                 spheres[i] = new Sphere(center, radius);
             }
 
-            MSACRobustLateration3DSolver solver =
-                    new MSACRobustLateration3DSolver(spheres, this);
+            MSACRobustLateration3DSolver solver = new MSACRobustLateration3DSolver(spheres, this);
             solver.setLinearSolverUsed(false);
             solver.setInitialPosition(position);
 
             reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
-            assertEquals(solveNextIteration, 0);
-            assertEquals(solveProgressChange, 0);
+            assertEquals(0, solveStart);
+            assertEquals(0, solveEnd);
+            assertEquals(0, solveNextIteration);
+            assertEquals(0, solveProgressChange);
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
@@ -2116,8 +1969,8 @@ public class MSACRobustLateration3DSolverTest implements
             assertNotNull(solver.getInliersData().getInliers());
             assertNotNull(solver.getInliersData().getResiduals());
 
-            assertEquals(solveStart, 1);
-            assertEquals(solveEnd, 1);
+            assertEquals(1, solveStart);
+            assertEquals(1, solveEnd);
             assertTrue(solveNextIteration > 0);
             assertTrue(solveProgressChange >= 0);
             assertTrue(solver.isReady());
@@ -2171,21 +2024,19 @@ public class MSACRobustLateration3DSolverTest implements
                     // inlier
                     error = 0.0;
                 }
-                radius = Math.max(RobustLaterationSolver.EPSILON,
-                        radius + error);
+                radius = Math.max(RobustLaterationSolver.EPSILON, radius + error);
                 spheres[i] = new Sphere(center, radius);
             }
 
-            MSACRobustLateration3DSolver solver =
-                    new MSACRobustLateration3DSolver(spheres, this);
+            MSACRobustLateration3DSolver solver = new MSACRobustLateration3DSolver(spheres, this);
             solver.setResultRefined(false);
             solver.setPreliminarySubsetSize(5);
 
             reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
-            assertEquals(solveNextIteration, 0);
-            assertEquals(solveProgressChange, 0);
+            assertEquals(0, solveStart);
+            assertEquals(0, solveEnd);
+            assertEquals(0, solveNextIteration);
+            assertEquals(0, solveProgressChange);
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
@@ -2202,8 +2053,8 @@ public class MSACRobustLateration3DSolverTest implements
             assertNotNull(solver.getInliersData().getInliers());
             assertNotNull(solver.getInliersData().getResiduals());
 
-            assertEquals(solveStart, 1);
-            assertEquals(solveEnd, 1);
+            assertEquals(1, solveStart);
+            assertEquals(1, solveEnd);
             assertTrue(solveNextIteration > 0);
             assertTrue(solveProgressChange >= 0);
             assertTrue(solver.isReady());

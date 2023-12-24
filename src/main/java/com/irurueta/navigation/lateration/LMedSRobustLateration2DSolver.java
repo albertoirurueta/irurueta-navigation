@@ -131,8 +131,8 @@ public class LMedSRobustLateration2DSolver extends RobustLateration2DSolver {
      * @param listener                   listener to be notified of events such as when estimation starts,
      *                                   ends or its progress significantly changes.
      * @throws IllegalArgumentException if either positions, distances or
-     *                                  standard deviations are null, don't have the same length or their length is smaller
-     *                                  than required (3 points).
+     *                                  standard deviations are null, don't have the same length or their length is
+     *                                  smaller than required (3 points).
      */
     public LMedSRobustLateration2DSolver(final Point2D[] positions, final double[] distances,
                                          final double[] distanceStandardDeviations,
@@ -377,6 +377,6 @@ public class LMedSRobustLateration2DSolver extends RobustLateration2DSolver {
      */
     @Override
     public RobustEstimatorMethod getMethod() {
-        return RobustEstimatorMethod.LMedS;
+        return RobustEstimatorMethod.LMEDS;
     }
 }

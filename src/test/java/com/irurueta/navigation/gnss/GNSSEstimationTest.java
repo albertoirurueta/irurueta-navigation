@@ -57,14 +57,14 @@ public class GNSSEstimationTest {
         GNSSEstimation estimation = new GNSSEstimation();
 
         // check default values
-        assertEquals(estimation.getX(), 0.0, 0.0);
-        assertEquals(estimation.getY(), 0.0, 0.0);
-        assertEquals(estimation.getZ(), 0.0, 0.0);
-        assertEquals(estimation.getVx(), 0.0, 0.0);
-        assertEquals(estimation.getVy(), 0.0, 0.0);
-        assertEquals(estimation.getVz(), 0.0, 0.0);
-        assertEquals(estimation.getClockOffset(), 0.0, 0.0);
-        assertEquals(estimation.getClockDrift(), 0.0, 0.0);
+        assertEquals(0.0, estimation.getX(), 0.0);
+        assertEquals(0.0, estimation.getY(), 0.0);
+        assertEquals(0.0, estimation.getZ(), 0.0);
+        assertEquals(0.0, estimation.getVx(), 0.0);
+        assertEquals(0.0, estimation.getVy(), 0.0);
+        assertEquals(0.0, estimation.getVz(), 0.0);
+        assertEquals(0.0, estimation.getClockOffset(), 0.0);
+        assertEquals(0.0, estimation.getClockDrift(), 0.0);
 
 
         // test constructor with values
@@ -77,22 +77,20 @@ public class GNSSEstimationTest {
         final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final double clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET,
-                MAX_CLOCK_OFFSET);
-        final double clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT,
-                MAX_CLOCK_DRIFT);
+        final double clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET, MAX_CLOCK_OFFSET);
+        final double clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT, MAX_CLOCK_DRIFT);
 
         estimation = new GNSSEstimation(x, y, z, vx, vy, vz, clockOffset, clockDrift);
 
         // check default values
-        assertEquals(estimation.getX(), x, 0.0);
-        assertEquals(estimation.getY(), y, 0.0);
-        assertEquals(estimation.getZ(), z, 0.0);
-        assertEquals(estimation.getVx(), vx, 0.0);
-        assertEquals(estimation.getVy(), vy, 0.0);
-        assertEquals(estimation.getVz(), vz, 0.0);
-        assertEquals(estimation.getClockOffset(), clockOffset, 0.0);
-        assertEquals(estimation.getClockDrift(), clockDrift, 0.0);
+        assertEquals(x, estimation.getX(), 0.0);
+        assertEquals(y, estimation.getY(), 0.0);
+        assertEquals(z, estimation.getZ(), 0.0);
+        assertEquals(vx, estimation.getVx(), 0.0);
+        assertEquals(vy, estimation.getVy(), 0.0);
+        assertEquals(vz, estimation.getVz(), 0.0);
+        assertEquals(clockOffset, estimation.getClockOffset(), 0.0);
+        assertEquals(clockDrift, estimation.getClockDrift(), 0.0);
 
 
         // test constructor with measurement values
@@ -104,39 +102,36 @@ public class GNSSEstimationTest {
         final Speed speedY = new Speed(vy, SpeedUnit.METERS_PER_SECOND);
         final Speed speedZ = new Speed(vz, SpeedUnit.METERS_PER_SECOND);
 
-        final Distance clockOffsetDistance = new Distance(clockOffset,
-                DistanceUnit.METER);
-        final Speed clockDriftSpeed = new Speed(clockDrift,
-                SpeedUnit.METERS_PER_SECOND);
+        final Distance clockOffsetDistance = new Distance(clockOffset, DistanceUnit.METER);
+        final Speed clockDriftSpeed = new Speed(clockDrift, SpeedUnit.METERS_PER_SECOND);
 
-        estimation = new GNSSEstimation(distanceX, distanceY, distanceZ,
-                speedX, speedY, speedZ, clockOffsetDistance, clockDriftSpeed);
+        estimation = new GNSSEstimation(distanceX, distanceY, distanceZ, speedX, speedY, speedZ,
+                clockOffsetDistance, clockDriftSpeed);
 
         // check default values
-        assertEquals(estimation.getX(), x, 0.0);
-        assertEquals(estimation.getY(), y, 0.0);
-        assertEquals(estimation.getZ(), z, 0.0);
-        assertEquals(estimation.getVx(), vx, 0.0);
-        assertEquals(estimation.getVy(), vy, 0.0);
-        assertEquals(estimation.getVz(), vz, 0.0);
-        assertEquals(estimation.getClockOffset(), clockOffset, 0.0);
-        assertEquals(estimation.getClockDrift(), clockDrift, 0.0);
+        assertEquals(x, estimation.getX(), 0.0);
+        assertEquals(y, estimation.getY(), 0.0);
+        assertEquals(z, estimation.getZ(), 0.0);
+        assertEquals(vx, estimation.getVx(), 0.0);
+        assertEquals(vy, estimation.getVy(), 0.0);
+        assertEquals(vz, estimation.getVz(), 0.0);
+        assertEquals(clockOffset, estimation.getClockOffset(), 0.0);
+        assertEquals(clockDrift, estimation.getClockDrift(), 0.0);
 
 
         // test constructor with values and position
         final Point3D position = new InhomogeneousPoint3D(x, y, z);
-        estimation = new GNSSEstimation(position, vx, vy, vz,
-                clockOffset, clockDrift);
+        estimation = new GNSSEstimation(position, vx, vy, vz, clockOffset, clockDrift);
 
         // check default values
-        assertEquals(estimation.getX(), x, 0.0);
-        assertEquals(estimation.getY(), y, 0.0);
-        assertEquals(estimation.getZ(), z, 0.0);
-        assertEquals(estimation.getVx(), vx, 0.0);
-        assertEquals(estimation.getVy(), vy, 0.0);
-        assertEquals(estimation.getVz(), vz, 0.0);
-        assertEquals(estimation.getClockOffset(), clockOffset, 0.0);
-        assertEquals(estimation.getClockDrift(), clockDrift, 0.0);
+        assertEquals(x, estimation.getX(), 0.0);
+        assertEquals(y, estimation.getY(), 0.0);
+        assertEquals(z, estimation.getZ(), 0.0);
+        assertEquals(vx, estimation.getVx(), 0.0);
+        assertEquals(vy, estimation.getVy(), 0.0);
+        assertEquals(vz, estimation.getVz(), 0.0);
+        assertEquals(clockOffset, estimation.getClockOffset(), 0.0);
+        assertEquals(clockDrift, estimation.getClockDrift(), 0.0);
 
 
         // test constructor with measurement values and position
@@ -144,95 +139,87 @@ public class GNSSEstimationTest {
                 clockOffsetDistance, clockDriftSpeed);
 
         // check default values
-        assertEquals(estimation.getX(), x, 0.0);
-        assertEquals(estimation.getY(), y, 0.0);
-        assertEquals(estimation.getZ(), z, 0.0);
-        assertEquals(estimation.getVx(), vx, 0.0);
-        assertEquals(estimation.getVy(), vy, 0.0);
-        assertEquals(estimation.getVz(), vz, 0.0);
-        assertEquals(estimation.getClockOffset(), clockOffset, 0.0);
-        assertEquals(estimation.getClockDrift(), clockDrift, 0.0);
+        assertEquals(x, estimation.getX(), 0.0);
+        assertEquals(y, estimation.getY(), 0.0);
+        assertEquals(z, estimation.getZ(), 0.0);
+        assertEquals(vx, estimation.getVx(), 0.0);
+        assertEquals(vy, estimation.getVy(), 0.0);
+        assertEquals(vz, estimation.getVz(), 0.0);
+        assertEquals(clockOffset, estimation.getClockOffset(), 0.0);
+        assertEquals(clockDrift, estimation.getClockDrift(), 0.0);
 
 
-        // test constructor with ECEF position, ECEF velocity and
-        // clock offset and drift
+        // test constructor with ECEF position, ECEF velocity and clock offset and drift
         final ECEFPosition ecefPosition = new ECEFPosition(x, y, z);
         final ECEFVelocity ecefVelocity = new ECEFVelocity(vx, vy, vz);
-        estimation = new GNSSEstimation(ecefPosition, ecefVelocity,
-                clockOffset, clockDrift);
+        estimation = new GNSSEstimation(ecefPosition, ecefVelocity, clockOffset, clockDrift);
 
         // check default values
-        assertEquals(estimation.getX(), x, 0.0);
-        assertEquals(estimation.getY(), y, 0.0);
-        assertEquals(estimation.getZ(), z, 0.0);
-        assertEquals(estimation.getVx(), vx, 0.0);
-        assertEquals(estimation.getVy(), vy, 0.0);
-        assertEquals(estimation.getVz(), vz, 0.0);
-        assertEquals(estimation.getClockOffset(), clockOffset, 0.0);
-        assertEquals(estimation.getClockDrift(), clockDrift, 0.0);
+        assertEquals(x, estimation.getX(), 0.0);
+        assertEquals(y, estimation.getY(), 0.0);
+        assertEquals(z, estimation.getZ(), 0.0);
+        assertEquals(vx, estimation.getVx(), 0.0);
+        assertEquals(vy, estimation.getVy(), 0.0);
+        assertEquals(vz, estimation.getVz(), 0.0);
+        assertEquals(clockOffset, estimation.getClockOffset(), 0.0);
+        assertEquals(clockDrift, estimation.getClockDrift(), 0.0);
 
 
-        // test constructor with ECEF position, ECEF velocity and
-        // clock offset and drift measurements
-        estimation = new GNSSEstimation(ecefPosition, ecefVelocity,
-                clockOffsetDistance, clockDriftSpeed);
+        // test constructor with ECEF position, ECEF velocity and clock offset and drift measurements
+        estimation = new GNSSEstimation(ecefPosition, ecefVelocity, clockOffsetDistance, clockDriftSpeed);
 
         // check default values
-        assertEquals(estimation.getX(), x, 0.0);
-        assertEquals(estimation.getY(), y, 0.0);
-        assertEquals(estimation.getZ(), z, 0.0);
-        assertEquals(estimation.getVx(), vx, 0.0);
-        assertEquals(estimation.getVy(), vy, 0.0);
-        assertEquals(estimation.getVz(), vz, 0.0);
-        assertEquals(estimation.getClockOffset(), clockOffset, 0.0);
-        assertEquals(estimation.getClockDrift(), clockDrift, 0.0);
+        assertEquals(x, estimation.getX(), 0.0);
+        assertEquals(y, estimation.getY(), 0.0);
+        assertEquals(z, estimation.getZ(), 0.0);
+        assertEquals(vx, estimation.getVx(), 0.0);
+        assertEquals(vy, estimation.getVy(), 0.0);
+        assertEquals(vz, estimation.getVz(), 0.0);
+        assertEquals(clockOffset, estimation.getClockOffset(), 0.0);
+        assertEquals(clockDrift, estimation.getClockDrift(), 0.0);
 
 
-        // test constructor with ECEF position and velocity, and
-        // clock offset and drift
+        // test constructor with ECEF position and velocity, and clock offset and drift
         final ECEFPositionAndVelocity positionAndVelocity =
                 new ECEFPositionAndVelocity(ecefPosition, ecefVelocity);
         estimation = new GNSSEstimation(positionAndVelocity, clockOffset, clockDrift);
 
         // check default values
-        assertEquals(estimation.getX(), x, 0.0);
-        assertEquals(estimation.getY(), y, 0.0);
-        assertEquals(estimation.getZ(), z, 0.0);
-        assertEquals(estimation.getVx(), vx, 0.0);
-        assertEquals(estimation.getVy(), vy, 0.0);
-        assertEquals(estimation.getVz(), vz, 0.0);
-        assertEquals(estimation.getClockOffset(), clockOffset, 0.0);
-        assertEquals(estimation.getClockDrift(), clockDrift, 0.0);
+        assertEquals(x, estimation.getX(), 0.0);
+        assertEquals(y, estimation.getY(), 0.0);
+        assertEquals(z, estimation.getZ(), 0.0);
+        assertEquals(vx, estimation.getVx(), 0.0);
+        assertEquals(vy, estimation.getVy(), 0.0);
+        assertEquals(vz, estimation.getVz(), 0.0);
+        assertEquals(clockOffset, estimation.getClockOffset(), 0.0);
+        assertEquals(clockDrift, estimation.getClockDrift(), 0.0);
 
-
-        // test constructor with ECEF position and velocity, and
-        // clock offset and drift measurements
-        estimation = new GNSSEstimation(positionAndVelocity,
-                clockOffsetDistance, clockDriftSpeed);
+        // test constructor with ECEF position and velocity, and clock offset and drift measurements
+        estimation = new GNSSEstimation(positionAndVelocity, clockOffsetDistance, clockDriftSpeed);
 
         // check default values
-        assertEquals(estimation.getX(), x, 0.0);
-        assertEquals(estimation.getY(), y, 0.0);
-        assertEquals(estimation.getZ(), z, 0.0);
-        assertEquals(estimation.getVx(), vx, 0.0);
-        assertEquals(estimation.getVy(), vy, 0.0);
-        assertEquals(estimation.getVz(), vz, 0.0);
-        assertEquals(estimation.getClockOffset(), clockOffset, 0.0);
-        assertEquals(estimation.getClockDrift(), clockDrift, 0.0);
+        assertEquals(x, estimation.getX(), 0.0);
+        assertEquals(y, estimation.getY(), 0.0);
+        assertEquals(z, estimation.getZ(), 0.0);
+        assertEquals(vx, estimation.getVx(), 0.0);
+        assertEquals(vy, estimation.getVy(), 0.0);
+        assertEquals(vz, estimation.getVz(), 0.0);
+        assertEquals(clockOffset, estimation.getClockOffset(), 0.0);
+        assertEquals(clockDrift, estimation.getClockDrift(), 0.0);
 
 
         // test copy constructor
         final GNSSEstimation estimation2 = new GNSSEstimation(estimation);
 
         // check default values
-        assertEquals(estimation2.getX(), x, 0.0);
-        assertEquals(estimation2.getY(), y, 0.0);
-        assertEquals(estimation2.getZ(), z, 0.0);
-        assertEquals(estimation2.getVx(), vx, 0.0);
-        assertEquals(estimation2.getVy(), vy, 0.0);
-        assertEquals(estimation2.getVz(), vz, 0.0);
-        assertEquals(estimation2.getClockOffset(), clockOffset, 0.0);
-        assertEquals(estimation2.getClockDrift(), clockDrift, 0.0);
+        assertEquals(x, estimation2.getX(), 0.0);
+        assertEquals(y, estimation2.getY(), 0.0);
+        assertEquals(z, estimation2.getZ(), 0.0);
+        assertEquals(vx, estimation2.getVx(), 0.0);
+        assertEquals(vy, estimation2.getVy(), 0.0);
+        assertEquals(vz, estimation2.getVz(), 0.0);
+        assertEquals(clockOffset, estimation2.getClockOffset(), 0.0);
+        assertEquals(clockDrift, estimation2.getClockDrift(), 0.0);
     }
 
     @Test
@@ -240,7 +227,7 @@ public class GNSSEstimationTest {
         final GNSSEstimation estimation = new GNSSEstimation();
 
         // check default value
-        assertEquals(estimation.getX(), 0.0, 0.0);
+        assertEquals(0.0, estimation.getX(), 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -249,7 +236,7 @@ public class GNSSEstimationTest {
         estimation.setX(x);
 
         // check
-        assertEquals(estimation.getX(), x, 0.0);
+        assertEquals(x, estimation.getX(), 0.0);
     }
 
     @Test
@@ -257,7 +244,7 @@ public class GNSSEstimationTest {
         final GNSSEstimation estimation = new GNSSEstimation();
 
         // check default value
-        assertEquals(estimation.getY(), 0.0, 0.0);
+        assertEquals(0.0, estimation.getY(), 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -266,7 +253,7 @@ public class GNSSEstimationTest {
         estimation.setY(y);
 
         // check
-        assertEquals(estimation.getY(), y, 0.0);
+        assertEquals(y, estimation.getY(), 0.0);
     }
 
     @Test
@@ -274,7 +261,7 @@ public class GNSSEstimationTest {
         final GNSSEstimation estimation = new GNSSEstimation();
 
         // check default value
-        assertEquals(estimation.getZ(), 0.0, 0.0);
+        assertEquals(0.0, estimation.getZ(), 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -283,7 +270,7 @@ public class GNSSEstimationTest {
         estimation.setZ(z);
 
         // check
-        assertEquals(estimation.getZ(), z, 0.0);
+        assertEquals(z, estimation.getZ(), 0.0);
     }
 
     @Test
@@ -291,9 +278,9 @@ public class GNSSEstimationTest {
         final GNSSEstimation estimation = new GNSSEstimation();
 
         // check default values
-        assertEquals(estimation.getX(), 0.0, 0.0);
-        assertEquals(estimation.getY(), 0.0, 0.0);
-        assertEquals(estimation.getZ(), 0.0, 0.0);
+        assertEquals(0.0, estimation.getX(), 0.0);
+        assertEquals(0.0, estimation.getY(), 0.0);
+        assertEquals(0.0, estimation.getZ(), 0.0);
 
         // set new values
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -304,9 +291,9 @@ public class GNSSEstimationTest {
         estimation.setPositionCoordinates(x, y, z);
 
         // check
-        assertEquals(estimation.getX(), x, 0.0);
-        assertEquals(estimation.getY(), y, 0.0);
-        assertEquals(estimation.getZ(), z, 0.0);
+        assertEquals(x, estimation.getX(), 0.0);
+        assertEquals(y, estimation.getY(), 0.0);
+        assertEquals(z, estimation.getZ(), 0.0);
     }
 
     @Test
@@ -314,7 +301,7 @@ public class GNSSEstimationTest {
         final GNSSEstimation estimation = new GNSSEstimation();
 
         // check default value
-        assertEquals(estimation.getVx(), 0.0, 0.0);
+        assertEquals(0.0, estimation.getVx(), 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -323,7 +310,7 @@ public class GNSSEstimationTest {
         estimation.setVx(vx);
 
         // check
-        assertEquals(estimation.getVx(), vx, 0.0);
+        assertEquals(vx, estimation.getVx(), 0.0);
     }
 
     @Test
@@ -331,7 +318,7 @@ public class GNSSEstimationTest {
         final GNSSEstimation estimation = new GNSSEstimation();
 
         // check default value
-        assertEquals(estimation.getVy(), 0.0, 0.0);
+        assertEquals(0.0, estimation.getVy(), 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -340,7 +327,7 @@ public class GNSSEstimationTest {
         estimation.setVy(vy);
 
         // check
-        assertEquals(estimation.getVy(), vy, 0.0);
+        assertEquals(vy, estimation.getVy(), 0.0);
     }
 
     @Test
@@ -348,7 +335,7 @@ public class GNSSEstimationTest {
         final GNSSEstimation estimation = new GNSSEstimation();
 
         // check default value
-        assertEquals(estimation.getVz(), 0.0, 0.0);
+        assertEquals(0.0, estimation.getVz(), 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -357,7 +344,7 @@ public class GNSSEstimationTest {
         estimation.setVz(vz);
 
         // check
-        assertEquals(estimation.getVz(), vz, 0.0);
+        assertEquals(vz, estimation.getVz(), 0.0);
     }
 
     @Test
@@ -365,9 +352,9 @@ public class GNSSEstimationTest {
         final GNSSEstimation estimation = new GNSSEstimation();
 
         // check default values
-        assertEquals(estimation.getVx(), 0.0, 0.0);
-        assertEquals(estimation.getVy(), 0.0, 0.0);
-        assertEquals(estimation.getVz(), 0.0, 0.0);
+        assertEquals(0.0, estimation.getVx(), 0.0);
+        assertEquals(0.0, estimation.getVy(), 0.0);
+        assertEquals(0.0, estimation.getVz(), 0.0);
 
         // set new values
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -378,9 +365,9 @@ public class GNSSEstimationTest {
         estimation.setVelocityCoordinates(vx, vy, vz);
 
         // check
-        assertEquals(estimation.getVx(), vx, 0.0);
-        assertEquals(estimation.getVy(), vy, 0.0);
-        assertEquals(estimation.getVz(), vz, 0.0);
+        assertEquals(vx, estimation.getVx(), 0.0);
+        assertEquals(vy, estimation.getVy(), 0.0);
+        assertEquals(vz, estimation.getVz(), 0.0);
     }
 
     @Test
@@ -388,17 +375,16 @@ public class GNSSEstimationTest {
         final GNSSEstimation estimation = new GNSSEstimation();
 
         // check default value
-        assertEquals(estimation.getClockOffset(), 0.0, 0.0);
+        assertEquals(0.0, estimation.getClockOffset(), 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET,
-                MAX_CLOCK_OFFSET);
+        final double clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET, MAX_CLOCK_OFFSET);
 
         estimation.setClockOffset(clockOffset);
 
         // check
-        assertEquals(estimation.getClockOffset(), clockOffset, 0.0);
+        assertEquals(clockOffset, estimation.getClockOffset(), 0.0);
     }
 
     @Test
@@ -406,17 +392,16 @@ public class GNSSEstimationTest {
         final GNSSEstimation estimation = new GNSSEstimation();
 
         // check default value
-        assertEquals(estimation.getClockDrift(), 0.0, 0.0);
+        assertEquals(0.0, estimation.getClockDrift(), 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT,
-                MAX_CLOCK_DRIFT);
+        final double clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT, MAX_CLOCK_DRIFT);
 
         estimation.setClockDrift(clockDrift);
 
         // check
-        assertEquals(estimation.getClockDrift(), clockDrift, 0.0);
+        assertEquals(clockDrift, estimation.getClockDrift(), 0.0);
     }
 
     @Test
@@ -426,8 +411,8 @@ public class GNSSEstimationTest {
         // check default value
         final Distance distanceX1 = estimation.getDistanceX();
 
-        assertEquals(distanceX1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(distanceX1.getUnit(), DistanceUnit.METER);
+        assertEquals(0.0, distanceX1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, distanceX1.getUnit());
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -453,8 +438,8 @@ public class GNSSEstimationTest {
         // check default value
         final Distance distanceY1 = estimation.getDistanceY();
 
-        assertEquals(distanceY1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(distanceY1.getUnit(), DistanceUnit.METER);
+        assertEquals(0.0, distanceY1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, distanceY1.getUnit());
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -480,8 +465,8 @@ public class GNSSEstimationTest {
         // check default value
         final Distance distanceZ1 = estimation.getDistanceZ();
 
-        assertEquals(distanceZ1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(distanceZ1.getUnit(), DistanceUnit.METER);
+        assertEquals(0.0, distanceZ1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, distanceZ1.getUnit());
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -509,12 +494,12 @@ public class GNSSEstimationTest {
         final Distance distanceY1 = estimation.getDistanceY();
         final Distance distanceZ1 = estimation.getDistanceZ();
 
-        assertEquals(distanceX1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(distanceX1.getUnit(), DistanceUnit.METER);
-        assertEquals(distanceY1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(distanceY1.getUnit(), DistanceUnit.METER);
-        assertEquals(distanceZ1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(distanceZ1.getUnit(), DistanceUnit.METER);
+        assertEquals(0.0, distanceX1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, distanceX1.getUnit());
+        assertEquals(0.0, distanceY1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, distanceY1.getUnit());
+        assertEquals(0.0, distanceZ1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, distanceZ1.getUnit());
 
         // set new values
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -545,8 +530,8 @@ public class GNSSEstimationTest {
         // check default value
         final Speed speedX1 = estimation.getSpeedX();
 
-        assertEquals(speedX1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(speedX1.getUnit(), SpeedUnit.METERS_PER_SECOND);
+        assertEquals(0.0, speedX1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, speedX1.getUnit());
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -572,8 +557,8 @@ public class GNSSEstimationTest {
         // check default value
         final Speed speedY1 = estimation.getSpeedY();
 
-        assertEquals(speedY1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(speedY1.getUnit(), SpeedUnit.METERS_PER_SECOND);
+        assertEquals(0.0, speedY1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, speedY1.getUnit());
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -599,8 +584,8 @@ public class GNSSEstimationTest {
         // check default value
         final Speed speedZ1 = estimation.getSpeedZ();
 
-        assertEquals(speedZ1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(speedZ1.getUnit(), SpeedUnit.METERS_PER_SECOND);
+        assertEquals(0.0, speedZ1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, speedZ1.getUnit());
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -628,12 +613,12 @@ public class GNSSEstimationTest {
         final Speed speedY1 = estimation.getSpeedY();
         final Speed speedZ1 = estimation.getSpeedZ();
 
-        assertEquals(speedX1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(speedX1.getUnit(), SpeedUnit.METERS_PER_SECOND);
-        assertEquals(speedY1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(speedY1.getUnit(), SpeedUnit.METERS_PER_SECOND);
-        assertEquals(speedZ1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(speedZ1.getUnit(), SpeedUnit.METERS_PER_SECOND);
+        assertEquals(0.0, speedX1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, speedX1.getUnit());
+        assertEquals(0.0, speedY1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, speedY1.getUnit());
+        assertEquals(0.0, speedZ1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, speedZ1.getUnit());
 
         // set new values
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -664,8 +649,8 @@ public class GNSSEstimationTest {
         // check default value
         final Distance clockOffset1 = estimation.getClockOffsetDistance();
 
-        assertEquals(clockOffset1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(clockOffset1.getUnit(), DistanceUnit.METER);
+        assertEquals(0.0, clockOffset1.getValue().doubleValue(), 0.0);
+        assertEquals(DistanceUnit.METER, clockOffset1.getUnit());
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -692,8 +677,8 @@ public class GNSSEstimationTest {
         // check default value
         final Speed clockDrift1 = estimation.getClockDriftSpeed();
 
-        assertEquals(clockDrift1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(clockDrift1.getUnit(), SpeedUnit.METERS_PER_SECOND);
+        assertEquals(0.0, clockDrift1.getValue().doubleValue(), 0.0);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, clockDrift1.getUnit());
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -748,9 +733,9 @@ public class GNSSEstimationTest {
         // check default value
         final ECEFPosition position1 = estimation.getEcefPosition();
 
-        assertEquals(position1.getX(), 0.0, 0.0);
-        assertEquals(position1.getY(), 0.0, 0.0);
-        assertEquals(position1.getZ(), 0.0, 0.0);
+        assertEquals(0.0, position1.getX(), 0.0);
+        assertEquals(0.0, position1.getY(), 0.0);
+        assertEquals(0.0, position1.getZ(), 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -777,9 +762,9 @@ public class GNSSEstimationTest {
         // check default value
         final ECEFVelocity velocity1 = estimation.getEcefVelocity();
 
-        assertEquals(velocity1.getVx(), 0.0, 0.0);
-        assertEquals(velocity1.getVy(), 0.0, 0.0);
-        assertEquals(velocity1.getVz(), 0.0, 0.0);
+        assertEquals(0.0, velocity1.getVx(), 0.0);
+        assertEquals(0.0, velocity1.getVy(), 0.0);
+        assertEquals(0.0, velocity1.getVz(), 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -804,15 +789,14 @@ public class GNSSEstimationTest {
         final GNSSEstimation estimation = new GNSSEstimation();
 
         // check default value
-        final ECEFPositionAndVelocity positionAndVelocity1 =
-                estimation.getPositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity1 = estimation.getPositionAndVelocity();
 
-        assertEquals(positionAndVelocity1.getX(), 0.0, 0.0);
-        assertEquals(positionAndVelocity1.getY(), 0.0, 0.0);
-        assertEquals(positionAndVelocity1.getZ(), 0.0, 0.0);
-        assertEquals(positionAndVelocity1.getVx(), 0.0, 0.0);
-        assertEquals(positionAndVelocity1.getVy(), 0.0, 0.0);
-        assertEquals(positionAndVelocity1.getVz(), 0.0, 0.0);
+        assertEquals(0.0, positionAndVelocity1.getX(), 0.0);
+        assertEquals(0.0, positionAndVelocity1.getY(), 0.0);
+        assertEquals(0.0, positionAndVelocity1.getZ(), 0.0);
+        assertEquals(0.0, positionAndVelocity1.getVx(), 0.0);
+        assertEquals(0.0, positionAndVelocity1.getVy(), 0.0);
+        assertEquals(0.0, positionAndVelocity1.getVz(), 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -822,16 +806,13 @@ public class GNSSEstimationTest {
         final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        final ECEFPositionAndVelocity positionAndVelocity2 =
-                new ECEFPositionAndVelocity(x, y, z, vx, vy, vz);
+        final ECEFPositionAndVelocity positionAndVelocity2 = new ECEFPositionAndVelocity(x, y, z, vx, vy, vz);
         estimation.setPositionAndVelocity(positionAndVelocity2);
 
         // check
-        final ECEFPositionAndVelocity positionAndVelocity3 =
-                new ECEFPositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity3 = new ECEFPositionAndVelocity();
         estimation.getPositionAndVelocity(positionAndVelocity3);
-        final ECEFPositionAndVelocity positionAndVelocity4 =
-                estimation.getPositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity4 = estimation.getPositionAndVelocity();
 
         assertEquals(positionAndVelocity2, positionAndVelocity3);
         assertEquals(positionAndVelocity2, positionAndVelocity4);
@@ -848,27 +829,24 @@ public class GNSSEstimationTest {
         final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final double clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET,
-                MAX_CLOCK_OFFSET);
-        final double clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT,
-                MAX_CLOCK_DRIFT);
+        final double clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET, MAX_CLOCK_OFFSET);
+        final double clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT, MAX_CLOCK_DRIFT);
 
-        final GNSSEstimation estimation = new GNSSEstimation(x, y, z, vx, vy, vz,
-                clockOffset, clockDrift);
+        final GNSSEstimation estimation = new GNSSEstimation(x, y, z, vx, vy, vz, clockOffset, clockDrift);
 
         final double[] result1 = new double[GNSSEstimation.NUM_PARAMETERS];
         estimation.asArray(result1);
         final double[] result2 = estimation.asArray();
 
         // check
-        assertEquals(result1[0], x, 0.0);
-        assertEquals(result1[1], y, 0.0);
-        assertEquals(result1[2], z, 0.0);
-        assertEquals(result1[3], vx, 0.0);
-        assertEquals(result1[4], vy, 0.0);
-        assertEquals(result1[5], vz, 0.0);
-        assertEquals(result1[6], clockOffset, 0.0);
-        assertEquals(result1[7], clockDrift, 0.0);
+        assertEquals(x, result1[0], 0.0);
+        assertEquals(y, result1[1], 0.0);
+        assertEquals(z, result1[2], 0.0);
+        assertEquals(vx, result1[3], 0.0);
+        assertEquals(vy, result1[4], 0.0);
+        assertEquals(vz, result1[5], 0.0);
+        assertEquals(clockOffset, result1[6], 0.0);
+        assertEquals(clockDrift, result1[7], 0.0);
         assertArrayEquals(result1, result2, 0.0);
 
         // Force IllegalArgumentException
@@ -890,10 +868,8 @@ public class GNSSEstimationTest {
         final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final double clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET,
-                MAX_CLOCK_OFFSET);
-        final double clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT,
-                MAX_CLOCK_DRIFT);
+        final double clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET, MAX_CLOCK_OFFSET);
+        final double clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT, MAX_CLOCK_DRIFT);
 
         final double[] array = new double[]{x, y, z, vx, vy, vz, clockOffset, clockDrift};
 
@@ -901,14 +877,14 @@ public class GNSSEstimationTest {
         estimation.fromArray(array);
 
         // check
-        assertEquals(estimation.getX(), x, 0.0);
-        assertEquals(estimation.getY(), y, 0.0);
-        assertEquals(estimation.getZ(), z, 0.0);
-        assertEquals(estimation.getVx(), vx, 0.0);
-        assertEquals(estimation.getVy(), vy, 0.0);
-        assertEquals(estimation.getVz(), vz, 0.0);
-        assertEquals(estimation.getClockOffset(), clockOffset, 0.0);
-        assertEquals(estimation.getClockDrift(), clockDrift, 0.0);
+        assertEquals(x, estimation.getX(), 0.0);
+        assertEquals(y, estimation.getY(), 0.0);
+        assertEquals(z, estimation.getZ(), 0.0);
+        assertEquals(vx, estimation.getVx(), 0.0);
+        assertEquals(vy, estimation.getVy(), 0.0);
+        assertEquals(vz, estimation.getVz(), 0.0);
+        assertEquals(clockOffset, estimation.getClockOffset(), 0.0);
+        assertEquals(clockDrift, estimation.getClockDrift(), 0.0);
 
         // Force IllegalArgumentException
         try {
@@ -928,13 +904,10 @@ public class GNSSEstimationTest {
         final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final double clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET,
-                MAX_CLOCK_OFFSET);
-        final double clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT,
-                MAX_CLOCK_DRIFT);
+        final double clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET, MAX_CLOCK_OFFSET);
+        final double clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT, MAX_CLOCK_DRIFT);
 
-        final GNSSEstimation estimation = new GNSSEstimation(x, y, z, vx, vy, vz,
-                clockOffset, clockDrift);
+        final GNSSEstimation estimation = new GNSSEstimation(x, y, z, vx, vy, vz, clockOffset, clockDrift);
 
         final Matrix result1 = new Matrix(GNSSEstimation.NUM_PARAMETERS, 1);
         estimation.asMatrix(result1);
@@ -943,16 +916,16 @@ public class GNSSEstimationTest {
         final Matrix result3 = estimation.asMatrix();
 
         // check
-        assertEquals(result1.getRows(), GNSSEstimation.NUM_PARAMETERS);
-        assertEquals(result1.getColumns(), 1);
-        assertEquals(result1.getElementAtIndex(0), x, 0.0);
-        assertEquals(result1.getElementAtIndex(1), y, 0.0);
-        assertEquals(result1.getElementAtIndex(2), z, 0.0);
-        assertEquals(result1.getElementAtIndex(3), vx, 0.0);
-        assertEquals(result1.getElementAtIndex(4), vy, 0.0);
-        assertEquals(result1.getElementAtIndex(5), vz, 0.0);
-        assertEquals(result1.getElementAtIndex(6), clockOffset, 0.0);
-        assertEquals(result1.getElementAtIndex(7), clockDrift, 0.0);
+        assertEquals(GNSSEstimation.NUM_PARAMETERS, result1.getRows());
+        assertEquals(1, result1.getColumns());
+        assertEquals(x, result1.getElementAtIndex(0), 0.0);
+        assertEquals(y, result1.getElementAtIndex(1), 0.0);
+        assertEquals(z, result1.getElementAtIndex(2), 0.0);
+        assertEquals(vx, result1.getElementAtIndex(3), 0.0);
+        assertEquals(vy, result1.getElementAtIndex(4), 0.0);
+        assertEquals(vz, result1.getElementAtIndex(5), 0.0);
+        assertEquals(clockOffset, result1.getElementAtIndex(6), 0.0);
+        assertEquals(clockDrift, result1.getElementAtIndex(7), 0.0);
         assertEquals(result1, result2);
         assertEquals(result1, result3);
     }
@@ -968,10 +941,8 @@ public class GNSSEstimationTest {
         final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final double clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET,
-                MAX_CLOCK_OFFSET);
-        final double clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT,
-                MAX_CLOCK_DRIFT);
+        final double clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET, MAX_CLOCK_OFFSET);
+        final double clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT, MAX_CLOCK_DRIFT);
 
         final double[] array = new double[]{x, y, z, vx, vy, vz, clockOffset, clockDrift};
         final Matrix matrix = Matrix.newFromArray(array);
@@ -980,14 +951,14 @@ public class GNSSEstimationTest {
         estimation.fromMatrix(matrix);
 
         // check
-        assertEquals(estimation.getX(), x, 0.0);
-        assertEquals(estimation.getY(), y, 0.0);
-        assertEquals(estimation.getZ(), z, 0.0);
-        assertEquals(estimation.getVx(), vx, 0.0);
-        assertEquals(estimation.getVy(), vy, 0.0);
-        assertEquals(estimation.getVz(), vz, 0.0);
-        assertEquals(estimation.getClockOffset(), clockOffset, 0.0);
-        assertEquals(estimation.getClockDrift(), clockDrift, 0.0);
+        assertEquals(x, estimation.getX(), 0.0);
+        assertEquals(y, estimation.getY(), 0.0);
+        assertEquals(z, estimation.getZ(), 0.0);
+        assertEquals(vx, estimation.getVx(), 0.0);
+        assertEquals(vy, estimation.getVy(), 0.0);
+        assertEquals(vz, estimation.getVz(), 0.0);
+        assertEquals(clockOffset, estimation.getClockOffset(), 0.0);
+        assertEquals(clockDrift, estimation.getClockDrift(), 0.0);
 
         // Force IllegalArgumentException
         try {
@@ -1007,26 +978,23 @@ public class GNSSEstimationTest {
         final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final double clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET,
-                MAX_CLOCK_OFFSET);
-        final double clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT,
-                MAX_CLOCK_DRIFT);
+        final double clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET, MAX_CLOCK_OFFSET);
+        final double clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT, MAX_CLOCK_DRIFT);
 
-        final GNSSEstimation estimation1 = new GNSSEstimation(x, y, z, vx, vy, vz,
-                clockOffset, clockDrift);
+        final GNSSEstimation estimation1 = new GNSSEstimation(x, y, z, vx, vy, vz, clockOffset, clockDrift);
 
         final GNSSEstimation estimation2 = new GNSSEstimation();
         estimation1.copyTo(estimation2);
 
         // check
-        assertEquals(estimation2.getX(), x, 0.0);
-        assertEquals(estimation2.getY(), y, 0.0);
-        assertEquals(estimation2.getZ(), z, 0.0);
-        assertEquals(estimation2.getVx(), vx, 0.0);
-        assertEquals(estimation2.getVy(), vy, 0.0);
-        assertEquals(estimation2.getVz(), vz, 0.0);
-        assertEquals(estimation2.getClockOffset(), clockOffset, 0.0);
-        assertEquals(estimation2.getClockDrift(), clockDrift, 0.0);
+        assertEquals(x, estimation2.getX(), 0.0);
+        assertEquals(y, estimation2.getY(), 0.0);
+        assertEquals(z, estimation2.getZ(), 0.0);
+        assertEquals(vx, estimation2.getVx(), 0.0);
+        assertEquals(vy, estimation2.getVy(), 0.0);
+        assertEquals(vz, estimation2.getVz(), 0.0);
+        assertEquals(clockOffset, estimation2.getClockOffset(), 0.0);
+        assertEquals(clockDrift, estimation2.getClockDrift(), 0.0);
     }
 
     @Test
@@ -1040,26 +1008,23 @@ public class GNSSEstimationTest {
         final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final double clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET,
-                MAX_CLOCK_OFFSET);
-        final double clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT,
-                MAX_CLOCK_DRIFT);
+        final double clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET, MAX_CLOCK_OFFSET);
+        final double clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT, MAX_CLOCK_DRIFT);
 
-        final GNSSEstimation estimation1 = new GNSSEstimation(x, y, z, vx, vy, vz,
-                clockOffset, clockDrift);
+        final GNSSEstimation estimation1 = new GNSSEstimation(x, y, z, vx, vy, vz, clockOffset, clockDrift);
 
         final GNSSEstimation estimation2 = new GNSSEstimation();
         estimation2.copyFrom(estimation1);
 
         // check
-        assertEquals(estimation2.getX(), x, 0.0);
-        assertEquals(estimation2.getY(), y, 0.0);
-        assertEquals(estimation2.getZ(), z, 0.0);
-        assertEquals(estimation2.getVx(), vx, 0.0);
-        assertEquals(estimation2.getVy(), vy, 0.0);
-        assertEquals(estimation2.getVz(), vz, 0.0);
-        assertEquals(estimation2.getClockOffset(), clockOffset, 0.0);
-        assertEquals(estimation2.getClockDrift(), clockDrift, 0.0);
+        assertEquals(x, estimation2.getX(), 0.0);
+        assertEquals(y, estimation2.getY(), 0.0);
+        assertEquals(z, estimation2.getZ(), 0.0);
+        assertEquals(vx, estimation2.getVx(), 0.0);
+        assertEquals(vy, estimation2.getVy(), 0.0);
+        assertEquals(vz, estimation2.getVz(), 0.0);
+        assertEquals(clockOffset, estimation2.getClockOffset(), 0.0);
+        assertEquals(clockDrift, estimation2.getClockDrift(), 0.0);
     }
 
     @Test
@@ -1073,15 +1038,11 @@ public class GNSSEstimationTest {
         final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final double clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET,
-                MAX_CLOCK_OFFSET);
-        final double clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT,
-                MAX_CLOCK_DRIFT);
+        final double clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET, MAX_CLOCK_OFFSET);
+        final double clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT, MAX_CLOCK_DRIFT);
 
-        final GNSSEstimation estimation1 = new GNSSEstimation(x, y, z, vx, vy, vz,
-                clockOffset, clockDrift);
-        final GNSSEstimation estimation2 = new GNSSEstimation(x, y, z, vx, vy, vz,
-                clockOffset, clockDrift);
+        final GNSSEstimation estimation1 = new GNSSEstimation(x, y, z, vx, vy, vz, clockOffset, clockDrift);
+        final GNSSEstimation estimation2 = new GNSSEstimation(x, y, z, vx, vy, vz, clockOffset, clockDrift);
         final GNSSEstimation estimation3 = new GNSSEstimation();
 
         assertEquals(estimation1.hashCode(), estimation2.hashCode());
@@ -1099,15 +1060,11 @@ public class GNSSEstimationTest {
         final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final double clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET,
-                MAX_CLOCK_OFFSET);
-        final double clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT,
-                MAX_CLOCK_DRIFT);
+        final double clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET, MAX_CLOCK_OFFSET);
+        final double clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT, MAX_CLOCK_DRIFT);
 
-        final GNSSEstimation estimation1 = new GNSSEstimation(x, y, z, vx, vy, vz,
-                clockOffset, clockDrift);
-        final GNSSEstimation estimation2 = new GNSSEstimation(x, y, z, vx, vy, vz,
-                clockOffset, clockDrift);
+        final GNSSEstimation estimation1 = new GNSSEstimation(x, y, z, vx, vy, vz, clockOffset, clockDrift);
+        final GNSSEstimation estimation2 = new GNSSEstimation(x, y, z, vx, vy, vz, clockOffset, clockDrift);
         final GNSSEstimation estimation3 = new GNSSEstimation();
 
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
@@ -1134,15 +1091,11 @@ public class GNSSEstimationTest {
         final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final double clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET,
-                MAX_CLOCK_OFFSET);
-        final double clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT,
-                MAX_CLOCK_DRIFT);
+        final double clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET, MAX_CLOCK_OFFSET);
+        final double clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT, MAX_CLOCK_DRIFT);
 
-        final GNSSEstimation estimation1 = new GNSSEstimation(x, y, z, vx, vy, vz,
-                clockOffset, clockDrift);
-        final GNSSEstimation estimation2 = new GNSSEstimation(x, y, z, vx, vy, vz,
-                clockOffset, clockDrift);
+        final GNSSEstimation estimation1 = new GNSSEstimation(x, y, z, vx, vy, vz, clockOffset, clockDrift);
+        final GNSSEstimation estimation2 = new GNSSEstimation(x, y, z, vx, vy, vz, clockOffset, clockDrift);
         final GNSSEstimation estimation3 = new GNSSEstimation();
 
         assertTrue(estimation1.equals(estimation1, THRESHOLD));
@@ -1162,13 +1115,10 @@ public class GNSSEstimationTest {
         final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final double clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET,
-                MAX_CLOCK_OFFSET);
-        final double clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT,
-                MAX_CLOCK_DRIFT);
+        final double clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET, MAX_CLOCK_OFFSET);
+        final double clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT, MAX_CLOCK_DRIFT);
 
-        final GNSSEstimation estimation1 = new GNSSEstimation(x, y, z, vx, vy, vz,
-                clockOffset, clockDrift);
+        final GNSSEstimation estimation1 = new GNSSEstimation(x, y, z, vx, vy, vz, clockOffset, clockDrift);
 
         final Object estimation2 = estimation1.clone();
 
@@ -1191,8 +1141,7 @@ public class GNSSEstimationTest {
         final double clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT,
                 MAX_CLOCK_DRIFT);
 
-        final GNSSEstimation estimation1 = new GNSSEstimation(
-                x, y, z, vx, vy, vz, clockOffset, clockDrift);
+        final GNSSEstimation estimation1 = new GNSSEstimation(x, y, z, vx, vy, vz, clockOffset, clockDrift);
 
         // serialize and deserialize
         final byte[] bytes = SerializationHelper.serialize(estimation1);

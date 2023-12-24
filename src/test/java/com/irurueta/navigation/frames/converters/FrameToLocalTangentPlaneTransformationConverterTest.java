@@ -72,14 +72,12 @@ public class FrameToLocalTangentPlaneTransformationConverterTest {
         final double[] translation = createTranslationChange();
         final Rotation3D rotation = createRotationChange();
 
-        final ECEFFrame currentEcefFrame = transformFrame(
-                referenceEcefFrame, translation, rotation);
+        final ECEFFrame currentEcefFrame = transformFrame(referenceEcefFrame, translation, rotation);
 
         // convert
         final double[] translationResult = new double[3];
         final Quaternion rotationResult = new Quaternion();
-        converter.convert(currentEcefFrame, referenceEcefFrame,
-                translationResult, rotationResult);
+        converter.convert(currentEcefFrame, referenceEcefFrame, translationResult, rotationResult);
 
         // check
         assertArrayEquals(translation, translationResult, ABSOLUTE_ERROR);
@@ -101,8 +99,7 @@ public class FrameToLocalTangentPlaneTransformationConverterTest {
             final double[] translation = createTranslationChange();
             final Rotation3D rotation = createRotationChange();
 
-            final ECEFFrame currentEcefFrame = transformFrame(
-                    referenceEcefFrame, translation, rotation);
+            final ECEFFrame currentEcefFrame = transformFrame(referenceEcefFrame, translation, rotation);
 
             // convert
             final EuclideanTransformation3D result = new EuclideanTransformation3D();
@@ -246,8 +243,7 @@ public class FrameToLocalTangentPlaneTransformationConverterTest {
 
             final ECEFFrame currentEcefFrame;
             try {
-                currentEcefFrame = transformFrame(
-                        referenceEcefFrame, translation, rotation);
+                currentEcefFrame = transformFrame(referenceEcefFrame, translation, rotation);
             } catch (final InvalidRotationMatrixException e) {
                 continue;
             }
@@ -284,8 +280,7 @@ public class FrameToLocalTangentPlaneTransformationConverterTest {
         final double[] translation = createTranslationChange();
         final Rotation3D rotation = createRotationChange();
 
-        final ECEFFrame currentEcefFrame = transformFrame(
-                referenceEcefFrame, translation, rotation);
+        final ECEFFrame currentEcefFrame = transformFrame(referenceEcefFrame, translation, rotation);
         final NEDFrame currentNedFrame = convertFrame(currentEcefFrame);
 
         // convert
@@ -298,8 +293,7 @@ public class FrameToLocalTangentPlaneTransformationConverterTest {
     }
 
     @Test
-    public void convertAndReturn1()
-            throws InvalidSourceAndDestinationFrameTypeException,
+    public void convertAndReturn1() throws InvalidSourceAndDestinationFrameTypeException,
             InvalidRotationMatrixException, RotationException {
         final FrameToLocalTangentPlaneTransformationConverter converter =
                 new FrameToLocalTangentPlaneTransformationConverter();
@@ -311,8 +305,7 @@ public class FrameToLocalTangentPlaneTransformationConverterTest {
         final double[] translation = createTranslationChange();
         final Rotation3D rotation = createRotationChange();
 
-        final ECEFFrame currentEcefFrame = transformFrame(
-                referenceEcefFrame, translation, rotation);
+        final ECEFFrame currentEcefFrame = transformFrame(referenceEcefFrame, translation, rotation);
 
         // convert
         final EuclideanTransformation3D result = converter.convertAndReturn(
@@ -324,8 +317,7 @@ public class FrameToLocalTangentPlaneTransformationConverterTest {
     }
 
     @Test
-    public void convertAndReturn2()
-            throws InvalidSourceAndDestinationFrameTypeException,
+    public void convertAndReturn2() throws InvalidSourceAndDestinationFrameTypeException,
             InvalidRotationMatrixException, RotationException {
         final FrameToLocalTangentPlaneTransformationConverter converter =
                 new FrameToLocalTangentPlaneTransformationConverter();
@@ -337,8 +329,7 @@ public class FrameToLocalTangentPlaneTransformationConverterTest {
         final double[] translation = createTranslationChange();
         final Rotation3D rotation = createRotationChange();
 
-        final ECEFFrame currentEcefFrame = transformFrame(
-                referenceEcefFrame, translation, rotation);
+        final ECEFFrame currentEcefFrame = transformFrame(referenceEcefFrame, translation, rotation);
         final NEDFrame currentNedFrame = convertFrame(currentEcefFrame);
 
         // convert
@@ -363,8 +354,7 @@ public class FrameToLocalTangentPlaneTransformationConverterTest {
         final double[] translation = createTranslationChange();
         final Rotation3D rotation = createRotationChange();
 
-        final ECEFFrame currentEcefFrame = transformFrame(
-                referenceEcefFrame, translation, rotation);
+        final ECEFFrame currentEcefFrame = transformFrame(referenceEcefFrame, translation, rotation);
 
         // convert
         final EuclideanTransformation3D result = converter.convertAndReturn(
@@ -390,15 +380,13 @@ public class FrameToLocalTangentPlaneTransformationConverterTest {
             final double[] translation = createTranslationChange();
             final Rotation3D rotation = createRotationChange();
 
-            final ECEFFrame currentEcefFrame = transformFrame(
-                    referenceEcefFrame, translation, rotation);
+            final ECEFFrame currentEcefFrame = transformFrame(referenceEcefFrame, translation, rotation);
             final NEDFrame currentNedFrame = convertFrame(currentEcefFrame);
 
             // convert
             final EuclideanTransformation3D result;
             try {
-                result = converter.convertAndReturn(
-                        currentNedFrame, referenceNedFrame);
+                result = converter.convertAndReturn(currentNedFrame, referenceNedFrame);
             } catch (final InvalidRotationMatrixException e) {
                 continue;
             }
@@ -420,16 +408,12 @@ public class FrameToLocalTangentPlaneTransformationConverterTest {
                 randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
-        final double height = randomizer.nextDouble(
-                MIN_HEIGHT_METERS, MAX_HEIGHT_METERS);
+        final double height = randomizer.nextDouble(MIN_HEIGHT_METERS, MAX_HEIGHT_METERS);
         final NEDPosition nedPosition = new NEDPosition(latitude, longitude, height);
 
-        final double roll = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
         final CoordinateTransformation nedC = new CoordinateTransformation(
                 roll, pitch, yaw, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
 
@@ -446,12 +430,9 @@ public class FrameToLocalTangentPlaneTransformationConverterTest {
 
     private double[] createTranslationChange() {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double diffX = randomizer.nextDouble(
-                MIN_POS_CHANGE_METERS, MAX_POS_CHANGE_METERS);
-        final double diffY = randomizer.nextDouble(
-                MIN_POS_CHANGE_METERS, MAX_POS_CHANGE_METERS);
-        final double diffZ = randomizer.nextDouble(
-                MIN_POS_CHANGE_METERS, MAX_POS_CHANGE_METERS);
+        final double diffX = randomizer.nextDouble(MIN_POS_CHANGE_METERS, MAX_POS_CHANGE_METERS);
+        final double diffY = randomizer.nextDouble(MIN_POS_CHANGE_METERS, MAX_POS_CHANGE_METERS);
+        final double diffZ = randomizer.nextDouble(MIN_POS_CHANGE_METERS, MAX_POS_CHANGE_METERS);
         return new double[]{ diffX, diffY, diffZ };
     }
 
@@ -466,23 +447,21 @@ public class FrameToLocalTangentPlaneTransformationConverterTest {
         return new Quaternion(roll, pitch, yaw);
     }
 
-    private ECEFFrame transformFrame(final ECEFFrame inputFrame,
-                                     final double[] translation,
-                                     final Rotation3D rotation)
-            throws InvalidRotationMatrixException,
-            InvalidSourceAndDestinationFrameTypeException {
+    private ECEFFrame transformFrame(
+            final ECEFFrame inputFrame, final double[] translation, final Rotation3D rotation)
+            throws InvalidRotationMatrixException, InvalidSourceAndDestinationFrameTypeException {
         final double x = inputFrame.getX() + translation[0];
         final double y = inputFrame.getY() + translation[1];
         final double z = inputFrame.getZ() + translation[2];
 
-        final Rotation3D inputR = inputFrame
-                .getCoordinateTransformation().asRotation();
+        final Rotation3D inputR = inputFrame.getCoordinateTransformation().asRotation();
         final Rotation3D r = rotation.combineAndReturnNew(inputR);
+        final Quaternion q = r.toQuaternion();
+        q.normalize();
 
-        final Matrix rotationMatrix = r.asInhomogeneousMatrix();
+        final Matrix rotationMatrix = q.asInhomogeneousMatrix();
         final CoordinateTransformation c = new CoordinateTransformation(
-                rotationMatrix, FrameType.BODY_FRAME,
-                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+                rotationMatrix, FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
         return new ECEFFrame(x, y, z, c);
     }

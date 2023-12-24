@@ -21,7 +21,7 @@ package com.irurueta.navigation.frames;
 public enum FrameType {
     /**
      * Earth Centered Inertial frame (aka ECI frame) is an almost inertial frame (which means it does not accelerate
-     * or rotate with respect to the rest of the universe.
+     * or rotate with respect to the rest of the universe).
      * This frame is nominally centered at the Earth's center of mass and oriented with respect to Earth's
      * spin axis and the stars.
      * The z-axis always points along the Earth's axis of rotation from the frame's origin at the center of
@@ -59,7 +59,7 @@ public enum FrameType {
      * assume that the gravity vector is coincident with the z-axis of the corresponding local navigation
      * frame. True gravity deviates from this slightly due to local anomalies.
      * The x-axis, or north (N) axis, is the projection in the plane orthogonal to the z-axis of the line
-     * from the user to the north pole.
+     * from the user to the North Pole.
      * The y-axis completes the orthogonal set by pointing east and is known as the east (E) axis.
      * North, east, down is the most common order of the axes in a local navigation coordinate system.
      * This frame is also known as NED frame, standing for North, East and Down.

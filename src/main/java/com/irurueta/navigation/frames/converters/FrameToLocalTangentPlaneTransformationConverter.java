@@ -96,11 +96,11 @@ public class FrameToLocalTangentPlaneTransformationConverter {
 
     /**
      * Converts provided current frame respect to provided reference frame into a
-     * 3D euclidean transformation that relates both frames.
+     * 3D Euclidean transformation that relates both frames.
      *
      * @param currentFrame   current frame.
      * @param referenceFrame reference frame.
-     * @param result         instance where estimated 3D euclidean transformation will
+     * @param result         instance where estimated 3D Euclidean transformation will
      *                       be stored.
      * @throws InvalidRotationMatrixException if either current or reference frame contains
      *                                        numerically unstable rotation values.
@@ -144,11 +144,11 @@ public class FrameToLocalTangentPlaneTransformationConverter {
 
     /**
      * Converts provided current frame respect to provided reference frame into a
-     * 3D euclidean transformation that relates both frames.
+     * 3D Euclidean transformation that relates both frames.
      *
      * @param currentFrame   current frame.
      * @param referenceFrame reference frame.
-     * @param result         instance where estimated 3D euclidean transformation will
+     * @param result         instance where estimated 3D Euclidean transformation will
      *                       be stored.
      * @throws InvalidRotationMatrixException if either current or reference frame contains
      *                                        numerically unstable rotation values.
@@ -183,11 +183,11 @@ public class FrameToLocalTangentPlaneTransformationConverter {
 
     /**
      * Converts provided current frame respect to provided reference frame into a
-     * 3D euclidean transformation that relates both frames.
+     * 3D Euclidean transformation that relates both frames.
      *
      * @param currentFrame   current frame.
      * @param referenceFrame reference frame.
-     * @param result         instance where estimated 3D euclidean transformation will
+     * @param result         instance where estimated 3D Euclidean transformation will
      *                       be stored.
      * @throws InvalidRotationMatrixException if either current or reference frame contains
      *                                        numerically unstable rotation values.
@@ -222,11 +222,11 @@ public class FrameToLocalTangentPlaneTransformationConverter {
 
     /**
      * Converts provided current frame respect to provided reference frame into a
-     * 3D euclidean transformation that relates both frames.
+     * 3D Euclidean transformation that relates both frames.
      *
      * @param currentFrame   current frame.
      * @param referenceFrame reference frame.
-     * @param result         instance where estimated 3D euclidean transformation will
+     * @param result         instance where estimated 3D Euclidean transformation will
      *                       be stored.
      * @throws InvalidRotationMatrixException if either current or reference frame contains
      *                                        numerically unstable rotation values.
@@ -241,7 +241,7 @@ public class FrameToLocalTangentPlaneTransformationConverter {
 
     /**
      * Converts provided current frame respect to provided reference frame into a
-     * 3D euclidean transformation that relates both frames.
+     * 3D Euclidean transformation that relates both frames.
      *
      * @param currentFrame   current frame.
      * @param referenceFrame reference frame.
@@ -259,7 +259,7 @@ public class FrameToLocalTangentPlaneTransformationConverter {
 
     /**
      * Converts provided current frame respect to provided reference frame into a
-     * 3D euclidean transformation that relates both frames.
+     * 3D Euclidean transformation that relates both frames.
      *
      * @param currentFrame   current frame.
      * @param referenceFrame reference frame.
@@ -277,7 +277,7 @@ public class FrameToLocalTangentPlaneTransformationConverter {
 
     /**
      * Converts provided current frame respect to provided reference frame into a
-     * 3D euclidean transformation that relates both frames.
+     * 3D Euclidean transformation that relates both frames.
      *
      * @param currentFrame   current frame.
      * @param referenceFrame reference frame.
@@ -295,7 +295,7 @@ public class FrameToLocalTangentPlaneTransformationConverter {
 
     /**
      * Converts provided current frame respect to provided reference frame into a
-     * 3D euclidean transformation that relates both frames.
+     * 3D Euclidean transformation that relates both frames.
      *
      * @param currentFrame   current frame.
      * @param referenceFrame reference frame.

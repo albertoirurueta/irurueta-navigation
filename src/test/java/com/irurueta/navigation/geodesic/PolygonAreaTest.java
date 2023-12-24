@@ -32,23 +32,23 @@ public class PolygonAreaTest {
         PolygonArea area = new PolygonArea(Geodesic.WGS84, true);
 
         //check
-        assertEquals(area.getMajorRadius(), Constants.EARTH_EQUATORIAL_RADIUS_WGS84, 0.0);
-        assertEquals(area.getFlattening(), Constants.EARTH_FLATTENING_WGS84, 0.0);
+        assertEquals(Constants.EARTH_EQUATORIAL_RADIUS_WGS84, area.getMajorRadius(), 0.0);
+        assertEquals(Constants.EARTH_FLATTENING_WGS84, area.getFlattening(), 0.0);
 
         Pair p = area.getCurrentPoint();
-        assertEquals(p.getFirst(), Double.NaN, 0.0);
-        assertEquals(p.getSecond(), Double.NaN, 0.0);
+        assertEquals(Double.NaN, p.getFirst(), 0.0);
+        assertEquals(Double.NaN, p.getSecond(), 0.0);
 
         //test without polyline
         area = new PolygonArea(Geodesic.WGS84, false);
 
         //check
-        assertEquals(area.getMajorRadius(), Constants.EARTH_EQUATORIAL_RADIUS_WGS84, 0.0);
-        assertEquals(area.getFlattening(), Constants.EARTH_FLATTENING_WGS84, 0.0);
+        assertEquals(Constants.EARTH_EQUATORIAL_RADIUS_WGS84, area.getMajorRadius(), 0.0);
+        assertEquals(Constants.EARTH_FLATTENING_WGS84, area.getFlattening(), 0.0);
 
         p = area.getCurrentPoint();
-        assertEquals(p.getFirst(), Double.NaN, 0.0);
-        assertEquals(p.getSecond(), Double.NaN, 0.0);
+        assertEquals(Double.NaN, p.getFirst(), 0.0);
+        assertEquals(Double.NaN, p.getSecond(), 0.0);
     }
 
     @Test
@@ -58,12 +58,12 @@ public class PolygonAreaTest {
         area.clear();
 
         //check
-        assertEquals(area.getMajorRadius(), Constants.EARTH_EQUATORIAL_RADIUS_WGS84, 0.0);
-        assertEquals(area.getFlattening(), Constants.EARTH_FLATTENING_WGS84, 0.0);
+        assertEquals(Constants.EARTH_EQUATORIAL_RADIUS_WGS84, area.getMajorRadius(), 0.0);
+        assertEquals(Constants.EARTH_FLATTENING_WGS84, area.getFlattening(), 0.0);
 
         final Pair p = area.getCurrentPoint();
-        assertEquals(p.getFirst(), Double.NaN, 0.0);
-        assertEquals(p.getSecond(), Double.NaN, 0.0);
+        assertEquals(Double.NaN, p.getFirst(), 0.0);
+        assertEquals(Double.NaN, p.getSecond(), 0.0);
     }
 
     @Test
@@ -103,13 +103,13 @@ public class PolygonAreaTest {
         PolygonResult polyResult = polyArea.compute();
         PolygonResult areaResult = area.compute();
 
-        assertEquals(polyResult.getNum(), 5);
-        assertEquals(polyResult.getPerimeter(), 121.34, 1.0);
-        assertEquals(polyResult.getArea(), Double.NaN, 0.0);
+        assertEquals(5, polyResult.getNum());
+        assertEquals(121.34, polyResult.getPerimeter(), 1.0);
+        assertEquals(Double.NaN, polyResult.getArea(), 0.0);
 
-        assertEquals(areaResult.getNum(), 5);
-        assertEquals(areaResult.getPerimeter(), 121.34, 1.0);
-        assertEquals(areaResult.getArea(), 815.72, 1.0);
+        assertEquals(5, areaResult.getNum());
+        assertEquals(121.34, areaResult.getPerimeter(), 1.0);
+        assertEquals(815.72, areaResult.getArea(), 1.0);
     }
 
     @Test
@@ -176,22 +176,22 @@ public class PolygonAreaTest {
         final PolygonResult polyEdgeResult = polyAreaEdge.compute();
         final PolygonResult areaEdgeResult = areaEdge.compute();
 
-        assertEquals(polyResult.getNum(), 5);
-        assertEquals(polyResult.getPerimeter(), 121.34, 1.0);
-        assertEquals(polyResult.getArea(), Double.NaN, 0.0);
+        assertEquals(5, polyResult.getNum());
+        assertEquals(121.34, polyResult.getPerimeter(), 1.0);
+        assertEquals(Double.NaN, polyResult.getArea(), 0.0);
 
-        assertEquals(areaResult.getNum(), 5);
-        assertEquals(areaResult.getPerimeter(), 121.34, 1.0);
-        assertEquals(areaResult.getArea(), 815.72, 1.0);
+        assertEquals(5, areaResult.getNum());
+        assertEquals(121.34, areaResult.getPerimeter(), 1.0);
+        assertEquals(815.72, areaResult.getArea(), 1.0);
 
 
-        assertEquals(polyEdgeResult.getNum(), 5);
-        assertEquals(polyEdgeResult.getPerimeter(), 121.34, 1.0);
-        assertEquals(polyEdgeResult.getArea(), Double.NaN, 0.0);
+        assertEquals(5, polyEdgeResult.getNum());
+        assertEquals(121.34, polyEdgeResult.getPerimeter(), 1.0);
+        assertEquals(Double.NaN, polyEdgeResult.getArea(), 0.0);
 
-        assertEquals(areaEdgeResult.getNum(), 5);
-        assertEquals(areaEdgeResult.getPerimeter(), 121.34, 1.0);
-        assertEquals(areaEdgeResult.getArea(), 815.72, 1.0);
+        assertEquals(5, areaEdgeResult.getNum());
+        assertEquals(121.34, areaEdgeResult.getPerimeter(), 1.0);
+        assertEquals(815.72, areaEdgeResult.getArea(), 1.0);
     }
 
     @Test
@@ -223,8 +223,8 @@ public class PolygonAreaTest {
         //compute reversed
         PolygonResult result = area.compute(true, true);
 
-        assertEquals(result.getPerimeter(), 121.34, 1.0);
-        assertEquals(result.getArea(), -815.72, 1.0);
+        assertEquals(121.34, result.getPerimeter(), 1.0);
+        assertEquals(-815.72, result.getArea(), 1.0);
 
         //compute remaining earth surface
         result = area.compute(true, false);
@@ -232,7 +232,7 @@ public class PolygonAreaTest {
         assertNotNull(Geodesic.WGS84);
         final double earthArea = Geodesic.WGS84.getEllipsoidArea();
 
-        assertEquals(result.getArea(), earthArea - 815.72, 1.0);
+        assertEquals(earthArea - 815.72, result.getArea(), 1.0);
     }
 
     @Test
@@ -300,37 +300,37 @@ public class PolygonAreaTest {
         final PolygonResult polyResult4 = polyArea.compute(false, false);
         final PolygonResult areaResult4 = area.compute(false, false);
 
-        assertEquals(testPolyResult1.getNum(), polyResult1.getNum());
-        assertEquals(testPolyResult1.getArea(), polyResult1.getArea(), ABSOLUTE_ERROR);
-        assertEquals(testPolyResult1.getPerimeter(), polyResult1.getPerimeter(), ABSOLUTE_ERROR);
+        assertEquals(polyResult1.getNum(), testPolyResult1.getNum());
+        assertEquals(polyResult1.getArea(), testPolyResult1.getArea(), ABSOLUTE_ERROR);
+        assertEquals(polyResult1.getPerimeter(), testPolyResult1.getPerimeter(), ABSOLUTE_ERROR);
 
-        assertEquals(testPolyResult2.getNum(), polyResult2.getNum());
-        assertEquals(testPolyResult2.getArea(), polyResult2.getArea(), ABSOLUTE_ERROR);
-        assertEquals(testPolyResult2.getPerimeter(), polyResult2.getPerimeter(), ABSOLUTE_ERROR);
+        assertEquals(polyResult2.getNum(), testPolyResult2.getNum());
+        assertEquals(polyResult2.getArea(), testPolyResult2.getArea(), ABSOLUTE_ERROR);
+        assertEquals(polyResult2.getPerimeter(), testPolyResult2.getPerimeter(), ABSOLUTE_ERROR);
 
-        assertEquals(testPolyResult3.getNum(), polyResult3.getNum());
-        assertEquals(testPolyResult3.getArea(), polyResult3.getArea(), ABSOLUTE_ERROR);
-        assertEquals(testPolyResult3.getPerimeter(), polyResult3.getPerimeter(), ABSOLUTE_ERROR);
+        assertEquals(polyResult3.getNum(), testPolyResult3.getNum());
+        assertEquals(polyResult3.getArea(), testPolyResult3.getArea(), ABSOLUTE_ERROR);
+        assertEquals(polyResult3.getPerimeter(), testPolyResult3.getPerimeter(), ABSOLUTE_ERROR);
 
-        assertEquals(testPolyResult4.getNum(), polyResult4.getNum());
-        assertEquals(testPolyResult4.getArea(), polyResult4.getArea(), ABSOLUTE_ERROR);
-        assertEquals(testPolyResult4.getPerimeter(), polyResult4.getPerimeter(), ABSOLUTE_ERROR);
+        assertEquals(polyResult4.getNum(), testPolyResult4.getNum());
+        assertEquals(polyResult4.getArea(), testPolyResult4.getArea(), ABSOLUTE_ERROR);
+        assertEquals(polyResult4.getPerimeter(), testPolyResult4.getPerimeter(), ABSOLUTE_ERROR);
 
-        assertEquals(testAreaResult1.getNum(), areaResult1.getNum());
-        assertEquals(testAreaResult1.getArea(), areaResult1.getArea(), LARGE_ABSOLUTE_ERROR);
-        assertEquals(testAreaResult1.getPerimeter(), areaResult1.getPerimeter(), LARGE_ABSOLUTE_ERROR);
+        assertEquals(areaResult1.getNum(), testAreaResult1.getNum());
+        assertEquals(areaResult1.getArea(), testAreaResult1.getArea(), LARGE_ABSOLUTE_ERROR);
+        assertEquals(areaResult1.getPerimeter(), testAreaResult1.getPerimeter(), LARGE_ABSOLUTE_ERROR);
 
-        assertEquals(testAreaResult2.getNum(), areaResult2.getNum());
-        assertEquals(testAreaResult2.getArea(), areaResult2.getArea(), LARGE_ABSOLUTE_ERROR);
-        assertEquals(testAreaResult2.getPerimeter(), areaResult2.getPerimeter(), LARGE_ABSOLUTE_ERROR);
+        assertEquals(areaResult2.getNum(), testAreaResult2.getNum());
+        assertEquals(areaResult2.getArea(), testAreaResult2.getArea(), LARGE_ABSOLUTE_ERROR);
+        assertEquals(areaResult2.getPerimeter(), testAreaResult2.getPerimeter(), LARGE_ABSOLUTE_ERROR);
 
-        assertEquals(testAreaResult3.getNum(), areaResult3.getNum());
-        assertEquals(testAreaResult3.getArea(), areaResult3.getArea(), LARGE_ABSOLUTE_ERROR);
-        assertEquals(testAreaResult3.getPerimeter(), areaResult3.getPerimeter(), LARGE_ABSOLUTE_ERROR);
+        assertEquals(areaResult3.getNum(), testAreaResult3.getNum());
+        assertEquals(areaResult3.getArea(), testAreaResult3.getArea(), LARGE_ABSOLUTE_ERROR);
+        assertEquals(areaResult3.getPerimeter(), testAreaResult3.getPerimeter(), LARGE_ABSOLUTE_ERROR);
 
-        assertEquals(testAreaResult4.getNum(), areaResult4.getNum());
-        assertEquals(testAreaResult4.getArea(), areaResult4.getArea(), LARGE_ABSOLUTE_ERROR);
-        assertEquals(testAreaResult4.getPerimeter(), areaResult4.getPerimeter(), LARGE_ABSOLUTE_ERROR);
+        assertEquals(areaResult4.getNum(), testAreaResult4.getNum());
+        assertEquals(areaResult4.getArea(), testAreaResult4.getArea(), LARGE_ABSOLUTE_ERROR);
+        assertEquals(areaResult4.getPerimeter(), testAreaResult4.getPerimeter(), LARGE_ABSOLUTE_ERROR);
     }
 
     @Test
@@ -412,36 +412,36 @@ public class PolygonAreaTest {
         final PolygonResult polyEdgeResult4 = polyAreaEdge.compute(false, false);
         final PolygonResult areaEdgeResult4 = areaEdge.compute(false, false);
 
-        assertEquals(testPolyResult1.getNum(), polyEdgeResult1.getNum());
-        assertEquals(testPolyResult1.getArea(), polyEdgeResult1.getArea(), ABSOLUTE_ERROR);
-        assertEquals(testPolyResult1.getPerimeter(), polyEdgeResult1.getPerimeter(), ABSOLUTE_ERROR);
+        assertEquals(polyEdgeResult1.getNum(), testPolyResult1.getNum());
+        assertEquals(polyEdgeResult1.getArea(), testPolyResult1.getArea(), ABSOLUTE_ERROR);
+        assertEquals(polyEdgeResult1.getPerimeter(), testPolyResult1.getPerimeter(), ABSOLUTE_ERROR);
 
-        assertEquals(testPolyResult2.getNum(), polyEdgeResult2.getNum());
-        assertEquals(testPolyResult2.getArea(), polyEdgeResult2.getArea(), ABSOLUTE_ERROR);
-        assertEquals(testPolyResult2.getPerimeter(), polyEdgeResult2.getPerimeter(), ABSOLUTE_ERROR);
+        assertEquals(polyEdgeResult2.getNum(), testPolyResult2.getNum());
+        assertEquals(polyEdgeResult2.getArea(), testPolyResult2.getArea(), ABSOLUTE_ERROR);
+        assertEquals(polyEdgeResult2.getPerimeter(), testPolyResult2.getPerimeter(), ABSOLUTE_ERROR);
 
-        assertEquals(testPolyResult3.getNum(), polyEdgeResult3.getNum());
-        assertEquals(testPolyResult3.getArea(), polyEdgeResult3.getArea(), ABSOLUTE_ERROR);
-        assertEquals(testPolyResult3.getPerimeter(), polyEdgeResult3.getPerimeter(), ABSOLUTE_ERROR);
+        assertEquals(polyEdgeResult3.getNum(), testPolyResult3.getNum());
+        assertEquals(polyEdgeResult3.getArea(), testPolyResult3.getArea(), ABSOLUTE_ERROR);
+        assertEquals(polyEdgeResult3.getPerimeter(), testPolyResult3.getPerimeter(), ABSOLUTE_ERROR);
 
-        assertEquals(testPolyResult4.getNum(), polyEdgeResult4.getNum());
-        assertEquals(testPolyResult4.getArea(), polyEdgeResult4.getArea(), ABSOLUTE_ERROR);
-        assertEquals(testPolyResult4.getPerimeter(), polyEdgeResult4.getPerimeter(), ABSOLUTE_ERROR);
+        assertEquals(polyEdgeResult4.getNum(), testPolyResult4.getNum());
+        assertEquals(polyEdgeResult4.getArea(), testPolyResult4.getArea(), ABSOLUTE_ERROR);
+        assertEquals(polyEdgeResult4.getPerimeter(), testPolyResult4.getPerimeter(), ABSOLUTE_ERROR);
 
-        assertEquals(testAreaResult1.getNum(), areaEdgeResult1.getNum());
-        assertEquals(testAreaResult1.getArea(), areaEdgeResult1.getArea(), ABSOLUTE_ERROR);
-        assertEquals(testAreaResult1.getPerimeter(), areaEdgeResult1.getPerimeter(), ABSOLUTE_ERROR);
+        assertEquals(areaEdgeResult1.getNum(), testAreaResult1.getNum());
+        assertEquals(areaEdgeResult1.getArea(), testAreaResult1.getArea(), ABSOLUTE_ERROR);
+        assertEquals(areaEdgeResult1.getPerimeter(), testAreaResult1.getPerimeter(), ABSOLUTE_ERROR);
 
-        assertEquals(testAreaResult2.getNum(), areaEdgeResult2.getNum());
-        assertEquals(testAreaResult2.getArea(), areaEdgeResult2.getArea(), ABSOLUTE_ERROR);
-        assertEquals(testAreaResult2.getPerimeter(), areaEdgeResult2.getPerimeter(), ABSOLUTE_ERROR);
+        assertEquals(areaEdgeResult2.getNum(), testAreaResult2.getNum());
+        assertEquals(areaEdgeResult2.getArea(), testAreaResult2.getArea(), ABSOLUTE_ERROR);
+        assertEquals(areaEdgeResult2.getPerimeter(), testAreaResult2.getPerimeter(), ABSOLUTE_ERROR);
 
-        assertEquals(testAreaResult3.getNum(), areaEdgeResult3.getNum());
-        assertEquals(testAreaResult3.getArea(), areaEdgeResult3.getArea(), ABSOLUTE_ERROR);
-        assertEquals(testAreaResult3.getPerimeter(), areaEdgeResult3.getPerimeter(), ABSOLUTE_ERROR);
+        assertEquals(areaEdgeResult3.getNum(), testAreaResult3.getNum());
+        assertEquals(areaEdgeResult3.getArea(), testAreaResult3.getArea(), ABSOLUTE_ERROR);
+        assertEquals(areaEdgeResult3.getPerimeter(), testAreaResult3.getPerimeter(), ABSOLUTE_ERROR);
 
-        assertEquals(testAreaResult4.getNum(), areaEdgeResult4.getNum());
-        assertEquals(testAreaResult4.getArea(), areaEdgeResult4.getArea(), ABSOLUTE_ERROR);
-        assertEquals(testAreaResult4.getPerimeter(), areaEdgeResult4.getPerimeter(), ABSOLUTE_ERROR);
+        assertEquals(areaEdgeResult4.getNum(), testAreaResult4.getNum());
+        assertEquals(areaEdgeResult4.getArea(), testAreaResult4.getArea(), ABSOLUTE_ERROR);
+        assertEquals(areaEdgeResult4.getPerimeter(), testAreaResult4.getPerimeter(), ABSOLUTE_ERROR);
     }
 }

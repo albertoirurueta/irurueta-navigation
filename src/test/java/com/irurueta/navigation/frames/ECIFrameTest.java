@@ -43,10 +43,8 @@ public class ECIFrameTest {
     private static final double MIN_ANGLE_DEGREES = -45.0;
     private static final double MAX_ANGLE_DEGREES = 45.0;
 
-    private static final double MIN_POSITION_VALUE =
-            Constants.EARTH_EQUATORIAL_RADIUS_WGS84 - 50.0;
-    private static final double MAX_POSITION_VALUE =
-            Constants.EARTH_EQUATORIAL_RADIUS_WGS84 + 50.0;
+    private static final double MIN_POSITION_VALUE = Constants.EARTH_EQUATORIAL_RADIUS_WGS84 - 50.0;
+    private static final double MAX_POSITION_VALUE = Constants.EARTH_EQUATORIAL_RADIUS_WGS84 + 50.0;
 
     private static final double MIN_VELOCITY_VALUE = -2.0;
     private static final double MAX_VELOCITY_VALUE = 2.0;
@@ -56,74 +54,69 @@ public class ECIFrameTest {
     @Test
     public void testConstants() {
 
-        assertEquals(ECIFrame.NUM_POSITION_COORDINATES, 3);
-        assertEquals(ECIFrame.NUM_VELOCITY_COORDINATES, 3);
+        assertEquals(3, ECIFrame.NUM_POSITION_COORDINATES);
+        assertEquals(3, ECIFrame.NUM_VELOCITY_COORDINATES);
     }
 
     @Test
-    public void testConstructor() throws WrongSizeException,
-            InvalidRotationMatrixException,
+    public void testConstructor() throws WrongSizeException, InvalidRotationMatrixException,
             InvalidSourceAndDestinationFrameTypeException {
 
         ECIFrame frame = new ECIFrame();
 
         // check
-        assertEquals(frame.getX(), 0.0, 0.0);
-        assertEquals(frame.getY(), 0.0, 0.0);
-        assertEquals(frame.getZ(), 0.0, 0.0);
+        assertEquals(0.0, frame.getX(), 0.0);
+        assertEquals(0.0, frame.getY(), 0.0);
+        assertEquals(0.0, frame.getZ(), 0.0);
 
-        assertEquals(frame.getVx(), 0.0, 0.0);
-        assertEquals(frame.getVy(), 0.0, 0.0);
-        assertEquals(frame.getVz(), 0.0, 0.0);
+        assertEquals(0.0, frame.getVx(), 0.0);
+        assertEquals(0.0, frame.getVy(), 0.0);
+        assertEquals(0.0, frame.getVz(), 0.0);
 
-        assertEquals(frame.getPositionX().getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(frame.getPositionY().getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(frame.getPositionZ().getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(0.0, frame.getPositionX().getValue().doubleValue(), 0.0);
+        assertEquals(0.0, frame.getPositionY().getValue().doubleValue(), 0.0);
+        assertEquals(0.0, frame.getPositionZ().getValue().doubleValue(), 0.0);
 
-        assertEquals(frame.getSpeedX().getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(frame.getSpeedY().getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(frame.getSpeedZ().getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(0.0, frame.getSpeedX().getValue().doubleValue(), 0.0);
+        assertEquals(0.0, frame.getSpeedY().getValue().doubleValue(), 0.0);
+        assertEquals(0.0, frame.getSpeedZ().getValue().doubleValue(), 0.0);
 
         assertNotNull(frame.getCoordinateTransformation());
 
         CoordinateTransformation c = frame.getCoordinateTransformation();
-        assertEquals(c.getSourceType(), FrameType.BODY_FRAME);
-        assertEquals(c.getDestinationType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
-        assertEquals(c.getMatrix(), Matrix.identity(3, 3));
+        assertEquals(FrameType.BODY_FRAME, c.getSourceType());
+        assertEquals(FrameType.EARTH_CENTERED_INERTIAL_FRAME, c.getDestinationType());
+        assertEquals(Matrix.identity(3, 3), c.getMatrix());
 
         // test constructor with coordinate transformation matrix
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double roll = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
         final Quaternion q = new Quaternion(roll, pitch, yaw);
 
         final Matrix m = q.asInhomogeneousMatrix();
         final CoordinateTransformation c1 = new CoordinateTransformation(
-                m, FrameType.BODY_FRAME,
-                FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+                m, FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_INERTIAL_FRAME);
 
         frame = new ECIFrame(c1);
 
         // check
-        assertEquals(frame.getX(), 0.0, 0.0);
-        assertEquals(frame.getY(), 0.0, 0.0);
-        assertEquals(frame.getZ(), 0.0, 0.0);
+        assertEquals(0.0, frame.getX(), 0.0);
+        assertEquals(0.0, frame.getY(), 0.0);
+        assertEquals(0.0, frame.getZ(), 0.0);
 
-        assertEquals(frame.getVx(), 0.0, 0.0);
-        assertEquals(frame.getVy(), 0.0, 0.0);
-        assertEquals(frame.getVz(), 0.0, 0.0);
+        assertEquals(0.0, frame.getVx(), 0.0);
+        assertEquals(0.0, frame.getVy(), 0.0);
+        assertEquals(0.0, frame.getVz(), 0.0);
 
-        assertEquals(frame.getPositionX().getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(frame.getPositionY().getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(frame.getPositionZ().getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(0.0, frame.getPositionX().getValue().doubleValue(), 0.0);
+        assertEquals(0.0, frame.getPositionY().getValue().doubleValue(), 0.0);
+        assertEquals(0.0, frame.getPositionZ().getValue().doubleValue(), 0.0);
 
-        assertEquals(frame.getSpeedX().getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(frame.getSpeedY().getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(frame.getSpeedZ().getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(0.0, frame.getSpeedX().getValue().doubleValue(), 0.0);
+        assertEquals(0.0, frame.getSpeedY().getValue().doubleValue(), 0.0);
+        assertEquals(0.0, frame.getSpeedZ().getValue().doubleValue(), 0.0);
 
         CoordinateTransformation c2 = frame.getCoordinateTransformation();
         assertEquals(c1, c2);
@@ -131,8 +124,7 @@ public class ECIFrameTest {
         // Force InvalidSourceAndDestinationFrameTypeException
         frame = null;
         try {
-            frame = new ECIFrame(new CoordinateTransformation(
-                    FrameType.BODY_FRAME, FrameType.BODY_FRAME));
+            frame = new ECIFrame(new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
         } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
         }
@@ -147,28 +139,28 @@ public class ECIFrameTest {
         frame = new ECIFrame(x, y, z);
 
         // check
-        assertEquals(frame.getX(), x, 0.0);
-        assertEquals(frame.getY(), y, 0.0);
-        assertEquals(frame.getZ(), z, 0.0);
+        assertEquals(x, frame.getX(), 0.0);
+        assertEquals(y, frame.getY(), 0.0);
+        assertEquals(z, frame.getZ(), 0.0);
 
-        assertEquals(frame.getVx(), 0.0, 0.0);
-        assertEquals(frame.getVy(), 0.0, 0.0);
-        assertEquals(frame.getVz(), 0.0, 0.0);
+        assertEquals(0.0, frame.getVx(), 0.0);
+        assertEquals(0.0, frame.getVy(), 0.0);
+        assertEquals(0.0, frame.getVz(), 0.0);
 
-        assertEquals(frame.getPositionX().getValue().doubleValue(), x, 0.0);
-        assertEquals(frame.getPositionY().getValue().doubleValue(), y, 0.0);
-        assertEquals(frame.getPositionZ().getValue().doubleValue(), z, 0.0);
+        assertEquals(x, frame.getPositionX().getValue().doubleValue(), 0.0);
+        assertEquals(y, frame.getPositionY().getValue().doubleValue(), 0.0);
+        assertEquals(z, frame.getPositionZ().getValue().doubleValue(), 0.0);
 
-        assertEquals(frame.getSpeedX().getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(frame.getSpeedY().getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(frame.getSpeedZ().getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(0.0, frame.getSpeedX().getValue().doubleValue(), 0.0);
+        assertEquals(0.0, frame.getSpeedY().getValue().doubleValue(), 0.0);
+        assertEquals(0.0, frame.getSpeedZ().getValue().doubleValue(), 0.0);
 
         assertNotNull(frame.getCoordinateTransformation());
 
         c = frame.getCoordinateTransformation();
-        assertEquals(c.getSourceType(), FrameType.BODY_FRAME);
-        assertEquals(c.getDestinationType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
-        assertEquals(c.getMatrix(), Matrix.identity(3, 3));
+        assertEquals(FrameType.BODY_FRAME, c.getSourceType());
+        assertEquals(FrameType.EARTH_CENTERED_INERTIAL_FRAME, c.getDestinationType());
+        assertEquals(Matrix.identity(3, 3), c.getMatrix());
 
 
         // test constructor with position
@@ -177,28 +169,28 @@ public class ECIFrameTest {
         frame = new ECIFrame(position);
 
         // check
-        assertEquals(frame.getX(), x, 0.0);
-        assertEquals(frame.getY(), y, 0.0);
-        assertEquals(frame.getZ(), z, 0.0);
+        assertEquals(x, frame.getX(), 0.0);
+        assertEquals(y, frame.getY(), 0.0);
+        assertEquals(z, frame.getZ(), 0.0);
 
-        assertEquals(frame.getVx(), 0.0, 0.0);
-        assertEquals(frame.getVy(), 0.0, 0.0);
-        assertEquals(frame.getVz(), 0.0, 0.0);
+        assertEquals(0.0, frame.getVx(), 0.0);
+        assertEquals(0.0, frame.getVy(), 0.0);
+        assertEquals(0.0, frame.getVz(), 0.0);
 
-        assertEquals(frame.getPositionX().getValue().doubleValue(), x, 0.0);
-        assertEquals(frame.getPositionY().getValue().doubleValue(), y, 0.0);
-        assertEquals(frame.getPositionZ().getValue().doubleValue(), z, 0.0);
+        assertEquals(x, frame.getPositionX().getValue().doubleValue(), 0.0);
+        assertEquals(y, frame.getPositionY().getValue().doubleValue(), 0.0);
+        assertEquals(z, frame.getPositionZ().getValue().doubleValue(), 0.0);
 
-        assertEquals(frame.getSpeedX().getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(frame.getSpeedY().getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(frame.getSpeedZ().getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(0.0, frame.getSpeedX().getValue().doubleValue(), 0.0);
+        assertEquals(0.0, frame.getSpeedY().getValue().doubleValue(), 0.0);
+        assertEquals(0.0, frame.getSpeedZ().getValue().doubleValue(), 0.0);
 
         assertNotNull(frame.getCoordinateTransformation());
 
         c = frame.getCoordinateTransformation();
-        assertEquals(c.getSourceType(), FrameType.BODY_FRAME);
-        assertEquals(c.getDestinationType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
-        assertEquals(c.getMatrix(), Matrix.identity(3, 3));
+        assertEquals(FrameType.BODY_FRAME, c.getSourceType());
+        assertEquals(FrameType.EARTH_CENTERED_INERTIAL_FRAME, c.getDestinationType());
+        assertEquals(Matrix.identity(3, 3), c.getMatrix());
 
 
         // test constructor with position coordinates
@@ -209,28 +201,28 @@ public class ECIFrameTest {
         frame = new ECIFrame(positionX, positionY, positionZ);
 
         // check
-        assertEquals(frame.getX(), x, 0.0);
-        assertEquals(frame.getY(), y, 0.0);
-        assertEquals(frame.getZ(), z, 0.0);
+        assertEquals(x, frame.getX(), 0.0);
+        assertEquals(y, frame.getY(), 0.0);
+        assertEquals(z, frame.getZ(), 0.0);
 
-        assertEquals(frame.getVx(), 0.0, 0.0);
-        assertEquals(frame.getVx(), 0.0, 0.0);
-        assertEquals(frame.getVz(), 0.0, 0.0);
+        assertEquals(0.0, frame.getVx(), 0.0);
+        assertEquals(0.0, frame.getVx(), 0.0);
+        assertEquals(0.0, frame.getVz(), 0.0);
 
-        assertEquals(frame.getPositionX().getValue().doubleValue(), x, 0.0);
-        assertEquals(frame.getPositionY().getValue().doubleValue(), y, 0.0);
-        assertEquals(frame.getPositionZ().getValue().doubleValue(), z, 0.0);
+        assertEquals(x, frame.getPositionX().getValue().doubleValue(), 0.0);
+        assertEquals(y, frame.getPositionY().getValue().doubleValue(), 0.0);
+        assertEquals(z, frame.getPositionZ().getValue().doubleValue(), 0.0);
 
-        assertEquals(frame.getSpeedX().getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(frame.getSpeedY().getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(frame.getSpeedZ().getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(0.0, frame.getSpeedX().getValue().doubleValue(), 0.0);
+        assertEquals(0.0, frame.getSpeedY().getValue().doubleValue(), 0.0);
+        assertEquals(0.0, frame.getSpeedZ().getValue().doubleValue(), 0.0);
 
         assertNotNull(frame.getCoordinateTransformation());
 
         c = frame.getCoordinateTransformation();
-        assertEquals(c.getSourceType(), FrameType.BODY_FRAME);
-        assertEquals(c.getDestinationType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
-        assertEquals(c.getMatrix(), Matrix.identity(3, 3));
+        assertEquals(FrameType.BODY_FRAME, c.getSourceType());
+        assertEquals(FrameType.EARTH_CENTERED_INERTIAL_FRAME, c.getDestinationType());
+        assertEquals(Matrix.identity(3, 3), c.getMatrix());
 
 
         // test constructor with cartesian position and velocity coordinates
@@ -241,55 +233,55 @@ public class ECIFrameTest {
         frame = new ECIFrame(x, y, z, vx, vy, vz);
 
         // check
-        assertEquals(frame.getX(), x, 0.0);
-        assertEquals(frame.getY(), y, 0.0);
-        assertEquals(frame.getZ(), z, 0.0);
+        assertEquals(x, frame.getX(), 0.0);
+        assertEquals(y, frame.getY(), 0.0);
+        assertEquals(z, frame.getZ(), 0.0);
 
-        assertEquals(frame.getVx(), vx, 0.0);
-        assertEquals(frame.getVy(), vy, 0.0);
-        assertEquals(frame.getVz(), vz, 0.0);
+        assertEquals(vx, frame.getVx(), 0.0);
+        assertEquals(vy, frame.getVy(), 0.0);
+        assertEquals(vz, frame.getVz(), 0.0);
 
-        assertEquals(frame.getPositionX().getValue().doubleValue(), x, 0.0);
-        assertEquals(frame.getPositionY().getValue().doubleValue(), y, 0.0);
-        assertEquals(frame.getPositionZ().getValue().doubleValue(), z, 0.0);
+        assertEquals(x, frame.getPositionX().getValue().doubleValue(), 0.0);
+        assertEquals(y, frame.getPositionY().getValue().doubleValue(), 0.0);
+        assertEquals(z, frame.getPositionZ().getValue().doubleValue(), 0.0);
 
-        assertEquals(frame.getSpeedX().getValue().doubleValue(), vx, 0.0);
-        assertEquals(frame.getSpeedY().getValue().doubleValue(), vy, 0.0);
-        assertEquals(frame.getSpeedZ().getValue().doubleValue(), vz, 0.0);
+        assertEquals(vx, frame.getSpeedX().getValue().doubleValue(), 0.0);
+        assertEquals(vy, frame.getSpeedY().getValue().doubleValue(), 0.0);
+        assertEquals(vz, frame.getSpeedZ().getValue().doubleValue(), 0.0);
 
         assertNotNull(frame.getCoordinateTransformation());
 
         c = frame.getCoordinateTransformation();
-        assertEquals(c.getSourceType(), FrameType.BODY_FRAME);
-        assertEquals(c.getDestinationType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
-        assertEquals(c.getMatrix(), Matrix.identity(3, 3));
+        assertEquals(FrameType.BODY_FRAME, c.getSourceType());
+        assertEquals(FrameType.EARTH_CENTERED_INERTIAL_FRAME, c.getDestinationType());
+        assertEquals(Matrix.identity(3, 3), c.getMatrix());
 
         // test constructor with position and velocity coordinates
         frame = new ECIFrame(position, vx, vy, vz);
 
         // check
-        assertEquals(frame.getX(), x, 0.0);
-        assertEquals(frame.getY(), y, 0.0);
-        assertEquals(frame.getZ(), z, 0.0);
+        assertEquals(x, frame.getX(), 0.0);
+        assertEquals(y, frame.getY(), 0.0);
+        assertEquals(z, frame.getZ(), 0.0);
 
-        assertEquals(frame.getVx(), vx, 0.0);
-        assertEquals(frame.getVy(), vy, 0.0);
-        assertEquals(frame.getVz(), vz, 0.0);
+        assertEquals(vx, frame.getVx(), 0.0);
+        assertEquals(vy, frame.getVy(), 0.0);
+        assertEquals(vz, frame.getVz(), 0.0);
 
-        assertEquals(frame.getPositionX().getValue().doubleValue(), x, 0.0);
-        assertEquals(frame.getPositionY().getValue().doubleValue(), y, 0.0);
-        assertEquals(frame.getPositionZ().getValue().doubleValue(), z, 0.0);
+        assertEquals(x, frame.getPositionX().getValue().doubleValue(), 0.0);
+        assertEquals(y, frame.getPositionY().getValue().doubleValue(), 0.0);
+        assertEquals(z, frame.getPositionZ().getValue().doubleValue(), 0.0);
 
-        assertEquals(frame.getSpeedX().getValue().doubleValue(), vx, 0.0);
-        assertEquals(frame.getSpeedY().getValue().doubleValue(), vy, 0.0);
-        assertEquals(frame.getSpeedZ().getValue().doubleValue(), vz, 0.0);
+        assertEquals(vx, frame.getSpeedX().getValue().doubleValue(), 0.0);
+        assertEquals(vy, frame.getSpeedY().getValue().doubleValue(), 0.0);
+        assertEquals(vz, frame.getSpeedZ().getValue().doubleValue(), 0.0);
 
         assertNotNull(frame.getCoordinateTransformation());
 
         c = frame.getCoordinateTransformation();
-        assertEquals(c.getSourceType(), FrameType.BODY_FRAME);
-        assertEquals(c.getDestinationType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
-        assertEquals(c.getMatrix(), Matrix.identity(3, 3));
+        assertEquals(FrameType.BODY_FRAME, c.getSourceType());
+        assertEquals(FrameType.EARTH_CENTERED_INERTIAL_FRAME, c.getDestinationType());
+        assertEquals(Matrix.identity(3, 3), c.getMatrix());
 
 
         // test constructor with position and speed coordinates
@@ -300,132 +292,132 @@ public class ECIFrameTest {
         frame = new ECIFrame(position, speedX, speedY, speedZ);
 
         // check
-        assertEquals(frame.getX(), x, 0.0);
-        assertEquals(frame.getY(), y, 0.0);
-        assertEquals(frame.getZ(), z, 0.0);
+        assertEquals(x, frame.getX(), 0.0);
+        assertEquals(y, frame.getY(), 0.0);
+        assertEquals(z, frame.getZ(), 0.0);
 
-        assertEquals(frame.getVx(), vx, 0.0);
-        assertEquals(frame.getVy(), vy, 0.0);
-        assertEquals(frame.getVz(), vz, 0.0);
+        assertEquals(vx, frame.getVx(), 0.0);
+        assertEquals(vy, frame.getVy(), 0.0);
+        assertEquals(vz, frame.getVz(), 0.0);
 
-        assertEquals(frame.getPositionX().getValue().doubleValue(), x, 0.0);
-        assertEquals(frame.getPositionY().getValue().doubleValue(), y, 0.0);
-        assertEquals(frame.getPositionZ().getValue().doubleValue(), z, 0.0);
+        assertEquals(x, frame.getPositionX().getValue().doubleValue(), 0.0);
+        assertEquals(y, frame.getPositionY().getValue().doubleValue(), 0.0);
+        assertEquals(z, frame.getPositionZ().getValue().doubleValue(), 0.0);
 
-        assertEquals(frame.getSpeedX().getValue().doubleValue(), vx, 0.0);
-        assertEquals(frame.getSpeedY().getValue().doubleValue(), vy, 0.0);
-        assertEquals(frame.getSpeedZ().getValue().doubleValue(), vz, 0.0);
+        assertEquals(vx, frame.getSpeedX().getValue().doubleValue(), 0.0);
+        assertEquals(vy, frame.getSpeedY().getValue().doubleValue(), 0.0);
+        assertEquals(vz, frame.getSpeedZ().getValue().doubleValue(), 0.0);
 
         assertNotNull(frame.getCoordinateTransformation());
 
         c = frame.getCoordinateTransformation();
-        assertEquals(c.getSourceType(), FrameType.BODY_FRAME);
-        assertEquals(c.getDestinationType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
-        assertEquals(c.getMatrix(), Matrix.identity(3, 3));
+        assertEquals(FrameType.BODY_FRAME, c.getSourceType());
+        assertEquals(FrameType.EARTH_CENTERED_INERTIAL_FRAME, c.getDestinationType());
+        assertEquals(Matrix.identity(3, 3), c.getMatrix());
 
 
         // test constructor with cartesian position coordinates and speed coordinates
         frame = new ECIFrame(x, y, z, speedX, speedY, speedZ);
 
         // check
-        assertEquals(frame.getX(), x, 0.0);
-        assertEquals(frame.getY(), y, 0.0);
-        assertEquals(frame.getZ(), z, 0.0);
+        assertEquals(x, frame.getX(), 0.0);
+        assertEquals(y, frame.getY(), 0.0);
+        assertEquals(z, frame.getZ(), 0.0);
 
-        assertEquals(frame.getVx(), vx, 0.0);
-        assertEquals(frame.getVy(), vy, 0.0);
-        assertEquals(frame.getVz(), vz, 0.0);
+        assertEquals(vx, frame.getVx(), 0.0);
+        assertEquals(vy, frame.getVy(), 0.0);
+        assertEquals(vz, frame.getVz(), 0.0);
 
-        assertEquals(frame.getPositionX().getValue().doubleValue(), x, 0.0);
-        assertEquals(frame.getPositionY().getValue().doubleValue(), y, 0.0);
-        assertEquals(frame.getPositionZ().getValue().doubleValue(), z, 0.0);
+        assertEquals(x, frame.getPositionX().getValue().doubleValue(), 0.0);
+        assertEquals(y, frame.getPositionY().getValue().doubleValue(), 0.0);
+        assertEquals(z, frame.getPositionZ().getValue().doubleValue(), 0.0);
 
-        assertEquals(frame.getSpeedX().getValue().doubleValue(), vx, 0.0);
-        assertEquals(frame.getSpeedY().getValue().doubleValue(), vy, 0.0);
-        assertEquals(frame.getSpeedZ().getValue().doubleValue(), vz, 0.0);
+        assertEquals(vx, frame.getSpeedX().getValue().doubleValue(), 0.0);
+        assertEquals(vy, frame.getSpeedY().getValue().doubleValue(), 0.0);
+        assertEquals(vz, frame.getSpeedZ().getValue().doubleValue(), 0.0);
 
         assertNotNull(frame.getCoordinateTransformation());
 
         c = frame.getCoordinateTransformation();
-        assertEquals(c.getSourceType(), FrameType.BODY_FRAME);
-        assertEquals(c.getDestinationType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
-        assertEquals(c.getMatrix(), Matrix.identity(3, 3));
+        assertEquals(FrameType.BODY_FRAME, c.getSourceType());
+        assertEquals(FrameType.EARTH_CENTERED_INERTIAL_FRAME, c.getDestinationType());
+        assertEquals(Matrix.identity(3, 3), c.getMatrix());
 
 
         // test constructor with position and velocity coordinates
         frame = new ECIFrame(positionX, positionY, positionZ, vx, vy, vz);
 
         // check
-        assertEquals(frame.getX(), x, 0.0);
-        assertEquals(frame.getY(), y, 0.0);
-        assertEquals(frame.getZ(), z, 0.0);
+        assertEquals(x, frame.getX(), 0.0);
+        assertEquals(y, frame.getY(), 0.0);
+        assertEquals(z, frame.getZ(), 0.0);
 
-        assertEquals(frame.getVx(), vx, 0.0);
-        assertEquals(frame.getVy(), vy, 0.0);
-        assertEquals(frame.getVz(), vz, 0.0);
+        assertEquals(vx, frame.getVx(), 0.0);
+        assertEquals(vy, frame.getVy(), 0.0);
+        assertEquals(vz, frame.getVz(), 0.0);
 
-        assertEquals(frame.getPositionX().getValue().doubleValue(), x, 0.0);
-        assertEquals(frame.getPositionY().getValue().doubleValue(), y, 0.0);
-        assertEquals(frame.getPositionZ().getValue().doubleValue(), z, 0.0);
+        assertEquals(x, frame.getPositionX().getValue().doubleValue(), 0.0);
+        assertEquals(y, frame.getPositionY().getValue().doubleValue(), 0.0);
+        assertEquals(z, frame.getPositionZ().getValue().doubleValue(), 0.0);
 
-        assertEquals(frame.getSpeedX().getValue().doubleValue(), vx, 0.0);
-        assertEquals(frame.getSpeedY().getValue().doubleValue(), vy, 0.0);
-        assertEquals(frame.getSpeedZ().getValue().doubleValue(), vz, 0.0);
+        assertEquals(vx, frame.getSpeedX().getValue().doubleValue(), 0.0);
+        assertEquals(vy, frame.getSpeedY().getValue().doubleValue(), 0.0);
+        assertEquals(vz, frame.getSpeedZ().getValue().doubleValue(), 0.0);
 
         assertNotNull(frame.getCoordinateTransformation());
 
         c = frame.getCoordinateTransformation();
-        assertEquals(c.getSourceType(), FrameType.BODY_FRAME);
-        assertEquals(c.getDestinationType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
-        assertEquals(c.getMatrix(), Matrix.identity(3, 3));
+        assertEquals(FrameType.BODY_FRAME, c.getSourceType());
+        assertEquals(FrameType.EARTH_CENTERED_INERTIAL_FRAME, c.getDestinationType());
+        assertEquals(Matrix.identity(3, 3), c.getMatrix());
 
 
         // test constructor with position and speed coordinates
         frame = new ECIFrame(positionX, positionY, positionZ, speedX, speedY, speedZ);
 
         // check
-        assertEquals(frame.getX(), x, 0.0);
-        assertEquals(frame.getY(), y, 0.0);
-        assertEquals(frame.getZ(), z, 0.0);
+        assertEquals(x, frame.getX(), 0.0);
+        assertEquals(y, frame.getY(), 0.0);
+        assertEquals(z, frame.getZ(), 0.0);
 
-        assertEquals(frame.getVx(), vx, 0.0);
-        assertEquals(frame.getVy(), vy, 0.0);
-        assertEquals(frame.getVz(), vz, 0.0);
+        assertEquals(vx, frame.getVx(), 0.0);
+        assertEquals(vy, frame.getVy(), 0.0);
+        assertEquals(vz, frame.getVz(), 0.0);
 
-        assertEquals(frame.getPositionX().getValue().doubleValue(), x, 0.0);
-        assertEquals(frame.getPositionY().getValue().doubleValue(), y, 0.0);
-        assertEquals(frame.getPositionZ().getValue().doubleValue(), z, 0.0);
+        assertEquals(x, frame.getPositionX().getValue().doubleValue(), 0.0);
+        assertEquals(y, frame.getPositionY().getValue().doubleValue(), 0.0);
+        assertEquals(z, frame.getPositionZ().getValue().doubleValue(), 0.0);
 
-        assertEquals(frame.getSpeedX().getValue().doubleValue(), vx, 0.0);
-        assertEquals(frame.getSpeedY().getValue().doubleValue(), vy, 0.0);
-        assertEquals(frame.getSpeedZ().getValue().doubleValue(), vz, 0.0);
+        assertEquals(vx, frame.getSpeedX().getValue().doubleValue(), 0.0);
+        assertEquals(vy, frame.getSpeedY().getValue().doubleValue(), 0.0);
+        assertEquals(vz, frame.getSpeedZ().getValue().doubleValue(), 0.0);
 
         assertNotNull(frame.getCoordinateTransformation());
 
         c = frame.getCoordinateTransformation();
-        assertEquals(c.getSourceType(), FrameType.BODY_FRAME);
-        assertEquals(c.getDestinationType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
-        assertEquals(c.getMatrix(), Matrix.identity(3, 3));
+        assertEquals(FrameType.BODY_FRAME, c.getSourceType());
+        assertEquals(FrameType.EARTH_CENTERED_INERTIAL_FRAME, c.getDestinationType());
+        assertEquals(Matrix.identity(3, 3), c.getMatrix());
 
         // test constructor with cartesian position coordinates and coordinate transformation matrix
         frame = new ECIFrame(x, y, z, c1);
 
         // check
-        assertEquals(frame.getX(), x, 0.0);
-        assertEquals(frame.getY(), y, 0.0);
-        assertEquals(frame.getZ(), z, 0.0);
+        assertEquals(x, frame.getX(), 0.0);
+        assertEquals(y, frame.getY(), 0.0);
+        assertEquals(z, frame.getZ(), 0.0);
 
-        assertEquals(frame.getVx(), 0.0, 0.0);
-        assertEquals(frame.getVy(), 0.0, 0.0);
-        assertEquals(frame.getVz(), 0.0, 0.0);
+        assertEquals(0.0, frame.getVx(), 0.0);
+        assertEquals(0.0, frame.getVy(), 0.0);
+        assertEquals(0.0, frame.getVz(), 0.0);
 
-        assertEquals(frame.getPositionX().getValue().doubleValue(), x, 0.0);
-        assertEquals(frame.getPositionY().getValue().doubleValue(), y, 0.0);
-        assertEquals(frame.getPositionZ().getValue().doubleValue(), z, 0.0);
+        assertEquals(x, frame.getPositionX().getValue().doubleValue(), 0.0);
+        assertEquals(y, frame.getPositionY().getValue().doubleValue(), 0.0);
+        assertEquals(z, frame.getPositionZ().getValue().doubleValue(), 0.0);
 
-        assertEquals(frame.getSpeedX().getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(frame.getSpeedY().getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(frame.getSpeedZ().getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(0.0, frame.getSpeedX().getValue().doubleValue(), 0.0);
+        assertEquals(0.0, frame.getSpeedY().getValue().doubleValue(), 0.0);
+        assertEquals(0.0, frame.getSpeedZ().getValue().doubleValue(), 0.0);
 
         c2 = frame.getCoordinateTransformation();
         assertEquals(c1, c2);
@@ -445,21 +437,21 @@ public class ECIFrameTest {
         frame = new ECIFrame(position, c1);
 
         // check
-        assertEquals(frame.getX(), x, 0.0);
-        assertEquals(frame.getY(), y, 0.0);
-        assertEquals(frame.getZ(), z, 0.0);
+        assertEquals(x, frame.getX(), 0.0);
+        assertEquals(y, frame.getY(), 0.0);
+        assertEquals(z, frame.getZ(), 0.0);
 
-        assertEquals(frame.getVx(), 0.0, 0.0);
-        assertEquals(frame.getVy(), 0.0, 0.0);
-        assertEquals(frame.getVz(), 0.0, 0.0);
+        assertEquals(0.0, frame.getVx(), 0.0);
+        assertEquals(0.0, frame.getVy(), 0.0);
+        assertEquals(0.0, frame.getVz(), 0.0);
 
-        assertEquals(frame.getPositionX().getValue().doubleValue(), x, 0.0);
-        assertEquals(frame.getPositionY().getValue().doubleValue(), y, 0.0);
-        assertEquals(frame.getPositionZ().getValue().doubleValue(), z, 0.0);
+        assertEquals(x, frame.getPositionX().getValue().doubleValue(), 0.0);
+        assertEquals(y, frame.getPositionY().getValue().doubleValue(), 0.0);
+        assertEquals(z, frame.getPositionZ().getValue().doubleValue(), 0.0);
 
-        assertEquals(frame.getSpeedX().getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(frame.getSpeedY().getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(frame.getSpeedZ().getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(0.0, frame.getSpeedX().getValue().doubleValue(), 0.0);
+        assertEquals(0.0, frame.getSpeedY().getValue().doubleValue(), 0.0);
+        assertEquals(0.0, frame.getSpeedZ().getValue().doubleValue(), 0.0);
 
         c2 = frame.getCoordinateTransformation();
         assertEquals(c1, c2);
@@ -479,21 +471,21 @@ public class ECIFrameTest {
         frame = new ECIFrame(positionX, positionY, positionZ, c1);
 
         // check
-        assertEquals(frame.getX(), x, 0.0);
-        assertEquals(frame.getY(), y, 0.0);
-        assertEquals(frame.getZ(), z, 0.0);
+        assertEquals(x, frame.getX(), 0.0);
+        assertEquals(y, frame.getY(), 0.0);
+        assertEquals(z, frame.getZ(), 0.0);
 
-        assertEquals(frame.getVx(), 0.0, 0.0);
-        assertEquals(frame.getVy(), 0.0, 0.0);
-        assertEquals(frame.getVz(), 0.0, 0.0);
+        assertEquals(0.0, frame.getVx(), 0.0);
+        assertEquals(0.0, frame.getVy(), 0.0);
+        assertEquals(0.0, frame.getVz(), 0.0);
 
-        assertEquals(frame.getPositionX().getValue().doubleValue(), x, 0.0);
-        assertEquals(frame.getPositionY().getValue().doubleValue(), y, 0.0);
-        assertEquals(frame.getPositionZ().getValue().doubleValue(), z, 0.0);
+        assertEquals(x, frame.getPositionX().getValue().doubleValue(), 0.0);
+        assertEquals(y, frame.getPositionY().getValue().doubleValue(), 0.0);
+        assertEquals(z, frame.getPositionZ().getValue().doubleValue(), 0.0);
 
-        assertEquals(frame.getSpeedX().getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(frame.getSpeedY().getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(frame.getSpeedZ().getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(0.0, frame.getSpeedX().getValue().doubleValue(), 0.0);
+        assertEquals(0.0, frame.getSpeedY().getValue().doubleValue(), 0.0);
+        assertEquals(0.0, frame.getSpeedZ().getValue().doubleValue(), 0.0);
 
         c2 = frame.getCoordinateTransformation();
         assertEquals(c1, c2);
@@ -502,33 +494,33 @@ public class ECIFrameTest {
         frame = null;
         try {
             frame = new ECIFrame(positionX, positionY, positionZ,
-                    new CoordinateTransformation(
-                            FrameType.BODY_FRAME, FrameType.BODY_FRAME));
+                    new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
         } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
         }
         assertNull(frame);
 
 
-        // test constructor with cartesian position and velocity coordinates, and with coordinate transformation matrix
+        // test constructor with cartesian position and velocity coordinates, and with coordinate
+        // transformation matrix
         frame = new ECIFrame(x, y, z, vx, vy, vz, c1);
 
         // check
-        assertEquals(frame.getX(), x, 0.0);
-        assertEquals(frame.getY(), y, 0.0);
-        assertEquals(frame.getZ(), z, 0.0);
+        assertEquals(x, frame.getX(), 0.0);
+        assertEquals(y, frame.getY(), 0.0);
+        assertEquals(z, frame.getZ(), 0.0);
 
-        assertEquals(frame.getVx(), vx, 0.0);
-        assertEquals(frame.getVy(), vy, 0.0);
-        assertEquals(frame.getVz(), vz, 0.0);
+        assertEquals(vx, frame.getVx(), 0.0);
+        assertEquals(vy, frame.getVy(), 0.0);
+        assertEquals(vz, frame.getVz(), 0.0);
 
-        assertEquals(frame.getPositionX().getValue().doubleValue(), x, 0.0);
-        assertEquals(frame.getPositionY().getValue().doubleValue(), y, 0.0);
-        assertEquals(frame.getPositionZ().getValue().doubleValue(), z, 0.0);
+        assertEquals(x, frame.getPositionX().getValue().doubleValue(), 0.0);
+        assertEquals(y, frame.getPositionY().getValue().doubleValue(), 0.0);
+        assertEquals(z, frame.getPositionZ().getValue().doubleValue(), 0.0);
 
-        assertEquals(frame.getSpeedX().getValue().doubleValue(), vx, 0.0);
-        assertEquals(frame.getSpeedY().getValue().doubleValue(), vy, 0.0);
-        assertEquals(frame.getSpeedZ().getValue().doubleValue(), vz, 0.0);
+        assertEquals(vx, frame.getSpeedX().getValue().doubleValue(), 0.0);
+        assertEquals(vy, frame.getSpeedY().getValue().doubleValue(), 0.0);
+        assertEquals(vz, frame.getSpeedZ().getValue().doubleValue(), 0.0);
 
         c2 = frame.getCoordinateTransformation();
         assertEquals(c1, c2);
@@ -537,8 +529,7 @@ public class ECIFrameTest {
         frame = null;
         try {
             frame = new ECIFrame(x, y, z, vx, vy, vz,
-                    new CoordinateTransformation(
-                            FrameType.BODY_FRAME, FrameType.BODY_FRAME));
+                    new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
         } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
         }
@@ -549,21 +540,21 @@ public class ECIFrameTest {
         frame = new ECIFrame(position, vx, vy, vz, c1);
 
         // check
-        assertEquals(frame.getX(), x, 0.0);
-        assertEquals(frame.getY(), y, 0.0);
-        assertEquals(frame.getZ(), z, 0.0);
+        assertEquals(x, frame.getX(), 0.0);
+        assertEquals(y, frame.getY(), 0.0);
+        assertEquals(z, frame.getZ(), 0.0);
 
-        assertEquals(frame.getVx(), vx, 0.0);
-        assertEquals(frame.getVy(), vy, 0.0);
-        assertEquals(frame.getVz(), vz, 0.0);
+        assertEquals(vx, frame.getVx(), 0.0);
+        assertEquals(vy, frame.getVy(), 0.0);
+        assertEquals(vz, frame.getVz(), 0.0);
 
-        assertEquals(frame.getPositionX().getValue().doubleValue(), x, 0.0);
-        assertEquals(frame.getPositionY().getValue().doubleValue(), y, 0.0);
-        assertEquals(frame.getPositionZ().getValue().doubleValue(), z, 0.0);
+        assertEquals(x, frame.getPositionX().getValue().doubleValue(), 0.0);
+        assertEquals(y, frame.getPositionY().getValue().doubleValue(), 0.0);
+        assertEquals(z, frame.getPositionZ().getValue().doubleValue(), 0.0);
 
-        assertEquals(frame.getSpeedX().getValue().doubleValue(), vx, 0.0);
-        assertEquals(frame.getSpeedY().getValue().doubleValue(), vy, 0.0);
-        assertEquals(frame.getSpeedZ().getValue().doubleValue(), vz, 0.0);
+        assertEquals(vx, frame.getSpeedX().getValue().doubleValue(), 0.0);
+        assertEquals(vy, frame.getSpeedY().getValue().doubleValue(), 0.0);
+        assertEquals(vz, frame.getSpeedZ().getValue().doubleValue(), 0.0);
 
         c2 = frame.getCoordinateTransformation();
         assertEquals(c1, c2);
@@ -572,8 +563,7 @@ public class ECIFrameTest {
         frame = null;
         try {
             frame = new ECIFrame(position, vx, vy, vz,
-                    new CoordinateTransformation(
-                            FrameType.BODY_FRAME, FrameType.BODY_FRAME));
+                    new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
         } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
         }
@@ -584,21 +574,21 @@ public class ECIFrameTest {
         frame = new ECIFrame(position, speedX, speedY, speedZ, c1);
 
         // check
-        assertEquals(frame.getX(), x, 0.0);
-        assertEquals(frame.getY(), y, 0.0);
-        assertEquals(frame.getZ(), z, 0.0);
+        assertEquals(x, frame.getX(), 0.0);
+        assertEquals(y, frame.getY(), 0.0);
+        assertEquals(z, frame.getZ(), 0.0);
 
-        assertEquals(frame.getVx(), vx, 0.0);
-        assertEquals(frame.getVy(), vy, 0.0);
-        assertEquals(frame.getVz(), vz, 0.0);
+        assertEquals(vx, frame.getVx(), 0.0);
+        assertEquals(vy, frame.getVy(), 0.0);
+        assertEquals(vz, frame.getVz(), 0.0);
 
-        assertEquals(frame.getPositionX().getValue().doubleValue(), x, 0.0);
-        assertEquals(frame.getPositionY().getValue().doubleValue(), y, 0.0);
-        assertEquals(frame.getPositionZ().getValue().doubleValue(), z, 0.0);
+        assertEquals(x, frame.getPositionX().getValue().doubleValue(), 0.0);
+        assertEquals(y, frame.getPositionY().getValue().doubleValue(), 0.0);
+        assertEquals(z, frame.getPositionZ().getValue().doubleValue(), 0.0);
 
-        assertEquals(frame.getSpeedX().getValue().doubleValue(), vx, 0.0);
-        assertEquals(frame.getSpeedY().getValue().doubleValue(), vy, 0.0);
-        assertEquals(frame.getSpeedZ().getValue().doubleValue(), vz, 0.0);
+        assertEquals(vx, frame.getSpeedX().getValue().doubleValue(), 0.0);
+        assertEquals(vy, frame.getSpeedY().getValue().doubleValue(), 0.0);
+        assertEquals(vz, frame.getSpeedZ().getValue().doubleValue(), 0.0);
 
         c2 = frame.getCoordinateTransformation();
         assertEquals(c1, c2);
@@ -607,33 +597,33 @@ public class ECIFrameTest {
         frame = null;
         try {
             frame = new ECIFrame(position, speedX, speedY, speedZ,
-                    new CoordinateTransformation(
-                            FrameType.BODY_FRAME, FrameType.BODY_FRAME));
+                    new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
         } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
         }
         assertNull(frame);
 
 
-        // test constructor with cartesian coordinates, speed coordinates and coordinate transformation matrix
+        // test constructor with cartesian coordinates, speed coordinates and coordinate transformation
+        // matrix
         frame = new ECIFrame(x, y, z, speedX, speedY, speedZ, c1);
 
         // check
-        assertEquals(frame.getX(), x, 0.0);
-        assertEquals(frame.getY(), y, 0.0);
-        assertEquals(frame.getZ(), z, 0.0);
+        assertEquals(x, frame.getX(), 0.0);
+        assertEquals(y, frame.getY(), 0.0);
+        assertEquals(z, frame.getZ(), 0.0);
 
-        assertEquals(frame.getVx(), vx, 0.0);
-        assertEquals(frame.getVy(), vy, 0.0);
-        assertEquals(frame.getVz(), vz, 0.0);
+        assertEquals(vx, frame.getVx(), 0.0);
+        assertEquals(vy, frame.getVy(), 0.0);
+        assertEquals(vz, frame.getVz(), 0.0);
 
-        assertEquals(frame.getPositionX().getValue().doubleValue(), x, 0.0);
-        assertEquals(frame.getPositionY().getValue().doubleValue(), y, 0.0);
-        assertEquals(frame.getPositionZ().getValue().doubleValue(), z, 0.0);
+        assertEquals(x, frame.getPositionX().getValue().doubleValue(), 0.0);
+        assertEquals(y, frame.getPositionY().getValue().doubleValue(), 0.0);
+        assertEquals(z, frame.getPositionZ().getValue().doubleValue(), 0.0);
 
-        assertEquals(frame.getSpeedX().getValue().doubleValue(), vx, 0.0);
-        assertEquals(frame.getSpeedY().getValue().doubleValue(), vy, 0.0);
-        assertEquals(frame.getSpeedZ().getValue().doubleValue(), vz, 0.0);
+        assertEquals(vx, frame.getSpeedX().getValue().doubleValue(), 0.0);
+        assertEquals(vy, frame.getSpeedY().getValue().doubleValue(), 0.0);
+        assertEquals(vz, frame.getSpeedZ().getValue().doubleValue(), 0.0);
 
         c2 = frame.getCoordinateTransformation();
         assertEquals(c1, c2);
@@ -642,32 +632,32 @@ public class ECIFrameTest {
         frame = null;
         try {
             frame = new ECIFrame(x, y, z, speedX, speedY, speedZ,
-                    new CoordinateTransformation(
-                            FrameType.BODY_FRAME, FrameType.BODY_FRAME));
+                    new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
         } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
         }
         assertNull(frame);
 
-        // test constructor with position coordinates, velocity coordinates and coordinates transformation matrix
+        // test constructor with position coordinates, velocity coordinates and coordinates transformation
+        // matrix
         frame = new ECIFrame(positionX, positionY, positionZ, vx, vy, vz, c1);
 
         // check
-        assertEquals(frame.getX(), x, 0.0);
-        assertEquals(frame.getY(), y, 0.0);
-        assertEquals(frame.getZ(), z, 0.0);
+        assertEquals(x, frame.getX(), 0.0);
+        assertEquals(y, frame.getY(), 0.0);
+        assertEquals(z, frame.getZ(), 0.0);
 
-        assertEquals(frame.getVx(), vx, 0.0);
-        assertEquals(frame.getVy(), vy, 0.0);
-        assertEquals(frame.getVz(), vz, 0.0);
+        assertEquals(vx, frame.getVx(), 0.0);
+        assertEquals(vy, frame.getVy(), 0.0);
+        assertEquals(vz, frame.getVz(), 0.0);
 
-        assertEquals(frame.getPositionX().getValue().doubleValue(), x, 0.0);
-        assertEquals(frame.getPositionY().getValue().doubleValue(), y, 0.0);
-        assertEquals(frame.getPositionZ().getValue().doubleValue(), z, 0.0);
+        assertEquals(x, frame.getPositionX().getValue().doubleValue(), 0.0);
+        assertEquals(y, frame.getPositionY().getValue().doubleValue(), 0.0);
+        assertEquals(z, frame.getPositionZ().getValue().doubleValue(), 0.0);
 
-        assertEquals(frame.getSpeedX().getValue().doubleValue(), vx, 0.0);
-        assertEquals(frame.getSpeedY().getValue().doubleValue(), vy, 0.0);
-        assertEquals(frame.getSpeedZ().getValue().doubleValue(), vz, 0.0);
+        assertEquals(vx, frame.getSpeedX().getValue().doubleValue(), 0.0);
+        assertEquals(vy, frame.getSpeedY().getValue().doubleValue(), 0.0);
+        assertEquals(vz, frame.getSpeedZ().getValue().doubleValue(), 0.0);
 
         c2 = frame.getCoordinateTransformation();
         assertEquals(c1, c2);
@@ -676,35 +666,33 @@ public class ECIFrameTest {
         frame = null;
         try {
             frame = new ECIFrame(positionX, positionY, positionZ,
-                    vx, vy, vz,
-                    new CoordinateTransformation(
-                            FrameType.BODY_FRAME, FrameType.BODY_FRAME));
+                    vx, vy, vz, new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
         } catch (InvalidSourceAndDestinationFrameTypeException ignore) {
         }
         assertNull(frame);
 
 
-        // test constructor with position coordinates, speed coordinates and coordinate transformation matrix
-        frame = new ECIFrame(positionX, positionY, positionZ, speedX, speedY, speedZ,
-                c1);
+        // test constructor with position coordinates, speed coordinates and coordinate transformation
+        // matrix
+        frame = new ECIFrame(positionX, positionY, positionZ, speedX, speedY, speedZ, c1);
 
         // check
-        assertEquals(frame.getX(), x, 0.0);
-        assertEquals(frame.getY(), y, 0.0);
-        assertEquals(frame.getZ(), z, 0.0);
+        assertEquals(x, frame.getX(), 0.0);
+        assertEquals(y, frame.getY(), 0.0);
+        assertEquals(z, frame.getZ(), 0.0);
 
-        assertEquals(frame.getVx(), vx, 0.0);
-        assertEquals(frame.getVy(), vy, 0.0);
-        assertEquals(frame.getVz(), vz, 0.0);
+        assertEquals(vx, frame.getVx(), 0.0);
+        assertEquals(vy, frame.getVy(), 0.0);
+        assertEquals(vz, frame.getVz(), 0.0);
 
-        assertEquals(frame.getPositionX().getValue().doubleValue(), x, 0.0);
-        assertEquals(frame.getPositionY().getValue().doubleValue(), y, 0.0);
-        assertEquals(frame.getPositionZ().getValue().doubleValue(), z, 0.0);
+        assertEquals(x, frame.getPositionX().getValue().doubleValue(), 0.0);
+        assertEquals(y, frame.getPositionY().getValue().doubleValue(), 0.0);
+        assertEquals(z, frame.getPositionZ().getValue().doubleValue(), 0.0);
 
-        assertEquals(frame.getSpeedX().getValue().doubleValue(), vx, 0.0);
-        assertEquals(frame.getSpeedY().getValue().doubleValue(), vy, 0.0);
-        assertEquals(frame.getSpeedZ().getValue().doubleValue(), vz, 0.0);
+        assertEquals(vx, frame.getSpeedX().getValue().doubleValue(), 0.0);
+        assertEquals(vy, frame.getSpeedY().getValue().doubleValue(), 0.0);
+        assertEquals(vz, frame.getSpeedZ().getValue().doubleValue(), 0.0);
 
         c2 = frame.getCoordinateTransformation();
         assertEquals(c1, c2);
@@ -712,10 +700,8 @@ public class ECIFrameTest {
         // Force InvalidSourceAndDestinationFrameTypeException
         frame = null;
         try {
-            frame = new ECIFrame(positionX, positionY, positionZ,
-                    speedX, speedY, speedZ,
-                    new CoordinateTransformation(
-                            FrameType.BODY_FRAME, FrameType.BODY_FRAME));
+            frame = new ECIFrame(positionX, positionY, positionZ, speedX, speedY, speedZ,
+                    new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
         } catch (InvalidSourceAndDestinationFrameTypeException ignore) {
         }
@@ -735,8 +721,7 @@ public class ECIFrameTest {
         assertEquals(frame.getVy(), frame2.getVy(), 0.0);
         assertEquals(frame.getVz(), frame2.getVz(), 0.0);
 
-        assertEquals(frame.getCoordinateTransformation(),
-                frame2.getCoordinateTransformation());
+        assertEquals(frame.getCoordinateTransformation(), frame2.getCoordinateTransformation());
     }
 
     @Test
@@ -748,13 +733,13 @@ public class ECIFrameTest {
         final ECIFrame frame = new ECIFrame();
 
         // check initial value
-        assertEquals(frame.getX(), 0.0, 0.0);
+        assertEquals(0.0, frame.getX(), 0.0);
 
         // set new value
         frame.setX(x);
 
         // check
-        assertEquals(frame.getX(), x, 0.0);
+        assertEquals(x, frame.getX(), 0.0);
     }
 
     @Test
@@ -766,13 +751,13 @@ public class ECIFrameTest {
         final ECIFrame frame = new ECIFrame();
 
         // check initial value
-        assertEquals(frame.getY(), 0.0, 0.0);
+        assertEquals(0.0, frame.getY(), 0.0);
 
         // set new value
         frame.setY(y);
 
         // check
-        assertEquals(frame.getY(), y, 0.0);
+        assertEquals(y, frame.getY(), 0.0);
     }
 
     @Test
@@ -784,13 +769,13 @@ public class ECIFrameTest {
         final ECIFrame frame = new ECIFrame();
 
         // check initial value
-        assertEquals(frame.getZ(), 0.0, 0.0);
+        assertEquals(0.0, frame.getZ(), 0.0);
 
         // set new value
         frame.setZ(z);
 
         // check
-        assertEquals(frame.getZ(), z, 0.0);
+        assertEquals(z, frame.getZ(), 0.0);
     }
 
     @Test
@@ -804,17 +789,17 @@ public class ECIFrameTest {
         final ECIFrame frame = new ECIFrame();
 
         // check initial values
-        assertEquals(frame.getX(), 0.0, 0.0);
-        assertEquals(frame.getY(), 0.0, 0.0);
-        assertEquals(frame.getZ(), 0.0, 0.0);
+        assertEquals(0.0, frame.getX(), 0.0);
+        assertEquals(0.0, frame.getY(), 0.0);
+        assertEquals(0.0, frame.getZ(), 0.0);
 
         // set new values
         frame.setCoordinates(x, y, z);
 
         // check
-        assertEquals(frame.getX(), x, 0.0);
-        assertEquals(frame.getY(), y, 0.0);
-        assertEquals(frame.getZ(), z, 0.0);
+        assertEquals(x, frame.getX(), 0.0);
+        assertEquals(y, frame.getY(), 0.0);
+        assertEquals(z, frame.getZ(), 0.0);
     }
 
     @Test
@@ -851,7 +836,7 @@ public class ECIFrameTest {
         final ECIFrame frame = new ECIFrame();
 
         // check initial value
-        assertEquals(frame.getPositionX().getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(0.0, frame.getPositionX().getValue().doubleValue(), 0.0);
 
         // set new value
         final Distance positionX1 = new Distance(x, DistanceUnit.METER);
@@ -875,7 +860,7 @@ public class ECIFrameTest {
         final ECIFrame frame = new ECIFrame();
 
         // check initial value
-        assertEquals(frame.getPositionY().getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(0.0, frame.getPositionY().getValue().doubleValue(), 0.0);
 
         // set new value
         final Distance positionY1 = new Distance(y, DistanceUnit.METER);
@@ -899,7 +884,7 @@ public class ECIFrameTest {
         final ECIFrame frame = new ECIFrame();
 
         // check initial value
-        assertEquals(frame.getPositionZ().getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(0.0, frame.getPositionZ().getValue().doubleValue(), 0.0);
 
         // set new value
         final Distance positionZ1 = new Distance(z, DistanceUnit.METER);
@@ -931,9 +916,9 @@ public class ECIFrameTest {
         frame.setPositionCoordinates(positionX, positionY, positionZ);
 
         // check
-        assertEquals(frame.getPositionX(), positionX);
-        assertEquals(frame.getPositionY(), positionY);
-        assertEquals(frame.getPositionZ(), positionZ);
+        assertEquals(positionX, frame.getPositionX());
+        assertEquals(positionY, frame.getPositionY());
+        assertEquals(positionZ, frame.getPositionZ());
     }
 
     @Test
@@ -943,8 +928,7 @@ public class ECIFrameTest {
         final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
         final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
         final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double norm = Math.sqrt(Math.pow(x, 2.0) + Math.pow(y, 2.0)
-                + Math.pow(z, 2.0));
+        final double norm = Math.sqrt(Math.pow(x, 2.0) + Math.pow(y, 2.0) + Math.pow(z, 2.0));
 
         final ECIFrame frame = new ECIFrame(x, y, z);
 
@@ -954,8 +938,8 @@ public class ECIFrameTest {
         frame.getPositionNormAsDistance(normDistance1);
         final Distance normDistance2 = frame.getPositionNormAsDistance();
 
-        assertEquals(normDistance1.getValue().doubleValue(), norm, ABSOLUTE_ERROR);
-        assertEquals(normDistance1.getUnit(), DistanceUnit.METER);
+        assertEquals(norm, normDistance1.getValue().doubleValue(), ABSOLUTE_ERROR);
+        assertEquals(DistanceUnit.METER, normDistance1.getUnit());
         assertEquals(normDistance1, normDistance2);
     }
 
@@ -968,13 +952,13 @@ public class ECIFrameTest {
         final ECIFrame frame = new ECIFrame();
 
         // check initial value
-        assertEquals(frame.getVx(), 0.0, 0.0);
+        assertEquals(0.0, frame.getVx(), 0.0);
 
         // set new value
         frame.setVx(vx);
 
         // check
-        assertEquals(frame.getVx(), vx, 0.0);
+        assertEquals(vx, frame.getVx(), 0.0);
     }
 
     @Test
@@ -986,13 +970,13 @@ public class ECIFrameTest {
         final ECIFrame frame = new ECIFrame();
 
         // check initial value
-        assertEquals(frame.getVy(), 0.0, 0.0);
+        assertEquals(0.0, frame.getVy(), 0.0);
 
         // set new value
         frame.setVy(vy);
 
         // check
-        assertEquals(frame.getVy(), vy, 0.0);
+        assertEquals(vy, frame.getVy(), 0.0);
     }
 
     @Test
@@ -1004,13 +988,13 @@ public class ECIFrameTest {
         final ECIFrame frame = new ECIFrame();
 
         // check initial value
-        assertEquals(frame.getVz(), 0.0, 0.0);
+        assertEquals(0.0, frame.getVz(), 0.0);
 
         // set new value
         frame.setVz(vz);
 
         // check
-        assertEquals(frame.getVz(), vz, 0.0);
+        assertEquals(vz, frame.getVz(), 0.0);
     }
 
     @Test
@@ -1024,17 +1008,17 @@ public class ECIFrameTest {
         final ECIFrame frame = new ECIFrame();
 
         // check initial value
-        assertEquals(frame.getVx(), 0.0, 0.0);
-        assertEquals(frame.getVy(), 0.0, 0.0);
-        assertEquals(frame.getVz(), 0.0, 0.0);
+        assertEquals(0.0, frame.getVx(), 0.0);
+        assertEquals(0.0, frame.getVy(), 0.0);
+        assertEquals(0.0, frame.getVz(), 0.0);
 
         // set new values
         frame.setVelocityCoordinates(vx, vy, vz);
 
         // check
-        assertEquals(frame.getVx(), vx, 0.0);
-        assertEquals(frame.getVy(), vy, 0.0);
-        assertEquals(frame.getVz(), vz, 0.0);
+        assertEquals(vx, frame.getVx(), 0.0);
+        assertEquals(vy, frame.getVy(), 0.0);
+        assertEquals(vz, frame.getVz(), 0.0);
     }
 
     @Test
@@ -1044,20 +1028,19 @@ public class ECIFrameTest {
         final double vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
         final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
         final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double norm = Math.sqrt(Math.pow(vx, 2.0) + Math.pow(vy, 2.0)
-                + Math.pow(vz, 2.0));
+        final double norm = Math.sqrt(Math.pow(vx, 2.0) + Math.pow(vy, 2.0) + Math.pow(vz, 2.0));
 
         final ECIFrame frame = new ECIFrame();
         frame.setVelocityCoordinates(vx, vy, vz);
 
-        assertEquals(frame.getVelocityNorm(), norm, ABSOLUTE_ERROR);
+        assertEquals(norm, frame.getVelocityNorm(), ABSOLUTE_ERROR);
 
         final Speed normSpeed1 = new Speed(0.0, SpeedUnit.KILOMETERS_PER_HOUR);
         frame.getVelocityNormAsSpeed(normSpeed1);
         final Speed normSpeed2 = frame.getVelocityNormAsSpeed();
 
-        assertEquals(normSpeed1.getValue().doubleValue(), norm, ABSOLUTE_ERROR);
-        assertEquals(normSpeed1.getUnit(), SpeedUnit.METERS_PER_SECOND);
+        assertEquals(norm, normSpeed1.getValue().doubleValue(), ABSOLUTE_ERROR);
+        assertEquals(SpeedUnit.METERS_PER_SECOND, normSpeed1.getUnit());
         assertEquals(normSpeed1, normSpeed2);
     }
 
@@ -1070,7 +1053,7 @@ public class ECIFrameTest {
         final ECIFrame frame = new ECIFrame();
 
         // check initial value
-        assertEquals(frame.getSpeedX().getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(0.0, frame.getSpeedX().getValue().doubleValue(), 0.0);
 
         // set new value
         final Speed speedX1 = new Speed(vx, SpeedUnit.METERS_PER_SECOND);
@@ -1094,7 +1077,7 @@ public class ECIFrameTest {
         final ECIFrame frame = new ECIFrame();
 
         // check initial value
-        assertEquals(frame.getSpeedY().getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(0.0, frame.getSpeedY().getValue().doubleValue(), 0.0);
 
         // set new value
         final Speed speedY1 = new Speed(vy, SpeedUnit.METERS_PER_SECOND);
@@ -1118,7 +1101,7 @@ public class ECIFrameTest {
         final ECIFrame frame = new ECIFrame();
 
         // check initial value
-        assertEquals(frame.getSpeedZ().getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(0.0, frame.getSpeedZ().getValue().doubleValue(), 0.0);
 
         // set new value
         final Speed speedZ1 = new Speed(vz, SpeedUnit.METERS_PER_SECOND);
@@ -1151,9 +1134,9 @@ public class ECIFrameTest {
         frame.setSpeedCoordinates(speedX, speedY, speedZ);
 
         // check
-        assertEquals(frame.getSpeedX(), speedX);
-        assertEquals(frame.getSpeedY(), speedY);
-        assertEquals(frame.getSpeedZ(), speedZ);
+        assertEquals(speedX, frame.getSpeedX());
+        assertEquals(speedY, frame.getSpeedY());
+        assertEquals(speedZ, frame.getSpeedZ());
     }
 
     @Test
@@ -1164,24 +1147,20 @@ public class ECIFrameTest {
 
         // check initial value
         final CoordinateTransformation c1 = frame.getCoordinateTransformation();
-        assertEquals(c1.getSourceType(), FrameType.BODY_FRAME);
-        assertEquals(c1.getDestinationType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
-        assertEquals(c1.getMatrix(), Matrix.identity(3, 3));
+        assertEquals(FrameType.BODY_FRAME, c1.getSourceType());
+        assertEquals(FrameType.EARTH_CENTERED_INERTIAL_FRAME, c1.getDestinationType());
+        assertEquals(Matrix.identity(3, 3), c1.getMatrix());
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double roll = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
         final Quaternion q = new Quaternion(roll, pitch, yaw);
 
         final Matrix m = q.asInhomogeneousMatrix();
         final CoordinateTransformation c2 = new CoordinateTransformation(
-                m, FrameType.BODY_FRAME,
-                FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+                m, FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_INERTIAL_FRAME);
 
         frame.setCoordinateTransformation(c2);
 
@@ -1206,18 +1185,14 @@ public class ECIFrameTest {
             InvalidRotationMatrixException, InvalidSourceAndDestinationFrameTypeException {
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double roll = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
         final Quaternion q = new Quaternion(roll, pitch, yaw);
 
         final Matrix m1 = q.asInhomogeneousMatrix();
         final CoordinateTransformation c = new CoordinateTransformation(
-                m1, FrameType.BODY_FRAME,
-                FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+                m1, FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_INERTIAL_FRAME);
 
         final ECIFrame frame = new ECIFrame(c);
 
@@ -1225,34 +1200,31 @@ public class ECIFrameTest {
         assertEquals(frame.getCoordinateTransformationMatrix(), m1);
         final Matrix m2 = new Matrix(CoordinateTransformation.ROWS, CoordinateTransformation.COLS);
         frame.getCoordinateTransformationMatrix(m2);
-        assertEquals(m2, m1);
+        assertEquals(m1, m2);
     }
 
     @Test
-    public void testGetSetCoordinateTransformationMatrix2() throws InvalidSourceAndDestinationFrameTypeException,
-            WrongSizeException, InvalidRotationMatrixException {
+    public void testGetSetCoordinateTransformationMatrix2()
+            throws InvalidSourceAndDestinationFrameTypeException, WrongSizeException,
+            InvalidRotationMatrixException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double roll = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
         final Quaternion q = new Quaternion(roll, pitch, yaw);
 
         final Matrix m1 = q.asInhomogeneousMatrix();
         final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.BODY_FRAME,
-                FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+                FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_INERTIAL_FRAME);
 
         final ECIFrame frame = new ECIFrame(c);
 
         // check default value
-        assertEquals(frame.getCoordinateTransformationMatrix(),
-                Matrix.identity(Rotation3D.INHOM_COORDS, Rotation3D.INHOM_COORDS));
+        assertEquals(Matrix.identity(Rotation3D.INHOM_COORDS, Rotation3D.INHOM_COORDS),
+                frame.getCoordinateTransformationMatrix());
         final Matrix m2 = new Matrix(CoordinateTransformation.ROWS, CoordinateTransformation.COLS);
         frame.getCoordinateTransformationMatrix(m2);
-        assertEquals(m2, Matrix.identity(Rotation3D.INHOM_COORDS, Rotation3D.INHOM_COORDS));
+        assertEquals(Matrix.identity(Rotation3D.INHOM_COORDS, Rotation3D.INHOM_COORDS), m2);
 
         // set nw value
         frame.setCoordinateTransformationMatrix(m1, THRESHOLD);
@@ -1264,21 +1236,18 @@ public class ECIFrameTest {
     }
 
     @Test
-    public void testGetSetCoordinateTransformationMatrix3() throws InvalidSourceAndDestinationFrameTypeException,
-            WrongSizeException, InvalidRotationMatrixException {
+    public void testGetSetCoordinateTransformationMatrix3()
+            throws InvalidSourceAndDestinationFrameTypeException, WrongSizeException,
+            InvalidRotationMatrixException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double roll = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
         final Quaternion q = new Quaternion(roll, pitch, yaw);
 
         final Matrix m1 = q.asInhomogeneousMatrix();
         final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.BODY_FRAME,
-                FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+                FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_INERTIAL_FRAME);
 
         final ECIFrame frame = new ECIFrame(c);
 
@@ -1299,8 +1268,8 @@ public class ECIFrameTest {
     }
 
     @Test
-    public void testGetSetCoordinateTransformationRotation() throws InvalidSourceAndDestinationFrameTypeException,
-            InvalidRotationMatrixException {
+    public void testGetSetCoordinateTransformationRotation()
+            throws InvalidSourceAndDestinationFrameTypeException, InvalidRotationMatrixException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double roll = Math.toRadians(
                 randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
@@ -1311,8 +1280,7 @@ public class ECIFrameTest {
         final Quaternion q = new Quaternion(roll, pitch, yaw);
 
         final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.BODY_FRAME,
-                FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+                FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_INERTIAL_FRAME);
 
         final ECIFrame frame = new ECIFrame(c);
 
@@ -1347,7 +1315,8 @@ public class ECIFrameTest {
     }
 
     @Test
-    public void testCopyTo() throws InvalidRotationMatrixException, InvalidSourceAndDestinationFrameTypeException {
+    public void testCopyTo() throws InvalidRotationMatrixException,
+            InvalidSourceAndDestinationFrameTypeException {
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
@@ -1359,18 +1328,14 @@ public class ECIFrameTest {
         final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
         final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final double roll = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
         final Quaternion q = new Quaternion(roll, pitch, yaw);
 
         final Matrix m = q.asInhomogeneousMatrix();
         final CoordinateTransformation c = new CoordinateTransformation(
-                m, FrameType.BODY_FRAME,
-                FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+                m, FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_INERTIAL_FRAME);
 
         final ECIFrame frame1 = new ECIFrame(x, y, z, vx, vy, vz, c);
         final ECIFrame frame2 = new ECIFrame();
@@ -1383,12 +1348,12 @@ public class ECIFrameTest {
         assertEquals(frame1.getVx(), frame2.getVx(), 0.0);
         assertEquals(frame1.getVy(), frame2.getVy(), 0.0);
         assertEquals(frame1.getVz(), frame2.getVz(), 0.0);
-        assertEquals(frame1.getCoordinateTransformation(),
-                frame2.getCoordinateTransformation());
+        assertEquals(frame1.getCoordinateTransformation(), frame2.getCoordinateTransformation());
     }
 
     @Test
-    public void testCopyFrom() throws InvalidRotationMatrixException, InvalidSourceAndDestinationFrameTypeException {
+    public void testCopyFrom() throws InvalidRotationMatrixException,
+            InvalidSourceAndDestinationFrameTypeException {
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
@@ -1400,18 +1365,14 @@ public class ECIFrameTest {
         final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
         final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final double roll = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
         final Quaternion q = new Quaternion(roll, pitch, yaw);
 
         final Matrix m = q.asInhomogeneousMatrix();
         final CoordinateTransformation c = new CoordinateTransformation(
-                m, FrameType.BODY_FRAME,
-                FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+                m, FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_INERTIAL_FRAME);
 
         final ECIFrame frame1 = new ECIFrame(x, y, z, vx, vy, vz, c);
         final ECIFrame frame2 = new ECIFrame();
@@ -1424,8 +1385,7 @@ public class ECIFrameTest {
         assertEquals(frame1.getVx(), frame2.getVx(), 0.0);
         assertEquals(frame1.getVy(), frame2.getVy(), 0.0);
         assertEquals(frame1.getVz(), frame2.getVz(), 0.0);
-        assertEquals(frame1.getCoordinateTransformation(),
-                frame2.getCoordinateTransformation());
+        assertEquals(frame1.getCoordinateTransformation(), frame2.getCoordinateTransformation());
     }
 
     @Test
@@ -1442,18 +1402,14 @@ public class ECIFrameTest {
         final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
         final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final double roll = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
         final Quaternion q = new Quaternion(roll, pitch, yaw);
 
         final Matrix m = q.asInhomogeneousMatrix();
         final CoordinateTransformation c = new CoordinateTransformation(
-                m, FrameType.BODY_FRAME,
-                FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+                m, FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_INERTIAL_FRAME);
 
         final ECIFrame frame1 = new ECIFrame(x, y, z, vx, vy, vz, c);
         final ECIFrame frame2 = new ECIFrame(x, y, z, vx, vy, vz, c);
@@ -1464,7 +1420,8 @@ public class ECIFrameTest {
     }
 
     @Test
-    public void testEquals() throws InvalidRotationMatrixException, InvalidSourceAndDestinationFrameTypeException {
+    public void testEquals() throws InvalidRotationMatrixException,
+            InvalidSourceAndDestinationFrameTypeException {
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
@@ -1476,18 +1433,14 @@ public class ECIFrameTest {
         final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
         final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final double roll = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
         final Quaternion q = new Quaternion(roll, pitch, yaw);
 
         final Matrix m = q.asInhomogeneousMatrix();
         final CoordinateTransformation c = new CoordinateTransformation(
-                m, FrameType.BODY_FRAME,
-                FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+                m, FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_INERTIAL_FRAME);
 
         final ECIFrame frame1 = new ECIFrame(x, y, z, vx, vy, vz, c);
         final ECIFrame frame2 = new ECIFrame(x, y, z, vx, vy, vz, c);
@@ -1520,12 +1473,9 @@ public class ECIFrameTest {
         final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
         final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final double roll = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
         final Quaternion q = new Quaternion(roll, pitch, yaw);
 
         final Matrix m = q.asInhomogeneousMatrix();
@@ -1544,8 +1494,7 @@ public class ECIFrameTest {
 
     @Test
     public void testClone() throws InvalidRotationMatrixException,
-            InvalidSourceAndDestinationFrameTypeException,
-            CloneNotSupportedException {
+            InvalidSourceAndDestinationFrameTypeException, CloneNotSupportedException {
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
@@ -1557,18 +1506,14 @@ public class ECIFrameTest {
         final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
         final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final double roll = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
         final Quaternion q = new Quaternion(roll, pitch, yaw);
 
         final Matrix m = q.asInhomogeneousMatrix();
         final CoordinateTransformation c = new CoordinateTransformation(
-                m, FrameType.BODY_FRAME,
-                FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+                m, FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_INERTIAL_FRAME);
 
         final ECIFrame frame1 = new ECIFrame(x, y, z, vx, vy, vz, c);
 
@@ -1579,8 +1524,7 @@ public class ECIFrameTest {
 
     @Test
     public void testSerializeDeserialize() throws InvalidRotationMatrixException,
-            InvalidSourceAndDestinationFrameTypeException, IOException,
-            ClassNotFoundException {
+            InvalidSourceAndDestinationFrameTypeException, IOException, ClassNotFoundException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
@@ -1591,18 +1535,14 @@ public class ECIFrameTest {
         final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
         final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final double roll = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
         final Quaternion q = new Quaternion(roll, pitch, yaw);
 
         final Matrix m = q.asInhomogeneousMatrix();
         final CoordinateTransformation c = new CoordinateTransformation(
-                m, FrameType.BODY_FRAME,
-                FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+                m, FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_INERTIAL_FRAME);
 
         final ECIFrame frame1 = new ECIFrame(x, y, z, vx, vy, vz, c);
 

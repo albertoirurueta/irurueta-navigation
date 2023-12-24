@@ -18,7 +18,7 @@ package com.irurueta.navigation.geodesic;
 /**
  * An accumulator for sums.
  * This allows many double precision numbers to be added together with twice the normal
- * precision. Thus the effective precision of the sum is 106 bits or about 32 decimal places.
+ * precision. Thus, the effective precision of the sum is 106 bits or about 32 decimal places.
  * The implementation follows J. R. Shewchuk,
  * <a href="https://doi.org/10.1007/PL00009321">Adaptive Precision Floating-Point Arithmetic and Fast Robust Geometric
  * Predicates</a>, Discrete &amp; Computational Geometry 18(3) 305&ndash;363 (1997).

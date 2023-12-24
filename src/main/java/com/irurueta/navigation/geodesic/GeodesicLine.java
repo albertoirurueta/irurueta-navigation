@@ -584,7 +584,7 @@ public class GeodesicLine {
     }
 
     /**
-     * Gets pair of sine and cosine of <i>azi1</i> the azimuth (degrees) of the geodesic line at
+     * Gets a pair of sine and cosine of <i>azi1</i> the azimuth (degrees) of the geodesic line at
      * point 1.
      *
      * @return pair of sine and cosine of <i>azi1</i> the azimuth (degrees) of the geodesic line
@@ -606,7 +606,7 @@ public class GeodesicLine {
     }
 
     /**
-     * Gets pair of sine and cosine of <i>azi0</i> the azimuth of the godesic line as it crosses the
+     * Gets a pair of sine and cosine of <i>azi0</i> the azimuth of the godesic line as it crosses the
      * equator in a northward direction.
      *
      * @return pair of sine and cosine of <i>azi0</i> the azimuth of the godesic line as it crosses
@@ -759,7 +759,7 @@ public class GeodesicLine {
         mCalp0 = GeoMath.hypot(mCalp1, mSalp1 * sbet1);
 
         // Evaluate sig with tan(bet1) = tan(sig1) * cos(alp1).
-        // sig = 0 is nearest northward crossing of equator.
+        // sig = 0 is nearest northward crossing of the equator.
         // With bet1 = 0, alp1 = pi/2, we have sig1 = 0 (equatorial line).
         // With bet1 = pi/2, alp1 = -pi, sig1 = pi/2
         // With bet1 = -pi/2, alp1 = 0, sig1 = -pi/2

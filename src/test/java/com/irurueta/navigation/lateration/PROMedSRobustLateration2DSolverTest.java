@@ -29,8 +29,7 @@ import java.util.Random;
 
 import static org.junit.Assert.*;
 
-public class PROMedSRobustLateration2DSolverTest implements
-        RobustLaterationSolverListener<Point2D> {
+public class PROMedSRobustLateration2DSolverTest implements RobustLaterationSolverListener<Point2D> {
 
     private static final int MIN_CIRCLES = 100;
     private static final int MAX_CIRCLES = 500;
@@ -61,12 +60,12 @@ public class PROMedSRobustLateration2DSolverTest implements
         PROMedSRobustLateration2DSolver solver = new PROMedSRobustLateration2DSolver();
 
         // check correctness
-        assertEquals(solver.getStopThreshold(),
-                PROMedSRobustLateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(solver.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(solver.getNumberOfDimensions(), 2);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
-        assertEquals(solver.getPreliminarySubsetSize(), 3);
+        assertEquals(PROMedSRobustLateration2DSolver.DEFAULT_STOP_THRESHOLD,
+                solver.getStopThreshold(), 0.0);
+        assertEquals(RobustEstimatorMethod.PROMEDS, solver.getMethod());
+        assertEquals(2, solver.getNumberOfDimensions());
+        assertEquals(3, solver.getMinRequiredPositionsAndDistances());
+        assertEquals(3, solver.getPreliminarySubsetSize());
         assertNull(solver.getCircles());
         assertNull(solver.getListener());
         assertNull(solver.getInitialPosition());
@@ -74,17 +73,12 @@ public class PROMedSRobustLateration2DSolverTest implements
         assertFalse(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
-        assertEquals(solver.getProgressDelta(),
-                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(solver.getConfidence(),
-                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(solver.getMaxIterations(),
-                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
+        assertEquals(RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, solver.getProgressDelta(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_CONFIDENCE, solver.getConfidence(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_MAX_ITERATIONS, solver.getMaxIterations());
         assertNull(solver.getInliersData());
-        assertEquals(solver.isResultRefined(),
-                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
-        assertEquals(solver.isCovarianceKept(),
-                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertEquals(RobustLaterationSolver.DEFAULT_REFINE_RESULT, solver.isResultRefined());
+        assertEquals(RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE, solver.isCovarianceKept());
         assertNull(solver.getPositions());
         assertNull(solver.getDistances());
         assertNull(solver.getDistanceStandardDeviations());
@@ -92,36 +86,30 @@ public class PROMedSRobustLateration2DSolverTest implements
         assertNull(solver.getQualityScores());
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
-
 
         // constructor with listener
         solver = new PROMedSRobustLateration2DSolver(this);
 
         // check correctness
-        assertEquals(solver.getStopThreshold(),
-                PROMedSRobustLateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(solver.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(solver.getNumberOfDimensions(), 2);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
-        assertEquals(solver.getPreliminarySubsetSize(), 3);
+        assertEquals(PROMedSRobustLateration2DSolver.DEFAULT_STOP_THRESHOLD,
+                solver.getStopThreshold(), 0.0);
+        assertEquals(RobustEstimatorMethod.PROMEDS, solver.getMethod());
+        assertEquals(2, solver.getNumberOfDimensions());
+        assertEquals(3, solver.getMinRequiredPositionsAndDistances());
+        assertEquals(3, solver.getPreliminarySubsetSize());
         assertNull(solver.getCircles());
-        assertSame(solver.getListener(), this);
+        assertSame(this, solver.getListener());
         assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
         assertFalse(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
-        assertEquals(solver.getProgressDelta(),
-                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(solver.getConfidence(),
-                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(solver.getMaxIterations(),
-                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
+        assertEquals(RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, solver.getProgressDelta(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_CONFIDENCE, solver.getConfidence(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_MAX_ITERATIONS, solver.getMaxIterations());
         assertNull(solver.getInliersData());
-        assertEquals(solver.isResultRefined(),
-                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
-        assertEquals(solver.isCovarianceKept(),
-                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertEquals(RobustLaterationSolver.DEFAULT_REFINE_RESULT, solver.isResultRefined());
+        assertEquals(RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE, solver.isCovarianceKept());
         assertNull(solver.getPositions());
         assertNull(solver.getDistances());
         assertNull(solver.getDistanceStandardDeviations());
@@ -129,7 +117,6 @@ public class PROMedSRobustLateration2DSolverTest implements
         assertNull(solver.getQualityScores());
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
-
 
         // constructor with positions and distances
         final Point2D[] positions = new Point2D[3];
@@ -140,12 +127,12 @@ public class PROMedSRobustLateration2DSolverTest implements
         solver = new PROMedSRobustLateration2DSolver(positions, distances);
 
         // check correctness
-        assertEquals(solver.getStopThreshold(),
-                PROMedSRobustLateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(solver.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(solver.getNumberOfDimensions(), 2);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
-        assertEquals(solver.getPreliminarySubsetSize(), 3);
+        assertEquals(PROMedSRobustLateration2DSolver.DEFAULT_STOP_THRESHOLD,
+                solver.getStopThreshold(), 0.0);
+        assertEquals(RobustEstimatorMethod.PROMEDS, solver.getMethod());
+        assertEquals(2, solver.getNumberOfDimensions());
+        assertEquals(3, solver.getMinRequiredPositionsAndDistances());
+        assertEquals(3, solver.getPreliminarySubsetSize());
         assertNotNull(solver.getCircles());
         assertNull(solver.getListener());
         assertNull(solver.getInitialPosition());
@@ -153,19 +140,14 @@ public class PROMedSRobustLateration2DSolverTest implements
         assertFalse(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
-        assertEquals(solver.getProgressDelta(),
-                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(solver.getConfidence(),
-                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(solver.getMaxIterations(),
-                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
+        assertEquals(RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, solver.getProgressDelta(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_CONFIDENCE, solver.getConfidence(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_MAX_ITERATIONS, solver.getMaxIterations());
         assertNull(solver.getInliersData());
-        assertEquals(solver.isResultRefined(),
-                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
-        assertEquals(solver.isCovarianceKept(),
-                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
+        assertEquals(RobustLaterationSolver.DEFAULT_REFINE_RESULT, solver.isResultRefined());
+        assertEquals(RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE, solver.isCovarianceKept());
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
         assertNull(solver.getDistanceStandardDeviations());
         assertFalse(solver.isReady());
         assertNull(solver.getQualityScores());
@@ -199,19 +181,17 @@ public class PROMedSRobustLateration2DSolverTest implements
         }
         assertNull(solver);
 
-
         // constructor with positions, distances and standard deviations
         final double[] standardDeviations = new double[3];
-        solver = new PROMedSRobustLateration2DSolver(positions, distances,
-                standardDeviations);
+        solver = new PROMedSRobustLateration2DSolver(positions, distances, standardDeviations);
 
         // check correctness
-        assertEquals(solver.getStopThreshold(),
-                PROMedSRobustLateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(solver.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(solver.getNumberOfDimensions(), 2);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
-        assertEquals(solver.getPreliminarySubsetSize(), 3);
+        assertEquals(PROMedSRobustLateration2DSolver.DEFAULT_STOP_THRESHOLD,
+                solver.getStopThreshold(), 0.0);
+        assertEquals(RobustEstimatorMethod.PROMEDS, solver.getMethod());
+        assertEquals(2, solver.getNumberOfDimensions());
+        assertEquals(3, solver.getMinRequiredPositionsAndDistances());
+        assertEquals(3, solver.getPreliminarySubsetSize());
         assertNotNull(solver.getCircles());
         assertNull(solver.getListener());
         assertNull(solver.getInitialPosition());
@@ -219,20 +199,15 @@ public class PROMedSRobustLateration2DSolverTest implements
         assertFalse(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
-        assertEquals(solver.getProgressDelta(),
-                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(solver.getConfidence(),
-                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(solver.getMaxIterations(),
-                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
+        assertEquals(RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, solver.getProgressDelta(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_CONFIDENCE, solver.getConfidence(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_MAX_ITERATIONS, solver.getMaxIterations());
         assertNull(solver.getInliersData());
-        assertEquals(solver.isResultRefined(),
-                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
-        assertEquals(solver.isCovarianceKept(),
-                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
+        assertEquals(RobustLaterationSolver.DEFAULT_REFINE_RESULT, solver.isResultRefined());
+        assertEquals(RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE, solver.isCovarianceKept());
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
         assertFalse(solver.isReady());
         assertNull(solver.getQualityScores());
         assertNull(solver.getCovariance());
@@ -241,38 +216,32 @@ public class PROMedSRobustLateration2DSolverTest implements
         // force IllegalArgumentException
         solver = null;
         try {
-            solver = new PROMedSRobustLateration2DSolver(null, distances,
-                    standardDeviations);
+            solver = new PROMedSRobustLateration2DSolver(null, distances, standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(positions, null,
-                    standardDeviations);
+            solver = new PROMedSRobustLateration2DSolver(positions, null, standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(positions, distances,
-                    (double[]) null);
+            solver = new PROMedSRobustLateration2DSolver(positions, distances, (double[]) null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(positions, wrong,
-                    standardDeviations);
+            solver = new PROMedSRobustLateration2DSolver(positions, wrong, standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(positions, distances,
-                    wrong);
+            solver = new PROMedSRobustLateration2DSolver(positions, distances, wrong);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(shortPositions,
-                    shortDistances, standardDeviations);
+            solver = new PROMedSRobustLateration2DSolver(shortPositions, shortDistances, standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -280,37 +249,31 @@ public class PROMedSRobustLateration2DSolverTest implements
 
 
         // constructor with positions, distances, standard deviations and listener
-        solver = new PROMedSRobustLateration2DSolver(positions, distances,
-                standardDeviations, this);
+        solver = new PROMedSRobustLateration2DSolver(positions, distances, standardDeviations, this);
 
         // check correctness
-        assertEquals(solver.getStopThreshold(),
-                PROMedSRobustLateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(solver.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(solver.getNumberOfDimensions(), 2);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
-        assertEquals(solver.getPreliminarySubsetSize(), 3);
+        assertEquals(PROMedSRobustLateration2DSolver.DEFAULT_STOP_THRESHOLD,
+                solver.getStopThreshold(), 0.0);
+        assertEquals(RobustEstimatorMethod.PROMEDS, solver.getMethod());
+        assertEquals(2, solver.getNumberOfDimensions());
+        assertEquals(3, solver.getMinRequiredPositionsAndDistances());
+        assertEquals(3, solver.getPreliminarySubsetSize());
         assertNotNull(solver.getCircles());
-        assertSame(solver.getListener(), this);
+        assertSame(this, solver.getListener());
         assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
         assertFalse(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
-        assertEquals(solver.getProgressDelta(),
-                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(solver.getConfidence(),
-                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(solver.getMaxIterations(),
-                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
+        assertEquals(RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, solver.getProgressDelta(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_CONFIDENCE, solver.getConfidence(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_MAX_ITERATIONS, solver.getMaxIterations());
         assertNull(solver.getInliersData());
-        assertEquals(solver.isResultRefined(),
-                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
-        assertEquals(solver.isCovarianceKept(),
-                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
-        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
+        assertEquals(RobustLaterationSolver.DEFAULT_REFINE_RESULT, solver.isResultRefined());
+        assertEquals(RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE, solver.isCovarianceKept());
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
         assertFalse(solver.isReady());
         assertNull(solver.getQualityScores());
         assertNull(solver.getCovariance());
@@ -337,14 +300,12 @@ public class PROMedSRobustLateration2DSolverTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(positions, wrong,
-                    standardDeviations, this);
+            solver = new PROMedSRobustLateration2DSolver(positions, wrong, standardDeviations, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(positions, distances,
-                    wrong, this);
+            solver = new PROMedSRobustLateration2DSolver(positions, distances, wrong, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -356,38 +317,31 @@ public class PROMedSRobustLateration2DSolverTest implements
         }
         assertNull(solver);
 
-
         // constructor with positions, distances and listener
-        solver = new PROMedSRobustLateration2DSolver(positions, distances,
-                this);
+        solver = new PROMedSRobustLateration2DSolver(positions, distances, this);
 
         // check correctness
-        assertEquals(solver.getStopThreshold(),
-                PROMedSRobustLateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(solver.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(solver.getNumberOfDimensions(), 2);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
-        assertEquals(solver.getPreliminarySubsetSize(), 3);
+        assertEquals(PROMedSRobustLateration2DSolver.DEFAULT_STOP_THRESHOLD,
+                solver.getStopThreshold(), 0.0);
+        assertEquals(RobustEstimatorMethod.PROMEDS, solver.getMethod());
+        assertEquals(2, solver.getNumberOfDimensions());
+        assertEquals(3, solver.getMinRequiredPositionsAndDistances());
+        assertEquals(3, solver.getPreliminarySubsetSize());
         assertNotNull(solver.getCircles());
-        assertSame(solver.getListener(), this);
+        assertSame(this, solver.getListener());
         assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
         assertFalse(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
-        assertEquals(solver.getProgressDelta(),
-                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(solver.getConfidence(),
-                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(solver.getMaxIterations(),
-                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
+        assertEquals(RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, solver.getProgressDelta(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_CONFIDENCE, solver.getConfidence(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_MAX_ITERATIONS, solver.getMaxIterations());
         assertNull(solver.getInliersData());
-        assertEquals(solver.isResultRefined(),
-                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
-        assertEquals(solver.isCovarianceKept(),
-                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
+        assertEquals(RobustLaterationSolver.DEFAULT_REFINE_RESULT, solver.isResultRefined());
+        assertEquals(RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE, solver.isCovarianceKept());
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
         assertNull(solver.getDistanceStandardDeviations());
         assertFalse(solver.isReady());
         assertNull(solver.getQualityScores());
@@ -397,31 +351,26 @@ public class PROMedSRobustLateration2DSolverTest implements
         // force IllegalArgumentException
         solver = null;
         try {
-            solver = new PROMedSRobustLateration2DSolver((Point2D[]) null, distances,
-                    this);
+            solver = new PROMedSRobustLateration2DSolver((Point2D[]) null, distances, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(positions, null,
-                    this);
+            solver = new PROMedSRobustLateration2DSolver(positions, null, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(positions, wrong,
-                    this);
+            solver = new PROMedSRobustLateration2DSolver(positions, wrong, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(shortPositions,
-                    shortDistances, this);
+            solver = new PROMedSRobustLateration2DSolver(shortPositions, shortDistances, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(solver);
-
 
         // constructor with circles
         final Circle[] circles = new Circle[3];
@@ -431,12 +380,12 @@ public class PROMedSRobustLateration2DSolverTest implements
         solver = new PROMedSRobustLateration2DSolver(circles);
 
         // check correctness
-        assertEquals(solver.getStopThreshold(),
-                PROMedSRobustLateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(solver.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(solver.getNumberOfDimensions(), 2);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
-        assertEquals(solver.getPreliminarySubsetSize(), 3);
+        assertEquals(PROMedSRobustLateration2DSolver.DEFAULT_STOP_THRESHOLD,
+                solver.getStopThreshold(), 0.0);
+        assertEquals(RobustEstimatorMethod.PROMEDS, solver.getMethod());
+        assertEquals(2, solver.getNumberOfDimensions());
+        assertEquals(3, solver.getMinRequiredPositionsAndDistances());
+        assertEquals(3, solver.getPreliminarySubsetSize());
         assertNotNull(solver.getCircles());
         assertNull(solver.getListener());
         assertNull(solver.getInitialPosition());
@@ -444,17 +393,12 @@ public class PROMedSRobustLateration2DSolverTest implements
         assertFalse(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
-        assertEquals(solver.getProgressDelta(),
-                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(solver.getConfidence(),
-                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(solver.getMaxIterations(),
-                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
+        assertEquals(RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, solver.getProgressDelta(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_CONFIDENCE, solver.getConfidence(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_MAX_ITERATIONS, solver.getMaxIterations());
         assertNull(solver.getInliersData());
-        assertEquals(solver.isResultRefined(),
-                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
-        assertEquals(solver.isCovarianceKept(),
-                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertEquals(RobustLaterationSolver.DEFAULT_REFINE_RESULT, solver.isResultRefined());
+        assertEquals(RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE, solver.isCovarianceKept());
         assertNotNull(solver.getPositions());
         assertNotNull(solver.getDistances());
         assertNull(solver.getDistanceStandardDeviations());
@@ -479,18 +423,16 @@ public class PROMedSRobustLateration2DSolverTest implements
         }
         assertNull(solver);
 
-
         // constructor with circles and standard deviations
-        solver = new PROMedSRobustLateration2DSolver(circles,
-                standardDeviations);
+        solver = new PROMedSRobustLateration2DSolver(circles, standardDeviations);
 
         // check correctness
-        assertEquals(solver.getStopThreshold(),
-                PROMedSRobustLateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(solver.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(solver.getNumberOfDimensions(), 2);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
-        assertEquals(solver.getPreliminarySubsetSize(), 3);
+        assertEquals(PROMedSRobustLateration2DSolver.DEFAULT_STOP_THRESHOLD,
+                solver.getStopThreshold(), 0.0);
+        assertEquals(RobustEstimatorMethod.PROMEDS, solver.getMethod());
+        assertEquals(2, solver.getNumberOfDimensions());
+        assertEquals(3, solver.getMinRequiredPositionsAndDistances());
+        assertEquals(3, solver.getPreliminarySubsetSize());
         assertNotNull(solver.getCircles());
         assertNull(solver.getListener());
         assertNull(solver.getInitialPosition());
@@ -498,21 +440,15 @@ public class PROMedSRobustLateration2DSolverTest implements
         assertFalse(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
-        assertEquals(solver.getProgressDelta(),
-                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(solver.getConfidence(),
-                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(solver.getMaxIterations(),
-                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
+        assertEquals(RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, solver.getProgressDelta(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_CONFIDENCE, solver.getConfidence(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_MAX_ITERATIONS, solver.getMaxIterations());
         assertNull(solver.getInliersData());
-        assertEquals(solver.isResultRefined(),
-                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
-        assertEquals(solver.isCovarianceKept(),
-                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertEquals(RobustLaterationSolver.DEFAULT_REFINE_RESULT, solver.isResultRefined());
+        assertEquals(RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE, solver.isCovarianceKept());
         assertNotNull(solver.getPositions());
         assertNotNull(solver.getDistances());
-        assertSame(solver.getDistanceStandardDeviations(),
-                standardDeviations);
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
         assertFalse(solver.isReady());
         assertNull(solver.getQualityScores());
         assertNull(solver.getCovariance());
@@ -521,20 +457,17 @@ public class PROMedSRobustLateration2DSolverTest implements
         // force IllegalArgumentException
         solver = null;
         try {
-            solver = new PROMedSRobustLateration2DSolver((Circle[]) null,
-                    standardDeviations);
+            solver = new PROMedSRobustLateration2DSolver((Circle[]) null, standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(circles,
-                    (double[]) null);
+            solver = new PROMedSRobustLateration2DSolver(circles, (double[]) null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(shortCircles,
-                    standardDeviations);
+            solver = new PROMedSRobustLateration2DSolver(shortCircles, standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -545,35 +478,29 @@ public class PROMedSRobustLateration2DSolverTest implements
         }
         assertNull(solver);
 
-
         // constructor with circles and listener
         solver = new PROMedSRobustLateration2DSolver(circles, this);
 
         // check correctness
-        assertEquals(solver.getStopThreshold(),
-                PROMedSRobustLateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(solver.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(solver.getNumberOfDimensions(), 2);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
-        assertEquals(solver.getPreliminarySubsetSize(), 3);
+        assertEquals(PROMedSRobustLateration2DSolver.DEFAULT_STOP_THRESHOLD,
+                solver.getStopThreshold(), 0.0);
+        assertEquals(RobustEstimatorMethod.PROMEDS, solver.getMethod());
+        assertEquals(2, solver.getNumberOfDimensions());
+        assertEquals(3, solver.getMinRequiredPositionsAndDistances());
+        assertEquals(3, solver.getPreliminarySubsetSize());
         assertNotNull(solver.getCircles());
-        assertSame(solver.getListener(), this);
+        assertSame(this, solver.getListener());
         assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
         assertFalse(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
-        assertEquals(solver.getProgressDelta(),
-                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(solver.getConfidence(),
-                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(solver.getMaxIterations(),
-                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
+        assertEquals(RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, solver.getProgressDelta(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_CONFIDENCE, solver.getConfidence(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_MAX_ITERATIONS, solver.getMaxIterations());
         assertNull(solver.getInliersData());
-        assertEquals(solver.isResultRefined(),
-                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
-        assertEquals(solver.isCovarianceKept(),
-                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertEquals(RobustLaterationSolver.DEFAULT_REFINE_RESULT, solver.isResultRefined());
+        assertEquals(RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE, solver.isCovarianceKept());
         assertNotNull(solver.getPositions());
         assertNotNull(solver.getDistances());
         assertNull(solver.getDistanceStandardDeviations());
@@ -585,53 +512,43 @@ public class PROMedSRobustLateration2DSolverTest implements
         // force IllegalArgumentException
         solver = null;
         try {
-            solver = new PROMedSRobustLateration2DSolver((Circle[]) null,
-                    this);
+            solver = new PROMedSRobustLateration2DSolver((Circle[]) null, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(shortCircles,
-                    this);
+            solver = new PROMedSRobustLateration2DSolver(shortCircles, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(solver);
 
-
         // constructor with circles, standard deviation and listener
-        solver = new PROMedSRobustLateration2DSolver(circles,
-                standardDeviations, this);
+        solver = new PROMedSRobustLateration2DSolver(circles, standardDeviations, this);
 
         // check correctness
-        assertEquals(solver.getStopThreshold(),
-                PROMedSRobustLateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(solver.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(solver.getNumberOfDimensions(), 2);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
-        assertEquals(solver.getPreliminarySubsetSize(), 3);
+        assertEquals(PROMedSRobustLateration2DSolver.DEFAULT_STOP_THRESHOLD,
+                solver.getStopThreshold(), 0.0);
+        assertEquals(RobustEstimatorMethod.PROMEDS, solver.getMethod());
+        assertEquals(2, solver.getNumberOfDimensions());
+        assertEquals(3, solver.getMinRequiredPositionsAndDistances());
+        assertEquals(3, solver.getPreliminarySubsetSize());
         assertNotNull(solver.getCircles());
-        assertSame(solver.getListener(), this);
+        assertSame(this, solver.getListener());
         assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
         assertFalse(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
-        assertEquals(solver.getProgressDelta(),
-                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(solver.getConfidence(),
-                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(solver.getMaxIterations(),
-                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
+        assertEquals(RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, solver.getProgressDelta(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_CONFIDENCE, solver.getConfidence(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_MAX_ITERATIONS, solver.getMaxIterations());
         assertNull(solver.getInliersData());
-        assertEquals(solver.isResultRefined(),
-                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
-        assertEquals(solver.isCovarianceKept(),
-                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertEquals(RobustLaterationSolver.DEFAULT_REFINE_RESULT, solver.isResultRefined());
+        assertEquals(RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE, solver.isCovarianceKept());
         assertNotNull(solver.getPositions());
         assertNotNull(solver.getDistances());
-        assertSame(solver.getDistanceStandardDeviations(),
-                standardDeviations);
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
         assertFalse(solver.isReady());
         assertNull(solver.getQualityScores());
         assertNull(solver.getCovariance());
@@ -640,43 +557,38 @@ public class PROMedSRobustLateration2DSolverTest implements
         // force IllegalArgumentException
         solver = null;
         try {
-            solver = new PROMedSRobustLateration2DSolver((Circle[]) null,
-                    standardDeviations, this);
+            solver = new PROMedSRobustLateration2DSolver((Circle[]) null, standardDeviations, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(circles,
-                    null, this);
+            solver = new PROMedSRobustLateration2DSolver(circles, null, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(shortCircles,
-                    standardDeviations, this);
+            solver = new PROMedSRobustLateration2DSolver(shortCircles, standardDeviations, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(circles, wrong,
-                    this);
+            solver = new PROMedSRobustLateration2DSolver(circles, wrong, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(solver);
-
 
         // constructor with quality scores
         final double[] qualityScores = new double[3];
         solver = new PROMedSRobustLateration2DSolver(qualityScores);
 
         // check correctness
-        assertEquals(solver.getStopThreshold(),
-                PROMedSRobustLateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(solver.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(solver.getNumberOfDimensions(), 2);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
-        assertEquals(solver.getPreliminarySubsetSize(), 3);
+        assertEquals(PROMedSRobustLateration2DSolver.DEFAULT_STOP_THRESHOLD,
+                solver.getStopThreshold(), 0.0);
+        assertEquals(RobustEstimatorMethod.PROMEDS, solver.getMethod());
+        assertEquals(2, solver.getNumberOfDimensions());
+        assertEquals(3, solver.getMinRequiredPositionsAndDistances());
+        assertEquals(3, solver.getPreliminarySubsetSize());
         assertNull(solver.getCircles());
         assertNull(solver.getListener());
         assertNull(solver.getInitialPosition());
@@ -684,22 +596,17 @@ public class PROMedSRobustLateration2DSolverTest implements
         assertFalse(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
-        assertEquals(solver.getProgressDelta(),
-                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(solver.getConfidence(),
-                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(solver.getMaxIterations(),
-                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
+        assertEquals(RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, solver.getProgressDelta(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_CONFIDENCE, solver.getConfidence(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_MAX_ITERATIONS, solver.getMaxIterations());
         assertNull(solver.getInliersData());
-        assertEquals(solver.isResultRefined(),
-                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
-        assertEquals(solver.isCovarianceKept(),
-                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertEquals(RobustLaterationSolver.DEFAULT_REFINE_RESULT, solver.isResultRefined());
+        assertEquals(RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE, solver.isCovarianceKept());
         assertNull(solver.getPositions());
         assertNull(solver.getDistances());
         assertNull(solver.getDistanceStandardDeviations());
         assertFalse(solver.isReady());
-        assertSame(solver.getQualityScores(), qualityScores);
+        assertSame(qualityScores, solver.getQualityScores());
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
@@ -722,35 +629,30 @@ public class PROMedSRobustLateration2DSolverTest implements
         solver = new PROMedSRobustLateration2DSolver(qualityScores, this);
 
         // check correctness
-        assertEquals(solver.getStopThreshold(),
-                PROMedSRobustLateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(solver.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(solver.getNumberOfDimensions(), 2);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
-        assertEquals(solver.getPreliminarySubsetSize(), 3);
+        assertEquals(PROMedSRobustLateration2DSolver.DEFAULT_STOP_THRESHOLD,
+                solver.getStopThreshold(), 0.0);
+        assertEquals(RobustEstimatorMethod.PROMEDS, solver.getMethod());
+        assertEquals(2, solver.getNumberOfDimensions());
+        assertEquals(3, solver.getMinRequiredPositionsAndDistances());
+        assertEquals(3, solver.getPreliminarySubsetSize());
         assertNull(solver.getCircles());
-        assertSame(solver.getListener(), this);
+        assertSame(this, solver.getListener());
         assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
         assertFalse(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
-        assertEquals(solver.getProgressDelta(),
-                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(solver.getConfidence(),
-                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(solver.getMaxIterations(),
-                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
+        assertEquals(RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, solver.getProgressDelta(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_CONFIDENCE, solver.getConfidence(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_MAX_ITERATIONS, solver.getMaxIterations());
         assertNull(solver.getInliersData());
-        assertEquals(solver.isResultRefined(),
-                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
-        assertEquals(solver.isCovarianceKept(),
-                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertEquals(RobustLaterationSolver.DEFAULT_REFINE_RESULT, solver.isResultRefined());
+        assertEquals(RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE, solver.isCovarianceKept());
         assertNull(solver.getPositions());
         assertNull(solver.getDistances());
         assertNull(solver.getDistanceStandardDeviations());
         assertFalse(solver.isReady());
-        assertSame(solver.getQualityScores(), qualityScores);
+        assertSame(qualityScores, solver.getQualityScores());
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
@@ -768,18 +670,16 @@ public class PROMedSRobustLateration2DSolverTest implements
         }
         assertNull(solver);
 
-
         // constructor with quality scores, positions and distances
-        solver = new PROMedSRobustLateration2DSolver(qualityScores,
-                positions, distances);
+        solver = new PROMedSRobustLateration2DSolver(qualityScores, positions, distances);
 
         // check correctness
-        assertEquals(solver.getStopThreshold(),
-                PROMedSRobustLateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(solver.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(solver.getNumberOfDimensions(), 2);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
-        assertEquals(solver.getPreliminarySubsetSize(), 3);
+        assertEquals(PROMedSRobustLateration2DSolver.DEFAULT_STOP_THRESHOLD,
+                solver.getStopThreshold(), 0.0);
+        assertEquals(RobustEstimatorMethod.PROMEDS, solver.getMethod());
+        assertEquals(2, solver.getNumberOfDimensions());
+        assertEquals(3, solver.getMinRequiredPositionsAndDistances());
+        assertEquals(3, solver.getPreliminarySubsetSize());
         assertNotNull(solver.getCircles());
         assertNull(solver.getListener());
         assertNull(solver.getInitialPosition());
@@ -787,22 +687,17 @@ public class PROMedSRobustLateration2DSolverTest implements
         assertFalse(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
-        assertEquals(solver.getProgressDelta(),
-                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(solver.getConfidence(),
-                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(solver.getMaxIterations(),
-                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
+        assertEquals(RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, solver.getProgressDelta(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_CONFIDENCE, solver.getConfidence(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_MAX_ITERATIONS, solver.getMaxIterations());
         assertNull(solver.getInliersData());
-        assertEquals(solver.isResultRefined(),
-                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
-        assertEquals(solver.isCovarianceKept(),
-                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
+        assertEquals(RobustLaterationSolver.DEFAULT_REFINE_RESULT, solver.isResultRefined());
+        assertEquals(RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE, solver.isCovarianceKept());
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
         assertNull(solver.getDistanceStandardDeviations());
         assertTrue(solver.isReady());
-        assertSame(solver.getQualityScores(), qualityScores);
+        assertSame(qualityScores, solver.getQualityScores());
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
@@ -811,38 +706,32 @@ public class PROMedSRobustLateration2DSolverTest implements
 
         solver = null;
         try {
-            solver = new PROMedSRobustLateration2DSolver(null, positions,
-                    distances);
+            solver = new PROMedSRobustLateration2DSolver(null, positions, distances);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(qualityScores,
-                    (Point2D[]) null, distances);
+            solver = new PROMedSRobustLateration2DSolver(qualityScores, (Point2D[]) null, distances);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(qualityScores,
-                    positions, null);
+            solver = new PROMedSRobustLateration2DSolver(qualityScores, positions, null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(qualityScores,
-                    positions, wrong);
+            solver = new PROMedSRobustLateration2DSolver(qualityScores, positions, wrong);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(
-                    shortQualityScores, positions, distances);
+            solver = new PROMedSRobustLateration2DSolver(shortQualityScores, positions, distances);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(qualityScores,
-                    shortPositions, shortDistances);
+            solver = new PROMedSRobustLateration2DSolver(qualityScores, shortPositions, shortDistances);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -850,16 +739,15 @@ public class PROMedSRobustLateration2DSolverTest implements
 
 
         // constructor with quality scores, positions and distances
-        solver = new PROMedSRobustLateration2DSolver(qualityScores,
-                positions, distances, standardDeviations);
+        solver = new PROMedSRobustLateration2DSolver(qualityScores, positions, distances, standardDeviations);
 
         // check correctness
-        assertEquals(solver.getStopThreshold(),
-                PROMedSRobustLateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(solver.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(solver.getNumberOfDimensions(), 2);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
-        assertEquals(solver.getPreliminarySubsetSize(), 3);
+        assertEquals(PROMedSRobustLateration2DSolver.DEFAULT_STOP_THRESHOLD,
+                solver.getStopThreshold(), 0.0);
+        assertEquals(RobustEstimatorMethod.PROMEDS, solver.getMethod());
+        assertEquals(2, solver.getNumberOfDimensions());
+        assertEquals(3, solver.getMinRequiredPositionsAndDistances());
+        assertEquals(3, solver.getPreliminarySubsetSize());
         assertNotNull(solver.getCircles());
         assertNull(solver.getListener());
         assertNull(solver.getInitialPosition());
@@ -867,74 +755,64 @@ public class PROMedSRobustLateration2DSolverTest implements
         assertFalse(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
-        assertEquals(solver.getProgressDelta(),
-                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(solver.getConfidence(),
-                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(solver.getMaxIterations(),
-                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
+        assertEquals(RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, solver.getProgressDelta(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_CONFIDENCE, solver.getConfidence(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_MAX_ITERATIONS, solver.getMaxIterations());
         assertNull(solver.getInliersData());
-        assertEquals(solver.isResultRefined(),
-                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
-        assertEquals(solver.isCovarianceKept(),
-                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
-        assertSame(solver.getDistanceStandardDeviations(),
-                standardDeviations);
+        assertEquals(RobustLaterationSolver.DEFAULT_REFINE_RESULT, solver.isResultRefined());
+        assertEquals(RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE, solver.isCovarianceKept());
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
         assertTrue(solver.isReady());
-        assertSame(solver.getQualityScores(), qualityScores);
+        assertSame(qualityScores, solver.getQualityScores());
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
         // force IllegalArgumentException
         solver = null;
         try {
-            solver = new PROMedSRobustLateration2DSolver(null, positions,
-                    distances, standardDeviations);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new PROMedSRobustLateration2DSolver(qualityScores,
-                    null, distances, standardDeviations);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new PROMedSRobustLateration2DSolver(qualityScores,
-                    positions, null, standardDeviations);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new PROMedSRobustLateration2DSolver(qualityScores,
-                    positions, distances, (double[]) null);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new PROMedSRobustLateration2DSolver(qualityScores,
-                    positions, wrong, standardDeviations);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new PROMedSRobustLateration2DSolver(qualityScores,
-                    positions, distances, wrong);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new PROMedSRobustLateration2DSolver(
-                    shortQualityScores, positions, distances,
+            solver = new PROMedSRobustLateration2DSolver(null, positions, distances,
                     standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(qualityScores,
-                    shortPositions, shortDistances, standardDeviations);
+            solver = new PROMedSRobustLateration2DSolver(qualityScores, null, distances,
+                    standardDeviations);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            solver = new PROMedSRobustLateration2DSolver(qualityScores, positions, null,
+                    standardDeviations);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            solver = new PROMedSRobustLateration2DSolver(qualityScores, positions, distances, (double[]) null);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            solver = new PROMedSRobustLateration2DSolver(qualityScores, positions, wrong, standardDeviations);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            solver = new PROMedSRobustLateration2DSolver(qualityScores, positions, distances, wrong);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            solver = new PROMedSRobustLateration2DSolver(shortQualityScores, positions, distances,
+                    standardDeviations);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            solver = new PROMedSRobustLateration2DSolver(qualityScores, shortPositions, shortDistances,
+                    standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -947,166 +825,142 @@ public class PROMedSRobustLateration2DSolverTest implements
                 positions, distances, standardDeviations, this);
 
         // check correctness
-        assertEquals(solver.getStopThreshold(),
-                PROMedSRobustLateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(solver.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(solver.getNumberOfDimensions(), 2);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
-        assertEquals(solver.getPreliminarySubsetSize(), 3);
+        assertEquals(PROMedSRobustLateration2DSolver.DEFAULT_STOP_THRESHOLD,
+                solver.getStopThreshold(), 0.0);
+        assertEquals(RobustEstimatorMethod.PROMEDS, solver.getMethod());
+        assertEquals(2, solver.getNumberOfDimensions());
+        assertEquals(3, solver.getMinRequiredPositionsAndDistances());
+        assertEquals(3, solver.getPreliminarySubsetSize());
         assertNotNull(solver.getCircles());
-        assertSame(solver.getListener(), this);
+        assertSame(this, solver.getListener());
         assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
         assertFalse(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
-        assertEquals(solver.getProgressDelta(),
-                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(solver.getConfidence(),
-                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(solver.getMaxIterations(),
-                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
+        assertEquals(RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, solver.getProgressDelta(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_CONFIDENCE, solver.getConfidence(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_MAX_ITERATIONS, solver.getMaxIterations());
         assertNull(solver.getInliersData());
-        assertEquals(solver.isResultRefined(),
-                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
-        assertEquals(solver.isCovarianceKept(),
-                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertEquals(RobustLaterationSolver.DEFAULT_REFINE_RESULT, solver.isResultRefined());
+        assertEquals(RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE, solver.isCovarianceKept());
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
-        assertSame(solver.getDistanceStandardDeviations(),
-                standardDeviations);
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
         assertTrue(solver.isReady());
-        assertSame(solver.getQualityScores(), qualityScores);
+        assertSame(qualityScores, solver.getQualityScores());
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
         // force IllegalArgumentException
         solver = null;
         try {
-            solver = new PROMedSRobustLateration2DSolver(null, positions,
-                    distances, standardDeviations, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new PROMedSRobustLateration2DSolver(qualityScores,
-                    null, distances, standardDeviations,
-                    this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new PROMedSRobustLateration2DSolver(qualityScores,
-                    positions, null, standardDeviations,
-                    this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new PROMedSRobustLateration2DSolver(qualityScores,
-                    positions, distances, null,
-                    this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new PROMedSRobustLateration2DSolver(qualityScores,
-                    positions, wrong, standardDeviations,
-                    this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new PROMedSRobustLateration2DSolver(qualityScores,
-                    positions, distances, wrong, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new PROMedSRobustLateration2DSolver(
-                    shortQualityScores, positions, distances,
+            solver = new PROMedSRobustLateration2DSolver(null, positions, distances,
                     standardDeviations, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(qualityScores,
-                    shortPositions, shortDistances, standardDeviations,
+            solver = new PROMedSRobustLateration2DSolver(qualityScores, null, distances,
+                    standardDeviations, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            solver = new PROMedSRobustLateration2DSolver(qualityScores, positions, null,
+                    standardDeviations, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            solver = new PROMedSRobustLateration2DSolver(qualityScores, positions, distances,
+                    null, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            solver = new PROMedSRobustLateration2DSolver(qualityScores, positions, wrong, standardDeviations,
                     this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            solver = new PROMedSRobustLateration2DSolver(qualityScores, positions, distances, wrong,
+                    this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            solver = new PROMedSRobustLateration2DSolver(shortQualityScores, positions, distances,
+                    standardDeviations, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            solver = new PROMedSRobustLateration2DSolver(qualityScores, shortPositions, shortDistances,
+                    standardDeviations, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(solver);
 
-
-        // constructor with quality scores, positions, distances
-        // and listener
+        // constructor with quality scores, positions, distances and listener
         solver = new PROMedSRobustLateration2DSolver(qualityScores,
                 positions, distances, this);
 
         // check correctness
-        assertEquals(solver.getStopThreshold(),
-                PROMedSRobustLateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(solver.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(solver.getNumberOfDimensions(), 2);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
-        assertEquals(solver.getPreliminarySubsetSize(), 3);
+        assertEquals(PROMedSRobustLateration2DSolver.DEFAULT_STOP_THRESHOLD,
+                solver.getStopThreshold(), 0.0);
+        assertEquals(RobustEstimatorMethod.PROMEDS, solver.getMethod());
+        assertEquals(2, solver.getNumberOfDimensions());
+        assertEquals(3, solver.getMinRequiredPositionsAndDistances());
+        assertEquals(3, solver.getPreliminarySubsetSize());
         assertNotNull(solver.getCircles());
-        assertSame(solver.getListener(), this);
+        assertSame(this, solver.getListener());
         assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
         assertFalse(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
-        assertEquals(solver.getProgressDelta(),
-                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(solver.getConfidence(),
-                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(solver.getMaxIterations(),
-                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
+        assertEquals(RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, solver.getProgressDelta(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_CONFIDENCE, solver.getConfidence(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_MAX_ITERATIONS, solver.getMaxIterations());
         assertNull(solver.getInliersData());
-        assertEquals(solver.isResultRefined(),
-                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
-        assertEquals(solver.isCovarianceKept(),
-                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
+        assertEquals(RobustLaterationSolver.DEFAULT_REFINE_RESULT, solver.isResultRefined());
+        assertEquals(RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE, solver.isCovarianceKept());
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
         assertNull(solver.getDistanceStandardDeviations());
         assertTrue(solver.isReady());
-        assertSame(solver.getQualityScores(), qualityScores);
+        assertSame(qualityScores, solver.getQualityScores());
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
         // force IllegalArgumentException
         solver = null;
         try {
-            solver = new PROMedSRobustLateration2DSolver(null, positions,
-                    distances, this);
+            solver = new PROMedSRobustLateration2DSolver(null, positions, distances, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(qualityScores,
-                    (Point2D[]) null, distances, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new PROMedSRobustLateration2DSolver(qualityScores,
-                    positions, null, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new PROMedSRobustLateration2DSolver(qualityScores,
-                    positions, wrong, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new PROMedSRobustLateration2DSolver(
-                    shortQualityScores, positions, distances,
+            solver = new PROMedSRobustLateration2DSolver(qualityScores, (Point2D[]) null, distances,
                     this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            solver = new PROMedSRobustLateration2DSolver(qualityScores, positions, null, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            solver = new PROMedSRobustLateration2DSolver(qualityScores, positions, wrong, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            solver = new PROMedSRobustLateration2DSolver(shortQualityScores, positions, distances, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -1120,16 +974,15 @@ public class PROMedSRobustLateration2DSolverTest implements
 
 
         // constructor with quality scores and circles
-        solver = new PROMedSRobustLateration2DSolver(qualityScores,
-                circles);
+        solver = new PROMedSRobustLateration2DSolver(qualityScores, circles);
 
         // check correctness
-        assertEquals(solver.getStopThreshold(),
-                PROMedSRobustLateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(solver.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(solver.getNumberOfDimensions(), 2);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
-        assertEquals(solver.getPreliminarySubsetSize(), 3);
+        assertEquals(PROMedSRobustLateration2DSolver.DEFAULT_STOP_THRESHOLD,
+                solver.getStopThreshold(), 0.0);
+        assertEquals(RobustEstimatorMethod.PROMEDS, solver.getMethod());
+        assertEquals(2, solver.getNumberOfDimensions());
+        assertEquals(3, solver.getMinRequiredPositionsAndDistances());
+        assertEquals(3, solver.getPreliminarySubsetSize());
         assertNotNull(solver.getCircles());
         assertNull(solver.getListener());
         assertNull(solver.getInitialPosition());
@@ -1137,48 +990,39 @@ public class PROMedSRobustLateration2DSolverTest implements
         assertFalse(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
-        assertEquals(solver.getProgressDelta(),
-                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(solver.getConfidence(),
-                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(solver.getMaxIterations(),
-                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
+        assertEquals(RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, solver.getProgressDelta(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_CONFIDENCE, solver.getConfidence(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_MAX_ITERATIONS, solver.getMaxIterations());
         assertNull(solver.getInliersData());
-        assertEquals(solver.isResultRefined(),
-                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
-        assertEquals(solver.isCovarianceKept(),
-                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertEquals(RobustLaterationSolver.DEFAULT_REFINE_RESULT, solver.isResultRefined());
+        assertEquals(RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE, solver.isCovarianceKept());
         assertNotNull(solver.getPositions());
         assertNotNull(solver.getDistances());
         assertNull(solver.getDistanceStandardDeviations());
         assertTrue(solver.isReady());
-        assertSame(solver.getQualityScores(), qualityScores);
+        assertSame(qualityScores, solver.getQualityScores());
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
         // force IllegalArgumentException
         solver = null;
         try {
-            solver = new PROMedSRobustLateration2DSolver(null,
-                    circles);
+            solver = new PROMedSRobustLateration2DSolver(null, circles);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(qualityScores,
-                    (Circle[]) null);
+            solver = new PROMedSRobustLateration2DSolver(qualityScores, (Circle[]) null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(shortQualityScores,
-                    circles);
+            solver = new PROMedSRobustLateration2DSolver(shortQualityScores, circles);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(qualityScores,
-                    shortCircles);
+            solver = new PROMedSRobustLateration2DSolver(qualityScores, shortCircles);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -1186,16 +1030,15 @@ public class PROMedSRobustLateration2DSolverTest implements
 
 
         // constructor with quality scores, circles and standard deviations
-        solver = new PROMedSRobustLateration2DSolver(qualityScores,
-                circles, standardDeviations);
+        solver = new PROMedSRobustLateration2DSolver(qualityScores, circles, standardDeviations);
 
         // check correctness
-        assertEquals(solver.getStopThreshold(),
-                PROMedSRobustLateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(solver.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(solver.getNumberOfDimensions(), 2);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
-        assertEquals(solver.getPreliminarySubsetSize(), 3);
+        assertEquals(PROMedSRobustLateration2DSolver.DEFAULT_STOP_THRESHOLD,
+                solver.getStopThreshold(), 0.0);
+        assertEquals(RobustEstimatorMethod.PROMEDS, solver.getMethod());
+        assertEquals(2, solver.getNumberOfDimensions());
+        assertEquals(3, solver.getMinRequiredPositionsAndDistances());
+        assertEquals(3, solver.getPreliminarySubsetSize());
         assertNotNull(solver.getCircles());
         assertNull(solver.getListener());
         assertNull(solver.getInitialPosition());
@@ -1203,61 +1046,49 @@ public class PROMedSRobustLateration2DSolverTest implements
         assertFalse(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
-        assertEquals(solver.getProgressDelta(),
-                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(solver.getConfidence(),
-                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(solver.getMaxIterations(),
-                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
+        assertEquals(RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, solver.getProgressDelta(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_CONFIDENCE, solver.getConfidence(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_MAX_ITERATIONS, solver.getMaxIterations());
         assertNull(solver.getInliersData());
-        assertEquals(solver.isResultRefined(),
-                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
-        assertEquals(solver.isCovarianceKept(),
-                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertEquals(RobustLaterationSolver.DEFAULT_REFINE_RESULT, solver.isResultRefined());
+        assertEquals(RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE, solver.isCovarianceKept());
         assertNotNull(solver.getPositions());
         assertNotNull(solver.getDistances());
-        assertSame(solver.getDistanceStandardDeviations(),
-                standardDeviations);
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
         assertTrue(solver.isReady());
-        assertSame(solver.getQualityScores(), qualityScores);
+        assertSame(qualityScores, solver.getQualityScores());
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
         // force IllegalArgumentException
         solver = null;
         try {
-            solver = new PROMedSRobustLateration2DSolver(null,
-                    circles, standardDeviations);
+            solver = new PROMedSRobustLateration2DSolver(null, circles, standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(qualityScores,
-                    (Circle[]) null, standardDeviations);
+            solver = new PROMedSRobustLateration2DSolver(qualityScores, (Circle[]) null, standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(qualityScores,
-                    circles, (double[]) null);
+            solver = new PROMedSRobustLateration2DSolver(qualityScores, circles, (double[]) null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(shortQualityScores,
-                    circles, standardDeviations);
+            solver = new PROMedSRobustLateration2DSolver(shortQualityScores, circles, standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(qualityScores,
-                    shortCircles, standardDeviations);
+            solver = new PROMedSRobustLateration2DSolver(qualityScores, shortCircles, standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(qualityScores,
-                    circles, wrong);
+            solver = new PROMedSRobustLateration2DSolver(qualityScores, circles, wrong);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -1265,107 +1096,89 @@ public class PROMedSRobustLateration2DSolverTest implements
 
 
         // constructor with quality scores, circles and listener
-        solver = new PROMedSRobustLateration2DSolver(qualityScores,
-                circles, this);
+        solver = new PROMedSRobustLateration2DSolver(qualityScores, circles, this);
 
         // check correctness
-        assertEquals(solver.getStopThreshold(),
-                PROMedSRobustLateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(solver.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(solver.getNumberOfDimensions(), 2);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
-        assertEquals(solver.getPreliminarySubsetSize(), 3);
+        assertEquals(PROMedSRobustLateration2DSolver.DEFAULT_STOP_THRESHOLD,
+                solver.getStopThreshold(), 0.0);
+        assertEquals(RobustEstimatorMethod.PROMEDS, solver.getMethod());
+        assertEquals(2, solver.getNumberOfDimensions());
+        assertEquals(3, solver.getMinRequiredPositionsAndDistances());
+        assertEquals(3, solver.getPreliminarySubsetSize());
         assertNotNull(solver.getCircles());
-        assertSame(solver.getListener(), this);
+        assertSame(this, solver.getListener());
         assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
         assertFalse(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
-        assertEquals(solver.getProgressDelta(),
-                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(solver.getConfidence(),
-                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(solver.getMaxIterations(),
-                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
+        assertEquals(RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, solver.getProgressDelta(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_CONFIDENCE, solver.getConfidence(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_MAX_ITERATIONS, solver.getMaxIterations());
         assertNull(solver.getInliersData());
-        assertEquals(solver.isResultRefined(),
-                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
-        assertEquals(solver.isCovarianceKept(),
-                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertEquals(RobustLaterationSolver.DEFAULT_REFINE_RESULT, solver.isResultRefined());
+        assertEquals(RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE, solver.isCovarianceKept());
         assertNotNull(solver.getPositions());
         assertNotNull(solver.getDistances());
         assertNull(solver.getDistanceStandardDeviations());
         assertTrue(solver.isReady());
-        assertSame(solver.getQualityScores(), qualityScores);
+        assertSame(qualityScores, solver.getQualityScores());
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
         // force IllegalArgumentException
         solver = null;
         try {
-            solver = new PROMedSRobustLateration2DSolver(null,
-                    circles, this);
+            solver = new PROMedSRobustLateration2DSolver(null, circles, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(qualityScores,
-                    null, this);
+            solver = new PROMedSRobustLateration2DSolver(qualityScores, null, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(shortQualityScores,
-                    circles, this);
+            solver = new PROMedSRobustLateration2DSolver(shortQualityScores, circles, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new PROMedSRobustLateration2DSolver(qualityScores,
-                    shortCircles, this);
+            solver = new PROMedSRobustLateration2DSolver(qualityScores, shortCircles, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(solver);
 
 
-        // constructor with quality scores, circles, standard deviations
-        // and listener
-        solver = new PROMedSRobustLateration2DSolver(qualityScores,
-                circles, standardDeviations, this);
+        // constructor with quality scores, circles, standard deviations and listener
+        solver = new PROMedSRobustLateration2DSolver(qualityScores, circles, standardDeviations, this);
 
         // check correctness
-        assertEquals(solver.getStopThreshold(),
-                PROMedSRobustLateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(solver.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(solver.getNumberOfDimensions(), 2);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
-        assertEquals(solver.getPreliminarySubsetSize(), 3);
+        assertEquals(PROMedSRobustLateration2DSolver.DEFAULT_STOP_THRESHOLD,
+                solver.getStopThreshold(), 0.0);
+        assertEquals(RobustEstimatorMethod.PROMEDS, solver.getMethod());
+        assertEquals(2, solver.getNumberOfDimensions());
+        assertEquals(3, solver.getMinRequiredPositionsAndDistances());
+        assertEquals(3, solver.getPreliminarySubsetSize());
         assertNotNull(solver.getCircles());
-        assertSame(solver.getListener(), this);
+        assertSame(this, solver.getListener());
         assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
         assertFalse(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
-        assertEquals(solver.getProgressDelta(),
-                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(solver.getConfidence(),
-                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(solver.getMaxIterations(),
-                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
+        assertEquals(RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, solver.getProgressDelta(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_CONFIDENCE, solver.getConfidence(), 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_MAX_ITERATIONS, solver.getMaxIterations());
         assertNull(solver.getInliersData());
-        assertEquals(solver.isResultRefined(),
-                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
-        assertEquals(solver.isCovarianceKept(),
-                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertEquals(RobustLaterationSolver.DEFAULT_REFINE_RESULT, solver.isResultRefined());
+        assertEquals(RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE, solver.isCovarianceKept());
         assertNotNull(solver.getPositions());
         assertNotNull(solver.getDistances());
-        assertSame(solver.getDistanceStandardDeviations(),
-                standardDeviations);
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
         assertTrue(solver.isReady());
-        assertSame(solver.getQualityScores(), qualityScores);
+        assertSame(qualityScores, solver.getQualityScores());
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
@@ -1412,18 +1225,17 @@ public class PROMedSRobustLateration2DSolverTest implements
 
     @Test
     public void testGetSetStopThreshold() throws LockedException {
-        final PROMedSRobustLateration2DSolver solver =
-                new PROMedSRobustLateration2DSolver();
+        final PROMedSRobustLateration2DSolver solver = new PROMedSRobustLateration2DSolver();
 
         // check initial value
-        assertEquals(solver.getStopThreshold(),
-                PROMedSRobustLateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
+        assertEquals(PROMedSRobustLateration2DSolver.DEFAULT_STOP_THRESHOLD,
+                solver.getStopThreshold(), 0.0);
 
         // set new value
         solver.setStopThreshold(1.0);
 
         // check
-        assertEquals(solver.getStopThreshold(), 1.0, 0.0);
+        assertEquals(1.0, solver.getStopThreshold(), 0.0);
 
         // force IllegalArgumentException
         try {
@@ -1437,8 +1249,7 @@ public class PROMedSRobustLateration2DSolverTest implements
     public void testGetSetCircles() throws LockedException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        final PROMedSRobustLateration2DSolver solver =
-                new PROMedSRobustLateration2DSolver();
+        final PROMedSRobustLateration2DSolver solver = new PROMedSRobustLateration2DSolver();
 
         // check initial value
         assertNull(solver.getCircles());
@@ -1483,8 +1294,7 @@ public class PROMedSRobustLateration2DSolverTest implements
     public void testGetSetCirclesAndStandardDeviations() throws LockedException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        final PROMedSRobustLateration2DSolver solver =
-                new PROMedSRobustLateration2DSolver();
+        final PROMedSRobustLateration2DSolver solver = new PROMedSRobustLateration2DSolver();
 
         // check initial value
         assertNull(solver.getCircles());
@@ -1515,31 +1325,26 @@ public class PROMedSRobustLateration2DSolverTest implements
             assertSame(circles[i].getCenter(), circles2[i].getCenter());
             assertEquals(circles[i].getRadius(), circles2[i].getRadius(), 0.0);
         }
-        assertSame(solver.getDistanceStandardDeviations(),
-                standardDeviations);
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
 
         // force IllegalArgumentException
         try {
-            solver.setCirclesAndStandardDeviations(null,
-                    standardDeviations);
+            solver.setCirclesAndStandardDeviations(null, standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver.setCirclesAndStandardDeviations(circles,
-                    null);
+            solver.setCirclesAndStandardDeviations(circles, null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver.setCirclesAndStandardDeviations(new Circle[1],
-                    standardDeviations);
+            solver.setCirclesAndStandardDeviations(new Circle[1], standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver.setCirclesAndStandardDeviations(circles,
-                    new double[1]);
+            solver.setCirclesAndStandardDeviations(circles, new double[1]);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -1547,17 +1352,16 @@ public class PROMedSRobustLateration2DSolverTest implements
 
     @Test
     public void testGetSetPreliminarySubsetSize() throws LockedException {
-        final PROMedSRobustLateration2DSolver solver =
-                new PROMedSRobustLateration2DSolver();
+        final PROMedSRobustLateration2DSolver solver = new PROMedSRobustLateration2DSolver();
 
         // check initial value
-        assertEquals(solver.getPreliminarySubsetSize(), 3);
+        assertEquals(3, solver.getPreliminarySubsetSize());
 
         // set new value
         solver.setPreliminarySubsetSize(4);
 
         // check
-        assertEquals(solver.getPreliminarySubsetSize(), 4);
+        assertEquals(4, solver.getPreliminarySubsetSize());
 
         // force IllegalArgumentException
         try {
@@ -1569,8 +1373,7 @@ public class PROMedSRobustLateration2DSolverTest implements
 
     @Test
     public void testGetSetListener() throws LockedException {
-        final PROMedSRobustLateration2DSolver solver =
-                new PROMedSRobustLateration2DSolver();
+        final PROMedSRobustLateration2DSolver solver = new PROMedSRobustLateration2DSolver();
 
         // check default value
         assertNull(solver.getListener());
@@ -1579,13 +1382,12 @@ public class PROMedSRobustLateration2DSolverTest implements
         solver.setListener(this);
 
         // check
-        assertSame(solver.getListener(), this);
+        assertSame(this, solver.getListener());
     }
 
     @Test
     public void testGetSetInitialPosition() throws LockedException {
-        final PROMedSRobustLateration2DSolver solver =
-                new PROMedSRobustLateration2DSolver();
+        final PROMedSRobustLateration2DSolver solver = new PROMedSRobustLateration2DSolver();
 
         // check default value
         assertNull(solver.getInitialPosition());
@@ -1595,13 +1397,12 @@ public class PROMedSRobustLateration2DSolverTest implements
         solver.setInitialPosition(p);
 
         // check
-        assertSame(solver.getInitialPosition(), p);
+        assertSame(p, solver.getInitialPosition());
     }
 
     @Test
     public void testIsSetLinearSolverUsed() throws LockedException {
-        final PROMedSRobustLateration2DSolver solver =
-                new PROMedSRobustLateration2DSolver();
+        final PROMedSRobustLateration2DSolver solver = new PROMedSRobustLateration2DSolver();
 
         // check default value
         assertTrue(solver.isLinearSolverUsed());
@@ -1615,8 +1416,7 @@ public class PROMedSRobustLateration2DSolverTest implements
 
     @Test
     public void testIsSetHomogeneousLinearSolverUsed() throws LockedException {
-        final PROMedSRobustLateration2DSolver solver =
-                new PROMedSRobustLateration2DSolver();
+        final PROMedSRobustLateration2DSolver solver = new PROMedSRobustLateration2DSolver();
 
         // check default value
         assertFalse(solver.isHomogeneousLinearSolverUsed());
@@ -1630,8 +1430,7 @@ public class PROMedSRobustLateration2DSolverTest implements
 
     @Test
     public void testIsSetPreliminarySolutionRefined() throws LockedException {
-        final PROMedSRobustLateration2DSolver solver =
-                new PROMedSRobustLateration2DSolver();
+        final PROMedSRobustLateration2DSolver solver = new PROMedSRobustLateration2DSolver();
 
         // check default value
         assertTrue(solver.isPreliminarySolutionRefined());
@@ -1645,18 +1444,16 @@ public class PROMedSRobustLateration2DSolverTest implements
 
     @Test
     public void testGetSetProgressDelta() throws LockedException {
-        final PROMedSRobustLateration2DSolver solver =
-                new PROMedSRobustLateration2DSolver();
+        final PROMedSRobustLateration2DSolver solver = new PROMedSRobustLateration2DSolver();
 
         // check default value
-        assertEquals(solver.getProgressDelta(),
-                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, solver.getProgressDelta(), 0.0);
 
         // set new value
         solver.setProgressDelta(0.5f);
 
         // check
-        assertEquals(solver.getProgressDelta(), 0.5f, 0.0);
+        assertEquals(0.5f, solver.getProgressDelta(), 0.0);
 
         // force IllegalArgumentException
         try {
@@ -1673,18 +1470,16 @@ public class PROMedSRobustLateration2DSolverTest implements
 
     @Test
     public void testGetSetConfidence() throws LockedException {
-        final PROMedSRobustLateration2DSolver solver =
-                new PROMedSRobustLateration2DSolver();
+        final PROMedSRobustLateration2DSolver solver = new PROMedSRobustLateration2DSolver();
 
         // check default value
-        assertEquals(solver.getConfidence(),
-                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
+        assertEquals(RobustLaterationSolver.DEFAULT_CONFIDENCE, solver.getConfidence(), 0.0);
 
         // set new value
         solver.setConfidence(0.8);
 
         // check
-        assertEquals(solver.getConfidence(), 0.8, 0.0);
+        assertEquals(0.8, solver.getConfidence(), 0.0);
 
         // force IllegalArgumentException
         try {
@@ -1701,18 +1496,16 @@ public class PROMedSRobustLateration2DSolverTest implements
 
     @Test
     public void testGetSetMaxIterations() throws LockedException {
-        final PROMedSRobustLateration2DSolver solver =
-                new PROMedSRobustLateration2DSolver();
+        final PROMedSRobustLateration2DSolver solver = new PROMedSRobustLateration2DSolver();
 
         // check default value
-        assertEquals(solver.getMaxIterations(),
-                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
+        assertEquals(RobustLaterationSolver.DEFAULT_MAX_ITERATIONS, solver.getMaxIterations());
 
         // set new value
         solver.setMaxIterations(10);
 
         // check
-        assertEquals(solver.getMaxIterations(), 10);
+        assertEquals(10, solver.getMaxIterations());
 
         // force IllegalArgumentException
         try {
@@ -1724,44 +1517,35 @@ public class PROMedSRobustLateration2DSolverTest implements
 
     @Test
     public void testIsSetResultRefined() throws LockedException {
-        final PROMedSRobustLateration2DSolver solver =
-                new PROMedSRobustLateration2DSolver();
+        final PROMedSRobustLateration2DSolver solver = new PROMedSRobustLateration2DSolver();
 
         // check default value
-        assertEquals(solver.isResultRefined(),
-                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
+        assertEquals(RobustLaterationSolver.DEFAULT_REFINE_RESULT, solver.isResultRefined());
 
         // set new value
-        solver.setResultRefined(
-                !RobustLaterationSolver.DEFAULT_REFINE_RESULT);
+        solver.setResultRefined(!RobustLaterationSolver.DEFAULT_REFINE_RESULT);
 
         // check
-        assertEquals(solver.isResultRefined(),
-                !RobustLaterationSolver.DEFAULT_REFINE_RESULT);
+        assertEquals(!RobustLaterationSolver.DEFAULT_REFINE_RESULT, solver.isResultRefined());
     }
 
     @Test
     public void testIsSetCovarianceKept() throws LockedException {
-        final PROMedSRobustLateration2DSolver solver =
-                new PROMedSRobustLateration2DSolver();
+        final PROMedSRobustLateration2DSolver solver = new PROMedSRobustLateration2DSolver();
 
         // check default value
-        assertEquals(solver.isCovarianceKept(),
-                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertEquals(RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE, solver.isCovarianceKept());
 
         // set new value
-        solver.setCovarianceKept(
-                !RobustLaterationSolver.DEFAULT_REFINE_RESULT);
+        solver.setCovarianceKept(!RobustLaterationSolver.DEFAULT_REFINE_RESULT);
 
         // check
-        assertEquals(solver.isCovarianceKept(),
-                !RobustLaterationSolver.DEFAULT_REFINE_RESULT);
+        assertEquals(!RobustLaterationSolver.DEFAULT_REFINE_RESULT, solver.isCovarianceKept());
     }
 
     @Test
     public void testGetSetQualityScores() throws LockedException {
-        final PROMedSRobustLateration2DSolver solver =
-                new PROMedSRobustLateration2DSolver();
+        final PROMedSRobustLateration2DSolver solver = new PROMedSRobustLateration2DSolver();
 
         // check default value
         assertNull(solver.getQualityScores());
@@ -1771,15 +1555,14 @@ public class PROMedSRobustLateration2DSolverTest implements
         solver.setQualityScores(qualityScores);
 
         // check
-        assertSame(solver.getQualityScores(), qualityScores);
+        assertSame(qualityScores, solver.getQualityScores());
     }
 
     @Test
     public void testGetSetPositionsAndDistances() throws LockedException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        final PROMedSRobustLateration2DSolver solver =
-                new PROMedSRobustLateration2DSolver();
+        final PROMedSRobustLateration2DSolver solver = new PROMedSRobustLateration2DSolver();
 
         // check default value
         assertNull(solver.getPositions());
@@ -1831,8 +1614,7 @@ public class PROMedSRobustLateration2DSolverTest implements
     public void testGetSetPositionsDistancesAndStandardDeviations() throws LockedException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        final PROMedSRobustLateration2DSolver solver =
-                new PROMedSRobustLateration2DSolver();
+        final PROMedSRobustLateration2DSolver solver = new PROMedSRobustLateration2DSolver();
 
         // check default value
         assertNull(solver.getPositions());
@@ -1852,14 +1634,12 @@ public class PROMedSRobustLateration2DSolverTest implements
         standardDeviations[1] = randomizer.nextDouble();
         standardDeviations[2] = randomizer.nextDouble();
 
-        solver.setPositionsDistancesAndStandardDeviations(
-                positions, distances, standardDeviations);
+        solver.setPositionsDistancesAndStandardDeviations(positions, distances, standardDeviations);
 
         // check
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
-        assertSame(solver.getDistanceStandardDeviations(),
-                standardDeviations);
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
+        assertSame(standardDeviations, solver.getDistanceStandardDeviations());
 
         // force IllegalArgumentException
         final double[] wrong = new double[4];
@@ -1867,32 +1647,27 @@ public class PROMedSRobustLateration2DSolverTest implements
         final double[] shortDistances = new double[1];
         final double[] shortStandardDeviations = new double[1];
         try {
-            solver.setPositionsDistancesAndStandardDeviations(
-                    null, distances, standardDeviations);
+            solver.setPositionsDistancesAndStandardDeviations(null, distances, standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver.setPositionsDistancesAndStandardDeviations(
-                    positions, null, standardDeviations);
+            solver.setPositionsDistancesAndStandardDeviations(positions, null, standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver.setPositionsDistancesAndStandardDeviations(
-                    positions, distances, null);
+            solver.setPositionsDistancesAndStandardDeviations(positions, distances, null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver.setPositionsDistancesAndStandardDeviations(
-                    positions, wrong, standardDeviations);
+            solver.setPositionsDistancesAndStandardDeviations(positions, wrong, standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver.setPositionsDistancesAndStandardDeviations(
-                    positions, distances, wrong);
+            solver.setPositionsDistancesAndStandardDeviations(positions, distances, wrong);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -1935,21 +1710,19 @@ public class PROMedSRobustLateration2DSolverTest implements
                     error = 0.0;
                 }
                 qualityScores[i] = 1.0 / (1.0 + error);
-                radius = Math.max(RobustLaterationSolver.EPSILON,
-                        radius + error);
+                radius = Math.max(RobustLaterationSolver.EPSILON, radius + error);
                 circles[i] = new Circle(center, radius);
             }
 
-            PROMedSRobustLateration2DSolver solver =
-                    new PROMedSRobustLateration2DSolver(qualityScores,
-                            circles, this);
+            PROMedSRobustLateration2DSolver solver = new PROMedSRobustLateration2DSolver(qualityScores,
+                    circles, this);
             solver.setResultRefined(false);
 
             reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
-            assertEquals(solveNextIteration, 0);
-            assertEquals(solveProgressChange, 0);
+            assertEquals(0, solveStart);
+            assertEquals(0, solveEnd);
+            assertEquals(0, solveNextIteration);
+            assertEquals(0, solveProgressChange);
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
@@ -1966,8 +1739,8 @@ public class PROMedSRobustLateration2DSolverTest implements
             assertNotNull(solver.getInliersData().getInliers());
             assertNotNull(solver.getInliersData().getResiduals());
 
-            assertEquals(solveStart, 1);
-            assertEquals(solveEnd, 1);
+            assertEquals(1, solveStart);
+            assertEquals(1, solveEnd);
             assertTrue(solveNextIteration > 0);
             assertTrue(solveProgressChange >= 0);
             assertTrue(solver.isReady());
@@ -2021,21 +1794,19 @@ public class PROMedSRobustLateration2DSolverTest implements
                     error = 0.0;
                 }
                 qualityScores[i] = 1.0 / (1.0 + error);
-                radius = Math.max(RobustLaterationSolver.EPSILON,
-                        radius + error);
+                radius = Math.max(RobustLaterationSolver.EPSILON, radius + error);
                 circles[i] = new Circle(center, radius);
             }
 
-            PROMedSRobustLateration2DSolver solver =
-                    new PROMedSRobustLateration2DSolver(qualityScores,
-                            circles, this);
+            PROMedSRobustLateration2DSolver solver = new PROMedSRobustLateration2DSolver(qualityScores,
+                    circles, this);
             solver.setResultRefined(true);
 
             reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
-            assertEquals(solveNextIteration, 0);
-            assertEquals(solveProgressChange, 0);
+            assertEquals(0, solveStart);
+            assertEquals(0, solveEnd);
+            assertEquals(0, solveNextIteration);
+            assertEquals(0, solveProgressChange);
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
@@ -2052,8 +1823,8 @@ public class PROMedSRobustLateration2DSolverTest implements
             assertNotNull(solver.getInliersData().getInliers());
             assertNotNull(solver.getInliersData().getResiduals());
 
-            assertEquals(solveStart, 1);
-            assertEquals(solveEnd, 1);
+            assertEquals(1, solveStart);
+            assertEquals(1, solveEnd);
             assertTrue(solveNextIteration > 0);
             assertTrue(solveProgressChange >= 0);
             assertTrue(solver.isReady());
@@ -2108,21 +1879,19 @@ public class PROMedSRobustLateration2DSolverTest implements
                 }
                 error += randomizer.nextDouble(MIN_DISTANCE_ERROR, MAX_DISTANCE_ERROR);
                 qualityScores[i] = 1.0 / (1.0 + Math.abs(error));
-                radius = Math.max(RobustLaterationSolver.EPSILON,
-                        radius + error);
+                radius = Math.max(RobustLaterationSolver.EPSILON, radius + error);
                 circles[i] = new Circle(center, radius);
             }
 
-            PROMedSRobustLateration2DSolver solver =
-                    new PROMedSRobustLateration2DSolver(qualityScores,
-                            circles, this);
+            PROMedSRobustLateration2DSolver solver = new PROMedSRobustLateration2DSolver(qualityScores,
+                    circles, this);
             solver.setResultRefined(true);
 
             reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
-            assertEquals(solveNextIteration, 0);
-            assertEquals(solveProgressChange, 0);
+            assertEquals(0, solveStart);
+            assertEquals(0, solveEnd);
+            assertEquals(0, solveNextIteration);
+            assertEquals(0, solveProgressChange);
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
@@ -2141,8 +1910,8 @@ public class PROMedSRobustLateration2DSolverTest implements
                 assertNotNull(solver.getInliersData().getResiduals());
             }
 
-            assertEquals(solveStart, 1);
-            assertEquals(solveEnd, 1);
+            assertEquals(1, solveStart);
+            assertEquals(1, solveEnd);
             assertTrue(solveNextIteration > 0);
             assertTrue(solveProgressChange >= 0);
             assertTrue(solver.isReady());
@@ -2204,21 +1973,19 @@ public class PROMedSRobustLateration2DSolverTest implements
                 // add inlier error
                 error += randomizer.nextDouble(MIN_DISTANCE_ERROR, MAX_DISTANCE_ERROR);
                 qualityScores[i] = 1.0 / (1.0 + Math.abs(error));
-                radius = Math.max(RobustLaterationSolver.EPSILON,
-                        radius + error);
+                radius = Math.max(RobustLaterationSolver.EPSILON, radius + error);
                 circles[i] = new Circle(center, radius);
             }
 
-            PROMedSRobustLateration2DSolver solver =
-                    new PROMedSRobustLateration2DSolver(qualityScores,
-                            circles, this);
+            PROMedSRobustLateration2DSolver solver = new PROMedSRobustLateration2DSolver(qualityScores,
+                    circles, this);
             solver.setResultRefined(true);
 
             reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
-            assertEquals(solveNextIteration, 0);
-            assertEquals(solveProgressChange, 0);
+            assertEquals(0, solveStart);
+            assertEquals(0, solveEnd);
+            assertEquals(0, solveNextIteration);
+            assertEquals(0, solveProgressChange);
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
@@ -2237,8 +2004,8 @@ public class PROMedSRobustLateration2DSolverTest implements
                 assertNotNull(solver.getInliersData().getResiduals());
             }
 
-            assertEquals(solveStart, 1);
-            assertEquals(solveEnd, 1);
+            assertEquals(1, solveStart);
+            assertEquals(1, solveEnd);
             assertTrue(solveNextIteration > 0);
             assertTrue(solveProgressChange >= 0);
             assertTrue(solver.isReady());
@@ -2292,21 +2059,19 @@ public class PROMedSRobustLateration2DSolverTest implements
                     error = 0.0;
                 }
                 qualityScores[i] = 1.0 / (1.0 + error);
-                radius = Math.max(RobustLaterationSolver.EPSILON,
-                        radius + error);
+                radius = Math.max(RobustLaterationSolver.EPSILON, radius + error);
                 circles[i] = new Circle(center, radius);
             }
 
-            PROMedSRobustLateration2DSolver solver =
-                    new PROMedSRobustLateration2DSolver(qualityScores,
-                            circles, this);
+            PROMedSRobustLateration2DSolver solver = new PROMedSRobustLateration2DSolver(qualityScores,
+                    circles, this);
             solver.setLinearSolverUsed(false);
 
             reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
-            assertEquals(solveNextIteration, 0);
-            assertEquals(solveProgressChange, 0);
+            assertEquals(0, solveStart);
+            assertEquals(0, solveEnd);
+            assertEquals(0, solveNextIteration);
+            assertEquals(0, solveProgressChange);
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
@@ -2323,8 +2088,8 @@ public class PROMedSRobustLateration2DSolverTest implements
             assertNotNull(solver.getInliersData().getInliers());
             assertNotNull(solver.getInliersData().getResiduals());
 
-            assertEquals(solveStart, 1);
-            assertEquals(solveEnd, 1);
+            assertEquals(1, solveStart);
+            assertEquals(1, solveEnd);
             assertTrue(solveNextIteration > 0);
             assertTrue(solveProgressChange >= 0);
             assertTrue(solver.isReady());
@@ -2378,22 +2143,20 @@ public class PROMedSRobustLateration2DSolverTest implements
                     error = 0.0;
                 }
                 qualityScores[i] = 1.0 / (1.0 + error);
-                radius = Math.max(RobustLaterationSolver.EPSILON,
-                        radius + error);
+                radius = Math.max(RobustLaterationSolver.EPSILON, radius + error);
                 circles[i] = new Circle(center, radius);
             }
 
-            PROMedSRobustLateration2DSolver solver =
-                    new PROMedSRobustLateration2DSolver(qualityScores,
-                            circles, this);
+            PROMedSRobustLateration2DSolver solver = new PROMedSRobustLateration2DSolver(qualityScores,
+                    circles, this);
             solver.setLinearSolverUsed(true);
             solver.setHomogeneousLinearSolverUsed(false);
 
             reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
-            assertEquals(solveNextIteration, 0);
-            assertEquals(solveProgressChange, 0);
+            assertEquals(0, solveStart);
+            assertEquals(0, solveEnd);
+            assertEquals(0, solveNextIteration);
+            assertEquals(0, solveProgressChange);
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
@@ -2410,8 +2173,8 @@ public class PROMedSRobustLateration2DSolverTest implements
             assertNotNull(solver.getInliersData().getInliers());
             assertNotNull(solver.getInliersData().getResiduals());
 
-            assertEquals(solveStart, 1);
-            assertEquals(solveEnd, 1);
+            assertEquals(1, solveStart);
+            assertEquals(1, solveEnd);
             assertTrue(solveNextIteration > 0);
             assertTrue(solveProgressChange >= 0);
             assertTrue(solver.isReady());
@@ -2465,22 +2228,20 @@ public class PROMedSRobustLateration2DSolverTest implements
                     error = 0.0;
                 }
                 qualityScores[i] = 1.0 / (1.0 + error);
-                radius = Math.max(RobustLaterationSolver.EPSILON,
-                        radius + error);
+                radius = Math.max(RobustLaterationSolver.EPSILON, radius + error);
                 circles[i] = new Circle(center, radius);
             }
 
-            PROMedSRobustLateration2DSolver solver =
-                    new PROMedSRobustLateration2DSolver(qualityScores,
-                            circles, this);
+            PROMedSRobustLateration2DSolver solver = new PROMedSRobustLateration2DSolver(qualityScores,
+                    circles, this);
             solver.setLinearSolverUsed(true);
             solver.setHomogeneousLinearSolverUsed(true);
 
             reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
-            assertEquals(solveNextIteration, 0);
-            assertEquals(solveProgressChange, 0);
+            assertEquals(0, solveStart);
+            assertEquals(0, solveEnd);
+            assertEquals(0, solveNextIteration);
+            assertEquals(0, solveProgressChange);
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
@@ -2497,8 +2258,8 @@ public class PROMedSRobustLateration2DSolverTest implements
             assertNotNull(solver.getInliersData().getInliers());
             assertNotNull(solver.getInliersData().getResiduals());
 
-            assertEquals(solveStart, 1);
-            assertEquals(solveEnd, 1);
+            assertEquals(1, solveStart);
+            assertEquals(1, solveEnd);
             assertTrue(solveNextIteration > 0);
             assertTrue(solveProgressChange >= 0);
             assertTrue(solver.isReady());
@@ -2552,22 +2313,20 @@ public class PROMedSRobustLateration2DSolverTest implements
                     error = 0.0;
                 }
                 qualityScores[i] = 1.0 / (1.0 + error);
-                radius = Math.max(RobustLaterationSolver.EPSILON,
-                        radius + error);
+                radius = Math.max(RobustLaterationSolver.EPSILON, radius + error);
                 circles[i] = new Circle(center, radius);
             }
 
-            PROMedSRobustLateration2DSolver solver =
-                    new PROMedSRobustLateration2DSolver(qualityScores,
-                            circles, this);
+            PROMedSRobustLateration2DSolver solver = new PROMedSRobustLateration2DSolver(qualityScores,
+                    circles, this);
             solver.setLinearSolverUsed(true);
             solver.setPreliminarySolutionRefined(true);
 
             reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
-            assertEquals(solveNextIteration, 0);
-            assertEquals(solveProgressChange, 0);
+            assertEquals(0, solveStart);
+            assertEquals(0, solveEnd);
+            assertEquals(0, solveNextIteration);
+            assertEquals(0, solveProgressChange);
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
@@ -2584,8 +2343,8 @@ public class PROMedSRobustLateration2DSolverTest implements
             assertNotNull(solver.getInliersData().getInliers());
             assertNotNull(solver.getInliersData().getResiduals());
 
-            assertEquals(solveStart, 1);
-            assertEquals(solveEnd, 1);
+            assertEquals(1, solveStart);
+            assertEquals(1, solveEnd);
             assertTrue(solveNextIteration > 0);
             assertTrue(solveProgressChange >= 0);
             assertTrue(solver.isReady());
@@ -2639,22 +2398,20 @@ public class PROMedSRobustLateration2DSolverTest implements
                     error = 0.0;
                 }
                 qualityScores[i] = 1.0 / (1.0 + error);
-                radius = Math.max(RobustLaterationSolver.EPSILON,
-                        radius + error);
+                radius = Math.max(RobustLaterationSolver.EPSILON, radius + error);
                 circles[i] = new Circle(center, radius);
             }
 
-            PROMedSRobustLateration2DSolver solver =
-                    new PROMedSRobustLateration2DSolver(qualityScores,
-                            circles, this);
+            PROMedSRobustLateration2DSolver solver = new PROMedSRobustLateration2DSolver(qualityScores,
+                    circles, this);
             solver.setLinearSolverUsed(true);
             solver.setPreliminarySolutionRefined(false);
 
             reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
-            assertEquals(solveNextIteration, 0);
-            assertEquals(solveProgressChange, 0);
+            assertEquals(0, solveStart);
+            assertEquals(0, solveEnd);
+            assertEquals(0, solveNextIteration);
+            assertEquals(0, solveProgressChange);
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
@@ -2671,8 +2428,8 @@ public class PROMedSRobustLateration2DSolverTest implements
             assertNotNull(solver.getInliersData().getInliers());
             assertNotNull(solver.getInliersData().getResiduals());
 
-            assertEquals(solveStart, 1);
-            assertEquals(solveEnd, 1);
+            assertEquals(1, solveStart);
+            assertEquals(1, solveEnd);
             assertTrue(solveNextIteration > 0);
             assertTrue(solveProgressChange >= 0);
             assertTrue(solver.isReady());
@@ -2696,8 +2453,7 @@ public class PROMedSRobustLateration2DSolverTest implements
     }
 
     @Test
-    public void testSolveNoPreliminaryLinearSolverAndNoPreliminarySolutionsRefinement()
-            throws Exception {
+    public void testSolveNoPreliminaryLinearSolverAndNoPreliminarySolutionsRefinement() throws Exception {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, STD_OUTLIER_ERROR);
@@ -2727,22 +2483,20 @@ public class PROMedSRobustLateration2DSolverTest implements
                     error = 0.0;
                 }
                 qualityScores[i] = 1.0 / (1.0 + error);
-                radius = Math.max(RobustLaterationSolver.EPSILON,
-                        radius + error);
+                radius = Math.max(RobustLaterationSolver.EPSILON, radius + error);
                 circles[i] = new Circle(center, radius);
             }
 
-            PROMedSRobustLateration2DSolver solver =
-                    new PROMedSRobustLateration2DSolver(qualityScores,
-                            circles, this);
+            PROMedSRobustLateration2DSolver solver = new PROMedSRobustLateration2DSolver(qualityScores,
+                    circles, this);
             solver.setLinearSolverUsed(false);
             solver.setPreliminarySolutionRefined(false);
 
             reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
-            assertEquals(solveNextIteration, 0);
-            assertEquals(solveProgressChange, 0);
+            assertEquals(0, solveStart);
+            assertEquals(0, solveEnd);
+            assertEquals(0, solveNextIteration);
+            assertEquals(0, solveProgressChange);
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
@@ -2759,8 +2513,8 @@ public class PROMedSRobustLateration2DSolverTest implements
             assertNotNull(solver.getInliersData().getInliers());
             assertNotNull(solver.getInliersData().getResiduals());
 
-            assertEquals(solveStart, 1);
-            assertEquals(solveEnd, 1);
+            assertEquals(1, solveStart);
+            assertEquals(1, solveEnd);
             assertTrue(solveNextIteration > 0);
             assertTrue(solveProgressChange >= 0);
             assertTrue(solver.isReady());
@@ -2814,22 +2568,20 @@ public class PROMedSRobustLateration2DSolverTest implements
                     error = 0.0;
                 }
                 qualityScores[i] = 1.0 / (1.0 + error);
-                radius = Math.max(RobustLaterationSolver.EPSILON,
-                        radius + error);
+                radius = Math.max(RobustLaterationSolver.EPSILON, radius + error);
                 circles[i] = new Circle(center, radius);
             }
 
-            PROMedSRobustLateration2DSolver solver =
-                    new PROMedSRobustLateration2DSolver(qualityScores,
-                            circles, this);
+            PROMedSRobustLateration2DSolver solver = new PROMedSRobustLateration2DSolver(qualityScores,
+                    circles, this);
             solver.setLinearSolverUsed(false);
             solver.setInitialPosition(position);
 
             reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
-            assertEquals(solveNextIteration, 0);
-            assertEquals(solveProgressChange, 0);
+            assertEquals(0, solveStart);
+            assertEquals(0, solveEnd);
+            assertEquals(0, solveNextIteration);
+            assertEquals(0, solveProgressChange);
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
@@ -2846,8 +2598,8 @@ public class PROMedSRobustLateration2DSolverTest implements
             assertNotNull(solver.getInliersData().getInliers());
             assertNotNull(solver.getInliersData().getResiduals());
 
-            assertEquals(solveStart, 1);
-            assertEquals(solveEnd, 1);
+            assertEquals(1, solveStart);
+            assertEquals(1, solveEnd);
             assertTrue(solveNextIteration > 0);
             assertTrue(solveProgressChange >= 0);
             assertTrue(solver.isReady());
@@ -2901,22 +2653,20 @@ public class PROMedSRobustLateration2DSolverTest implements
                     error = 0.0;
                 }
                 qualityScores[i] = 1.0 / (1.0 + error);
-                radius = Math.max(RobustLaterationSolver.EPSILON,
-                        radius + error);
+                radius = Math.max(RobustLaterationSolver.EPSILON, radius + error);
                 circles[i] = new Circle(center, radius);
             }
 
-            PROMedSRobustLateration2DSolver solver =
-                    new PROMedSRobustLateration2DSolver(qualityScores,
-                            circles, this);
+            PROMedSRobustLateration2DSolver solver = new PROMedSRobustLateration2DSolver(qualityScores,
+                    circles, this);
             solver.setLinearSolverUsed(false);
             solver.setPreliminarySubsetSize(4);
 
             reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
-            assertEquals(solveNextIteration, 0);
-            assertEquals(solveProgressChange, 0);
+            assertEquals(0, solveStart);
+            assertEquals(0, solveEnd);
+            assertEquals(0, solveNextIteration);
+            assertEquals(0, solveProgressChange);
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
@@ -2933,8 +2683,8 @@ public class PROMedSRobustLateration2DSolverTest implements
             assertNotNull(solver.getInliersData().getInliers());
             assertNotNull(solver.getInliersData().getResiduals());
 
-            assertEquals(solveStart, 1);
-            assertEquals(solveEnd, 1);
+            assertEquals(1, solveStart);
+            assertEquals(1, solveEnd);
             assertTrue(solveNextIteration > 0);
             assertTrue(solveProgressChange >= 0);
             assertTrue(solver.isReady());
@@ -2982,8 +2732,7 @@ public class PROMedSRobustLateration2DSolverTest implements
     }
 
     private void reset() {
-        solveStart = solveEnd = solveNextIteration =
-                solveProgressChange = 0;
+        solveStart = solveEnd = solveNextIteration = solveProgressChange = 0;
     }
 
     private void checkLocked(final PROMedSRobustLateration2DSolver solver) {

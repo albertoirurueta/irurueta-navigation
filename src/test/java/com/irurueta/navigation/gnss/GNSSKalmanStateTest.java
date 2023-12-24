@@ -53,10 +53,8 @@ public class GNSSKalmanStateTest {
         final double vz = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double clockOffset = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double clockDrift = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        final GNSSEstimation estimation = new GNSSEstimation(x, y, z, vx, vy, vz,
-                clockOffset, clockDrift);
-        final Matrix covariance = Matrix.identity(GNSSEstimation.NUM_PARAMETERS,
-                GNSSEstimation.NUM_PARAMETERS);
+        final GNSSEstimation estimation = new GNSSEstimation(x, y, z, vx, vy, vz, clockOffset, clockDrift);
+        final Matrix covariance = Matrix.identity(GNSSEstimation.NUM_PARAMETERS, GNSSEstimation.NUM_PARAMETERS);
         state = new GNSSKalmanState(estimation, covariance);
 
         // check default values
@@ -99,8 +97,7 @@ public class GNSSKalmanStateTest {
         final double vz = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double clockOffset = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double clockDrift = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        final GNSSEstimation estimation1 = new GNSSEstimation(x, y, z, vx, vy, vz,
-                clockOffset, clockDrift);
+        final GNSSEstimation estimation1 = new GNSSEstimation(x, y, z, vx, vy, vz, clockOffset, clockDrift);
         state.setEstimation(estimation1);
 
         // check
@@ -121,8 +118,7 @@ public class GNSSKalmanStateTest {
         assertFalse(state.getCovariance(new Matrix(1, 1)));
 
         // set new value
-        final Matrix covariance1 = Matrix.identity(GNSSEstimation.NUM_PARAMETERS,
-                GNSSEstimation.NUM_PARAMETERS);
+        final Matrix covariance1 = Matrix.identity(GNSSEstimation.NUM_PARAMETERS, GNSSEstimation.NUM_PARAMETERS);
         state.setCovariance(covariance1);
 
         // check
@@ -135,8 +131,7 @@ public class GNSSKalmanStateTest {
     }
 
     @Test
-    public void testCopyToWhenInputHasValuesAndOutputDoesNotHaveValues()
-            throws WrongSizeException {
+    public void testCopyToWhenInputHasValuesAndOutputDoesNotHaveValues() throws WrongSizeException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double x = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double y = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
@@ -146,10 +141,8 @@ public class GNSSKalmanStateTest {
         final double vz = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double clockOffset = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double clockDrift = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        final GNSSEstimation estimation = new GNSSEstimation(x, y, z, vx, vy, vz,
-                clockOffset, clockDrift);
-        final Matrix covariance = Matrix.identity(GNSSEstimation.NUM_PARAMETERS,
-                GNSSEstimation.NUM_PARAMETERS);
+        final GNSSEstimation estimation = new GNSSEstimation(x, y, z, vx, vy, vz, clockOffset, clockDrift);
+        final Matrix covariance = Matrix.identity(GNSSEstimation.NUM_PARAMETERS, GNSSEstimation.NUM_PARAMETERS);
         final GNSSKalmanState state1 = new GNSSKalmanState(estimation, covariance);
 
         assertEquals(state1.getEstimation(), estimation);
@@ -164,8 +157,7 @@ public class GNSSKalmanStateTest {
     }
 
     @Test
-    public void testCopyToWhenInputHasNoValuesAndOutputHasValues()
-            throws WrongSizeException {
+    public void testCopyToWhenInputHasNoValuesAndOutputHasValues() throws WrongSizeException {
         final GNSSKalmanState state1 = new GNSSKalmanState();
 
         assertNull(state1.getEstimation());
@@ -180,10 +172,8 @@ public class GNSSKalmanStateTest {
         final double vz = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double clockOffset = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double clockDrift = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        final GNSSEstimation estimation = new GNSSEstimation(x, y, z, vx, vy, vz,
-                clockOffset, clockDrift);
-        final Matrix covariance = Matrix.identity(GNSSEstimation.NUM_PARAMETERS,
-                GNSSEstimation.NUM_PARAMETERS);
+        final GNSSEstimation estimation = new GNSSEstimation(x, y, z, vx, vy, vz, clockOffset, clockDrift);
+        final Matrix covariance = Matrix.identity(GNSSEstimation.NUM_PARAMETERS, GNSSEstimation.NUM_PARAMETERS);
 
         final GNSSKalmanState state2 = new GNSSKalmanState(estimation, covariance);
         state1.copyTo(state2);
@@ -219,10 +209,8 @@ public class GNSSKalmanStateTest {
         final double clockDrift1 = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final GNSSEstimation estimation1 = new GNSSEstimation(x1, y1, z1, vx1, vy1, vz1,
                 clockOffset1, clockDrift1);
-        final Matrix covariance1 = new Matrix(GNSSEstimation.NUM_PARAMETERS,
-                GNSSEstimation.NUM_PARAMETERS);
+        final Matrix covariance1 = new Matrix(GNSSEstimation.NUM_PARAMETERS, GNSSEstimation.NUM_PARAMETERS);
         final GNSSKalmanState state1 = new GNSSKalmanState(estimation1, covariance1);
-
 
         final double x2 = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double y2 = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
@@ -234,8 +222,7 @@ public class GNSSKalmanStateTest {
         final double clockDrift2 = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final GNSSEstimation estimation2 = new GNSSEstimation(x2, y2, z2, vx2, vy2, vz2,
                 clockOffset2, clockDrift2);
-        final Matrix covariance2 = Matrix.identity(GNSSEstimation.NUM_PARAMETERS,
-                GNSSEstimation.NUM_PARAMETERS);
+        final Matrix covariance2 = Matrix.identity(GNSSEstimation.NUM_PARAMETERS, GNSSEstimation.NUM_PARAMETERS);
         final GNSSKalmanState state2 = new GNSSKalmanState(estimation2, covariance2);
 
         state1.copyTo(state2);
@@ -257,10 +244,8 @@ public class GNSSKalmanStateTest {
         final double clockDrift1 = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final GNSSEstimation estimation1 = new GNSSEstimation(x1, y1, z1, vx1, vy1, vz1,
                 clockOffset1, clockDrift1);
-        final Matrix covariance1 = new Matrix(GNSSEstimation.NUM_PARAMETERS,
-                GNSSEstimation.NUM_PARAMETERS);
+        final Matrix covariance1 = new Matrix(GNSSEstimation.NUM_PARAMETERS, GNSSEstimation.NUM_PARAMETERS);
         final GNSSKalmanState state1 = new GNSSKalmanState(estimation1, covariance1);
-
 
         final double x2 = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double y2 = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
@@ -272,8 +257,7 @@ public class GNSSKalmanStateTest {
         final double clockDrift2 = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final GNSSEstimation estimation2 = new GNSSEstimation(x2, y2, z2, vx2, vy2, vz2,
                 clockOffset2, clockDrift2);
-        final Matrix covariance2 = Matrix.identity(GNSSEstimation.NUM_PARAMETERS,
-                GNSSEstimation.NUM_PARAMETERS);
+        final Matrix covariance2 = Matrix.identity(GNSSEstimation.NUM_PARAMETERS, GNSSEstimation.NUM_PARAMETERS);
         final GNSSKalmanState state2 = new GNSSKalmanState(estimation2, covariance2);
 
         state2.copyFrom(state1);
@@ -293,10 +277,8 @@ public class GNSSKalmanStateTest {
         final double vz = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double clockOffset = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double clockDrift = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        final GNSSEstimation estimation = new GNSSEstimation(x, y, z, vx, vy, vz,
-                clockOffset, clockDrift);
-        final Matrix covariance = Matrix.identity(GNSSEstimation.NUM_PARAMETERS,
-                GNSSEstimation.NUM_PARAMETERS);
+        final GNSSEstimation estimation = new GNSSEstimation(x, y, z, vx, vy, vz, clockOffset, clockDrift);
+        final Matrix covariance = Matrix.identity(GNSSEstimation.NUM_PARAMETERS, GNSSEstimation.NUM_PARAMETERS);
         final GNSSKalmanState state1 = new GNSSKalmanState(estimation, covariance);
         final GNSSKalmanState state2 = new GNSSKalmanState(estimation, covariance);
         final GNSSKalmanState state3 = new GNSSKalmanState();
@@ -316,10 +298,8 @@ public class GNSSKalmanStateTest {
         final double vz = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double clockOffset = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double clockDrift = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        final GNSSEstimation estimation = new GNSSEstimation(x, y, z, vx, vy, vz,
-                clockOffset, clockDrift);
-        final Matrix covariance = Matrix.identity(GNSSEstimation.NUM_PARAMETERS,
-                GNSSEstimation.NUM_PARAMETERS);
+        final GNSSEstimation estimation = new GNSSEstimation(x, y, z, vx, vy, vz, clockOffset, clockDrift);
+        final Matrix covariance = Matrix.identity(GNSSEstimation.NUM_PARAMETERS, GNSSEstimation.NUM_PARAMETERS);
         final GNSSKalmanState state1 = new GNSSKalmanState(estimation, covariance);
         final GNSSKalmanState state2 = new GNSSKalmanState(estimation, covariance);
         final GNSSKalmanState state3 = new GNSSKalmanState();
@@ -348,10 +328,8 @@ public class GNSSKalmanStateTest {
         final double vz = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double clockOffset = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double clockDrift = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        final GNSSEstimation estimation = new GNSSEstimation(x, y, z, vx, vy, vz,
-                clockOffset, clockDrift);
-        final Matrix covariance = Matrix.identity(GNSSEstimation.NUM_PARAMETERS,
-                GNSSEstimation.NUM_PARAMETERS);
+        final GNSSEstimation estimation = new GNSSEstimation(x, y, z, vx, vy, vz, clockOffset, clockDrift);
+        final Matrix covariance = Matrix.identity(GNSSEstimation.NUM_PARAMETERS, GNSSEstimation.NUM_PARAMETERS);
         final GNSSKalmanState state1 = new GNSSKalmanState(estimation, covariance);
         final GNSSKalmanState state2 = new GNSSKalmanState(estimation, covariance);
         final GNSSKalmanState state3 = new GNSSKalmanState();
@@ -373,10 +351,8 @@ public class GNSSKalmanStateTest {
         final double vz = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double clockOffset = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double clockDrift = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        final GNSSEstimation estimation = new GNSSEstimation(x, y, z, vx, vy, vz,
-                clockOffset, clockDrift);
-        final Matrix covariance = Matrix.identity(GNSSEstimation.NUM_PARAMETERS,
-                GNSSEstimation.NUM_PARAMETERS);
+        final GNSSEstimation estimation = new GNSSEstimation(x, y, z, vx, vy, vz, clockOffset, clockDrift);
+        final Matrix covariance = Matrix.identity(GNSSEstimation.NUM_PARAMETERS, GNSSEstimation.NUM_PARAMETERS);
         final GNSSKalmanState state1 = new GNSSKalmanState(estimation, covariance);
 
         final Object state2 = state1.clone();
@@ -395,10 +371,8 @@ public class GNSSKalmanStateTest {
         final double vz = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double clockOffset = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double clockDrift = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        final GNSSEstimation estimation = new GNSSEstimation(x, y, z, vx, vy, vz,
-                clockOffset, clockDrift);
-        final Matrix covariance = Matrix.identity(GNSSEstimation.NUM_PARAMETERS,
-                GNSSEstimation.NUM_PARAMETERS);
+        final GNSSEstimation estimation = new GNSSEstimation(x, y, z, vx, vy, vz, clockOffset, clockDrift);
+        final Matrix covariance = Matrix.identity(GNSSEstimation.NUM_PARAMETERS, GNSSEstimation.NUM_PARAMETERS);
         final GNSSKalmanState state1 = new GNSSKalmanState(estimation, covariance);
 
         // serialize and deserialize

@@ -18,9 +18,9 @@ package com.irurueta.navigation.frames.converters;
 import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.WrongSizeException;
 import com.irurueta.navigation.frames.CoordinateTransformation;
-import com.irurueta.navigation.frames.ECEFFrame;
 import com.irurueta.navigation.frames.ECEFPosition;
 import com.irurueta.navigation.frames.ECEFVelocity;
+import com.irurueta.navigation.frames.ECIorECEFFrame;
 import com.irurueta.navigation.frames.NEDPosition;
 import com.irurueta.navigation.frames.NEDVelocity;
 import com.irurueta.navigation.geodesic.Constants;
@@ -30,7 +30,9 @@ import com.irurueta.navigation.geodesic.Constants;
  * from ECEF to NED.
  * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multi-sensor
  * Integrated Navigation Systems, Second Edition" and on the companion software available at:
- * https://github.com/ymjdz/MATLAB-Codes/blob/master/pv_ECEF_to_NED.m
+ * <a href="https://github.com/ymjdz/MATLAB-Codes/blob/master/pv_ECEF_to_NED.m">
+ *     https://github.com/ymjdz/MATLAB-Codes/blob/master/pv_ECEF_to_NED.m
+ * </a>
  */
 public class ECEFtoNEDPositionVelocityConverter {
 
@@ -59,8 +61,7 @@ public class ECEFtoNEDPositionVelocityConverter {
                         final ECEFVelocity sourceVelocity,
                         final NEDPosition destinationPosition,
                         final NEDVelocity destinationVelocity) {
-        convertECEFtoNED(sourcePosition, sourceVelocity, destinationPosition,
-                destinationVelocity);
+        convertECEFtoNED(sourcePosition, sourceVelocity, destinationPosition, destinationVelocity);
     }
 
     /**
@@ -82,8 +83,7 @@ public class ECEFtoNEDPositionVelocityConverter {
                         final double vx, final double vy, final double vz,
                         final NEDPosition destinationPosition,
                         final NEDVelocity destinationVelocity) {
-        convertECEFtoNED(x, y, z, vx, vy, vz, destinationPosition,
-                destinationVelocity);
+        convertECEFtoNED(x, y, z, vx, vy, vz, destinationPosition, destinationVelocity);
     }
 
     /**
@@ -179,7 +179,7 @@ public class ECEFtoNEDPositionVelocityConverter {
             final Matrix cen = CoordinateTransformation.ecefToNedMatrix(latitude, longitude);
 
             // Transform velocity using (2.73)
-            final Matrix vEbe = new Matrix(ECEFFrame.NUM_VELOCITY_COORDINATES, 1);
+            final Matrix vEbe = new Matrix(ECIorECEFFrame.NUM_VELOCITY_COORDINATES, 1);
             vEbe.setElementAtIndex(0, vx);
             vEbe.setElementAtIndex(1, vy);
             vEbe.setElementAtIndex(2, vz);

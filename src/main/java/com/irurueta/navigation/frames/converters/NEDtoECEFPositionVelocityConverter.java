@@ -30,7 +30,9 @@ import com.irurueta.navigation.geodesic.Constants;
  * axes from NED to ECEF.
  * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multi-sensor
  * Integrated Navigation Systems, Second Edition" and on the companion software available at:
- * https://github.com/ymjdz/MATLAB-Codes/blob/master/pv_NED_to_ECEF.m
+ * <a href="https://github.com/ymjdz/MATLAB-Codes/blob/master/pv_NED_to_ECEF.m">
+ *     https://github.com/ymjdz/MATLAB-Codes/blob/master/pv_NED_to_ECEF.m
+ * </a>
  */
 public class NEDtoECEFPositionVelocityConverter {
 
@@ -59,8 +61,7 @@ public class NEDtoECEFPositionVelocityConverter {
                         final NEDVelocity sourceVelocity,
                         final ECEFPosition destinationPosition,
                         final ECEFVelocity destinationVelocity) {
-        convertNEDtoECEF(sourcePosition, sourceVelocity, destinationPosition,
-                destinationVelocity);
+        convertNEDtoECEF(sourcePosition, sourceVelocity, destinationPosition, destinationVelocity);
     }
 
     /**
@@ -86,8 +87,7 @@ public class NEDtoECEFPositionVelocityConverter {
                         final double ve, final double vd,
                         final ECEFPosition destinationPosition,
                         final ECEFVelocity destinationVelocity) {
-        convertNEDtoECEF(latitude, longitude, height, vn, ve, vd,
-                destinationPosition, destinationVelocity);
+        convertNEDtoECEF(latitude, longitude, height, vn, ve, vd, destinationPosition, destinationVelocity);
     }
 
     /**
@@ -113,8 +113,7 @@ public class NEDtoECEFPositionVelocityConverter {
         final double ve = sourceVelocity.getVe();
         final double vd = sourceVelocity.getVd();
 
-        convertNEDtoECEF(latitude, longitude, height, vn, ve, vd,
-                destinationPosition, destinationVelocity);
+        convertNEDtoECEF(latitude, longitude, height, vn, ve, vd, destinationPosition, destinationVelocity);
     }
 
     /**

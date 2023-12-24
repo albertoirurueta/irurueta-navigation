@@ -55,13 +55,10 @@ public class GeodesicLineTest {
                 ABSOLUTE_ERROR);
 
         assertNotEquals(line.getEquatorialArc(), Double.NaN);
-        assertEquals(line.getMajorRadius(), Geodesic.WGS84.getMajorRadius(),
-                ABSOLUTE_ERROR);
-        assertEquals(line.getFlattening(), Geodesic.WGS84.getFlattening(),
-                ABSOLUTE_ERROR);
+        assertEquals(line.getMajorRadius(), Geodesic.WGS84.getMajorRadius(), ABSOLUTE_ERROR);
+        assertEquals(line.getFlattening(), Geodesic.WGS84.getFlattening(), ABSOLUTE_ERROR);
         assertEquals(line.getCapabilities(), GeodesicMask.ALL |
-                GeodesicMask.LATITUDE | GeodesicMask.AZIMUTH |
-                GeodesicMask.LONG_UNROLL);
+                GeodesicMask.LATITUDE | GeodesicMask.AZIMUTH | GeodesicMask.LONG_UNROLL);
     }
 
     @Test
@@ -293,8 +290,7 @@ public class GeodesicLineTest {
         final GeodesicLine line = new GeodesicLine(Geodesic.WGS84, lat1, lon1, data1.getAzi1());
 
         assertEquals(line.getCapabilities(), GeodesicMask.ALL |
-                GeodesicMask.LATITUDE | GeodesicMask.AZIMUTH |
-                GeodesicMask.LONG_UNROLL);
+                GeodesicMask.LATITUDE | GeodesicMask.AZIMUTH | GeodesicMask.LONG_UNROLL);
 
         assertTrue(line.capabilities(GeodesicMask.ALL));
         assertTrue(line.capabilities(GeodesicMask.LATITUDE));

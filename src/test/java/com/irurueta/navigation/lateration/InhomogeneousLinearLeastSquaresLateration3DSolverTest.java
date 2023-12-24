@@ -60,10 +60,10 @@ public class InhomogeneousLinearLeastSquaresLateration3DSolverTest implements La
         assertFalse(solver.isReady());
         assertNull(solver.getEstimatedPositionCoordinates());
         assertNull(solver.getEstimatedPosition());
-        assertEquals(solver.getNumberOfDimensions(), 3);
+        assertEquals(3, solver.getNumberOfDimensions());
         assertNull(solver.getSpheres());
-        assertEquals(solver.getType(), LaterationSolverType.INHOMOGENEOUS_LINEAR_TRILATERATION_SOLVER);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
+        assertEquals(LaterationSolverType.INHOMOGENEOUS_LINEAR_TRILATERATION_SOLVER, solver.getType());
+        assertEquals(4, solver.getMinRequiredPositionsAndDistances());
 
 
         // constructor with positions and distances
@@ -77,15 +77,15 @@ public class InhomogeneousLinearLeastSquaresLateration3DSolverTest implements La
 
         // check correctness
         assertNull(solver.getListener());
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
         assertTrue(solver.isReady());
         assertNull(solver.getEstimatedPositionCoordinates());
         assertNull(solver.getEstimatedPosition());
-        assertEquals(solver.getNumberOfDimensions(), 3);
+        assertEquals(3, solver.getNumberOfDimensions());
         assertNotNull(solver.getSpheres());
-        assertEquals(solver.getType(), LaterationSolverType.INHOMOGENEOUS_LINEAR_TRILATERATION_SOLVER);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
+        assertEquals(LaterationSolverType.INHOMOGENEOUS_LINEAR_TRILATERATION_SOLVER, solver.getType());
+        assertEquals(4, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
         final double[] wrong = new double[5];
@@ -114,39 +114,38 @@ public class InhomogeneousLinearLeastSquaresLateration3DSolverTest implements La
         }
         assertNull(solver);
 
-
         // constructor with listener
         // noinspection unchecked
         final LaterationSolverListener<Point3D> listener = mock(LaterationSolverListener.class);
         solver = new InhomogeneousLinearLeastSquaresLateration3DSolver(listener);
 
         // check correctness
-        assertSame(solver.getListener(), listener);
+        assertSame(listener, solver.getListener());
         assertNull(solver.getPositions());
         assertNull(solver.getDistances());
         assertFalse(solver.isReady());
         assertNull(solver.getEstimatedPositionCoordinates());
         assertNull(solver.getEstimatedPosition());
-        assertEquals(solver.getNumberOfDimensions(), 3);
+        assertEquals(3, solver.getNumberOfDimensions());
         assertNull(solver.getSpheres());
-        assertEquals(solver.getType(), LaterationSolverType.INHOMOGENEOUS_LINEAR_TRILATERATION_SOLVER);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
+        assertEquals(LaterationSolverType.INHOMOGENEOUS_LINEAR_TRILATERATION_SOLVER, solver.getType());
+        assertEquals(4, solver.getMinRequiredPositionsAndDistances());
 
 
         // constructor with positions, distances and listener
         solver = new InhomogeneousLinearLeastSquaresLateration3DSolver(positions, distances, listener);
 
         // check correctness
-        assertSame(solver.getListener(), listener);
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
+        assertSame(listener, solver.getListener());
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
         assertTrue(solver.isReady());
         assertNull(solver.getEstimatedPositionCoordinates());
         assertNull(solver.getEstimatedPosition());
-        assertEquals(solver.getNumberOfDimensions(), 3);
+        assertEquals(3, solver.getNumberOfDimensions());
         assertNotNull(solver.getSpheres());
-        assertEquals(solver.getType(), LaterationSolverType.INHOMOGENEOUS_LINEAR_TRILATERATION_SOLVER);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
+        assertEquals(LaterationSolverType.INHOMOGENEOUS_LINEAR_TRILATERATION_SOLVER, solver.getType());
+        assertEquals(4, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
         solver = null;
@@ -166,7 +165,8 @@ public class InhomogeneousLinearLeastSquaresLateration3DSolverTest implements La
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            solver = new InhomogeneousLinearLeastSquaresLateration3DSolver(shortPositions, shortDistances, listener);
+            solver = new InhomogeneousLinearLeastSquaresLateration3DSolver(shortPositions, shortDistances,
+                    listener);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -188,10 +188,10 @@ public class InhomogeneousLinearLeastSquaresLateration3DSolverTest implements La
         assertTrue(solver.isReady());
         assertNull(solver.getEstimatedPositionCoordinates());
         assertNull(solver.getEstimatedPosition());
-        assertEquals(solver.getNumberOfDimensions(), 3);
+        assertEquals(3, solver.getNumberOfDimensions());
         assertNotNull(solver.getSpheres());
-        assertEquals(solver.getType(), LaterationSolverType.INHOMOGENEOUS_LINEAR_TRILATERATION_SOLVER);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
+        assertEquals(LaterationSolverType.INHOMOGENEOUS_LINEAR_TRILATERATION_SOLVER, solver.getType());
+        assertEquals(4, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
         final Sphere[] shortSpheres = new Sphere[1];
@@ -214,16 +214,16 @@ public class InhomogeneousLinearLeastSquaresLateration3DSolverTest implements La
         solver = new InhomogeneousLinearLeastSquaresLateration3DSolver(spheres, listener);
 
         // check correctness
-        assertSame(solver.getListener(), listener);
+        assertSame(listener, solver.getListener());
         assertNotNull(solver.getPositions());
         assertNotNull(solver.getDistances());
         assertTrue(solver.isReady());
         assertNull(solver.getEstimatedPositionCoordinates());
         assertNull(solver.getEstimatedPosition());
-        assertEquals(solver.getNumberOfDimensions(), 3);
+        assertEquals(3, solver.getNumberOfDimensions());
         assertNotNull(solver.getSpheres());
-        assertEquals(solver.getType(), LaterationSolverType.INHOMOGENEOUS_LINEAR_TRILATERATION_SOLVER);
-        assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
+        assertEquals(LaterationSolverType.INHOMOGENEOUS_LINEAR_TRILATERATION_SOLVER, solver.getType());
+        assertEquals(4, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
         solver = null;
@@ -308,7 +308,7 @@ public class InhomogeneousLinearLeastSquaresLateration3DSolverTest implements La
         solver.setListener(listener);
 
         // check
-        assertSame(solver.getListener(), listener);
+        assertSame(listener, solver.getListener());
     }
 
     @Test
@@ -332,8 +332,8 @@ public class InhomogeneousLinearLeastSquaresLateration3DSolverTest implements La
         solver.setPositionsAndDistances(positions, distances);
 
         // check
-        assertSame(solver.getPositions(), positions);
-        assertSame(solver.getDistances(), distances);
+        assertSame(positions, solver.getPositions());
+        assertSame(distances, solver.getDistances());
         assertTrue(solver.isReady());
 
         // Force IllegalArgumentException
@@ -384,12 +384,11 @@ public class InhomogeneousLinearLeastSquaresLateration3DSolverTest implements La
             }
 
             final InhomogeneousLinearLeastSquaresLateration3DSolver solver =
-                    new InhomogeneousLinearLeastSquaresLateration3DSolver(
-                            spheres, this);
+                    new InhomogeneousLinearLeastSquaresLateration3DSolver(spheres, this);
 
             reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
+            assertEquals(0, solveStart);
+            assertEquals(0, solveEnd);
             assertTrue(solver.isReady());
             assertNull(solver.getEstimatedPosition());
             assertNull(solver.getEstimatedPositionCoordinates());
@@ -462,12 +461,11 @@ public class InhomogeneousLinearLeastSquaresLateration3DSolverTest implements La
             }
 
             final InhomogeneousLinearLeastSquaresLateration3DSolver solver =
-                    new InhomogeneousLinearLeastSquaresLateration3DSolver(
-                            positions, distances, this);
+                    new InhomogeneousLinearLeastSquaresLateration3DSolver(positions, distances, this);
 
             reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
+            assertEquals(0, solveStart);
+            assertEquals(0, solveEnd);
             assertTrue(solver.isReady());
             assertNull(solver.getEstimatedPosition());
             assertNull(solver.getEstimatedPositionCoordinates());
@@ -512,12 +510,11 @@ public class InhomogeneousLinearLeastSquaresLateration3DSolverTest implements La
             }
 
             final InhomogeneousLinearLeastSquaresLateration3DSolver solver =
-                    new InhomogeneousLinearLeastSquaresLateration3DSolver(
-                            spheres, this);
+                    new InhomogeneousLinearLeastSquaresLateration3DSolver(spheres, this);
 
             reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
+            assertEquals(0, solveStart);
+            assertEquals(0, solveEnd);
             assertTrue(solver.isReady());
             assertNull(solver.getEstimatedPosition());
             assertNull(solver.getEstimatedPositionCoordinates());
