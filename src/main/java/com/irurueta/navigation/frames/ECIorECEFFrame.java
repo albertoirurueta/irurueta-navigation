@@ -88,9 +88,15 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
     CoordinateTransformation mC;
 
     /**
+     * Actual type class
+     */
+    transient Class<T> mClass;
+
+    /**
      * Constructor.
      */
-    ECIorECEFFrame() {
+    ECIorECEFFrame(final Class<T> c) {
+        mClass = c;
     }
 
     /**
@@ -684,10 +690,23 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame<?>> implements Fra
     /**
      * Checks if provided instance has exactly the same contents as this instance.
      *
-     * @param other instance to be compared.
+     * @param obj instance to be compared.
      * @return true if both instances are considered to be equal, false otherwise.
      */
-    public boolean equals(final T other) {
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (obj == this) {
+            return true;
+        }
+        if (!mClass.isInstance(obj)) {
+            return false;
+        }
+
+        //noinspection unchecked
+        final T other = (T) obj;
         return equals(other, 0.0);
     }
 
