@@ -13,7 +13,13 @@
 	
 	<!-- whitespace -->
 	<module name="FileTabCharacter"/>
-	
+
+	<!-- lines length -->
+	<module name="LineLength">
+		<property name="max" value="120"/>
+		<property name="ignorePattern" value="^( *\* *[^ ]+)|(import)$"/>
+	</module>
+
 	<module name="TreeWalker">
 		<!-- annotations -->
 		<module name="AnnotationUseStyle"/>
@@ -84,10 +90,6 @@
 		<module name="RedundantModifier"/>
 		
 		<!-- size violations -->
-		<module name="LineLength">
-		    <property name="max" value="120"/>
-		    <property name="ignorePattern" value="^( *\* *[^ ]+)|(import)$"/>
-		</module>		
 		<module name="ParameterNumber"/>
 		
 		<!-- whitespace -->
