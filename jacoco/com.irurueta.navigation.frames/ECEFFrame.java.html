@@ -1,0 +1,792 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ECEFFrame.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-navigation</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.navigation.frames</a> &gt; <span class="el_source">ECEFFrame.java</span></div><h1>ECEFFrame.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2019 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.navigation.frames;
+
+import com.irurueta.geometry.Point3D;
+import com.irurueta.navigation.gnss.ECEFPositionAndVelocity;
+import com.irurueta.units.Distance;
+import com.irurueta.units.Speed;
+
+/**
+ * Contains position, velocity and coordinates transformation matrix expressed in ECEF frame.
+ * Position and velocity of this frame is expressed along ECEF axes as described here:
+ * {@link FrameType#EARTH_CENTERED_EARTH_FIXED_FRAME}.
+ */
+public class ECEFFrame extends ECIorECEFFrame&lt;ECEFFrame&gt; implements Cloneable {
+
+    /**
+     * Constructor.
+     * Initializes position and velocity coordinates to zero and the coordinate transformation matrix to the
+     * identity.
+     */
+    public ECEFFrame() {
+<span class="fc" id="L36">        super(ECEFFrame.class);</span>
+<span class="fc" id="L37">        mC = new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);</span>
+<span class="fc" id="L38">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param c Body to ECEF coordinate transformation matrix to be set.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
+     */
+    public ECEFFrame(final CoordinateTransformation c) throws InvalidSourceAndDestinationFrameTypeException {
+<span class="fc" id="L47">        super(c);</span>
+<span class="fc" id="L48">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param x cartesian x coordinate of body position expressed in meters (m) with respect ECEF frame, resolved along
+     *          ECEF-frame axes.
+     * @param y cartesian y coordinate of body position expressed in meters (m) with respect ECEF frame, resolved along
+     *          ECEF-frame axes.
+     * @param z cartesian z coordinate of body position expressed in meters (m) with respect ECEF frame, resolved along
+     *          ECEF-frame axes.
+     */
+    public ECEFFrame(final double x, final double y, final double z) {
+<span class="fc" id="L61">        this();</span>
+<span class="fc" id="L62">        setCoordinates(x, y, z);</span>
+<span class="fc" id="L63">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param position body position expressed in meters (m) and resolved along ECEF-frame axes.
+     */
+    public ECEFFrame(final Point3D position) {
+<span class="fc" id="L71">        this();</span>
+<span class="fc" id="L72">        setPosition(position);</span>
+<span class="fc" id="L73">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param positionX cartesian x coordinate of body position to be set resolved along ECEF-frame axes.
+     * @param positionY cartesian y coordinate of body position to be set resolved along ECEF-frame axes.
+     * @param positionZ cartesian z coordinate of body position to be set resolved along ECEF-frame axes.
+     */
+    public ECEFFrame(final Distance positionX, final Distance positionY,
+                     final Distance positionZ) {
+<span class="fc" id="L84">        this();</span>
+<span class="fc" id="L85">        setPositionCoordinates(positionX, positionY, positionZ);</span>
+<span class="fc" id="L86">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param position cartesian position.
+     */
+    public ECEFFrame(final ECEFPosition position) {
+<span class="fc" id="L94">        this();</span>
+<span class="fc" id="L95">        setPosition(position);</span>
+<span class="fc" id="L96">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param x  cartesian x coordinate of body position expressed in meters (m) and resolved along ECEF-frame axes.
+     * @param y  cartesian y coordinate of body position expressed in meters (m) and resolved along ECEF-frame axes.
+     * @param z  cartesian z coordinate of body position expressed in meters (m) and resolved along ECEF-frame axes.
+     * @param vx x coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *           ECEF-frame axes.
+     * @param vy y coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *           ECEF-frame axes.
+     * @param vz z coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *           ECEF-frame axes.
+     */
+    public ECEFFrame(final double x, final double y, final double z,
+                     final double vx, final double vy, final double vz) {
+<span class="fc" id="L113">        this(x, y, z);</span>
+<span class="fc" id="L114">        setVelocityCoordinates(vx, vy, vz);</span>
+<span class="fc" id="L115">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param position cartesian position.
+     * @param vx       x coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *                 ECEF-frame axes.
+     * @param vy       y coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *                 ECEF-frame axes.
+     * @param vz       z coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *                 ECEF-frame axes.
+     */
+    public ECEFFrame(final ECEFPosition position,
+                     final double vx, final double vy, final double vz) {
+<span class="fc" id="L130">        this(position);</span>
+<span class="fc" id="L131">        setVelocityCoordinates(vx, vy, vz);</span>
+<span class="fc" id="L132">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param position body position expressed in meters (m) and resolved along ECEF-frame axes.
+     * @param vx       x coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *                 ECEF-frame axes.
+     * @param vy       y coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *                 ECEF-frame axes.
+     * @param vz       z coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *                 ECEF-frame axes.
+     */
+    public ECEFFrame(final Point3D position,
+                     final double vx, final double vy, final double vz) {
+<span class="fc" id="L147">        this(position);</span>
+<span class="fc" id="L148">        setVelocityCoordinates(vx, vy, vz);</span>
+<span class="fc" id="L149">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param position body position expressed in meters (m) and resolved along ECEF-frame axes.
+     * @param speedX   x coordinate of velocity to be set resolved along ECEF-frame axes.
+     * @param speedY   y coordinate of velocity to be set resolved along ECEF-frame axes.
+     * @param speedZ   z coordinate of velocity to be set resolved along ECEF-frame axes.
+     */
+    public ECEFFrame(final Point3D position,
+                     final Speed speedX, final Speed speedY, final Speed speedZ) {
+<span class="fc" id="L161">        this(position);</span>
+<span class="fc" id="L162">        setSpeedCoordinates(speedX, speedY, speedZ);</span>
+<span class="fc" id="L163">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param position cartesian position.
+     * @param speedX   x coordinate of velocity to be set resolved along ECEF-frame axes.
+     * @param speedY   y coordinate of velocity to be set resolved along ECEF-frame axes.
+     * @param speedZ   z coordinate of velocity to be set resolved along ECEF-frame axes.
+     */
+    public ECEFFrame(final ECEFPosition position,
+                     final Speed speedX, final Speed speedY, final Speed speedZ) {
+<span class="fc" id="L175">        this(position);</span>
+<span class="fc" id="L176">        setSpeedCoordinates(speedX, speedY, speedZ);</span>
+<span class="fc" id="L177">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param position body position expressed in meters (m) and resolved along ECEF-frame axes.
+     * @param velocity velocity to be set resolved along ECEF-frame axes.
+     */
+    public ECEFFrame(final Point3D position,
+                     final ECEFVelocity velocity) {
+<span class="fc" id="L187">        this(position);</span>
+<span class="fc" id="L188">        setVelocity(velocity);</span>
+<span class="fc" id="L189">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param x      cartesian x coordinate of body position expressed in meters (m) with respect ECEF frame, resolved
+     *               along ECEF-frame axes.
+     * @param y      cartesian y coordinate of body position expressed in meters (m) with respect ECEF frame, resolved
+     *               along ECEF-frame axes.
+     * @param z      cartesian z coordinate of body position expressed in meters (m) with respect ECEF frame, resolved
+     *               along ECEF-frame axes.
+     * @param speedX x coordinate of velocity to be set resolved along ECEF-frame axes.
+     * @param speedY y coordinate of velocity to be set resolved along ECEF-frame axes.
+     * @param speedZ z coordinate of velocity to be set resolved along ECEF-frame axes.
+     */
+    public ECEFFrame(final double x, final double y, final double z,
+                     final Speed speedX, final Speed speedY, final Speed speedZ) {
+<span class="fc" id="L206">        this(x, y, z);</span>
+<span class="fc" id="L207">        setSpeedCoordinates(speedX, speedY, speedZ);</span>
+<span class="fc" id="L208">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param x        cartesian x coordinate of body position expressed in meters (m) with respect ECEF frame, resolved
+     *                 along ECEF-frame axes.
+     * @param y        cartesian y coordinate of body position expressed in meters (m) with respect ECEF frame, resolved
+     *                 along ECEF-frame axes.
+     * @param z        cartesian z coordinate of body position expressed in meters (m) with respect ECEF frame, resolved
+     *                 along ECEF-frame axes.
+     * @param velocity velocity to be set resolved along ECEF-frame axes.
+     */
+    public ECEFFrame(final double x, final double y, final double z,
+                     final ECEFVelocity velocity) {
+<span class="fc" id="L223">        this(x, y, z);</span>
+<span class="fc" id="L224">        setVelocity(velocity);</span>
+<span class="fc" id="L225">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param positionX cartesian x coordinate of body position to be set, resolved along ECEF-frame axes.
+     * @param positionY cartesian y coordinate of body position to be set, resolved along ECEF-frame axes.
+     * @param positionZ cartesian z coordinate of body position to be set, resolved along ECEF-frame axes.
+     * @param vx        x coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *                  ECEF-frame axes.
+     * @param vy        y coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *                  ECEF-frame axes.
+     * @param vz        z coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *                  ECEF-frame axes.
+     */
+    public ECEFFrame(final Distance positionX, final Distance positionY,
+                     final Distance positionZ, final double vx,
+                     final double vy, final double vz) {
+<span class="fc" id="L243">        this(positionX, positionY, positionZ);</span>
+<span class="fc" id="L244">        setVelocityCoordinates(vx, vy, vz);</span>
+<span class="fc" id="L245">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param positionX cartesian x coordinate of body position to be set, resolved along ECEF-frame axes.
+     * @param positionY cartesian y coordinate of body position to be set, resolved along ECEF-frame axes.
+     * @param positionZ cartesian z coordinate of body position to be set, resolved along ECEF-frame axes.
+     * @param speedX    x coordinate of velocity to be set, resolved along ECEF-frame axes.
+     * @param speedY    y coordinate of velocity to be set, resolved along ECEF-frame axes.
+     * @param speedZ    z coordinate of velocity to be set, resolved along ECEF-frame axes.
+     */
+    public ECEFFrame(final Distance positionX, final Distance positionY,
+                     final Distance positionZ, final Speed speedX,
+                     final Speed speedY, final Speed speedZ) {
+<span class="fc" id="L260">        this(positionX, positionY, positionZ);</span>
+<span class="fc" id="L261">        setSpeedCoordinates(speedX, speedY, speedZ);</span>
+<span class="fc" id="L262">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param positionX cartesian x coordinate of body position to be set, resolved along ECEF-frame axes.
+     * @param positionY cartesian y coordinate of body position to be set, resolved along ECEF-frame axes.
+     * @param positionZ cartesian z coordinate of body position to be set, resolved along ECEF-frame axes.
+     * @param velocity  velocity to be set resolved along ECEF-frame axes.
+     */
+    public ECEFFrame(final Distance positionX, final Distance positionY,
+                     final Distance positionZ, final ECEFVelocity velocity) {
+<span class="fc" id="L274">        this(positionX, positionY, positionZ);</span>
+<span class="fc" id="L275">        setVelocity(velocity);</span>
+<span class="fc" id="L276">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param position cartesian position.
+     * @param velocity velocity to be set resolved along ECEF-frame axes.
+     */
+    public ECEFFrame(final ECEFPosition position,
+                     final ECEFVelocity velocity) {
+<span class="fc" id="L286">        this(position);</span>
+<span class="fc" id="L287">        setVelocity(velocity);</span>
+<span class="fc" id="L288">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param positionAndVelocity position and velocity to be set resolved
+     *                            along ECEF-frame axes.
+     */
+    public ECEFFrame(final ECEFPositionAndVelocity positionAndVelocity) {
+<span class="fc" id="L297">        this();</span>
+<span class="fc" id="L298">        setPositionAndVelocity(positionAndVelocity);</span>
+<span class="fc" id="L299">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param x cartesian x coordinate of body position expressed in meters (m) with respect ECEF frame, resolved along
+     *          ECEF-frame axes.
+     * @param y cartesian y coordinate of body position expressed in meters (m) with respect ECEF frame, resolved along
+     *          ECEF-frame axes.
+     * @param z cartesian z coordinate of body position expressed in meters (m) with respect ECEF frame, resolved along
+     *          ECEF-frame axes.
+     * @param c Body to ECEF coordinate transformation matrix to be set.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
+     */
+    public ECEFFrame(final double x, final double y, final double z, final CoordinateTransformation c)
+            throws InvalidSourceAndDestinationFrameTypeException {
+<span class="fc" id="L315">        this(x, y, z);</span>
+<span class="fc" id="L316">        setCoordinateTransformation(c);</span>
+<span class="fc" id="L317">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param position cartesian position.
+     * @param c        Body to ECEF coordinate transformation matrix to be set.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
+     */
+    public ECEFFrame(final ECEFPosition position, final CoordinateTransformation c)
+            throws InvalidSourceAndDestinationFrameTypeException {
+<span class="fc" id="L328">        this(position);</span>
+<span class="fc" id="L329">        setCoordinateTransformation(c);</span>
+<span class="fc" id="L330">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param position body position expressed in meters (m) and resolved along ECEF-frame axes.
+     * @param c        Body to ECEF coordinate transformation matrix to be set.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
+     */
+    public ECEFFrame(final Point3D position,
+                     final CoordinateTransformation c)
+            throws InvalidSourceAndDestinationFrameTypeException {
+
+<span class="fc" id="L343">        this(position);</span>
+<span class="fc" id="L344">        setCoordinateTransformation(c);</span>
+<span class="fc" id="L345">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param positionX cartesian x coordinate of body position to be set, resolved along ECEF-frame axes.
+     * @param positionY cartesian y coordinate of body position to be set, resolved along ECEF-frame axes.
+     * @param positionZ cartesian z coordinate of body position to be set, resolved along ECEF-frame axes.
+     * @param c         Body to ECEF coordinate transformation matrix to be set.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
+     */
+    public ECEFFrame(final Distance positionX, final Distance positionY,
+                     final Distance positionZ,
+                     final CoordinateTransformation c)
+            throws InvalidSourceAndDestinationFrameTypeException {
+
+<span class="fc" id="L361">        this(positionX, positionY, positionZ);</span>
+<span class="fc" id="L362">        setCoordinateTransformation(c);</span>
+<span class="fc" id="L363">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param x  cartesian x coordinate of body position expressed in meters (m) with respect ECEF frame, resolved along
+     *           ECEF-frame axes.
+     * @param y  cartesian y coordinate of body position expressed in meters (m) with respect ECEF frame, resolved along
+     *           ECEF-frame axes.
+     * @param z  cartesian z coordinate of body position expressed in meters (m) with respect ECEF frame, resolved along
+     *           ECEF-frame axes.
+     * @param vx x coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *           ECEF-frame axes.
+     * @param vy y coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *           ECEF-frame axes.
+     * @param vz z coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *           ECEF-frame axes.
+     * @param c  Body to ECEF coordinate transformation matrix to be set.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
+     */
+    public ECEFFrame(final double x, final double y, final double z,
+                     final double vx, final double vy, final double vz,
+                     final CoordinateTransformation c)
+            throws InvalidSourceAndDestinationFrameTypeException {
+<span class="fc" id="L387">        this(x, y, z, vx, vy, vz);</span>
+<span class="fc" id="L388">        setCoordinateTransformation(c);</span>
+<span class="fc" id="L389">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param position cartesian position.
+     * @param vx       x coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *                 ECEF-frame axes.
+     * @param vy       y coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *                 ECEF-frame axes.
+     * @param vz       z coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *                 ECEF-frame axes.
+     * @param c        Body to ECEF coordinate transformation matrix to be set.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
+     */
+    public ECEFFrame(final ECEFPosition position,
+                     final double vx, final double vy, final double vz,
+                     final CoordinateTransformation c)
+            throws InvalidSourceAndDestinationFrameTypeException {
+<span class="fc" id="L408">        this(position, vx, vy, vz);</span>
+<span class="fc" id="L409">        setCoordinateTransformation(c);</span>
+<span class="fc" id="L410">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param x        cartesian x coordinate of body position expressed in meters (m) with respect ECEF frame,
+     *                 resolved along ECEF-frame axes.
+     * @param y        cartesian y coordinate of body position expressed in meters (m) with respect ECEF frame,
+     *                 resolved along ECEF-frame axes.
+     * @param z        cartesian z coordinate of body position expressed in meters (m) with respect ECEF frame,
+     *                 resolved along ECEF-frame axes.
+     * @param velocity velocity to be set resolved along ECEF-frame axes.
+     * @param c        Body to ECEF coordinate transformation matrix to be set.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
+     */
+    public ECEFFrame(final double x, final double y, final double z,
+                     final ECEFVelocity velocity,
+                     final CoordinateTransformation c)
+            throws InvalidSourceAndDestinationFrameTypeException {
+<span class="fc" id="L429">        this(x, y, z, velocity);</span>
+<span class="fc" id="L430">        setCoordinateTransformation(c);</span>
+<span class="fc" id="L431">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param position cartesian position.
+     * @param velocity velocity to be set resolved along ECEF-frame axes.
+     * @param c        Body to ECEF coordinate transformation matrix to be set.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
+     */
+    public ECEFFrame(final ECEFPosition position, final ECEFVelocity velocity,
+                     final CoordinateTransformation c)
+            throws InvalidSourceAndDestinationFrameTypeException {
+<span class="fc" id="L444">        this(position, velocity);</span>
+<span class="fc" id="L445">        setCoordinateTransformation(c);</span>
+<span class="fc" id="L446">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param positionAndVelocity position and velocity to be set resolved along
+     *                            ECEF-frame axes.
+     * @param c                   Body to ECEF coordinate transformation matrix to be
+     *                            set.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
+     */
+    public ECEFFrame(final ECEFPositionAndVelocity positionAndVelocity,
+                     final CoordinateTransformation c)
+            throws InvalidSourceAndDestinationFrameTypeException {
+<span class="fc" id="L460">        this(positionAndVelocity);</span>
+<span class="fc" id="L461">        setCoordinateTransformation(c);</span>
+<span class="fc" id="L462">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param position body position expressed in meters (m) and resolved along ECEF-frame axes.
+     * @param vx       x coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *                 ECEF-frame axes.
+     * @param vy       y coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *                 ECEF-frame axes.
+     * @param vz       z coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *                 ECEF-frame axes.
+     * @param c        Body to ECEF coordinate transformation matrix to be set.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
+     */
+    public ECEFFrame(final Point3D position,
+                     final double vx, final double vy, final double vz,
+                     final CoordinateTransformation c)
+            throws InvalidSourceAndDestinationFrameTypeException {
+<span class="fc" id="L481">        this(position, vx, vy, vz);</span>
+<span class="fc" id="L482">        setCoordinateTransformation(c);</span>
+<span class="fc" id="L483">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param position body position expressed in meters (m) and resolved along ECEF-frame axes.
+     * @param velocity velocity to be set resolved along ECEF-frame axes.
+     * @param c        Body to ECEF coordinate transformation matrix to be set.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
+     */
+    public ECEFFrame(final Point3D position,
+                     final ECEFVelocity velocity,
+                     final CoordinateTransformation c)
+            throws InvalidSourceAndDestinationFrameTypeException {
+<span class="fc" id="L497">        this(position, velocity);</span>
+<span class="fc" id="L498">        setCoordinateTransformation(c);</span>
+<span class="fc" id="L499">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param position body position expressed in meters (m) and resolved along ECEF-frame axes.
+     * @param speedX   x coordinate of velocity to be set, resolved along ECEF-frame axes.
+     * @param speedY   y coordinate of velocity to be set, resolved along ECEF-frame axes.
+     * @param speedZ   z coordinate of velocity to be set, resolved along ECEF-frame axes.
+     * @param c        Body to ECEF coordinate transformation matrix to be set.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
+     */
+    public ECEFFrame(final Point3D position,
+                     final Speed speedX, final Speed speedY, final Speed speedZ,
+                     final CoordinateTransformation c)
+            throws InvalidSourceAndDestinationFrameTypeException {
+<span class="fc" id="L515">        this(position, speedX, speedY, speedZ);</span>
+<span class="fc" id="L516">        setCoordinateTransformation(c);</span>
+<span class="fc" id="L517">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param position cartesian position.
+     * @param speedX   x coordinate of velocity to be set, resolved along ECEF-frame axes.
+     * @param speedY   y coordinate of velocity to be set, resolved along ECEF-frame axes.
+     * @param speedZ   z coordinate of velocity to be set, resolved along ECEF-frame axes.
+     * @param c        Body to ECEF coordinate transformation matrix to be set.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
+     */
+    public ECEFFrame(final ECEFPosition position,
+                     final Speed speedX, final Speed speedY, final Speed speedZ,
+                     final CoordinateTransformation c)
+            throws InvalidSourceAndDestinationFrameTypeException {
+<span class="fc" id="L533">        this(position, speedX, speedY, speedZ);</span>
+<span class="fc" id="L534">        setCoordinateTransformation(c);</span>
+<span class="fc" id="L535">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param x      cartesian x coordinate of body position expressed in meters (m) with respect ECEF frame, resolved
+     *               along ECEF-frame axes.
+     * @param y      cartesian y coordinate of body position expressed in meters (m) with respect ECEF frame, resolved
+     *               along ECEF-frame axes.
+     * @param z      cartesian z coordinate of body position expressed in meters (m) with respect ECEF frame, resolved
+     *               along ECEF-frame axes.
+     * @param speedX x coordinate of velocity to be set, resolved along ECEF-frame axes.
+     * @param speedY y coordinate of velocity to be set, resolved along ECEF-frame axes.
+     * @param speedZ z coordinate of velocity to be set, resolved along ECEF-frame axes.
+     * @param c      Body to ECEF coordinate transformation matrix to be set.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
+     */
+    public ECEFFrame(final double x, final double y, final double z,
+                     final Speed speedX, final Speed speedY, final Speed speedZ,
+                     final CoordinateTransformation c)
+            throws InvalidSourceAndDestinationFrameTypeException {
+<span class="fc" id="L556">        this(x, y, z, speedX, speedY, speedZ);</span>
+<span class="fc" id="L557">        setCoordinateTransformation(c);</span>
+<span class="fc" id="L558">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param positionX cartesian x coordinate of body position to be set, resolved along ECEF-frame axes.
+     * @param positionY cartesian y coordinate of body position to be set, resolved along ECEF-frame axes.
+     * @param positionZ cartesian z coordinate of body position to be set, resolved along ECEF-frame axes.
+     * @param vx        x coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *                  ECEF-frame axes.
+     * @param vy        y coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *                  ECEF-frame axes.
+     * @param vz        z coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *                  ECEF-frame axes.
+     * @param c         Body to ECEF coordinate transformation matrix to be set.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
+     */
+    public ECEFFrame(final Distance positionX, final Distance positionY,
+                     final Distance positionZ, final double vx,
+                     final double vy, final double vz,
+                     final CoordinateTransformation c)
+            throws InvalidSourceAndDestinationFrameTypeException {
+<span class="fc" id="L580">        this(positionX, positionY, positionZ, vx, vy, vz);</span>
+<span class="fc" id="L581">        setCoordinateTransformation(c);</span>
+<span class="fc" id="L582">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param positionX cartesian x coordinate of body position to be set, resolved along ECEF-frame axes.
+     * @param positionY cartesian y coordinate of body position to be set, resolved along ECEF-frame axes.
+     * @param positionZ cartesian z coordinate of body position to be set, resolved along ECEF-frame axes.
+     * @param velocity  velocity to be set resolved along ECEF-frame axes.
+     * @param c         Body to ECEF coordinate transformation matrix to be set.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
+     */
+    public ECEFFrame(final Distance positionX, final Distance positionY,
+                     final Distance positionZ, final ECEFVelocity velocity,
+                     final CoordinateTransformation c)
+            throws InvalidSourceAndDestinationFrameTypeException {
+<span class="fc" id="L598">        this(positionX, positionY, positionZ, velocity);</span>
+<span class="fc" id="L599">        setCoordinateTransformation(c);</span>
+<span class="fc" id="L600">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param positionX cartesian x coordinate of body position to be set, resolved along ECEF-frame axes.
+     * @param positionY cartesian y coordinate of body position to be set, resolved along ECEF-frame axes.
+     * @param positionZ cartesian z coordinate of body position to be set, resolved along ECEF-frame axes.
+     * @param speedX    x coordinate of velocity to be set, resolved along ECEF-frame axes.
+     * @param speedY    y coordinate of velocity to be set, resolved along ECEF-frame axes.
+     * @param speedZ    z coordinate of velocity to be set, resolved along ECEF-frame axes.
+     * @param c         Body to ECEF coordinate transformation matrix to be set.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
+     */
+    public ECEFFrame(final Distance positionX, final Distance positionY,
+                     final Distance positionZ, final Speed speedX,
+                     final Speed speedY, final Speed speedZ,
+                     final CoordinateTransformation c)
+            throws InvalidSourceAndDestinationFrameTypeException {
+<span class="fc" id="L619">        this(positionX, positionY, positionZ, speedX, speedY, speedZ);</span>
+<span class="fc" id="L620">        setCoordinateTransformation(c);</span>
+<span class="fc" id="L621">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param input ECEF frame to copy data from.
+     */
+    public ECEFFrame(final ECEFFrame input) {
+<span class="fc" id="L629">        this();</span>
+<span class="fc" id="L630">        copyFrom(input);</span>
+<span class="fc" id="L631">    }</span>
+
+    /**
+     * Gets cartesian position.
+     *
+     * @param result instance where cartesian position will be stored.
+     */
+    public void getECEFPosition(final ECEFPosition result) {
+<span class="fc" id="L639">        result.setCoordinates(mX, mY, mZ);</span>
+<span class="fc" id="L640">    }</span>
+
+    /**
+     * Gets cartesian position.
+     *
+     * @return cartesian position.
+     */
+    public ECEFPosition getECEFPosition() {
+<span class="fc" id="L648">        return new ECEFPosition(mX, mY, mZ);</span>
+    }
+
+    /**
+     * Sets cartesian position.
+     *
+     * @param position cartesian position to be set.
+     */
+    public void setPosition(final ECEFPosition position) {
+<span class="fc" id="L657">        mX = position.getX();</span>
+<span class="fc" id="L658">        mY = position.getY();</span>
+<span class="fc" id="L659">        mZ = position.getZ();</span>
+<span class="fc" id="L660">    }</span>
+
+    /**
+     * Gets cartesian velocity.
+     *
+     * @param result instance where cartesian velocity will be stored.
+     */
+    public void getECEFVelocity(final ECEFVelocity result) {
+<span class="fc" id="L668">        result.setCoordinates(mVx, mVy, mVz);</span>
+<span class="fc" id="L669">    }</span>
+
+    /**
+     * Gets cartesian velocity.
+     *
+     * @return cartesian velocity.
+     */
+    public ECEFVelocity getECEFVelocity() {
+<span class="fc" id="L677">        return new ECEFVelocity(mVx, mVy, mVz);</span>
+    }
+
+    /**
+     * Sets cartesian velocity.
+     *
+     * @param velocity cartesian velocity to be set.
+     */
+    public void setVelocity(final ECEFVelocity velocity) {
+<span class="fc" id="L686">        mVx = velocity.getVx();</span>
+<span class="fc" id="L687">        mVy = velocity.getVy();</span>
+<span class="fc" id="L688">        mVz = velocity.getVz();</span>
+<span class="fc" id="L689">    }</span>
+
+    /**
+     * Gets cartesian position and velocity.
+     *
+     * @param result instance where cartesian position and velocity will be stored.
+     */
+    public void getPositionAndVelocity(final ECEFPositionAndVelocity result) {
+<span class="fc" id="L697">        result.setPositionCoordinates(mX, mY, mZ);</span>
+<span class="fc" id="L698">        result.setVelocityCoordinates(mVx, mVy, mVz);</span>
+<span class="fc" id="L699">    }</span>
+
+    /**
+     * Gets cartesian position and velocity.
+     *
+     * @return cartesian position and velocity.
+     */
+    public ECEFPositionAndVelocity getPositionAndVelocity() {
+<span class="fc" id="L707">        return new ECEFPositionAndVelocity(mX, mY, mZ, mVx, mVy, mVz);</span>
+    }
+
+    /**
+     * Sets cartesian position and velocity.
+     *
+     * @param positionAndVelocity cartesian position and velocity.
+     */
+    public void setPositionAndVelocity(
+            final ECEFPositionAndVelocity positionAndVelocity) {
+<span class="fc" id="L717">        mX = positionAndVelocity.getX();</span>
+<span class="fc" id="L718">        mY = positionAndVelocity.getY();</span>
+<span class="fc" id="L719">        mZ = positionAndVelocity.getZ();</span>
+
+<span class="fc" id="L721">        mVx = positionAndVelocity.getVx();</span>
+<span class="fc" id="L722">        mVy = positionAndVelocity.getVy();</span>
+<span class="fc" id="L723">        mVz = positionAndVelocity.getVz();</span>
+<span class="fc" id="L724">    }</span>
+
+    /**
+     * Gets coordinate transformation matrix.
+     *
+     * @return coordinate transformation matrix.
+     */
+    @Override
+    public CoordinateTransformation getCoordinateTransformation() {
+<span class="fc" id="L733">        final CoordinateTransformation result = new CoordinateTransformation(FrameType.BODY_FRAME,</span>
+                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+<span class="fc" id="L735">        getCoordinateTransformation(result);</span>
+<span class="fc" id="L736">        return result;</span>
+    }
+
+    /**
+     * Gets coordinate transformation matrix.
+     *
+     * @param result instance where coordinate transformation matrix will be copied to.
+     */
+    @Override
+    public void getCoordinateTransformation(final CoordinateTransformation result) {
+<span class="fc" id="L746">        mC.copyTo(result);</span>
+<span class="fc" id="L747">    }</span>
+
+    /**
+     * Sets coordinate transformation matrix.
+     * Provided value must be a body to ECEF transformation matrix.
+     *
+     * @param c coordinate transformation matrix to be set.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
+     */
+    @Override
+    public void setCoordinateTransformation(final CoordinateTransformation c)
+            throws InvalidSourceAndDestinationFrameTypeException {
+<span class="fc bfc" id="L759" title="All 2 branches covered.">        if (!isValidCoordinateTransformation(c)) {</span>
+<span class="fc" id="L760">            throw new InvalidSourceAndDestinationFrameTypeException();</span>
+        }
+
+<span class="fc" id="L763">        mC = c;</span>
+<span class="fc" id="L764">    }</span>
+
+    /**
+     * Checks whether provided coordinate transformation is valid or not.
+     * Only body to ECEF transformation matrices are considered to be valid.
+     *
+     * @param c coordinate transformation matrix to be checked.
+     * @return true if provided value is valid, false otherwise.
+     */
+    public static boolean isValidCoordinateTransformation(final CoordinateTransformation c) {
+<span class="fc bfc" id="L774" title="All 2 branches covered.">        return c.getSourceType() == FrameType.BODY_FRAME &amp;&amp;</span>
+<span class="fc bfc" id="L775" title="All 2 branches covered.">                c.getDestinationType() == FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME;</span>
+    }
+
+    /**
+     * Makes a copy of this instance.
+     *
+     * @return a copy of this instance.
+     * @throws CloneNotSupportedException if clone fails for some reason.
+     */
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+<span class="fc" id="L786">        final ECEFFrame result = (ECEFFrame) super.clone();</span>
+<span class="fc" id="L787">        copyTo(result);</span>
+<span class="fc" id="L788">        mClass = ECEFFrame.class;</span>
+<span class="fc" id="L789">        return result;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -1,0 +1,2076 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Geodesic.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-navigation</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.navigation.geodesic</a> &gt; <span class="el_source">Geodesic.java</span></div><h1>Geodesic.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2018 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.navigation.geodesic;
+
+/**
+ * Geodesic calculations.
+ * The shortest path between two points on an ellipsoid at (&lt;i&gt;lat1&lt;/i&gt;, &lt;i&gt;lon1&lt;/i&gt;) and
+ * (&lt;i&gt;lat2&lt;/i&gt;, &lt;i&gt;lon2&lt;/i&gt;) is called the geodesic. Its length is &lt;i&gt;s12&lt;/i&gt; and the geodesic
+ * from point 1 to point 2 has azimuths &lt;i&gt;azi1&lt;/i&gt; and &lt;i&gt;azi2&lt;/i&gt; at the two end points. (The
+ * azimuth is the heading measured clockwise from north. &lt;i&gt;azi2&lt;/i&gt; is the &quot;forward&quot; azimuth, i.e.,
+ * the heading that takes you beyond point 2 not back to point 1.).
+ * Given &lt;i&gt;lat1&lt;/i&gt;, &lt;i&gt;lon1&lt;/i&gt;, &lt;i&gt;azi1&lt;/i&gt;, and &lt;i&gt;s12&lt;/i&gt;, we can determine &lt;i&gt;lat2&lt;/i&gt;,
+ * &lt;i&gt;lon2&lt;/i&gt;, and &lt;i&gt;azi2&lt;/i&gt;. This is the &lt;i&gt;direct&lt;/i&gt; geodesic problem and its solution is given
+ * by th function {@link #direct}. (If &lt;i&gt;s12&lt;/i&gt; is sufficiently large that the geodesic wraps
+ * more than halfway around the earth, there will be another geodesic between the points with
+ * a smaller &lt;i&gt;s12&lt;/i&gt;.)
+ * Given &lt;i&gt;lat1&lt;/i&gt;, &lt;i&gt;lon1&lt;/i&gt;, &lt;i&gt;lat2&lt;/i&gt;, and &lt;i&gt;lon2&lt;/i&gt;, we can determine &lt;i&gt;azi1&lt;/i&gt;,
+ * &lt;i&gt;azi2&lt;/i&gt;, and &lt;i&gt;s12&lt;/i&gt;. This is the &lt;i&gt;inverse&lt;/i&gt; geodesic problem, whose solution is
+ * given by {@link #inverse}. Usually, the solution to the inverse problem is unique. In cases where
+ * there are multiple solutions (all with the same &lt;i&gt;s12&lt;/i&gt;, of course), all the solutions can be
+ * easily generated once a particular solution is provided.
+ * The standard way of specifying the direct problem is to specify the distance &lt;i&gt;s12&lt;/i&gt; to the
+ * second point. However, it is sometimes useful instead to specify the arc length &lt;i&gt;a12&lt;/i&gt; (in
+ * degrees) on the auxiliary sphere. This is a mathematical construct used in solving the geodesic
+ * problems. The solution of the direct problem in this form is provided by {@link #arcDirect}. An
+ * arc length in excess of 180&amp;deg; indicates that the geodesic is not the shortest path. In addition,
+ * the arc length between an equatorial crossing and the next extremum of latitude for a geodesic is
+ * 90&amp;deg;.
+ * This class can also calculate several other quantities related to geodesics. These are:
+ * &lt;ul&gt;
+ *     &lt;li&gt;
+ *         &lt;i&gt;reduced length&lt;/i&gt;. If we fix the first point and increase &lt;i&gt;azi1&lt;/i&gt; by &lt;i&gt;dazi1&lt;/i&gt;
+ *         (radians), the second point is displaced &lt;i&gt;m12&lt;/i&gt; &lt;i&gt;dazi1&lt;/i&gt; in the direction
+ *         &lt;i&gt;azi2&lt;/i&gt; + 90&amp;deg;. The quantity &lt;i&gt;m12&lt;/i&gt; is called the &quot;reduced length&quot; and is
+ *         symmetric under interchange of the two points. On a curved surface the reduced length
+ *         obeys a symmetry relation, &lt;i&gt;m12&lt;/i&gt; + &lt;i&gt;m21&lt;/i&gt; = 0. On a flat surface, we have
+ *         &lt;i&gt;m12&lt;/i&gt; = &lt;i&gt;s12&lt;/i&gt;. The ratio &lt;i&gt;s12&lt;/i&gt;/&lt;i&gt;m12&lt;/i&gt; gives the azimuthal scale for
+ *         an azimuthal equidistant projection.
+ *     &lt;/li&gt;
+ *     &lt;li&gt;
+ *         &lt;i&gt;geodesic scale&lt;/i&gt;. Consider a reference geodesic and a second geodesic parallel to this
+ *         one at point 1 and separated by a small distance &lt;i&gt;dt&lt;/i&gt;. The separation of the two
+ *         geodesics at point 2 is &lt;i&gt;M12&lt;/i&gt;&lt;i&gt;dt&lt;/i&gt; where &lt;i&gt;M12&lt;/i&gt; is called the &quot;geodesic scale&quot;.
+ *         &lt;i&gt;M21&lt;/i&gt; is defined similarly (with the geodesics being parallel at point 2). On a flat
+ *         surface, we have &lt;i&gt;M12&lt;/i&gt; = &lt;i&gt;M21&lt;/i&gt; = 1. The quantity 1/&lt;i&gt;M12&lt;/i&gt; gives the scale
+ *         of the Cassini-Soldner projection.
+ *     &lt;/li&gt;
+ *     &lt;li&gt;
+ *         &lt;i&gt;area&lt;/i&gt;. The area between the geodesic from point 1 to point 2 and the equation is
+ *         represented by &lt;i&gt;S12&lt;/i&gt;; it is the area, measured counter-clockwise, of the geodesic
+ *         quadrilateral with corners (&lt;i&gt;lat1&lt;/i&gt;, &lt;i&gt;lon1&lt;/i&gt;), (0, &lt;i&gt;lon1&lt;/i&gt;), (0, &lt;i&gt;lon2&lt;/i&gt;), and
+ *         (&lt;i&gt;lat2&lt;/i&gt;, &lt;i&gt;lon2&lt;/i&gt;). It can be used to compute the area of any single geodesic
+ *         polygon.
+ *     &lt;/li&gt;
+ * &lt;/ul&gt;
+ * The quantities &lt;i&gt;m12&lt;/i&gt;, &lt;i&gt;M12&lt;/i&gt;, &lt;i&gt;M21&lt;/i&gt; which all specify the behavior of nearby geodesics
+ * obey addition rules. If points 1, 2, and 3 all lie on a single geodesic, then the following rules hold:
+ * &lt;ul&gt;
+ *     &lt;li&gt;
+ *         &lt;i&gt;s13&lt;/i&gt; = &lt;i&gt;s12&lt;/i&gt; + &lt;i&gt;s23&lt;/i&gt;
+ *     &lt;/li&gt;
+ *     &lt;li&gt;
+ *         &lt;i&gt;a13&lt;/i&gt; = &lt;i&gt;a12&lt;/i&gt; + &lt;i&gt;a23&lt;/i&gt;
+ *     &lt;/li&gt;
+ *     &lt;li&gt;
+ *         &lt;i&gt;S13&lt;/i&gt; = &lt;i&gt;S12&lt;/i&gt; + &lt;i&gt;S23&lt;/i&gt;
+ *     &lt;/li&gt;
+ *     &lt;li&gt;
+ *         &lt;i&gt;m13&lt;/i&gt; = &lt;i&gt;m12&lt;/i&gt; &lt;i&gt;M23&lt;/i&gt; + &lt;i&gt;m23&lt;/i&gt; &lt;i&gt;M21&lt;/i&gt;
+ *     &lt;/li&gt;
+ *     &lt;li&gt;
+ *         &lt;i&gt;M13&lt;/i&gt; = &lt;i&gt;M12&lt;/i&gt; &lt;i&gt;M23&lt;/i&gt; &amp;minus; (1 &amp;minus; &lt;i&gt;M12&lt;/i&gt; &lt;i&gt;M21&lt;/i&gt;) &lt;i&gt;m23&lt;/i&gt; / &lt;i&gt;m12&lt;/i&gt;
+ *     &lt;/li&gt;
+ *     &lt;li&gt;
+ *         &lt;i&gt;M31&lt;/i&gt; = &lt;i&gt;M32&lt;/i&gt; &lt;i&gt;M21&lt;/i&gt; &amp;minus; (1 &amp;minus; &lt;i&gt;M23&lt;/i&gt; &lt;i&gt;M32&lt;/i&gt;) &lt;i&gt;m12&lt;/i&gt; / &lt;i&gt;m23&lt;/i&gt;
+ *     &lt;/li&gt;
+ * &lt;/ul&gt;
+ * The results of the geodesic calculations are bundled up into a {@link GeodesicData} object which includes the
+ * input parameters and all the computed results, i.e. &lt;i&gt;lat1&lt;/i&gt;, &lt;i&gt;lon1&lt;/i&gt;, &lt;i&gt;azi1&lt;/i&gt;, &lt;i&gt;lat2&lt;/i&gt;,
+ * &lt;i&gt;lon2&lt;/i&gt;, &lt;i&gt;azi2&lt;/i&gt;, &lt;i&gt;s12&lt;/i&gt;, &lt;i&gt;a12&lt;/i&gt;, &lt;i&gt;m12&lt;/i&gt;, &lt;i&gt;M12&lt;/i&gt;, &lt;i&gt;M21&lt;/i&gt;, &lt;i&gt;S12&lt;/i&gt;.
+ * The functions {@link #direct(double, double, double, double, int)},
+ * {@link #arcDirect(double, double, double, double, int)} and {@link #inverse(double, double, double, double, int)}
+ * include an optional final argument &lt;i&gt;outmask&lt;/i&gt; which allows you to specify which results should be computed and
+ * returned. If you omit &lt;i&gt;outmask&lt;/i&gt;, then the &quot;standard&quot; geodesic results are computed (latitudes,  longitudes,
+ * azimuths, and distance). &lt;i&gt;outmask&lt;/i&gt; is bitor'ed combination of {@link GeodesicMask} values. For example, if
+ * you wish just to compute the distance between two points you would call, e.g.,
+ * &lt;pre&gt;
+ *     {@code
+ *     GeodesicData g = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2, GeodesicMask.DISTANCE);
+ *     }
+ * &lt;/pre&gt;
+ * Additional functionality is provided by the {@link GeodesicLine} class, which allows a sequence of points along a
+ * geodesic to be computed.
+ * The shortest distance returned by the solution of the inverse problem is (obviously) uniquely defined. However, in
+ * a few special cases there are multiple azimuths which yield the same shortest distance. Here is a catalog of those
+ * cases:
+ * &lt;ul&gt;
+ *     &lt;li&gt;
+ *         &lt;i&gt;lat1&lt;/i&gt; = &amp;minus;&lt;i&gt;lat2&lt;/i&gt; (with neither point at a pole). If
+ *         &lt;i&gt;azi1&lt;/i&gt; = &lt;i&gt;azi2&lt;/i&gt;, the geodesic is unique. Otherwise there are two geodesics and the second one is
+ *         obtained by setting [&lt;i&gt;azi1&lt;/i&gt;, &lt;i&gt;azi2&lt;/i&gt;] &amp;rarr; [&lt;i&gt;azi2&lt;/i&gt;, &lt;i&gt;azi1&lt;/i&gt;], [&lt;i&gt;M12&lt;/i&gt;, &lt;i&gt;M21&lt;/i&gt;]
+ *         &amp;rarr; [&lt;i&gt;M21&lt;/i&gt;, &lt;i&gt;M12&lt;/i&gt;], &lt;i&gt;S12&lt;/i&gt; &amp;rarr; &amp;minus;&lt;i&gt;S12&lt;/i&gt;.
+ *         (This occurs when the longitude difference is near &amp;plusmn;180&amp;deg; for oblate ellipsoids.)
+ *     &lt;/li&gt;
+ *     &lt;li&gt;
+ *         &lt;i&gt;lon2&lt;/i&gt; = &lt;i&gt;lon1&lt;/i&gt; + 180&amp;deg; (with neither point at pole). If &lt;i&gt;azi1&lt;/i&gt; = 0&amp;deg; or
+ *         &amp;plusmn;180&amp;deg;, the geodesic is unique. Otherwise there are two geodesics and the second one is obtained
+ *         by setting [&lt;i&gt;azi1&lt;/i&gt;, &lt;i&gt;azi2&lt;/i&gt;] &amp;rarr; [&amp;minus;&lt;i&gt;azi1&lt;/i&gt;, &amp;minus;&lt;i&gt;azi2&lt;/i&gt;], &lt;i&gt;S12&lt;/i&gt; &amp;rarr;
+ *         &amp;minus; &lt;i&gt;S12&lt;/i&gt;. (This occurs when &lt;i&gt;lat2&lt;/i&gt; is near &amp;minus;&lt;i&gt;lat1&lt;/i&gt; for prolate ellipsoids.)
+ *     &lt;/li&gt;
+ *     &lt;li&gt;
+ *         Points 1 and 2 at opposite poles. There are infinitely many geodesics which can be generated by setting
+ *         [&lt;i&gt;azi1&lt;/i&gt;, &lt;i&gt;azi2&lt;/i&gt;] &amp;rarr; [&lt;i&gt;azi1&lt;/i&gt;, &lt;i&gt;azi2&lt;/i&gt;] + [&lt;i&gt;d&lt;/i&gt;, &amp;minus;&lt;i&gt;d&lt;/i&gt;], for arbitrary
+ *         &lt;i&gt;d&lt;/i&gt;. (For spheres, this prescription applies when points 1 and 2 are antipodal.)
+ *     &lt;/li&gt;
+ *     &lt;li&gt;
+ *         &lt;i&gt;s12&lt;/i&gt; = 0 (coincident points). There are infinitely many geodesics which can be generated by setting
+ *         [&lt;i&gt;azi1&lt;/i&gt;, &lt;i&gt;azi2&lt;/i&gt;] &amp;rarr; [&lt;i&gt;azi1&lt;/i&gt;, &lt;i&gt;azi2&lt;/i&gt;] + [&lt;i&gt;d&lt;/i&gt;, &lt;i&gt;d&lt;/i&gt;], for arbitrary &lt;i&gt;d&lt;/i&gt;.
+ *     &lt;/li&gt;
+ * &lt;/ul&gt;
+ * The calculations are accurate to better than 15nm (15 nanometers) for the WGS84 ellipsoid. See Sec. 9 of
+ * &lt;a href=&quot;https://arxiv.org/abs/1102.1215v1&quot;&gt;arXiv:1102.1215v1&lt;/a&gt; for details. The algorithms used by this class are
+ * based on series expansions using the flattening &lt;i&gt;f&lt;/i&gt; as a small parameter. These are only accurate for |&lt;i&gt;f&lt;/i&gt;|
+ * &amp;lt; 0.02; however reasonably accurate results will be obtained for |&lt;i&gt;f&lt;/i&gt;| &amp;lt; 0.2. Here is a table with the
+ * same equatorial radius as the WGS84 ellipsoid and different values of the flattening.
+ * &lt;pre&gt;
+ *     |f|      error
+ *     0.01     25 nm
+ *     0.02     30 nm
+ *     0.05     10 um
+ *     0.1      1.5 mm
+ *     0.2      300 mm
+ * &lt;/pre&gt;
+ * The algorithms are described in
+ * &lt;ul&gt;
+ *     &lt;li&gt;
+ *         C.F.F Karney, &lt;a href=&quot;https://doi.org/10.1007/s00190-012-0578-z&quot;&gt;Algorithms for geodesics&lt;/a&gt;,
+ *         J. Geodesy &lt;b&gt;87&lt;/b&gt;, 43&amp;ndash;55 (2013)
+ *     &lt;/li&gt;
+ * &lt;/ul&gt;
+ * Example of use:
+ * &lt;pre&gt;
+ *     {@code
+ *     //Solve the direct geodesic problem.
+ *
+ *     //This program reads in lines with lat1, lon1, azi1, s12 and prints out lines with lat2, lon2, azi2
+ *     //(for the WGS84 ellipsoid).
+ *
+ *     import java.util.*;
+ *     import com.irurueta.navigation.geodesic.*;
+ *
+ *     public class Direct {
+ *         public static void main(String[] args) {
+ *             try {
+ *                 Scanner in = new Scanner(System.in);
+ *                 double lat1, lon1, azi1, s12;
+ *                 while (true) {
+ *                     lat1 = in.nextDouble();
+ *                     lon1 = in.nextDouble();
+ *                     azi1 = in.nextDouble();
+ *                     s12 = in.nextDouble();
+ *
+ *                     GeodesicData g = Geodesic.WGS84.direct(lat1, lon1, azi1, s12);
+ *                     System.out.println(g.lat2 + &quot; &quot; + g.lon2 + &quot; &quot; + g.azi2);
+ *                 }
+ *             } catch (Exception e) { }
+ *         }
+ *     }
+ *     }
+ * &lt;/pre&gt;
+ */
+@SuppressWarnings(&quot;DuplicatedCode&quot;)
+public class Geodesic {
+
+    /**
+     * A global instantiation of Geodesic with the parameters for the WGS84 ellipsoid.
+     */
+<span class="fc" id="L191">    public static final Geodesic WGS84 = safeInstance(Constants.EARTH_EQUATORIAL_RADIUS_WGS84,</span>
+            Constants.EARTH_FLATTENING_WGS84);
+
+    /**
+     * The order of the expansions used.
+     */
+    protected static final int GEODESIC_ORDER = 6;
+
+    protected static final int NA1 = GEODESIC_ORDER;
+    protected static final int NC1 = GEODESIC_ORDER;
+    protected static final int NC1P = GEODESIC_ORDER;
+
+    protected static final int NA2 = GEODESIC_ORDER;
+    protected static final int NC2 = GEODESIC_ORDER;
+
+    protected static final int NA3 = GEODESIC_ORDER;
+
+    protected static final int NA3X = NA3;
+    protected static final int NC3 = GEODESIC_ORDER;
+
+    protected static final int NC3X = (NC3 * (NC3 - 1)) / 2;
+    protected static final int NC4 = GEODESIC_ORDER;
+
+    protected static final int NC4X = (NC4 * (NC4 + 1)) / 2;
+
+    /**
+     * Underflow guard. We require TINY * epsilon() &amp;lt; 0 and TINY + epsilon() == epsilon()
+     */
+<span class="fc" id="L219">    protected static final double TINY = Math.sqrt(GeoMath.MIN);</span>
+
+    private static final int MAXIT1 = 20;
+    private static final int MAXIT2 = MAXIT1 + GeoMath.DIGITS + 10;
+
+<span class="fc" id="L224">    private static final double TOL0 = GeoMath.EPSILON;</span>
+
+    /**
+     * Increase multiplier in defn of TOl1 from 100 to 200 to fix inverse case
+     * 52.784459412564 0 -52.784459512563990912 179.634407464943777557
+     */
+<span class="fc" id="L230">    private static final double TOL1 = 200 * TOL0;</span>
+
+<span class="fc" id="L232">    private static final double TOL2 = Math.sqrt(TOL0);</span>
+
+    /**
+     * Check on bisection interval.
+     */
+<span class="fc" id="L237">    private static final double TOLB = TOL0 * TOL2;</span>
+
+<span class="fc" id="L239">    private static final double XTHRESH = 1000 * TOL2;</span>
+
+    protected final double mA;
+
+    protected final double mF;
+
+    protected final double mF1;
+
+    protected final double mE2;
+
+    protected final double mEp2;
+
+    protected final double mB;
+
+    protected final double mC2;
+
+    private final double mN;
+
+    private final double mEtol2;
+
+    private final double[] mA3x;
+
+    private final double[] mC3x;
+
+    private final double[] mC4x;
+
+    /**
+     * Constructor for an ellipsoid with.
+     *
+     * @param a equatorial radius (meters).
+     * @param f flattening of ellipsoid. Setting &lt;i&gt;f&lt;/i&gt; = 0 gives a sphere. Negative &lt;i&gt;f&lt;/i&gt; gives a prolate
+     *          ellipsoid.
+     * @throws GeodesicException if &lt;i&gt;a&lt;/i&gt; or (1 &amp;minus; &lt;i&gt;f&lt;/i&gt;) &lt;i&gt;a&lt;/i&gt; is not positive.
+     */
+<span class="fc" id="L273">    public Geodesic(final double a, final double f) throws GeodesicException {</span>
+<span class="fc" id="L274">        mA = a;</span>
+<span class="fc" id="L275">        mF = f;</span>
+<span class="fc" id="L276">        mF1 = 1 - mF;</span>
+<span class="fc" id="L277">        mE2 = mF * (2 - mF);</span>
+
+        // e2 / (1 - e2)
+<span class="fc" id="L280">        mEp2 = mE2 / GeoMath.sq(mF1);</span>
+<span class="fc" id="L281">        mN = mF / (2 - mF);</span>
+<span class="fc" id="L282">        mB = mA * mF1;</span>
+
+        // authalic radius squared
+<span class="fc bfc" id="L285" title="All 2 branches covered.">        final double tmp = (mE2 &gt; 0 ? GeoMath.atanh(Math.sqrt(mE2)) :</span>
+<span class="fc" id="L286">                Math.atan(Math.sqrt(-mE2)));</span>
+<span class="fc" id="L287">        mC2 = (GeoMath.sq(mA) + GeoMath.sq(mB) *</span>
+<span class="fc bfc" id="L288" title="All 2 branches covered.">                (mE2 == 0 ? 1 : tmp / Math.sqrt(Math.abs(mE2)))) / 2;</span>
+
+        // The sig12 threshold for &quot;really short&quot;. Using the auxiliary sphere solution with dnm computed at
+        // (bet1 + bet2) / 2, the relative error in the azimuth consistency check is
+        // sig12^2 * abs(f) * min(1, 1 - f/2) / 2.
+        // (Error measured for 1/100 &lt; b/a &lt; 100 and abs(f) &gt;= 1/1000. For a given f and sig12, the max error occurs for
+        // lines near the pole. If the old rule for computing dnm = (dn1 + dn2)/2 is used, then the error increases by
+        // a factor of 2.) Setting this equal to epsilon gives sig12 = etol2. Here 0.1 is a safety factor (error
+        // decreased by 100) and max(0.001, abs(f)) stops etol2 getting too large in the nearly spherical case.
+<span class="fc" id="L297">        mEtol2 = 0.1 * TOL2 / Math.sqrt(Math.max(0.001, Math.abs(mF)) * Math.min(1.0, 1 - mF / 2) / 2);</span>
+
+<span class="pc bpc" id="L299" title="1 of 4 branches missed.">        if (!(GeoMath.isFinite(mA) &amp;&amp; mA &gt; 0)) {</span>
+<span class="fc" id="L300">            throw new GeodesicException(&quot;Equatorial radius is not positive&quot;);</span>
+        }
+<span class="pc bpc" id="L302" title="1 of 4 branches missed.">        if (!(GeoMath.isFinite(mB) &amp;&amp; mB &gt; 0)) {</span>
+<span class="fc" id="L303">            throw new GeodesicException(&quot;Polar semi-axis is not positive&quot;);</span>
+        }
+<span class="fc" id="L305">        mA3x = new double[NA3X];</span>
+<span class="fc" id="L306">        mC3x = new double[NC3X];</span>
+<span class="fc" id="L307">        mC4x = new double[NC4X];</span>
+
+<span class="fc" id="L309">        a3coeff();</span>
+<span class="fc" id="L310">        c3coeff();</span>
+<span class="fc" id="L311">        c4coeff();</span>
+<span class="fc" id="L312">    }</span>
+
+    /**
+     * Solve the direct geodesic problem where the length of the geodesic is specified in terms of distance.
+     * If either point is at a pole, the azimuth is defined by keeping the longitude fixed, writing
+     * &lt;i&gt;lat&lt;/i&gt; = &amp;plusmn;(90&amp;deg; &amp;minus; &amp;epsilon;), and taking the limit &amp;epsilon; &amp;rarr; 0+. An arc length greater
+     * than 180&amp;deg; signifies a geodesic which is not the shortest path. (For a prolate ellipsoid, an additional
+     * condition is necessary for the shortest path: the longitudinal extent must not exceed of 180&amp;deg;.)
+     *
+     * @param lat1 latitude of point 1 (degrees). &lt;i&gt;lat1&lt;/i&gt; should be in the range [&amp;minus;90&amp;deg;, 90&amp;deg;].
+     * @param lon1 longitude of point 1 (degrees).
+     * @param azi1 azimuth at point 1 (degrees).
+     * @param s12  distance between point 1 and point 2 (meters); it can be negative.
+     * @return a {@link GeodesicData} object with the following fields: &lt;i&gt;lat1&lt;/i&gt;, &lt;i&gt;lon1&lt;/i&gt;, &lt;i&gt;azi1&lt;/i&gt;,
+     * &lt;i&gt;lat2&lt;/i&gt;, &lt;i&gt;lon2&lt;/i&gt;, &lt;i&gt;azi2&lt;/i&gt;, &lt;i&gt;s12&lt;/i&gt;, &lt;i&gt;a12&lt;/i&gt;. The values of &lt;i&gt;lon2&lt;/i&gt; and &lt;i&gt;azi2&lt;/i&gt;
+     * returned are in the range [&amp;minus;180&amp;deg;, 180&amp;deg;].
+     */
+    public GeodesicData direct(
+            final double lat1, final double lon1, final double azi1, final double s12) {
+<span class="fc" id="L331">        return direct(lat1, lon1, azi1, false, s12, GeodesicMask.STANDARD);</span>
+    }
+
+    /**
+     * Solve the direct geodesic problem where the length of the geodesic is specified in terms of distance with a
+     * subset of the geodesic results returned.
+     *
+     * @param lat1    latitude of point 1 (degrees).
+     * @param lon1    longitude of point 1 (degrees).
+     * @param azi1    azimuth at point 1 (degrees).
+     * @param s12     distance between point 1 and point 2 (meters); it can be negative.
+     * @param outmask a bitor'ed combination of {@link GeodesicMask} values specifying which results should be returned.
+     * @return a {@link GeodesicData} object with the fields specified by &lt;i&gt;outmask&lt;/i&gt; computed. &lt;i&gt;lat1&lt;/i&gt;,
+     * &lt;i&gt;lon1&lt;/i&gt;, &lt;i&gt;azi1&lt;/i&gt;, &lt;i&gt;s12&lt;/i&gt;, and &lt;i&gt;a12&lt;/i&gt; are always included in the returned result. The value of
+     * &lt;i&gt;lon2&lt;/i&gt; returned is in the range [&amp;minus;180&amp;deg;, 180&amp;deg;], unless the &lt;i&gt;outmask&lt;/i&gt; includes the
+     * {@link GeodesicMask#LONG_UNROLL} flag.
+     */
+    public GeodesicData direct(
+            final double lat1, final double lon1, final double azi1, final double s12,
+            final int outmask) {
+<span class="fc" id="L351">        return direct(lat1, lon1, azi1, false, s12, outmask);</span>
+    }
+
+    /**
+     * Solve the direct geodesic problem where the length of the geodesic is specified in terms of arc length.
+     * If either point is at a pole, the azimuth is defined by keeping the longitude fixed, writing
+     * &lt;i&gt;lat&lt;/i&gt; = &amp;plusmn;(90&amp;deg; &amp;minus; &amp;epsilon;), and taking the limit &amp;epsilon; &amp;rarr; 0+. An arc length
+     * greater than 180&amp;deg; signifies a geodesic which is not the shortest path. (For a prolate ellipsoid, an additional
+     * condition is necessary for the shortest path: the longitudinal extent must not exceed of 180&amp;deg;.)
+     *
+     * @param lat1 latitude of point 1 (degrees). &lt;i&gt;lat1&lt;/i&gt; should be in the range [&amp;minus;90&amp;deg;, 90&amp;deg;].
+     * @param lon1 longitude of point 1 (degrees).
+     * @param azi1 azimuth at point 1 (degrees).
+     * @param a12  arc length between point 1 and point 2 (degrees); it can be negative.
+     * @return a {@link GeodesicData} object with the following fields: &lt;i&gt;lat1&lt;/i&gt;, &lt;i&gt;lon1&lt;/i&gt;, &lt;i&gt;azi1&lt;/i&gt;,
+     * &lt;i&gt;lat2&lt;/i&gt;, &lt;i&gt;lon2&lt;/i&gt;, &lt;i&gt;azi2&lt;/i&gt;, &lt;i&gt;s12&lt;/i&gt;, &lt;i&gt;a12&lt;/i&gt;. The values of &lt;i&gt;lon2&lt;/i&gt; and &lt;i&gt;azi2&lt;/i&gt;
+     * returned are in the range [&amp;minus;180&amp;deg;, 180&amp;deg;].
+     */
+    public GeodesicData arcDirect(
+            final double lat1, final double lon1, final double azi1, final double a12) {
+<span class="fc" id="L371">        return direct(lat1, lon1, azi1, true, a12, GeodesicMask.STANDARD);</span>
+    }
+
+    /**
+     * Solve the direct geodesic problem where the length of the geodesic is specified in terms of arc length and with
+     * a subset of the geodesic results returned.
+     *
+     * @param lat1    latitude of point 1 (degrees).
+     * @param lon1    longitude of point 1 (degrees).
+     * @param azi1    azimuth at point 1 (degrees).
+     * @param a12     arc length between point 1 and point 2 (degrees); it can be negative.
+     * @param outmask a bitor'ed combination of {@link GeodesicMask} values specifying which results should be returned.
+     * @return a {@link GeodesicData} object with the fields specified by &lt;i&gt;outmask&lt;/i&gt; computed. &lt;i&gt;lat1&lt;/i&gt;,
+     * &lt;i&gt;lon1&lt;/i&gt;, &lt;i&gt;azi1&lt;/i&gt;, and &lt;i&gt;a12&lt;/i&gt; are always included in the returned result. The value of &lt;i&gt;lon2&lt;/i&gt;
+     * returned is in the range [&amp;minus;180&amp;deg;, 180&amp;deg;], unless the &lt;i&gt;outmask&lt;/i&gt; includes the
+     * {@link GeodesicMask#LONG_UNROLL} flag.
+     */
+    public GeodesicData arcDirect(
+            final double lat1, final double lon1, final double azi1, final double a12,
+            final int outmask) {
+<span class="fc" id="L391">        return direct(lat1, lon1, azi1, true, a12, outmask);</span>
+    }
+
+    /**
+     * The general direct geodesic problem. {@link #direct} and {@link #arcDirect} are defined in terms of this
+     * function.
+     * The {@link GeodesicMask} values possible for &lt;i&gt;outmask&lt;/i&gt; are
+     * &lt;ul&gt;
+     *     &lt;li&gt;
+     *         &lt;i&gt;outmask&lt;/i&gt; |= {@link GeodesicMask#LATITUDE} for the latitude &lt;i&gt;lat2&lt;/i&gt;;
+     *     &lt;/li&gt;
+     *     &lt;li&gt;
+     *         &lt;i&gt;outmask&lt;/i&gt; |= {@link GeodesicMask#LONGITUDE} for the longitude &lt;i&gt;lon2&lt;/i&gt;;
+     *     &lt;/li&gt;
+     *     &lt;li&gt;
+     *         &lt;i&gt;outmask&lt;/i&gt; |= {@link GeodesicMask#AZIMUTH} for the azimuth &lt;i&gt;azi2&lt;/i&gt;;
+     *     &lt;/li&gt;
+     *     &lt;li&gt;
+     *         &lt;i&gt;outmask&lt;/i&gt; |= {@link GeodesicMask#DISTANCE} for the distance &lt;i&gt;s12&lt;/i&gt;;
+     *     &lt;/li&gt;
+     *     &lt;li&gt;
+     *         &lt;i&gt;outmask&lt;/i&gt; |= {@link GeodesicMask#REDUCED_LENGTH} for the reduced length &lt;i&gt;m12&lt;/i&gt;;
+     *     &lt;/li&gt;
+     *     &lt;li&gt;
+     *         &lt;i&gt;outmask&lt;/i&gt; |= {@link GeodesicMask#GEODESIC_SCALE} for the geodesic scales &lt;i&gt;M12&lt;/i&gt; and &lt;i&gt;M21&lt;/i&gt;;
+     *     &lt;/li&gt;
+     *     &lt;li&gt;
+     *         &lt;i&gt;outmask&lt;/i&gt; |= {@link GeodesicMask#AREA} for the area &lt;i&gt;S12&lt;/i&gt;;
+     *     &lt;/li&gt;
+     *     &lt;li&gt;
+     *         &lt;i&gt;outmask&lt;/i&gt; |= {@link GeodesicMask#LONG_UNROLL}, if set then &lt;i&gt;lon1&lt;/i&gt; is unchanged and &lt;i&gt;lon2&lt;/i&gt;
+     *         &amp;minus; &lt;i&gt;lon1&lt;/i&gt; indicates how many times and in what sense the geodesic encircles the ellipsoid.
+     *         Otherwise &lt;i&gt;lon1&lt;/i&gt; and &lt;i&gt;lon2&lt;/i&gt; are both reduced to the range [&amp;minus;180&amp;deg;, 180&amp;deg;].
+     *     &lt;/li&gt;
+     * &lt;/ul&gt;
+     * The function value &lt;i&gt;a12&lt;/i&gt; is always computed and returned and this equals &lt;i&gt;s12A12&lt;/i&gt; is &lt;i&gt;arcmode&lt;/i&gt; is
+     * true. If &lt;i&gt;outmask&lt;/i&gt; includes {@link GeodesicMask#DISTANCE} and &lt;i&gt;arcmode&lt;/i&gt; is false, then &lt;i&gt;s12&lt;/i&gt; =
+     * &lt;i&gt;s12A12&lt;/i&gt;. It is not necessary to include {@link GeodesicMask#DISTANCE_IN} in &lt;i&gt;outmask&lt;/i&gt;; this is
+     * automatically included if &lt;i&gt;arcmode&lt;/i&gt; is false.
+     *
+     * @param lat1    latitude of point 1 (degrees).
+     * @param lon1    longitude of point 1 (degrees).
+     * @param azi1    azimuth at point 1 (degrees).
+     * @param arcmode boolean flag determining the meaning of the &lt;i&gt;s12A12&lt;/i&gt;.
+     * @param s12A12  &lt;i&gt;arcmode&lt;/i&gt; is false, this is the distance between point 1 and point 2 (meters); otherwise it
+     *                is the arc length between point 1 and point 2 (degrees); it can be negative.
+     * @param outmask a bitor'ed combination of {@link GeodesicMask} values specifying which results should be returned.
+     * @return a {@link GeodesicData} object with the fields specified by &lt;i&gt;outmask&lt;/i&gt; computed.
+     */
+    public GeodesicData direct(
+            final double lat1, final double lon1, final double azi1,
+            final boolean arcmode, final double s12A12, int outmask) {
+        // automatically supply DISTANCE_IN if necessary
+<span class="fc bfc" id="L444" title="All 2 branches covered.">        if (!arcmode) {</span>
+<span class="fc" id="L445">            outmask |= GeodesicMask.DISTANCE_IN;</span>
+        }
+<span class="fc" id="L447">        return new GeodesicLine(this, lat1, lon1, azi1, outmask).position(arcmode, s12A12, outmask);</span>
+    }
+
+    /**
+     * Define a {@link GeodesicLine} in terms of the direct geodesic problem specified in terms of
+     * distance with all capabilities included.
+     * This function sets point 3 of the GeodesicLine to correspond to point 2 of the direct geodesic
+     * problem.
+     *
+     * @param lat1 latitude of point 1 (degrees). &lt;i&gt;lat1&lt;/i&gt; should be in the range [&amp;minus;90&amp;deg;, 90&amp;deg;].
+     * @param lon1 longitude of point 1 (degrees).
+     * @param azi1 azimuth at point 1 (degrees).
+     * @param s12  distance between point 1 and point 2 (meters); it can be negative.
+     * @return a {@link GeodesicLine} object.
+     */
+    public GeodesicLine directLine(
+            final double lat1, final double lon1, final double azi1, final double s12) {
+<span class="fc" id="L464">        return directLine(lat1, lon1, azi1, s12, GeodesicMask.ALL);</span>
+    }
+
+    /**
+     * Define a {@link GeodesicLine} in terms of the direct geodesic problem specified in terms of
+     * distance with a subset of the capabilities included.
+     * This function sets point 3 of the GeodesicLine to correspond to point 2 of the direct geodesic
+     * problem.
+     *
+     * @param lat1 latitude of point 1 (Degrees). &lt;i&gt;lat1&lt;/i&gt; should be in the range [&amp;minus;90&amp;deg;, 90&amp;deg;].
+     * @param lon1 longitude of point 1 (degrees).
+     * @param azi1 azimuth at point 1 (degrees).
+     * @param s12  distance between point 1 and point 2 (meters); it can be negative.
+     * @param caps bitor'ed combination of {@link GeodesicMask} values specifying the capabilities the
+     *             GeodesicLine object should possess, i.e., which quantities can be returned in calls
+     *             to {@link GeodesicLine#position}.
+     * @return a {@link GeodesicLine} object.
+     */
+    public GeodesicLine directLine(
+            final double lat1, final double lon1, final double azi1, final double s12,
+            final int caps) {
+<span class="fc" id="L485">        return genDirectLine(lat1, lon1, azi1, false, s12, caps);</span>
+    }
+
+    /**
+     * Define a {@link GeodesicLine} in terms of the direct geodesic problem specified in terms of
+     * arc length with all capabilities included.
+     * This function sets point 3 of the GeodesicLine to correspond to point 2 of the direct geodesic
+     * problem.
+     *
+     * @param lat1 latitude of point 1 (degrees). &lt;i&gt;lat1&lt;/i&gt; should be in the range [&amp;minus;90&amp;deg;, 90&amp;deg;].
+     * @param lon1 longitude of point 1 (degrees).
+     * @param azi1 azimuth at point 1 (degrees).
+     * @param a12  arc length between point 1 and point 2 (degrees); it can be negative.
+     * @return a {@link GeodesicLine} object.
+     */
+    public GeodesicLine arcDirectLine(
+            final double lat1, final double lon1, final double azi1, final double a12) {
+<span class="fc" id="L502">        return arcDirectLine(lat1, lon1, azi1, a12, GeodesicMask.ALL);</span>
+    }
+
+    /**
+     * Define a {@link GeodesicLine} in terms of the direct geodesic problem specified in terms of
+     * arc length with a subset of the capabilities included.
+     * This function sets point 3 of the GeodesicLine to correspond to point 2 of the direct geodesic problem.
+     *
+     * @param lat1 latitude of point 1 (degrees). &lt;i&gt;lat1&lt;/i&gt; should be in the range [&amp;minus;90&amp;deg;, 90&amp;deg;].
+     * @param lon1 longitude of point 1 (degrees).
+     * @param azi1 azimuth at point 1 (degrees).
+     * @param a12  arc length between point 1 and point 2 (degrees); it can be negative.
+     * @param caps bitor'ed combination of {@link GeodesicMask} values specifying the capabilities the
+     *             GeodesicLine object should possess, i.e., which quantities can be returned in calls
+     *             to {@link GeodesicLine#position}.
+     * @return a {@link GeodesicLine} object.
+     */
+    public GeodesicLine arcDirectLine(
+            final double lat1, final double lon1, final double azi1, final double a12,
+            final int caps) {
+<span class="fc" id="L522">        return genDirectLine(lat1, lon1, azi1, true, a12, caps);</span>
+    }
+
+    /**
+     * Define a {@link GeodesicLine} in terms of the direct geodesic problem specified in terms of
+     * either distance or arc length with a subset of the capabilities included.
+     * This function sets point 3 of the GeodesicLine to correspond to point 2 of the direct geodesic
+     * problem.
+     *
+     * @param lat1    latitude of point 1 (degrees). &lt;i&gt;lat1&lt;/i&gt; should be in the range [&amp;minus;90&amp;deg;, 90&amp;deg;].
+     * @param lon1    longitude of point 1 (degrees).
+     * @param azi1    azimuth at point 1 (degrees).
+     * @param arcmode boolean flag determining the meaning of the &lt;i&gt;s12A12&lt;/i&gt;.
+     * @param s12A12  if &lt;i&gt;arcmode&lt;/i&gt; is false, this is the distance between point 1 and point 2 (meters); otherwise
+     *                it is the arc length between point 1 and point 2 (degrees); it can be negative.
+     * @param caps    bitor'ed combination of {@link GeodesicMask} values specifying the capabilities the
+     *                GeodesicLine object should possess, i.e., which quantities can be returned in calls
+     *                to {@link GeodesicLine#position}.
+     * @return a {@link GeodesicLine} object.
+     */
+    public GeodesicLine genDirectLine(
+            final double lat1, final double lon1, double azi1, final boolean arcmode,
+            final double s12A12, int caps) {
+<span class="fc" id="L545">        azi1 = GeoMath.angNormalize(azi1);</span>
+        final double salp1;
+        final double calp1;
+
+        // Guard against underflow in salp0. Also -0 is converted to +0.
+<span class="fc" id="L550">        final Pair p = GeoMath.sincosd(GeoMath.angRound(azi1));</span>
+<span class="fc" id="L551">        salp1 = p.getFirst();</span>
+<span class="fc" id="L552">        calp1 = p.getSecond();</span>
+
+        // Automatically supply DISTANCE_IN if necessary
+<span class="fc bfc" id="L555" title="All 2 branches covered.">        if (!arcmode) {</span>
+<span class="fc" id="L556">            caps |= GeodesicMask.DISTANCE_IN;</span>
+        }
+
+<span class="fc" id="L559">        return new GeodesicLine(this, lat1, lon1, azi1, salp1, calp1, caps, arcmode, s12A12);</span>
+    }
+
+    /**
+     * Solve the inverse geodesic problem.
+     * &lt;i&gt;lat1&lt;/i&gt; and &lt;i&gt;lat2&lt;/i&gt; should be in the range [&amp;minus;90&amp;deg;, 90&amp;deg;]. The values of
+     * &lt;i&gt;azi1&lt;/i&gt; and &lt;i&gt;azi2&lt;/i&gt; returned are in the range [&amp;minus;180&amp;deg;, 180&amp;deg;].
+     * If either point is at a pole, the azimuth is defined by keeping the longitude fixed, writing
+     * &lt;i&gt;lat&lt;/i&gt; = &amp;plusmn;(90&amp;deg; &amp;minus; &amp;epsilon;), taking the limit &amp;epsilon; &amp;rarr; 0+.
+     * The solution to the inverse problem is found using Newton's method. If this fails to converge
+     * (this is very unlikely in geodetic applications but does occur for very eccentric ellipsoids),
+     * then the bisection method is used to refine the solution.
+     *
+     * @param lat1 latitude of point 1 (degrees).
+     * @param lon1 longitude of point 1 (degrees).
+     * @param lat2 latitude of point 2 (degrees).
+     * @param lon2 longitude of point 2 (degrees).
+     * @return a {@link GeodesicData} object with the following fields: &lt;i&gt;lat1&lt;/i&gt;, &lt;i&gt;lon1&lt;/i&gt;,
+     * &lt;i&gt;azi1&lt;/i&gt;, &lt;i&gt;lat2&lt;/i&gt;, &lt;i&gt;lon2&lt;/i&gt;, &lt;i&gt;azi2&lt;/i&gt;, &lt;i&gt;s12&lt;/i&gt;, &lt;i&gt;a12&lt;/i&gt;.
+     */
+    public GeodesicData inverse(
+            final double lat1, final double lon1, final double lat2, final double lon2) {
+<span class="fc" id="L581">        return inverse(lat1, lon1, lat2, lon2, GeodesicMask.STANDARD);</span>
+    }
+
+    /**
+     * Solve the inverse geodesic problem with a subset of the geodesic results returned.
+     * The {@link GeodesicMask} values possible for &lt;i&gt;outmask&lt;/i&gt; are
+     * &lt;ul&gt;
+     *     &lt;li&gt;
+     *         &lt;i&gt;outmask&lt;/i&gt; |= {@link GeodesicMask#DISTANCE} for the distance &lt;i&gt;s12&lt;/i&gt;;
+     *     &lt;/li&gt;
+     *     &lt;li&gt;
+     *         &lt;i&gt;outmask&lt;/i&gt; |= {@link GeodesicMask#AZIMUTH} for the latitude &lt;i&gt;azi2&lt;/i&gt;.
+     *     &lt;/li&gt;
+     *     &lt;li&gt;
+     *         &lt;i&gt;outmask&lt;/i&gt; |= {@link GeodesicMask#REDUCED_LENGTH} for the reduced length
+     *         &lt;i&gt;m12&lt;/i&gt;;
+     *     &lt;/li&gt;
+     *     &lt;li&gt;
+     *         &lt;i&gt;outmask&lt;/i&gt; |= {@link GeodesicMask#GEODESIC_SCALE} for the geodesic scales
+     *         &lt;i&gt;M12&lt;/i&gt; and &lt;i&gt;M21&lt;/i&gt;;
+     *     &lt;/li&gt;
+     *     &lt;li&gt;
+     *         &lt;i&gt;outmask&lt;/i&gt; |= {@link GeodesicMask#AREA} for the area &lt;i&gt;S12&lt;/i&gt;;
+     *     &lt;/li&gt;
+     *     &lt;li&gt;
+     *         &lt;i&gt;outmask&lt;/i&gt; |= {@link GeodesicMask#ALL} for all of the above.
+     *     &lt;/li&gt;
+     *     &lt;li&gt;
+     *         &lt;i&gt;outmask&lt;/i&gt; |= {@link GeodesicMask#LONG_UNROLL}, if set then &lt;i&gt;lon1&lt;/i&gt; is
+     *         unchanged and &lt;i&gt;lon2&lt;/i&gt; &amp;minus; &lt;i&gt;lon1&lt;/i&gt; indicates whether the geodesic is
+     *         east going or west going. Otherwise &lt;i&gt;lon1&lt;/i&gt; and &lt;i&gt;lon2&lt;/i&gt; are both reduced to
+     *         the range [&amp;minus;180&amp;deg;, 180&amp;deg;].
+     *     &lt;/li&gt;
+     * &lt;/ul&gt;
+     *
+     * @param lat1    latitude of point 1 (degrees).
+     * @param lon1    longitude of point 1 (degrees).
+     * @param lat2    latitude of point 2 (degrees).
+     * @param lon2    longitude of point 2 (degrees)
+     * @param outmask a bitor'ed combination of {@link GeodesicMask} values specifying which
+     *                results should be returned.
+     * @return a {@link GeodesicData} object with the fields specified by &lt;i&gt;outmask&lt;/i&gt; computed.
+     * &lt;i&gt;lat1&lt;/i&gt;, &lt;i&gt;lon1&lt;/i&gt;, &lt;i&gt;lat2&lt;/i&gt;, &lt;i&gt;lon2&lt;/i&gt;, and &lt;i&gt;a12&lt;/i&gt; are always included in the
+     * returned result.
+     */
+    public GeodesicData inverse(
+            final double lat1, final double lon1, final double lat2, final double lon2,
+            int outmask) {
+<span class="fc" id="L629">        outmask &amp;= GeodesicMask.OUT_MASK;</span>
+<span class="fc" id="L630">        final InverseData result = inverseInt(lat1, lon1, lat2, lon2, outmask);</span>
+<span class="fc" id="L631">        final GeodesicData r = result.mG;</span>
+
+<span class="fc bfc" id="L633" title="All 2 branches covered.">        if ((outmask &amp; GeodesicMask.AZIMUTH) != 0) {</span>
+<span class="fc" id="L634">            r.setAzi1(GeoMath.atan2d(result.mSalp1, result.mCalp1));</span>
+<span class="fc" id="L635">            r.setAzi2(GeoMath.atan2d(result.mSalp2, result.mCalp2));</span>
+        }
+<span class="fc" id="L637">        return r;</span>
+    }
+
+    /**
+     * Define a {@link GeodesicLine} in terms of the inverse geodesic problem with all capabilities
+     * included.
+     * This function sets point 3 of the GeodesicLine to correspond to point 2 of the inverse
+     * geodesic problem.
+     * &lt;i&gt;lat2&lt;/i&gt; and &lt;i&gt;lat2&lt;/i&gt; should be in the range [&amp;minus;90&amp;deg;, 90&amp;deg;].
+     *
+     * @param lat1 latitude of point 1 (degrees).
+     * @param lon1 longitude of point 1 (degrees).
+     * @param lat2 latitude of point 2 (degrees).
+     * @param lon2 longitude of point 2 (degrees).
+     * @return a {@link GeodesicLine} object.
+     */
+    public GeodesicLine inverseLine(
+            final double lat1, final double lon1, final double lat2, final double lon2) {
+<span class="fc" id="L655">        return inverseLine(lat1, lon1, lat2, lon2, GeodesicMask.ALL);</span>
+    }
+
+    /**
+     * Define a {@link GeodesicLine} in terms of the inverse geodesic problem with a subet of the
+     * capabilities included.
+     * This function sets point 3 of the GeodesicLine to correspond to point 2 of the inverse
+     * geodesic problem.
+     * &lt;i&gt;lat1&lt;/i&gt; and &lt;i&gt;lat2&lt;/i&gt; should be in the range [&amp;minus;90&amp;deg;, 90&amp;deg;].
+     *
+     * @param lat1 latitude of point 1 (degrees).
+     * @param lon1 longitude of point 1 (degrees).
+     * @param lat2 latitude of point 2 (degrees).
+     * @param lon2 longitude of point 2 (degrees).
+     * @param caps bitor'ed combination of {@link GeodesicMask} values specifying the capabilities
+     *             the GeodesicLine object should possess, i.e., which quantities can be returned
+     *             in calls to {@link GeodesicLine#position}.
+     * @return a {@link GeodesicLine} object.
+     */
+    public GeodesicLine inverseLine(
+            final double lat1, final double lon1, final double lat2, final double lon2,
+            int caps) {
+<span class="fc" id="L677">        final InverseData result = inverseInt(lat1, lon1, lat2, lon2, 0);</span>
+<span class="fc" id="L678">        final double salp1 = result.mSalp1;</span>
+<span class="fc" id="L679">        final double calp1 = result.mCalp1;</span>
+<span class="fc" id="L680">        final double azi1 = GeoMath.atan2d(salp1, calp1);</span>
+<span class="fc" id="L681">        final double a12 = result.mG.getA12();</span>
+        // ensure that a12 can be converted to a distance
+<span class="pc bpc" id="L683" title="1 of 2 branches missed.">        if ((caps &amp; (GeodesicMask.OUT_MASK &amp; GeodesicMask.DISTANCE_IN)) != 0) {</span>
+<span class="fc" id="L684">            caps |= GeodesicMask.DISTANCE;</span>
+        }
+<span class="fc" id="L686">        return new GeodesicLine(this, lat1, lon1, azi1, salp1, calp1, caps, true, a12);</span>
+    }
+
+    /**
+     * Set up to compute several points on a single geodesic with all capabilities included.
+     * If the point is at a pole, the azimuth is defined by keeping the &lt;i&gt;lon1&lt;/i&gt; fixed, writing
+     * &lt;i&gt;lat1&lt;/i&gt; = &amp;plusmn; (90 &amp;minus; &amp;epsilon;), taking the limit &amp;epsilon; &amp;rarr; 0+.
+     *
+     * @param lat1 latitude of point 1 (degrees). &lt;i&gt;lat1&lt;/i&gt; should be in the range
+     *             [&amp;minus;90&amp;deg;, 90&amp;deg;].
+     * @param lon1 longitude of point 1 (degrees).
+     * @param azi1 azimuth at point 1 (degrees).
+     * @return a {@link GeodesicLine} object. The full set of capabilities is included.
+     */
+    public GeodesicLine line(final double lat1, final double lon1, final double azi1) {
+<span class="fc" id="L701">        return line(lat1, lon1, azi1, GeodesicMask.ALL);</span>
+    }
+
+    /**
+     * Set up to compute several points on a single geodesic with a subset of the capabilities
+     * included.
+     * The {@link GeodesicMask} values are:
+     * &lt;ul&gt;
+     *     &lt;li&gt;
+     *         &lt;i&gt;caps&lt;/i&gt; |= {@link GeodesicMask#LATITUDE} for the latitude &lt;i&gt;lat2&lt;/i&gt;; this is
+     *         added automatically;
+     *     &lt;/li&gt;
+     *     &lt;li&gt;
+     *         &lt;i&gt;caps&lt;/i&gt; |= {@link GeodesicMask#LONGITUDE} for the longitude &lt;i&gt;lon2&lt;/i&gt;;
+     *     &lt;/li&gt;
+     *     &lt;li&gt;
+     *         &lt;i&gt;caps&lt;/i&gt; |= {@link GeodesicMask#AZIMUTH} for the azimuth &lt;i&gt;azi2&lt;/i&gt;; this is
+     *         added automatically;
+     *     &lt;/li&gt;
+     *     &lt;li&gt;
+     *         &lt;i&gt;caps&lt;/i&gt; |= {@link GeodesicMask#DISTANCE} for the distance &lt;i&gt;s12&lt;/i&gt;;
+     *     &lt;/li&gt;
+     *     &lt;li&gt;
+     *         &lt;i&gt;caps&lt;/i&gt; |= {@link GeodesicMask#REDUCED_LENGTH} for the reduced length &lt;i&gt;m12&lt;/i&gt;;
+     *     &lt;/li&gt;
+     *     &lt;li&gt;
+     *         &lt;i&gt;caps&lt;/i&gt; |= {@link GeodesicMask#GEODESIC_SCALE} for the geodesic scales &lt;i&gt;M12&lt;/i&gt;
+     *         and &lt;i&gt;M21&lt;/i&gt;;
+     *     &lt;/li&gt;
+     *     &lt;li&gt;
+     *         &lt;i&gt;caps&lt;/i&gt; |= {@link GeodesicMask#AREA} for the area &lt;i&gt;S12&lt;/i&gt;;
+     *     &lt;/li&gt;
+     *     &lt;li&gt;
+     *         &lt;i&gt;caps&lt;/i&gt; |= {@link GeodesicMask#DISTANCE_IN} permits the length of the geodesic to
+     *         be given in terms of &lt;i&gt;s12&lt;/i&gt;; without this capability the length can only be specified
+     *         in terms of arc length;
+     *     &lt;/li&gt;
+     *     &lt;li&gt;
+     *         &lt;i&gt;caps&lt;/i&gt; |= {@link GeodesicMask#ALL} for all of the above.
+     *     &lt;/li&gt;
+     * &lt;/ul&gt;
+     * If the point is at a pole, the azimuth is defined by keeping &lt;i&gt;lon1&lt;/i&gt; fixed, writing
+     * &lt;i&gt;lat1&lt;/i&gt; = &amp;plusmn; (90 &amp;minus; &amp;epsilon;), and taking the limit &amp;epsilon; &amp;rarr; 0+.
+     *
+     * @param lat1 latitude of point 1 (degrees).
+     * @param lon1 longitude of point 1 (degrees).
+     * @param azi1 azimuth at point 1 (degrees).
+     * @param caps bitor'ed combination of {@link GeodesicMask} values specifying which
+     *             quantities can be returned in calls to {@link GeodesicLine#position}.
+     * @return a {@link GeodesicLine} object.
+     */
+    public GeodesicLine line(
+            final double lat1, final double lon1, final double azi1, final int caps) {
+<span class="fc" id="L754">        return new GeodesicLine(this, lat1, lon1, azi1, caps);</span>
+    }
+
+    /**
+     * Gets the equatorial radius of the ellipsoid (meters). This is the value used in the
+     * constructor.
+     *
+     * @return &lt;i&gt;a&lt;/i&gt; the equatorial radius of the ellipsoid (meters).
+     */
+    public double getMajorRadius() {
+<span class="fc" id="L764">        return mA;</span>
+    }
+
+    /**
+     * Gets the flattening of the ellipsoid. This is the value used in the constructor.
+     *
+     * @return &lt;i&gt;f&lt;/i&gt; the flattening of the ellipsoid.
+     */
+    public double getFlattening() {
+<span class="fc" id="L773">        return mF;</span>
+    }
+
+    /**
+     * Total area of ellipsoid in meters&lt;sup&gt;2&lt;/sup&gt;. The area of a polygon encircling a pole can
+     * be found by adding ellipsoidArea()/2 to the sum of &lt;i&gt;S12&lt;/i&gt; for each side of the polygon.
+     *
+     * @return total area of ellipsoid in meters&lt;sup&gt;2&lt;/sup&gt;.
+     */
+    public double getEllipsoidArea() {
+<span class="fc" id="L783">        return 4 * Math.PI * mC2;</span>
+    }
+
+    /**
+     * This is a reformulation of the geodesic problem. The notation is as follows:
+     * - at a general point (no suffix or 1 or 2 as suffix)
+     * - phi = latitude
+     * - beta = latitude on auxiliary sphere
+     * - omega = longitude on auxiliary sphere
+     * - lambda = longitude
+     * - alpha = azimuth of great circle
+     * - sigma = arc length along great circle
+     * - s = distance
+     * - tau = scaled distance (= sigma at multiples of pi/2)
+     * - at northwards equator crossing
+     * - beta = phi = 0
+     * - omega = lambda = 0
+     * - alpha = alpha0
+     * - sigma = s = 0
+     * - a 12 suggix means a difference, e.g., s12 = s2 - s1.
+     * - s and c prefixes mean sin and cos
+     *
+     * @param sinp sinus of p
+     * @param sinx sinus of x
+     * @param cosx cosinus of x
+     * @param c    c
+     * @return sin cos series.
+     */
+    protected static double sinCosSeries(
+            final boolean sinp, final double sinx, final double cosx, final double[] c) {
+        // evaluate
+        // y = sinp ? sum(c[i] * sin(2 * i * x), i, 1, n) :
+        //       sum(c[i] * cos((2 * i + 1) * x), i, 0, n - 1)
+        // using Clenshaw summation. N.B. c[0] is unused for sin series
+        // Approx operation count = (n + 5) mult and (2 * n + 2) add
+
+        // point to one beyond last element
+<span class="fc" id="L820">        int k = c.length;</span>
+<span class="fc bfc" id="L821" title="All 2 branches covered.">        int n = k - (sinp ? 1 : 0);</span>
+
+        // 2 * cos(2 * x)
+<span class="fc" id="L824">        final double ar = 2 * (cosx - sinx) * (cosx + sinx);</span>
+        // accumulators for sum
+<span class="fc bfc" id="L826" title="All 2 branches covered.">        double y0 = (n &amp; 1) != 0 ? c[--k] : 0;</span>
+<span class="fc" id="L827">        double y1 = 0;</span>
+
+        // now n is even
+<span class="fc" id="L830">        n /= 2;</span>
+<span class="fc bfc" id="L831" title="All 2 branches covered.">        while (n-- != 0) {</span>
+            // unroll loop x 2, so accumulators return to their original role
+<span class="fc" id="L833">            y1 = ar * y0 - y1 + c[--k];</span>
+<span class="fc" id="L834">            y0 = ar * y1 - y0 + c[--k];</span>
+        }
+
+        // sin(2 * x) * y0 or cos(x) * (y0 - y1)
+<span class="fc bfc" id="L838" title="All 2 branches covered.">        return sinp ? 2 * sinx * cosx * y0 : cosx * (y0 - y1);</span>
+    }
+
+    protected double a3f(final double eps) {
+        // evaluate a3
+<span class="fc" id="L843">        return GeoMath.polyval(NA3 - 1, mA3x, 0, eps);</span>
+    }
+
+    protected void c3f(final double eps, final double[] c) {
+        // evaluate c3 coeffs
+        // elements c[1] thru c[NC3 - 1] are set
+<span class="fc" id="L849">        double mult = 1;</span>
+<span class="fc" id="L850">        int o = 0;</span>
+
+        // 1 is index of c3[l]
+<span class="fc bfc" id="L853" title="All 2 branches covered.">        for (int l = 1; l &lt; NC3; ++l) {</span>
+            // order of polynomial in eps
+<span class="fc" id="L855">            final int m = NC3 - l - 1;</span>
+<span class="fc" id="L856">            mult *= eps;</span>
+<span class="fc" id="L857">            c[l] = mult * GeoMath.polyval(m, mC3x, o, eps);</span>
+<span class="fc" id="L858">            o += m + 1;</span>
+        }
+<span class="fc" id="L860">    }</span>
+
+    protected void c4f(final double eps, final double[] c) {
+        // evaluate c4 coeffs
+        // elements c[0] thru c[NC4 - 1] are set
+<span class="fc" id="L865">        double mult = 1;</span>
+<span class="fc" id="L866">        int o = 0;</span>
+
+        // l is index of c4[l]
+<span class="fc bfc" id="L869" title="All 2 branches covered.">        for (int l = 0; l &lt; NC4; ++l) {</span>
+            // order of polynomial in eps
+<span class="fc" id="L871">            final int m = NC4 - l - 1;</span>
+<span class="fc" id="L872">            c[l] = mult * GeoMath.polyval(m, mC4x, o, eps);</span>
+<span class="fc" id="L873">            o += m + 1;</span>
+<span class="fc" id="L874">            mult *= eps;</span>
+        }
+<span class="fc" id="L876">    }</span>
+
+    // the scale factor a1 - 1 = mean value of (d/dsigma) i1 - 1
+    protected static double a1m1f(final double eps) {
+<span class="fc" id="L880">        final double[] coeffs = {</span>
+                // (1 - eps) * a1 - 1, polynomial in eps2 of order3
+                1, 4, 64, 0, 256,
+        };
+<span class="fc" id="L884">        final int m = NA1 / 2;</span>
+<span class="fc" id="L885">        final double t = GeoMath.polyval(m, coeffs, 0, GeoMath.sq(eps)) / coeffs[m + 1];</span>
+<span class="fc" id="L886">        return (t + eps) / (1 - eps);</span>
+    }
+
+    // The coefficients c1[l] in the Fourier expansion of b1
+    protected static void c1f(final double eps, final double[] c) {
+<span class="fc" id="L891">        final double[] coeff = {</span>
+                // c1[1]/eps^1, polynomial in eps2 of order 2
+                -1, 6, -16, 32,
+                // c1[2]/eps^2, polynomial in eps2 of order 2
+                -9, 64, -128, 2048,
+                // c1[3]/eps^3, polynomial in eps2 of order 1
+                9, -16, 768,
+                // c1[4]/eps^4, polynomial in eps2 of order 1
+                3, -5, 512,
+                // c1[5]/eps^5, polynomial in eps2 of order 0
+                -7, 1280,
+                // c1[6]/eps^6, polynomial in eps2 of order 0
+                -7, 2048,
+        };
+
+<span class="fc" id="L906">        final double eps2 = GeoMath.sq(eps);</span>
+<span class="fc" id="L907">        double d = eps;</span>
+<span class="fc" id="L908">        int o = 0;</span>
+<span class="fc bfc" id="L909" title="All 2 branches covered.">        for (int l = 1; l &lt;= NC1; ++l) {</span>
+            // l is index of c1p[l]
+            // order of polynomial in eps^2
+<span class="fc" id="L912">            final int m = (NC1 - l) / 2;</span>
+<span class="fc" id="L913">            c[l] = d * GeoMath.polyval(m, coeff, o, eps2) / coeff[o + m + 1];</span>
+<span class="fc" id="L914">            o += m + 2;</span>
+<span class="fc" id="L915">            d *= eps;</span>
+        }
+<span class="fc" id="L917">    }</span>
+
+    // The coefficients c1p[l] in the Fourier expansion of b1p
+    protected static void c1pf(final double eps, final double[] c) {
+<span class="fc" id="L921">        final double[] coeff = {</span>
+                // c1p[l]/eps^1, polynomial in eps2 of order 2
+                205, -432, 768, 1536,
+                // c1p[2]/eps^2, polynomial in eps2 of order 2
+                4005, -4736, 3840, 12288,
+                // c1p[3]/eps^3, polynomial in eps2 of order 1
+                -225, 116, 384,
+                // c1p[4]/eps^4, polynomial in eps2 of order 1
+                -7173, 2695, 7680,
+                // c1p[5]/eps^5, polynomial in eps2 of order 0
+                3467, 7680,
+                // c1p[6]/eps^6, polynomial in eps2 of order 0
+                38081, 61440,
+        };
+
+<span class="fc" id="L936">        final double eps2 = GeoMath.sq(eps);</span>
+<span class="fc" id="L937">        double d = eps;</span>
+<span class="fc" id="L938">        int o = 0;</span>
+
+        // l is index of c1p[l]
+<span class="fc bfc" id="L941" title="All 2 branches covered.">        for (int l = 1; l &lt;= NC1P; ++l) {</span>
+            // order of polynomial in eps^2
+<span class="fc" id="L943">            final int m = (NC1P - l) / 2;</span>
+<span class="fc" id="L944">            c[l] = d * GeoMath.polyval(m, coeff, o, eps2) / coeff[o + m + 1];</span>
+<span class="fc" id="L945">            o += m + 2;</span>
+<span class="fc" id="L946">            d *= eps;</span>
+        }
+<span class="fc" id="L948">    }</span>
+
+    // the scale factor a2 - 1 = mean value of (d/dsigma)i2 - 1
+    protected static double a2m1f(final double eps) {
+<span class="fc" id="L952">        final double[] coeff = {</span>
+                // (eps + 1)*a2 - 1, polynomial in eps2 of order 3
+                -11, -28, -192, 0, 256,
+        };
+
+<span class="fc" id="L957">        final int m = NA2 / 2;</span>
+<span class="fc" id="L958">        final double t = GeoMath.polyval(m, coeff, 0, GeoMath.sq(eps)) / coeff[m + 1];</span>
+<span class="fc" id="L959">        return (t - eps) / (1 + eps);</span>
+    }
+
+    // the coefficients c2[l] in the Fourier expansion of b2
+    protected static void c2f(final double eps, final double[] c) {
+<span class="fc" id="L964">        final double[] coeff = {</span>
+                // c2[1]/eps^1, polynomial in eps2 of order 2
+                1, 2, 16, 32,
+                // c2[2]/eps^2, polynomial in eps2 of order 2
+                35, 64, 384, 2048,
+                // c2[3]/eps^3, polynomial in eps2 of order 1
+                15, 80, 768,
+                // c2[4]/eps^4, polynomial in eps2 of order 1
+                7, 35, 512,
+                // c2[5]/eps^5, polynomial in eps2 of order 0
+                63, 1280,
+                // c2[6]/eps^6, polynomial in eps2 of order 0
+                77, 2048,
+        };
+
+<span class="fc" id="L979">        final double eps2 = GeoMath.sq(eps);</span>
+<span class="fc" id="L980">        double d = eps;</span>
+<span class="fc" id="L981">        int o = 0;</span>
+
+        // l is index of c2[l]
+<span class="fc bfc" id="L984" title="All 2 branches covered.">        for (int l = 1; l &lt;= NC2; ++l) {</span>
+            // order of polynomial in eps^2
+<span class="fc" id="L986">            final int m = (NC2 - l) / 2;</span>
+<span class="fc" id="L987">            c[l] = d * GeoMath.polyval(m, coeff, o, eps2) / coeff[o + m + 1];</span>
+<span class="fc" id="L988">            o += m + 2;</span>
+<span class="fc" id="L989">            d *= eps;</span>
+        }
+<span class="fc" id="L991">    }</span>
+
+    // The scale factor a3 = mean value of (d/dsigma)i3
+    private void a3coeff() {
+<span class="fc" id="L995">        final double[] coeff = {</span>
+                // a3, coeff of eps^5, polynomial in n of order 0
+                -3, 128,
+                // a3, coeff of eps^4, polynomial in n of order 1
+                -2, -3, 64,
+                // a3, coeff of eps^3, polynomial in n of order 2
+                -1, -3, -1, 16,
+                // a3, coeff of eps^2, polynomial in n of order 2
+                3, -1, -2, 8,
+                // a3, coeff of eps^1, polynomial in n of order 1
+                1, -1, 2,
+                // a3, coeff of eps^0, polynomial in n of order 0
+                1, 1,
+        };
+
+<span class="fc" id="L1010">        int o = 0;</span>
+<span class="fc" id="L1011">        int k = 0;</span>
+
+        // coeff of eps^j
+<span class="fc bfc" id="L1014" title="All 2 branches covered.">        for (int j = NA3 - 1; j &gt;= 0; --j) {</span>
+            // order of polynomial in n
+<span class="fc" id="L1016">            final int m = Math.min(NA3 - j - 1, j);</span>
+<span class="fc" id="L1017">            mA3x[k++] = GeoMath.polyval(m, coeff, o, mN) / coeff[o + m + 1];</span>
+<span class="fc" id="L1018">            o += m + 2;</span>
+        }
+<span class="fc" id="L1020">    }</span>
+
+    // The coefficients c3[l] in the Fourier expansion of b3
+    private void c3coeff() {
+<span class="fc" id="L1024">        final double[] coeff = {</span>
+                // c3[1], coeff of eps^5, polynomial in n of order 0
+                3, 128,
+                // c3[1], coeff of eps^4, polynomial in n of order 1
+                2, 5, 128,
+                // c3[1], coeff of eps^3, polynomial in n of order 2
+                -1, 3, 3, 64,
+                // c3[1], coeff of eps^2, polynomial in n of order 2
+                -1, 0, 1, 8,
+                // c3[1], coeff of eps^1, polynomial in n of order 1
+                -1, 1, 4,
+                // c3[2], coeff of eps^5, polynomial in n of order 0
+                5, 256,
+                // c3[2], coeff of eps^4, polynomial in n of order 1
+                1, 3, 128,
+                // c3[2], coeff of eps^3, polynomial in n of order 2
+                -3, -2, 3, 64,
+                // c3[2], coeff of eps^2, polynomial in n of order 2
+                1, -3, 2, 32,
+                // c3[3], coeff of eps^5, polynomial in n of order 0
+                7, 512,
+                // c3[3], coeff of eps^4, polynomial in n of order 1
+                -10, 9, 384,
+                // c3[3], coeff of eps^3, polynomial in n of order 2
+                5, -9, 5, 192,
+                // c3[4], coeff of eps^5, polynomial in n of order 0
+                7, 512,
+                // c3[4], coeff of eps^4, polynomial in n of order 1
+                -14, 7, 512,
+                // c3[5], coeff of eps^5, polynomial in n of order 0
+                21, 2560,
+        };
+
+<span class="fc" id="L1057">        int o = 0;</span>
+<span class="fc" id="L1058">        int k = 0;</span>
+        // l is index of c3[l]
+<span class="fc bfc" id="L1060" title="All 2 branches covered.">        for (int l = 1; l &lt; NC3; ++l) {</span>
+<span class="fc bfc" id="L1061" title="All 2 branches covered.">            for (int j = NC3 - 1; j &gt;= l; --j) {</span>
+                // coeff of eps^j
+                // order of polynomial in n
+<span class="fc" id="L1064">                final int m = Math.min(NC3 - j - 1, j);</span>
+<span class="fc" id="L1065">                mC3x[k++] = GeoMath.polyval(m, coeff, o, mN) / coeff[o + m + 1];</span>
+<span class="fc" id="L1066">                o += m + 2;</span>
+            }
+        }
+<span class="fc" id="L1069">    }</span>
+
+    private void c4coeff() {
+<span class="fc" id="L1072">        final double[] coeff = {</span>
+                // c4[0], coeff of eps^5, polynomial in n of order 0
+                97, 15015,
+                // c4[0], coeff of eps^4, polynomial in n of order 1
+                1088, 156, 45045,
+                // c4[0], coeff of eps^3, polynomial in n of order 2
+                -224, -4784, 1573, 45045,
+                // c4[0], coeff of eps^2, polynomial in n of order 3
+                -10656, 14144, -4576, -858, 45045,
+                // c4[0], coeff of eps^1, polynomial in n of order 4
+                64, 624, -4576, 6864, -3003, 15015,
+                // c4[0], coeff of eps^0, polynomial in n of order 5
+                100, 208, 572, 3432, -12012, 30030, 45045,
+                // c4[1], coeff of eps^5, polynomial in n of order 0
+                1, 9009,
+                // c4[1], coeff of eps^4, polynomial in n of order 1
+                -2944, 468, 135135,
+                // c4[1], coeff of eps^3, polynomial in n of order 2
+                5792, 1040, -1287, 135135,
+                // c4[1], coeff of eps^2, polynomial in n of order 3
+                5952, -11648, 9152, -2574, 135135,
+                // c4[1], coeff of eps^1, polynomial in n of order 4
+                -64, -624, 4576, -6864, 3003, 135135,
+                // c4[2], coeff of eps^5, polynomial in n of order 0
+                8, 10725,
+                // c4[2], coeff of eps^4, polynomial in n of order 1
+                1856, -936, 225225,
+                // c4[2], coeff of eps^3, polynomial in n of order 2
+                -8448, 4992, -1144, 225225,
+                // c4[2], coeff of eps^2, polynomial in n of order 3
+                -1440, 4160, -4576, 1716, 225225,
+                // c4[3], coeff of eps^5, polynomial in n of order 0
+                -136, 63063,
+                // c4[3], coeff of eps^4, polynomial in n of order 1
+                1024, -208, 105105,
+                // c4[3], coeff of eps^3, polynomial in n of order 2
+                3584, -3328, 1144, 315315,
+                // c4[4], coeff of eps^5, polynomial in n of order 0
+                -128, 135135,
+                // c4[4], coeff of eps^4, polynomial in n of order 1
+                -2560, 832, 405405,
+                // c4[5], coeff of eps^5, polynomial in n of order 0
+                128, 99099,
+        };
+<span class="fc" id="L1116">        int o = 0;</span>
+<span class="fc" id="L1117">        int k = 0;</span>
+        // l is index of c3[l]
+<span class="fc bfc" id="L1119" title="All 2 branches covered.">        for (int l = 0; l &lt; NC4; ++l) {</span>
+            // coeff of eps^j
+<span class="fc bfc" id="L1121" title="All 2 branches covered.">            for (int j = NC4 - 1; j &gt;= l; --j) {</span>
+                // order of polynomial in n
+<span class="fc" id="L1123">                final int m = NC4 - j - 1;</span>
+<span class="fc" id="L1124">                mC4x[k++] = GeoMath.polyval(m, coeff, o, mN) / coeff[o + m + 1];</span>
+<span class="fc" id="L1125">                o += m + 2;</span>
+            }
+        }
+<span class="fc" id="L1128">    }</span>
+
+    private InverseData inverseInt(
+            double lat1, final double lon1, double lat2, final double lon2,
+            final int outmask) {
+<span class="fc" id="L1133">        final InverseData result = new InverseData();</span>
+<span class="fc" id="L1134">        final GeodesicData r = result.mG;</span>
+
+        // Compute longitude difference (angDiff does this carefully). Result is in [-180, 180] but
+        // -180 is only for west-going geodesics. 180 is for east-going and meridional geodesics.
+<span class="fc" id="L1138">        lat1 = GeoMath.latFix(lat1);</span>
+<span class="fc" id="L1139">        lat2 = GeoMath.latFix(lat2);</span>
+<span class="fc" id="L1140">        r.setLat1(lat1);</span>
+<span class="fc" id="L1141">        r.setLat2(lat2);</span>
+
+        // if really close to the equator, treat as on equator
+<span class="fc" id="L1144">        lat1 = GeoMath.angRound(lat1);</span>
+<span class="fc" id="L1145">        lat2 = GeoMath.angRound(lat2);</span>
+
+        double lon12;
+        double lon12s;
+
+<span class="fc" id="L1150">        Pair p = GeoMath.angDiff(lon1, lon2);</span>
+<span class="fc" id="L1151">        lon12 = p.getFirst();</span>
+<span class="fc" id="L1152">        lon12s = p.getSecond();</span>
+
+<span class="fc bfc" id="L1154" title="All 2 branches covered.">        if ((outmask &amp; GeodesicMask.LONG_UNROLL) != 0) {</span>
+<span class="fc" id="L1155">            r.setLon1(lon1);</span>
+<span class="fc" id="L1156">            r.setLon2((lon1 + lon12) + lon12s);</span>
+        } else {
+<span class="fc" id="L1158">            r.setLon1(GeoMath.angNormalize(lon1));</span>
+<span class="fc" id="L1159">            r.setLon2(GeoMath.angNormalize(lon2));</span>
+        }
+
+        // make longitude difference positive
+<span class="fc bfc" id="L1163" title="All 2 branches covered.">        int lonsign = lon12 &gt;= 0 ? 1 : -1;</span>
+
+        // if very close to being on the same half-meridian, then make it so
+<span class="fc" id="L1166">        lon12 = lonsign * GeoMath.angRound(lon12);</span>
+<span class="fc" id="L1167">        lon12s = GeoMath.angRound((180 - lon12) - lonsign * lon12s);</span>
+<span class="fc" id="L1168">        final double lam12 = Math.toRadians(lon12);</span>
+        double slam12;
+        double clam12;
+
+<span class="fc bfc" id="L1172" title="All 2 branches covered.">        p = GeoMath.sincosd(lon12 &gt; 90 ? lon12s : lon12);</span>
+<span class="fc" id="L1173">        slam12 = p.getFirst();</span>
+<span class="fc bfc" id="L1174" title="All 2 branches covered.">        clam12 = (lon12 &gt; 90 ? -1 : 1) * p.getSecond();</span>
+
+        // swap points so that point with higher (abs) latitude is point 1
+        // if one latitude is a nan, then it becomes lat1
+<span class="fc bfc" id="L1178" title="All 2 branches covered.">        final int swapp = Math.abs(lat1) &lt; Math.abs(lat2) ? -1 : 1;</span>
+<span class="fc bfc" id="L1179" title="All 2 branches covered.">        if (swapp &lt; 0) {</span>
+<span class="fc" id="L1180">            lonsign *= -1;</span>
+
+<span class="fc" id="L1182">            final double t = lat1;</span>
+<span class="fc" id="L1183">            lat1 = lat2;</span>
+<span class="fc" id="L1184">            lat2 = t;</span>
+        }
+
+        // make lat1 &lt;= 0
+<span class="fc bfc" id="L1188" title="All 2 branches covered.">        final int latsign = lat1 &lt; 0 ? 1 : -1;</span>
+<span class="fc" id="L1189">        lat1 *= latsign;</span>
+<span class="fc" id="L1190">        lat2 *= latsign;</span>
+
+        // now we have
+        // 0 &lt;= lon2 &lt;= 180
+        // -90 &lt;= lat1 &lt;= 0
+        // lat1 &lt;= lat2 &lt;= -lat1
+        // longsign, swapp, latsign register the transformation to bring the coordinates to this
+        // canonical form. In all cases, 1 means no change was made. We make these transformations
+        // so that there are few cases to check, e.g., on verifying quadrants in atan2. In addition,
+        // this enforces some symmetries in the results returned.
+
+        double sbet1;
+        double cbet1;
+        double sbet2;
+        double cbet2;
+        double s12x;
+        double m12x;
+<span class="fc" id="L1207">        s12x = m12x = Double.NaN;</span>
+
+<span class="fc" id="L1209">        p = GeoMath.sincosd(lat1);</span>
+<span class="fc" id="L1210">        sbet1 = mF1 * p.getFirst();</span>
+<span class="fc" id="L1211">        cbet1 = p.getSecond();</span>
+
+        // ensure cbet1 = +epsilon at poles; doing the fix on beta means that sig12 will be &lt;= 2*tiny
+        // for two points at the same pole.
+<span class="fc" id="L1215">        p = GeoMath.norm(sbet1, cbet1);</span>
+<span class="fc" id="L1216">        sbet1 = p.getFirst();</span>
+<span class="fc" id="L1217">        cbet1 = p.getSecond();</span>
+
+<span class="fc" id="L1219">        cbet1 = Math.max(TINY, cbet1);</span>
+
+<span class="fc" id="L1221">        p = GeoMath.sincosd(lat2);</span>
+<span class="fc" id="L1222">        sbet2 = mF1 * p.getFirst();</span>
+<span class="fc" id="L1223">        cbet2 = p.getSecond();</span>
+
+        // ensure cbet2 = +epsilon at poles
+<span class="fc" id="L1226">        p = GeoMath.norm(sbet2, cbet2);</span>
+<span class="fc" id="L1227">        sbet2 = p.getFirst();</span>
+<span class="fc" id="L1228">        cbet2 = p.getSecond();</span>
+
+<span class="fc" id="L1230">        cbet2 = Math.max(TINY, cbet2);</span>
+
+        // if cbet1 &lt; -sbet1, then cbet2 - cbet1 is a sensitive measure of the |bet1| - |bet2|.
+        // Alternatively (cbet1 &gt;= -sbet1), abs(sbet2) + sbet1 is a better measure.
+        // This logic is used in assigning calp2 in lambda12.
+        // Sometimes these quantities vanish and in that case we force bet2 = +/- bet1 exactly.
+        // An example where it is necessary is the inverse problem
+        // 48.522876735459 0 -48.522876735458293 179.599720456223079643
+
+<span class="fc bfc" id="L1239" title="All 2 branches covered.">        if (cbet1 &lt; -sbet1) {</span>
+<span class="fc bfc" id="L1240" title="All 2 branches covered.">            if (cbet2 == cbet1) {</span>
+<span class="fc bfc" id="L1241" title="All 2 branches covered.">                sbet2 = sbet2 &lt; 0 ? sbet1 : -sbet1;</span>
+            }
+        } else {
+<span class="fc bfc" id="L1244" title="All 2 branches covered.">            if (Math.abs(sbet2) == -sbet1) {</span>
+<span class="fc" id="L1245">                cbet2 = cbet1;</span>
+            }
+        }
+
+<span class="fc" id="L1249">        final double dn1 = Math.sqrt(1 + mEp2 * GeoMath.sq(sbet1));</span>
+<span class="fc" id="L1250">        final double dn2 = Math.sqrt(1 + mEp2 * GeoMath.sq(sbet2));</span>
+
+        double a12;
+        double sig12;
+        double calp1;
+        double salp1;
+        double calp2;
+        double salp2;
+<span class="fc" id="L1258">        a12 = calp1 = salp1 = calp2 = salp2 = Double.NaN;</span>
+
+        // index zero elements of these arrays are unused
+<span class="fc" id="L1261">        final double[] c1a = new double[NC1 + 1];</span>
+<span class="fc" id="L1262">        final double[] c2a = new double[NC2 + 1];</span>
+<span class="fc" id="L1263">        final double[] c3a = new double[NC3];</span>
+
+<span class="fc bfc" id="L1265" title="All 4 branches covered.">        boolean meridian = lat1 == -90 || slam12 == 0;</span>
+
+<span class="fc bfc" id="L1267" title="All 2 branches covered.">        if (meridian) {</span>
+            // endpoints are on a single full meridian, so the geodesic might lie on a meridian
+
+            // head to the target longitude
+<span class="fc" id="L1271">            calp1 = clam12;</span>
+<span class="fc" id="L1272">            salp1 = slam12;</span>
+
+            // at the target we're heading north
+<span class="fc" id="L1275">            calp2 = 1;</span>
+<span class="fc" id="L1276">            salp2 = 0;</span>
+
+            // tan(bet) = tan(sig) * cos(alp)
+            //noinspection all
+<span class="fc" id="L1280">            final double ssig1 = sbet1;</span>
+<span class="fc" id="L1281">            final double csig1 = calp1 * cbet1;</span>
+<span class="fc" id="L1282">            final double csig2 = calp2 * cbet2;</span>
+
+            // sig12 = sig2 - sig1
+<span class="fc" id="L1285">            sig12 = Math.atan2(Math.max(0.0, csig1 * sbet2 - ssig1 * csig2),</span>
+                    csig1 * csig2 + ssig1 * sbet2);
+
+<span class="fc" id="L1288">            final LengthsV v = lengths(mN, sig12, ssig1, csig1, dn1, sbet2, csig2, dn2, cbet1, cbet2,</span>
+                    outmask | GeodesicMask.DISTANCE | GeodesicMask.REDUCED_LENGTH, c1a, c2a);
+<span class="fc" id="L1290">            s12x = v.mS12b;</span>
+<span class="fc" id="L1291">            m12x = v.mM12b;</span>
+
+<span class="pc bpc" id="L1293" title="1 of 2 branches missed.">            if ((outmask &amp; GeodesicMask.GEODESIC_SCALE) != 0) {</span>
+<span class="nc" id="L1294">                r.setScaleM12(v.mM12);</span>
+<span class="nc" id="L1295">                r.setScaleM21(v.mM21);</span>
+            }
+
+            // add the check for sig12 since zero length geodesics might yield m12 &lt; 0. Test case was
+            // echo 20.001 0 20.001 0 | GeodSolve -i
+            // in fact, we will have sig12 &gt; pi/2 for meridional geodesic which is not the shortest path.
+<span class="fc bfc" id="L1301" title="All 4 branches covered.">            if (sig12 &lt; 1 || m12x &gt;= 0) {</span>
+                // need at least 2, to handle 90 0 90 180
+<span class="fc bfc" id="L1303" title="All 2 branches covered.">                if (sig12 &lt; 3 * TINY) {</span>
+<span class="fc" id="L1304">                    sig12 = m12x = s12x = 0;</span>
+                }
+<span class="fc" id="L1306">                m12x *= mB;</span>
+<span class="fc" id="L1307">                s12x *= mB;</span>
+<span class="fc" id="L1308">                a12 = Math.toDegrees(sig12);</span>
+            } else {
+                // m12 &lt; 0, i.e., prolate and too close to anti-podal
+<span class="fc" id="L1311">                meridian = false;</span>
+            }
+        }
+
+<span class="fc" id="L1315">        double omg12 = Double.NaN;</span>
+<span class="fc" id="L1316">        double somg12 = 2.0;</span>
+<span class="fc" id="L1317">        double comg12 = Double.NaN;</span>
+        // and sbet2 == 0 mimic the way Lambda12 works with calp1 = 0
+<span class="fc bfc" id="L1319" title="All 8 branches covered.">        if (!meridian &amp;&amp; sbet1 == 0 &amp;&amp; (mF &lt;= 0 || lon12s &gt;= mF * 180)) {</span>
+            // geodesic runs along equator
+<span class="fc" id="L1321">            calp1 = calp2 = 0;</span>
+<span class="fc" id="L1322">            salp1 = salp2 = 1;</span>
+<span class="fc" id="L1323">            s12x = mA * lam12;</span>
+<span class="fc" id="L1324">            sig12 = omg12 = lam12 / mF1;</span>
+<span class="fc" id="L1325">            m12x = mB * Math.sin(sig12);</span>
+<span class="pc bpc" id="L1326" title="1 of 2 branches missed.">            if ((outmask &amp; GeodesicMask.GEODESIC_SCALE) != 0) {</span>
+<span class="nc" id="L1327">                final double value = Math.cos(sig12);</span>
+<span class="nc" id="L1328">                r.setScaleM12(value);</span>
+<span class="nc" id="L1329">                r.setScaleM21(value);</span>
+            }
+<span class="fc" id="L1331">            a12 = lon12 / mF1;</span>
+
+<span class="fc bfc" id="L1333" title="All 2 branches covered.">        } else if (!meridian) {</span>
+            // now point1 and point2 belong within a hemisphere bounded by a
+            // meridian and geodesic is neither meridional nor equatorial
+
+            // figure a starting point for Newton's method
+            final double dnm;
+<span class="fc" id="L1339">            final InverseStartV iv = inverseStart(sbet1, cbet1, dn1, sbet2, cbet2, dn2,</span>
+                    lam12, slam12, clam12, c1a, c2a);
+<span class="fc" id="L1341">            sig12 = iv.mSig12;</span>
+<span class="fc" id="L1342">            salp1 = iv.mSalp1;</span>
+<span class="fc" id="L1343">            calp1 = iv.mCalp1;</span>
+<span class="fc" id="L1344">            salp2 = iv.mSalp2;</span>
+<span class="fc" id="L1345">            calp2 = iv.mCalp2;</span>
+<span class="fc" id="L1346">            dnm = iv.mDnm;</span>
+
+<span class="pc bpc" id="L1348" title="1 of 2 branches missed.">            if (sig12 &gt;= 0) {</span>
+                // short lines (inverseStart sets salp2, calp2, dnm)
+<span class="nc" id="L1350">                s12x = sig12 * mB * dnm;</span>
+<span class="nc" id="L1351">                m12x = GeoMath.sq(dnm) * mB * Math.sin(sig12 / dnm);</span>
+<span class="nc bnc" id="L1352" title="All 2 branches missed.">                if ((outmask &amp; GeodesicMask.GEODESIC_SCALE) != 0) {</span>
+<span class="nc" id="L1353">                    final double value = Math.cos(sig12 / dnm);</span>
+<span class="nc" id="L1354">                    r.setScaleM12(value);</span>
+<span class="nc" id="L1355">                    r.setScaleM21(value);</span>
+                }
+<span class="nc" id="L1357">                a12 = Math.toDegrees(sig12);</span>
+<span class="nc" id="L1358">                omg12 = lam12 / (mF1 * dnm);</span>
+            } else {
+                // Newton's method. This is a straightforward solution of f(alp1) =
+                // lambda12(alp1) - lam12 = 0 with one wrinkle. f(alp) has exactly one
+                // root in the interval (0, pi) and its derivative is positive at the
+                // root. Thus f(alp) is positive for alp &gt; alp1 and negative for alp &lt; alp1.
+                // During the course of the iteration, a range (alp1a, alp1b) is maintained
+                // which brackets the root and with each evaluation of f(alp) the range is
+                // shrunk, if possible. Newton's method is restarted whenever the derivative
+                // of f is negative (because the new value of alp1 is then further from the
+                // solution) or if the new estimate of alp1 lies outside (0,pi); in this
+                // case, the new starting guess is taken to be (alp1a + alp1b) / 2.
+                double ssig1;
+                double csig1;
+                double ssig2;
+                double csig2;
+                double eps;
+                double domg12;
+<span class="fc" id="L1376">                ssig1 = csig1 = ssig2 = csig2 = eps = domg12 = Double.NaN;</span>
+<span class="fc" id="L1377">                int numit = 0;</span>
+                // bracketing range
+<span class="fc" id="L1379">                double salp1a = TINY;</span>
+<span class="fc" id="L1380">                double calp1a = 1.0;</span>
+<span class="fc" id="L1381">                double salp1b = TINY;</span>
+<span class="fc" id="L1382">                double calp1b = -1.0;</span>
+<span class="pc bpc" id="L1383" title="1 of 2 branches missed.">                for (boolean tripn = false, tripb = false; numit &lt; MAXIT2; ++numit) {</span>
+                    // the WGS84 test set: mean = 1.47, sd = 1.25, max = 16
+                    // WGS84 and random input: mean = 2.85, sd = 0.60
+                    final double v;
+                    final double dv;
+
+<span class="pc bpc" id="L1389" title="1 of 2 branches missed.">                    final Lambda12V w = lambda12(sbet1, cbet1, dn1, sbet2, cbet2, dn2, salp1, calp1,</span>
+                            slam12, clam12, numit &lt; MAXIT1, c1a, c2a, c3a);
+<span class="fc" id="L1391">                    v = w.mLam12;</span>
+<span class="fc" id="L1392">                    salp2 = w.mSalp2;</span>
+<span class="fc" id="L1393">                    calp2 = w.mCalp2;</span>
+<span class="fc" id="L1394">                    sig12 = w.mSig12;</span>
+<span class="fc" id="L1395">                    ssig1 = w.mSsig1;</span>
+<span class="fc" id="L1396">                    csig1 = w.mCsig1;</span>
+<span class="fc" id="L1397">                    ssig2 = w.mSsig2;</span>
+<span class="fc" id="L1398">                    csig2 = w.mCsig2;</span>
+<span class="fc" id="L1399">                    eps = w.mEps;</span>
+<span class="fc" id="L1400">                    domg12 = w.mDomg12;</span>
+<span class="fc" id="L1401">                    dv = w.mDlam12;</span>
+
+                    // 2 * TOL0 is approximately 1 ulp for a number in [0, pi].
+                    // reversed test to allow escape with NaNs
+<span class="fc bfc" id="L1405" title="All 2 branches covered.">                    final double tmp = (tripn ? 8 : 1);</span>
+<span class="pc bpc" id="L1406" title="1 of 4 branches missed.">                    if (tripb || !(Math.abs(v) &gt;= tmp * TOL0)) {</span>
+<span class="fc" id="L1407">                        break;</span>
+                    }
+
+                    // update bracketing values
+<span class="pc bpc" id="L1411" title="2 of 6 branches missed.">                    if (v &gt; 0 &amp;&amp; (numit &gt; MAXIT1 || calp1 / salp1 &gt; calp1b / salp1b)) {</span>
+<span class="fc" id="L1412">                        salp1b = salp1;</span>
+<span class="fc" id="L1413">                        calp1b = calp1;</span>
+<span class="pc bpc" id="L1414" title="3 of 6 branches missed.">                    } else if (v &lt; 0 &amp;&amp; (numit &gt; MAXIT1 || calp1 / salp1 &lt; calp1a / salp1a)) {</span>
+<span class="fc" id="L1415">                        salp1a = salp1;</span>
+<span class="fc" id="L1416">                        calp1a = calp1;</span>
+                    }
+
+<span class="pc bpc" id="L1419" title="1 of 4 branches missed.">                    if (numit &lt; MAXIT1 &amp;&amp; dv &gt; 0) {</span>
+<span class="fc" id="L1420">                        final double dalp1 = -v / dv;</span>
+<span class="fc" id="L1421">                        final double sdalp1 = Math.sin(dalp1);</span>
+<span class="fc" id="L1422">                        final double cdalp1 = Math.cos(dalp1);</span>
+<span class="fc" id="L1423">                        final double nsalp1 = salp1 * cdalp1 + calp1 * sdalp1;</span>
+<span class="pc bpc" id="L1424" title="2 of 4 branches missed.">                        if (nsalp1 &gt; 0 &amp;&amp; Math.abs(dalp1) &lt; Math.PI) {</span>
+<span class="fc" id="L1425">                            calp1 = calp1 * cdalp1 - salp1 * sdalp1;</span>
+<span class="fc" id="L1426">                            salp1 = nsalp1;</span>
+
+<span class="fc" id="L1428">                            p = GeoMath.norm(salp1, calp1);</span>
+<span class="fc" id="L1429">                            salp1 = p.getFirst();</span>
+<span class="fc" id="L1430">                            calp1 = p.getSecond();</span>
+
+                            // in some regimes we don't get quadratic convergence because
+                            // slope -&gt; 0. So use convergence conditions based on epsilon
+                            // instead of sqrt(epsilon).
+<span class="fc bfc" id="L1435" title="All 2 branches covered.">                            tripn = Math.abs(v) &lt;= 16 * TOL0;</span>
+<span class="fc" id="L1436">                            continue;</span>
+                        }
+                    }
+
+                    // either dv was not positive or updated value was outside legal range.
+                    // Use the midpoint of the bracket as the next estimate.
+                    // This mechanism is not needed for the WGS84 ellipsoid, but it does
+                    // catch problems with more eccentric ellipsoids. Its efficacy is such
+                    // for the WGS84 test set with the starting guess set to alp1 = 90deg
+                    // the WGS84 test set: mean = 5.21, sd = 3.93, max = 24
+                    // WGS84 and random input: mean = 4.74, sd = 0.99
+<span class="fc" id="L1447">                    salp1 = (salp1a + salp1b) / 2;</span>
+<span class="fc" id="L1448">                    calp1 = (calp1a + calp1b) / 2;</span>
+
+<span class="fc" id="L1450">                    p = GeoMath.norm(salp1, calp1);</span>
+<span class="fc" id="L1451">                    salp1 = p.getFirst();</span>
+<span class="fc" id="L1452">                    calp1 = p.getSecond();</span>
+
+<span class="fc" id="L1454">                    tripn = false;</span>
+<span class="pc bpc" id="L1455" title="1 of 2 branches missed.">                    tripb = (Math.abs(salp1a - salp1) + (calp1a - calp1) &lt; TOLB ||</span>
+<span class="pc bpc" id="L1456" title="1 of 2 branches missed.">                            Math.abs(salp1 - salp1b) + (calp1 - calp1b) &lt; TOLB);</span>
+                }
+
+                // ensure that the reduced length and geodesic scale are computed in a
+                // &quot;canonical&quot; way, with the I2 integral.
+<span class="fc" id="L1461">                final int lengthmask = outmask | ((outmask &amp;</span>
+<span class="fc bfc" id="L1462" title="All 2 branches covered.">                        (GeodesicMask.REDUCED_LENGTH | GeodesicMask.GEODESIC_SCALE)) != 0 ?</span>
+<span class="fc" id="L1463">                        GeodesicMask.DISTANCE : GeodesicMask.NONE);</span>
+<span class="fc" id="L1464">                final LengthsV v = lengths(eps, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2, cbet1, cbet2,</span>
+                        lengthmask, c1a, c2a);
+<span class="fc" id="L1466">                s12x = v.mS12b;</span>
+<span class="fc" id="L1467">                m12x = v.mM12b;</span>
+<span class="fc bfc" id="L1468" title="All 2 branches covered.">                if ((outmask &amp; GeodesicMask.GEODESIC_SCALE) != 0) {</span>
+<span class="fc" id="L1469">                    r.setScaleM12(v.mM12);</span>
+<span class="fc" id="L1470">                    r.setScaleM21(v.mM21);</span>
+                }
+
+<span class="fc" id="L1473">                m12x *= mB;</span>
+<span class="fc" id="L1474">                s12x *= mB;</span>
+<span class="fc" id="L1475">                a12 = Math.toDegrees(sig12);</span>
+<span class="fc bfc" id="L1476" title="All 2 branches covered.">                if ((outmask &amp; GeodesicMask.AREA) != 0) {</span>
+                    // omg12 = lam12 - domg12
+<span class="fc" id="L1478">                    final double sdomg12 = Math.sin(domg12);</span>
+<span class="fc" id="L1479">                    final double cdomg12 = Math.cos(domg12);</span>
+<span class="fc" id="L1480">                    somg12 = slam12 * cdomg12 - clam12 * sdomg12;</span>
+<span class="fc" id="L1481">                    comg12 = clam12 * cdomg12 + slam12 * sdomg12;</span>
+                }
+            }
+        }
+
+<span class="fc bfc" id="L1486" title="All 2 branches covered.">        if ((outmask &amp; GeodesicMask.DISTANCE) != 0) {</span>
+            // convert -0 to 0
+<span class="fc" id="L1488">            r.setS12(0.0 + s12x);</span>
+        }
+
+<span class="fc bfc" id="L1491" title="All 2 branches covered.">        if ((outmask &amp; GeodesicMask.REDUCED_LENGTH) != 0) {</span>
+            // convert -0 to 0
+<span class="fc" id="L1493">            r.setM12(0.0 + m12x);</span>
+        }
+
+<span class="fc bfc" id="L1496" title="All 2 branches covered.">        if ((outmask &amp; GeodesicMask.AREA) != 0) {</span>
+            // from lambda12: sin(alp1) * cos(bet1) = sin(alp0)
+            // calp0 &gt; 0
+<span class="fc" id="L1499">            final double salp0 = salp1 * cbet1;</span>
+<span class="fc" id="L1500">            final double calp0 = GeoMath.hypot(calp1, salp1 * sbet1);</span>
+            final double alp12;
+<span class="fc bfc" id="L1502" title="All 4 branches covered.">            if (calp0 != 0 &amp;&amp; salp0 != 0) {</span>
+                // from lambda12: tan(bet) = tan(sig) * cos(alp)
+                // multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0).
+<span class="fc" id="L1505">                double ssig1 = sbet1;</span>
+<span class="fc" id="L1506">                double csig1 = calp1 * cbet1;</span>
+<span class="fc" id="L1507">                double ssig2 = sbet2;</span>
+<span class="fc" id="L1508">                double csig2 = calp2 * cbet2;</span>
+<span class="fc" id="L1509">                final double k2 = GeoMath.sq(calp0) * mEp2;</span>
+<span class="fc" id="L1510">                final double eps = k2 / (2 * (1 + Math.sqrt(1 + k2)) + k2);</span>
+<span class="fc" id="L1511">                final double a4 = GeoMath.sq(mA) * calp0 * salp0 * mE2;</span>
+
+<span class="fc" id="L1513">                p = GeoMath.norm(ssig1, csig1);</span>
+<span class="fc" id="L1514">                ssig1 = p.getFirst();</span>
+<span class="fc" id="L1515">                csig1 = p.getSecond();</span>
+
+<span class="fc" id="L1517">                p = GeoMath.norm(ssig2, csig2);</span>
+<span class="fc" id="L1518">                ssig2 = p.getFirst();</span>
+<span class="fc" id="L1519">                csig2 = p.getSecond();</span>
+
+<span class="fc" id="L1521">                final double[] c4a = new double[NC4];</span>
+<span class="fc" id="L1522">                c4f(eps, c4a);</span>
+<span class="fc" id="L1523">                final double b41 = sinCosSeries(false, ssig1, csig1, c4a);</span>
+<span class="fc" id="L1524">                final double b42 = sinCosSeries(false, ssig2, csig2, c4a);</span>
+<span class="fc" id="L1525">                r.setAreaS12(a4 * (b42 - b41));</span>
+<span class="fc" id="L1526">            } else {</span>
+                // avoid problems with indeterminate sig1, sig2 on equator
+<span class="fc" id="L1528">                r.setAreaS12(0.0);</span>
+            }
+
+<span class="fc bfc" id="L1531" title="All 4 branches covered.">            if (!meridian &amp;&amp; somg12 &gt; 1) {</span>
+<span class="fc" id="L1532">                somg12 = Math.sin(omg12);</span>
+<span class="fc" id="L1533">                comg12 = Math.cos(omg12);</span>
+            }
+
+            // long difference not too big
+            // lat difference not too big
+<span class="fc bfc" id="L1538" title="All 6 branches covered.">            if (!meridian &amp;&amp; comg12 &gt; -0.7071 &amp;&amp; sbet2 - sbet1 &lt; 1.75) {</span>
+                // use tan(gamma/2) = tan(omg12/2) * (tan(bet1/2)+tan(bet2/2))/
+                // (1+tan(bet1/2)*tan(bet2/2)) with tan(x/2) = sin(x)/(1 + cos(x))
+<span class="fc" id="L1541">                final double domg12 = 1 + comg12;</span>
+<span class="fc" id="L1542">                final double dbet1 = 1 + cbet1;</span>
+<span class="fc" id="L1543">                final double dbet2 = 1 + cbet2;</span>
+<span class="fc" id="L1544">                alp12 = 2 * Math.atan2(somg12 * (sbet1 * dbet2 + sbet2 * dbet1),</span>
+                        domg12 * (sbet1 * sbet2 + dbet1 * dbet2));
+<span class="fc" id="L1546">            } else {</span>
+                // alp12 = alp2 - alp1, used in atan2 so no need to normalize
+<span class="fc" id="L1548">                double salp12 = salp2 * calp1 - calp2 * salp1;</span>
+<span class="fc" id="L1549">                double calp12 = calp2 * calp1 + salp2 * salp1;</span>
+
+                // the right thing appears to happen if alp1 = +/-180 and alp2 = 0, viz
+                // salp12 = -0 and alp12 = -180. However, this depends on the sign
+                // being attached to 0 correctly. The following ensures the correct
+                // behavior.
+<span class="fc bfc" id="L1555" title="All 4 branches covered.">                if (salp12 == 0 &amp;&amp; calp12 &lt; 0) {</span>
+<span class="fc" id="L1556">                    salp12 = TINY * calp1;</span>
+<span class="fc" id="L1557">                    calp12 = -1;</span>
+                }
+<span class="fc" id="L1559">                alp12 = Math.atan2(salp12, calp12);</span>
+            }
+<span class="fc" id="L1561">            r.setAreaS12(r.getAreaS12() + mC2 * alp12);</span>
+<span class="fc" id="L1562">            r.setAreaS12(r.getAreaS12() * swapp * lonsign * latsign);</span>
+
+            // convert -0 to 0
+<span class="fc" id="L1565">            r.setAreaS12(r.getAreaS12() + 0.0);</span>
+        }
+
+        // convert calp, salp to azimuth accounting for lonsign, swapp, latsign
+<span class="fc bfc" id="L1569" title="All 2 branches covered.">        if (swapp &lt; 0) {</span>
+<span class="fc" id="L1570">            double t = salp1;</span>
+<span class="fc" id="L1571">            salp1 = salp2;</span>
+<span class="fc" id="L1572">            salp2 = t;</span>
+
+<span class="fc" id="L1574">            t = calp1;</span>
+<span class="fc" id="L1575">            calp1 = calp2;</span>
+<span class="fc" id="L1576">            calp2 = t;</span>
+
+<span class="fc bfc" id="L1578" title="All 2 branches covered.">            if ((outmask &amp; GeodesicMask.GEODESIC_SCALE) != 0) {</span>
+<span class="fc" id="L1579">                t = r.getScaleM12();</span>
+<span class="fc" id="L1580">                r.setScaleM12(r.getScaleM21());</span>
+<span class="fc" id="L1581">                r.setScaleM21(t);</span>
+            }
+        }
+
+<span class="fc" id="L1585">        salp1 *= swapp * lonsign;</span>
+<span class="fc" id="L1586">        calp1 *= swapp * latsign;</span>
+<span class="fc" id="L1587">        salp2 *= swapp * lonsign;</span>
+<span class="fc" id="L1588">        calp2 *= swapp * latsign;</span>
+
+        // returned value in [0, 180]
+<span class="fc" id="L1591">        r.setA12(a12);</span>
+<span class="fc" id="L1592">        result.mSalp1 = salp1;</span>
+<span class="fc" id="L1593">        result.mCalp1 = calp1;</span>
+<span class="fc" id="L1594">        result.mSalp2 = salp2;</span>
+<span class="fc" id="L1595">        result.mCalp2 = calp2;</span>
+<span class="fc" id="L1596">        return result;</span>
+    }
+
+    /**
+     * Safely creates an ellipsoid with.
+     *
+     * @param a equatorial radius (meters).
+     * @param f flattening of ellipsoid. Setting &lt;i&gt;f&lt;/i&gt; = 0 gives a sphere. Negative &lt;i&gt;f&lt;/i&gt; gives a prolate
+     *          ellipsoid.
+     * @return a new Geodesic instance or null if something fails.
+     */
+    @SuppressWarnings(&quot;SameParameterValue&quot;)
+    private static Geodesic safeInstance(final double a, final double f) {
+        try {
+<span class="fc" id="L1610">            return new Geodesic(a, f);</span>
+<span class="nc" id="L1611">        } catch (final GeodesicException e) {</span>
+<span class="nc" id="L1612">            return null;</span>
+        }
+    }
+
+    private LengthsV lengths(
+            final double eps, final double sig12, final double ssig1, final double csig1,
+            final double dn1, final double ssig2, final double csig2, final double dn2,
+            final double cbet1, final double cbet2,
+            // scratch areas of the right size
+            int outmask, final double[] c1a, final double[] c2a) {
+        // return m12b = (reduced length)/mB; also calculate s12b = distance/mB,
+        // and m0 = coefficient of secular term in expression for reduced length.
+<span class="fc" id="L1624">        outmask &amp;= GeodesicMask.OUT_MASK;</span>
+
+        // to hold s12b, m12b, m0, M12, M21
+<span class="fc" id="L1627">        final LengthsV v = new LengthsV();</span>
+
+<span class="fc" id="L1629">        double m0x = 0;</span>
+<span class="fc" id="L1630">        double j12 = 0;</span>
+<span class="fc" id="L1631">        double a1 = 0;</span>
+<span class="fc" id="L1632">        double a2 = 0;</span>
+<span class="fc bfc" id="L1633" title="All 2 branches covered.">        if ((outmask &amp; (GeodesicMask.DISTANCE | GeodesicMask.REDUCED_LENGTH |</span>
+                GeodesicMask.GEODESIC_SCALE)) != 0) {
+<span class="fc" id="L1635">            a1 = a1m1f(eps);</span>
+<span class="fc" id="L1636">            c1f(eps, c1a);</span>
+<span class="fc bfc" id="L1637" title="All 2 branches covered.">            if ((outmask &amp; (GeodesicMask.REDUCED_LENGTH | GeodesicMask.GEODESIC_SCALE)) != 0) {</span>
+<span class="fc" id="L1638">                a2 = a2m1f(eps);</span>
+<span class="fc" id="L1639">                c2f(eps, c2a);</span>
+<span class="fc" id="L1640">                m0x = a1 - a2;</span>
+<span class="fc" id="L1641">                a2 = 1 + a2;</span>
+            }
+<span class="fc" id="L1643">            a1 = 1 + a1;</span>
+        }
+
+<span class="fc bfc" id="L1646" title="All 2 branches covered.">        if ((outmask &amp; GeodesicMask.DISTANCE) != 0) {</span>
+<span class="fc" id="L1647">            final double b1 = sinCosSeries(true, ssig2, csig2, c1a) -</span>
+<span class="fc" id="L1648">                    sinCosSeries(true, ssig1, csig1, c1a);</span>
+            // missing a factor of mB
+<span class="fc" id="L1650">            v.mS12b = a1 * (sig12 + b1);</span>
+<span class="fc bfc" id="L1651" title="All 2 branches covered.">            if ((outmask &amp; (GeodesicMask.REDUCED_LENGTH | GeodesicMask.GEODESIC_SCALE)) != 0) {</span>
+<span class="fc" id="L1652">                final double b2 = sinCosSeries(true, ssig2, csig2, c2a) -</span>
+<span class="fc" id="L1653">                        sinCosSeries(true, ssig1, csig1, c2a);</span>
+<span class="fc" id="L1654">                j12 = m0x * sig12 + (a1 * b1 - a2 * b2);</span>
+            }
+<span class="fc bfc" id="L1656" title="All 2 branches covered.">        } else if ((outmask &amp; (GeodesicMask.REDUCED_LENGTH | GeodesicMask.GEODESIC_SCALE)) != 0) {</span>
+            // assume here that NC1 &gt;= NC2
+<span class="fc bfc" id="L1658" title="All 2 branches covered.">            for (int l = 1; l &lt;= NC2; ++l) {</span>
+<span class="fc" id="L1659">                c2a[l] = a1 * c1a[l] - a2 * c2a[l];</span>
+            }
+<span class="fc" id="L1661">            j12 = m0x * sig12 + (sinCosSeries(true, ssig2, csig2, c2a) -</span>
+<span class="fc" id="L1662">                    sinCosSeries(true, ssig1, csig1, c2a));</span>
+        }
+
+<span class="fc bfc" id="L1665" title="All 2 branches covered.">        if ((outmask &amp; GeodesicMask.REDUCED_LENGTH) != 0) {</span>
+<span class="fc" id="L1666">            v.mM0 = m0x;</span>
+            // Missing a factor of mB.
+            // Add parens around (csig1 * ssig2) and (ssig1 * csig2) to ensure
+            // accurate cancellation in the case of coincident points
+<span class="fc" id="L1670">            v.mM12b = dn2 * (csig1 * ssig2) - dn1 * (ssig1 * csig2) - csig1 * csig2 * j12;</span>
+        }
+
+<span class="fc bfc" id="L1673" title="All 2 branches covered.">        if ((outmask &amp; GeodesicMask.GEODESIC_SCALE) != 0) {</span>
+<span class="fc" id="L1674">            final double csig12 = csig1 * csig2 + ssig1 * ssig2;</span>
+<span class="fc" id="L1675">            final double t = mEp2 * (cbet1 - cbet2) * (cbet1 + cbet2) / (dn1 + dn2);</span>
+<span class="fc" id="L1676">            v.mM12 = csig12 + (t * ssig2 - csig2 * j12) * ssig1 / dn1;</span>
+<span class="fc" id="L1677">            v.mM21 = csig12 - (t * ssig1 - csig1 * j12) * ssig2 / dn2;</span>
+        }
+<span class="fc" id="L1679">        return v;</span>
+    }
+
+    private static double astroid(final double x, final double y) {
+        // solve k^4 + 2 * k^3 - (x^2 + y^2 - 1) * k^2 - 2 * y^2 * k - y^2 = 0 for positive root k.
+        // this solution is adapted from Geocentric.reverse
+        final double k;
+<span class="fc" id="L1686">        final double p = GeoMath.sq(x);</span>
+        //noinspection all
+<span class="fc" id="L1688">        final double q = GeoMath.sq(y);</span>
+<span class="fc" id="L1689">        final double r = (p + q - 1) / 6;</span>
+
+<span class="pc bpc" id="L1691" title="3 of 4 branches missed.">        if (!(q == 0 &amp;&amp; r &lt;= 0)) {</span>
+            // avoid possible division by zero when r = 0 by multiplying equations for s and t by
+            // r^3 and r, resp.
+
+            // s = r^3 * s
+<span class="fc" id="L1696">            final double s = p * q / 4;</span>
+<span class="fc" id="L1697">            final double r2 = GeoMath.sq(r);</span>
+<span class="fc" id="L1698">            final double r3 = r * r2;</span>
+            // the discriminant of the quadratic equation for T3. This is zero on the
+            // evolute curve p^(1/3) + q^(1/3) = 1
+<span class="fc" id="L1701">            final double disc = s * (s + 2 * r3);</span>
+<span class="fc" id="L1702">            double u = r;</span>
+<span class="fc bfc" id="L1703" title="All 2 branches covered.">            if (disc &gt;= 0) {</span>
+<span class="fc" id="L1704">                double t3 = s + r3;</span>
+
+                // pick the sign on the sqrt to maximize abs(t3). This minimizes loss of precision
+                // due to cancellation. The result is unchanged because of the way the T is used in
+                // definition of u.
+
+                // t3 = (r * t)^3
+<span class="pc bpc" id="L1711" title="1 of 2 branches missed.">                t3 += t3 &lt; 0 ? -Math.sqrt(disc) : Math.sqrt(disc);</span>
+
+                // N.B. cbrt always returns the double root. cbrt(-8) = -2.
+                // t = r * t
+<span class="fc" id="L1715">                final double t = GeoMath.cbrt(t3);</span>
+
+                // t can be zero; but then r2 / t -&gt; 0.
+<span class="pc bpc" id="L1718" title="1 of 2 branches missed.">                u += t + (t != 0 ? r2 / t : 0);</span>
+<span class="fc" id="L1719">            } else {</span>
+                // t is complex, but the way u is defined the result is double.
+<span class="fc" id="L1721">                final double ang = Math.atan2(Math.sqrt(-disc), -(s + r3));</span>
+                // there are three possible cube roots. We choose the root which
+                // avoids cancellation. Note that disc &lt; 0 implies that r &lt; 0.
+<span class="fc" id="L1724">                u += 2 * r * Math.cos(ang / 3);</span>
+            }
+
+            // guaranteed positive
+<span class="fc" id="L1728">            final double v = Math.sqrt(GeoMath.sq(u) + q);</span>
+            // avoid loss of accuracy when u &lt; 0
+            // u + v, guaranteed positive
+<span class="pc bpc" id="L1731" title="1 of 2 branches missed.">            final double uv = u &lt; 0 ? q / (v - u) : u + v;</span>
+            // positive?
+<span class="fc" id="L1733">            final double w = (uv - q) / (2 * v);</span>
+
+            // rearrange expression for k to avoid loss of accuracy due to subtraction. Division
+            // by 0 not possible because uv &gt; 0, w &gt;= 0
+
+            // guaranteed positive
+<span class="fc" id="L1739">            k = uv / (Math.sqrt(uv + GeoMath.sq(w)) + w);</span>
+<span class="fc" id="L1740">        } else {</span>
+            // y = 0 with |x| &lt;= 1. Handle this case directly
+            // for y small, positive root is k = abs(y) / sqrt(1 - x ^2)
+<span class="nc" id="L1743">            k = 0;</span>
+        }
+<span class="fc" id="L1745">        return k;</span>
+    }
+
+    private InverseStartV inverseStart(
+            final double sbet1, final double cbet1, final double dn1,
+            final double sbet2, final double cbet2, final double dn2,
+            final double lam12, final double slam12, final double clam12,
+            // scratch areas of the right size
+            final double[] c1a, final double[] c2a) {
+        // return a starting point for Newton's method in salp1 and calp1 (function value is -1).
+        // If Newton's method doesn't need to be used, return also salp2 and calp2 and function
+        // value is sig12.
+
+        // to hold sig12, salp1, calp1, salp2, calp2, dnm.
+<span class="fc" id="L1759">        final InverseStartV w = new InverseStartV();</span>
+
+        // return value
+<span class="fc" id="L1762">        w.mSig12 = -1;</span>
+
+        // bet12 = bet2 - bet1 in [0, pi); bet12a = bet2 + bet1 in (-pi, 0]
+<span class="fc" id="L1765">        final double sbet12 = sbet2 * cbet1 - cbet2 * sbet1;</span>
+<span class="fc" id="L1766">        final double cbet12 = cbet2 * cbet1 + sbet2 * sbet1;</span>
+<span class="fc" id="L1767">        final double sbet12a = sbet2 * cbet1 + cbet2 * sbet1;</span>
+<span class="fc bfc" id="L1768" title="All 6 branches covered.">        final boolean shortline = cbet12 &gt;= 0 &amp;&amp; sbet12 &lt; 0.5 &amp;&amp;</span>
+                cbet2 * lam12 &lt; 0.5;
+        double somg12;
+        double comg12;
+<span class="fc bfc" id="L1772" title="All 2 branches covered.">        if (shortline) {</span>
+<span class="fc" id="L1773">            double sbetm2 = GeoMath.sq(sbet1 + sbet2);</span>
+
+            // sin((bet1 + bet2) / 2)^2
+            // = (sbet1 + sbet2)^2 / ((sbet1 + sbet2)^2 + (cbet1 + cbet2)^2)
+<span class="fc" id="L1777">            sbetm2 /= sbetm2 + GeoMath.sq(cbet1 + cbet2);</span>
+<span class="fc" id="L1778">            w.mDnm = Math.sqrt(1 + mEp2 * sbetm2);</span>
+<span class="fc" id="L1779">            final double omg12 = lam12 / (mF1 * w.mDnm);</span>
+<span class="fc" id="L1780">            somg12 = Math.sin(omg12);</span>
+<span class="fc" id="L1781">            comg12 = Math.cos(omg12);</span>
+<span class="fc" id="L1782">        } else {</span>
+<span class="fc" id="L1783">            somg12 = slam12;</span>
+<span class="fc" id="L1784">            comg12 = clam12;</span>
+        }
+
+<span class="fc" id="L1787">        w.mSalp1 = cbet2 * somg12;</span>
+<span class="fc bfc" id="L1788" title="All 2 branches covered.">        w.mCalp1 = comg12 &gt;= 0 ?</span>
+<span class="fc" id="L1789">                sbet12 + cbet2 * sbet1 * GeoMath.sq(somg12) / (1 + comg12) :</span>
+<span class="fc" id="L1790">                sbet12a - cbet2 * sbet1 * GeoMath.sq(somg12) / (1 - comg12);</span>
+
+<span class="fc" id="L1792">        final double ssig12 = GeoMath.hypot(w.mSalp1, w.mCalp1);</span>
+<span class="fc" id="L1793">        final double csig12 = sbet1 * sbet2 + cbet1 * cbet2 * comg12;</span>
+
+<span class="pc bpc" id="L1795" title="1 of 4 branches missed.">        if (shortline &amp;&amp; ssig12 &lt; mEtol2) {</span>
+            // really short lines
+<span class="nc" id="L1797">            w.mSalp2 = cbet1 * somg12;</span>
+<span class="nc bnc" id="L1798" title="All 2 branches missed.">            w.mCalp2 = sbet12 - cbet1 * sbet2 * (comg12 &gt;= 0 ?</span>
+<span class="nc" id="L1799">                    GeoMath.sq(somg12) / (1 + comg12) : 1 - comg12);</span>
+
+<span class="nc" id="L1801">            final Pair p = GeoMath.norm(w.mSalp2, w.mCalp2);</span>
+<span class="nc" id="L1802">            w.mSalp2 = p.getFirst();</span>
+<span class="nc" id="L1803">            w.mCalp2 = p.getSecond();</span>
+
+            // set return value
+<span class="nc" id="L1806">            w.mSig12 = Math.atan2(ssig12, csig12);</span>
+            // skip astroid calc if too eccentric
+<span class="pc bfc" id="L1808" title="All 6 branches covered.">        } else if (!(Math.abs(mN) &gt; 0.1 || csig12 &gt;= 0 || ssig12 &gt;= 6 * Math.abs(mN) * Math.PI * GeoMath.sq(cbet1))) {</span>
+            // scale lam12 and bet2 to x, y coordinate system where antipodal point is at origin and
+            // singular point is at y = 0, x = -1
+            final double y;
+            final double lamscale;
+            final double betscale;
+
+            // In C++ volatile declaration needed to fix inverse case
+            // 56.320923501171 0 -56.320923501171 179.664747671772880215
+            final double x;
+            // lam12 - pi
+<span class="fc" id="L1819">            final double lam12x = Math.atan2(-slam12, -clam12);</span>
+<span class="fc bfc" id="L1820" title="All 2 branches covered.">            if (mF &gt;= 0) {</span>
+                // in fact f == 0 does not get here
+
+                // x = dlong, y = dlat
+<span class="fc" id="L1824">                final double k2 = GeoMath.sq(sbet1) * mEp2;</span>
+<span class="fc" id="L1825">                final double eps = k2 / (2 * (1 + Math.sqrt(1 + k2)) + k2);</span>
+<span class="fc" id="L1826">                lamscale = mF * cbet1 * a3f(eps) * Math.PI;</span>
+
+<span class="fc" id="L1828">                betscale = lamscale * cbet1;</span>
+
+<span class="fc" id="L1830">                x = lam12x / lamscale;</span>
+<span class="fc" id="L1831">                y = sbet12a / betscale;</span>
+<span class="fc" id="L1832">            } else {</span>
+                // mF &lt; 0
+                // x = dlat, y = dlong
+<span class="fc" id="L1835">                final double cbet12a = cbet2 * cbet1 - sbet2 * sbet1;</span>
+<span class="fc" id="L1836">                final double bet12a = Math.atan2(sbet12a, cbet12a);</span>
+                final double m12b;
+                final double m0;
+
+                // in the case of lon12 = 180, this repeats a calculation made in inverse
+<span class="fc" id="L1841">                final LengthsV v = lengths(mN, Math.PI + bet12a, sbet1, -cbet1, dn1, sbet2, cbet2, dn2,</span>
+                        cbet1, cbet2, GeodesicMask.REDUCED_LENGTH, c1a, c2a);
+<span class="fc" id="L1843">                m12b = v.mM12b;</span>
+<span class="fc" id="L1844">                m0 = v.mM0;</span>
+
+<span class="fc" id="L1846">                x = -1 + m12b / (cbet1 * cbet2 * m0 * Math.PI);</span>
+<span class="fc bfc" id="L1847" title="All 2 branches covered.">                betscale = x &lt; -0.01 ? sbet12a / x :</span>
+<span class="fc" id="L1848">                        -mF * GeoMath.sq(cbet1) * Math.PI;</span>
+<span class="fc" id="L1849">                lamscale = betscale / cbet1;</span>
+<span class="fc" id="L1850">                y = lam12x / lamscale;</span>
+            }
+
+<span class="pc bpc" id="L1853" title="1 of 4 branches missed.">            if (y &gt; -TOL1 &amp;&amp; x &gt; -1 - XTHRESH) {</span>
+                // strip near cut
+<span class="fc bfc" id="L1855" title="All 2 branches covered.">                if (mF &gt;= 0) {</span>
+<span class="fc" id="L1856">                    w.mSalp1 = Math.min(1.0, -x);</span>
+<span class="fc" id="L1857">                    w.mCalp1 = -Math.sqrt(1 - GeoMath.sq(w.mSalp1));</span>
+                } else {
+<span class="fc bfc" id="L1859" title="All 2 branches covered.">                    w.mCalp1 = Math.max(x &gt; -TOL1 ? 0.0 : -1.0, x);</span>
+<span class="fc" id="L1860">                    w.mSalp1 = Math.sqrt(1 - GeoMath.sq(w.mCalp1));</span>
+                }
+            } else {
+                // estimate alp1, by solving the astroid problem
+
+                // could estimate alpha1 = theta + pi/2, directly, i.e.,
+                // calp1 = y / k; salp1 = -x / (1 + k); for mF &gt;= 0
+                // calp1 = x / (1 + k); salp1 = -y / k; for mF &lt; 0 (need to check)
+
+                // However, it's better to estimate omg12 from astroid and use spherical
+                // formula to compute alp1. This reduces the mean number of Newton iterations
+                // for astroid cases from 2.24 (min 0, max 6) to 2.12 (min 0 max 5). The changes
+                // in the number of iterations are as follows:
+
+                // change    percent
+                //   1           5
+                //   0           78
+                //  -1          16
+                //  -2          0.6
+                //  -3          0.04
+                //  -4          0.002
+
+                // The histogram of iterations is (m = number of iterations estimating alp1 directly,
+                // n = number of iterations estimating via omg12, total number of trials = 148605):
+
+                // iter      m       n
+                //   0       148     186
+                //   1       13046   13845
+                //   2       93315   102225
+                //   3       36189   32341
+                //   4       5396    7
+                //   5       455     1
+                //   6       56      0
+
+                // Because omg12 is near pi, estimate work with omg12a = pi - omg12
+<span class="fc" id="L1895">                final double k = astroid(x, y);</span>
+<span class="pc bpc" id="L1896" title="1 of 2 branches missed.">                final double omg12a = lamscale * (mF &gt;= 0.0 ? -x * k / (1.0 + k) : -y * (1 + k) / k);</span>
+<span class="fc" id="L1897">                somg12 = Math.sin(omg12a);</span>
+<span class="fc" id="L1898">                comg12 = -Math.cos(omg12a);</span>
+
+                // update spherical estimate of alp1 using omg12 instead of lam12
+<span class="fc" id="L1901">                w.mSalp1 = cbet2 * somg12;</span>
+<span class="fc" id="L1902">                w.mCalp1 = sbet12a - cbet2 * sbet1 * GeoMath.sq(somg12) / (1 - comg12);</span>
+            }
+        }
+
+        // sanity check on starting guess. Backwards check allows NaN through
+<span class="fc bfc" id="L1907" title="All 2 branches covered.">        if (!(w.mSalp1 &lt;= 0.0)) {</span>
+<span class="fc" id="L1908">            final Pair p = GeoMath.norm(w.mSalp1, w.mCalp1);</span>
+<span class="fc" id="L1909">            w.mSalp1 = p.getFirst();</span>
+<span class="fc" id="L1910">            w.mCalp1 = p.getSecond();</span>
+<span class="fc" id="L1911">        } else {</span>
+<span class="fc" id="L1912">            w.mSalp1 = 1;</span>
+<span class="fc" id="L1913">            w.mCalp1 = 0;</span>
+        }
+<span class="fc" id="L1915">        return w;</span>
+    }
+
+    private Lambda12V lambda12(
+            final double sbet1, final double cbet1, final double dn1,
+            final double sbet2, final double cbet2, final double dn2,
+            final double salp1, double calp1,
+            final double slam120, final double clam120, final boolean diffp,
+            // scratch areas of the right size
+            final double[] c1a, final double[] c2a, final double[] c3a) {
+        // object to hold lam12, salp2, calp2, sig12, ssig1, csig1, ssig2, csig2, eps, domg12, dlam12
+<span class="fc" id="L1926">        final Lambda12V w = new Lambda12V();</span>
+
+<span class="pc bpc" id="L1928" title="1 of 4 branches missed.">        if (sbet1 == 0 &amp;&amp; calp1 == 0) {</span>
+            // break degeneracy of equatorial line. This case has already been handled
+<span class="nc" id="L1930">            calp1 = -TINY;</span>
+        }
+
+        // sin(alp1) * cos(bet1) = sin(alp0)
+<span class="fc" id="L1934">        final double salp0 = salp1 * cbet1;</span>
+        // calp0 &gt; 0
+<span class="fc" id="L1936">        final double calp0 = GeoMath.hypot(calp1, salp1 * sbet1);</span>
+
+        double somg1;
+        double comg1;
+        double somg2;
+        double comg2;
+        double somg12;
+        double comg12;
+        // tan(bet1) = tan(sig1) * cos(alp1)
+        // tan(omg1) = sin(alp0) * tan(sig1) = tan(omg1) = tan(alp1) * sin(bet1)
+<span class="fc" id="L1946">        w.mSsig1 = sbet1;</span>
+<span class="fc" id="L1947">        somg1 = salp0 * sbet1;</span>
+<span class="fc" id="L1948">        w.mCsig1 = comg1 = calp1 * cbet1;</span>
+
+<span class="fc" id="L1950">        Pair p = GeoMath.norm(w.mSsig1, w.mCsig1);</span>
+<span class="fc" id="L1951">        w.mSsig1 = p.getFirst();</span>
+<span class="fc" id="L1952">        w.mCsig1 = p.getSecond();</span>
+
+        // GeoMath.norm(somg1, comg1); -- don't need to normalize!
+
+        // Enforce symmetries in the case abs(bet2) = -bet1. Need to be careful about this case,
+        // since this can yield singularities in the Newton iteration.
+        // sin(alp2) * cos(bet2) = sin(alp0)
+<span class="fc bfc" id="L1959" title="All 2 branches covered.">        w.mSalp2 = cbet2 != cbet1 ? salp0 / cbet2 : salp1;</span>
+        // calp2 = sqrt(1 - sq(salp2))
+        //       = sqrt(sq(calp0) - sq(sbet2)) / cbet2
+        // and subst for calp0 and rearrange to give (choose positive sqrt
+        // to give alp2 in [0, pi/2]).
+<span class="fc bfc" id="L1964" title="All 2 branches covered.">        final double tmp = (cbet1 &lt; -sbet1 ? (cbet2 - cbet1) * (cbet1 + cbet2) :</span>
+<span class="fc" id="L1965">                (sbet1 - sbet2) * (sbet1 + sbet2));</span>
+<span class="pc bpc" id="L1966" title="1 of 4 branches missed.">        w.mCalp2 = cbet2 != cbet1 || Math.abs(sbet2) != -sbet1 ?</span>
+<span class="fc" id="L1967">                Math.sqrt(GeoMath.sq(calp1 * cbet1) + tmp) / cbet2 :</span>
+<span class="fc" id="L1968">                Math.abs(calp1);</span>
+        // tan(bet2) = tan(sig2) * cos(alp2)
+        // tan(omg2) = sin(alp0) * tan(sig2)
+<span class="fc" id="L1971">        w.mSsig2 = sbet2;</span>
+<span class="fc" id="L1972">        somg2 = salp0 * sbet2;</span>
+<span class="fc" id="L1973">        w.mCsig2 = comg2 = w.mCalp2 * cbet2;</span>
+
+<span class="fc" id="L1975">        p = GeoMath.norm(w.mSsig2, w.mCsig2);</span>
+<span class="fc" id="L1976">        w.mSsig2 = p.getFirst();</span>
+<span class="fc" id="L1977">        w.mCsig2 = p.getSecond();</span>
+
+        // GeoMath.norm(somg2, comg2); -- don't need to normalize!
+
+        // sig12 = sig2 - sig1, limit to [0, pi]
+<span class="fc" id="L1982">        w.mSig12 = Math.atan2(Math.max(0.0, w.mCsig1 * w.mSsig2 - w.mSsig1 * w.mCsig2),</span>
+                w.mCsig1 * w.mCsig2 + w.mSsig1 * w.mSsig2);
+
+        // omg12 = omg2 - omg1, limit to [0, pi]
+<span class="fc" id="L1986">        somg12 = Math.max(0.0, comg1 * somg2 - somg1 * comg2);</span>
+<span class="fc" id="L1987">        comg12 = comg1 * comg2 + somg1 * somg2;</span>
+        // eta = omg12 - lam120
+<span class="fc" id="L1989">        final double eta = Math.atan2(somg12 * clam120 - comg12 * slam120,</span>
+                comg12 * clam120 + somg12 * slam120);
+
+        final double b312;
+<span class="fc" id="L1993">        final double k2 = GeoMath.sq(calp0) * mEp2;</span>
+<span class="fc" id="L1994">        w.mEps = k2 / (2 * (1 + Math.sqrt(1 + k2)) + k2);</span>
+<span class="fc" id="L1995">        c3f(w.mEps, c3a);</span>
+<span class="fc" id="L1996">        b312 = (sinCosSeries(true, w.mSsig2, w.mCsig2, c3a) -</span>
+<span class="fc" id="L1997">                sinCosSeries(true, w.mSsig1, w.mCsig1, c3a));</span>
+<span class="fc" id="L1998">        w.mDomg12 = -mF * a3f(w.mEps) * salp0 * (w.mSig12 + b312);</span>
+<span class="fc" id="L1999">        w.mLam12 = eta + w.mDomg12;</span>
+
+<span class="pc bpc" id="L2001" title="1 of 2 branches missed.">        if (diffp) {</span>
+<span class="fc bfc" id="L2002" title="All 2 branches covered.">            if (w.mCalp2 == 0) {</span>
+<span class="fc" id="L2003">                w.mDlam12 = -2 * mF1 * dn1 / sbet1;</span>
+            } else {
+<span class="fc" id="L2005">                LengthsV v = lengths(w.mEps, w.mSig12, w.mSsig1, w.mCsig1, dn1, w.mSsig2, w.mCsig2,</span>
+                        dn2, cbet1, cbet2, GeodesicMask.REDUCED_LENGTH, c1a, c2a);
+<span class="fc" id="L2007">                w.mDlam12 = v.mM12b;</span>
+<span class="fc" id="L2008">                w.mDlam12 *= mF1 / (w.mCalp2 * cbet2);</span>
+            }
+        }
+
+<span class="fc" id="L2012">        return w;</span>
+    }
+
+    private static class Lambda12V {
+        private double mLam12;
+        private double mSalp2;
+        private double mCalp2;
+        private double mSig12;
+        private double mSsig1;
+        private double mCsig1;
+        private double mSsig2;
+        private double mCsig2;
+        private double mEps;
+        private double mDomg12;
+        private double mDlam12;
+
+<span class="fc" id="L2028">        private Lambda12V() {</span>
+<span class="fc" id="L2029">            mLam12 = mSalp2 = mCalp2 = mSig12 = mSsig1 = mCsig1 = mSsig2 = mCsig2 =</span>
+                    mEps = mDomg12 = mDlam12 = Double.NaN;
+<span class="fc" id="L2031">        }</span>
+    }
+
+    private static class InverseStartV {
+        private double mSig12;
+        private double mSalp1;
+        private double mCalp1;
+
+        // only updated if return value &gt;= 0
+        private double mSalp2;
+        private double mCalp2;
+
+        // only updated for short lines
+        private double mDnm;
+
+<span class="fc" id="L2046">        private InverseStartV() {</span>
+<span class="fc" id="L2047">            mSig12 = mSalp1 = mCalp1 = mSalp2 = mCalp2 = mDnm = Double.NaN;</span>
+<span class="fc" id="L2048">        }</span>
+    }
+
+    private static class LengthsV {
+        private double mS12b;
+        private double mM12b;
+        private double mM0;
+        private double mM12;
+        private double mM21;
+
+<span class="fc" id="L2058">        private LengthsV() {</span>
+<span class="fc" id="L2059">            mS12b = mM12b = mM0 = mM12 = mM21 = Double.NaN;</span>
+<span class="fc" id="L2060">        }</span>
+    }
+
+    private static class InverseData {
+        private final GeodesicData mG;
+        private double mSalp1;
+        private double mCalp1;
+        private double mSalp2;
+        private double mCalp2;
+
+<span class="fc" id="L2070">        private InverseData() {</span>
+<span class="fc" id="L2071">            mG = new GeodesicData();</span>
+<span class="fc" id="L2072">            mSalp1 = mCalp1 = mSalp2 = mCalp2 = Double.NaN;</span>
+<span class="fc" id="L2073">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

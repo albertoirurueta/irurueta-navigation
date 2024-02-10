@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LMedSRobustLateration3DSolver.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-navigation</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.navigation.lateration</a> &gt; <span class="el_source">LMedSRobustLateration3DSolver.java</span></div><h1>LMedSRobustLateration3DSolver.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2018 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.navigation.lateration;
+
+import com.irurueta.geometry.Point3D;
+import com.irurueta.geometry.Sphere;
+import com.irurueta.navigation.LockedException;
+import com.irurueta.navigation.NotReadyException;
+import com.irurueta.numerical.robust.LMedSRobustEstimator;
+import com.irurueta.numerical.robust.LMedSRobustEstimatorListener;
+import com.irurueta.numerical.robust.RobustEstimator;
+import com.irurueta.numerical.robust.RobustEstimatorException;
+import com.irurueta.numerical.robust.RobustEstimatorMethod;
+
+import java.util.List;
+
+/**
+ * Robustly solves the lateration problem by finding the best pairs of 3D
+ * positions and distances among the provided ones using LMedS algorithm to
+ * discard outliers.
+ */
+@SuppressWarnings(&quot;Duplicates&quot;)
+public class LMedSRobustLateration3DSolver extends RobustLateration3DSolver {
+
+    /**
+     * Default value to be used for stop threshold. Stop threshold can be used to
+     * avoid keeping the algorithm unnecessarily iterating in case that best
+     * estimated threshold using median of residuals is not small enough. Once a
+     * solution is found that generates a threshold below this value, the
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm iterating
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
+     */
+    public static final double DEFAULT_STOP_THRESHOLD = 1e-5;
+
+    /**
+     * Minimum allowed stop threshold value.
+     */
+    public static final double MIN_STOP_THRESHOLD = 0.0;
+
+    /**
+     * Threshold to be used to keep the algorithm iterating in case that best
+     * estimated threshold using median of residuals is not small enough. Once
+     * a solution is found that generates a threshold below this value, the
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm iterating
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
+     */
+<span class="fc" id="L78">    private double mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
+
+    /**
+     * Constructor.
+     */
+    public LMedSRobustLateration3DSolver() {
+<span class="fc" id="L84">        super();</span>
+<span class="fc" id="L85">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts, ends or its progress significantly changes.
+     */
+    public LMedSRobustLateration3DSolver(
+            final RobustLaterationSolverListener&lt;Point3D&gt; listener) {
+<span class="fc" id="L95">        super(listener);</span>
+<span class="fc" id="L96">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param positions known positions of static nodes.
+     * @param distances euclidean distances from static nodes to mobile node to be estimated.
+     * @throws IllegalArgumentException if either positions or distances are null,
+     *                                  don't have the same length or their length is smaller than required (4 points).
+     */
+    public LMedSRobustLateration3DSolver(final Point3D[] positions, final double[] distances) {
+<span class="fc" id="L107">        super(positions, distances);</span>
+<span class="fc" id="L108">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param positions                  known positions of static nodes.
+     * @param distances                  euclidean distances from static nodes to mobile node to be
+     *                                   estimated.
+     * @param distanceStandardDeviations standard deviations of provided measured distances.
+     * @throws IllegalArgumentException if either positions or distances are null,
+     *                                  don't have the same length or their length is smaller than required (4 points).
+     */
+    public LMedSRobustLateration3DSolver(final Point3D[] positions, final double[] distances,
+                                         final double[] distanceStandardDeviations) {
+<span class="fc" id="L122">        super(positions, distances, distanceStandardDeviations);</span>
+<span class="fc" id="L123">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param positions                  known positions of static nodes.
+     * @param distances                  euclidean distances from static nodes to mobile node.
+     * @param distanceStandardDeviations standard deviations of provided measured distances.
+     * @param listener                   listener to be notified of events such as when estimation starts,
+     *                                   ends or its progress significantly changes.
+     * @throws IllegalArgumentException if either positions, distances or
+     *                                  standard deviations are null, don't have the same length or their length is
+     *                                  smaller than required (4 points).
+     */
+    public LMedSRobustLateration3DSolver(
+            final Point3D[] positions, final double[] distances,
+            final double[] distanceStandardDeviations,
+            final RobustLaterationSolverListener&lt;Point3D&gt; listener) {
+<span class="fc" id="L141">        super(positions, distances, distanceStandardDeviations, listener);</span>
+<span class="fc" id="L142">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param positions known positions of static nodes.
+     * @param distances euclidean distances from static nodes to mobile node.
+     * @param listener  listener to be notified of events such as when estimation starts,
+     *                  ends or its progress significantly changes.
+     * @throws IllegalArgumentException if either positions or distances are null,
+     *                                  don't have the same length or their length is smaller than required (4 points).
+     */
+    public LMedSRobustLateration3DSolver(
+            final Point3D[] positions, final double[] distances,
+            final RobustLaterationSolverListener&lt;Point3D&gt; listener) {
+<span class="fc" id="L157">        super(positions, distances, listener);</span>
+<span class="fc" id="L158">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param spheres spheres defining positions and distances.
+     * @throws IllegalArgumentException if spheres is null or if length of spheres array
+     *                                  is less than required (4 points).
+     */
+    public LMedSRobustLateration3DSolver(final Sphere[] spheres) {
+<span class="fc" id="L168">        super(spheres);</span>
+<span class="fc" id="L169">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param spheres                    spheres defining positions and distances.
+     * @param distanceStandardDeviations standard deviations of provided measured distances.
+     * @throws IllegalArgumentException if spheres is null, length of spheres array is less
+     *                                  than required (4 points) or don't have the same length.
+     */
+    public LMedSRobustLateration3DSolver(final Sphere[] spheres,
+                                         final double[] distanceStandardDeviations) {
+<span class="fc" id="L181">        super(spheres, distanceStandardDeviations);</span>
+<span class="fc" id="L182">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param spheres  spheres defining positions and distances.
+     * @param listener listener to be notified of events such as when estimation starts,
+     *                 ends or its progress significantly changes.
+     * @throws IllegalArgumentException if spheres is null or if length of spheres array
+     *                                  is less than required (4 points).
+     */
+    public LMedSRobustLateration3DSolver(
+            final Sphere[] spheres, final RobustLaterationSolverListener&lt;Point3D&gt; listener) {
+<span class="fc" id="L195">        super(spheres, listener);</span>
+<span class="fc" id="L196">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param spheres                    spheres defining positions and distances.
+     * @param distanceStandardDeviations standard deviations of provided measured distances.
+     * @param listener                   listener to be notified of events such as when estimation stats,
+     *                                   ends or its progress significantly changes.
+     * @throws IllegalArgumentException if spheres is null, length of spheres array is less
+     *                                  than required (4 points) or don't have the same length.
+     */
+    public LMedSRobustLateration3DSolver(
+            final Sphere[] spheres, final double[] distanceStandardDeviations,
+            final RobustLaterationSolverListener&lt;Point3D&gt; listener) {
+<span class="fc" id="L211">        super(spheres, distanceStandardDeviations, listener);</span>
+<span class="fc" id="L212">    }</span>
+
+    /**
+     * Returns threshold to be used to keep the algorithm iterating in case that
+     * best estimated threshold using median of residuals is not small enough.
+     * Once a solution is found that generates a threshold below this value, the
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm to iterate
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
+     *
+     * @return stop threshold to stop the algorithm prematurely when a certain
+     * accuracy has been reached.
+     */
+    public double getStopThreshold() {
+<span class="fc" id="L234">        return mStopThreshold;</span>
+    }
+
+    /**
+     * Sets threshold to be used to keep the algorithm iterating in case that
+     * best estimated threshold using median of residuals is not small enough.
+     * Once a solution is found that generates a threshold below this value,
+     * the algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm to iterate
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
+     *
+     * @param stopThreshold stop threshold to stop the algorithm prematurely
+     *                      when a certain accuracy has been reached.
+     * @throws IllegalArgumentException if provided value is zero or negative.
+     * @throws LockedException          if this solver is locked.
+     */
+    public void setStopThreshold(final double stopThreshold) throws LockedException {
+<span class="fc bfc" id="L259" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L260">            throw new LockedException();</span>
+        }
+<span class="fc bfc" id="L262" title="All 2 branches covered.">        if (stopThreshold &lt;= MIN_STOP_THRESHOLD) {</span>
+<span class="fc" id="L263">            throw new IllegalArgumentException();</span>
+        }
+
+<span class="fc" id="L266">        mStopThreshold = stopThreshold;</span>
+<span class="fc" id="L267">    }</span>
+
+    /**
+     * Solves the lateration problem.
+     *
+     * @return estimated position.
+     * @throws LockedException          if instance is busy solving the lateration problem.
+     * @throws NotReadyException        is solver is not ready.
+     * @throws RobustEstimatorException if estimation fails for any reason
+     *                                  (i.e. numerical instability, no solution available, etc).
+     */
+    @Override
+    public Point3D solve() throws LockedException, NotReadyException, RobustEstimatorException {
+<span class="fc bfc" id="L280" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L281">            throw new LockedException();</span>
+        }
+<span class="fc bfc" id="L283" title="All 2 branches covered.">        if (!isReady()) {</span>
+<span class="fc" id="L284">            throw new NotReadyException();</span>
+        }
+
+<span class="fc" id="L287">        final LMedSRobustEstimator&lt;Point3D&gt; innerEstimator =</span>
+<span class="fc" id="L288">                new LMedSRobustEstimator&lt;&gt;(new LMedSRobustEstimatorListener&lt;Point3D&gt;() {</span>
+                    @Override
+                    public int getTotalSamples() {
+<span class="fc" id="L291">                        return mDistances.length;</span>
+                    }
+
+                    @Override
+                    public int getSubsetSize() {
+<span class="fc" id="L296">                        return mPreliminarySubsetSize;</span>
+                    }
+
+                    @Override
+                    public void estimatePreliminarSolutions(
+                            final int[] samplesIndices, final List&lt;Point3D&gt; solutions) {
+<span class="fc" id="L302">                        solvePreliminarySolutions(samplesIndices, solutions);</span>
+<span class="fc" id="L303">                    }</span>
+
+                    @Override
+                    public double computeResidual(
+                            final Point3D currentEstimation, final int i) {
+<span class="fc" id="L308">                        return Math.abs(currentEstimation.distanceTo(mPositions[i]) - mDistances[i]);</span>
+                    }
+
+                    @Override
+                    public boolean isReady() {
+<span class="fc" id="L313">                        return LMedSRobustLateration3DSolver.this.isReady();</span>
+                    }
+
+                    @Override
+                    public void onEstimateStart(final RobustEstimator&lt;Point3D&gt; estimator) {
+                        // no action needed
+<span class="fc" id="L319">                    }</span>
+
+                    @Override
+                    public void onEstimateEnd(final RobustEstimator&lt;Point3D&gt; estimator) {
+                        // no action needed
+<span class="fc" id="L324">                    }</span>
+
+                    @Override
+                    public void onEstimateNextIteration(
+                            final RobustEstimator&lt;Point3D&gt; estimator, final int iteration) {
+<span class="pc bpc" id="L329" title="1 of 2 branches missed.">                        if (mListener != null) {</span>
+<span class="fc" id="L330">                            mListener.onSolveNextIteration(</span>
+                                    LMedSRobustLateration3DSolver.this, iteration);
+                        }
+<span class="fc" id="L333">                    }</span>
+
+                    @Override
+                    public void onEstimateProgressChange(
+                            final RobustEstimator&lt;Point3D&gt; estimator, final float progress) {
+<span class="pc bpc" id="L338" title="1 of 2 branches missed.">                        if (mListener != null) {</span>
+<span class="fc" id="L339">                            mListener.onSolveProgressChange(</span>
+                                    LMedSRobustLateration3DSolver.this, progress);
+                        }
+<span class="fc" id="L342">                    }</span>
+                });
+
+        try {
+<span class="fc" id="L346">            mLocked = true;</span>
+
+<span class="pc bpc" id="L348" title="1 of 2 branches missed.">            if (mListener != null) {</span>
+<span class="fc" id="L349">                mListener.onSolveStart(this);</span>
+            }
+
+<span class="fc" id="L352">            mInliersData = null;</span>
+<span class="fc" id="L353">            innerEstimator.setConfidence(mConfidence);</span>
+<span class="fc" id="L354">            innerEstimator.setMaxIterations(mMaxIterations);</span>
+<span class="fc" id="L355">            innerEstimator.setProgressDelta(mProgressDelta);</span>
+<span class="fc" id="L356">            Point3D result = innerEstimator.estimate();</span>
+<span class="fc" id="L357">            mInliersData = innerEstimator.getInliersData();</span>
+<span class="fc" id="L358">            result = attemptRefine(result);</span>
+
+<span class="pc bpc" id="L360" title="1 of 2 branches missed.">            if (mListener != null) {</span>
+<span class="fc" id="L361">                mListener.onSolveEnd(this);</span>
+            }
+
+<span class="fc" id="L364">            return result;</span>
+
+<span class="nc" id="L366">        } catch (final com.irurueta.numerical.LockedException e) {</span>
+<span class="nc" id="L367">            throw new LockedException(e);</span>
+<span class="nc" id="L368">        } catch (final com.irurueta.numerical.NotReadyException e) {</span>
+<span class="nc" id="L369">            throw new NotReadyException(e);</span>
+        } finally {
+<span class="fc" id="L371">            mLocked = false;</span>
+        }
+    }
+
+    /**
+     * Returns method being used for robust estimation.
+     *
+     * @return method being used for robust estimation.
+     */
+    @Override
+    public RobustEstimatorMethod getMethod() {
+<span class="fc" id="L382">        return RobustEstimatorMethod.LMEDS;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

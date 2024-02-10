@@ -1,0 +1,1399 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CoordinateTransformation.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-navigation</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.navigation.frames</a> &gt; <span class="el_source">CoordinateTransformation.java</span></div><h1>CoordinateTransformation.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2019 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.navigation.frames;
+
+import com.irurueta.algebra.Matrix;
+import com.irurueta.algebra.WrongSizeException;
+import com.irurueta.geometry.InvalidRotationMatrixException;
+import com.irurueta.geometry.MatrixRotation3D;
+import com.irurueta.geometry.Rotation3D;
+import com.irurueta.navigation.geodesic.Constants;
+import com.irurueta.units.Angle;
+import com.irurueta.units.AngleConverter;
+import com.irurueta.units.AngleUnit;
+import com.irurueta.units.Time;
+import com.irurueta.units.TimeConverter;
+import com.irurueta.units.TimeUnit;
+
+import java.io.Serializable;
+import java.util.Objects;
+
+/**
+ * Contains a coordinate transformation matrix, or rotation matrix. The coordinate transformation matrix is a 3x3
+ * matrix where a vector may be transformed in one step from one set of resolving axes to another by pre-multiplying it
+ * by the appropriate coordinate transformation matrix. The coordinate transformation matrix is associated to a source
+ * and destination frame.
+ * This implementation is based on the equations defined in &quot;Principles of GNSS, Inertial, and Multi-sensor
+ * Integrated Navigation Systems, Second Edition&quot; and on the companion software available at:
+ * &lt;a href=&quot;https://github.com/ymjdz/MATLAB-Codes/blob/master/Euler_to_CTM.m&quot;&gt;
+ *     https://github.com/ymjdz/MATLAB-Codes/blob/master/Euler_to_CTM.m
+ * &lt;/a&gt;
+ * &lt;a href=&quot;https://github.com/ymjdz/MATLAB-Codes/blob/master/CTM_to_Euler.m&quot;&gt;
+ *     https://github.com/ymjdz/MATLAB-Codes/blob/master/CTM_to_Euler.m
+ * &lt;/a&gt;
+ */
+public class CoordinateTransformation implements Serializable, Cloneable {
+
+    /**
+     * Number of rows of a coordinate transformation matrix.
+     */
+    public static final int ROWS = MatrixRotation3D.ROTATION3D_INHOM_MATRIX_ROWS;
+
+    /**
+     * Number of columns of a coordinate transformation matrix.
+     */
+    public static final int COLS = MatrixRotation3D.ROTATION3D_INHOM_MATRIX_ROWS;
+
+    /**
+     * Default threshold to consider a matrix valid.
+     */
+    public static final double DEFAULT_THRESHOLD = 1e-11;
+
+    /**
+     * Earth rotation rate expressed in radians per second (rad/s).
+     */
+    public static final double EARTH_ROTATION_RATE = Constants.EARTH_ROTATION_RATE;
+
+    /**
+     * 3x3 matrix containing a rotation.
+     */
+    Matrix mMatrix;
+
+    /**
+     * Source frame type.
+     */
+    private FrameType mSourceType;
+
+    /**
+     * Destination frame type.
+     */
+    private FrameType mDestinationType;
+
+    /**
+     * Constructor.
+     * Initializes rotation as the identity (no rotation).
+     *
+     * @param sourceType      source frame type.
+     * @param destinationType destination frame type.
+     * @throws NullPointerException if either source or destination frame types are null.
+     */
+<span class="fc" id="L93">    public CoordinateTransformation(final FrameType sourceType, final FrameType destinationType) {</span>
+        try {
+<span class="fc" id="L95">            mMatrix = Matrix.identity(ROWS, COLS);</span>
+<span class="nc" id="L96">        } catch (final WrongSizeException ignore) {</span>
+            // never happens
+<span class="fc" id="L98">        }</span>
+
+<span class="fc" id="L100">        setSourceType(sourceType);</span>
+<span class="fc" id="L101">        setDestinationType(destinationType);</span>
+<span class="fc" id="L102">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param matrix          a 3x3 matrix containing a rotation.
+     * @param sourceType      source frame type.
+     * @param destinationType destination frame type.
+     * @param threshold       threshold to validate rotation matrix.
+     * @throws InvalidRotationMatrixException if provided matrix is not a valid rotation matrix (3x3 and orthonormal).
+     * @throws NullPointerException           if either source or destination frame types are null.
+     * @throws IllegalArgumentException       if provided threshold is negative.
+     */
+    public CoordinateTransformation(final Matrix matrix, final FrameType sourceType,
+                                    final FrameType destinationType,
+<span class="fc" id="L117">                                    final double threshold) throws InvalidRotationMatrixException {</span>
+<span class="fc" id="L118">        setMatrix(matrix, threshold);</span>
+<span class="fc" id="L119">        setSourceType(sourceType);</span>
+<span class="fc" id="L120">        setDestinationType(destinationType);</span>
+<span class="fc" id="L121">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param matrix          a 3x3 matrix containing a rotation.
+     * @param sourceType      source frame type.
+     * @param destinationType destination frame type.
+     * @throws InvalidRotationMatrixException if provided matrix is not a valid rotation matrix (3x3 and orthonormal).
+     * @throws NullPointerException           if either source or destination frame types are null.
+     */
+    public CoordinateTransformation(final Matrix matrix, final FrameType sourceType,
+                                    final FrameType destinationType) throws InvalidRotationMatrixException {
+<span class="fc" id="L134">        this(matrix, sourceType, destinationType, DEFAULT_THRESHOLD);</span>
+<span class="fc" id="L135">    }</span>
+
+    /**
+     * Constructor with Euler angles.
+     * Notice that these angles do not match angles obtained from {@link com.irurueta.geometry.Rotation3D} or
+     * {@link com.irurueta.geometry.Quaternion} because they are referred to different axes.
+     *
+     * @param roll            roll Euler angle (around x-axis) expressed in radians.
+     * @param pitch           pitch Euler angle (around y-axis) expressed in radians.
+     * @param yaw             yaw Euler angle (around z-axis) expressed in radians.
+     * @param sourceType      source frame type.
+     * @param destinationType destination frame type.
+     */
+    public CoordinateTransformation(final double roll, final double pitch, final double yaw,
+                                    final FrameType sourceType, final FrameType destinationType) {
+<span class="fc" id="L150">        this(sourceType, destinationType);</span>
+<span class="fc" id="L151">        setEulerAngles(roll, pitch, yaw);</span>
+<span class="fc" id="L152">    }</span>
+
+    /**
+     * Constructor with Euler angles.
+     * Notice that these angles do not match angles obtained from {@link com.irurueta.geometry.Rotation3D} or
+     * {@link com.irurueta.geometry.Quaternion} because they are referred to different axes.
+     *
+     * @param roll            roll Euler angle (around x-axis).
+     * @param pitch           pitch Euler angle (around y-axis).
+     * @param yaw             yaw Euler angle (around z-axis).
+     * @param sourceType      source frame type.
+     * @param destinationType destination frame type.
+     */
+    public CoordinateTransformation(final Angle roll, final Angle pitch, final Angle yaw,
+                                    final FrameType sourceType, final FrameType destinationType) {
+<span class="fc" id="L167">        this(sourceType, destinationType);</span>
+<span class="fc" id="L168">        setEulerAngles(roll, pitch, yaw);</span>
+<span class="fc" id="L169">    }</span>
+
+    /**
+     * Constructor with 3D rotation.
+     *
+     * @param rotation        3D rotation.
+     * @param sourceType      source frame type.
+     * @param destinationType destination frame type.
+     */
+    public CoordinateTransformation(final Rotation3D rotation,
+                                    final FrameType sourceType, final FrameType destinationType) {
+<span class="fc" id="L180">        this(sourceType, destinationType);</span>
+<span class="fc" id="L181">        fromRotation(rotation);</span>
+<span class="fc" id="L182">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param input other coordinate transformation matrix to copy data from.
+     */
+    public CoordinateTransformation(final CoordinateTransformation input) {
+<span class="fc" id="L190">        this(input.mSourceType, input.mDestinationType);</span>
+<span class="fc" id="L191">        copyFrom(input);</span>
+<span class="fc" id="L192">    }</span>
+
+    /**
+     * Gets matrix containing a rotation.
+     *
+     * @return 3x3 matrix containing a rotation.
+     */
+    public Matrix getMatrix() {
+        Matrix result;
+        try {
+<span class="fc" id="L202">            result = new Matrix(ROWS, COLS);</span>
+<span class="fc" id="L203">            getMatrix(result);</span>
+<span class="nc" id="L204">        } catch (final WrongSizeException ignore) {</span>
+            // never happens
+<span class="nc" id="L206">            result = null;</span>
+<span class="fc" id="L207">        }</span>
+<span class="fc" id="L208">        return result;</span>
+    }
+
+    /**
+     * Gets matrix containing a rotation.
+     *
+     * @param result instance where internal 3x3 matrix containing a rotation will be copied to.
+     */
+    public void getMatrix(Matrix result) {
+<span class="fc" id="L217">        mMatrix.copyTo(result);</span>
+<span class="fc" id="L218">    }</span>
+
+    /**
+     * Sets matrix containing a rotation.
+     *
+     * @param matrix    a 3x3 matrix containing a rotation.
+     * @param threshold threshold to validate rotation matrix.
+     * @throws InvalidRotationMatrixException if provided matrix is not a valid rotation matrix (3x3 and orthonormal).
+     * @throws IllegalArgumentException       if provided threshold is negative.
+     */
+    public void setMatrix(final Matrix matrix, final double threshold) throws InvalidRotationMatrixException {
+
+<span class="fc bfc" id="L230" title="All 2 branches covered.">        if (!isValidMatrix(matrix, threshold)) {</span>
+<span class="fc" id="L231">            throw new InvalidRotationMatrixException();</span>
+        }
+
+<span class="fc" id="L234">        mMatrix = matrix;</span>
+<span class="fc" id="L235">    }</span>
+
+    /**
+     * Sets matrix containing a rotation.
+     *
+     * @param matrix a 3x3 matrix containing a rotation.
+     * @throws InvalidRotationMatrixException if provided matrix is not a valid rotation matrix (3x3 and orthonormal).
+     */
+    public void setMatrix(final Matrix matrix) throws InvalidRotationMatrixException {
+<span class="fc" id="L244">        setMatrix(matrix, DEFAULT_THRESHOLD);</span>
+<span class="fc" id="L245">    }</span>
+
+    /**
+     * Determines whether provided matrix is a valid rotation matrix (3x3 and orthonormal)
+     * up to provided threshold.
+     *
+     * @param matrix    matrix to be checked.
+     * @param threshold threshold to determine whether matrix is valid.
+     * @return true if matrix is valid, false otherwise.
+     * @throws IllegalArgumentException if provided threshold value is negative.
+     */
+    public static boolean isValidMatrix(final Matrix matrix, final double threshold) {
+<span class="fc bfc" id="L257" title="All 2 branches covered.">        if (threshold &lt; Rotation3D.MIN_THRESHOLD) {</span>
+<span class="fc" id="L258">            throw new IllegalArgumentException();</span>
+        }
+
+<span class="fc" id="L261">        return Rotation3D.isValidRotationMatrix(matrix, threshold);</span>
+    }
+
+    /**
+     * Determines whether provided matrix is a valid rotation matrix (3x3 and orthonormal)
+     * up to default threshold {@link #DEFAULT_THRESHOLD}.
+     *
+     * @param matrix matrix to be checked.
+     * @return true if matrix is valid, false otherwise.
+     */
+    public static boolean isValidMatrix(final Matrix matrix) {
+<span class="fc" id="L272">        return isValidMatrix(matrix, DEFAULT_THRESHOLD);</span>
+    }
+
+    /**
+     * Gets roll Euler angle (around x-axis) expressed in radians.
+     * Notice that this angle does not match angles obtained from {@link com.irurueta.geometry.Rotation3D} or
+     * {@link com.irurueta.geometry.Quaternion} because they are referred to different axes.
+     *
+     * @return roll Euler angle.
+     */
+    public double getRollEulerAngle() {
+<span class="fc" id="L283">        return Math.atan2(mMatrix.getElementAt(1, 2), mMatrix.getElementAt(2, 2));</span>
+    }
+
+    /**
+     * Gets roll Euler angle (around x-axis).
+     * Notice that this angle does not match angles obtained from {@link com.irurueta.geometry.Rotation3D} or
+     * {@link com.irurueta.geometry.Quaternion} because they are referred to different axes.
+     *
+     * @param result instance where roll Euler angle will be stored.
+     */
+    public void getRollEulerAngleMeasurement(final Angle result) {
+<span class="fc" id="L294">        result.setValue(getRollEulerAngle());</span>
+<span class="fc" id="L295">        result.setUnit(AngleUnit.RADIANS);</span>
+<span class="fc" id="L296">    }</span>
+
+    /**
+     * Gets roll Euler angle (around x-axis).
+     * Notice that this angle does not match angles obtained from {@link com.irurueta.geometry.Rotation3D} or
+     * {@link com.irurueta.geometry.Quaternion} because they are referred to different axes.
+     *
+     * @return roll Euler angle.
+     */
+    public Angle getRollEulerAngleMeasurement() {
+<span class="fc" id="L306">        final Angle result = new Angle(0.0, AngleUnit.RADIANS);</span>
+<span class="fc" id="L307">        getRollEulerAngleMeasurement(result);</span>
+<span class="fc" id="L308">        return result;</span>
+    }
+
+    /**
+     * Gets pitch Euler angle (around y-axis) expressed in radians.
+     * Notice that this angle does not match angles obtained from {@link com.irurueta.geometry.Rotation3D} or
+     * {@link com.irurueta.geometry.Quaternion} because they are referred to different axes.
+     *
+     * @return pitch Euler angle.
+     */
+    public double getPitchEulerAngle() {
+<span class="fc" id="L319">        return -Math.asin(mMatrix.getElementAt(0, 2));</span>
+    }
+
+    /**
+     * Gets pitch Euler angle (around y-axis).
+     * Notice that this angle does not match angles obtained from {@link com.irurueta.geometry.Rotation3D} or
+     * {@link com.irurueta.geometry.Quaternion} because they are referred to different axes.
+     *
+     * @param result instance where pitch Euler angle will be stored.
+     */
+    public void getPitchEulerAngleMeasurement(final Angle result) {
+<span class="fc" id="L330">        result.setValue(getPitchEulerAngle());</span>
+<span class="fc" id="L331">        result.setUnit(AngleUnit.RADIANS);</span>
+<span class="fc" id="L332">    }</span>
+
+    /**
+     * Gets pitch Euler angle (around y-axis).
+     * Notice that this angle does not match angles obtained from {@link com.irurueta.geometry.Rotation3D} or
+     * {@link com.irurueta.geometry.Quaternion} because they are referred to different axes.
+     *
+     * @return pitch Euler angle.
+     */
+    public Angle getPitchEulerAngleMeasurement() {
+<span class="fc" id="L342">        final Angle result = new Angle(0.0, AngleUnit.RADIANS);</span>
+<span class="fc" id="L343">        getPitchEulerAngleMeasurement(result);</span>
+<span class="fc" id="L344">        return result;</span>
+    }
+
+    /**
+     * Gets yaw Euler angle (around z-axis) expressed in radians.
+     * Notice that this angle does not match angles obtained from {@link com.irurueta.geometry.Rotation3D} or
+     * {@link com.irurueta.geometry.Quaternion} because they are referred to different axes.
+     *
+     * @return yaw Euler angle.
+     */
+    public double getYawEulerAngle() {
+<span class="fc" id="L355">        return Math.atan2(mMatrix.getElementAt(0, 1), mMatrix.getElementAt(0, 0));</span>
+    }
+
+    /**
+     * Gets yaw Euler angle (around z-axis).
+     * Notice that this angle does not match angles obtained from {@link com.irurueta.geometry.Rotation3D} or
+     * {@link com.irurueta.geometry.Quaternion} because they are referred to different axes.
+     *
+     * @param result instance where yaw Euler angle will be stored.
+     */
+    public void getYawEulerAngleMeasurement(final Angle result) {
+<span class="fc" id="L366">        result.setValue(getYawEulerAngle());</span>
+<span class="fc" id="L367">        result.setUnit(AngleUnit.RADIANS);</span>
+<span class="fc" id="L368">    }</span>
+
+    /**
+     * Gets yaw Euler angle (around z-axis).
+     * Notice that this angle does not match angles obtained from {@link com.irurueta.geometry.Rotation3D} or
+     * {@link com.irurueta.geometry.Quaternion} because they are referred to different axes.
+     *
+     * @return yaw Euler angle.
+     */
+    public Angle getYawEulerAngleMeasurement() {
+<span class="fc" id="L378">        final Angle result = new Angle(0.0, AngleUnit.RADIANS);</span>
+<span class="fc" id="L379">        getYawEulerAngleMeasurement(result);</span>
+<span class="fc" id="L380">        return result;</span>
+    }
+
+    /**
+     * Sets euler angles (roll, pitch and yaw) expressed in radians.
+     * Notice that these angles do not match angles obtained from {@link com.irurueta.geometry.Rotation3D} or
+     * {@link com.irurueta.geometry.Quaternion} because they are referred to different axes.
+     *
+     * @param roll  roll Euler angle (around x-axis) expressed in radians.
+     * @param pitch pitch Euler angle (around y-axis) expressed in radians.
+     * @param yaw   yaw Euler angle (around z-axis) expressed in radians.
+     */
+    public void setEulerAngles(final double roll, final double pitch, final double yaw) {
+<span class="fc" id="L393">        final double sinPhi = Math.sin(roll);</span>
+<span class="fc" id="L394">        final double cosPhi = Math.cos(roll);</span>
+<span class="fc" id="L395">        final double sinTheta = Math.sin(pitch);</span>
+<span class="fc" id="L396">        final double cosTheta = Math.cos(pitch);</span>
+<span class="fc" id="L397">        final double sinPsi = Math.sin(yaw);</span>
+<span class="fc" id="L398">        final double cosPsi = Math.cos(yaw);</span>
+
+        // Calculate coordinate transformation matrix using (2.22)
+<span class="fc" id="L401">        mMatrix.setElementAt(0, 0, cosTheta * cosPsi);</span>
+<span class="fc" id="L402">        mMatrix.setElementAt(0, 1, cosTheta * sinPsi);</span>
+<span class="fc" id="L403">        mMatrix.setElementAt(0, 2, -sinTheta);</span>
+
+<span class="fc" id="L405">        mMatrix.setElementAt(1, 0, -cosPhi * sinPsi + sinPhi * sinTheta * cosPsi);</span>
+<span class="fc" id="L406">        mMatrix.setElementAt(1, 1, cosPhi * cosPsi + sinPhi * sinTheta * sinPsi);</span>
+<span class="fc" id="L407">        mMatrix.setElementAt(1, 2, sinPhi * cosTheta);</span>
+
+<span class="fc" id="L409">        mMatrix.setElementAt(2, 0, sinPhi * sinPsi + cosPhi * sinTheta * cosPsi);</span>
+<span class="fc" id="L410">        mMatrix.setElementAt(2, 1, -sinPhi * cosPsi + cosPhi * sinTheta * sinPsi);</span>
+<span class="fc" id="L411">        mMatrix.setElementAt(2, 2, cosPhi * cosTheta);</span>
+<span class="fc" id="L412">    }</span>
+
+    /**
+     * Sets euler angles (roll, pitch and yaw).
+     * Notice that these angles do not match angles obtained from {@link com.irurueta.geometry.Rotation3D} or
+     * {@link com.irurueta.geometry.Quaternion} because they are referred to different axes.
+     *
+     * @param roll  roll Euler angle (around x-axis).
+     * @param pitch pitch Euler angle (around y-axis).
+     * @param yaw   yaw Euler angle (around z-axis).
+     */
+    public void setEulerAngles(final Angle roll, final Angle pitch, final Angle yaw) {
+<span class="fc" id="L424">        setEulerAngles(AngleConverter.convert(roll.getValue().doubleValue(), roll.getUnit(), AngleUnit.RADIANS),</span>
+<span class="fc" id="L425">                AngleConverter.convert(pitch.getValue().doubleValue(), pitch.getUnit(), AngleUnit.RADIANS),</span>
+<span class="fc" id="L426">                AngleConverter.convert(yaw.getValue().doubleValue(), yaw.getUnit(), AngleUnit.RADIANS));</span>
+<span class="fc" id="L427">    }</span>
+
+    /**
+     * Gets source frame type.
+     *
+     * @return source frame type.
+     */
+    public FrameType getSourceType() {
+<span class="fc" id="L435">        return mSourceType;</span>
+    }
+
+    /**
+     * Sets source frame type.
+     *
+     * @param sourceType source frame type.
+     * @throws NullPointerException if provided value is null.
+     */
+    public void setSourceType(final FrameType sourceType) {
+<span class="fc bfc" id="L445" title="All 2 branches covered.">        if (sourceType == null) {</span>
+<span class="fc" id="L446">            throw new NullPointerException();</span>
+        }
+
+<span class="fc" id="L449">        mSourceType = sourceType;</span>
+<span class="fc" id="L450">    }</span>
+
+    /**
+     * Gets destination frame type.
+     *
+     * @return destination frame type.
+     */
+    public FrameType getDestinationType() {
+<span class="fc" id="L458">        return mDestinationType;</span>
+    }
+
+    /**
+     * Sets destination frame type.
+     *
+     * @param destinationType destination frame type.
+     * @throws NullPointerException if provided value is null.
+     */
+    public void setDestinationType(final FrameType destinationType) {
+<span class="fc bfc" id="L468" title="All 2 branches covered.">        if (destinationType == null) {</span>
+<span class="fc" id="L469">            throw new NullPointerException();</span>
+        }
+
+<span class="fc" id="L472">        mDestinationType = destinationType;</span>
+<span class="fc" id="L473">    }</span>
+
+    /**
+     * Gets internal matrix as a 3D rotation.
+     *
+     * @return a 3D rotation representing the internal matrix.
+     * @throws InvalidRotationMatrixException if internal matrix cannot be converted to a 3D rotation.
+     */
+    public Rotation3D asRotation() throws InvalidRotationMatrixException {
+<span class="fc" id="L482">        return new MatrixRotation3D(mMatrix);</span>
+    }
+
+    /**
+     * Gets internal matrix as a 3D rotation.
+     *
+     * @param result instance where 3D rotation will be stored.
+     * @throws InvalidRotationMatrixException if internal matrix cannot be converted to a 3D rotation.
+     */
+    public void asRotation(final Rotation3D result) throws InvalidRotationMatrixException {
+<span class="fc" id="L492">        result.fromMatrix(mMatrix);</span>
+<span class="fc" id="L493">    }</span>
+
+    /**
+     * Sets internal matrix as the inhomogeneous matrix representation of provided 3D rotation.
+     * @param rotation 3D rotation to set matrix from.
+     */
+    public void fromRotation(final Rotation3D rotation) {
+<span class="fc" id="L500">        rotation.asInhomogeneousMatrix(mMatrix);</span>
+<span class="fc" id="L501">    }</span>
+
+    /**
+     * Copies this instance data into provided instance.
+     *
+     * @param output destination instance where data will be copied to.
+     */
+    public void copyTo(final CoordinateTransformation output) {
+<span class="fc" id="L509">        output.mSourceType = mSourceType;</span>
+<span class="fc" id="L510">        output.mDestinationType = mDestinationType;</span>
+<span class="fc" id="L511">        mMatrix.copyTo(output.mMatrix);</span>
+<span class="fc" id="L512">    }</span>
+
+    /**
+     * Copies data of provided instance into this instance.
+     *
+     * @param input instance to copy data from.
+     */
+    public void copyFrom(final CoordinateTransformation input) {
+<span class="fc" id="L520">        mSourceType = input.mSourceType;</span>
+<span class="fc" id="L521">        mDestinationType = input.mDestinationType;</span>
+<span class="fc" id="L522">        mMatrix.copyFrom(input.mMatrix);</span>
+<span class="fc" id="L523">    }</span>
+
+    /**
+     * Computes and returns hash code for this instance. Hash codes are almost unique
+     * values that are useful for fast classification and storage of objects in collections.
+     *
+     * @return Hash code.
+     */
+    @Override
+    public int hashCode() {
+<span class="fc" id="L533">        return Objects.hash(mSourceType, mDestinationType, mMatrix);</span>
+    }
+
+    /**
+     * Checks if provided object is a CoordinateTransformationMatrix having exactly the same
+     * contents as this instance.
+     *
+     * @param obj Object to be compared.
+     * @return true if both objects are considered to be equal, false otherwise.
+     */
+    @Override
+    public boolean equals(final Object obj) {
+<span class="fc bfc" id="L545" title="All 2 branches covered.">        if (obj == null) {</span>
+<span class="fc" id="L546">            return false;</span>
+        }
+<span class="fc bfc" id="L548" title="All 2 branches covered.">        if (obj == this) {</span>
+<span class="fc" id="L549">            return true;</span>
+        }
+<span class="fc bfc" id="L551" title="All 2 branches covered.">        if (!(obj instanceof CoordinateTransformation)) {</span>
+<span class="fc" id="L552">            return false;</span>
+        }
+
+<span class="fc" id="L555">        final CoordinateTransformation other = (CoordinateTransformation) obj;</span>
+<span class="fc" id="L556">        return equals(other);</span>
+    }
+
+    /**
+     * Checks if provided instance has exactly the same contents as this instance.
+     *
+     * @param other instance to be compared.
+     * @return true if both instances are considered to be equal, false otherwise.
+     */
+    public boolean equals(final CoordinateTransformation other) {
+<span class="fc" id="L566">        return equals(other, 0.0);</span>
+    }
+
+    /**
+     * Checks if provided instance has contents similar to this instance up to
+     * provided threshold value.
+     *
+     * @param other     instance to be compared.
+     * @param threshold maximum difference allowed between values on internal matrix.
+     * @return true if both instances are considered to be equal (up to provided threshold),
+     * false otherwise.
+     */
+    public boolean equals(final CoordinateTransformation other, final double threshold) {
+<span class="fc bfc" id="L579" title="All 2 branches covered.">        if (other == null) {</span>
+<span class="fc" id="L580">            return false;</span>
+        }
+<span class="pc bpc" id="L582" title="1 of 4 branches missed.">        return other.mSourceType == mSourceType &amp;&amp; other.mDestinationType == mDestinationType &amp;&amp;</span>
+<span class="pc bpc" id="L583" title="1 of 2 branches missed.">                other.mMatrix.equals(mMatrix, threshold);</span>
+    }
+
+    /**
+     * Computes the inverse of this coordinate transformation matrix and stores the result into provided instance.
+     *
+     * @param result instance where inverse will be stored.
+     */
+    public void inverse(final CoordinateTransformation result) {
+        try {
+<span class="fc" id="L593">            final FrameType source = mSourceType;</span>
+<span class="fc" id="L594">            final FrameType destination = mDestinationType;</span>
+<span class="fc" id="L595">            final Matrix matrix = Matrix.identity(ROWS, COLS);</span>
+<span class="fc" id="L596">            matrix.copyFrom(mMatrix);</span>
+
+<span class="fc" id="L598">            result.setSourceType(destination);</span>
+<span class="fc" id="L599">            result.setDestinationType(source);</span>
+
+            // Because matrix needs to be a rotation (3x3 and orthonormal), its inverse is the transpose
+<span class="fc" id="L602">            matrix.transpose();</span>
+<span class="fc" id="L603">            result.setMatrix(matrix);</span>
+<span class="nc" id="L604">        } catch (final WrongSizeException | InvalidRotationMatrixException ignore) {</span>
+            // never happens
+<span class="fc" id="L606">        }</span>
+<span class="fc" id="L607">    }</span>
+
+    /**
+     * Converts this instance into its inverse coordinate transformation matrix.
+     */
+    public void inverse() {
+<span class="fc" id="L613">        inverse(this);</span>
+<span class="fc" id="L614">    }</span>
+
+    /**
+     * Computes the inverse of this coordinate transformation matrix and returns it as a new instance.
+     *
+     * @return the inverse of this coordinate transformation matrix.
+     */
+    public CoordinateTransformation inverseAndReturnNew() {
+<span class="fc" id="L622">        final CoordinateTransformation result = new CoordinateTransformation(mDestinationType, mSourceType);</span>
+<span class="fc" id="L623">        inverse(result);</span>
+<span class="fc" id="L624">        return result;</span>
+    }
+
+    /**
+     * Computes matrix to convert ECEF to NED coordinates.
+     *
+     * @param latitude  latitude angle.
+     * @param longitude longitude angle.
+     * @param result    instance where computed matrix will be stored.
+     */
+    public static void ecefToNedMatrix(final Angle latitude, final Angle longitude, final Matrix result) {
+<span class="fc" id="L635">        ecefToNedMatrix(</span>
+<span class="fc" id="L636">                AngleConverter.convert(latitude.getValue().doubleValue(), latitude.getUnit(), AngleUnit.RADIANS),</span>
+<span class="fc" id="L637">                AngleConverter.convert(longitude.getValue().doubleValue(), longitude.getUnit(), AngleUnit.RADIANS),</span>
+                result);
+<span class="fc" id="L639">    }</span>
+
+    /**
+     * Computes matrix to convert ECEF to NED coordinates.
+     *
+     * @param latitude  latitude angle.
+     * @param longitude longitude angle.
+     * @return a new matrix to convert ECEF to NED coordinates.
+     */
+    public static Matrix ecefToNedMatrix(final Angle latitude, final Angle longitude) {
+<span class="fc" id="L649">        return ecefToNedMatrix(</span>
+<span class="fc" id="L650">                AngleConverter.convert(latitude.getValue().doubleValue(), latitude.getUnit(), AngleUnit.RADIANS),</span>
+<span class="fc" id="L651">                AngleConverter.convert(longitude.getValue().doubleValue(), longitude.getUnit(), AngleUnit.RADIANS));</span>
+    }
+
+    /**
+     * Computes matrix to convert ECEF to NED coordinates.
+     *
+     * @param latitude  latitude expressed in radians.
+     * @param longitude longitude expressed in radians.
+     * @param result    instance where computed matrix will be stored.
+     */
+    public static void ecefToNedMatrix(final double latitude, final double longitude, final Matrix result) {
+<span class="pc bpc" id="L662" title="1 of 4 branches missed.">        if (result.getRows() != ROWS || result.getColumns() != COLS) {</span>
+            try {
+<span class="fc" id="L664">                result.resize(ROWS, COLS);</span>
+<span class="nc" id="L665">            } catch (final WrongSizeException ignore) {</span>
+                // never happens
+<span class="fc" id="L667">            }</span>
+        }
+        // Calculate ECEF to NED coordinate transformation matrix using (2.150)
+<span class="fc" id="L670">        final double cosLat = Math.cos(latitude);</span>
+<span class="fc" id="L671">        final double sinLat = Math.sin(latitude);</span>
+<span class="fc" id="L672">        final double cosLong = Math.cos(longitude);</span>
+<span class="fc" id="L673">        final double sinLong = Math.sin(longitude);</span>
+
+<span class="fc" id="L675">        result.setElementAtIndex(0, -sinLat * cosLong);</span>
+<span class="fc" id="L676">        result.setElementAtIndex(1, -sinLong);</span>
+<span class="fc" id="L677">        result.setElementAtIndex(2, -cosLat * cosLong);</span>
+
+<span class="fc" id="L679">        result.setElementAtIndex(3, -sinLat * sinLong);</span>
+<span class="fc" id="L680">        result.setElementAtIndex(4, cosLong);</span>
+<span class="fc" id="L681">        result.setElementAtIndex(5, -cosLat * sinLong);</span>
+
+<span class="fc" id="L683">        result.setElementAtIndex(6, cosLat);</span>
+<span class="fc" id="L684">        result.setElementAtIndex(7, 0.0);</span>
+<span class="fc" id="L685">        result.setElementAtIndex(8, -sinLat);</span>
+<span class="fc" id="L686">    }</span>
+
+    /**
+     * Computes matrix to convert ECEF to NED coordinates.
+     *
+     * @param latitude  latitude expressed in radians.
+     * @param longitude longitude expressed in radians.
+     * @return a new matrix to convert ECEF to NED coordinates.
+     */
+    public static Matrix ecefToNedMatrix(final double latitude, final double longitude) {
+        Matrix result;
+        try {
+<span class="fc" id="L698">            result = new Matrix(CoordinateTransformation.ROWS, CoordinateTransformation.COLS);</span>
+<span class="fc" id="L699">            ecefToNedMatrix(latitude, longitude, result);</span>
+<span class="nc" id="L700">        } catch (final WrongSizeException ignore) {</span>
+            // never happens
+<span class="nc" id="L702">            result = null;</span>
+<span class="fc" id="L703">        }</span>
+<span class="fc" id="L704">        return result;</span>
+    }
+
+    /**
+     * Computes ECEF to NED coordinate transformation matrix.
+     *
+     * @param latitude  latitude angle.
+     * @param longitude longitude angle.
+     * @param result    instance where result will be stored.
+     */
+    public static void ecefToNedCoordinateTransformationMatrix(final Angle latitude, final Angle longitude,
+                                                               final CoordinateTransformation result) {
+<span class="fc" id="L716">        ecefToNedCoordinateTransformationMatrix(</span>
+<span class="fc" id="L717">                AngleConverter.convert(latitude.getValue().doubleValue(), latitude.getUnit(), AngleUnit.RADIANS),</span>
+<span class="fc" id="L718">                AngleConverter.convert(longitude.getValue().doubleValue(), longitude.getUnit(), AngleUnit.RADIANS),</span>
+                result);
+<span class="fc" id="L720">    }</span>
+
+    /**
+     * Computes ECEF to NED coordinate transformation matrix.
+     *
+     * @param latitude  latitude angle.
+     * @param longitude longitude angle.
+     * @return a new ECEF to NED coordinate transformation matrix.
+     */
+    public static CoordinateTransformation ecefToNedCoordinateTransformationMatrix(
+            final Angle latitude, final Angle longitude) {
+<span class="fc" id="L731">        return ecefToNedCoordinateTransformationMatrix(</span>
+<span class="fc" id="L732">                AngleConverter.convert(latitude.getValue().doubleValue(), latitude.getUnit(), AngleUnit.RADIANS),</span>
+<span class="fc" id="L733">                AngleConverter.convert(longitude.getValue().doubleValue(), longitude.getUnit(), AngleUnit.RADIANS));</span>
+    }
+
+    /**
+     * Computes ECEF to NED coordinate transformation matrix.
+     *
+     * @param latitude  latitude expressed in radians.
+     * @param longitude longitude expressed in radians.
+     * @param result    instance where result will be stored.
+     */
+    public static void ecefToNedCoordinateTransformationMatrix(final double latitude, final double longitude,
+                                                               final CoordinateTransformation result) {
+        try {
+<span class="fc" id="L746">            result.setSourceType(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);</span>
+<span class="fc" id="L747">            result.setDestinationType(FrameType.LOCAL_NAVIGATION_FRAME);</span>
+<span class="fc" id="L748">            result.setMatrix(ecefToNedMatrix(latitude, longitude));</span>
+<span class="nc" id="L749">        } catch (final InvalidRotationMatrixException ignore) {</span>
+            // never happens
+<span class="fc" id="L751">        }</span>
+<span class="fc" id="L752">    }</span>
+
+    /**
+     * Computes ECEF to NED coordinate transformation matrix.
+     *
+     * @param latitude  latitude expressed in radians.
+     * @param longitude longitude expressed in radians.
+     * @return a new ECEF to NED coordinate transformation matrix.
+     */
+    public static CoordinateTransformation ecefToNedCoordinateTransformationMatrix(final double latitude,
+                                                                                   final double longitude) {
+<span class="fc" id="L763">        final CoordinateTransformation result = new CoordinateTransformation(</span>
+                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
+<span class="fc" id="L765">        ecefToNedCoordinateTransformationMatrix(latitude, longitude, result);</span>
+<span class="fc" id="L766">        return result;</span>
+    }
+
+    /**
+     * Computes matrix to convert NED to ECEF coordinates.
+     *
+     * @param latitude  latitude angle.
+     * @param longitude longitude angle.
+     * @param result    instance where computed matrix will be stored.
+     */
+    public static void nedToEcefMatrix(final Angle latitude, final Angle longitude, final Matrix result) {
+<span class="fc" id="L777">        nedToEcefMatrix(</span>
+<span class="fc" id="L778">                AngleConverter.convert(latitude.getValue().doubleValue(), latitude.getUnit(), AngleUnit.RADIANS),</span>
+<span class="fc" id="L779">                AngleConverter.convert(longitude.getValue().doubleValue(), longitude.getUnit(), AngleUnit.RADIANS),</span>
+                result);
+<span class="fc" id="L781">    }</span>
+
+    /**
+     * Computes matrix to convert NED to ECEF coordinates.
+     *
+     * @param latitude  latitude angle.
+     * @param longitude longitude angle.
+     * @return a new matrix to convert NED to ECEF coordinates.
+     */
+    public static Matrix nedToEcefMatrix(final Angle latitude, final Angle longitude) {
+<span class="fc" id="L791">        return nedToEcefMatrix(</span>
+<span class="fc" id="L792">                AngleConverter.convert(latitude.getValue().doubleValue(), latitude.getUnit(), AngleUnit.RADIANS),</span>
+<span class="fc" id="L793">                AngleConverter.convert(longitude.getValue().doubleValue(), longitude.getUnit(), AngleUnit.RADIANS));</span>
+    }
+
+    /**
+     * Computes matrix to convert NED to ECEF coordinates.
+     *
+     * @param latitude  latitude expressed in radians.
+     * @param longitude longitude expressed in radians.
+     * @param result    instance where computed matrix will be stored.
+     */
+    public static void nedToEcefMatrix(final double latitude, final double longitude, final Matrix result) {
+        // NED to ECEF matrix is the inverse of ECEF to NED matrix.
+        // Since ECEF to NED matrix is a rotation (3x3 and orthonormal), its inverse is the transpose.
+<span class="fc" id="L806">        ecefToNedMatrix(latitude, longitude, result);</span>
+<span class="fc" id="L807">        result.transpose();</span>
+<span class="fc" id="L808">    }</span>
+
+    /**
+     * Computes matrix to convert NED to ECEF coordinates.
+     *
+     * @param latitude  latitude expressed in radians.
+     * @param longitude longitude expressed in radians.
+     * @return a new matrix to convert NED to ECEF coordinates.
+     */
+    public static Matrix nedToEcefMatrix(final double latitude, final double longitude) {
+        Matrix result;
+        try {
+<span class="fc" id="L820">            result = new Matrix(CoordinateTransformation.ROWS, CoordinateTransformation.COLS);</span>
+<span class="fc" id="L821">            nedToEcefMatrix(latitude, longitude, result);</span>
+<span class="nc" id="L822">        } catch (final WrongSizeException ignore) {</span>
+            // never happens
+<span class="nc" id="L824">            result = null;</span>
+<span class="fc" id="L825">        }</span>
+
+<span class="fc" id="L827">        return result;</span>
+    }
+
+    /**
+     * Computes NED to ECEF coordinate transformation matrix.
+     *
+     * @param latitude  latitude angle.
+     * @param longitude longitude angle.
+     * @param result    instance where result will be stored.
+     */
+    public static void nedToEcefCoordinateTransformationMatrix(final Angle latitude, final Angle longitude,
+                                                               final CoordinateTransformation result) {
+<span class="fc" id="L839">        nedToEcefCoordinateTransformationMatrix(</span>
+<span class="fc" id="L840">                AngleConverter.convert(latitude.getValue().doubleValue(), latitude.getUnit(), AngleUnit.RADIANS),</span>
+<span class="fc" id="L841">                AngleConverter.convert(longitude.getValue().doubleValue(), longitude.getUnit(), AngleUnit.RADIANS),</span>
+                result);
+<span class="fc" id="L843">    }</span>
+
+    /**
+     * Computes NED to ECEF coordinate transformation matrix.
+     *
+     * @param latitude  latitude angle.
+     * @param longitude longitude angle.
+     * @return a new NED to ECEF coordinate transformation matrix.
+     */
+    public static CoordinateTransformation nedToEcefCoordinateTransformationMatrix(
+            final Angle latitude, final Angle longitude) {
+<span class="fc" id="L854">        return nedToEcefCoordinateTransformationMatrix(</span>
+<span class="fc" id="L855">                AngleConverter.convert(latitude.getValue().doubleValue(), latitude.getUnit(), AngleUnit.RADIANS),</span>
+<span class="fc" id="L856">                AngleConverter.convert(longitude.getValue().doubleValue(), longitude.getUnit(), AngleUnit.RADIANS));</span>
+    }
+
+    /**
+     * Computes NED to ECEF coordinate transformation matrix.
+     *
+     * @param latitude  latitude expressed in radians.
+     * @param longitude longitude expressed in radians.
+     * @param result    instance where result will be stored.
+     */
+    public static void nedToEcefCoordinateTransformationMatrix(final double latitude, final double longitude,
+                                                               final CoordinateTransformation result) {
+        try {
+<span class="fc" id="L869">            result.setSourceType(FrameType.LOCAL_NAVIGATION_FRAME);</span>
+<span class="fc" id="L870">            result.setDestinationType(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);</span>
+<span class="fc" id="L871">            result.setMatrix(nedToEcefMatrix(latitude, longitude));</span>
+<span class="nc" id="L872">        } catch (final InvalidRotationMatrixException ignore) {</span>
+            // never happens
+<span class="fc" id="L874">        }</span>
+<span class="fc" id="L875">    }</span>
+
+    /**
+     * Computes NED to ECEF coordinate transformation matrix.
+     *
+     * @param latitude  latitude expressed in radians.
+     * @param longitude longitude expressed in radians.
+     * @return a new NED to ECEF coordinate transformation matrix.
+     */
+    public static CoordinateTransformation nedToEcefCoordinateTransformationMatrix(final double latitude,
+                                                                                   final double longitude) {
+<span class="fc" id="L886">        final CoordinateTransformation result = new CoordinateTransformation(</span>
+                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+<span class="fc" id="L888">        nedToEcefCoordinateTransformationMatrix(latitude, longitude, result);</span>
+<span class="fc" id="L889">        return result;</span>
+    }
+
+    /**
+     * Computes ECEF to ECI coordinate transformation matrix taking into account Earth
+     * rotation during provided time interval.
+     *
+     * @param timeInterval a time interval.
+     * @param result       instance where result will be stored.
+     */
+    public static void ecefToEciMatrixFromTimeInterval(final Time timeInterval, final Matrix result) {
+<span class="fc" id="L900">        ecefToEciMatrixFromTimeInterval(TimeConverter.convert(</span>
+<span class="fc" id="L901">                timeInterval.getValue().doubleValue(), timeInterval.getUnit(),</span>
+                TimeUnit.SECOND), result);
+<span class="fc" id="L903">    }</span>
+
+    /**
+     * Computes ECEF to ECI coordinate transformation matrix taking into account Earth
+     * rotation during provided time interval.
+     *
+     * @param timeInterval a time interval expressed in seconds (s).
+     * @param result       instance where result will be stored.
+     */
+    public static void ecefToEciMatrixFromTimeInterval(final double timeInterval, final Matrix result) {
+<span class="fc" id="L913">        ecefToEciMatrixFromAngle(EARTH_ROTATION_RATE * timeInterval, result);</span>
+<span class="fc" id="L914">    }</span>
+
+    /**
+     * Computes ECEF to ECI coordinate transformation matrix for provided Earth
+     * rotation angle.
+     *
+     * @param angle  angle amount the Earth has rotated.
+     * @param result instance where result will be stored.
+     */
+    public static void ecefToEciMatrixFromAngle(final Angle angle, final Matrix result) {
+<span class="fc" id="L924">        ecefToEciMatrixFromAngle(AngleConverter.convert(angle.getValue().doubleValue(),</span>
+<span class="fc" id="L925">                angle.getUnit(), AngleUnit.RADIANS), result);</span>
+<span class="fc" id="L926">    }</span>
+
+    /**
+     * Computes ECEF to ECI coordinate transformation matrix for provided Earth
+     * rotation angle.
+     *
+     * @param angle  angle amount the Earth has rotated expressed in radians.
+     * @param result instance where result will be stored.
+     */
+    public static void ecefToEciMatrixFromAngle(final double angle, final Matrix result) {
+<span class="pc bpc" id="L936" title="2 of 4 branches missed.">        if (result.getRows() != ROWS || result.getColumns() != COLS) {</span>
+            try {
+<span class="nc" id="L938">                result.resize(ROWS, COLS);</span>
+<span class="nc" id="L939">            } catch (final WrongSizeException ignore) {</span>
+                // never happens
+<span class="nc" id="L941">            }</span>
+        }
+
+<span class="fc" id="L944">        final double sinAngle = Math.sin(angle);</span>
+<span class="fc" id="L945">        final double cosAngle = Math.cos(angle);</span>
+
+<span class="fc" id="L947">        result.setElementAt(0, 0, cosAngle);</span>
+<span class="fc" id="L948">        result.setElementAt(0, 1, -sinAngle);</span>
+<span class="fc" id="L949">        result.setElementAt(0, 2, 0.0);</span>
+
+<span class="fc" id="L951">        result.setElementAt(1, 0, sinAngle);</span>
+<span class="fc" id="L952">        result.setElementAt(1, 1, cosAngle);</span>
+<span class="fc" id="L953">        result.setElementAt(1, 2, 0.0);</span>
+
+<span class="fc" id="L955">        result.setElementAt(2, 0, 0.0);</span>
+<span class="fc" id="L956">        result.setElementAt(2, 1, 0.0);</span>
+<span class="fc" id="L957">        result.setElementAt(2, 2, 1.0);</span>
+<span class="fc" id="L958">    }</span>
+
+    /**
+     * Computes ECEF to ECI coordinate transformation matrix taking into account Earth
+     * rotation during provided time interval.
+     *
+     * @param timeInterval a time interval.
+     * @return a new ECEF to ECI coordinate transformation matrix.
+     */
+    public static Matrix ecefToEciMatrixFromTimeInterval(final Time timeInterval) {
+<span class="fc" id="L968">        return ecefToEciMatrixFromTimeInterval(TimeConverter.convert(</span>
+<span class="fc" id="L969">                timeInterval.getValue().doubleValue(), timeInterval.getUnit(),</span>
+                TimeUnit.SECOND));
+    }
+
+    /**
+     * Computes ECEF to ECI coordinate transformation matrix taking into account Earth
+     * rotation during provided time interval.
+     *
+     * @param timeInterval a time interval expressed in seconds (s).
+     * @return a new ECEF to ECI coordinate transformation matrix.
+     */
+    public static Matrix ecefToEciMatrixFromTimeInterval(final double timeInterval) {
+<span class="fc" id="L981">        return ecefToEciMatrixFromAngle(EARTH_ROTATION_RATE * timeInterval);</span>
+    }
+
+    /**
+     * Computes ECEF to ECI coordinate transformation matrix for provided Earth
+     * rotation angle.
+     *
+     * @param angle angle amount the Earth has rotated.
+     * @return a new ECEF to ECI coordinate transformation matrix.
+     */
+    public static Matrix ecefToEciMatrixFromAngle(final Angle angle) {
+<span class="fc" id="L992">        return ecefToEciMatrixFromAngle(AngleConverter.convert(</span>
+<span class="fc" id="L993">                angle.getValue().doubleValue(),</span>
+<span class="fc" id="L994">                angle.getUnit(), AngleUnit.RADIANS));</span>
+    }
+
+    /**
+     * Computes ECEF to ECI coordinate transformation matrix for provided Earth
+     * rotation angle.
+     *
+     * @param angle angle amount the Earth has rotated expressed in radians.
+     * @return a new ECEF to ECI coordinate transformation matrix.
+     */
+    public static Matrix ecefToEciMatrixFromAngle(final double angle) {
+        Matrix result;
+        try {
+<span class="fc" id="L1007">            result = new Matrix(CoordinateTransformation.ROWS, CoordinateTransformation.COLS);</span>
+<span class="fc" id="L1008">            ecefToEciMatrixFromAngle(angle, result);</span>
+<span class="nc" id="L1009">        } catch (final WrongSizeException ignore) {</span>
+            // never happens
+<span class="nc" id="L1011">            result = null;</span>
+<span class="fc" id="L1012">        }</span>
+<span class="fc" id="L1013">        return result;</span>
+    }
+
+    /**
+     * Computes ECEF to ECI coordinate transformation matrix taking into account Earth
+     * rotation during provided time interval.
+     *
+     * @param timeInterval a time interval.
+     * @param result       instance where result will be stored.
+     */
+    public static void ecefToEciCoordinateTransformationMatrixFromTimeInterval(
+            final Time timeInterval, final CoordinateTransformation result) {
+<span class="fc" id="L1025">        ecefToEciCoordinateTransformationMatrixFromTimeInterval(</span>
+<span class="fc" id="L1026">                TimeConverter.convert(timeInterval.getValue().doubleValue(),</span>
+<span class="fc" id="L1027">                        timeInterval.getUnit(), TimeUnit.SECOND), result);</span>
+<span class="fc" id="L1028">    }</span>
+
+    /**
+     * Computes ECEF to ECI coordinate transformation matrix taking into account Earth
+     * rotation during provided time interval.
+     *
+     * @param timeInterval a time interval expressed in seconds (s).
+     * @param result       instance where result will be stored.
+     */
+    public static void ecefToEciCoordinateTransformationMatrixFromTimeInterval(
+            final double timeInterval, final CoordinateTransformation result) {
+<span class="fc" id="L1039">        ecefToEciCoordinateTransformationMatrixFromAngle(</span>
+                EARTH_ROTATION_RATE * timeInterval, result);
+<span class="fc" id="L1041">    }</span>
+
+    /**
+     * Computes ECEF to ECI coordinate transformation matrix for provided Earth
+     * rotation angle.
+     *
+     * @param angle  angle amount the Earth has rotated.
+     * @param result instance where result will be stored.
+     */
+    public static void ecefToEciCoordinateTransformationMatrixFromAngle(
+            final Angle angle, final CoordinateTransformation result) {
+<span class="fc" id="L1052">        ecefToEciCoordinateTransformationMatrixFromAngle(</span>
+<span class="fc" id="L1053">                AngleConverter.convert(angle.getValue().doubleValue(),</span>
+<span class="fc" id="L1054">                        angle.getUnit(), AngleUnit.RADIANS), result);</span>
+<span class="fc" id="L1055">    }</span>
+
+    /**
+     * Computes ECEF to ECI coordinate transformation matrix for provided Earth
+     * rotation angle.
+     *
+     * @param angle  angle amount the Earth has rotated expressed in radians.
+     * @param result instance where result will be stored.
+     */
+    public static void ecefToEciCoordinateTransformationMatrixFromAngle(
+            final double angle, final CoordinateTransformation result) {
+        try {
+<span class="fc" id="L1067">            result.setSourceType(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);</span>
+<span class="fc" id="L1068">            result.setDestinationType(FrameType.EARTH_CENTERED_INERTIAL_FRAME);</span>
+<span class="fc" id="L1069">            result.setMatrix(ecefToEciMatrixFromAngle(angle));</span>
+<span class="nc" id="L1070">        } catch (final InvalidRotationMatrixException ignore) {</span>
+            // never happens
+<span class="fc" id="L1072">        }</span>
+<span class="fc" id="L1073">    }</span>
+
+    /**
+     * Computes ECEF to ECI coordinate transformation matrix taking into account Earth
+     * rotation during provided time interval.
+     *
+     * @param timeInterval a time interval.
+     * @return a new ECEF to ECI coordinate transformation matrix.
+     */
+    public static CoordinateTransformation ecefToEciCoordinateTransformationMatrixFromTimeInterval(
+            final Time timeInterval) {
+<span class="fc" id="L1084">        final CoordinateTransformation result = new CoordinateTransformation(</span>
+                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME,
+                FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+<span class="fc" id="L1087">        ecefToEciCoordinateTransformationMatrixFromTimeInterval(timeInterval, result);</span>
+<span class="fc" id="L1088">        return result;</span>
+    }
+
+    /**
+     * Computes ECEF to ECI coordinate transformation matrix taking into account Earth
+     * rotation during provided time interval.
+     *
+     * @param timeInterval a time interval expressed in seconds (s).
+     * @return a new ECEF to ECI coordinate transformation matrix.
+     */
+    public static CoordinateTransformation ecefToEciCoordinateTransformationMatrixFromTimeInterval(
+            final double timeInterval) {
+<span class="fc" id="L1100">        final CoordinateTransformation result = new CoordinateTransformation(</span>
+                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME,
+                FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+<span class="fc" id="L1103">        ecefToEciCoordinateTransformationMatrixFromTimeInterval(timeInterval, result);</span>
+<span class="fc" id="L1104">        return result;</span>
+    }
+
+    /**
+     * Computes ECEF to ECI coordinate transformation matrix for provided Earth rotation angle.
+     *
+     * @param angle angle amount the Earth has rotated.
+     * @return a new ECEF to ECI coordinate transformation matrix.
+     */
+    public static CoordinateTransformation ecefToEciCoordinateTransformationMatrixFromAngle(
+            final Angle angle) {
+<span class="fc" id="L1115">        final CoordinateTransformation result = new CoordinateTransformation(</span>
+                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME,
+                FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+<span class="fc" id="L1118">        ecefToEciCoordinateTransformationMatrixFromAngle(angle, result);</span>
+<span class="fc" id="L1119">        return result;</span>
+    }
+
+    /**
+     * Computes ECEF to ECI coordinate transformation matrix for provided Earth rotation angle.
+     *
+     * @param angle angle amount the Earth has rotated expressed in radians.
+     * @return a new ECEF to ECI coordinate transformation matrix.
+     */
+    public static CoordinateTransformation ecefToEciCoordinateTransformationMatrixFromAngle(
+            final double angle) {
+<span class="fc" id="L1130">        final CoordinateTransformation result = new CoordinateTransformation(</span>
+                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME,
+                FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+<span class="fc" id="L1133">        ecefToEciCoordinateTransformationMatrixFromAngle(angle, result);</span>
+<span class="fc" id="L1134">        return result;</span>
+    }
+
+    /**
+     * Computes ECI to ECEF coordinate transformation matrix taking into account Earth
+     * rotation during provided time interval.
+     *
+     * @param timeInterval a time interval.
+     * @param result       instance where result will be stored.
+     */
+    public static void eciToEcefMatrixFromTimeInterval(final Time timeInterval,
+                                                       final Matrix result) {
+<span class="fc" id="L1146">        eciToEcefMatrixFromTimeInterval(TimeConverter.convert(</span>
+<span class="fc" id="L1147">                timeInterval.getValue().doubleValue(), timeInterval.getUnit(),</span>
+                TimeUnit.SECOND), result);
+<span class="fc" id="L1149">    }</span>
+
+    /**
+     * Computes ECI to ECEF coordinate transformation matrix taking into account Earth
+     * rotation during provided time interval.
+     *
+     * @param timeInterval a time interval expressed in seconds (s).
+     * @param result       instance where result will be stored.
+     */
+    public static void eciToEcefMatrixFromTimeInterval(final double timeInterval,
+                                                       final Matrix result) {
+<span class="fc" id="L1160">        eciToEcefMatrixFromAngle(EARTH_ROTATION_RATE * timeInterval, result);</span>
+<span class="fc" id="L1161">    }</span>
+
+    /**
+     * Computes ECI to ECEF coordinate transformation matrix for provided Earth
+     * rotation angle.
+     *
+     * @param angle  angle amount the Earth has rotated.
+     * @param result instance where result will be stored.
+     */
+    public static void eciToEcefMatrixFromAngle(final Angle angle, final Matrix result) {
+<span class="fc" id="L1171">        eciToEcefMatrixFromAngle(AngleConverter.convert(angle.getValue().doubleValue(),</span>
+<span class="fc" id="L1172">                angle.getUnit(), AngleUnit.RADIANS), result);</span>
+<span class="fc" id="L1173">    }</span>
+
+    /**
+     * Computes ECI to ECEF coordinate transformation matrix for provided Earth
+     * rotation angle.
+     *
+     * @param angle  angle amount the Earth has rotated expressed in radians.
+     * @param result instance where result will be stored.
+     */
+    public static void eciToEcefMatrixFromAngle(final double angle, final Matrix result) {
+<span class="pc bpc" id="L1183" title="2 of 4 branches missed.">        if (result.getRows() != ROWS || result.getColumns() != COLS) {</span>
+            try {
+<span class="nc" id="L1185">                result.resize(ROWS, COLS);</span>
+<span class="nc" id="L1186">            } catch (final WrongSizeException ignore) {</span>
+                // never happens
+<span class="nc" id="L1188">            }</span>
+        }
+
+<span class="fc" id="L1191">        final double sinAngle = Math.sin(angle);</span>
+<span class="fc" id="L1192">        final double cosAngle = Math.cos(angle);</span>
+
+<span class="fc" id="L1194">        result.setElementAt(0, 0, cosAngle);</span>
+<span class="fc" id="L1195">        result.setElementAt(0, 1, sinAngle);</span>
+<span class="fc" id="L1196">        result.setElementAt(0, 2, 0.0);</span>
+
+<span class="fc" id="L1198">        result.setElementAt(1, 0, -sinAngle);</span>
+<span class="fc" id="L1199">        result.setElementAt(1, 1, cosAngle);</span>
+<span class="fc" id="L1200">        result.setElementAt(1, 2, 0.0);</span>
+
+<span class="fc" id="L1202">        result.setElementAt(2, 0, 0.0);</span>
+<span class="fc" id="L1203">        result.setElementAt(2, 1, 0.0);</span>
+<span class="fc" id="L1204">        result.setElementAt(2, 2, 1.0);</span>
+<span class="fc" id="L1205">    }</span>
+
+    /**
+     * Computes ECI to ECEF coordinate transformation matrix taking into account Earth
+     * rotation during provided time interval.
+     *
+     * @param timeInterval a time interval.
+     * @return a new ECI to ECEF coordinate transformation matrix.
+     */
+    public static Matrix eciToEcefMatrixFromTimeInterval(final Time timeInterval) {
+<span class="fc" id="L1215">        return eciToEcefMatrixFromTimeInterval(TimeConverter.convert(</span>
+<span class="fc" id="L1216">                timeInterval.getValue().doubleValue(), timeInterval.getUnit(),</span>
+                TimeUnit.SECOND));
+    }
+
+    /**
+     * Computes ECI to ECEF coordinate transformation matrix taking into account Earth
+     * rotation during provided time interval.
+     *
+     * @param timeInterval a time interval expressed in seconds (s).
+     * @return a new ECI to ECEF coordinate transformation matrix.
+     */
+    public static Matrix eciToEcefMatrixFromTimeInterval(final double timeInterval) {
+<span class="fc" id="L1228">        return eciToEcefMatrixFromAngle(EARTH_ROTATION_RATE * timeInterval);</span>
+    }
+
+    /**
+     * Computes ECI to ECEF coordinate transformation matrix for provided Earth
+     * rotation angle.
+     *
+     * @param angle angle amount the Earth has rotated.
+     * @return a new ECI to ECEF coordinate transformation matrix.
+     */
+    public static Matrix eciToEcefMatrixFromAngle(final Angle angle) {
+<span class="fc" id="L1239">        return eciToEcefMatrixFromAngle(AngleConverter.convert(</span>
+<span class="fc" id="L1240">                angle.getValue().doubleValue(),</span>
+<span class="fc" id="L1241">                angle.getUnit(), AngleUnit.RADIANS));</span>
+    }
+
+    /**
+     * Computes ECI to ECEF coordinate transformation matrix for provided Earth
+     * rotation angle.
+     *
+     * @param angle angle amount the Earth has rotated.
+     * @return a new ECI to ECEF coordinate transformation matrix.
+     */
+    public static Matrix eciToEcefMatrixFromAngle(final double angle) {
+        Matrix result;
+        try {
+<span class="fc" id="L1254">            result = new Matrix(CoordinateTransformation.ROWS, CoordinateTransformation.COLS);</span>
+<span class="fc" id="L1255">            eciToEcefMatrixFromAngle(angle, result);</span>
+<span class="nc" id="L1256">        } catch (final WrongSizeException ignore) {</span>
+            // never happens
+<span class="nc" id="L1258">            result = null;</span>
+<span class="fc" id="L1259">        }</span>
+<span class="fc" id="L1260">        return result;</span>
+    }
+
+    /**
+     * Computes ECI to ECEF coordinate transformation matrix taking into account Earth
+     * rotation during provided time interval.
+     *
+     * @param timeInterval a time interval.
+     * @param result       instance where result will be stored.
+     */
+    public static void eciToEcefCoordinateTransformationMatrixFromTimeInterval(
+            final Time timeInterval, final CoordinateTransformation result) {
+<span class="fc" id="L1272">        eciToEcefCoordinateTransformationMatrixFromTimeInterval(</span>
+<span class="fc" id="L1273">                TimeConverter.convert(timeInterval.getValue().doubleValue(),</span>
+<span class="fc" id="L1274">                        timeInterval.getUnit(), TimeUnit.SECOND), result);</span>
+<span class="fc" id="L1275">    }</span>
+
+    /**
+     * Computes ECI to ECEF coordinate transformation matrix taking into account Earth
+     * rotation during provided time interval.
+     *
+     * @param timeInterval a time interval expressed in seconds (s).
+     * @param result       instance where result will be stored.
+     */
+    public static void eciToEcefCoordinateTransformationMatrixFromTimeInterval(
+            final double timeInterval, final CoordinateTransformation result) {
+<span class="fc" id="L1286">        eciToEcefCoordinateTransformationMatrixFromAngle(</span>
+                EARTH_ROTATION_RATE * timeInterval, result);
+<span class="fc" id="L1288">    }</span>
+
+    /**
+     * Computes ECI to ECEF coordinate transformation matrix for provided Earth
+     * rotation angle.
+     *
+     * @param angle  angle amount the Earth has rotated.
+     * @param result instance where result will be stored.
+     */
+    public static void eciToEcefCoordinateTransformationMatrixFromAngle(
+            final Angle angle, final CoordinateTransformation result) {
+<span class="fc" id="L1299">        eciToEcefCoordinateTransformationMatrixFromAngle(</span>
+<span class="fc" id="L1300">                AngleConverter.convert(angle.getValue().doubleValue(),</span>
+<span class="fc" id="L1301">                        angle.getUnit(), AngleUnit.RADIANS), result);</span>
+<span class="fc" id="L1302">    }</span>
+
+    /**
+     * Computes ECI to ECEF coordinate transformation matrix for provided Earth
+     * rotation angle.
+     *
+     * @param angle  angle amount the Earth has rotated expressed in radians.
+     * @param result instance where result will be stored.
+     */
+    public static void eciToEcefCoordinateTransformationMatrixFromAngle(
+            final double angle, final CoordinateTransformation result) {
+        try {
+<span class="fc" id="L1314">            result.setSourceType(FrameType.EARTH_CENTERED_INERTIAL_FRAME);</span>
+<span class="fc" id="L1315">            result.setDestinationType(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);</span>
+<span class="fc" id="L1316">            result.setMatrix(eciToEcefMatrixFromAngle(angle));</span>
+<span class="nc" id="L1317">        } catch (final InvalidRotationMatrixException ignore) {</span>
+            // never happens
+<span class="fc" id="L1319">        }</span>
+<span class="fc" id="L1320">    }</span>
+
+    /**
+     * Computes ECI to ECEF coordinate transformation matrix taking into account Earth
+     * rotation during provided time interval.
+     *
+     * @param timeInterval a time interval.
+     * @return a new ECI to ECEF coordinate transformation matrix.
+     */
+    public static CoordinateTransformation eciToEcefCoordinateTransformationMatrixFromTimeInterval(
+            final Time timeInterval) {
+<span class="fc" id="L1331">        final CoordinateTransformation result = new CoordinateTransformation(</span>
+                FrameType.EARTH_CENTERED_INERTIAL_FRAME,
+                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+<span class="fc" id="L1334">        eciToEcefCoordinateTransformationMatrixFromTimeInterval(timeInterval, result);</span>
+<span class="fc" id="L1335">        return result;</span>
+    }
+
+    /**
+     * Computes ECI to ECEF coordinate transformation matrix taking into account Earth
+     * rotation during provided time interval.
+     *
+     * @param timeInterval a time interval expressed in seconds (s).
+     * @return a new ECI to ECEF coordinate transformation matrix.
+     */
+    public static CoordinateTransformation eciToEcefCoordinateTransformationMatrixFromInterval(
+            final double timeInterval) {
+<span class="fc" id="L1347">        final CoordinateTransformation result = new CoordinateTransformation(</span>
+                FrameType.EARTH_CENTERED_INERTIAL_FRAME,
+                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+<span class="fc" id="L1350">        eciToEcefCoordinateTransformationMatrixFromTimeInterval(timeInterval, result);</span>
+<span class="fc" id="L1351">        return result;</span>
+    }
+
+    /**
+     * Computes ECI to ECEF coordinate transformation matrix for provided Earth
+     * rotation angle.
+     *
+     * @param angle angle amount the Earth has rotated.
+     * @return a new ECI to ECEF coordinate transformation matrix.
+     */
+    public static CoordinateTransformation eciToEcefCoordinateTransformationMatrixFromAngle(
+            final Angle angle) {
+<span class="fc" id="L1363">        final CoordinateTransformation result = new CoordinateTransformation(</span>
+                FrameType.EARTH_CENTERED_INERTIAL_FRAME,
+                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+<span class="fc" id="L1366">        eciToEcefCoordinateTransformationMatrixFromAngle(angle, result);</span>
+<span class="fc" id="L1367">        return result;</span>
+    }
+
+    /**
+     * Computes ECI to ECEF coordinate transformation matrix for provided Earth
+     * rotation angle.
+     *
+     * @param angle angle amount the Earth has rotated expressed in radians.
+     * @return a new ECI to ECEF coordinate transformation matrix.
+     */
+    public static CoordinateTransformation eciToEcefCoordinateTransformationMatrixFromAngle(
+            final double angle) {
+<span class="fc" id="L1379">        final CoordinateTransformation result = new CoordinateTransformation(</span>
+                FrameType.EARTH_CENTERED_INERTIAL_FRAME,
+                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+<span class="fc" id="L1382">        eciToEcefCoordinateTransformationMatrixFromAngle(angle, result);</span>
+<span class="fc" id="L1383">        return result;</span>
+    }
+
+    /**
+     * Makes a copy of this instance.
+     *
+     * @return a copy of this instance.
+     * @throws CloneNotSupportedException if clone fails for some reason.
+     */
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+<span class="fc" id="L1394">        final CoordinateTransformation result = (CoordinateTransformation) super.clone();</span>
+<span class="fc" id="L1395">        copyTo(result);</span>
+<span class="fc" id="L1396">        return result;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

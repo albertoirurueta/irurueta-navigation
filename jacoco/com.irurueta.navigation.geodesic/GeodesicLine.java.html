@@ -1,0 +1,826 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GeodesicLine.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-navigation</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.navigation.geodesic</a> &gt; <span class="el_source">GeodesicLine.java</span></div><h1>GeodesicLine.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2018 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.navigation.geodesic;
+
+/**
+ * A geodesic line
+ * GeodesicLine facilitates the determination of a series of points on a single geodesic. The
+ * starting point (&lt;i&gt;lat1&lt;/i&gt;, &lt;i&gt;lon1&lt;/i&gt;) and the azimuth &lt;i&gt;azi1&lt;/i&gt; are specified in the
+ * constructor; alternatively, the {@link Geodesic#line} method can be used to create a GeodesicLine.
+ * {@link #position} returns the location of point 2 a distance &lt;i&gt;s12&lt;/i&gt; along the geodesic.
+ * Alternatively {@link #arcPosition} gives the position of point 2 an arc length &lt;i&gt;a12&lt;/i&gt; along
+ * the geodesic.
+ * You can register the position of a reference point 3 a distance (arc length), &lt;i&gt;s13&lt;/i&gt;
+ * (&lt;i&gt;a13&lt;/i&gt;) along the geodesic with the {@link #setDistance} ({@link #setArc}) functions. Points
+ * a fractional distance along the line can be found by providing, for example, 0.5 * {@link #getDistance}
+ * as an argument to {@link #position}. The {@link Geodesic#inverseLine} or {@link Geodesic#directLine}
+ * methods return GeodesicLine objects with point 3 set to the point 2 of the corresponding geodesic
+ * problem. GeodesicLine objects created with the public constructor or with {@link Geodesic#line}
+ * have &lt;i&gt;s13&lt;/i&gt; and &lt;i&gt;a13&lt;/i&gt; set to NaNs.
+ * The calculations are accurate to better than 15 nm (15 nanometers). See Sec. 9 of
+ * &lt;a href=&quot;https://arxiv.org/abs/1102.1215v1&quot;&gt;arXiv:1102.1215v1&lt;/a&gt; for details. The algorithms used
+ * by this class are based on series expansions using the flattening &lt;i&gt;f&lt;/i&gt; as a small parameter.
+ * These are only accurate for |&lt;i&gt;f&lt;/i&gt; &amp;lt; 0.02; however reasonably accurate results will be
+ * obtained for |&lt;i&gt;f&lt;/i&gt; &amp;lt; 0.2.
+ * The algorithms are described in
+ * &lt;ul&gt;
+ *     &lt;li&gt;
+ *         C. F. F. Karney, &lt;a href=&quot;https://doi.org/10.1007/s00190-012-0578-z&quot;&gt;
+ *         Algorithms for geodesics&lt;/a&gt;,
+ *         J. Geodesy &lt;b&gt;87&lt;/b&gt;, 43&amp;ndash;55 (2013)
+ *         (&lt;a href=&quot;https://geographiclib.sourceforge.io/geod-addenda.html&quot;&gt;addenda&lt;/a&gt;).
+ *     &lt;/li&gt;
+ * &lt;/ul&gt;
+ * Here's an example of using this class
+ * &lt;pre&gt;
+ * {@code
+ * import net.sf.geographiclib.*;
+ * public class GeodesicLineTest {
+ *   public static void main(String[] args) {
+ *     // Print waypoints between JFK and SIN
+ *     Geodesic geod = Geodesic.WGS84;
+ *     double
+ *       lat1 = 40.640, lon1 = -73.779, // JFK
+ *       lat2 =  1.359, lon2 = 103.989; // SIN
+ *     GeodesicLine line = geod.InverseLine(lat1, lon1, lat2, lon2,
+ *                                          GeodesicMask.DISTANCE_IN |
+ *                                          GeodesicMask.LATITUDE |
+ *                                          GeodesicMask.LONGITUDE);
+ *     double ds0 = 500e3;     // Nominal distance between points = 500 km
+ *     // The number of intervals
+ *     int num = (int)(Math.ceil(line.Distance() / ds0));
+ *     {
+ *       // Use intervals of equal length
+ *       double ds = line.Distance() / num;
+ *       for (int i = 0; i &lt;= num; ++i) {
+ *         GeodesicData g = line.Position(i * ds,
+ *                                        GeodesicMask.LATITUDE |
+ *                                        GeodesicMask.LONGITUDE);
+ *         System.out.println(i + &quot; &quot; + g.lat2 + &quot; &quot; + g.lon2);
+ *       }
+ *     }
+ *     {
+ *       // Slightly faster, use intervals of equal arc length
+ *       double da = line.Arc() / num;
+ *       for (int i = 0; i &lt;= num; ++i) {
+ *         GeodesicData g = line.ArcPosition(i * da,
+ *                                           GeodesicMask.LATITUDE |
+ *                                           GeodesicMask.LONGITUDE);
+ *         System.out.println(i + &quot; &quot; + g.lat2 + &quot; &quot; + g.lon2);
+ *       }
+ *     }
+ *   }
+ * }}&lt;/pre&gt;
+ */
+public class GeodesicLine {
+
+    private static final int NC1 = Geodesic.NC1;
+    private static final int NC1P = Geodesic.NC1P;
+    private static final int NC2 = Geodesic.NC2;
+    private static final int NC3 = Geodesic.NC3;
+    private static final int NC4 = Geodesic.NC4;
+
+    private double mLat1;
+    private double mLon1;
+    private double mAzi1;
+
+    private double mA;
+    private double mF;
+    private double mB;
+    private double mC2;
+    private double mF1;
+    private double mSalp0;
+    private double mCalp0;
+    private double mK2;
+    private double mSalp1;
+    private double mCalp1;
+    private double mSsig1;
+    private double mCsig1;
+    private double mDn1;
+    private double mStau1;
+    private double mCtau1;
+    private double mSomg1;
+    private double mComg1;
+    private double mA1m1;
+    private double mA2m1;
+    private double mA3c;
+    private double mB11;
+    private double mB21;
+    private double mB31;
+    private double mA4;
+    private double mB41;
+
+    private double mA13;
+    private double mS13;
+
+    // index zero elements of mC1a, mC1pa, mC2a, mC3a are unused
+    // all the elements of mC4a are used.
+    private double[] mC1a;
+    private double[] mC1pa;
+    private double[] mC2a;
+    private double[] mC3a;
+    private double[] mC4a;
+
+    private int mCaps;
+
+    /**
+     * Constructor for a geodesic line staring at latitude &lt;i&gt;lat1&lt;/i&gt;, longitude &lt;i&gt;lon1&lt;/i&gt;,
+     * and azimuth &lt;i&gt;azi1&lt;/i&gt; (all in degrees).
+     * If the point is at a pole, the azimuth is defined by keeping &lt;i&gt;lon1&lt;/i&gt; fixed, writing
+     * &lt;i&gt;lat1&lt;/i&gt; = &amp;plusmn;(90&amp;deg; &amp;minus; &amp;epsilon;), and taking the limit &amp;epsilon;
+     * &amp;rarr; 0+.
+     *
+     * @param g    a {@link Geodesic} object used to compute the necessary information about the
+     *             GeodesicLine
+     * @param lat1 latitude of point 1 (degrees). &lt;i&gt;lat1&lt;/i&gt; should be in the range [&amp;minus;90&amp;deg;, 90&amp;deg;].
+     * @param lon1 longitude of point 1 (degrees).
+     * @param azi1 azimuth at point 1 (degrees).
+     */
+    public GeodesicLine(
+            final Geodesic g, final double lat1, final double lon1, final double azi1) {
+<span class="fc" id="L154">        this(g, lat1, lon1, azi1, GeodesicMask.ALL);</span>
+<span class="fc" id="L155">    }</span>
+
+    /**
+     * Constructor for a geodesic line starting at latitude &lt;i&gt;lat1&lt;/i&gt;, longitude &lt;i&gt;lon1&lt;/i&gt;,
+     * and azimuth &lt;i&gt;azi1&lt;/i&gt; (all in degrees) with a subset of the capabilities included.
+     * The {@link GeodesicMask} values are:
+     * &lt;ul&gt;
+     *     &lt;li&gt;
+     *         &lt;i&gt;caps&lt;/i&gt; |= {@link GeodesicMask#LATITUDE} for the latitude &lt;i&gt;lat2&lt;/i&gt;; this is
+     *         added automatically
+     *     &lt;/li&gt;
+     *     &lt;li&gt;
+     *         &lt;i&gt;caps&lt;/i&gt; |= {@link GeodesicMask#LONGITUDE} for the longitude &lt;i&gt;lon2&lt;/i&gt;
+     *     &lt;/li&gt;
+     *     &lt;li&gt;
+     *         &lt;i&gt;caps&lt;/i&gt; |= {@link GeodesicMask#AZIMUTH} for the azimuth &lt;i&gt;azi2&lt;/i&gt;; this is
+     *         added automatically
+     *     &lt;/li&gt;
+     *     &lt;li&gt;
+     *         &lt;i&gt;caps&lt;/i&gt; |= {@link GeodesicMask#DISTANCE} for the distance &lt;i&gt;s12&lt;/i&gt;
+     *     &lt;/li&gt;
+     *     &lt;li&gt;
+     *         &lt;i&gt;caps&lt;/i&gt; |= {@link GeodesicMask#REDUCED_LENGTH} for the reduced length &lt;i&gt;m12&lt;/i&gt;
+     *     &lt;/li&gt;
+     *     &lt;li&gt;
+     *         &lt;i&gt;caps&lt;/i&gt; |= {@link GeodesicMask#GEODESIC_SCALE} for the geodesic scales &lt;i&gt;M12&lt;/i&gt;
+     *         and &lt;i&gt;M21&lt;/i&gt;
+     *     &lt;/li&gt;
+     *     &lt;li&gt;
+     *         &lt;i&gt;caps&lt;/i&gt; |= {@link GeodesicMask#AREA} for the area &lt;i&gt;S12&lt;/i&gt;
+     *     &lt;/li&gt;
+     *     &lt;li&gt;
+     *         &lt;i&gt;caps&lt;/i&gt; |= {@link GeodesicMask#DISTANCE_IN} permits the length of the geodesic
+     *         to be given in terms of &lt;i&gt;s12&lt;/i&gt;; without this capability the length can only be
+     *         specified in terms of arc length
+     *     &lt;/li&gt;
+     *     &lt;li&gt;
+     *         &lt;i&gt;caps&lt;/i&gt; |= {@link GeodesicMask#ALL} for all of the above.
+     *     &lt;/li&gt;
+     * &lt;/ul&gt;
+     *
+     * @param g    a {@link Geodesic} object used to compute the necessary information about the
+     *             GeodesicLine.
+     * @param lat1 latitude of point 1 (degrees).
+     * @param lon1 longitude of point 1 (degrees).
+     * @param azi1 azimuth at point 1 (degrees).
+     * @param caps bitor'ed combination of {@link GeodesicMask} values specifying the capabilities
+     *             the GeodesicLine object should possess, i.e., which quantities can be returned in
+     *             calls to {@link #position}.
+     */
+    public GeodesicLine(final Geodesic g, final double lat1, final double lon1, double azi1,
+<span class="fc" id="L206">                        final int caps) {</span>
+<span class="fc" id="L207">        azi1 = GeoMath.angNormalize(azi1);</span>
+
+        final double salp1;
+        final double calp1;
+
+<span class="fc" id="L212">        final Pair p = GeoMath.sincosd(GeoMath.angRound(azi1));</span>
+<span class="fc" id="L213">        salp1 = p.getFirst();</span>
+<span class="fc" id="L214">        calp1 = p.getSecond();</span>
+
+<span class="fc" id="L216">        lineInit(g, lat1, lon1, azi1, salp1, calp1, caps);</span>
+<span class="fc" id="L217">    }</span>
+
+    protected GeodesicLine(
+            final Geodesic g, final double lat1, final double lon1, final double azi1,
+            final double salp1, final double calp1, final int caps, final boolean arcmode,
+<span class="fc" id="L222">            final double s13A13) {</span>
+<span class="fc" id="L223">        lineInit(g, lat1, lon1, azi1, salp1, calp1, caps);</span>
+<span class="fc" id="L224">        genSetDistance(arcmode, s13A13);</span>
+<span class="fc" id="L225">    }</span>
+
+    /**
+     * Compute the position of point 2 which is a distance &lt;i&gt;s12&lt;/i&gt; (meters) from point 1.
+     * The values of &lt;i&gt;lon2&lt;/i&gt; and &lt;i&gt;azi2&lt;/i&gt; returned are in the range [&amp;minus;180&amp;deg;, 180&amp;deg;].
+     * The GeodesicLine object &lt;i&gt;must&lt;/i&gt; have been constructed with &lt;i&gt;caps&lt;/i&gt;
+     * |= {@link GeodesicMask#DISTANCE_IN}; otherwise no parameters are set.
+     *
+     * @param s12 distance from point 1 to point 2 (meters); it can be negative.
+     * @return a {@link GeodesicData} object with the following fields: &lt;i&gt;lat1&lt;/i&gt;, &lt;i&gt;lon1&lt;/i&gt;,
+     * &lt;i&gt;azi1&lt;/i&gt;, &lt;i&gt;lat2&lt;/i&gt;, &lt;i&gt;lon2&lt;/i&gt;, &lt;i&gt;azi2&lt;/i&gt;, &lt;i&gt;s12&lt;/i&gt;, &lt;i&gt;a12&lt;/i&gt;. Some of these
+     * results may be missing if the GeodesicLine did not include the relevant capability.
+     */
+    public GeodesicData position(final double s12) {
+<span class="fc" id="L239">        return position(false, s12, GeodesicMask.STANDARD);</span>
+    }
+
+    /**
+     * Compute the position of point 2 which is a distance &lt;i&gt;s12&lt;/i&gt; (meters) from point 1 and
+     * with a subset of the geodesic results returned.
+     * The GeodesicLine object &lt;i&gt;must&lt;/i&gt; have been constructed with &lt;i&gt;caps&lt;/i&gt; |=
+     * {@link GeodesicMask#DISTANCE_IN}; otherwise no parameters are set.
+     * Requesting a value which the GeodesicLine object is not capable of computing is not an error
+     * (no parameters will be set). The value of &lt;i&gt;lon2&lt;/i&gt; returned is normally in the range
+     * [&amp;minus;180&amp;deg;, 180&amp;deg;]; however if the &lt;i&gt;outmask&lt;/i&gt; includes the
+     * {@link GeodesicMask#LONG_UNROLL} flag, the longitude is &quot;unrolled&quot; so that the quantity
+     * &lt;i&gt;lon2&lt;/i&gt; &amp;minus; &lt;i&gt;lon1&lt;/i&gt; indicates how many times and in what sense the geodesic
+     * encircles the ellipsoid.
+     *
+     * @param s12     distance from point 1 to point 2 (meters); it can be negative.
+     * @param outmask a bitor'ed combination of {@link GeodesicMask} values specifying which results
+     *                should be returned.
+     * @return a {@link GeodesicData} object including the requested results.
+     */
+    public GeodesicData position(final double s12, final int outmask) {
+<span class="fc" id="L260">        return position(false, s12, outmask);</span>
+    }
+
+    /**
+     * Compute the position of point 2 which is an arc length &lt;i&gt;a12&lt;/i&gt; (degrees) from point 1.
+     * The values of &lt;i&gt;lon2&lt;/i&gt; and &lt;i&gt;azi2&lt;/i&gt; returned are in the range [&amp;minus;180&amp;deg;, 180&amp;deg;].
+     * The GeodesicLine object &lt;i&gt;must&lt;/i&gt; have been constructed with &lt;i&gt;caps&lt;/i&gt; |=
+     * {@link GeodesicMask#DISTANCE_IN}; otherwise no parameters are set.
+     *
+     * @param a12 arc length from point 1 to point 2 (degrees); it can be negative.
+     * @return a {@link GeodesicData} object with the following fields: &lt;i&gt;lat1&lt;/i&gt;, &lt;i&gt;lon1&lt;/i&gt;,
+     * &lt;i&gt;azi1&lt;/i&gt;, &lt;i&gt;lat2&lt;/i&gt;, &lt;i&gt;lon2&lt;/i&gt;, &lt;i&gt;azi2&lt;/i&gt;, &lt;i&gt;s12&lt;/i&gt;, &lt;i&gt;a12&lt;/i&gt;. Some of these
+     * results may be missing if the GeodesicLine did not include the relevant capability.
+     */
+    public GeodesicData arcPosition(final double a12) {
+<span class="fc" id="L275">        return position(true, a12, GeodesicMask.STANDARD);</span>
+    }
+
+    /**
+     * Compute the position of point 2 which is an arc length &lt;i&gt;a12&lt;/i&gt; (degrees) from point 1 and
+     * with a subset of th geodesic results returned.
+     * Requesting a value which the GeodesicLine object is not capable of computing is not an error
+     * (no parameters will be set). The value of &lt;i&gt;lon2&lt;/i&gt; returned is in the range
+     * [&amp;minus;180&amp;deg;, 180&amp;deg;], unless the &lt;i&gt;outmask&lt;/i&gt; includes the
+     * {@link GeodesicMask#LONG_UNROLL} flags.
+     *
+     * @param a12     arc length from point 1 to point 2 (degrees); it can be negative.
+     * @param outmask a bitor'ed combination of {@link GeodesicMask} values specifying which results
+     *                should be returned.
+     * @return a {@link GeodesicData} object giving &lt;i&gt;lat1&lt;/i&gt;, &lt;i&gt;lon2&lt;/i&gt;, &lt;i&gt;azi2&lt;/i&gt;, and
+     * &lt;i&gt;a12&lt;/i&gt;.
+     */
+    public GeodesicData arcPosition(final double a12, final int outmask) {
+<span class="fc" id="L293">        return position(true, a12, outmask);</span>
+    }
+
+    /**
+     * The general position function. {@link #position(double, int)} and {@link #arcPosition(double, int)}
+     * are defined in terms of this function.
+     * The {@link GeodesicMask} values possible for &lt;i&gt;outmask&lt;/i&gt; are
+     * &lt;ul&gt;
+     *     &lt;li&gt;
+     *         &lt;i&gt;outmask&lt;/i&gt; |= {@link GeodesicMask#LATITUDE} for the latitude &lt;i&gt;lat2&lt;/i&gt;;
+     *     &lt;/li&gt;
+     *     &lt;li&gt;
+     *         &lt;i&gt;outmask&lt;/i&gt; |= {@link GeodesicMask#LONGITUDE} for the latitude &lt;i&gt;lon2&lt;/i&gt;;
+     *     &lt;/li&gt;
+     *     &lt;li&gt;
+     *         &lt;i&gt;outmask&lt;/i&gt; |= {@link GeodesicMask#AZIMUTH} for the latitude &lt;i&gt;azi2&lt;/i&gt;;
+     *     &lt;/li&gt;
+     *     &lt;li&gt;
+     *         &lt;i&gt;outmask&lt;/i&gt; |= {@link GeodesicMask#DISTANCE} for the distance &lt;i&gt;s12&lt;/i&gt;;
+     *     &lt;/li&gt;
+     *     &lt;li&gt;
+     *         &lt;i&gt;outmask&lt;/i&gt; |= {@link GeodesicMask#REDUCED_LENGTH} for the reduced length
+     *         &lt;i&gt;m12&lt;/i&gt;;
+     *     &lt;/li&gt;
+     *     &lt;li&gt;
+     *         &lt;i&gt;outmask&lt;/i&gt; |= {@link GeodesicMask#GEODESIC_SCALE} for the geodesic scales
+     *         &lt;i&gt;M12&lt;/i&gt; and &lt;i&gt;M21&lt;/i&gt;;
+     *     &lt;/li&gt;
+     *     &lt;li&gt;
+     *         &lt;i&gt;outmask&lt;/i&gt; |= {@link GeodesicMask#ALL} for all of the above;
+     *     &lt;/li&gt;
+     *     &lt;li&gt;
+     *         &lt;i&gt;outmask&lt;/i&gt; |= {@link GeodesicMask#LONG_UNROLL} to unroll &lt;i&gt;lon2&lt;/i&gt; (instead of
+     *         reducing it to the range [&amp;minus;180&amp;deg;, 180&amp;deg;]).
+     *     &lt;/li&gt;
+     * &lt;/ul&gt;
+     *
+     * @param arcmode boolean flag determining the meaning of the second parameter; if arcmode is false,
+     *                then the GeodesicLine object must have been constructed with &lt;i&gt;caps&lt;/i&gt; |=
+     *                {@link GeodesicMask#DISTANCE_IN}.
+     * @param s12A12  if &lt;i&gt;arcmode&lt;/i&gt; is false, this is the distance between point 1 and point 2 (meters);
+     *                otherwise it is the arc length between point 1 and point 2 (degrees); it can be
+     *                negative.
+     * @param outmask a bitor'ed combination of {@link GeodesicMask} values specifying which results
+     *                should be returned.
+     * @return a {@link GeodesicData} object with the requested results. Requesting a value which the
+     * GeodesicLine object is not capable of computing is not an error; Double.NaN is returned instead.
+     */
+    public GeodesicData position(final boolean arcmode, final double s12A12, int outmask) {
+<span class="fc" id="L342">        outmask &amp;= mCaps &amp; GeodesicMask.OUT_MASK;</span>
+<span class="fc" id="L343">        final GeodesicData r = new GeodesicData();</span>
+<span class="pc bpc" id="L344" title="2 of 6 branches missed.">        if (!(init() &amp;&amp; (arcmode || (mCaps &amp; (GeodesicMask.OUT_MASK &amp; GeodesicMask.DISTANCE_IN)) != 0))) {</span>
+            // uninitialized or impossible distance calculation requested
+<span class="nc" id="L346">            return r;</span>
+        }
+
+<span class="fc" id="L349">        r.setLat1(mLat1);</span>
+<span class="fc" id="L350">        r.setAzi1(mAzi1);</span>
+<span class="fc bfc" id="L351" title="All 2 branches covered.">        r.setLon1(((outmask &amp; GeodesicMask.LONG_UNROLL) != 0) ? mLon1 : GeoMath.angNormalize(mLon1));</span>
+
+        // avoid warning about uninitialized b12
+        double sig12;
+        double ssig12;
+        double csig12;
+<span class="fc" id="L357">        double b12 = 0.0;</span>
+<span class="fc" id="L358">        double ab1 = 0.0;</span>
+<span class="fc bfc" id="L359" title="All 2 branches covered.">        if (arcmode) {</span>
+            // interpret s12A12 as spherical arc length
+<span class="fc" id="L361">            r.setA12(s12A12);</span>
+<span class="fc" id="L362">            sig12 = Math.toRadians(s12A12);</span>
+
+<span class="fc" id="L364">            final Pair p = GeoMath.sincosd(s12A12);</span>
+<span class="fc" id="L365">            ssig12 = p.getFirst();</span>
+<span class="fc" id="L366">            csig12 = p.getSecond();</span>
+<span class="fc" id="L367">        } else {</span>
+            // interpret s12A12 as distance
+<span class="fc" id="L369">            r.setS12(s12A12);</span>
+
+<span class="fc" id="L371">            final double tau12 = s12A12 / (mB * (1 + mA1m1));</span>
+<span class="fc" id="L372">            final double s = Math.sin(tau12);</span>
+<span class="fc" id="L373">            final double c = Math.cos(tau12);</span>
+
+            // tau2 = tau1 + tau12
+<span class="fc" id="L376">            b12 = -Geodesic.sinCosSeries(true, mStau1 * c + mCtau1 * s,</span>
+                    mCtau1 * c - mStau1 * s, mC1pa);
+<span class="fc" id="L378">            sig12 = tau12 - (b12 - mB11);</span>
+<span class="fc" id="L379">            ssig12 = Math.sin(sig12);</span>
+<span class="fc" id="L380">            csig12 = Math.cos(sig12);</span>
+
+<span class="fc bfc" id="L382" title="All 2 branches covered.">            if (Math.abs(mF) &gt; 0.01) {</span>
+                // reverted distance series is inaccurate for |f| &gt; 1/100, so correct sig12 with 1
+                // Newton iteration. The following table shows the approximate maximum error for
+                // a = WGSa() and various f relative to GeodesicExact.
+                // erri = the error in the inverse solution (nm)
+                // errd = the error in the direct solution (series only) (nm)
+                // errda = the error in the direct solution (series + 1 Newton) (nm)
+
+                //  f       erri        errd        errda
+                //  -1/5    12e6        1.2e9       69e6
+                //  -1/10   123e3       12e6        765e3
+                //  -1/20   1110        108e3       7155
+                //  -1/50   18.63       200.9       27.12
+                //  -1/100  18.63       23.78       23.37
+                //  -1/150  18.63       21.05       20.26
+                //  1/150   22.35       24.73       25.83
+                //  1/100   22.35       25.03       25.31
+                //  1/50    29.80       231.9       30.44
+                //  1/20    5376        146e3       10e3
+                //  1/10    829e3       22e6        1.5e6
+                //  1/5     157e6       3.8e9       280e6
+
+<span class="fc" id="L404">                final double ssig2 = mSsig1 * csig12 + mCsig1 * ssig12;</span>
+<span class="fc" id="L405">                final double csig2 = mCsig1 * csig12 - mSsig1 * ssig12;</span>
+<span class="fc" id="L406">                b12 = Geodesic.sinCosSeries(true, ssig2, csig2, mC1a);</span>
+
+<span class="fc" id="L408">                final double serr = (1 + mA1m1) * (sig12 + (b12 - mB11)) - s12A12 / mB;</span>
+<span class="fc" id="L409">                sig12 = sig12 - serr / Math.sqrt(1 + mK2 * GeoMath.sq(ssig2));</span>
+<span class="fc" id="L410">                ssig12 = Math.sin(sig12);</span>
+<span class="fc" id="L411">                csig12 = Math.cos(sig12);</span>
+                // update b12 below
+            }
+<span class="fc" id="L414">            r.setA12(Math.toDegrees(sig12));</span>
+        }
+
+<span class="fc" id="L417">        final double ssig2 = mSsig1 * csig12 + mCsig1 * ssig12;</span>
+<span class="fc" id="L418">        double csig2 = mCsig1 * csig12 - mSsig1 * ssig12;</span>
+        final double sbet2;
+        double cbet2;
+        final double salp2;
+        final double calp2;
+        // sig2 = sig1 + sig12
+
+
+<span class="fc" id="L426">        final double dn2 = Math.sqrt(1 + mK2 * GeoMath.sq(ssig2));</span>
+<span class="fc bfc" id="L427" title="All 2 branches covered.">        if ((outmask &amp; (GeodesicMask.DISTANCE | GeodesicMask.REDUCED_LENGTH |</span>
+                GeodesicMask.GEODESIC_SCALE)) != 0) {
+<span class="fc bfc" id="L429" title="All 4 branches covered.">            if (arcmode || Math.abs(mF) &gt; 0.01) {</span>
+<span class="fc" id="L430">                b12 = Geodesic.sinCosSeries(true, ssig2, csig2, mC1a);</span>
+            }
+<span class="fc" id="L432">            ab1 = (1 + mA1m1) * (b12 - mB11);</span>
+        }
+
+        // sin(bet2) = cos(alp0) * sin(sig2)
+<span class="fc" id="L436">        sbet2 = mCalp0 * ssig2;</span>
+        // alt: cbet2 = hypot(csig2, salp0 * ssig2)
+<span class="fc" id="L438">        cbet2 = GeoMath.hypot(mSalp0, mCalp0 * csig2);</span>
+<span class="pc bpc" id="L439" title="1 of 2 branches missed.">        if (cbet2 == 0) {</span>
+            // i.e., salp0 = 0, csig2 = 0. Break the degeneracy in this case
+<span class="nc" id="L441">            cbet2 = csig2 = Geodesic.TINY;</span>
+        }
+
+        // tan(alp0) = cos(sig2) * tan(alp2)
+<span class="fc" id="L445">        salp2 = mSalp0;</span>
+        // no need to normalize
+<span class="fc" id="L447">        calp2 = mCalp0 * csig2;</span>
+
+<span class="fc bfc" id="L449" title="All 4 branches covered.">        if ((outmask &amp; GeodesicMask.DISTANCE) != 0 &amp;&amp; arcmode) {</span>
+<span class="fc" id="L450">            r.setS12(mB * ((1 + mA1m1) * sig12 + ab1));</span>
+        }
+
+<span class="fc bfc" id="L453" title="All 2 branches covered.">        if ((outmask &amp; GeodesicMask.LONGITUDE) != 0) {</span>
+            // tan(omg2) = sin(alp0) * tan(sig2)
+
+            // no need to normalize east or west going?
+            //noinspection all
+<span class="fc" id="L458">            final double somg2 = mSalp0 * ssig2;</span>
+<span class="fc" id="L459">            final double e = GeoMath.copysign(1, mSalp0);</span>
+
+            // omg12 = omg2 - omg1
+<span class="fc bfc" id="L462" title="All 2 branches covered.">            final double omg12 = ((outmask &amp; GeodesicMask.LONG_UNROLL) != 0) ?</span>
+<span class="fc" id="L463">                    e * (sig12 - (Math.atan2(ssig2, csig2) - Math.atan2(mSsig1, mCsig1)) +</span>
+<span class="fc" id="L464">                            (Math.atan2(e * somg2, csig2) - Math.atan2(e * mSomg1, mComg1))) :</span>
+<span class="fc" id="L465">                    Math.atan2(somg2 * mComg1 - csig2 * mSomg1,</span>
+                            csig2 * mComg1 + somg2 * mSomg1);
+
+<span class="fc" id="L468">            final double lam12 = omg12 + mA3c * (sig12 +</span>
+<span class="fc" id="L469">                    (Geodesic.sinCosSeries(true, ssig2, csig2, mC3a) - mB31));</span>
+<span class="fc" id="L470">            final double lon12 = Math.toDegrees(lam12);</span>
+<span class="fc bfc" id="L471" title="All 2 branches covered.">            r.setLon2(((outmask &amp; GeodesicMask.LONG_UNROLL) != 0) ? mLon1 + lon12 :</span>
+<span class="fc" id="L472">                    GeoMath.angNormalize(r.getLon1() + GeoMath.angNormalize(lon12)));</span>
+        }
+
+<span class="fc bfc" id="L475" title="All 2 branches covered.">        if ((outmask &amp; GeodesicMask.LATITUDE) != 0) {</span>
+<span class="fc" id="L476">            r.setLat2(GeoMath.atan2d(sbet2, mF1 * cbet2));</span>
+        }
+
+<span class="fc bfc" id="L479" title="All 2 branches covered.">        if ((outmask &amp; GeodesicMask.AZIMUTH) != 0) {</span>
+<span class="fc" id="L480">            r.setAzi2(GeoMath.atan2d(salp2, calp2));</span>
+        }
+
+<span class="fc bfc" id="L483" title="All 2 branches covered.">        if ((outmask &amp; (GeodesicMask.REDUCED_LENGTH | GeodesicMask.GEODESIC_SCALE)) != 0) {</span>
+<span class="fc" id="L484">            final double b22 = Geodesic.sinCosSeries(true, ssig2, csig2, mC2a);</span>
+<span class="fc" id="L485">            final double ab2 = (1 + mA2m1) * (b22 - mB21);</span>
+<span class="fc" id="L486">            final double j12 = (mA1m1 - mA2m1) * sig12 + (ab1 - ab2);</span>
+<span class="pc bpc" id="L487" title="1 of 2 branches missed.">            if ((outmask &amp; GeodesicMask.REDUCED_LENGTH) != 0) {</span>
+                // add parens around (mCsig1 * ssig2) and (mSsig1 * csig2) to ensure
+                // accurate cancellation in the case of coincident points
+<span class="fc" id="L490">                r.setM12(mB * ((dn2 * (mCsig1 * ssig2) - mDn1 * (mSsig1 * csig2)) -</span>
+                        mCsig1 * csig2 * j12));
+            }
+<span class="pc bpc" id="L493" title="1 of 2 branches missed.">            if ((outmask &amp; GeodesicMask.GEODESIC_SCALE) != 0) {</span>
+<span class="fc" id="L494">                final double t = mK2 * (ssig2 - mSsig1) * (ssig2 + mSsig1) / (mDn1 + dn2);</span>
+<span class="fc" id="L495">                r.setScaleM12(csig12 + (t * ssig2 - csig2 * j12) * mSsig1 / mDn1);</span>
+<span class="fc" id="L496">                r.setScaleM21(csig12 - (t * mSsig1 - mCsig1 * j12) * ssig2 / dn2);</span>
+            }
+        }
+
+<span class="fc bfc" id="L500" title="All 2 branches covered.">        if ((outmask &amp; GeodesicMask.AREA) != 0) {</span>
+<span class="fc" id="L501">            final double b42 = Geodesic.sinCosSeries(false, ssig2, csig2, mC4a);</span>
+            final double salp12;
+            final double calp12;
+<span class="pc bpc" id="L504" title="1 of 4 branches missed.">            if (mCalp0 == 0 || mSalp0 == 0) {</span>
+                //alp12 = alp2 - alp1, used in atan2 so no need to normalize
+<span class="fc" id="L506">                salp12 = salp2 * mCalp1 - calp2 * mSalp1;</span>
+<span class="fc" id="L507">                calp12 = calp2 * mCalp1 + salp2 * mSalp1;</span>
+            } else {
+                // tan(alp) = tan(alp0) * sec(sig)
+                // tan(alp2-alp1) = (tan(alp2) -tan(alp1)) / (tan(alp2)*tan(alp1)+1)
+                // = calp0 * salp0 * (csig1-csig2) / (salp0^2 + calp0^2 * csig1*csig2)
+                // if csig12 &gt; 0, write
+                //   csig1 - csig2 = ssig12 * (csig1 * ssig12 / (1 + csig12) + ssig1)
+                // else
+                //   csig1 - csig2 = csig1 * (1 - csig12) + ssig12 * ssig1
+                // no need to normalize
+<span class="fc" id="L517">                salp12 = mCalp0 * mSalp0 *</span>
+<span class="fc bfc" id="L518" title="All 2 branches covered.">                        (csig12 &lt;= 0 ? mCsig1 * (1 - csig12) + ssig12 * mSsig1 :</span>
+<span class="fc" id="L519">                                ssig12 * (mCsig1 * ssig12 / (1 + csig12) + mSsig1));</span>
+<span class="fc" id="L520">                calp12 = GeoMath.sq(mSalp0) + GeoMath.sq(mCalp0) * mCsig1 * csig2;</span>
+            }
+<span class="fc" id="L522">            r.setAreaS12(mC2 * Math.atan2(salp12, calp12) + mA4 * (b42 - mB41));</span>
+        }
+
+<span class="fc" id="L525">        return r;</span>
+    }
+
+    /**
+     * Specify position of point 3 in terms of distance.
+     * This is only useful if the GeodesicLine object has been constructed with &lt;i&gt;caps&lt;/i&gt; |=
+     * {@link GeodesicMask#DISTANCE_IN}.
+     *
+     * @param s13 the distance from point 1 to point 3 (meters); it can be negative.
+     */
+    public void setDistance(final double s13) {
+<span class="fc" id="L536">        mS13 = s13;</span>
+<span class="fc" id="L537">        final GeodesicData g = position(false, mS13, 0);</span>
+<span class="fc" id="L538">        mA13 = g.getA12();</span>
+<span class="fc" id="L539">    }</span>
+
+    /**
+     * Specify position of point 3 in terms of either distance or arc length.
+     *
+     * @param arcmode boolean flag determining the meaning of the second parameter; if &lt;i&gt;arcmode&lt;/i&gt;
+     *                is false, then the GeodesicLine object must have been constructed with
+     *                &lt;i&gt;caps&lt;/i&gt; |= {@link GeodesicMask#DISTANCE_IN}.
+     * @param s13A13  if &lt;i&gt;arcmode&lt;/i&gt; is false, this is the distance from point 1 to point 3 (meters);
+     *                otherwise it is the arc length from point 1 to point 3 (degrees); it can be
+     *                negative.
+     */
+    public void genSetDistance(final boolean arcmode, final double s13A13) {
+<span class="fc bfc" id="L552" title="All 2 branches covered.">        if (arcmode) {</span>
+<span class="fc" id="L553">            setArc(s13A13);</span>
+        } else {
+<span class="fc" id="L555">            setDistance(s13A13);</span>
+        }
+<span class="fc" id="L557">    }</span>
+
+    /**
+     * Gets the latitude of point 1 (degrees).
+     *
+     * @return &lt;i&gt;lat1&lt;/i&gt; the latitude of point 1 (degrees).
+     */
+    public double getLatitude() {
+<span class="pc bpc" id="L565" title="1 of 2 branches missed.">        return init() ? mLat1 : Double.NaN;</span>
+    }
+
+    /**
+     * Gets the longitude of point 1 (degrees).
+     *
+     * @return &lt;i&gt;lon1&lt;/i&gt; the longitude of point 1 (degrees).
+     */
+    public double getLongitude() {
+<span class="pc bpc" id="L574" title="1 of 2 branches missed.">        return init() ? mLon1 : Double.NaN;</span>
+    }
+
+    /**
+     * Gets the azimuth (degrees) of the geodesic line at point 1.
+     *
+     * @return &lt;i&gt;azi1&lt;/i&gt; the azimuth (degrees) of the geodesic line at point 1.
+     */
+    public double getAzimuth() {
+<span class="pc bpc" id="L583" title="1 of 2 branches missed.">        return init() ? mAzi1 : Double.NaN;</span>
+    }
+
+    /**
+     * Gets a pair of sine and cosine of &lt;i&gt;azi1&lt;/i&gt; the azimuth (degrees) of the geodesic line at
+     * point 1.
+     *
+     * @return pair of sine and cosine of &lt;i&gt;azi1&lt;/i&gt; the azimuth (degrees) of the geodesic line
+     * at point 1.
+     */
+    public Pair getAzimuthCosines() {
+<span class="pc bpc" id="L594" title="2 of 4 branches missed.">        return new Pair(init() ? mSalp1 : Double.NaN, init() ? mCalp1 : Double.NaN);</span>
+    }
+
+    /**
+     * Gets the azimuth (degrees) of the geodesic line as it crosses the equator in a northward
+     * direction.
+     *
+     * @return &lt;i&gt;azi0&lt;/i&gt; the azimuth (degrees) of the geodesic line as it crosses the equator in a
+     * northward direction.
+     */
+    public double getEquatorialAzimuth() {
+<span class="pc bpc" id="L605" title="1 of 2 branches missed.">        return init() ? GeoMath.atan2d(mSalp0, mCalp0) : Double.NaN;</span>
+    }
+
+    /**
+     * Gets a pair of sine and cosine of &lt;i&gt;azi0&lt;/i&gt; the azimuth of the godesic line as it crosses the
+     * equator in a northward direction.
+     *
+     * @return pair of sine and cosine of &lt;i&gt;azi0&lt;/i&gt; the azimuth of the godesic line as it crosses
+     * the equator in a northward direction.
+     */
+    public Pair getEquatorialAzimuthCosines() {
+<span class="pc bpc" id="L616" title="2 of 4 branches missed.">        return new Pair(init() ? mSalp0 : Double.NaN, init() ? mCalp0 : Double.NaN);</span>
+    }
+
+    /**
+     * Gets the arc length (degrees) between the northward equatorial crossing and point 1.
+     *
+     * @return &lt;i&gt;a1&lt;/i&gt; the arc length (degrees) between the northward equatorial crossing and
+     * point 1.
+     */
+    public double getEquatorialArc() {
+<span class="pc bpc" id="L626" title="1 of 2 branches missed.">        return init() ? GeoMath.atan2d(mSsig1, mCsig1) : Double.NaN;</span>
+    }
+
+    /**
+     * Gets the equatorial radius of the ellipsoid (meters). This is the value inherited from the
+     * Geodesic object used in the constructor.
+     *
+     * @return &lt;i&gt;a&lt;/i&gt; the equatorial radius of the ellipsoid (meters).
+     */
+    public double getMajorRadius() {
+<span class="pc bpc" id="L636" title="1 of 2 branches missed.">        return init() ? mA : Double.NaN;</span>
+    }
+
+    /**
+     * Gets the flattening of the ellipsoid. This is the value inherited from the Geodesic object
+     * used in the constructor.
+     *
+     * @return &lt;i&gt;f&lt;/i&gt; the flattening of the ellipsoid.
+     */
+    public double getFlattening() {
+<span class="pc bpc" id="L646" title="1 of 2 branches missed.">        return init() ? mF : Double.NaN;</span>
+    }
+
+    /**
+     * Gets the computational capabilities that this object was constructed with. LATITUDE and AZIMUTH
+     * are always included.
+     *
+     * @return &lt;i&gt;caps&lt;/i&gt; the computation capabilities that this object was constructed with.
+     */
+    public int getCapabilities() {
+<span class="fc" id="L656">        return mCaps;</span>
+    }
+
+    /**
+     * Indicates whether this GeodesicLine object has all tested capabilities
+     *
+     * @param testcaps a set of bitor'ed {@link GeodesicMask} values.
+     * @return true if the GeodesicLine object has all these capabilities.
+     */
+    public boolean capabilities(int testcaps) {
+<span class="fc" id="L666">        testcaps &amp;= GeodesicMask.OUT_ALL;</span>
+<span class="pc bpc" id="L667" title="1 of 2 branches missed.">        return (mCaps &amp; testcaps) == testcaps;</span>
+    }
+
+    /**
+     * The distance or arc length to point 3.
+     *
+     * @param arcmode boolean flag determining the meaning of returned value.
+     * @return &lt;i&gt;s13&lt;/i&gt; if &lt;i&gt;arcmode&lt;/i&gt; is false; &lt;i&gt;a13&lt;/i&gt; if &lt;i&gt;arcmode&lt;/i&gt; is true.
+     */
+    public double genDistance(final boolean arcmode) {
+<span class="fc bfc" id="L677" title="All 2 branches covered.">        double tmp = arcmode ? mA13 : mS13;</span>
+<span class="pc bpc" id="L678" title="1 of 2 branches missed.">        return init() ? tmp : Double.NaN;</span>
+    }
+
+    /**
+     * Gets the distance to point 3 (meters).
+     *
+     * @return &lt;i&gt;s13&lt;/i&gt; the disance to point 3 (meters).
+     */
+    public double getDistance() {
+<span class="fc" id="L687">        return genDistance(false);</span>
+    }
+
+    /**
+     * Gets the arc length to point 3 (degrees).
+     *
+     * @return &lt;i&gt;a13&lt;/i&gt; the arc length to point 3 (degrees).
+     */
+    public double getArc() {
+<span class="fc" id="L696">        return genDistance(true);</span>
+    }
+
+    /**
+     * Specify position of point 3 in terms of arc length.
+     * The distance &lt;i&gt;s13&lt;/i&gt; is only set if the GeodesicLine object has been constructed with
+     * &lt;i&gt;caps&lt;/i&gt; |= {@link GeodesicMask#DISTANCE}.
+     *
+     * @param a13 the arc length from point 1 to point 3 (degrees); it can be negative.
+     */
+    void setArc(final double a13) {
+<span class="fc" id="L707">        mA13 = a13;</span>
+<span class="fc" id="L708">        GeodesicData g = position(true, mA13, GeodesicMask.DISTANCE);</span>
+<span class="fc" id="L709">        mS13 = g.getS12();</span>
+<span class="fc" id="L710">    }</span>
+
+    /**
+     * @return true if the object has been initialized.
+     */
+    private boolean init() {
+<span class="pc bpc" id="L716" title="1 of 2 branches missed.">        return mCaps != 0;</span>
+    }
+
+    private void lineInit(
+            final Geodesic g, final double lat1, final double lon1, final double azi1,
+            final double salp1, final double calp1, final int caps) {
+<span class="fc" id="L722">        mA = g.mA;</span>
+<span class="fc" id="L723">        mF = g.mF;</span>
+<span class="fc" id="L724">        mB = g.mB;</span>
+<span class="fc" id="L725">        mC2 = g.mC2;</span>
+<span class="fc" id="L726">        mF1 = g.mF1;</span>
+
+        // always allow latitude and azimuth and unrolling the longitude
+<span class="fc" id="L729">        mCaps = caps | GeodesicMask.LATITUDE | GeodesicMask.AZIMUTH |</span>
+                GeodesicMask.LONG_UNROLL;
+
+<span class="fc" id="L732">        mLat1 = GeoMath.latFix(lat1);</span>
+<span class="fc" id="L733">        mLon1 = lon1;</span>
+<span class="fc" id="L734">        mAzi1 = azi1;</span>
+<span class="fc" id="L735">        mSalp1 = salp1;</span>
+<span class="fc" id="L736">        mCalp1 = calp1;</span>
+
+        double cbet1;
+        double sbet1;
+
+<span class="fc" id="L741">        Pair p = GeoMath.sincosd(GeoMath.angRound(mLat1));</span>
+<span class="fc" id="L742">        sbet1 = mF1 * p.getFirst();</span>
+<span class="fc" id="L743">        cbet1 = p.getSecond();</span>
+
+        // ensure cbet1 = +epsilon at poles
+<span class="fc" id="L746">        p = GeoMath.norm(sbet1, cbet1);</span>
+<span class="fc" id="L747">        sbet1 = p.getFirst();</span>
+<span class="fc" id="L748">        cbet1 = Math.max(Geodesic.TINY, p.getSecond());</span>
+
+<span class="fc" id="L750">        mDn1 = Math.sqrt(1 + g.mEp2 * GeoMath.sq(sbet1));</span>
+
+        // evaluate alp0 from sin(alp1) * cos(bet1) = sin(alp0),
+
+        // alp0 in [0, pi/2 - |bet1|]
+<span class="fc" id="L755">        mSalp0 = mSalp1 * cbet1;</span>
+
+        // alt: calp0 = hypot(sbet1, calp1 * cbet1). The following is slightly
+        // better (consider the case salp1 = 0).
+<span class="fc" id="L759">        mCalp0 = GeoMath.hypot(mCalp1, mSalp1 * sbet1);</span>
+
+        // Evaluate sig with tan(bet1) = tan(sig1) * cos(alp1).
+        // sig = 0 is nearest northward crossing of the equator.
+        // With bet1 = 0, alp1 = pi/2, we have sig1 = 0 (equatorial line).
+        // With bet1 = pi/2, alp1 = -pi, sig1 = pi/2
+        // With bet1 = -pi/2, alp1 = 0, sig1 = -pi/2
+        // Evaluate omg1 with tan(omg1) = sin(alp0) * tan(sig1).
+        // With alp0 in (0, pi/2], quadrants for sig and omg coincide.
+        // No atan2(0,0) ambiguity at poles since cbet1 = +epsilon
+        // With alp0 = 0, omg1 = 0 for alp1 = 0, omg1 = pi for alp1 = pi.
+<span class="fc" id="L770">        mSsig1 = sbet1;</span>
+<span class="fc" id="L771">        mSomg1 = mSalp0 * sbet1;</span>
+<span class="pc bpc" id="L772" title="3 of 4 branches missed.">        mCsig1 = mComg1 = sbet1 != 0 || mCalp1 != 0 ? cbet1 * mCalp1 : 1;</span>
+
+<span class="fc" id="L774">        p = GeoMath.norm(mSsig1, mCsig1);</span>
+<span class="fc" id="L775">        mSsig1 = p.getFirst();</span>
+        // sig 1 in (-pi, pi]
+<span class="fc" id="L777">        mCsig1 = p.getSecond();</span>
+
+        // GeoMath.norm(mSomg1, mComg1); -- don't need to normalize!
+
+<span class="fc" id="L781">        mK2 = GeoMath.sq(mCalp0) * g.mEp2;</span>
+<span class="fc" id="L782">        final double eps = mK2 / (2 * (1 + Math.sqrt(1 + mK2)) + mK2);</span>
+
+<span class="pc bpc" id="L784" title="1 of 2 branches missed.">        if ((mCaps &amp; GeodesicMask.CAP_C1) != 0) {</span>
+<span class="fc" id="L785">            mA1m1 = Geodesic.a1m1f(eps);</span>
+<span class="fc" id="L786">            mC1a = new double[NC1 + 1];</span>
+<span class="fc" id="L787">            Geodesic.c1f(eps, mC1a);</span>
+<span class="fc" id="L788">            mB11 = Geodesic.sinCosSeries(true, mSsig1, mCsig1, mC1a);</span>
+<span class="fc" id="L789">            final double s = Math.sin(mB11);</span>
+<span class="fc" id="L790">            final double c = Math.cos(mB11);</span>
+            // tau1 = sig1 + b11
+<span class="fc" id="L792">            mStau1 = mSsig1 * c + mCsig1 * s;</span>
+<span class="fc" id="L793">            mCtau1 = mCsig1 * c - mSsig1 * s;</span>
+            // not necessary because c1pa rverts c1a
+            // mB11 = -sinCosSeries(true, mStau1, mCtau1, mC1pa, NC1P)
+        }
+
+<span class="fc bfc" id="L798" title="All 2 branches covered.">        if ((mCaps &amp; GeodesicMask.CAP_C1P) != 0) {</span>
+<span class="fc" id="L799">            mC1pa = new double[NC1P + 1];</span>
+<span class="fc" id="L800">            Geodesic.c1pf(eps, mC1pa);</span>
+        }
+
+<span class="fc bfc" id="L803" title="All 2 branches covered.">        if ((mCaps &amp; GeodesicMask.CAP_C2) != 0) {</span>
+<span class="fc" id="L804">            mC2a = new double[NC2 + 1];</span>
+<span class="fc" id="L805">            mA2m1 = Geodesic.a2m1f(eps);</span>
+<span class="fc" id="L806">            Geodesic.c2f(eps, mC2a);</span>
+<span class="fc" id="L807">            mB21 = Geodesic.sinCosSeries(true, mSsig1, mCsig1, mC2a);</span>
+        }
+
+<span class="fc bfc" id="L810" title="All 2 branches covered.">        if ((mCaps &amp; GeodesicMask.CAP_C3) != 0) {</span>
+<span class="fc" id="L811">            mC3a = new double[NC3];</span>
+<span class="fc" id="L812">            g.c3f(eps, mC3a);</span>
+<span class="fc" id="L813">            mA3c = -mF * mSalp0 * g.a3f(eps);</span>
+<span class="fc" id="L814">            mB31 = Geodesic.sinCosSeries(true, mSsig1, mCsig1, mC3a);</span>
+        }
+
+<span class="fc bfc" id="L817" title="All 2 branches covered.">        if ((mCaps &amp; GeodesicMask.CAP_C4) != 0) {</span>
+<span class="fc" id="L818">            mC4a = new double[NC4];</span>
+<span class="fc" id="L819">            g.c4f(eps, mC4a);</span>
+            // multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0)
+<span class="fc" id="L821">            mA4 = GeoMath.sq(mA) * mCalp0 * mSalp0 * g.mE2;</span>
+<span class="fc" id="L822">            mB41 = Geodesic.sinCosSeries(false, mSsig1, mCsig1, mC4a);</span>
+        }
+<span class="fc" id="L824">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
