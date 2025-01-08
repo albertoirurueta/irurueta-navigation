@@ -41,8 +41,7 @@ public class NonLinearLeastSquaresLateration3DSolver extends NonLinearLeastSquar
      *                                  length is smaller than required (3 for 2D points or 4 for 3D points) or fitter
      *                                  is null.
      */
-    public NonLinearLeastSquaresLateration3DSolver(
-            final Point3D[] positions, final double[] distances) {
+    public NonLinearLeastSquaresLateration3DSolver(final Point3D[] positions, final double[] distances) {
         super(positions, distances);
     }
 
@@ -66,8 +65,7 @@ public class NonLinearLeastSquaresLateration3DSolver extends NonLinearLeastSquar
      *                                  is null.
      */
     public NonLinearLeastSquaresLateration3DSolver(
-            final Point3D[] positions,
-            final double[] distances, final Point3D initialPosition) {
+            final Point3D[] positions, final double[] distances, final Point3D initialPosition) {
         super(positions, distances, initialPosition);
     }
 
@@ -76,8 +74,7 @@ public class NonLinearLeastSquaresLateration3DSolver extends NonLinearLeastSquar
      *
      * @param listener listener to be notified of events raised by this instance.
      */
-    public NonLinearLeastSquaresLateration3DSolver(
-            final LaterationSolverListener<Point3D> listener) {
+    public NonLinearLeastSquaresLateration3DSolver(final LaterationSolverListener<Point3D> listener) {
         super(listener);
     }
 
@@ -92,8 +89,7 @@ public class NonLinearLeastSquaresLateration3DSolver extends NonLinearLeastSquar
      *                                  is null.
      */
     public NonLinearLeastSquaresLateration3DSolver(
-            final Point3D[] positions, final double[] distances,
-            final LaterationSolverListener<Point3D> listener) {
+            final Point3D[] positions, final double[] distances, final LaterationSolverListener<Point3D> listener) {
         super(positions, distances, listener);
     }
 
@@ -104,8 +100,7 @@ public class NonLinearLeastSquaresLateration3DSolver extends NonLinearLeastSquar
      * @param listener        listener to be notified of events raised by this instance.
      */
     public NonLinearLeastSquaresLateration3DSolver(
-            final Point3D initialPosition,
-            final LaterationSolverListener<Point3D> listener) {
+            final Point3D initialPosition, final LaterationSolverListener<Point3D> listener) {
         super(initialPosition, listener);
     }
 
@@ -121,8 +116,7 @@ public class NonLinearLeastSquaresLateration3DSolver extends NonLinearLeastSquar
      *                                  is null.
      */
     public NonLinearLeastSquaresLateration3DSolver(
-            final Point3D[] positions,
-            final double[] distances, final Point3D initialPosition,
+            final Point3D[] positions, final double[] distances, final Point3D initialPosition,
             final LaterationSolverListener<Point3D> listener) {
         super(positions, distances, initialPosition, listener);
     }
@@ -145,8 +139,7 @@ public class NonLinearLeastSquaresLateration3DSolver extends NonLinearLeastSquar
      * @param initialPosition initial position to start lateration solving.
      * @throws IllegalArgumentException if spheres is null or if length of spheres array is less than 2.
      */
-    public NonLinearLeastSquaresLateration3DSolver(
-            final Sphere[] spheres, final Point3D initialPosition) {
+    public NonLinearLeastSquaresLateration3DSolver(final Sphere[] spheres, final Point3D initialPosition) {
         super(initialPosition);
         internalSetSpheres(spheres);
     }
@@ -159,8 +152,7 @@ public class NonLinearLeastSquaresLateration3DSolver extends NonLinearLeastSquar
      * @throws IllegalArgumentException if spheres is null or if length of spheres array is less than 2.
      */
     public NonLinearLeastSquaresLateration3DSolver(
-            final Sphere[] spheres,
-            final LaterationSolverListener<Point3D> listener) {
+            final Sphere[] spheres, final LaterationSolverListener<Point3D> listener) {
         super(listener);
         internalSetSpheres(spheres);
     }
@@ -174,8 +166,7 @@ public class NonLinearLeastSquaresLateration3DSolver extends NonLinearLeastSquar
      * @throws IllegalArgumentException if spheres is null or if length of spheres array is less than 2.
      */
     public NonLinearLeastSquaresLateration3DSolver(
-            final Sphere[] spheres, final Point3D initialPosition,
-            final LaterationSolverListener<Point3D> listener) {
+            final Sphere[] spheres, final Point3D initialPosition, final LaterationSolverListener<Point3D> listener) {
         super(initialPosition, listener);
         internalSetSpheres(spheres);
     }
@@ -191,8 +182,7 @@ public class NonLinearLeastSquaresLateration3DSolver extends NonLinearLeastSquar
      *                                  (2 points).
      */
     public NonLinearLeastSquaresLateration3DSolver(
-            final Point3D[] positions, final double[] distances,
-            final double[] distanceStandardDeviations) {
+            final Point3D[] positions, final double[] distances, final double[] distanceStandardDeviations) {
         super(positions, distances, distanceStandardDeviations);
     }
 
@@ -208,8 +198,8 @@ public class NonLinearLeastSquaresLateration3DSolver extends NonLinearLeastSquar
      *                                  (2 points).
      */
     public NonLinearLeastSquaresLateration3DSolver(
-            final Point3D[] positions, final double[] distances,
-            final double[] distanceStandardDeviations, final Point3D initialPosition) {
+            final Point3D[] positions, final double[] distances, final double[] distanceStandardDeviations,
+            final Point3D initialPosition) {
         super(positions, distances, distanceStandardDeviations, initialPosition);
     }
 
@@ -225,8 +215,7 @@ public class NonLinearLeastSquaresLateration3DSolver extends NonLinearLeastSquar
      *                                  (2 points).
      */
     public NonLinearLeastSquaresLateration3DSolver(
-            final Point3D[] positions, final double[] distances,
-            final double[] distanceStandardDeviations,
+            final Point3D[] positions, final double[] distances, final double[] distanceStandardDeviations,
             final LaterationSolverListener<Point3D> listener) {
         super(positions, distances, distanceStandardDeviations, listener);
     }
@@ -244,9 +233,8 @@ public class NonLinearLeastSquaresLateration3DSolver extends NonLinearLeastSquar
      *                                  (2 points).
      */
     public NonLinearLeastSquaresLateration3DSolver(
-            final Point3D[] positions, final double[] distances,
-            final double[] distanceStandardDeviations, final Point3D initialPosition,
-            final LaterationSolverListener<Point3D> listener) {
+            final Point3D[] positions, final double[] distances, final double[] distanceStandardDeviations,
+            final Point3D initialPosition, final LaterationSolverListener<Point3D> listener) {
         super(positions, distances, distanceStandardDeviations, initialPosition, listener);
     }
 
@@ -258,8 +246,7 @@ public class NonLinearLeastSquaresLateration3DSolver extends NonLinearLeastSquar
      * @throws IllegalArgumentException if spheres is null or if length of spheres array is less than 2.
      */
     public NonLinearLeastSquaresLateration3DSolver(
-            final Sphere[] spheres,
-            final double[] distanceStandardDeviations) {
+            final Sphere[] spheres, final double[] distanceStandardDeviations) {
         super();
         internalSetSpheresAndStandardDeviations(spheres, distanceStandardDeviations);
     }
@@ -273,8 +260,7 @@ public class NonLinearLeastSquaresLateration3DSolver extends NonLinearLeastSquar
      * @throws IllegalArgumentException if spheres is null or if length of spheres array is less than 2.
      */
     public NonLinearLeastSquaresLateration3DSolver(
-            final Sphere[] spheres,
-            final double[] distanceStandardDeviations, final Point3D initialPosition) {
+            final Sphere[] spheres, final double[] distanceStandardDeviations, final Point3D initialPosition) {
         super(initialPosition);
         internalSetSpheresAndStandardDeviations(spheres, distanceStandardDeviations);
     }
@@ -288,8 +274,7 @@ public class NonLinearLeastSquaresLateration3DSolver extends NonLinearLeastSquar
      * @throws IllegalArgumentException if spheres is null or if length of spheres array is less than 2.
      */
     public NonLinearLeastSquaresLateration3DSolver(
-            final Sphere[] spheres,
-            final double[] distanceStandardDeviations,
+            final Sphere[] spheres, final double[] distanceStandardDeviations,
             final LaterationSolverListener<Point3D> listener) {
         super(listener);
         internalSetSpheresAndStandardDeviations(spheres, distanceStandardDeviations);
@@ -305,8 +290,7 @@ public class NonLinearLeastSquaresLateration3DSolver extends NonLinearLeastSquar
      * @throws IllegalArgumentException if spheres is null or if length of spheres array is less than 2.
      */
     public NonLinearLeastSquaresLateration3DSolver(
-            final Sphere[] spheres,
-            final double[] distanceStandardDeviations, final Point3D initialPosition,
+            final Sphere[] spheres, final double[] distanceStandardDeviations, final Point3D initialPosition,
             final LaterationSolverListener<Point3D> listener) {
         super(initialPosition, listener);
         internalSetSpheresAndStandardDeviations(spheres, distanceStandardDeviations);
@@ -318,14 +302,14 @@ public class NonLinearLeastSquaresLateration3DSolver extends NonLinearLeastSquar
      * @return spheres defined by provided positions and distances.
      */
     public Sphere[] getSpheres() {
-        if (mPositions == null) {
+        if (positions == null) {
             return null;
         }
 
-        final Sphere[] result = new Sphere[mPositions.length];
+        final var result = new Sphere[positions.length];
 
-        for (int i = 0; i < mPositions.length; i++) {
-            result[i] = new Sphere(mPositions[i], mDistances[i]);
+        for (var i = 0; i < positions.length; i++) {
+            result[i] = new Sphere(positions[i], distances[i]);
         }
         return result;
     }
@@ -355,8 +339,7 @@ public class NonLinearLeastSquaresLateration3DSolver extends NonLinearLeastSquar
      *                                  2 or don't have the same length.
      * @throws LockedException          if instance is busy solving the lateration problem.
      */
-    public void setSpheresAndStandardDeviations(
-            final Sphere[] spheres, final double[] radiusStandardDeviations)
+    public void setSpheresAndStandardDeviations(final Sphere[] spheres, final double[] radiusStandardDeviations)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -392,11 +375,11 @@ public class NonLinearLeastSquaresLateration3DSolver extends NonLinearLeastSquar
      */
     @Override
     public Point3D getEstimatedPosition() {
-        if (mEstimatedPositionCoordinates == null) {
+        if (estimatedPositionCoordinates == null) {
             return null;
         }
 
-        final InhomogeneousPoint3D position = new InhomogeneousPoint3D();
+        final var position = new InhomogeneousPoint3D();
         getEstimatedPosition(position);
         return position;
     }
@@ -413,10 +396,10 @@ public class NonLinearLeastSquaresLateration3DSolver extends NonLinearLeastSquar
             throw new IllegalArgumentException();
         }
 
-        final Point3D[] positions = new Point3D[spheres.length];
-        final double[] distances = new double[spheres.length];
-        for (int i = 0; i < spheres.length; i++) {
-            final Sphere sphere = spheres[i];
+        final var positions = new Point3D[spheres.length];
+        final var distances = new double[spheres.length];
+        for (var i = 0; i < spheres.length; i++) {
+            final var sphere = spheres[i];
             positions[i] = sphere.getCenter();
             distances[i] = sphere.getRadius();
         }
@@ -434,8 +417,7 @@ public class NonLinearLeastSquaresLateration3DSolver extends NonLinearLeastSquar
      *                                  2 or don't have the same length.
      */
     private void internalSetSpheresAndStandardDeviations(
-            final Sphere[] spheres,
-            final double[] radiusStandardDeviations) {
+            final Sphere[] spheres, final double[] radiusStandardDeviations) {
         if (spheres == null || spheres.length < getMinRequiredPositionsAndDistances()) {
             throw new IllegalArgumentException();
         }
@@ -448,16 +430,14 @@ public class NonLinearLeastSquaresLateration3DSolver extends NonLinearLeastSquar
             throw new IllegalArgumentException();
         }
 
-        final Point3D[] positions = new Point3D[spheres.length];
-        final double[] distances = new double[spheres.length];
-        for (int i = 0; i < spheres.length; i++) {
-            final Sphere sphere = spheres[i];
+        final var positions = new Point3D[spheres.length];
+        final var distances = new double[spheres.length];
+        for (var i = 0; i < spheres.length; i++) {
+            final var sphere = spheres[i];
             positions[i] = sphere.getCenter();
             distances[i] = sphere.getRadius();
         }
 
-        internalSetPositionsDistancesAndStandardDeviations(positions, distances,
-                radiusStandardDeviations);
-
+        internalSetPositionsDistancesAndStandardDeviations(positions, distances, radiusStandardDeviations);
     }
 }

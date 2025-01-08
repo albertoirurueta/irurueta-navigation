@@ -29,12 +29,12 @@ public class GNSSKalmanState implements Serializable, Cloneable {
      * Contains estimation of ECEF position and velocity, and estimated clock
      * offset and drift.
      */
-    private GNSSEstimation mEstimation;
+    private GNSSEstimation estimation;
 
     /**
      * Kalman filter error covariance matrix.
      */
-    private Matrix mCovariance;
+    private Matrix covariance;
 
     /**
      * Constructor.
@@ -73,8 +73,8 @@ public class GNSSKalmanState implements Serializable, Cloneable {
      * @return true if result data has been copied, false otherwise.
      */
     public boolean getEstimation(final GNSSEstimation result) {
-        if (mEstimation != null) {
-            mEstimation.copyTo(result);
+        if (estimation != null) {
+            estimation.copyTo(result);
             return true;
         } else {
             return false;
@@ -88,7 +88,7 @@ public class GNSSKalmanState implements Serializable, Cloneable {
      * @return GNSS estimation.
      */
     public GNSSEstimation getEstimation() {
-        return mEstimation;
+        return estimation;
     }
 
     /**
@@ -98,7 +98,7 @@ public class GNSSKalmanState implements Serializable, Cloneable {
      * @param estimation GNSS estimation to be set.
      */
     public void setEstimation(final GNSSEstimation estimation) {
-        mEstimation = estimation;
+        this.estimation = estimation;
     }
 
     /**
@@ -108,8 +108,8 @@ public class GNSSKalmanState implements Serializable, Cloneable {
      * @return true if result data has been copied, false otherwise.
      */
     public boolean getCovariance(final Matrix result) {
-        if (mCovariance != null) {
-            mCovariance.copyTo(result);
+        if (covariance != null) {
+            covariance.copyTo(result);
             return true;
         } else {
             return false;
@@ -122,7 +122,7 @@ public class GNSSKalmanState implements Serializable, Cloneable {
      * @return Kalman filter error covariance matrix.
      */
     public Matrix getCovariance() {
-        return mCovariance;
+        return covariance;
     }
 
     /**
@@ -132,12 +132,12 @@ public class GNSSKalmanState implements Serializable, Cloneable {
      * @throws IllegalArgumentException if provided covariance matrix is not 8x8.
      */
     public void setCovariance(final Matrix covariance) {
-        if (covariance.getRows() != GNSSEstimation.NUM_PARAMETERS ||
-                covariance.getColumns() != GNSSEstimation.NUM_PARAMETERS) {
+        if (covariance.getRows() != GNSSEstimation.NUM_PARAMETERS
+                || covariance.getColumns() != GNSSEstimation.NUM_PARAMETERS) {
             throw new IllegalArgumentException();
         }
 
-        mCovariance = covariance;
+        this.covariance = covariance;
     }
 
     /**
@@ -156,23 +156,23 @@ public class GNSSKalmanState implements Serializable, Cloneable {
      */
     public void copyFrom(final GNSSKalmanState input) {
         // copy estimation
-        if (input.mEstimation == null) {
-            mEstimation = null;
+        if (input.estimation == null) {
+            estimation = null;
         } else {
-            if (mEstimation == null) {
-                mEstimation = new GNSSEstimation();
+            if (estimation == null) {
+                estimation = new GNSSEstimation();
             }
-            mEstimation.copyFrom(input.mEstimation);
+            estimation.copyFrom(input.estimation);
         }
 
         // copy covariance
-        if (input.mCovariance == null) {
-            mCovariance = null;
+        if (input.covariance == null) {
+            covariance = null;
         } else {
-            if (mCovariance == null) {
-                mCovariance = new Matrix(input.mCovariance);
+            if (covariance == null) {
+                covariance = new Matrix(input.covariance);
             } else {
-                mCovariance.copyFrom(input.mCovariance);
+                covariance.copyFrom(input.covariance);
             }
         }
     }
@@ -185,7 +185,7 @@ public class GNSSKalmanState implements Serializable, Cloneable {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(mEstimation, mCovariance);
+        return Objects.hash(estimation, covariance);
     }
 
     /**
@@ -203,7 +203,7 @@ public class GNSSKalmanState implements Serializable, Cloneable {
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        final GNSSKalmanState other = (GNSSKalmanState) obj;
+        final var other = (GNSSKalmanState) obj;
         return equals(other);
     }
 
@@ -231,10 +231,10 @@ public class GNSSKalmanState implements Serializable, Cloneable {
             return false;
         }
 
-        return other.mEstimation != null
-                && other.mEstimation.equals(mEstimation, threshold)
-                && other.mCovariance != null
-                && other.mCovariance.equals(mCovariance, threshold);
+        return other.estimation != null
+                && other.estimation.equals(estimation, threshold)
+                && other.covariance != null
+                && other.covariance.equals(covariance, threshold);
     }
 
     /**
@@ -245,7 +245,7 @@ public class GNSSKalmanState implements Serializable, Cloneable {
      */
     @Override
     protected Object clone() throws CloneNotSupportedException {
-        final GNSSKalmanState result = (GNSSKalmanState) super.clone();
+        final var result = (GNSSKalmanState) super.clone();
         copyTo(result);
         return result;
     }

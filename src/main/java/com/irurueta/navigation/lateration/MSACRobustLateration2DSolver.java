@@ -51,7 +51,7 @@ public class MSACRobustLateration2DSolver extends RobustLateration2DSolver {
      * Threshold to determine whether samples are inliers or not when
      * testing possible estimation solutions.
      */
-    private double mThreshold = DEFAULT_THRESHOLD;
+    private double threshold = DEFAULT_THRESHOLD;
 
     /**
      * Constructor.
@@ -66,8 +66,7 @@ public class MSACRobustLateration2DSolver extends RobustLateration2DSolver {
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or its progress significantly changes.
      */
-    public MSACRobustLateration2DSolver(
-            final RobustLaterationSolverListener<Point2D> listener) {
+    public MSACRobustLateration2DSolver(final RobustLaterationSolverListener<Point2D> listener) {
         super(listener);
     }
 
@@ -192,7 +191,7 @@ public class MSACRobustLateration2DSolver extends RobustLateration2DSolver {
      * @return threshold to determine whether samples are inliers or not.
      */
     public double getThreshold() {
-        return mThreshold;
+        return threshold;
     }
 
     /**
@@ -211,7 +210,7 @@ public class MSACRobustLateration2DSolver extends RobustLateration2DSolver {
         if (threshold <= MIN_THRESHOLD) {
             throw new IllegalArgumentException();
         }
-        mThreshold = threshold;
+        this.threshold = threshold;
     }
 
     /**
@@ -232,86 +231,79 @@ public class MSACRobustLateration2DSolver extends RobustLateration2DSolver {
             throw new NotReadyException();
         }
 
-        final MSACRobustEstimator<Point2D> innerEstimator =
-                new MSACRobustEstimator<>(new MSACRobustEstimatorListener<Point2D>() {
-                    @Override
-                    public double getThreshold() {
-                        return mThreshold;
-                    }
-
-                    @Override
-                    public int getTotalSamples() {
-                        return mDistances.length;
-                    }
-
-                    @Override
-                    public int getSubsetSize() {
-                        return mPreliminarySubsetSize;
-                    }
-
-                    @Override
-                    public void estimatePreliminarSolutions(
-                            final int[] samplesIndices, final List<Point2D> solutions) {
-                        solvePreliminarySolutions(samplesIndices, solutions);
-                    }
-
-                    @Override
-                    public double computeResidual(
-                            final Point2D currentEstimation, final int i) {
-                        return Math.abs(currentEstimation.distanceTo(mPositions[i]) - mDistances[i]);
-                    }
-
-                    @Override
-                    public boolean isReady() {
-                        return MSACRobustLateration2DSolver.this.isReady();
-                    }
-
-                    @Override
-                    public void onEstimateStart(final RobustEstimator<Point2D> estimator) {
-                        // no action needed
-                    }
-
-                    @Override
-                    public void onEstimateEnd(final RobustEstimator<Point2D> estimator) {
-                        // no action needed
-                    }
-
-                    @Override
-                    public void onEstimateNextIteration(
-                            final RobustEstimator<Point2D> estimator, final int iteration) {
-                        if (mListener != null) {
-                            mListener.onSolveNextIteration(
-                                    MSACRobustLateration2DSolver.this, iteration);
-                        }
-                    }
-
-                    @Override
-                    public void onEstimateProgressChange(
-                            final RobustEstimator<Point2D> estimator, final float progress) {
-                        if (mListener != null) {
-                            mListener.onSolveProgressChange(
-                                    MSACRobustLateration2DSolver.this, progress);
-                        }
-                    }
-                });
-
-        try {
-            mLocked = true;
-
-            if (mListener != null) {
-                mListener.onSolveStart(this);
+        final var innerEstimator = new MSACRobustEstimator<>(new MSACRobustEstimatorListener<Point2D>() {
+            @Override
+            public double getThreshold() {
+                return threshold;
             }
 
-            mInliersData = null;
-            innerEstimator.setConfidence(mConfidence);
-            innerEstimator.setMaxIterations(mMaxIterations);
-            innerEstimator.setProgressDelta(mProgressDelta);
-            Point2D result = innerEstimator.estimate();
-            mInliersData = innerEstimator.getInliersData();
+            @Override
+            public int getTotalSamples() {
+                return distances.length;
+            }
+
+            @Override
+            public int getSubsetSize() {
+                return preliminarySubsetSize;
+            }
+
+            @Override
+            public void estimatePreliminarSolutions(final int[] samplesIndices, final List<Point2D> solutions) {
+                solvePreliminarySolutions(samplesIndices, solutions);
+            }
+
+            @Override
+            public double computeResidual(final Point2D currentEstimation, final int i) {
+                return Math.abs(currentEstimation.distanceTo(positions[i]) - distances[i]);
+            }
+
+            @Override
+            public boolean isReady() {
+                return MSACRobustLateration2DSolver.this.isReady();
+            }
+
+            @Override
+            public void onEstimateStart(final RobustEstimator<Point2D> estimator) {
+                // no action needed
+            }
+
+            @Override
+            public void onEstimateEnd(final RobustEstimator<Point2D> estimator) {
+                // no action needed
+            }
+
+            @Override
+            public void onEstimateNextIteration(final RobustEstimator<Point2D> estimator, final int iteration) {
+                if (listener != null) {
+                    listener.onSolveNextIteration(MSACRobustLateration2DSolver.this, iteration);
+                }
+            }
+
+            @Override
+            public void onEstimateProgressChange(final RobustEstimator<Point2D> estimator, final float progress) {
+                if (listener != null) {
+                    listener.onSolveProgressChange(MSACRobustLateration2DSolver.this, progress);
+                }
+            }
+        });
+
+        try {
+            locked = true;
+
+            if (listener != null) {
+                listener.onSolveStart(this);
+            }
+
+            inliersData = null;
+            innerEstimator.setConfidence(confidence);
+            innerEstimator.setMaxIterations(maxIterations);
+            innerEstimator.setProgressDelta(progressDelta);
+            var result = innerEstimator.estimate();
+            inliersData = innerEstimator.getInliersData();
             result = attemptRefine(result);
 
-            if (mListener != null) {
-                mListener.onSolveEnd(this);
+            if (listener != null) {
+                listener.onSolveEnd(this);
             }
 
             return result;
@@ -321,7 +313,7 @@ public class MSACRobustLateration2DSolver extends RobustLateration2DSolver {
         } catch (final com.irurueta.numerical.NotReadyException e) {
             throw new NotReadyException(e);
         } finally {
-            mLocked = false;
+            locked = false;
         }
     }
 

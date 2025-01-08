@@ -33,23 +33,22 @@ public class FrameToLocalTangentPlaneTransformationConverter {
     /**
      * Reference rotation to be reused for efficiency purposes.
      */
-    private final Quaternion mRefQ = new Quaternion();
+    private final Quaternion refQ = new Quaternion();
 
     /**
      * Coordinate transformation to be reused for efficiency purposes.
      */
-    private final CoordinateTransformation mC = new CoordinateTransformation(
-            FrameType.BODY_FRAME, FrameType.BODY_FRAME);
+    private final CoordinateTransformation c = new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME);
 
     /**
      * Current ECEF frame to be reused for efficiency purposes.
      */
-    private final ECEFFrame mCurrentEcefFrame = new ECEFFrame();
+    private final ECEFFrame currentEcefFrame = new ECEFFrame();
 
     /**
      * Reference frame to be reused for efficiency purposes.
      */
-    private final ECEFFrame mReferenceEcefFrame = new ECEFFrame();
+    private final ECEFFrame referenceEcefFrame = new ECEFFrame();
 
     /**
      * Converts provided current frame respect to provided reference frame into the
@@ -62,36 +61,33 @@ public class FrameToLocalTangentPlaneTransformationConverter {
      * @throws InvalidRotationMatrixException if either current or reference frame contains
      *                                        numerically unstable rotation values.
      */
-    public void convert(final ECEFFrame currentFrame,
-                        final ECEFFrame referenceFrame,
-                        final double[] translationResult,
-                        final Rotation3D rotationResult)
-            throws InvalidRotationMatrixException {
+    public void convert(final ECEFFrame currentFrame, final ECEFFrame referenceFrame, final double[] translationResult,
+                        final Rotation3D rotationResult) throws InvalidRotationMatrixException {
 
         if (translationResult.length != EuclideanTransformation3D.NUM_TRANSLATION_COORDS) {
             throw new IllegalArgumentException();
         }
 
-        final double refX = referenceFrame.getX();
-        final double refY = referenceFrame.getY();
-        final double refZ = referenceFrame.getZ();
+        final var refX = referenceFrame.getX();
+        final var refY = referenceFrame.getY();
+        final var refZ = referenceFrame.getZ();
 
-        final double x = currentFrame.getX();
-        final double y = currentFrame.getY();
-        final double z = currentFrame.getZ();
+        final var x = currentFrame.getX();
+        final var y = currentFrame.getY();
+        final var z = currentFrame.getZ();
 
         translationResult[0] = x - refX;
         translationResult[1] = y - refY;
         translationResult[2] = z - refZ;
 
-        referenceFrame.getCoordinateTransformation(mC);
-        mC.asRotation(mRefQ);
-        mRefQ.inverse();
+        referenceFrame.getCoordinateTransformation(c);
+        c.asRotation(refQ);
+        refQ.inverse();
 
-        currentFrame.getCoordinateTransformation(mC);
-        mC.asRotation(rotationResult);
+        currentFrame.getCoordinateTransformation(c);
+        c.asRotation(rotationResult);
 
-        rotationResult.combine(mRefQ);
+        rotationResult.combine(refQ);
     }
 
     /**
@@ -105,16 +101,14 @@ public class FrameToLocalTangentPlaneTransformationConverter {
      * @throws InvalidRotationMatrixException if either current or reference frame contains
      *                                        numerically unstable rotation values.
      */
-    public void convert(final ECEFFrame currentFrame,
-                        final ECEFFrame referenceFrame,
-                        final EuclideanTransformation3D result)
-            throws InvalidRotationMatrixException {
-        double[] translation = result.getTranslation();
+    public void convert(final ECEFFrame currentFrame, final ECEFFrame referenceFrame,
+                        final EuclideanTransformation3D result) throws InvalidRotationMatrixException {
+        var translation = result.getTranslation();
         if (translation == null) {
             translation = new double[EuclideanTransformation3D.NUM_TRANSLATION_COORDS];
         }
 
-        Rotation3D rotation = result.getRotation();
+        var rotation = result.getRotation();
         if (rotation == null) {
             rotation = new Quaternion();
         }
@@ -133,13 +127,10 @@ public class FrameToLocalTangentPlaneTransformationConverter {
      * @throws InvalidRotationMatrixException if either current or reference frame contains
      *                                        numerically unstable rotation values.
      */
-    public void convert(final NEDFrame currentFrame,
-                        final ECEFFrame referenceFrame,
-                        final double[] translationResult,
-                        final Rotation3D rotationResult)
-            throws InvalidRotationMatrixException {
-        NEDtoECEFFrameConverter.convertNEDtoECEF(currentFrame, mCurrentEcefFrame);
-        convert(mCurrentEcefFrame, referenceFrame, translationResult, rotationResult);
+    public void convert(final NEDFrame currentFrame, final ECEFFrame referenceFrame, final double[] translationResult,
+                        final Rotation3D rotationResult) throws InvalidRotationMatrixException {
+        NEDtoECEFFrameConverter.convertNEDtoECEF(currentFrame, currentEcefFrame);
+        convert(currentEcefFrame, referenceFrame, translationResult, rotationResult);
     }
 
     /**
@@ -153,12 +144,10 @@ public class FrameToLocalTangentPlaneTransformationConverter {
      * @throws InvalidRotationMatrixException if either current or reference frame contains
      *                                        numerically unstable rotation values.
      */
-    public void convert(final NEDFrame currentFrame,
-                        final ECEFFrame referenceFrame,
-                        final EuclideanTransformation3D result)
-            throws InvalidRotationMatrixException {
-        NEDtoECEFFrameConverter.convertNEDtoECEF(currentFrame, mCurrentEcefFrame);
-        convert(mCurrentEcefFrame, referenceFrame, result);
+    public void convert(final NEDFrame currentFrame, final ECEFFrame referenceFrame,
+                        final EuclideanTransformation3D result) throws InvalidRotationMatrixException {
+        NEDtoECEFFrameConverter.convertNEDtoECEF(currentFrame, currentEcefFrame);
+        convert(currentEcefFrame, referenceFrame, result);
     }
 
     /**
@@ -172,13 +161,10 @@ public class FrameToLocalTangentPlaneTransformationConverter {
      * @throws InvalidRotationMatrixException if either current or reference frame contains
      *                                        numerically unstable rotation values.
      */
-    public void convert(final ECEFFrame currentFrame,
-                        final NEDFrame referenceFrame,
-                        final double[] translationResult,
-                        final Rotation3D rotationResult)
-            throws InvalidRotationMatrixException {
-        NEDtoECEFFrameConverter.convertNEDtoECEF(referenceFrame, mReferenceEcefFrame);
-        convert(currentFrame, mReferenceEcefFrame, translationResult, rotationResult);
+    public void convert(final ECEFFrame currentFrame, final NEDFrame referenceFrame, final double[] translationResult,
+                        final Rotation3D rotationResult) throws InvalidRotationMatrixException {
+        NEDtoECEFFrameConverter.convertNEDtoECEF(referenceFrame, referenceEcefFrame);
+        convert(currentFrame, referenceEcefFrame, translationResult, rotationResult);
     }
 
     /**
@@ -192,12 +178,10 @@ public class FrameToLocalTangentPlaneTransformationConverter {
      * @throws InvalidRotationMatrixException if either current or reference frame contains
      *                                        numerically unstable rotation values.
      */
-    public void convert(final ECEFFrame currentFrame,
-                        final NEDFrame referenceFrame,
-                        final EuclideanTransformation3D result)
-            throws InvalidRotationMatrixException {
-        NEDtoECEFFrameConverter.convertNEDtoECEF(referenceFrame, mReferenceEcefFrame);
-        convert(currentFrame, mReferenceEcefFrame, result);
+    public void convert(final ECEFFrame currentFrame, final NEDFrame referenceFrame,
+                        final EuclideanTransformation3D result) throws InvalidRotationMatrixException {
+        NEDtoECEFFrameConverter.convertNEDtoECEF(referenceFrame, referenceEcefFrame);
+        convert(currentFrame, referenceEcefFrame, result);
     }
 
     /**
@@ -211,13 +195,10 @@ public class FrameToLocalTangentPlaneTransformationConverter {
      * @throws InvalidRotationMatrixException if either current or reference frame contains
      *                                        numerically unstable rotation values.
      */
-    public void convert(final NEDFrame currentFrame,
-                        final NEDFrame referenceFrame,
-                        final double[] translationResult,
-                        final Rotation3D rotationResult)
-            throws InvalidRotationMatrixException {
-        NEDtoECEFFrameConverter.convertNEDtoECEF(referenceFrame, mReferenceEcefFrame);
-        convert(currentFrame, mReferenceEcefFrame, translationResult, rotationResult);
+    public void convert(final NEDFrame currentFrame, final NEDFrame referenceFrame, final double[] translationResult,
+                        final Rotation3D rotationResult) throws InvalidRotationMatrixException {
+        NEDtoECEFFrameConverter.convertNEDtoECEF(referenceFrame, referenceEcefFrame);
+        convert(currentFrame, referenceEcefFrame, translationResult, rotationResult);
     }
 
     /**
@@ -231,12 +212,10 @@ public class FrameToLocalTangentPlaneTransformationConverter {
      * @throws InvalidRotationMatrixException if either current or reference frame contains
      *                                        numerically unstable rotation values.
      */
-    public void convert(final NEDFrame currentFrame,
-                        final NEDFrame referenceFrame,
-                        final EuclideanTransformation3D result)
-            throws InvalidRotationMatrixException {
-        NEDtoECEFFrameConverter.convertNEDtoECEF(referenceFrame, mReferenceEcefFrame);
-        convert(currentFrame, mReferenceEcefFrame, result);
+    public void convert(final NEDFrame currentFrame, final NEDFrame referenceFrame,
+                        final EuclideanTransformation3D result) throws InvalidRotationMatrixException {
+        NEDtoECEFFrameConverter.convertNEDtoECEF(referenceFrame, referenceEcefFrame);
+        convert(currentFrame, referenceEcefFrame, result);
     }
 
     /**
@@ -250,9 +229,8 @@ public class FrameToLocalTangentPlaneTransformationConverter {
      *                                        numerically unstable rotation values.
      */
     public EuclideanTransformation3D convertAndReturn(
-            final ECEFFrame currentFrame, final ECEFFrame referenceFrame)
-            throws InvalidRotationMatrixException {
-        final EuclideanTransformation3D result = new EuclideanTransformation3D();
+            final ECEFFrame currentFrame, final ECEFFrame referenceFrame) throws InvalidRotationMatrixException {
+        final var result = new EuclideanTransformation3D();
         convert(currentFrame, referenceFrame, result);
         return result;
     }
@@ -268,9 +246,8 @@ public class FrameToLocalTangentPlaneTransformationConverter {
      *                                        numerically unstable rotation values.
      */
     public EuclideanTransformation3D convertAndReturn(
-            final NEDFrame currentFrame, final ECEFFrame referenceFrame)
-            throws InvalidRotationMatrixException {
-        final EuclideanTransformation3D result = new EuclideanTransformation3D();
+            final NEDFrame currentFrame, final ECEFFrame referenceFrame) throws InvalidRotationMatrixException {
+        final var result = new EuclideanTransformation3D();
         convert(currentFrame, referenceFrame, result);
         return result;
     }
@@ -286,9 +263,8 @@ public class FrameToLocalTangentPlaneTransformationConverter {
      *                                        numerically unstable rotation values.
      */
     public EuclideanTransformation3D convertAndReturn(
-            final ECEFFrame currentFrame, final NEDFrame referenceFrame)
-            throws InvalidRotationMatrixException {
-        final EuclideanTransformation3D result = new EuclideanTransformation3D();
+            final ECEFFrame currentFrame, final NEDFrame referenceFrame) throws InvalidRotationMatrixException {
+        final var result = new EuclideanTransformation3D();
         convert(currentFrame, referenceFrame, result);
         return result;
     }
@@ -304,9 +280,8 @@ public class FrameToLocalTangentPlaneTransformationConverter {
      *                                        numerically unstable rotation values.
      */
     public EuclideanTransformation3D convertAndReturn(
-            final NEDFrame currentFrame, final NEDFrame referenceFrame)
-            throws InvalidRotationMatrixException {
-        final EuclideanTransformation3D result = new EuclideanTransformation3D();
+            final NEDFrame currentFrame, final NEDFrame referenceFrame) throws InvalidRotationMatrixException {
+        final var result = new EuclideanTransformation3D();
         convert(currentFrame, referenceFrame, result);
         return result;
     }

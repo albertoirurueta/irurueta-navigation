@@ -61,17 +61,17 @@ public class RANSACRobustLateration3DSolver extends RobustLateration3DSolver {
      * The threshold refers to the amount of error on distance between estimated position and
      * distances provided for each sample.
      */
-    private double mThreshold = DEFAULT_THRESHOLD;
+    private double threshold = DEFAULT_THRESHOLD;
 
     /**
      * Indicates whether inliers must be computed and kept.
      */
-    private boolean mComputeAndKeepInliers = DEFAULT_COMPUTE_AND_KEEP_INLIERS;
+    private boolean computeAndKeepInliers = DEFAULT_COMPUTE_AND_KEEP_INLIERS;
 
     /**
      * Indicates whether residuals must be computed and kept.
      */
-    private boolean mComputeAndKeepResiduals = DEFAULT_COMPUTE_AND_KEEP_RESIDUALS;
+    private boolean computeAndKeepResiduals = DEFAULT_COMPUTE_AND_KEEP_RESIDUALS;
 
     /**
      * Constructor.
@@ -86,8 +86,7 @@ public class RANSACRobustLateration3DSolver extends RobustLateration3DSolver {
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or its progress significantly changes.
      */
-    public RANSACRobustLateration3DSolver(
-            final RobustLaterationSolverListener<Point3D> listener) {
+    public RANSACRobustLateration3DSolver(final RobustLaterationSolverListener<Point3D> listener) {
         super(listener);
     }
 
@@ -100,8 +99,7 @@ public class RANSACRobustLateration3DSolver extends RobustLateration3DSolver {
      * @throws IllegalArgumentException if either positions or distances are null,
      *                                  don't have the same length or their length is smaller than required (4 points).
      */
-    public RANSACRobustLateration3DSolver(
-            final Point3D[] positions, final double[] distances) {
+    public RANSACRobustLateration3DSolver(final Point3D[] positions, final double[] distances) {
         super(positions, distances);
     }
 
@@ -116,8 +114,7 @@ public class RANSACRobustLateration3DSolver extends RobustLateration3DSolver {
      *                                  don't have the same length or their length is smaller than required (4 points).
      */
     public RANSACRobustLateration3DSolver(
-            final Point3D[] positions, final double[] distances,
-            final double[] distanceStandardDeviations) {
+            final Point3D[] positions, final double[] distances, final double[] distanceStandardDeviations) {
         super(positions, distances, distanceStandardDeviations);
     }
 
@@ -134,8 +131,7 @@ public class RANSACRobustLateration3DSolver extends RobustLateration3DSolver {
      *                                  smaller than required (4 points).
      */
     public RANSACRobustLateration3DSolver(
-            final Point3D[] positions, final double[] distances,
-            final double[] distanceStandardDeviations,
+            final Point3D[] positions, final double[] distances, final double[] distanceStandardDeviations,
             final RobustLaterationSolverListener<Point3D> listener) {
         super(positions, distances, distanceStandardDeviations, listener);
     }
@@ -176,8 +172,7 @@ public class RANSACRobustLateration3DSolver extends RobustLateration3DSolver {
      * @throws IllegalArgumentException if spheres is null, length of spheres array is less
      *                                  than required (4 points) or don't have the same length.
      */
-    public RANSACRobustLateration3DSolver(
-            final Sphere[] spheres, final double[] distanceStandardDeviations) {
+    public RANSACRobustLateration3DSolver(final Sphere[] spheres, final double[] distanceStandardDeviations) {
         super(spheres, distanceStandardDeviations);
     }
 
@@ -219,7 +214,7 @@ public class RANSACRobustLateration3DSolver extends RobustLateration3DSolver {
      * @return threshold to determine whether samples are inliers or not.
      */
     public double getThreshold() {
-        return mThreshold;
+        return threshold;
     }
 
     /**
@@ -238,7 +233,7 @@ public class RANSACRobustLateration3DSolver extends RobustLateration3DSolver {
         if (threshold <= MIN_THRESHOLD) {
             throw new IllegalArgumentException();
         }
-        mThreshold = threshold;
+        this.threshold = threshold;
     }
 
     /**
@@ -248,7 +243,7 @@ public class RANSACRobustLateration3DSolver extends RobustLateration3DSolver {
      * only need to be computed but not kept.
      */
     public boolean isComputeAndKeepInliersEnabled() {
-        return mComputeAndKeepInliers;
+        return computeAndKeepInliers;
     }
 
     /**
@@ -258,12 +253,11 @@ public class RANSACRobustLateration3DSolver extends RobustLateration3DSolver {
      *                              false if inliers only need to be computed but not kept.
      * @throws LockedException if this solver is locked.
      */
-    public void setComputeAndKeepInliersEnabled(final boolean computeAndKeepInliers)
-            throws LockedException {
+    public void setComputeAndKeepInliersEnabled(final boolean computeAndKeepInliers) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        mComputeAndKeepInliers = computeAndKeepInliers;
+        this.computeAndKeepInliers = computeAndKeepInliers;
     }
 
     /**
@@ -273,7 +267,7 @@ public class RANSACRobustLateration3DSolver extends RobustLateration3DSolver {
      * only need to be computed but not kept.
      */
     public boolean isComputeAndKeepResiduals() {
-        return mComputeAndKeepResiduals;
+        return computeAndKeepResiduals;
     }
 
     /**
@@ -283,12 +277,11 @@ public class RANSACRobustLateration3DSolver extends RobustLateration3DSolver {
      *                                false if residuals only need to be computed but not kept.
      * @throws LockedException if this solver is locked.
      */
-    public void setComputeAndKeepResidualsEnabled(final boolean computeAndKeepResiduals)
-            throws LockedException {
+    public void setComputeAndKeepResidualsEnabled(final boolean computeAndKeepResiduals) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        mComputeAndKeepResiduals = computeAndKeepResiduals;
+        this.computeAndKeepResiduals = computeAndKeepResiduals;
     }
 
     /**
@@ -309,91 +302,82 @@ public class RANSACRobustLateration3DSolver extends RobustLateration3DSolver {
             throw new NotReadyException();
         }
 
-        final RANSACRobustEstimator<Point3D> innerEstimator =
-                new RANSACRobustEstimator<>(new RANSACRobustEstimatorListener<Point3D>() {
+        final var innerEstimator = new RANSACRobustEstimator<>(new RANSACRobustEstimatorListener<Point3D>() {
 
-                    @Override
-                    public double getThreshold() {
-                        return mThreshold;
-                    }
-
-                    @Override
-                    public int getTotalSamples() {
-                        return mDistances.length;
-                    }
-
-                    @Override
-                    public int getSubsetSize() {
-                        return mPreliminarySubsetSize;
-                    }
-
-                    @Override
-                    public void estimatePreliminarSolutions(
-                            final int[] samplesIndices, final List<Point3D> solutions) {
-                        solvePreliminarySolutions(samplesIndices, solutions);
-                    }
-
-                    @Override
-                    public double computeResidual(
-                            final Point3D currentEstimation, final int i) {
-                        return Math.abs(currentEstimation.distanceTo(mPositions[i]) - mDistances[i]);
-                    }
-
-                    @Override
-                    public boolean isReady() {
-                        return RANSACRobustLateration3DSolver.this.isReady();
-                    }
-
-                    @Override
-                    public void onEstimateStart(final RobustEstimator<Point3D> estimator) {
-                        // no action needed
-                    }
-
-                    @Override
-                    public void onEstimateEnd(final RobustEstimator<Point3D> estimator) {
-                        // no action needed
-                    }
-
-                    @Override
-                    public void onEstimateNextIteration(
-                            final RobustEstimator<Point3D> estimator, final int iteration) {
-                        if (mListener != null) {
-                            mListener.onSolveNextIteration(
-                                    RANSACRobustLateration3DSolver.this, iteration);
-                        }
-                    }
-
-                    @Override
-                    public void onEstimateProgressChange(
-                            final RobustEstimator<Point3D> estimator, final float progress) {
-                        if (mListener != null) {
-                            mListener.onSolveProgressChange(
-                                    RANSACRobustLateration3DSolver.this, progress);
-                        }
-                    }
-                });
-
-        try {
-            mLocked = true;
-
-            if (mListener != null) {
-                mListener.onSolveStart(RANSACRobustLateration3DSolver.this);
+            @Override
+            public double getThreshold() {
+                return threshold;
             }
 
-            mInliersData = null;
-            innerEstimator.setComputeAndKeepInliersEnabled(
-                    mComputeAndKeepInliers || mRefineResult);
-            innerEstimator.setComputeAndKeepResidualsEnabled(
-                    mComputeAndKeepResiduals || mRefineResult);
-            innerEstimator.setConfidence(mConfidence);
-            innerEstimator.setMaxIterations(mMaxIterations);
-            innerEstimator.setProgressDelta(mProgressDelta);
-            Point3D result = innerEstimator.estimate();
-            mInliersData = innerEstimator.getInliersData();
+            @Override
+            public int getTotalSamples() {
+                return distances.length;
+            }
+
+            @Override
+            public int getSubsetSize() {
+                return preliminarySubsetSize;
+            }
+
+            @Override
+            public void estimatePreliminarSolutions(final int[] samplesIndices, final List<Point3D> solutions) {
+                solvePreliminarySolutions(samplesIndices, solutions);
+            }
+
+            @Override
+            public double computeResidual(final Point3D currentEstimation, final int i) {
+                return Math.abs(currentEstimation.distanceTo(positions[i]) - distances[i]);
+            }
+
+            @Override
+            public boolean isReady() {
+                return RANSACRobustLateration3DSolver.this.isReady();
+            }
+
+            @Override
+            public void onEstimateStart(final RobustEstimator<Point3D> estimator) {
+                // no action needed
+            }
+
+            @Override
+            public void onEstimateEnd(final RobustEstimator<Point3D> estimator) {
+                // no action needed
+            }
+
+            @Override
+            public void onEstimateNextIteration(final RobustEstimator<Point3D> estimator, final int iteration) {
+                if (listener != null) {
+                    listener.onSolveNextIteration(RANSACRobustLateration3DSolver.this, iteration);
+                }
+            }
+
+            @Override
+            public void onEstimateProgressChange(final RobustEstimator<Point3D> estimator, final float progress) {
+                if (listener != null) {
+                    listener.onSolveProgressChange(RANSACRobustLateration3DSolver.this, progress);
+                }
+            }
+        });
+
+        try {
+            locked = true;
+
+            if (listener != null) {
+                listener.onSolveStart(RANSACRobustLateration3DSolver.this);
+            }
+
+            inliersData = null;
+            innerEstimator.setComputeAndKeepInliersEnabled(computeAndKeepInliers || refineResult);
+            innerEstimator.setComputeAndKeepResidualsEnabled(computeAndKeepResiduals || refineResult);
+            innerEstimator.setConfidence(confidence);
+            innerEstimator.setMaxIterations(maxIterations);
+            innerEstimator.setProgressDelta(progressDelta);
+            var result = innerEstimator.estimate();
+            inliersData = innerEstimator.getInliersData();
             result = attemptRefine(result);
 
-            if (mListener != null) {
-                mListener.onSolveEnd(RANSACRobustLateration3DSolver.this);
+            if (listener != null) {
+                listener.onSolveEnd(RANSACRobustLateration3DSolver.this);
             }
 
             return result;
@@ -403,7 +387,7 @@ public class RANSACRobustLateration3DSolver extends RobustLateration3DSolver {
         } catch (final com.irurueta.numerical.NotReadyException e) {
             throw new NotReadyException(e);
         } finally {
-            mLocked = false;
+            locked = false;
         }
     }
 

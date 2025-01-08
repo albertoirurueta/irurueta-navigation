@@ -41,19 +41,19 @@ public class ECEFPosition implements Serializable, Cloneable {
      * Cartesian x coordinate of body position expressed in meters (m) with respect ECEF frame, resolved
      * along ECEF axes.
      */
-    private double mX;
+    private double x;
 
     /**
      * Cartesian y coordinate of body position expressed in meters (m) with respect ECEF frame, resolved
      * along ECEF axes.
      */
-    private double mY;
+    private double y;
 
     /**
      * Cartesian z coordinate of body position expressed in meters (m) with respect ECEF frame, resolved
      * along ECEF axes.
      */
-    private double mZ;
+    private double z;
 
     /**
      * Constructor.
@@ -102,7 +102,7 @@ public class ECEFPosition implements Serializable, Cloneable {
      * @return cartesian x coordinate of body position.
      */
     public double getX() {
-        return mX;
+        return x;
     }
 
     /**
@@ -112,7 +112,7 @@ public class ECEFPosition implements Serializable, Cloneable {
      * @param x cartesian x coordinate of body position.
      */
     public void setX(final double x) {
-        mX = x;
+        this.x = x;
     }
 
     /**
@@ -122,7 +122,7 @@ public class ECEFPosition implements Serializable, Cloneable {
      * @return cartesian y coordinate of body position.
      */
     public double getY() {
-        return mY;
+        return y;
     }
 
     /**
@@ -132,7 +132,7 @@ public class ECEFPosition implements Serializable, Cloneable {
      * @param y cartesian y coordinate of body position.
      */
     public void setY(final double y) {
-        mY = y;
+        this.y = y;
     }
 
     /**
@@ -142,7 +142,7 @@ public class ECEFPosition implements Serializable, Cloneable {
      * @return z coordinate of body position.
      */
     public double getZ() {
-        return mZ;
+        return z;
     }
 
     /**
@@ -152,7 +152,7 @@ public class ECEFPosition implements Serializable, Cloneable {
      * @param z cartesian z coordinate of body position.
      */
     public void setZ(final double z) {
-        mZ = z;
+        this.z = z;
     }
 
     /**
@@ -164,9 +164,9 @@ public class ECEFPosition implements Serializable, Cloneable {
      * @param z cartesian z coordinate of body position.
      */
     public void setCoordinates(final double x, final double y, final double z) {
-        mX = x;
-        mY = y;
-        mZ = z;
+        this.x = x;
+        this.y = y;
+        this.z = z;
     }
 
     /**
@@ -175,7 +175,7 @@ public class ECEFPosition implements Serializable, Cloneable {
      * @return body position.
      */
     public Point3D getPosition() {
-        return new InhomogeneousPoint3D(mX, mY, mZ);
+        return new InhomogeneousPoint3D(x, y, z);
     }
 
     /**
@@ -184,7 +184,7 @@ public class ECEFPosition implements Serializable, Cloneable {
      * @param result instance where position data is copied to.
      */
     public void getPosition(final Point3D result) {
-        result.setInhomogeneousCoordinates(mX, mY, mZ);
+        result.setInhomogeneousCoordinates(x, y, z);
     }
 
     /**
@@ -193,9 +193,9 @@ public class ECEFPosition implements Serializable, Cloneable {
      * @param point body position to be set.
      */
     public void setPosition(final Point3D point) {
-        mX = point.getInhomX();
-        mY = point.getInhomY();
-        mZ = point.getInhomZ();
+        x = point.getInhomX();
+        y = point.getInhomY();
+        z = point.getInhomZ();
     }
 
     /**
@@ -205,7 +205,7 @@ public class ECEFPosition implements Serializable, Cloneable {
      *               stored.
      */
     public void getDistanceX(final Distance result) {
-        result.setValue(mX);
+        result.setValue(x);
         result.setUnit(DistanceUnit.METER);
     }
 
@@ -215,7 +215,7 @@ public class ECEFPosition implements Serializable, Cloneable {
      * @return x coordinate of body position resolved along ECEF-frame axes.
      */
     public Distance getDistanceX() {
-        return new Distance(mX, DistanceUnit.METER);
+        return new Distance(x, DistanceUnit.METER);
     }
 
     /**
@@ -224,7 +224,7 @@ public class ECEFPosition implements Serializable, Cloneable {
      * @param x cartesian x coordinate of body position to be set.
      */
     public void setX(final Distance x) {
-        mX = convertDistance(x);
+        this.x = convertDistance(x);
     }
 
     /**
@@ -234,7 +234,7 @@ public class ECEFPosition implements Serializable, Cloneable {
      *               stored.
      */
     public void getDistanceY(final Distance result) {
-        result.setValue(mY);
+        result.setValue(y);
         result.setUnit(DistanceUnit.METER);
     }
 
@@ -244,7 +244,7 @@ public class ECEFPosition implements Serializable, Cloneable {
      * @return y coordinate of body position resolved along ECEF-frame axes.
      */
     public Distance getDistanceY() {
-        return new Distance(mY, DistanceUnit.METER);
+        return new Distance(y, DistanceUnit.METER);
     }
 
     /**
@@ -253,7 +253,7 @@ public class ECEFPosition implements Serializable, Cloneable {
      * @param y cartesian y coordinate of body position to be set.
      */
     public void setY(final Distance y) {
-        mY = convertDistance(y);
+        this.y = convertDistance(y);
     }
 
     /**
@@ -263,7 +263,7 @@ public class ECEFPosition implements Serializable, Cloneable {
      *               stored.
      */
     public void getDistanceZ(final Distance result) {
-        result.setValue(mZ);
+        result.setValue(z);
         result.setUnit(DistanceUnit.METER);
     }
 
@@ -273,7 +273,7 @@ public class ECEFPosition implements Serializable, Cloneable {
      * @return z coordinate of body position resolved along ECEF-frame axes.
      */
     public Distance getDistanceZ() {
-        return new Distance(mZ, DistanceUnit.METER);
+        return new Distance(z, DistanceUnit.METER);
     }
 
     /**
@@ -282,7 +282,7 @@ public class ECEFPosition implements Serializable, Cloneable {
      * @param z cartesian z coordinate of body position to be set.
      */
     public void setZ(final Distance z) {
-        mZ = convertDistance(z);
+        this.z = convertDistance(z);
     }
 
     /**
@@ -305,7 +305,7 @@ public class ECEFPosition implements Serializable, Cloneable {
      * @return position norm expressed in meters (m).
      */
     public double getNorm() {
-        return Math.sqrt(mX * mX + mY * mY + mZ * mZ);
+        return Math.sqrt(x * x + y * y + z * z);
     }
 
     /**
@@ -333,9 +333,9 @@ public class ECEFPosition implements Serializable, Cloneable {
      * @param output destination instance where data will be copied to.
      */
     public void copyTo(final ECEFPosition output) {
-        output.mX = mX;
-        output.mY = mY;
-        output.mZ = mZ;
+        output.x = x;
+        output.y = y;
+        output.z = z;
     }
 
     /**
@@ -344,9 +344,9 @@ public class ECEFPosition implements Serializable, Cloneable {
      * @param input instance to copy data from.
      */
     public void copyFrom(final ECEFPosition input) {
-        mX = input.mX;
-        mY = input.mY;
-        mZ = input.mZ;
+        x = input.x;
+        y = input.y;
+        z = input.z;
     }
 
     /**
@@ -361,9 +361,9 @@ public class ECEFPosition implements Serializable, Cloneable {
             throw new IllegalArgumentException();
         }
 
-        result[0] = mX;
-        result[1] = mY;
-        result[2] = mZ;
+        result[0] = x;
+        result[1] = y;
+        result[2] = z;
     }
 
     /**
@@ -372,7 +372,7 @@ public class ECEFPosition implements Serializable, Cloneable {
      * @return array containing position coordinates in x,y,z order.
      */
     public double[] asArray() {
-        final double[] result = new double[COMPONENTS];
+        final var result = new double[COMPONENTS];
         asArray(result);
         return result;
     }
@@ -394,9 +394,9 @@ public class ECEFPosition implements Serializable, Cloneable {
             }
         }
 
-        result.setElementAtIndex(0, mX);
-        result.setElementAtIndex(1, mY);
-        result.setElementAtIndex(2, mZ);
+        result.setElementAtIndex(0, x);
+        result.setElementAtIndex(1, y);
+        result.setElementAtIndex(2, z);
     }
 
     /**
@@ -425,7 +425,7 @@ public class ECEFPosition implements Serializable, Cloneable {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(mX, mY, mZ);
+        return Objects.hash(x, y, z);
     }
 
     /**
@@ -471,9 +471,9 @@ public class ECEFPosition implements Serializable, Cloneable {
             return false;
         }
 
-        return Math.abs(mX - other.mX) <= threshold
-                && Math.abs(mY - other.mY) <= threshold
-                && Math.abs(mZ - other.mZ) <= threshold;
+        return Math.abs(x - other.x) <= threshold
+                && Math.abs(y - other.y) <= threshold
+                && Math.abs(z - other.z) <= threshold;
     }
 
     /**
@@ -484,7 +484,7 @@ public class ECEFPosition implements Serializable, Cloneable {
      */
     @Override
     protected Object clone() throws CloneNotSupportedException {
-        final ECEFPosition result = (ECEFPosition) super.clone();
+        final var result = (ECEFPosition) super.clone();
         copyTo(result);
         return result;
     }

@@ -73,12 +73,9 @@ public class GNSSKalmanEpochEstimator {
      * @throws AlgebraException if there are numerical instabilities.
      */
     public static GNSSKalmanState estimate(
-            final Collection<GNSSMeasurement> measurements,
-            final Time propagationInterval,
-            final GNSSKalmanState previousState,
-            final GNSSKalmanConfig config) throws AlgebraException {
-        return estimate(measurements, convertTime(propagationInterval),
-                previousState, config);
+            final Collection<GNSSMeasurement> measurements, final Time propagationInterval,
+            final GNSSKalmanState previousState, final GNSSKalmanConfig config) throws AlgebraException {
+        return estimate(measurements, convertTime(propagationInterval), previousState, config);
     }
 
     /**
@@ -100,8 +97,7 @@ public class GNSSKalmanEpochEstimator {
                                 final GNSSKalmanState previousState,
                                 final GNSSKalmanConfig config,
                                 final GNSSKalmanState result) throws AlgebraException {
-        estimate(measurements, convertTime(propagationInterval), previousState,
-                config, result);
+        estimate(measurements, convertTime(propagationInterval), previousState, config, result);
     }
 
     /**
@@ -129,8 +125,8 @@ public class GNSSKalmanEpochEstimator {
                                 final GNSSKalmanConfig config,
                                 final GNSSEstimation updatedEstimation,
                                 final Matrix updatedCovariance) throws AlgebraException {
-        estimate(measurements, convertTime(propagationInterval), previousEstimation,
-                previousCovariance, config, updatedEstimation, updatedCovariance);
+        estimate(measurements, convertTime(propagationInterval), previousEstimation, previousCovariance, config,
+                updatedEstimation, updatedCovariance);
     }
 
     /**
@@ -151,7 +147,7 @@ public class GNSSKalmanEpochEstimator {
             final double propagationInterval,
             final GNSSKalmanState previousState,
             final GNSSKalmanConfig config) throws AlgebraException {
-        final GNSSKalmanState result = new GNSSKalmanState();
+        final var result = new GNSSKalmanState();
         estimate(measurements, propagationInterval, previousState, config, result);
         return result;
     }
@@ -175,13 +171,11 @@ public class GNSSKalmanEpochEstimator {
                                 final GNSSKalmanState previousState,
                                 final GNSSKalmanConfig config,
                                 final GNSSKalmanState result) throws AlgebraException {
-        final GNSSEstimation resultEstimation = new GNSSEstimation();
-        final Matrix resultCovariance = new Matrix(GNSSEstimation.NUM_PARAMETERS,
-                GNSSEstimation.NUM_PARAMETERS);
+        final var resultEstimation = new GNSSEstimation();
+        final var resultCovariance = new Matrix(GNSSEstimation.NUM_PARAMETERS, GNSSEstimation.NUM_PARAMETERS);
 
-        estimate(measurements, propagationInterval, previousState.getEstimation(),
-                previousState.getCovariance(), config, resultEstimation,
-                resultCovariance);
+        estimate(measurements, propagationInterval, previousState.getEstimation(), previousState.getCovariance(),
+                config, resultEstimation, resultCovariance);
 
         result.setEstimation(resultEstimation);
         result.setCovariance(resultCovariance);
@@ -214,35 +208,35 @@ public class GNSSKalmanEpochEstimator {
                                 final GNSSEstimation updatedEstimation,
                                 final Matrix updatedCovariance) throws AlgebraException {
 
-        if (previousCovariance.getRows() != GNSSEstimation.NUM_PARAMETERS ||
-                previousCovariance.getColumns() != GNSSEstimation.NUM_PARAMETERS) {
+        if (previousCovariance.getRows() != GNSSEstimation.NUM_PARAMETERS
+                || previousCovariance.getColumns() != GNSSEstimation.NUM_PARAMETERS) {
             throw new IllegalArgumentException();
         }
 
         // SYSTEM PROPAGATION PHASE
 
         // 1. Determine transition matrix using (9.147) and (9.150)
-        final Matrix phiMatrix = Matrix.identity(MATRIX_SIZE, MATRIX_SIZE);
+        final var phiMatrix = Matrix.identity(MATRIX_SIZE, MATRIX_SIZE);
         phiMatrix.setElementAt(0, 3, propagationInterval);
         phiMatrix.setElementAt(1, 4, propagationInterval);
         phiMatrix.setElementAt(2, 5, propagationInterval);
         phiMatrix.setElementAt(6, 7, propagationInterval);
 
         // 2. Determine system noise covariance matrix using (9.152)
-        final double propagationInterval2 = propagationInterval * propagationInterval;
-        final double propagationInterval3 = propagationInterval2 * propagationInterval;
-        final double accelerationPSD = config.getAccelerationPSD();
-        final double clockFrequencyPSD = config.getClockFrequencyPSD();
-        final double clockPhasePSD = config.getClockPhasePSD();
+        final var propagationInterval2 = propagationInterval * propagationInterval;
+        final var propagationInterval3 = propagationInterval2 * propagationInterval;
+        final var accelerationPSD = config.getAccelerationPSD();
+        final var clockFrequencyPSD = config.getClockFrequencyPSD();
+        final var clockPhasePSD = config.getClockPhasePSD();
 
-        final double value1 = accelerationPSD * propagationInterval3 / 3.0;
-        final double value2 = accelerationPSD * propagationInterval2 / 2.0;
-        final double value3 = accelerationPSD * propagationInterval;
-        final double value4 = clockFrequencyPSD * propagationInterval3 / 3.0 + clockPhasePSD * propagationInterval;
-        final double value5 = clockFrequencyPSD * propagationInterval2 / 2.0;
-        final double value6 = clockFrequencyPSD * propagationInterval;
+        final var value1 = accelerationPSD * propagationInterval3 / 3.0;
+        final var value2 = accelerationPSD * propagationInterval2 / 2.0;
+        final var value3 = accelerationPSD * propagationInterval;
+        final var value4 = clockFrequencyPSD * propagationInterval3 / 3.0 + clockPhasePSD * propagationInterval;
+        final var value5 = clockFrequencyPSD * propagationInterval2 / 2.0;
+        final var value6 = clockFrequencyPSD * propagationInterval;
 
-        final Matrix qMatrix = new Matrix(MATRIX_SIZE, MATRIX_SIZE);
+        final var qMatrix = new Matrix(MATRIX_SIZE, MATRIX_SIZE);
         qMatrix.setElementAt(0, 0, value1);
         qMatrix.setElementAt(1, 1, value1);
         qMatrix.setElementAt(2, 2, value1);
@@ -266,15 +260,15 @@ public class GNSSKalmanEpochEstimator {
 
 
         // 3. Propagate state estimates using (3.14)
-        final Matrix xEstOld = previousEstimation.asMatrix();
-        final Matrix xEstPropagated = phiMatrix.multiplyAndReturnNew(xEstOld);
-        final Matrix propagatedVelocity = xEstPropagated.getSubmatrix(
+        final var xEstOld = previousEstimation.asMatrix();
+        final var xEstPropagated = phiMatrix.multiplyAndReturnNew(xEstOld);
+        final var propagatedVelocity = xEstPropagated.getSubmatrix(
                 3, 0, 5, 0);
-        final Matrix propagatedPosition = xEstPropagated.getSubmatrix(
+        final var propagatedPosition = xEstPropagated.getSubmatrix(
                 0, 0, 2, 0);
 
         // 4. Propagate state estimation error covariance matrix using (3.15)
-        final Matrix pMatrixPropagated = phiMatrix.multiplyAndReturnNew(previousCovariance);
+        final var pMatrixPropagated = phiMatrix.multiplyAndReturnNew(previousCovariance);
         phiMatrix.transpose();
         pMatrixPropagated.multiply(phiMatrix);
         pMatrixPropagated.add(qMatrix);
@@ -282,40 +276,39 @@ public class GNSSKalmanEpochEstimator {
         // MEASUREMENT UPDATE PHASE
 
         // Skew symmetric matrix of Earth rate
-        final Matrix omegaIe = Utils.skewMatrix(new double[]{0.0, 0.0, EARTH_ROTATION_RATE});
+        final var omegaIe = Utils.skewMatrix(new double[]{0.0, 0.0, EARTH_ROTATION_RATE});
 
-        final int numberOfMeasurements = measurements.size();
-        final Matrix uAseT = new Matrix(numberOfMeasurements, 3);
-        final Matrix predMeas = new Matrix(numberOfMeasurements, 2);
+        final var numberOfMeasurements = measurements.size();
+        final var uAseT = new Matrix(numberOfMeasurements, 3);
+        final var predMeas = new Matrix(numberOfMeasurements, 2);
 
-        final Matrix cei = Matrix.identity(CoordinateTransformation.ROWS,
-                CoordinateTransformation.COLS);
-        final Matrix satellitePosition = new Matrix(CoordinateTransformation.ROWS, 1);
-        final Matrix satelliteVelocity = new Matrix(CoordinateTransformation.ROWS, 1);
-        final Matrix deltaR = new Matrix(CoordinateTransformation.ROWS, 1);
-        final Matrix tmp1 = new Matrix(CoordinateTransformation.ROWS, 1);
-        final Matrix tmp2 = new Matrix(CoordinateTransformation.ROWS, 1);
-        final Matrix tmp3 = new Matrix(CoordinateTransformation.ROWS, 1);
-        final Matrix tmp4 = new Matrix(CoordinateTransformation.ROWS, 1);
-        final Matrix tmp5 = new Matrix(CoordinateTransformation.ROWS, 1);
-        final Matrix tmp6 = new Matrix(CoordinateTransformation.ROWS, 1);
-        final Matrix tmp7 = new Matrix(1, CoordinateTransformation.ROWS);
+        final var cei = Matrix.identity(CoordinateTransformation.ROWS, CoordinateTransformation.COLS);
+        final var satellitePosition = new Matrix(CoordinateTransformation.ROWS, 1);
+        final var satelliteVelocity = new Matrix(CoordinateTransformation.ROWS, 1);
+        final var deltaR = new Matrix(CoordinateTransformation.ROWS, 1);
+        final var tmp1 = new Matrix(CoordinateTransformation.ROWS, 1);
+        final var tmp2 = new Matrix(CoordinateTransformation.ROWS, 1);
+        final var tmp3 = new Matrix(CoordinateTransformation.ROWS, 1);
+        final var tmp4 = new Matrix(CoordinateTransformation.ROWS, 1);
+        final var tmp5 = new Matrix(CoordinateTransformation.ROWS, 1);
+        final var tmp6 = new Matrix(CoordinateTransformation.ROWS, 1);
+        final var tmp7 = new Matrix(1, CoordinateTransformation.ROWS);
 
         // Loop measurements
-        int j = 0;
-        for (final GNSSMeasurement measurement : measurements) {
+        var j = 0;
+        for (final var measurement : measurements) {
             // Predict approx range
-            final double measX = measurement.getX();
-            final double measY = measurement.getY();
-            final double measZ = measurement.getZ();
+            final var measX = measurement.getX();
+            final var measY = measurement.getY();
+            final var measZ = measurement.getZ();
 
-            final double deltaX = measX - xEstPropagated.getElementAtIndex(0);
-            final double deltaY = measY - xEstPropagated.getElementAtIndex(1);
-            final double deltaZ = measZ - xEstPropagated.getElementAtIndex(2);
-            final double approxRange = Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
+            final var deltaX = measX - xEstPropagated.getElementAtIndex(0);
+            final var deltaY = measY - xEstPropagated.getElementAtIndex(1);
+            final var deltaZ = measZ - xEstPropagated.getElementAtIndex(2);
+            final var approxRange = Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
 
             // Calculate frame rotation during signal transit time using (8.36)
-            final double ceiValue = EARTH_ROTATION_RATE * approxRange / SPEED_OF_LIGHT;
+            final var ceiValue = EARTH_ROTATION_RATE * approxRange / SPEED_OF_LIGHT;
             cei.setElementAt(0, 1, ceiValue);
             cei.setElementAt(1, 0, -ceiValue);
 
@@ -325,17 +318,15 @@ public class GNSSKalmanEpochEstimator {
             satellitePosition.setElementAtIndex(2, measZ);
 
             cei.multiply(satellitePosition, deltaR);
-            for (int i = 0; i < CoordinateTransformation.ROWS; i++) {
-                deltaR.setElementAtIndex(i, deltaR.getElementAtIndex(i)
-                        - xEstPropagated.getElementAtIndex(i));
+            for (var i = 0; i < CoordinateTransformation.ROWS; i++) {
+                deltaR.setElementAtIndex(i, deltaR.getElementAtIndex(i) - xEstPropagated.getElementAtIndex(i));
             }
-            final double range = Utils.normF(deltaR);
+            final var range = Utils.normF(deltaR);
 
-            predMeas.setElementAt(j, 0, range
-                    + xEstPropagated.getElementAtIndex(6));
+            predMeas.setElementAt(j, 0, range + xEstPropagated.getElementAtIndex(6));
 
             // Predict line of sight
-            for (int i = 0; i < CoordinateTransformation.ROWS; i++) {
+            for (var i = 0; i < CoordinateTransformation.ROWS; i++) {
                 uAseT.setElementAt(j, i, deltaR.getElementAtIndex(i) / range);
             }
 
@@ -355,19 +346,18 @@ public class GNSSKalmanEpochEstimator {
 
             uAseT.getSubmatrix(j, 0, j, 2, tmp7);
 
-            final double rangeRate = Utils.dotProduct(tmp7, tmp5);
+            final var rangeRate = Utils.dotProduct(tmp7, tmp5);
 
-            predMeas.setElementAt(j, 1,
-                    rangeRate + xEstPropagated.getElementAtIndex(7));
+            predMeas.setElementAt(j, 1, rangeRate + xEstPropagated.getElementAtIndex(7));
 
             j++;
         }
 
         // 5. Set-up measurement matrix using (9.163)
-        final Matrix h = new Matrix(2 * numberOfMeasurements, GNSSEstimation.NUM_PARAMETERS);
+        final var h = new Matrix(2 * numberOfMeasurements, GNSSEstimation.NUM_PARAMETERS);
         for (int j1 = 0, j2 = numberOfMeasurements; j1 < numberOfMeasurements; j1++, j2++) {
             for (int i1 = 0, i2 = 3; i1 < CoordinateTransformation.ROWS; i1++, i2++) {
-                final double value = -uAseT.getElementAt(j1, i1);
+                final var value = -uAseT.getElementAt(j1, i1);
 
                 h.setElementAt(j1, i1, value);
                 h.setElementAt(j2, i2, value);
@@ -378,34 +368,31 @@ public class GNSSKalmanEpochEstimator {
 
         // 6. Set-up measurement noise covariance matrix assuming all measurements are independent
         // and have equal variance for a given measurement type
-        final double pseudoRangeSD = config.getPseudoRangeSD();
-        final double pseudoRangeSD2 = pseudoRangeSD * pseudoRangeSD;
-        final double rangeRateSD = config.getRangeRateSD();
-        final double rangeRateSD2 = rangeRateSD * rangeRateSD;
-        final Matrix r = new Matrix(2 * numberOfMeasurements, 2 * numberOfMeasurements);
+        final var pseudoRangeSD = config.getPseudoRangeSD();
+        final var pseudoRangeSD2 = pseudoRangeSD * pseudoRangeSD;
+        final var rangeRateSD = config.getRangeRateSD();
+        final var rangeRateSD2 = rangeRateSD * rangeRateSD;
+        final var r = new Matrix(2 * numberOfMeasurements, 2 * numberOfMeasurements);
         for (int i1 = 0, i2 = numberOfMeasurements; i1 < numberOfMeasurements; i1++, i2++) {
             r.setElementAt(i1, i1, pseudoRangeSD2);
             r.setElementAt(i2, i2, rangeRateSD2);
         }
 
         // 7. Calculate Kalman gain using (3.21)
-        final Matrix hTransposed = h.transposeAndReturnNew();
-        final Matrix tmp8 = h.multiplyAndReturnNew(
-                pMatrixPropagated.multiplyAndReturnNew(hTransposed));
+        final var hTransposed = h.transposeAndReturnNew();
+        final var tmp8 = h.multiplyAndReturnNew(pMatrixPropagated.multiplyAndReturnNew(hTransposed));
         tmp8.add(r);
-        final Matrix tmp9 = Utils.inverse(tmp8);
-        final Matrix k = pMatrixPropagated.multiplyAndReturnNew(hTransposed);
+        final var tmp9 = Utils.inverse(tmp8);
+        final var k = pMatrixPropagated.multiplyAndReturnNew(hTransposed);
         k.multiply(tmp9);
 
         // 8. Formulate measurement innovations using (3.88)
-        final Matrix deltaZ = new Matrix(2 * numberOfMeasurements, 1);
-        int i1 = 0;
-        int i2 = numberOfMeasurements;
-        for (final GNSSMeasurement measurement : measurements) {
-            deltaZ.setElementAtIndex(i1, measurement.getPseudoRange()
-                    - predMeas.getElementAt(i1, 0));
-            deltaZ.setElementAtIndex(i2, measurement.getPseudoRate()
-                    - predMeas.getElementAt(i1, 1));
+        final var deltaZ = new Matrix(2 * numberOfMeasurements, 1);
+        var i1 = 0;
+        var i2 = numberOfMeasurements;
+        for (final var measurement : measurements) {
+            deltaZ.setElementAtIndex(i1, measurement.getPseudoRange() - predMeas.getElementAt(i1, 0));
+            deltaZ.setElementAtIndex(i2, measurement.getPseudoRate() - predMeas.getElementAt(i1, 1));
             i1++;
             i2++;
         }
@@ -417,10 +404,9 @@ public class GNSSKalmanEpochEstimator {
         updatedEstimation.fromMatrix(xEstPropagated);
 
         // 10. Update state estimation error covariance matrix using (3.25)
-        if (updatedCovariance.getRows() != GNSSEstimation.NUM_PARAMETERS ||
-                updatedCovariance.getColumns() != GNSSEstimation.NUM_PARAMETERS) {
-            updatedCovariance.resize(GNSSEstimation.NUM_PARAMETERS,
-                    GNSSEstimation.NUM_PARAMETERS);
+        if (updatedCovariance.getRows() != GNSSEstimation.NUM_PARAMETERS
+                || updatedCovariance.getColumns() != GNSSEstimation.NUM_PARAMETERS) {
+            updatedCovariance.resize(GNSSEstimation.NUM_PARAMETERS, GNSSEstimation.NUM_PARAMETERS);
         }
         Matrix.identity(updatedCovariance);
         k.multiply(h);
@@ -435,7 +421,6 @@ public class GNSSKalmanEpochEstimator {
      * @return time value expressed in seconds.
      */
     private static double convertTime(final Time time) {
-        return TimeConverter.convert(time.getValue().doubleValue(),
-                time.getUnit(), TimeUnit.SECOND);
+        return TimeConverter.convert(time.getValue().doubleValue(), time.getUnit(), TimeUnit.SECOND);
     }
 }

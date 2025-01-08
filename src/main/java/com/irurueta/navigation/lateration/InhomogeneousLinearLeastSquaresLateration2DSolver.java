@@ -42,8 +42,7 @@ public class InhomogeneousLinearLeastSquaresLateration2DSolver extends
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      *                                  length is smaller than required (3 points).
      */
-    public InhomogeneousLinearLeastSquaresLateration2DSolver(
-            final Point2D[] positions, final double[] distances) {
+    public InhomogeneousLinearLeastSquaresLateration2DSolver(final Point2D[] positions, final double[] distances) {
         super(positions, distances);
     }
 
@@ -52,8 +51,7 @@ public class InhomogeneousLinearLeastSquaresLateration2DSolver extends
      *
      * @param listener listener to be notified of events raised by this instance.
      */
-    public InhomogeneousLinearLeastSquaresLateration2DSolver(
-            final LaterationSolverListener<Point2D> listener) {
+    public InhomogeneousLinearLeastSquaresLateration2DSolver(final LaterationSolverListener<Point2D> listener) {
         super(listener);
     }
 
@@ -67,8 +65,7 @@ public class InhomogeneousLinearLeastSquaresLateration2DSolver extends
      *                                  length is smaller than required (3 points).
      */
     public InhomogeneousLinearLeastSquaresLateration2DSolver(
-            final Point2D[] positions, final double[] distances,
-            final LaterationSolverListener<Point2D> listener) {
+            final Point2D[] positions, final double[] distances, final LaterationSolverListener<Point2D> listener) {
         super(positions, distances, listener);
     }
 
@@ -91,8 +88,7 @@ public class InhomogeneousLinearLeastSquaresLateration2DSolver extends
      * @throws IllegalArgumentException if circles is null or if length of circles array is less than 3.
      */
     public InhomogeneousLinearLeastSquaresLateration2DSolver(
-            final Circle[] circles,
-            final LaterationSolverListener<Point2D> listener) {
+            final Circle[] circles, final LaterationSolverListener<Point2D> listener) {
         super(listener);
         internalSetCircles(circles);
     }
@@ -103,14 +99,14 @@ public class InhomogeneousLinearLeastSquaresLateration2DSolver extends
      * @return circles defined by provided positions and distances.
      */
     public Circle[] getCircles() {
-        if (mPositions == null) {
+        if (positions == null) {
             return null;
         }
 
-        final Circle[] result = new Circle[mPositions.length];
+        final var result = new Circle[positions.length];
 
-        for (int i = 0; i < mPositions.length; i++) {
-            result[i] = new Circle(mPositions[i], mDistances[i]);
+        for (var i = 0; i < positions.length; i++) {
+            result[i] = new Circle(positions[i], distances[i]);
         }
         return result;
     }
@@ -158,11 +154,11 @@ public class InhomogeneousLinearLeastSquaresLateration2DSolver extends
      */
     @Override
     public Point2D getEstimatedPosition() {
-        if (mEstimatedPositionCoordinates == null) {
+        if (estimatedPositionCoordinates == null) {
             return null;
         }
 
-        final InhomogeneousPoint2D position = new InhomogeneousPoint2D();
+        final var position = new InhomogeneousPoint2D();
         getEstimatedPosition(position);
         return position;
     }
@@ -179,10 +175,10 @@ public class InhomogeneousLinearLeastSquaresLateration2DSolver extends
             throw new IllegalArgumentException();
         }
 
-        final Point2D[] positions = new Point2D[circles.length];
-        final double[] distances = new double[circles.length];
-        for (int i = 0; i < circles.length; i++) {
-            final Circle circle = circles[i];
+        final var positions = new Point2D[circles.length];
+        final var distances = new double[circles.length];
+        for (var i = 0; i < circles.length; i++) {
+            final var circle = circles[i];
             positions[i] = circle.getCenter();
             distances[i] = circle.getRadius();
         }

@@ -120,7 +120,7 @@ public class ECEFtoECIFrameConverter implements TimeIntervalFrameConverter<ECEFF
      * @return a new destination frame instance.
      */
     public static ECIFrame convertECEFtoECIAndReturnNew(final double timeInterval, final ECEFFrame source) {
-        final ECIFrame result = new ECIFrame();
+        final var result = new ECIFrame();
         convertECEFtoECI(timeInterval, source, result);
         return result;
     }
@@ -145,32 +145,31 @@ public class ECEFtoECIFrameConverter implements TimeIntervalFrameConverter<ECEFF
      * @param destination  destination frame instance to convert to.
      */
     @SuppressWarnings("DuplicatedCode")
-    public static void convertECEFtoECI(final double timeInterval, final ECEFFrame source,
-                                        final ECIFrame destination) {
+    public static void convertECEFtoECI(final double timeInterval, final ECEFFrame source, final ECIFrame destination) {
         try {
             // Calculate ECEF to ECI coordinate transformation matrix using (2.145)
-            final double alpha = EARTH_ROTATION_RATE * timeInterval;
-            final Matrix cei = CoordinateTransformation.ecefToEciMatrixFromAngle(alpha);
+            final var alpha = EARTH_ROTATION_RATE * timeInterval;
+            final var cei = CoordinateTransformation.ecefToEciMatrixFromAngle(alpha);
 
             // Transform position using (2.146)
-            final Matrix rEbe = new Matrix(ECIorECEFFrame.NUM_POSITION_COORDINATES, 1);
+            final var rEbe = new Matrix(ECIorECEFFrame.NUM_POSITION_COORDINATES, 1);
             rEbe.setElementAtIndex(0, source.getX());
             rEbe.setElementAtIndex(1, source.getY());
             rEbe.setElementAtIndex(2, source.getZ());
 
-            final Matrix rIbi = cei.multiplyAndReturnNew(rEbe);
+            final var rIbi = cei.multiplyAndReturnNew(rEbe);
 
             destination.setCoordinates(rIbi.getElementAtIndex(0),
                     rIbi.getElementAtIndex(1), rIbi.getElementAtIndex(2));
 
             // Transform velocity using (2.145)
-            final Matrix tmp = new Matrix(ECIorECEFFrame.NUM_POSITION_COORDINATES, 1);
+            final var tmp = new Matrix(ECIorECEFFrame.NUM_POSITION_COORDINATES, 1);
             tmp.setElementAtIndex(0, -source.getY());
             tmp.setElementAtIndex(1, source.getX());
             tmp.setElementAtIndex(2, 0.0);
             tmp.multiplyByScalar(EARTH_ROTATION_RATE);
 
-            final Matrix vEbe = new Matrix(ECIorECEFFrame.NUM_VELOCITY_COORDINATES, 1);
+            final var vEbe = new Matrix(ECIorECEFFrame.NUM_VELOCITY_COORDINATES, 1);
             vEbe.setElementAtIndex(0, source.getVx());
             vEbe.setElementAtIndex(1, source.getVy());
             vEbe.setElementAtIndex(2, source.getVz());
@@ -178,17 +177,17 @@ public class ECEFtoECIFrameConverter implements TimeIntervalFrameConverter<ECEFF
             // vEbe + omega * [-y;x;0]
             vEbe.add(tmp);
 
-            final Matrix vIbi = cei.multiplyAndReturnNew(vEbe);
+            final var vIbi = cei.multiplyAndReturnNew(vEbe);
 
             destination.setVelocityCoordinates(vIbi.getElementAtIndex(0),
                     vIbi.getElementAtIndex(1), vIbi.getElementAtIndex(2));
 
             // Transform attitude using (2.15)
             // cbi = cei * cbe
-            final Matrix cbe = source.getCoordinateTransformationMatrix();
+            final var cbe = source.getCoordinateTransformationMatrix();
             cei.multiply(cbe);
 
-            final CoordinateTransformation c = new CoordinateTransformation(cei,
+            final var c = new CoordinateTransformation(cei,
                     FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_INERTIAL_FRAME);
             destination.setCoordinateTransformation(c);
         } catch (final WrongSizeException | InvalidSourceAndDestinationFrameTypeException |
@@ -204,9 +203,8 @@ public class ECEFtoECIFrameConverter implements TimeIntervalFrameConverter<ECEFF
      * @param source       source frame to convert from.
      * @param destination  destination frame instance to convert to.
      */
-    public static void convertECEFtoECI(final Time timeInterval, final ECEFFrame source,
-                                        final ECIFrame destination) {
-        convertECEFtoECI(TimeConverter.convert(timeInterval.getValue().doubleValue(),
-                timeInterval.getUnit(), TimeUnit.SECOND), source, destination);
+    public static void convertECEFtoECI(final Time timeInterval, final ECEFFrame source, final ECIFrame destination) {
+        convertECEFtoECI(TimeConverter.convert(timeInterval.getValue().doubleValue(), timeInterval.getUnit(),
+                TimeUnit.SECOND), source, destination);
     }
 }

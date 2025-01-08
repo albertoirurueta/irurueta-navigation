@@ -31,8 +31,7 @@ import com.irurueta.navigation.NotReadyException;
  *
  * @param <P> a {@link Point} type.
  */
-public abstract class InhomogeneousLinearLeastSquaresLaterationSolver<P extends Point<P>> extends
-        LaterationSolver<P> {
+public abstract class InhomogeneousLinearLeastSquaresLaterationSolver<P extends Point<P>> extends LaterationSolver<P> {
 
     /**
      * Constructor.
@@ -49,8 +48,7 @@ public abstract class InhomogeneousLinearLeastSquaresLaterationSolver<P extends 
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      *                                  length is smaller than required points.
      */
-    protected InhomogeneousLinearLeastSquaresLaterationSolver(
-            final P[] positions, final double[] distances) {
+    protected InhomogeneousLinearLeastSquaresLaterationSolver(final P[] positions, final double[] distances) {
         super(positions, distances);
     }
 
@@ -59,8 +57,7 @@ public abstract class InhomogeneousLinearLeastSquaresLaterationSolver<P extends 
      *
      * @param listener listener to be notified of events raised by this instance.
      */
-    protected InhomogeneousLinearLeastSquaresLaterationSolver(
-            final LaterationSolverListener<P> listener) {
+    protected InhomogeneousLinearLeastSquaresLaterationSolver(final LaterationSolverListener<P> listener) {
         super(listener);
     }
 
@@ -74,8 +71,7 @@ public abstract class InhomogeneousLinearLeastSquaresLaterationSolver<P extends 
      *                                  length is smaller than required points.
      */
     protected InhomogeneousLinearLeastSquaresLaterationSolver(
-            final P[] positions, final double[] distances,
-            final LaterationSolverListener<P> listener) {
+            final P[] positions, final double[] distances, final LaterationSolverListener<P> listener) {
         super(positions, distances, listener);
     }
 
@@ -87,8 +83,7 @@ public abstract class InhomogeneousLinearLeastSquaresLaterationSolver<P extends 
      * @throws LockedException     if instance is busy solving the lateration problem.
      */
     @Override
-    public void solve() throws LaterationException, NotReadyException,
-            LockedException {
+    public void solve() throws LaterationException, NotReadyException, LockedException {
         // The implementation on this method follows the algorithm bellow for 3D but
         // generalized for both 2D and 3D:
 
@@ -135,51 +130,51 @@ public abstract class InhomogeneousLinearLeastSquaresLaterationSolver<P extends 
         }
 
         try {
-            mLocked = true;
+            locked = true;
 
-            if (mListener != null) {
-                mListener.onSolveStart(this);
+            if (listener != null) {
+                listener.onSolveStart(this);
             }
 
-            final int numberOfPositions = mPositions.length;
-            final int numberOfPositionsMinus1 = numberOfPositions - 1;
-            final int dims = getNumberOfDimensions();
+            final var numberOfPositions = positions.length;
+            final var numberOfPositionsMinus1 = numberOfPositions - 1;
+            final var dims = getNumberOfDimensions();
 
-            final Matrix a = new Matrix(numberOfPositionsMinus1, dims);
+            final var a = new Matrix(numberOfPositionsMinus1, dims);
             for (int i = 1, i2 = 0; i < numberOfPositions; i++, i2++) {
-                for (int j = 0; j < dims; j++) {
-                    a.setElementAt(i2, j, mPositions[i].getInhomogeneousCoordinate(j) -
-                            mPositions[0].getInhomogeneousCoordinate(j));
+                for (var j = 0; j < dims; j++) {
+                    a.setElementAt(i2, j, positions[i].getInhomogeneousCoordinate(j)
+                            - positions[0].getInhomogeneousCoordinate(j));
                 }
             }
 
             // reference point is first position mPositions[0] with distance mDistances[0]
-            final double referenceDistance = mDistances[0];
-            final double sqrRefDistance = referenceDistance * referenceDistance;
-            final double[] b = new double[numberOfPositionsMinus1];
+            final var referenceDistance = distances[0];
+            final var sqrRefDistance = referenceDistance * referenceDistance;
+            final var b = new double[numberOfPositionsMinus1];
             for (int i = 1, i2 = 0; i < numberOfPositions; i++, i2++) {
-                final double ri = mDistances[i];
-                final double sqrRi = ri * ri;
+                final var ri = distances[i];
+                final var sqrRi = ri * ri;
 
                 // find distance between ri and r0
-                final double sqrRi0 = mPositions[i].sqrDistanceTo(mPositions[0]);
+                final var sqrRi0 = positions[i].sqrDistanceTo(positions[0]);
                 b[i2] = 0.5 * (sqrRefDistance - sqrRi + sqrRi0);
             }
 
-            mEstimatedPositionCoordinates = Utils.solve(a, b);
+            estimatedPositionCoordinates = Utils.solve(a, b);
 
             // add position of reference point
-            for (int i = 0; i < dims; i++) {
-                mEstimatedPositionCoordinates[i] += mPositions[0].getInhomogeneousCoordinate(i);
+            for (var i = 0; i < dims; i++) {
+                estimatedPositionCoordinates[i] += positions[0].getInhomogeneousCoordinate(i);
             }
 
-            if (mListener != null) {
-                mListener.onSolveEnd(this);
+            if (listener != null) {
+                listener.onSolveEnd(this);
             }
         } catch (final AlgebraException e) {
             throw new LaterationException(e);
         } finally {
-            mLocked = false;
+            locked = false;
         }
     }
 

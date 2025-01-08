@@ -15,18 +15,18 @@
  */
 package com.irurueta.navigation.geodesic;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class GnomonicTest {
+class GnomonicTest {
 
     private static final double ABSOLUTE_ERROR = 1e-9;
 
     @Test
-    public void testConstructor() {
-        final Gnomonic g = new Gnomonic(Geodesic.WGS84);
+    void testConstructor() {
+        final var g = new Gnomonic(Geodesic.WGS84);
 
         //check
         assertNotNull(Geodesic.WGS84);
@@ -35,18 +35,18 @@ public class GnomonicTest {
     }
 
     @Test
-    public void testForwardReverse() {
-        final Gnomonic g = new Gnomonic(Geodesic.WGS84);
+    void testForwardReverse() {
+        final var g = new Gnomonic(Geodesic.WGS84);
 
         //use the following coordinates
-        final double lat1 = 41.382643;
-        final double lon1 = 2.176700;
+        final var lat1 = 41.382643;
+        final var lon1 = 2.176700;
 
-        final double lat2 = 41.382524;
-        final double lon2 = 2.176861;
+        final var lat2 = 41.382524;
+        final var lon2 = 2.176861;
 
-        final GnomonicData data1 = g.forward(lat1, lon1, lat2, lon2);
-        final GnomonicData data2 = g.reverse(data1.getLat0(), data1.getLon0(), data1.getX(), data1.getY());
+        final var data1 = g.forward(lat1, lon1, lat2, lon2);
+        final var data2 = g.reverse(data1.getLat0(), data1.getLon0(), data1.getX(), data1.getY());
 
         assertEquals(lat1, data1.getLat0(), 0.0);
         assertEquals(lon1, data1.getLon0(), 0.0);

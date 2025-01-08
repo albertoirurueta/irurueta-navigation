@@ -24,7 +24,6 @@ import com.irurueta.units.TimeUnit;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Calculates position, velocity, clock offset and clock drift using an
@@ -41,13 +40,13 @@ public class GNSSKalmanFilteredEstimator {
     /**
      * Internal estimator to compute least squares solution for GNSS measurements.
      */
-    private final GNSSLeastSquaresPositionAndVelocityEstimator mLsEstimator =
+    private final GNSSLeastSquaresPositionAndVelocityEstimator lsEstimator =
             new GNSSLeastSquaresPositionAndVelocityEstimator();
 
     /**
      * Listener to notify events raised by this instance.
      */
-    private GNSSKalmanFilteredEstimatorListener mListener;
+    private GNSSKalmanFilteredEstimatorListener listener;
 
     /**
      * Minimum epoch interval expressed in seconds (s) between consecutive
@@ -55,40 +54,40 @@ public class GNSSKalmanFilteredEstimator {
      * Attempting to propagate results using Kalman filter or updating measurements when
      * intervals are lass than this value, will be ignored.
      */
-    private double mEpochInterval;
+    private double epochInterval;
 
     /**
      * GNSS Kalman filter configuration parameters (usually obtained through calibration).
      */
-    private GNSSKalmanConfig mConfig;
+    private GNSSKalmanConfig config;
 
     /**
      * GNSS measurements of a collection of satellites.
      */
-    private Collection<GNSSMeasurement> mMeasurements;
+    private Collection<GNSSMeasurement> measurements;
 
     /**
      * Current estimation containing user ECEF position, user ECEF velocity, clock offset
      * and clock drift.
      */
-    private GNSSEstimation mEstimation;
+    private GNSSEstimation estimation;
 
     /**
      * Current Kalman filter state containing current GNSS estimation along with
      * Kalman filter covariance error matrix.
      */
-    private GNSSKalmanState mState;
+    private GNSSKalmanState state;
 
     /**
      * Timestamp expressed in seconds since epoch time when Kalman filter state
      * was last propagated.
      */
-    private Double mLastStateTimestamp;
+    private Double lastStateTimestamp;
 
     /**
      * Indicates whether this estimator is running or not.
      */
-    private boolean mRunning;
+    private boolean running;
 
     /**
      * Constructor.
@@ -103,7 +102,7 @@ public class GNSSKalmanFilteredEstimator {
      *               through calibration).
      */
     public GNSSKalmanFilteredEstimator(final GNSSKalmanConfig config) {
-        mConfig = new GNSSKalmanConfig(config);
+        this.config = new GNSSKalmanConfig(config);
     }
 
     /**
@@ -126,9 +125,8 @@ public class GNSSKalmanFilteredEstimator {
      *
      * @param listener listener to notify events raised by this instance.
      */
-    public GNSSKalmanFilteredEstimator(
-            final GNSSKalmanFilteredEstimatorListener listener) {
-        mListener = listener;
+    public GNSSKalmanFilteredEstimator(final GNSSKalmanFilteredEstimatorListener listener) {
+        this.listener = listener;
     }
 
     /**
@@ -140,10 +138,9 @@ public class GNSSKalmanFilteredEstimator {
      *                      consecutive propagations or measurements.
      * @throws IllegalArgumentException if provided epoch interval is negative.
      */
-    public GNSSKalmanFilteredEstimator(final GNSSKalmanConfig config,
-                                       final double epochInterval) {
+    public GNSSKalmanFilteredEstimator(final GNSSKalmanConfig config, final double epochInterval) {
         this(epochInterval);
-        mConfig = new GNSSKalmanConfig(config);
+        this.config = new GNSSKalmanConfig(config);
     }
 
     /**
@@ -154,10 +151,9 @@ public class GNSSKalmanFilteredEstimator {
      * @param listener listener to notify events raised by this instance.
      */
     public GNSSKalmanFilteredEstimator(
-            final GNSSKalmanConfig config,
-            final GNSSKalmanFilteredEstimatorListener listener) {
+            final GNSSKalmanConfig config, final GNSSKalmanFilteredEstimatorListener listener) {
         this(config);
-        mListener = listener;
+        this.listener = listener;
     }
 
     /**
@@ -169,10 +165,9 @@ public class GNSSKalmanFilteredEstimator {
      * @throws IllegalArgumentException if provided epoch interval is negative.
      */
     public GNSSKalmanFilteredEstimator(
-            final double epochInterval,
-            final GNSSKalmanFilteredEstimatorListener listener) {
+            final double epochInterval, final GNSSKalmanFilteredEstimatorListener listener) {
         this(epochInterval);
-        mListener = listener;
+        this.listener = listener;
     }
 
     /**
@@ -189,7 +184,7 @@ public class GNSSKalmanFilteredEstimator {
             final GNSSKalmanConfig config, final double epochInterval,
             final GNSSKalmanFilteredEstimatorListener listener) {
         this(config, epochInterval);
-        mListener = listener;
+        this.listener = listener;
     }
 
     /**
@@ -200,8 +195,7 @@ public class GNSSKalmanFilteredEstimator {
      * @throws IllegalArgumentException if provided epoch interval is negative.
      */
     public GNSSKalmanFilteredEstimator(final Time epochInterval) {
-        this(TimeConverter.convert(epochInterval.getValue().doubleValue(),
-                epochInterval.getUnit(), TimeUnit.SECOND));
+        this(TimeConverter.convert(epochInterval.getValue().doubleValue(), epochInterval.getUnit(), TimeUnit.SECOND));
     }
 
     /**
@@ -213,10 +207,9 @@ public class GNSSKalmanFilteredEstimator {
      *                      or measurements.
      * @throws IllegalArgumentException if provided epoch interval is negative.
      */
-    public GNSSKalmanFilteredEstimator(final GNSSKalmanConfig config,
-                                       final Time epochInterval) {
-        this(config, TimeConverter.convert(epochInterval.getValue().doubleValue(),
-                epochInterval.getUnit(), TimeUnit.SECOND));
+    public GNSSKalmanFilteredEstimator(final GNSSKalmanConfig config, final Time epochInterval) {
+        this(config, TimeConverter.convert(epochInterval.getValue().doubleValue(), epochInterval.getUnit(),
+                TimeUnit.SECOND));
     }
 
     /**
@@ -227,11 +220,9 @@ public class GNSSKalmanFilteredEstimator {
      * @param listener      listener to notify events raised by this instance.
      * @throws IllegalArgumentException if provided epoch interval is negative.
      */
-    public GNSSKalmanFilteredEstimator(
-            final Time epochInterval,
-            final GNSSKalmanFilteredEstimatorListener listener) {
+    public GNSSKalmanFilteredEstimator(final Time epochInterval, final GNSSKalmanFilteredEstimatorListener listener) {
         this(epochInterval);
-        mListener = listener;
+        this.listener = listener;
     }
 
     /**
@@ -248,7 +239,7 @@ public class GNSSKalmanFilteredEstimator {
             final GNSSKalmanConfig config, final Time epochInterval,
             final GNSSKalmanFilteredEstimatorListener listener) {
         this(config, epochInterval);
-        mListener = listener;
+        this.listener = listener;
     }
 
     /**
@@ -257,7 +248,7 @@ public class GNSSKalmanFilteredEstimator {
      * @return listener to notify events raised by this instance.
      */
     public GNSSKalmanFilteredEstimatorListener getListener() {
-        return mListener;
+        return listener;
     }
 
     /**
@@ -266,13 +257,12 @@ public class GNSSKalmanFilteredEstimator {
      * @param listener listener to notify events raised by this instance.
      * @throws LockedException if this estimator is already running.
      */
-    public void setListener(final GNSSKalmanFilteredEstimatorListener listener)
-            throws LockedException {
-        if (mRunning) {
+    public void setListener(final GNSSKalmanFilteredEstimatorListener listener) throws LockedException {
+        if (running) {
             throw new LockedException();
         }
 
-        mListener = listener;
+        this.listener = listener;
     }
 
     /**
@@ -285,7 +275,7 @@ public class GNSSKalmanFilteredEstimator {
      * measurements.
      */
     public double getEpochInterval() {
-        return mEpochInterval;
+        return epochInterval;
     }
 
     /**
@@ -300,7 +290,7 @@ public class GNSSKalmanFilteredEstimator {
      * @throws IllegalArgumentException if provided epoch interval is negative.
      */
     public void setEpochInterval(final double epochInterval) throws LockedException {
-        if (mRunning) {
+        if (running) {
             throw new LockedException();
         }
 
@@ -308,7 +298,7 @@ public class GNSSKalmanFilteredEstimator {
             throw new IllegalArgumentException();
         }
 
-        mEpochInterval = epochInterval;
+        this.epochInterval = epochInterval;
     }
 
     /**
@@ -319,7 +309,7 @@ public class GNSSKalmanFilteredEstimator {
      * @param result instance where minimum epoch interval will be stored.
      */
     public void getEpochIntervalAsTime(final Time result) {
-        result.setValue(mEpochInterval);
+        result.setValue(epochInterval);
         result.setUnit(TimeUnit.SECOND);
     }
 
@@ -331,7 +321,7 @@ public class GNSSKalmanFilteredEstimator {
      * @return minimum epoch interval.
      */
     public Time getEpochIntervalAsTime() {
-        return new Time(mEpochInterval, TimeUnit.SECOND);
+        return new Time(epochInterval, TimeUnit.SECOND);
     }
 
     /**
@@ -344,8 +334,7 @@ public class GNSSKalmanFilteredEstimator {
      * @throws IllegalArgumentException if provided epoch interval is negative.
      */
     public void setEpochInterval(final Time epochInterval) throws LockedException {
-        final double epochIntervalSeconds = TimeConverter.convert(
-                epochInterval.getValue().doubleValue(),
+        final var epochIntervalSeconds = TimeConverter.convert(epochInterval.getValue().doubleValue(),
                 epochInterval.getUnit(), TimeUnit.SECOND);
         setEpochInterval(epochIntervalSeconds);
     }
@@ -359,8 +348,8 @@ public class GNSSKalmanFilteredEstimator {
      * @return true if result instance is updated, false otherwise.
      */
     public boolean getConfig(final GNSSKalmanConfig result) {
-        if (mConfig != null) {
-            result.copyFrom(mConfig);
+        if (config != null) {
+            result.copyFrom(config);
             return true;
         } else {
             return false;
@@ -374,7 +363,7 @@ public class GNSSKalmanFilteredEstimator {
      * @return GNSS Kalman configuration parameters.
      */
     public GNSSKalmanConfig getConfig() {
-        return mConfig;
+        return config;
     }
 
     /**
@@ -384,13 +373,12 @@ public class GNSSKalmanFilteredEstimator {
      * @param config GNSS Kalman configuration parameters to be set.
      * @throws LockedException if this estimator is already running.
      */
-    public void setConfig(final GNSSKalmanConfig config)
-            throws LockedException {
-        if (mRunning) {
+    public void setConfig(final GNSSKalmanConfig config) throws LockedException {
+        if (running) {
             throw new LockedException();
         }
 
-        mConfig = new GNSSKalmanConfig(config);
+        this.config = new GNSSKalmanConfig(config);
     }
 
     /**
@@ -399,12 +387,12 @@ public class GNSSKalmanFilteredEstimator {
      * @return last updated GNSS measurements of a collection of satellites.
      */
     public Collection<GNSSMeasurement> getMeasurements() {
-        if (mMeasurements == null) {
+        if (measurements == null) {
             return null;
         }
 
-        final List<GNSSMeasurement> result = new ArrayList<>();
-        for (final GNSSMeasurement measurement : mMeasurements) {
+        final var result = new ArrayList<GNSSMeasurement>();
+        for (final var measurement : measurements) {
             result.add(new GNSSMeasurement(measurement));
         }
         return result;
@@ -418,7 +406,7 @@ public class GNSSKalmanFilteredEstimator {
      * clock offset and clock drift.
      */
     public GNSSEstimation getEstimation() {
-        return mEstimation != null ? new GNSSEstimation(mEstimation) : null;
+        return estimation != null ? new GNSSEstimation(estimation) : null;
     }
 
     /**
@@ -430,8 +418,8 @@ public class GNSSKalmanFilteredEstimator {
      * @return true if result estimation was updated, false otherwise.
      */
     public boolean getEstimation(final GNSSEstimation result) {
-        if (mEstimation != null) {
-            result.copyFrom(mEstimation);
+        if (estimation != null) {
+            result.copyFrom(estimation);
             return true;
         } else {
             return false;
@@ -446,7 +434,7 @@ public class GNSSKalmanFilteredEstimator {
      * with Kalman filter covariance error matrix.
      */
     public GNSSKalmanState getState() {
-        return mState != null ? new GNSSKalmanState(mState) : null;
+        return state != null ? new GNSSKalmanState(state) : null;
     }
 
     /**
@@ -458,8 +446,8 @@ public class GNSSKalmanFilteredEstimator {
      * @return true if result state was updated, false otherwise.
      */
     public boolean getState(final GNSSKalmanState result) {
-        if (mState != null) {
-            result.copyFrom(mState);
+        if (state != null) {
+            result.copyFrom(state);
             return true;
         } else {
             return false;
@@ -474,7 +462,7 @@ public class GNSSKalmanFilteredEstimator {
      * state was last propagated.
      */
     public Double getLastStateTimestamp() {
-        return mLastStateTimestamp;
+        return lastStateTimestamp;
     }
 
     /**
@@ -485,8 +473,8 @@ public class GNSSKalmanFilteredEstimator {
      * @return true if result instance is updated, false otherwise.
      */
     public boolean getLastStateTimestampAsTime(final Time result) {
-        if (mLastStateTimestamp != null) {
-            result.setValue(mLastStateTimestamp);
+        if (lastStateTimestamp != null) {
+            result.setValue(lastStateTimestamp);
             result.setUnit(TimeUnit.SECOND);
             return true;
         } else {
@@ -501,8 +489,7 @@ public class GNSSKalmanFilteredEstimator {
      * propagated.
      */
     public Time getLastStateTimestampAsTime() {
-        return mLastStateTimestamp != null ?
-                new Time(mLastStateTimestamp, TimeUnit.SECOND) : null;
+        return lastStateTimestamp != null ? new Time(lastStateTimestamp, TimeUnit.SECOND) : null;
     }
 
     /**
@@ -511,7 +498,7 @@ public class GNSSKalmanFilteredEstimator {
      * @return true if this estimator is running, false otherwise.
      */
     public boolean isRunning() {
-        return mRunning;
+        return running;
     }
 
     /**
@@ -521,10 +508,8 @@ public class GNSSKalmanFilteredEstimator {
      * @param measurements measurements to be checked.
      * @return true if estimator is ready, false otherwise.
      */
-    public static boolean isUpdateMeasurementsReady(
-            final Collection<GNSSMeasurement> measurements) {
-        return GNSSLeastSquaresPositionAndVelocityEstimator
-                .isValidMeasurements(measurements);
+    public static boolean isUpdateMeasurementsReady(final Collection<GNSSMeasurement> measurements) {
+        return GNSSLeastSquaresPositionAndVelocityEstimator.isValidMeasurements(measurements);
     }
 
     /**
@@ -545,8 +530,7 @@ public class GNSSKalmanFilteredEstimator {
             final Collection<GNSSMeasurement> measurements, final Time timestamp)
             throws LockedException, NotReadyException, GNSSException {
         return updateMeasurements(measurements, TimeConverter.convert(
-                timestamp.getValue().doubleValue(), timestamp.getUnit(),
-                TimeUnit.SECOND));
+                timestamp.getValue().doubleValue(), timestamp.getUnit(), TimeUnit.SECOND));
     }
 
     /**
@@ -567,7 +551,7 @@ public class GNSSKalmanFilteredEstimator {
             final Collection<GNSSMeasurement> measurements, final double timestamp)
             throws LockedException, NotReadyException, GNSSException {
 
-        if (mRunning) {
+        if (running) {
             throw new LockedException();
         }
 
@@ -575,34 +559,33 @@ public class GNSSKalmanFilteredEstimator {
             throw new NotReadyException();
         }
 
-        if (mLastStateTimestamp != null &&
-                timestamp - mLastStateTimestamp <= mEpochInterval) {
+        if (lastStateTimestamp != null && timestamp - lastStateTimestamp <= epochInterval) {
             return false;
         }
 
         try {
-            mRunning = true;
+            running = true;
 
-            if (mListener != null) {
-                mListener.onUpdateStart(this);
+            if (listener != null) {
+                listener.onUpdateStart(this);
             }
 
-            mMeasurements = new ArrayList<>(measurements);
+            this.measurements = new ArrayList<>(measurements);
 
-            mLsEstimator.setMeasurements(mMeasurements);
-            mLsEstimator.setPriorPositionAndVelocityFromEstimation(mEstimation);
-            if (mEstimation != null) {
-                mLsEstimator.estimate(mEstimation);
+            lsEstimator.setMeasurements(this.measurements);
+            lsEstimator.setPriorPositionAndVelocityFromEstimation(estimation);
+            if (estimation != null) {
+                lsEstimator.estimate(estimation);
             } else {
-                mEstimation = mLsEstimator.estimate();
+                estimation = lsEstimator.estimate();
             }
 
-            if (mListener != null) {
-                mListener.onUpdateEnd(this);
+            if (listener != null) {
+                listener.onUpdateEnd(this);
             }
 
         } finally {
-            mRunning = false;
+            running = false;
         }
 
         propagate(timestamp);
@@ -616,7 +599,7 @@ public class GNSSKalmanFilteredEstimator {
      * @return true if estimator is ready, false otherwise.
      */
     public boolean isPropagateReady() {
-        return mConfig != null && mEstimation != null;
+        return config != null && estimation != null;
     }
 
     /**
@@ -631,10 +614,9 @@ public class GNSSKalmanFilteredEstimator {
      * @throws NotReadyException if estimator is not ready for measurements updates.
      * @throws GNSSException     if estimation fails due to numerical instabilities.
      */
-    public boolean propagate(final Time timestamp) throws LockedException,
-            NotReadyException, GNSSException {
-        return propagate(TimeConverter.convert(timestamp.getValue().doubleValue(),
-                timestamp.getUnit(), TimeUnit.SECOND));
+    public boolean propagate(final Time timestamp) throws LockedException, NotReadyException, GNSSException {
+        return propagate(TimeConverter.convert(timestamp.getValue().doubleValue(), timestamp.getUnit(),
+                TimeUnit.SECOND));
     }
 
     /**
@@ -649,10 +631,9 @@ public class GNSSKalmanFilteredEstimator {
      * @throws NotReadyException if estimator is not ready for measurements updates.
      * @throws GNSSException     if estimation fails due to numerical instabilities.
      */
-    public boolean propagate(final double timestamp) throws LockedException,
-            NotReadyException, GNSSException {
+    public boolean propagate(final double timestamp) throws LockedException, NotReadyException, GNSSException {
 
-        if (mRunning) {
+        if (running) {
             throw new LockedException();
         }
 
@@ -660,37 +641,35 @@ public class GNSSKalmanFilteredEstimator {
             throw new NotReadyException();
         }
 
-        final double propagationInterval = mLastStateTimestamp != null ?
-                timestamp - mLastStateTimestamp : 0.0;
-        if (mLastStateTimestamp != null && propagationInterval <= mEpochInterval) {
+        final var propagationInterval = lastStateTimestamp != null ? timestamp - lastStateTimestamp : 0.0;
+        if (lastStateTimestamp != null && propagationInterval <= epochInterval) {
             return false;
         }
 
         try {
-            mRunning = true;
+            running = true;
 
-            if (mListener != null) {
-                mListener.onPropagateStart(this);
+            if (listener != null) {
+                listener.onPropagateStart(this);
             }
 
-            if (mState == null) {
-                mState = GNSSKalmanInitializer.initialize(mEstimation, mConfig);
+            if (state == null) {
+                state = GNSSKalmanInitializer.initialize(estimation, config);
             }
 
-            GNSSKalmanEpochEstimator.estimate(mMeasurements, propagationInterval,
-                    mState, mConfig, mState);
-            mLastStateTimestamp = timestamp;
+            GNSSKalmanEpochEstimator.estimate(measurements, propagationInterval, state, config, state);
+            lastStateTimestamp = timestamp;
 
-            mState.getEstimation(mEstimation);
+            state.getEstimation(estimation);
 
-            if (mListener != null) {
-                mListener.onPropagateEnd(this);
+            if (listener != null) {
+                listener.onPropagateEnd(this);
             }
 
         } catch (final AlgebraException e) {
             throw new GNSSException(e);
         } finally {
-            mRunning = false;
+            running = false;
         }
 
         return true;
@@ -702,20 +681,20 @@ public class GNSSKalmanFilteredEstimator {
      * @throws LockedException if this estimator is already running.
      */
     public void reset() throws LockedException {
-        if (mRunning) {
+        if (running) {
             throw new LockedException();
         }
 
-        mRunning = true;
-        mMeasurements = null;
-        mEstimation = null;
-        mState = null;
-        mLastStateTimestamp = null;
+        running = true;
+        measurements = null;
+        estimation = null;
+        state = null;
+        lastStateTimestamp = null;
 
-        if (mListener != null) {
-            mListener.onReset(this);
+        if (listener != null) {
+            listener.onReset(this);
         }
 
-        mRunning = false;
+        running = false;
     }
 }

@@ -25,8 +25,8 @@ import java.io.Serializable;
 public class SerializationHelper {
 
     public static <T extends Serializable> byte[] serialize(final T object) throws IOException {
-        try (final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
-            try (final ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream)) {
+        try (final var byteArrayOutputStream = new ByteArrayOutputStream()) {
+            try (final var objectOutputStream = new ObjectOutputStream(byteArrayOutputStream)) {
                 objectOutputStream.writeObject(object);
             }
 
@@ -36,10 +36,10 @@ public class SerializationHelper {
         }
     }
 
-    public static <T extends Serializable> T deserialize(final byte[] bytes)
-            throws IOException, ClassNotFoundException {
-        try (final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes)) {
-            try (final ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream)) {
+    public static <T extends Serializable> T deserialize(final byte[] bytes) throws IOException,
+            ClassNotFoundException {
+        try (final var byteArrayInputStream = new ByteArrayInputStream(bytes)) {
+            try (final var objectInputStream = new ObjectInputStream(byteArrayInputStream)) {
                 //noinspection unchecked
                 return (T) objectInputStream.readObject();
             }

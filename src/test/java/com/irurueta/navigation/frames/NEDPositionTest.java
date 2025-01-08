@@ -6,14 +6,13 @@ import com.irurueta.units.Angle;
 import com.irurueta.units.AngleUnit;
 import com.irurueta.units.Distance;
 import com.irurueta.units.DistanceUnit;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.Random;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class NEDPositionTest {
+class NEDPositionTest {
 
     private static final double THRESHOLD = 1e-6;
 
@@ -24,10 +23,10 @@ public class NEDPositionTest {
     private static final double MAX_HEIGHT = 50.0;
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
 
         // test empty constructor
-        NEDPosition position = new NEDPosition();
+        var position = new NEDPosition();
 
         // check
         assertEquals(0.0, position.getLatitude(), 0.0);
@@ -40,10 +39,10 @@ public class NEDPositionTest {
 
 
         // test constructor with coordinates
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+        final var randomizer = new UniformRandomizer();
+        final var latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
 
         position = new NEDPosition(latitude, longitude, height);
 
@@ -63,9 +62,9 @@ public class NEDPositionTest {
 
 
         // test constructor with angles and distance coordinates
-        final Angle latitudeAngle = new Angle(latitude, AngleUnit.RADIANS);
-        final Angle longitudeAngle = new Angle(longitude, AngleUnit.RADIANS);
-        final Distance heightDistance = new Distance(height, DistanceUnit.METER);
+        final var latitudeAngle = new Angle(latitude, AngleUnit.RADIANS);
+        final var longitudeAngle = new Angle(longitude, AngleUnit.RADIANS);
+        final var heightDistance = new Distance(height, DistanceUnit.METER);
 
         position = new NEDPosition(latitudeAngle, longitudeAngle, heightDistance);
 
@@ -85,7 +84,7 @@ public class NEDPositionTest {
 
 
         // test copy constructor
-        final NEDPosition position2 = new NEDPosition(position);
+        final var position2 = new NEDPosition(position);
 
         // check
         assertEquals(latitude, position2.getLatitude(), 0.0);
@@ -103,15 +102,15 @@ public class NEDPositionTest {
     }
 
     @Test
-    public void testGetSetLatitude() {
-        final NEDPosition position = new NEDPosition();
+    void testGetSetLatitude() {
+        final var position = new NEDPosition();
 
         // check default value
         assertEquals(0.0, position.getLatitude(), 0.0);
 
         // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var randomizer = new UniformRandomizer();
+        final var latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
         position.setLatitude(latitude);
 
@@ -120,16 +119,15 @@ public class NEDPositionTest {
     }
 
     @Test
-    public void testGetSetLongitude() {
-        final NEDPosition position = new NEDPosition();
+    void testGetSetLongitude() {
+        final var position = new NEDPosition();
 
         // check default value
         assertEquals(0.0, position.getLongitude(), 0.0);
 
         // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double longitude = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var randomizer = new UniformRandomizer();
+        final var longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
         position.setLongitude(longitude);
 
@@ -138,15 +136,15 @@ public class NEDPositionTest {
     }
 
     @Test
-    public void testGetSetHeight() {
-        final NEDPosition position = new NEDPosition();
+    void testGetSetHeight() {
+        final var position = new NEDPosition();
 
         // check default value
         assertEquals(0.0, position.getHeight(), 0.0);
 
         // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+        final var randomizer = new UniformRandomizer();
+        final var height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
 
         position.setHeight(height);
 
@@ -155,8 +153,8 @@ public class NEDPositionTest {
     }
 
     @Test
-    public void testSetCoordinates() {
-        final NEDPosition position = new NEDPosition();
+    void testSetCoordinates() {
+        final var position = new NEDPosition();
 
         // check default values
         assertEquals(0.0, position.getLatitude(), 0.0);
@@ -164,11 +162,10 @@ public class NEDPositionTest {
         assertEquals(0.0, position.getHeight(), 0.0);
 
         // set new values
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double longitude = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+        final var randomizer = new UniformRandomizer();
+        final var latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
 
         position.setCoordinates(latitude, longitude, height);
 
@@ -179,24 +176,24 @@ public class NEDPositionTest {
     }
 
     @Test
-    public void testGetSetLatitudeAngle() {
-        final NEDPosition position = new NEDPosition();
+    void testGetSetLatitudeAngle() {
+        final var position = new NEDPosition();
 
         // check default values
         assertEquals(0.0, position.getLatitudeAngle().getValue().doubleValue(), 0.0);
         assertEquals(AngleUnit.RADIANS, position.getLatitudeAngle().getUnit());
 
         // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var randomizer = new UniformRandomizer();
+        final var latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
-        final Angle latitudeAngle1 = new Angle(latitude, AngleUnit.RADIANS);
+        final var latitudeAngle1 = new Angle(latitude, AngleUnit.RADIANS);
         position.setLatitudeAngle(latitudeAngle1);
 
         // check
-        final Angle latitudeAngle2 = new Angle(0.0, AngleUnit.DEGREES);
+        final var latitudeAngle2 = new Angle(0.0, AngleUnit.DEGREES);
         position.getLatitudeAngle(latitudeAngle2);
-        final Angle latitudeAngle3 = position.getLatitudeAngle();
+        final var latitudeAngle3 = position.getLatitudeAngle();
 
         assertEquals(latitude, latitudeAngle2.getValue().doubleValue(), 0.0);
         assertEquals(AngleUnit.RADIANS, latitudeAngle2.getUnit());
@@ -204,25 +201,24 @@ public class NEDPositionTest {
     }
 
     @Test
-    public void testGetSetLongitudeAngle() {
-        final NEDPosition position = new NEDPosition();
+    void testGetSetLongitudeAngle() {
+        final var position = new NEDPosition();
 
         // check default values
         assertEquals(0.0, position.getLongitudeAngle().getValue().doubleValue(), 0.0);
         assertEquals(AngleUnit.RADIANS, position.getLongitudeAngle().getUnit());
 
         // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double longitude = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var randomizer = new UniformRandomizer();
+        final var longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
-        final Angle longitudeAngle1 = new Angle(longitude, AngleUnit.RADIANS);
+        final var longitudeAngle1 = new Angle(longitude, AngleUnit.RADIANS);
         position.setLongitudeAngle(longitudeAngle1);
 
         // check
-        final Angle longitudeAngle2 = new Angle(0.0, AngleUnit.DEGREES);
+        final var longitudeAngle2 = new Angle(0.0, AngleUnit.DEGREES);
         position.getLongitudeAngle(longitudeAngle2);
-        final Angle longitudeAngle3 = position.getLongitudeAngle();
+        final var longitudeAngle3 = position.getLongitudeAngle();
 
         assertEquals(longitude, longitudeAngle2.getValue().doubleValue(), 0.0);
         assertEquals(AngleUnit.RADIANS, longitudeAngle2.getUnit());
@@ -230,24 +226,24 @@ public class NEDPositionTest {
     }
 
     @Test
-    public void testGetSetHeightDistance() {
-        final NEDPosition position = new NEDPosition();
+    void testGetSetHeightDistance() {
+        final var position = new NEDPosition();
 
         // check default values
         assertEquals(0.0, position.getHeightDistance().getValue().doubleValue(), 0.0);
         assertEquals(DistanceUnit.METER, position.getHeightDistance().getUnit());
 
         // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+        final var randomizer = new UniformRandomizer();
+        final var height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
 
-        final Distance heightDistance1 = new Distance(height, DistanceUnit.METER);
+        final var heightDistance1 = new Distance(height, DistanceUnit.METER);
         position.setHeightDistance(heightDistance1);
 
         // check
-        final Distance heightDistance2 = new Distance(0.0, DistanceUnit.KILOMETER);
+        final var heightDistance2 = new Distance(0.0, DistanceUnit.KILOMETER);
         position.getHeightDistance(heightDistance2);
-        final Distance heightDistance3 = position.getHeightDistance();
+        final var heightDistance3 = position.getHeightDistance();
 
         assertEquals(height, heightDistance2.getValue().doubleValue(), 0.0);
         assertEquals(DistanceUnit.METER, heightDistance2.getUnit());
@@ -255,18 +251,17 @@ public class NEDPositionTest {
     }
 
     @Test
-    public void testSetAngleAndDistanceCoordinates() {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double longitude = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+    void testSetAngleAndDistanceCoordinates() {
+        final var randomizer = new UniformRandomizer();
+        final var latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
 
-        final Angle latitudeAngle = new Angle(latitude, AngleUnit.RADIANS);
-        final Angle longitudeAngle = new Angle(longitude, AngleUnit.RADIANS);
-        final Distance heightDistance = new Distance(height, DistanceUnit.METER);
+        final var latitudeAngle = new Angle(latitude, AngleUnit.RADIANS);
+        final var longitudeAngle = new Angle(longitude, AngleUnit.RADIANS);
+        final var heightDistance = new Distance(height, DistanceUnit.METER);
 
-        final NEDPosition position = new NEDPosition();
+        final var position = new NEDPosition();
 
         // check default values
         assertEquals(0.0, position.getLatitudeAngle().getValue().doubleValue(), 0.0);
@@ -280,9 +275,9 @@ public class NEDPositionTest {
         position.setCoordinates(latitudeAngle, longitudeAngle, heightDistance);
 
         // check
-        final Angle latitudeAngle2 = position.getLatitudeAngle();
-        final Angle longitudeAngle2 = position.getLongitudeAngle();
-        final Distance heightDistance2 = position.getHeightDistance();
+        final var latitudeAngle2 = position.getLatitudeAngle();
+        final var longitudeAngle2 = position.getLongitudeAngle();
+        final var heightDistance2 = position.getHeightDistance();
 
         assertEquals(latitude, latitudeAngle2.getValue().doubleValue(), 0.0);
         assertEquals(AngleUnit.RADIANS, latitudeAngle2.getUnit());
@@ -296,16 +291,14 @@ public class NEDPositionTest {
     }
 
     @Test
-    public void testCopyTo() {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double longitude = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+    void testCopyTo() {
+        final var randomizer = new UniformRandomizer();
+        final var latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
 
-        final NEDPosition
-            position1 = new NEDPosition(latitude, longitude, height);
-        final NEDPosition position2 = new NEDPosition();
+        final var position1 = new NEDPosition(latitude, longitude, height);
+        final var position2 = new NEDPosition();
         position1.copyTo(position2);
 
         // check
@@ -315,16 +308,14 @@ public class NEDPositionTest {
     }
 
     @Test
-    public void testCopyFrom() {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double longitude = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+    void testCopyFrom() {
+        final var randomizer = new UniformRandomizer();
+        final var latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
 
-        final NEDPosition
-            position1 = new NEDPosition(latitude, longitude, height);
-        final NEDPosition position2 = new NEDPosition();
+        final var position1 = new NEDPosition(latitude, longitude, height);
+        final var position2 = new NEDPosition();
         position2.copyFrom(position1);
 
         // check
@@ -334,32 +325,30 @@ public class NEDPositionTest {
     }
 
     @Test
-    public void testHashCode() {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double longitude = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+    void testHashCode() {
+        final var randomizer = new UniformRandomizer();
+        final var latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
 
-        final NEDPosition position1 = new NEDPosition(latitude, longitude, height);
-        final NEDPosition position2 = new NEDPosition(latitude, longitude, height);
-        final NEDPosition position3 = new NEDPosition();
+        final var position1 = new NEDPosition(latitude, longitude, height);
+        final var position2 = new NEDPosition(latitude, longitude, height);
+        final var position3 = new NEDPosition();
 
         assertEquals(position1.hashCode(), position2.hashCode());
         assertNotEquals(position1.hashCode(), position3.hashCode());
     }
 
     @Test
-    public void testEquals() {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double longitude = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+    void testEquals() {
+        final var randomizer = new UniformRandomizer();
+        final var latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
 
-        final NEDPosition position1 = new NEDPosition(latitude, longitude, height);
-        final NEDPosition position2 = new NEDPosition(latitude, longitude, height);
-        final NEDPosition position3 = new NEDPosition();
+        final var position1 = new NEDPosition(latitude, longitude, height);
+        final var position2 = new NEDPosition(latitude, longitude, height);
+        final var position3 = new NEDPosition();
 
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
         assertTrue(position1.equals((Object) position1));
@@ -371,20 +360,19 @@ public class NEDPositionTest {
         assertFalse(position1.equals((Object) null));
         assertFalse(position1.equals(null));
         //noinspection SimplifiableJUnitAssertion
-        assertFalse(position1.equals(new Object()));
+        assertNotEquals(new Object(), position1);
     }
 
     @Test
-    public void testEqualsWithThreshold() {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double longitude = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+    void testEqualsWithThreshold() {
+        final var randomizer = new UniformRandomizer();
+        final var latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
 
-        final NEDPosition position1 = new NEDPosition(latitude, longitude, height);
-        final NEDPosition position2 = new NEDPosition(latitude, longitude, height);
-        final NEDPosition position3 = new NEDPosition();
+        final var position1 = new NEDPosition(latitude, longitude, height);
+        final var position2 = new NEDPosition(latitude, longitude, height);
+        final var position3 = new NEDPosition();
 
         assertTrue(position1.equals(position1, THRESHOLD));
         assertTrue(position1.equals(position2, THRESHOLD));
@@ -393,33 +381,31 @@ public class NEDPositionTest {
     }
 
     @Test
-    public void testClone() throws CloneNotSupportedException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double longitude = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+    void testClone() throws CloneNotSupportedException {
+        final var randomizer = new UniformRandomizer();
+        final var latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
 
-        final NEDPosition position1 = new NEDPosition(latitude, longitude, height);
+        final var position1 = new NEDPosition(latitude, longitude, height);
 
-        final Object position2 = position1.clone();
+        final var position2 = position1.clone();
 
         assertEquals(position1, position2);
     }
 
     @Test
-    public void testSerializeDeserialize() throws IOException, ClassNotFoundException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double longitude = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+    void testSerializeDeserialize() throws IOException, ClassNotFoundException {
+        final var randomizer = new UniformRandomizer();
+        final var latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
 
-        final NEDPosition position1 = new NEDPosition(latitude, longitude, height);
+        final var position1 = new NEDPosition(latitude, longitude, height);
 
         // serialize and deserialize
-        final byte[] bytes = SerializationHelper.serialize(position1);
-        final NEDPosition position2 = SerializationHelper.deserialize(bytes);
+        final var bytes = SerializationHelper.serialize(position1);
+        final var position2 = SerializationHelper.<NEDPosition>deserialize(bytes);
 
         // check
         assertEquals(position1, position2);

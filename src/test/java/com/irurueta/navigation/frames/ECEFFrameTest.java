@@ -30,14 +30,13 @@ import com.irurueta.units.Distance;
 import com.irurueta.units.DistanceUnit;
 import com.irurueta.units.Speed;
 import com.irurueta.units.SpeedUnit;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.Random;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class ECEFFrameTest {
+class ECEFFrameTest {
 
     private static final double THRESHOLD = 1e-6;
 
@@ -53,17 +52,17 @@ public class ECEFFrameTest {
     private static final double ABSOLUTE_ERROR = 1e-8;
 
     @Test
-    public void testConstants() {
+    void testConstants() {
         assertEquals(3, ECEFFrame.NUM_POSITION_COORDINATES);
         assertEquals(3, ECEFFrame.NUM_VELOCITY_COORDINATES);
     }
 
     @Test
-    public void testConstructor() throws WrongSizeException, InvalidRotationMatrixException,
+    void testConstructor() throws WrongSizeException, InvalidRotationMatrixException,
             InvalidSourceAndDestinationFrameTypeException {
 
         // test empty constructor
-        ECEFFrame frame = new ECEFFrame();
+        var frame = new ECEFFrame();
 
         // check
         assertEquals(0.0, frame.getX(), 0.0);
@@ -91,15 +90,15 @@ public class ECEFFrameTest {
 
 
         // test constructor with coordinate transformation matrix
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final Quaternion q = new Quaternion(roll, pitch, yaw);
+        final var randomizer = new UniformRandomizer();
+        final var roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var q = new Quaternion(roll, pitch, yaw);
 
-        final Matrix m = q.asInhomogeneousMatrix();
-        final CoordinateTransformation c1 = new CoordinateTransformation(
-                m, FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        final var m = q.asInhomogeneousMatrix();
+        final var c1 = new CoordinateTransformation(m, FrameType.BODY_FRAME,
+                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
         frame = new ECEFFrame(c1);
 
@@ -120,24 +119,17 @@ public class ECEFFrameTest {
         assertEquals(0.0, frame.getSpeedY().getValue().doubleValue(), 0.0);
         assertEquals(0.0, frame.getSpeedZ().getValue().doubleValue(), 0.0);
 
-        CoordinateTransformation c2 = frame.getCoordinateTransformation();
+        var c2 = frame.getCoordinateTransformation();
         assertEquals(c1, c2);
 
         // Force InvalidSourceAndDestinationFrameTypeException
-        frame = null;
-        try {
-            frame = new ECEFFrame(new CoordinateTransformation(
-                    FrameType.BODY_FRAME, FrameType.BODY_FRAME));
-            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
-        }
-        assertNull(frame);
-
+        assertThrows(InvalidSourceAndDestinationFrameTypeException.class,
+                () -> new ECEFFrame(new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME)));
 
         // test constructor with cartesian position coordinates
-        final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
         frame = new ECEFFrame(x, y, z);
 
@@ -167,7 +159,7 @@ public class ECEFFrameTest {
 
 
         // test constructor with position
-        final Point3D position = new InhomogeneousPoint3D(x, y, z);
+        final var position = new InhomogeneousPoint3D(x, y, z);
 
         frame = new ECEFFrame(position);
 
@@ -197,9 +189,9 @@ public class ECEFFrameTest {
 
 
         // test constructor with position coordinates
-        final Distance positionX = new Distance(x, DistanceUnit.METER);
-        final Distance positionY = new Distance(y, DistanceUnit.METER);
-        final Distance positionZ = new Distance(z, DistanceUnit.METER);
+        final var positionX = new Distance(x, DistanceUnit.METER);
+        final var positionY = new Distance(y, DistanceUnit.METER);
+        final var positionZ = new Distance(z, DistanceUnit.METER);
 
         frame = new ECEFFrame(positionX, positionY, positionZ);
 
@@ -229,7 +221,7 @@ public class ECEFFrameTest {
 
 
         // test constructor with ECEF position
-        final ECEFPosition ecefPosition = new ECEFPosition(x, y, z);
+        final var ecefPosition = new ECEFPosition(x, y, z);
         frame = new ECEFFrame(ecefPosition);
 
         // check
@@ -258,9 +250,9 @@ public class ECEFFrameTest {
 
 
         // test constructor with cartesian position and velocity coordinates
-        final double vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
         frame = new ECEFFrame(x, y, z, vx, vy, vz);
 
@@ -346,9 +338,9 @@ public class ECEFFrameTest {
 
 
         // test constructor with position and speed coordinates
-        final Speed speedX = new Speed(vx, SpeedUnit.METERS_PER_SECOND);
-        final Speed speedY = new Speed(vy, SpeedUnit.METERS_PER_SECOND);
-        final Speed speedZ = new Speed(vz, SpeedUnit.METERS_PER_SECOND);
+        final var speedX = new Speed(vx, SpeedUnit.METERS_PER_SECOND);
+        final var speedY = new Speed(vy, SpeedUnit.METERS_PER_SECOND);
+        final var speedZ = new Speed(vz, SpeedUnit.METERS_PER_SECOND);
 
         frame = new ECEFFrame(position, speedX, speedY, speedZ);
 
@@ -406,7 +398,7 @@ public class ECEFFrameTest {
 
 
         // test constructor with position and ECEF velocity
-        final ECEFVelocity ecefVelocity = new ECEFVelocity(vx, vy, vz);
+        final var ecefVelocity = new ECEFVelocity(vx, vy, vz);
         frame = new ECEFFrame(position, ecefVelocity);
 
         // check
@@ -435,8 +427,7 @@ public class ECEFFrameTest {
 
 
         // test constructor with position and velocity
-        final ECEFPositionAndVelocity positionAndVelocity =
-                new ECEFPositionAndVelocity(ecefPosition, ecefVelocity);
+        final var positionAndVelocity = new ECEFPositionAndVelocity(ecefPosition, ecefVelocity);
         frame = new ECEFFrame(positionAndVelocity);
 
         // check
@@ -462,7 +453,6 @@ public class ECEFFrameTest {
         assertEquals(FrameType.BODY_FRAME, c.getSourceType());
         assertEquals(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME, c.getDestinationType());
         assertEquals(Matrix.identity(3, 3), c.getMatrix());
-
 
         // test constructor with cartesian position coordinates and speed coordinates
         frame = new ECEFFrame(x, y, z, speedX, speedY, speedZ);
@@ -656,15 +646,8 @@ public class ECEFFrameTest {
         assertEquals(c1, c2);
 
         // Force InvalidSourceAndDestinationFrameTypeException
-        frame = null;
-        try {
-            frame = new ECEFFrame(x, y, z, new CoordinateTransformation(
-                    FrameType.BODY_FRAME, FrameType.BODY_FRAME));
-            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
-        }
-        assertNull(frame);
-
+        assertThrows(InvalidSourceAndDestinationFrameTypeException.class,
+                () -> new ECEFFrame(x, y, z, new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME)));
 
         // test constructor with ECEF position and coordinate transformation matrix
         frame = new ECEFFrame(ecefPosition, c1);
@@ -690,15 +673,9 @@ public class ECEFFrameTest {
         assertEquals(c1, c2);
 
         // Force InvalidSourceAndDestinationFrameTypeException
-        frame = null;
-        try {
-            frame = new ECEFFrame(ecefPosition, new CoordinateTransformation(
-                    FrameType.BODY_FRAME, FrameType.BODY_FRAME));
-            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
-        }
-        assertNull(frame);
-
+        assertThrows(InvalidSourceAndDestinationFrameTypeException.class,
+                () -> new ECEFFrame(ecefPosition, new CoordinateTransformation(FrameType.BODY_FRAME,
+                        FrameType.BODY_FRAME)));
 
         // test constructor with position and coordinate transformation matrix
         frame = new ECEFFrame(position, c1);
@@ -724,15 +701,9 @@ public class ECEFFrameTest {
         assertEquals(c1, c2);
 
         // Force InvalidSourceAndDestinationFrameTypeException
-        frame = null;
-        try {
-            frame = new ECEFFrame(position, new CoordinateTransformation(
-                    FrameType.BODY_FRAME, FrameType.BODY_FRAME));
-            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
-        }
-        assertNull(frame);
-
+        assertThrows(InvalidSourceAndDestinationFrameTypeException.class,
+                () -> new ECEFFrame(position, new CoordinateTransformation(FrameType.BODY_FRAME,
+                        FrameType.BODY_FRAME)));
 
         // test constructor with position coordinates and coordinate transformation matrix
         frame = new ECEFFrame(positionX, positionY, positionZ, c1);
@@ -758,15 +729,9 @@ public class ECEFFrameTest {
         assertEquals(c1, c2);
 
         // Force InvalidSourceAndDestinationFrameTypeException
-        frame = null;
-        try {
-            frame = new ECEFFrame(positionX, positionY, positionZ,
-                    new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME));
-            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
-        }
-        assertNull(frame);
-
+        assertThrows(InvalidSourceAndDestinationFrameTypeException.class,
+                () -> new ECEFFrame(positionX, positionY, positionZ, new CoordinateTransformation(FrameType.BODY_FRAME,
+                        FrameType.BODY_FRAME)));
 
         // test constructor with cartesian position and velocity coordinates, and with coordinate
         // transformation matrix
@@ -793,15 +758,8 @@ public class ECEFFrameTest {
         assertEquals(c1, c2);
 
         // Force InvalidSourceAndDestinationFrameTypeException
-        frame = null;
-        try {
-            frame = new ECEFFrame(x, y, z, vx, vy, vz,
-                    new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME));
-            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
-        }
-        assertNull(frame);
-
+        assertThrows(InvalidSourceAndDestinationFrameTypeException.class, () -> new ECEFFrame(x, y, z, vx, vy, vz,
+                new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME)));
 
         // test constructor with ECEF position, velocity coordinates, and coordinate transformation
         // matrix
@@ -828,15 +786,8 @@ public class ECEFFrameTest {
         assertEquals(c1, c2);
 
         // Force InvalidSourceAndDestinationFrameTypeException
-        frame = null;
-        try {
-            frame = new ECEFFrame(ecefPosition, vx, vy, vz,
-                    new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME));
-            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
-        }
-        assertNull(frame);
-
+        assertThrows(InvalidSourceAndDestinationFrameTypeException.class, () -> new ECEFFrame(ecefPosition, vx, vy, vz,
+                new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME)));
 
         // test constructor with cartesian position, ecef velocity and coordinate transformation matrix
         frame = new ECEFFrame(x, y, z, ecefVelocity, c1);
@@ -862,15 +813,8 @@ public class ECEFFrameTest {
         assertEquals(c1, c2);
 
         // Force InvalidSourceAndDestinationFrameTypeException
-        frame = null;
-        try {
-            frame = new ECEFFrame(x, y, z, ecefVelocity,
-                    new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME));
-            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
-        }
-        assertNull(frame);
-
+        assertThrows(InvalidSourceAndDestinationFrameTypeException.class, () -> new ECEFFrame(x, y, z, ecefVelocity,
+                new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME)));
 
         // test constructor with ECEF position, ECEF velocity and coordinate transformation matrix
         frame = new ECEFFrame(ecefPosition, ecefVelocity, c1);
@@ -896,15 +840,8 @@ public class ECEFFrameTest {
         assertEquals(c1, c2);
 
         // Force InvalidSourceAndDestinationFrameTypeException
-        frame = null;
-        try {
-            frame = new ECEFFrame(ecefPosition, ecefVelocity,
-                    new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME));
-            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
-        }
-        assertNull(frame);
-
+        assertThrows(InvalidSourceAndDestinationFrameTypeException.class, () -> new ECEFFrame(ecefPosition, ecefVelocity,
+                new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME)));
 
         // test constructor with ECEF position and velocity and coordinate transformation matrix
         frame = new ECEFFrame(positionAndVelocity, c1);
@@ -930,15 +867,8 @@ public class ECEFFrameTest {
         assertEquals(c1, c2);
 
         // Force InvalidSourceAndDestinationFrameTypeException
-        frame = null;
-        try {
-            frame = new ECEFFrame(positionAndVelocity,
-                    new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME));
-            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
-        }
-        assertNull(frame);
-
+        assertThrows(InvalidSourceAndDestinationFrameTypeException.class, () -> new ECEFFrame(positionAndVelocity,
+                new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME)));
 
         // test constructor with position, velocity coordinates, and coordinate transformation matrix
         frame = new ECEFFrame(position, vx, vy, vz, c1);
@@ -964,15 +894,8 @@ public class ECEFFrameTest {
         assertEquals(c1, c2);
 
         // Force InvalidSourceAndDestinationFrameTypeException
-        frame = null;
-        try {
-            frame = new ECEFFrame(position, vx, vy, vz,
-                    new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME));
-            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
-        }
-        assertNull(frame);
-
+        assertThrows(InvalidSourceAndDestinationFrameTypeException.class, () -> new ECEFFrame(position, vx, vy, vz,
+                new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME)));
 
         // test constructor with position, ECEF velocity and coordinate transformation matrix
         frame = new ECEFFrame(position, ecefVelocity, c1);
@@ -998,15 +921,8 @@ public class ECEFFrameTest {
         assertEquals(c1, c2);
 
         // Force InvalidSourceAndDestinationFrameTypeException
-        frame = null;
-        try {
-            frame = new ECEFFrame(position, ecefVelocity,
-                    new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME));
-            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
-        }
-        assertNull(frame);
-
+        assertThrows(InvalidSourceAndDestinationFrameTypeException.class, () -> new ECEFFrame(position, ecefVelocity,
+                new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME)));
 
         // test constructor with position, speed coordinates and coordinate transformation matrix
         frame = new ECEFFrame(position, speedX, speedY, speedZ, c1);
@@ -1032,15 +948,8 @@ public class ECEFFrameTest {
         assertEquals(c1, c2);
 
         // Force InvalidSourceAndDestinationFrameTypeException
-        frame = null;
-        try {
-            frame = new ECEFFrame(position, speedX, speedY, speedZ,
-                    new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME));
-            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
-        }
-        assertNull(frame);
-
+        assertThrows(InvalidSourceAndDestinationFrameTypeException.class, () -> new ECEFFrame(position,
+                speedX, speedY, speedZ, new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME)));
 
         // test constructor with position, speed coordinates and coordinate transformation matrix
         frame = new ECEFFrame(ecefPosition, speedX, speedY, speedZ, c1);
@@ -1066,15 +975,8 @@ public class ECEFFrameTest {
         assertEquals(c1, c2);
 
         // Force InvalidSourceAndDestinationFrameTypeException
-        frame = null;
-        try {
-            frame = new ECEFFrame(ecefPosition, speedX, speedY, speedZ,
-                    new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME));
-            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
-        }
-        assertNull(frame);
-
+        assertThrows(InvalidSourceAndDestinationFrameTypeException.class, () -> new ECEFFrame(ecefPosition,
+                speedX, speedY, speedZ, new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME)));
 
         // test constructor with cartesian coordinates, speed coordinates and coordinate transformation
         // matrix
@@ -1101,15 +1003,8 @@ public class ECEFFrameTest {
         assertEquals(c1, c2);
 
         // Force InvalidSourceAndDestinationFrameTypeException
-        frame = null;
-        try {
-            frame = new ECEFFrame(x, y, z, speedX, speedY, speedZ,
-                    new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME));
-            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
-        }
-        assertNull(frame);
-
+        assertThrows(InvalidSourceAndDestinationFrameTypeException.class, () -> new ECEFFrame(x, y, z,
+                speedX, speedY, speedZ, new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME)));
 
         // test constructor with position coordinates, velocity coordinates and coordinates
         // transformation matrix
@@ -1136,15 +1031,9 @@ public class ECEFFrameTest {
         assertEquals(c1, c2);
 
         // Force InvalidSourceAndDestinationFrameTypeException
-        frame = null;
-        try {
-            frame = new ECEFFrame(positionX, positionY, positionZ, vx, vy, vz,
-                    new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME));
-            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (InvalidSourceAndDestinationFrameTypeException ignore) {
-        }
-        assertNull(frame);
-
+        assertThrows(InvalidSourceAndDestinationFrameTypeException.class, () -> new ECEFFrame(
+                positionX, positionY, positionZ, vx, vy, vz, new CoordinateTransformation(FrameType.BODY_FRAME,
+                FrameType.BODY_FRAME)));
 
         // test constructor with position coordinates, speed coordinates and coordinate transformation
         // matrix
@@ -1171,15 +1060,9 @@ public class ECEFFrameTest {
         assertEquals(c1, c2);
 
         // Force InvalidSourceAndDestinationFrameTypeException
-        frame = null;
-        try {
-            frame = new ECEFFrame(positionX, positionY, positionZ, speedX, speedY, speedZ,
-                    new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME));
-            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (InvalidSourceAndDestinationFrameTypeException ignore) {
-        }
-        assertNull(frame);
-
+        assertThrows(InvalidSourceAndDestinationFrameTypeException.class, () -> new ECEFFrame(
+                positionX, positionY, positionZ, speedX, speedY, speedZ, new CoordinateTransformation(
+                        FrameType.BODY_FRAME, FrameType.BODY_FRAME)));
 
         // test constructor with position coordinates, ECEF velocity and coordinate transformation matrix
         frame = new ECEFFrame(positionX, positionY, positionZ, ecefVelocity, c1);
@@ -1205,15 +1088,9 @@ public class ECEFFrameTest {
         assertEquals(c1, c2);
 
         // Force InvalidSourceAndDestinationFrameTypeException
-        frame = null;
-        try {
-            frame = new ECEFFrame(positionX, positionY, positionZ, ecefVelocity,
-                    new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME));
-            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (InvalidSourceAndDestinationFrameTypeException ignore) {
-        }
-        assertNull(frame);
-
+        assertThrows(InvalidSourceAndDestinationFrameTypeException.class, () -> new ECEFFrame(
+                positionX, positionY, positionZ, ecefVelocity, new CoordinateTransformation(FrameType.BODY_FRAME,
+                FrameType.BODY_FRAME)));
 
         // test constructor with another ECEF frame
         frame = new ECEFFrame(x, y, z, vx, vy, vz, c1);
@@ -1232,12 +1109,12 @@ public class ECEFFrameTest {
     }
 
     @Test
-    public void testGetSetX() {
+    void testGetSetX() {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final ECEFFrame frame = new ECEFFrame();
+        final var frame = new ECEFFrame();
 
         // check initial value
         assertEquals(0.0, frame.getX(), 0.0);
@@ -1250,12 +1127,12 @@ public class ECEFFrameTest {
     }
 
     @Test
-    public void testGetSetY() {
+    void testGetSetY() {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final ECEFFrame frame = new ECEFFrame();
+        final var frame = new ECEFFrame();
 
         // check initial value
         assertEquals(0.0, frame.getY(), 0.0);
@@ -1268,12 +1145,12 @@ public class ECEFFrameTest {
     }
 
     @Test
-    public void testGetSetZ() {
+    void testGetSetZ() {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final ECEFFrame frame = new ECEFFrame();
+        final var frame = new ECEFFrame();
 
         // check initial value
         assertEquals(0.0, frame.getZ(), 0.0);
@@ -1286,14 +1163,14 @@ public class ECEFFrameTest {
     }
 
     @Test
-    public void testSetCoordinates() {
+    void testSetCoordinates() {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final ECEFFrame frame = new ECEFFrame();
+        final var frame = new ECEFFrame();
 
         // check initial values
         assertEquals(0.0, frame.getX(), 0.0);
@@ -1310,115 +1187,115 @@ public class ECEFFrameTest {
     }
 
     @Test
-    public void testGetSetPosition() {
+    void testGetSetPosition() {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final ECEFFrame frame = new ECEFFrame();
+        final var frame = new ECEFFrame();
 
         // check initial value
         assertEquals(frame.getPosition(), Point3D.create());
 
         // set new value
-        final Point3D position = new InhomogeneousPoint3D(x, y, z);
+        final var position = new InhomogeneousPoint3D(x, y, z);
         frame.setPosition(position);
 
         // check
         assertEquals(frame.getPosition(), position);
 
-        final Point3D position2 = new InhomogeneousPoint3D();
+        final var position2 = new InhomogeneousPoint3D();
         frame.getPosition(position2);
         assertEquals(position, position2);
     }
 
     @Test
-    public void testGetSetPositionX() {
+    void testGetSetPositionX() {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final ECEFFrame frame = new ECEFFrame();
+        final var frame = new ECEFFrame();
 
         // check initial value
         assertEquals(0.0, frame.getPositionX().getValue().doubleValue(), 0.0);
 
         // set new value
-        final Distance positionX1 = new Distance(x, DistanceUnit.METER);
+        final var positionX1 = new Distance(x, DistanceUnit.METER);
         frame.setPositionX(positionX1);
 
         // check
-        final Distance positionX2 = new Distance(0.0, DistanceUnit.CENTIMETER);
+        final var positionX2 = new Distance(0.0, DistanceUnit.CENTIMETER);
         frame.getPositionX(positionX2);
-        final Distance positionX3 = frame.getPositionX();
+        final var positionX3 = frame.getPositionX();
 
         assertEquals(positionX1, positionX2);
         assertEquals(positionX1, positionX3);
     }
 
     @Test
-    public void testGetSetPositionY() {
+    void testGetSetPositionY() {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final ECEFFrame frame = new ECEFFrame();
+        final var frame = new ECEFFrame();
 
         // check initial value
         assertEquals(0.0, frame.getPositionY().getValue().doubleValue(), 0.0);
 
         // set new value
-        final Distance positionY1 = new Distance(y, DistanceUnit.METER);
+        final var positionY1 = new Distance(y, DistanceUnit.METER);
         frame.setPositionY(positionY1);
 
         // check
-        final Distance positionY2 = new Distance(0.0, DistanceUnit.CENTIMETER);
+        final var positionY2 = new Distance(0.0, DistanceUnit.CENTIMETER);
         frame.getPositionY(positionY2);
-        final Distance positionY3 = frame.getPositionY();
+        final var positionY3 = frame.getPositionY();
 
         assertEquals(positionY1, positionY2);
         assertEquals(positionY1, positionY3);
     }
 
     @Test
-    public void testGetSetPositionZ() {
+    void testGetSetPositionZ() {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final ECEFFrame frame = new ECEFFrame();
+        final var frame = new ECEFFrame();
 
         // check initial value
         assertEquals(0.0, frame.getPositionZ().getValue().doubleValue(), 0.0);
 
         // set new value
-        final Distance positionZ1 = new Distance(z, DistanceUnit.METER);
+        final var positionZ1 = new Distance(z, DistanceUnit.METER);
         frame.setPositionZ(positionZ1);
 
         // check
-        final Distance positionZ2 = new Distance(0.0, DistanceUnit.CENTIMETER);
+        final var positionZ2 = new Distance(0.0, DistanceUnit.CENTIMETER);
         frame.getPositionZ(positionZ2);
-        final Distance positionZ3 = frame.getPositionZ();
+        final var positionZ3 = frame.getPositionZ();
 
         assertEquals(positionZ1, positionZ2);
         assertEquals(positionZ1, positionZ3);
     }
 
     @Test
-    public void testSetPositionCoordinates() {
+    void testSetPositionCoordinates() {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final Distance positionX = new Distance(x, DistanceUnit.METER);
-        final Distance positionY = new Distance(y, DistanceUnit.METER);
-        final Distance positionZ = new Distance(z, DistanceUnit.METER);
+        final var positionX = new Distance(x, DistanceUnit.METER);
+        final var positionY = new Distance(y, DistanceUnit.METER);
+        final var positionZ = new Distance(z, DistanceUnit.METER);
 
-        final ECEFFrame frame = new ECEFFrame();
+        final var frame = new ECEFFrame();
 
         frame.setPositionCoordinates(positionX, positionY, positionZ);
 
@@ -1429,21 +1306,21 @@ public class ECEFFrameTest {
     }
 
     @Test
-    public void testGetPositionNorm() {
+    void testGetPositionNorm() {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double norm = Math.sqrt(Math.pow(x, 2.0) + Math.pow(y, 2.0) + Math.pow(z, 2.0));
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var norm = Math.sqrt(Math.pow(x, 2.0) + Math.pow(y, 2.0) + Math.pow(z, 2.0));
 
-        final ECEFFrame frame = new ECEFFrame(x, y, z);
+        final var frame = new ECEFFrame(x, y, z);
 
         assertEquals(norm, frame.getPositionNorm(), ABSOLUTE_ERROR);
 
-        final Distance normDistance1 = new Distance(0.0, DistanceUnit.KILOMETER);
+        final var normDistance1 = new Distance(0.0, DistanceUnit.KILOMETER);
         frame.getPositionNormAsDistance(normDistance1);
-        final Distance normDistance2 = frame.getPositionNormAsDistance();
+        final var normDistance2 = frame.getPositionNormAsDistance();
 
         assertEquals(norm, normDistance1.getValue().doubleValue(), ABSOLUTE_ERROR);
         assertEquals(DistanceUnit.METER, normDistance1.getUnit());
@@ -1451,12 +1328,12 @@ public class ECEFFrameTest {
     }
 
     @Test
-    public void testGetSetVx() {
+    void testGetSetVx() {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final ECEFFrame frame = new ECEFFrame();
+        final var frame = new ECEFFrame();
 
         // check initial value
         assertEquals(0.0, frame.getVx(), 0.0);
@@ -1469,12 +1346,12 @@ public class ECEFFrameTest {
     }
 
     @Test
-    public void testGetSetVy() {
+    void testGetSetVy() {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final ECEFFrame frame = new ECEFFrame();
+        final var frame = new ECEFFrame();
 
         // check initial value
         assertEquals(0.0, frame.getVy(), 0.0);
@@ -1487,12 +1364,12 @@ public class ECEFFrameTest {
     }
 
     @Test
-    public void testGetSetVz() {
+    void testGetSetVz() {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final ECEFFrame frame = new ECEFFrame();
+        final var frame = new ECEFFrame();
 
         // check initial value
         assertEquals(0.0, frame.getVz(), 0.0);
@@ -1505,14 +1382,14 @@ public class ECEFFrameTest {
     }
 
     @Test
-    public void testSetVelocityCoordinates() {
+    void testSetVelocityCoordinates() {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final ECEFFrame frame = new ECEFFrame();
+        final var frame = new ECEFFrame();
 
         // check initial value
         assertEquals(0.0, frame.getVx(), 0.0);
@@ -1529,22 +1406,22 @@ public class ECEFFrameTest {
     }
 
     @Test
-    public void testGetVelocityNorm() {
+    void testGetVelocityNorm() {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double norm = Math.sqrt(Math.pow(vx, 2.0) + Math.pow(vy, 2.0) + Math.pow(vz, 2.0));
+        final var randomizer = new UniformRandomizer();
+        final var vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var norm = Math.sqrt(Math.pow(vx, 2.0) + Math.pow(vy, 2.0) + Math.pow(vz, 2.0));
 
-        final ECEFFrame frame = new ECEFFrame();
+        final var frame = new ECEFFrame();
         frame.setVelocityCoordinates(vx, vy, vz);
 
         assertEquals(norm, frame.getVelocityNorm(), ABSOLUTE_ERROR);
 
-        final Speed normSpeed1 = new Speed(0.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        final var normSpeed1 = new Speed(0.0, SpeedUnit.KILOMETERS_PER_HOUR);
         frame.getVelocityNormAsSpeed(normSpeed1);
-        final Speed normSpeed2 = frame.getVelocityNormAsSpeed();
+        final var normSpeed2 = frame.getVelocityNormAsSpeed();
 
         assertEquals(norm, normSpeed1.getValue().doubleValue(), ABSOLUTE_ERROR);
         assertEquals(SpeedUnit.METERS_PER_SECOND, normSpeed1.getUnit());
@@ -1552,90 +1429,90 @@ public class ECEFFrameTest {
     }
 
     @Test
-    public void testGetSetSpeedX() {
+    void testGetSetSpeedX() {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final ECEFFrame frame = new ECEFFrame();
+        final var frame = new ECEFFrame();
 
         // check initial value
         assertEquals(0.0, frame.getSpeedX().getValue().doubleValue(), 0.0);
 
         // set new value
-        final Speed speedX1 = new Speed(vx, SpeedUnit.METERS_PER_SECOND);
+        final var speedX1 = new Speed(vx, SpeedUnit.METERS_PER_SECOND);
         frame.setSpeedX(speedX1);
 
         // check
-        final Speed speedX2 = new Speed(0.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        final var speedX2 = new Speed(0.0, SpeedUnit.KILOMETERS_PER_HOUR);
         frame.getSpeedX(speedX2);
-        final Speed speedX3 = frame.getSpeedX();
+        final var speedX3 = frame.getSpeedX();
 
         assertEquals(speedX1, speedX2);
         assertEquals(speedX1, speedX3);
     }
 
     @Test
-    public void testGetSetSpeedY() {
+    void testGetSetSpeedY() {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final ECEFFrame frame = new ECEFFrame();
+        final var frame = new ECEFFrame();
 
         // check initial value
         assertEquals(0.0, frame.getSpeedY().getValue().doubleValue(), 0.0);
 
         // set new value
-        final Speed speedY1 = new Speed(vy, SpeedUnit.METERS_PER_SECOND);
+        final var speedY1 = new Speed(vy, SpeedUnit.METERS_PER_SECOND);
         frame.setSpeedY(speedY1);
 
         // check
-        final Speed speedY2 = new Speed(0.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        final var speedY2 = new Speed(0.0, SpeedUnit.KILOMETERS_PER_HOUR);
         frame.getSpeedY(speedY2);
-        final Speed speedY3 = frame.getSpeedY();
+        final var speedY3 = frame.getSpeedY();
 
         assertEquals(speedY1, speedY2);
         assertEquals(speedY1, speedY3);
     }
 
     @Test
-    public void testGetSetSpeedZ() {
+    void testGetSetSpeedZ() {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final ECEFFrame frame = new ECEFFrame();
+        final var frame = new ECEFFrame();
 
         // check initial value
         assertEquals(0.0, frame.getSpeedZ().getValue().doubleValue(), 0.0);
 
         // set new value
-        final Speed speedZ1 = new Speed(vz, SpeedUnit.METERS_PER_SECOND);
+        final var speedZ1 = new Speed(vz, SpeedUnit.METERS_PER_SECOND);
         frame.setSpeedZ(speedZ1);
 
         // check
-        final Speed speedZ2 = new Speed(0.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        final var speedZ2 = new Speed(0.0, SpeedUnit.KILOMETERS_PER_HOUR);
         frame.getSpeedZ(speedZ2);
-        final Speed speedZ3 = frame.getSpeedZ();
+        final var speedZ3 = frame.getSpeedZ();
 
         assertEquals(speedZ1, speedZ2);
         assertEquals(speedZ1, speedZ3);
     }
 
     @Test
-    public void testSetSpeedCoordinates() {
+    void testSetSpeedCoordinates() {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final Speed speedX = new Speed(vx, SpeedUnit.METERS_PER_SECOND);
-        final Speed speedY = new Speed(vy, SpeedUnit.METERS_PER_SECOND);
-        final Speed speedZ = new Speed(vz, SpeedUnit.METERS_PER_SECOND);
+        final var speedX = new Speed(vx, SpeedUnit.METERS_PER_SECOND);
+        final var speedY = new Speed(vy, SpeedUnit.METERS_PER_SECOND);
+        final var speedZ = new Speed(vz, SpeedUnit.METERS_PER_SECOND);
 
-        final ECEFFrame frame = new ECEFFrame();
+        final var frame = new ECEFFrame();
 
         // set new values
         frame.setSpeedCoordinates(speedX, speedY, speedZ);
@@ -1647,69 +1524,69 @@ public class ECEFFrameTest {
     }
 
     @Test
-    public void testGetSetECEFPosition() {
-        final ECEFFrame frame = new ECEFFrame();
+    void testGetSetECEFPosition() {
+        final var frame = new ECEFFrame();
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
         // check initial value
-        final ECEFPosition position1 = frame.getECEFPosition();
+        final var position1 = frame.getECEFPosition();
 
         assertEquals(0.0, position1.getX(), 0.0);
         assertEquals(0.0, position1.getY(), 0.0);
         assertEquals(0.0, position1.getZ(), 0.0);
 
         // set new value
-        final ECEFPosition position2 = new ECEFPosition(x, y, z);
+        final var position2 = new ECEFPosition(x, y, z);
         frame.setPosition(position2);
 
         // check
-        final ECEFPosition position3 = new ECEFPosition();
+        final var position3 = new ECEFPosition();
         frame.getECEFPosition(position3);
-        final ECEFPosition position4 = frame.getECEFPosition();
+        final var position4 = frame.getECEFPosition();
 
         assertEquals(position2, position3);
         assertEquals(position2, position4);
     }
 
     @Test
-    public void testGetSetECEFVelocity() {
-        final ECEFFrame frame = new ECEFFrame();
+    void testGetSetECEFVelocity() {
+        final var frame = new ECEFFrame();
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
         // check initial value
-        final ECEFVelocity velocity1 = frame.getECEFVelocity();
+        final var velocity1 = frame.getECEFVelocity();
 
         assertEquals(0.0, velocity1.getVx(), 0.0);
         assertEquals(0.0, velocity1.getVy(), 0.0);
         assertEquals(0.0, velocity1.getVz(), 0.0);
 
         // set new value
-        final ECEFVelocity velocity2 = new ECEFVelocity(vx, vy, vz);
+        final var velocity2 = new ECEFVelocity(vx, vy, vz);
         frame.setVelocity(velocity2);
 
         // check
-        final ECEFVelocity velocity3 = new ECEFVelocity();
+        final var velocity3 = new ECEFVelocity();
         frame.getECEFVelocity(velocity3);
-        final ECEFVelocity velocity4 = frame.getECEFVelocity();
+        final var velocity4 = frame.getECEFVelocity();
 
         assertEquals(velocity2, velocity3);
         assertEquals(velocity2, velocity4);
     }
 
     @Test
-    public void testGetSetPositionAndVelocity() {
-        final ECEFFrame frame = new ECEFFrame();
+    void testGetSetPositionAndVelocity() {
+        final var frame = new ECEFFrame();
 
         // check initial value
-        final ECEFPositionAndVelocity positionAndVelocity1 = frame.getPositionAndVelocity();
+        final var positionAndVelocity1 = frame.getPositionAndVelocity();
 
         assertEquals(0.0, positionAndVelocity1.getX(), 0.0);
         assertEquals(0.0, positionAndVelocity1.getY(), 0.0);
@@ -1719,109 +1596,102 @@ public class ECEFFrameTest {
         assertEquals(0.0, positionAndVelocity1.getVz(), 0.0);
 
         // set new values
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final ECEFPositionAndVelocity positionAndVelocity2 =
-                new ECEFPositionAndVelocity(x, y, z, vx, vy, vz);
+        final var positionAndVelocity2 = new ECEFPositionAndVelocity(x, y, z, vx, vy, vz);
         frame.setPositionAndVelocity(positionAndVelocity2);
 
-        final ECEFPositionAndVelocity positionAndVelocity3 = new ECEFPositionAndVelocity();
+        final var positionAndVelocity3 = new ECEFPositionAndVelocity();
         frame.getPositionAndVelocity(positionAndVelocity3);
-        final ECEFPositionAndVelocity positionAndVelocity4 = frame.getPositionAndVelocity();
+        final var positionAndVelocity4 = frame.getPositionAndVelocity();
 
         assertEquals(positionAndVelocity2, positionAndVelocity3);
         assertEquals(positionAndVelocity2, positionAndVelocity4);
     }
 
     @Test
-    public void testGetSetCoordinateTransformation() throws WrongSizeException,
-            InvalidRotationMatrixException, InvalidSourceAndDestinationFrameTypeException {
+    void testGetSetCoordinateTransformation() throws WrongSizeException, InvalidRotationMatrixException,
+            InvalidSourceAndDestinationFrameTypeException {
 
-        final ECEFFrame frame = new ECEFFrame();
+        final var frame = new ECEFFrame();
 
         // check initial value
-        final CoordinateTransformation c1 = frame.getCoordinateTransformation();
+        final var c1 = frame.getCoordinateTransformation();
         assertEquals(FrameType.BODY_FRAME, c1.getSourceType());
         assertEquals(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME, c1.getDestinationType());
         assertEquals(Matrix.identity(3, 3), c1.getMatrix());
 
         // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final Quaternion q = new Quaternion(roll, pitch, yaw);
+        final var randomizer = new UniformRandomizer();
+        final var roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var q = new Quaternion(roll, pitch, yaw);
 
-        final Matrix m = q.asInhomogeneousMatrix();
-        final CoordinateTransformation c2 = new CoordinateTransformation(
-                m, FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        final var m = q.asInhomogeneousMatrix();
+        final var c2 = new CoordinateTransformation(m, FrameType.BODY_FRAME,
+                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
         frame.setCoordinateTransformation(c2);
 
         // check
         assertEquals(frame.getCoordinateTransformation(), c2);
-        final CoordinateTransformation c3 = new CoordinateTransformation(
-                FrameType.BODY_FRAME, FrameType.BODY_FRAME);
+        final var c3 = new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME);
         frame.getCoordinateTransformation(c3);
         assertEquals(c2, c3);
 
         // Force InvalidSourceAndDestinationFrameTypeException
-        try {
-            frame.setCoordinateTransformation(new CoordinateTransformation(
-                    FrameType.BODY_FRAME, FrameType.BODY_FRAME));
-            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (InvalidSourceAndDestinationFrameTypeException ignore) {
-        }
+        assertThrows(InvalidSourceAndDestinationFrameTypeException.class, () -> frame.setCoordinateTransformation(
+                new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME)));
     }
 
     @Test
-    public void testGetSetCoordinateTransformationMatrix() throws WrongSizeException,
-            InvalidRotationMatrixException, InvalidSourceAndDestinationFrameTypeException {
+    void testGetSetCoordinateTransformationMatrix() throws WrongSizeException, InvalidRotationMatrixException,
+            InvalidSourceAndDestinationFrameTypeException {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final Quaternion q = new Quaternion(roll, pitch, yaw);
+        final var randomizer = new UniformRandomizer();
+        final var roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var q = new Quaternion(roll, pitch, yaw);
 
-        final Matrix m1 = q.asInhomogeneousMatrix();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                m1, FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        final var m1 = q.asInhomogeneousMatrix();
+        final var c = new CoordinateTransformation(m1, FrameType.BODY_FRAME,
+                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
-        final ECEFFrame frame = new ECEFFrame(c);
+        final var frame = new ECEFFrame(c);
 
         // check
         assertEquals(frame.getCoordinateTransformationMatrix(), m1);
-        final Matrix m2 = new Matrix(CoordinateTransformation.ROWS, CoordinateTransformation.COLS);
+        final var m2 = new Matrix(CoordinateTransformation.ROWS, CoordinateTransformation.COLS);
         frame.getCoordinateTransformationMatrix(m2);
         assertEquals(m2, m1);
     }
 
     @Test
-    public void testGetSetCoordinateTransformationMatrix2() throws InvalidRotationMatrixException,
+    void testGetSetCoordinateTransformationMatrix2() throws InvalidRotationMatrixException,
             InvalidSourceAndDestinationFrameTypeException, WrongSizeException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final Quaternion q = new Quaternion(roll, pitch, yaw);
+        final var randomizer = new UniformRandomizer();
+        final var roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var q = new Quaternion(roll, pitch, yaw);
 
-        final Matrix m1 = q.asInhomogeneousMatrix();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        final var m1 = q.asInhomogeneousMatrix();
+        final var c = new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
-        final ECEFFrame frame = new ECEFFrame(c);
+        final var frame = new ECEFFrame(c);
 
         // check default value
         assertEquals(Matrix.identity(Rotation3D.INHOM_COORDS, Rotation3D.INHOM_COORDS),
                 frame.getCoordinateTransformationMatrix());
-        final Matrix m2 = new Matrix(CoordinateTransformation.ROWS, CoordinateTransformation.COLS);
+        final var m2 = new Matrix(CoordinateTransformation.ROWS, CoordinateTransformation.COLS);
         frame.getCoordinateTransformationMatrix(m2);
         assertEquals(Matrix.identity(Rotation3D.INHOM_COORDS, Rotation3D.INHOM_COORDS), m2);
 
@@ -1835,24 +1705,23 @@ public class ECEFFrameTest {
     }
 
     @Test
-    public void testGetSetCoordinateTransformationMatrix3() throws InvalidRotationMatrixException,
+    void testGetSetCoordinateTransformationMatrix3() throws InvalidRotationMatrixException,
             InvalidSourceAndDestinationFrameTypeException, WrongSizeException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final Quaternion q = new Quaternion(roll, pitch, yaw);
+        final var randomizer = new UniformRandomizer();
+        final var roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var q = new Quaternion(roll, pitch, yaw);
 
-        final Matrix m1 = q.asInhomogeneousMatrix();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        final var m1 = q.asInhomogeneousMatrix();
+        final var c = new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
-        final ECEFFrame frame = new ECEFFrame(c);
+        final var frame = new ECEFFrame(c);
 
         // check default value
         assertEquals(Matrix.identity(Rotation3D.INHOM_COORDS, Rotation3D.INHOM_COORDS),
                 frame.getCoordinateTransformationMatrix());
-        final Matrix m2 = new Matrix(CoordinateTransformation.ROWS, CoordinateTransformation.COLS);
+        final var m2 = new Matrix(CoordinateTransformation.ROWS, CoordinateTransformation.COLS);
         frame.getCoordinateTransformationMatrix(m2);
         assertEquals(Matrix.identity(Rotation3D.INHOM_COORDS, Rotation3D.INHOM_COORDS), m2);
 
@@ -1866,22 +1735,21 @@ public class ECEFFrameTest {
     }
 
     @Test
-    public void testGetSetCoordinateTransformationRotation()
-            throws InvalidSourceAndDestinationFrameTypeException, InvalidRotationMatrixException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final Quaternion q = new Quaternion(roll, pitch, yaw);
+    void testGetSetCoordinateTransformationRotation() throws InvalidSourceAndDestinationFrameTypeException,
+            InvalidRotationMatrixException {
+        final var randomizer = new UniformRandomizer();
+        final var roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var q = new Quaternion(roll, pitch, yaw);
 
-        final CoordinateTransformation c = new CoordinateTransformation(
-                FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        final var c = new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
-        final ECEFFrame frame = new ECEFFrame(c);
+        final var frame = new ECEFFrame(c);
 
         // check default value
         assertEquals(new Quaternion(), frame.getCoordinateTransformationRotation());
-        final Quaternion q2 = new Quaternion();
+        final var q2 = new Quaternion();
         frame.getCoordinateTransformationRotation(q2);
         assertEquals(new Quaternion(), q2);
 
@@ -1895,14 +1763,11 @@ public class ECEFFrameTest {
     }
 
     @Test
-    public void testIsValidCoordinateTransformation() {
+    void testIsValidCoordinateTransformation() {
 
-        final CoordinateTransformation c1 = new CoordinateTransformation(
-                FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
-        final CoordinateTransformation c2 = new CoordinateTransformation(
-                FrameType.BODY_FRAME, FrameType.BODY_FRAME);
-        final CoordinateTransformation c3 = new CoordinateTransformation(
-                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
+        final var c1 = new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        final var c2 = new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.BODY_FRAME);
+        final var c3 = new CoordinateTransformation(FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
 
         assertTrue(ECEFFrame.isValidCoordinateTransformation(c1));
         assertFalse(ECEFFrame.isValidCoordinateTransformation(c2));
@@ -1910,30 +1775,28 @@ public class ECEFFrameTest {
     }
 
     @Test
-    public void testCopyTo() throws InvalidRotationMatrixException,
-            InvalidSourceAndDestinationFrameTypeException {
+    void testCopyTo() throws InvalidRotationMatrixException, InvalidSourceAndDestinationFrameTypeException {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final var randomizer = new UniformRandomizer();
 
-        final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final double vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final Quaternion q = new Quaternion(roll, pitch, yaw);
+        final var roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var q = new Quaternion(roll, pitch, yaw);
 
-        final Matrix m = q.asInhomogeneousMatrix();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                m, FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        final var m = q.asInhomogeneousMatrix();
+        final var c = new CoordinateTransformation(m, FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
-        final ECEFFrame frame1 = new ECEFFrame(x, y, z, vx, vy, vz, c);
-        final ECEFFrame frame2 = new ECEFFrame();
+        final var frame1 = new ECEFFrame(x, y, z, vx, vy, vz, c);
+        final var frame2 = new ECEFFrame();
         frame1.copyTo(frame2);
 
         // check
@@ -1947,30 +1810,28 @@ public class ECEFFrameTest {
     }
 
     @Test
-    public void testCopyFrom() throws InvalidSourceAndDestinationFrameTypeException,
-            InvalidRotationMatrixException {
+    void testCopyFrom() throws InvalidSourceAndDestinationFrameTypeException, InvalidRotationMatrixException {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final var randomizer = new UniformRandomizer();
 
-        final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final double vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final Quaternion q = new Quaternion(roll, pitch, yaw);
+        final var roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var q = new Quaternion(roll, pitch, yaw);
 
-        final Matrix m = q.asInhomogeneousMatrix();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                m, FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        final var m = q.asInhomogeneousMatrix();
+        final var c = new CoordinateTransformation(m, FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
-        final ECEFFrame frame1 = new ECEFFrame(x, y, z, vx, vy, vz, c);
-        final ECEFFrame frame2 = new ECEFFrame();
+        final var frame1 = new ECEFFrame(x, y, z, vx, vy, vz, c);
+        final var frame2 = new ECEFFrame();
         frame2.copyFrom(frame1);
 
         // check
@@ -1984,102 +1845,97 @@ public class ECEFFrameTest {
     }
 
     @Test
-    public void testHashCode() throws InvalidSourceAndDestinationFrameTypeException,
-            InvalidRotationMatrixException {
+    void testHashCode() throws InvalidSourceAndDestinationFrameTypeException, InvalidRotationMatrixException {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final var randomizer = new UniformRandomizer();
 
-        final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final double vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final Quaternion q = new Quaternion(roll, pitch, yaw);
+        final var roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var q = new Quaternion(roll, pitch, yaw);
 
-        final Matrix m = q.asInhomogeneousMatrix();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                m, FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        final var m = q.asInhomogeneousMatrix();
+        final var c = new CoordinateTransformation(m, FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
-        final ECEFFrame frame1 = new ECEFFrame(x, y, z, vx, vy, vz, c);
-        final ECEFFrame frame2 = new ECEFFrame(x, y, z, vx, vy, vz, c);
-        final ECEFFrame frame3 = new ECEFFrame();
+        final var frame1 = new ECEFFrame(x, y, z, vx, vy, vz, c);
+        final var frame2 = new ECEFFrame(x, y, z, vx, vy, vz, c);
+        final var frame3 = new ECEFFrame();
 
         assertEquals(frame1.hashCode(), frame2.hashCode());
         assertNotEquals(frame1.hashCode(), frame3.hashCode());
     }
 
     @Test
-    public void testEquals() throws InvalidRotationMatrixException,
-            InvalidSourceAndDestinationFrameTypeException {
+    void testEquals() throws InvalidRotationMatrixException, InvalidSourceAndDestinationFrameTypeException {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final var randomizer = new UniformRandomizer();
 
-        final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final double vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final Quaternion q = new Quaternion(roll, pitch, yaw);
+        final var roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var q = new Quaternion(roll, pitch, yaw);
 
-        final Matrix m = q.asInhomogeneousMatrix();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                m, FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        final var m = q.asInhomogeneousMatrix();
+        final var c = new CoordinateTransformation(m, FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
-        final ECEFFrame frame1 = new ECEFFrame(x, y, z, vx, vy, vz, c);
-        final ECEFFrame frame2 = new ECEFFrame(x, y, z, vx, vy, vz, c);
-        final ECEFFrame frame3 = new ECEFFrame();
+        final var frame1 = new ECEFFrame(x, y, z, vx, vy, vz, c);
+        final var frame2 = new ECEFFrame(x, y, z, vx, vy, vz, c);
+        final var frame3 = new ECEFFrame();
 
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
         assertTrue(frame1.equals((Object) frame1));
         //noinspection EqualsWithItself
         assertTrue(frame1.equals(frame1));
-        assertTrue(frame1.equals(frame2));
-        assertFalse(frame1.equals(frame3));
+        assertEquals(frame1, frame2);
+        assertNotEquals(frame1, frame3);
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
         assertFalse(frame1.equals((Object) null));
-        assertFalse(frame1.equals(null));
+        assertNotEquals(null, frame1);
         //noinspection SimplifiableJUnitAssertion
-        assertFalse(frame1.equals(new Object()));
+        assertNotEquals(new Object(), frame1);
     }
 
     @Test
-    public void testEqualsWithThreshold() throws InvalidRotationMatrixException,
+    void testEqualsWithThreshold() throws InvalidRotationMatrixException,
             InvalidSourceAndDestinationFrameTypeException {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final var randomizer = new UniformRandomizer();
 
-        final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final double vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final Quaternion q = new Quaternion(roll, pitch, yaw);
+        final var roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var q = new Quaternion(roll, pitch, yaw);
 
-        final Matrix m = q.asInhomogeneousMatrix();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                m, FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        final var m = q.asInhomogeneousMatrix();
+        final var c = new CoordinateTransformation(m, FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
-        final ECEFFrame frame1 = new ECEFFrame(x, y, z, vx, vy, vz, c);
-        final ECEFFrame frame2 = new ECEFFrame(x, y, z, vx, vy, vz, c);
-        final ECEFFrame frame3 = new ECEFFrame();
+        final var frame1 = new ECEFFrame(x, y, z, vx, vy, vz, c);
+        final var frame2 = new ECEFFrame(x, y, z, vx, vy, vz, c);
+        final var frame3 = new ECEFFrame();
 
         assertTrue(frame1.equals(frame1, THRESHOLD));
         assertTrue(frame1.equals(frame2, THRESHOLD));
@@ -2088,62 +1944,60 @@ public class ECEFFrameTest {
     }
 
     @Test
-    public void testClone() throws InvalidRotationMatrixException,
-            InvalidSourceAndDestinationFrameTypeException, CloneNotSupportedException {
+    void testClone() throws InvalidRotationMatrixException, InvalidSourceAndDestinationFrameTypeException,
+            CloneNotSupportedException {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final var randomizer = new UniformRandomizer();
 
-        final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final double vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final Quaternion q = new Quaternion(roll, pitch, yaw);
+        final var roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var q = new Quaternion(roll, pitch, yaw);
 
-        final Matrix m = q.asInhomogeneousMatrix();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                m, FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        final var m = q.asInhomogeneousMatrix();
+        final var c = new CoordinateTransformation(m, FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
-        final ECEFFrame frame1 = new ECEFFrame(x, y, z, vx, vy, vz, c);
+        final var frame1 = new ECEFFrame(x, y, z, vx, vy, vz, c);
 
-        final Object frame2 = frame1.clone();
+        final var frame2 = frame1.clone();
 
         assertEquals(frame1, frame2);
     }
 
     @Test
-    public void testSerializeDeserialize() throws InvalidRotationMatrixException,
+    void testSerializeDeserialize() throws InvalidRotationMatrixException,
             InvalidSourceAndDestinationFrameTypeException, IOException, ClassNotFoundException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final var randomizer = new UniformRandomizer();
 
-        final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final var z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final double vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-        final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final var vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final double roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final Quaternion q = new Quaternion(roll, pitch, yaw);
+        final var roll = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var yaw = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var q = new Quaternion(roll, pitch, yaw);
 
-        final Matrix m = q.asInhomogeneousMatrix();
-        final CoordinateTransformation c = new CoordinateTransformation(
-                m, FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        final var m = q.asInhomogeneousMatrix();
+        final var c = new CoordinateTransformation(m, FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
-        final ECEFFrame frame1 = new ECEFFrame(x, y, z, vx, vy, vz, c);
+        final var frame1 = new ECEFFrame(x, y, z, vx, vy, vz, c);
 
         // serialize and deserialize
-        final byte[] bytes = SerializationHelper.serialize(frame1);
-        final ECEFFrame frame2 = SerializationHelper.deserialize(bytes);
+        final var bytes = SerializationHelper.serialize(frame1);
+        final var frame2 = SerializationHelper.<ECEFFrame>deserialize(bytes);
 
         // check
         assertEquals(frame1, frame2);

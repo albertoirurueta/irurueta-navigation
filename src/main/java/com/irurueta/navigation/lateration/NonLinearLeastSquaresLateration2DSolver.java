@@ -40,8 +40,7 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      *                                  length is smaller than required (2 points).
      */
-    public NonLinearLeastSquaresLateration2DSolver(
-            final Point2D[] positions, final double[] distances) {
+    public NonLinearLeastSquaresLateration2DSolver(final Point2D[] positions, final double[] distances) {
         super(positions, distances);
     }
 
@@ -64,8 +63,7 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
      *                                  length is smaller than required (2 points).
      */
     public NonLinearLeastSquaresLateration2DSolver(
-            final Point2D[] positions,
-            final double[] distances, final Point2D initialPosition) {
+            final Point2D[] positions, final double[] distances, final Point2D initialPosition) {
         super(positions, distances, initialPosition);
     }
 
@@ -74,8 +72,7 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
      *
      * @param listener listener to be notified of events raised by this instance.
      */
-    public NonLinearLeastSquaresLateration2DSolver(
-            final LaterationSolverListener<Point2D> listener) {
+    public NonLinearLeastSquaresLateration2DSolver(final LaterationSolverListener<Point2D> listener) {
         super(listener);
     }
 
@@ -89,8 +86,7 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
      *                                  length is smaller than required (2 points).
      */
     public NonLinearLeastSquaresLateration2DSolver(
-            final Point2D[] positions, final double[] distances,
-            final LaterationSolverListener<Point2D> listener) {
+            final Point2D[] positions, final double[] distances, final LaterationSolverListener<Point2D> listener) {
         super(positions, distances, listener);
     }
 
@@ -101,8 +97,7 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
      * @param listener        listener to be notified of events raised by this instance.
      */
     public NonLinearLeastSquaresLateration2DSolver(
-            final Point2D initialPosition,
-            final LaterationSolverListener<Point2D> listener) {
+            final Point2D initialPosition, final LaterationSolverListener<Point2D> listener) {
         super(initialPosition, listener);
     }
 
@@ -117,8 +112,7 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
      *                                  length is smaller than required (2 points).
      */
     public NonLinearLeastSquaresLateration2DSolver(
-            final Point2D[] positions,
-            final double[] distances, final Point2D initialPosition,
+            final Point2D[] positions, final double[] distances, final Point2D initialPosition,
             final LaterationSolverListener<Point2D> listener) {
         super(positions, distances, initialPosition, listener);
     }
@@ -141,8 +135,7 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
      * @param initialPosition initial position to start lateration solving.
      * @throws IllegalArgumentException if circles is null or if length of circles array is less than 2.
      */
-    public NonLinearLeastSquaresLateration2DSolver(
-            final Circle[] circles, final Point2D initialPosition) {
+    public NonLinearLeastSquaresLateration2DSolver(final Circle[] circles, final Point2D initialPosition) {
         super(initialPosition);
         internalSetCircles(circles);
     }
@@ -155,8 +148,7 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
      * @throws IllegalArgumentException if circles is null or if length of circles array is less than 2.
      */
     public NonLinearLeastSquaresLateration2DSolver(
-            final Circle[] circles,
-            final LaterationSolverListener<Point2D> listener) {
+            final Circle[] circles, final LaterationSolverListener<Point2D> listener) {
         super(listener);
         internalSetCircles(circles);
     }
@@ -170,8 +162,7 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
      * @throws IllegalArgumentException if circles is null or if length of circles array is less than 2.
      */
     public NonLinearLeastSquaresLateration2DSolver(
-            final Circle[] circles, final Point2D initialPosition,
-            final LaterationSolverListener<Point2D> listener) {
+            final Circle[] circles, final Point2D initialPosition, final LaterationSolverListener<Point2D> listener) {
         super(initialPosition, listener);
         internalSetCircles(circles);
     }
@@ -187,8 +178,7 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
      *                                  (2 points).
      */
     public NonLinearLeastSquaresLateration2DSolver(
-            final Point2D[] positions, final double[] distances,
-            final double[] distanceStandardDeviations) {
+            final Point2D[] positions, final double[] distances, final double[] distanceStandardDeviations) {
         super(positions, distances, distanceStandardDeviations);
     }
 
@@ -204,8 +194,8 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
      *                                  (2 points).
      */
     public NonLinearLeastSquaresLateration2DSolver(
-            final Point2D[] positions, final double[] distances,
-            final double[] distanceStandardDeviations, final Point2D initialPosition) {
+            final Point2D[] positions, final double[] distances, final double[] distanceStandardDeviations,
+            final Point2D initialPosition) {
         super(positions, distances, distanceStandardDeviations, initialPosition);
     }
 
@@ -221,8 +211,7 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
      *                                  (2 points).
      */
     public NonLinearLeastSquaresLateration2DSolver(
-            final Point2D[] positions, final double[] distances,
-            final double[] distanceStandardDeviations,
+            final Point2D[] positions, final double[] distances, final double[] distanceStandardDeviations,
             final LaterationSolverListener<Point2D> listener) {
         super(positions, distances, distanceStandardDeviations, listener);
     }
@@ -240,9 +229,8 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
      *                                  (2 points).
      */
     public NonLinearLeastSquaresLateration2DSolver(
-            final Point2D[] positions, final double[] distances,
-            final double[] distanceStandardDeviations, final Point2D initialPosition,
-            final LaterationSolverListener<Point2D> listener) {
+            final Point2D[] positions, final double[] distances, final double[] distanceStandardDeviations,
+            final Point2D initialPosition, final LaterationSolverListener<Point2D> listener) {
         super(positions, distances, distanceStandardDeviations, initialPosition, listener);
     }
 
@@ -254,8 +242,7 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
      * @throws IllegalArgumentException if circles is null or if length of circles array is less than 2.
      */
     public NonLinearLeastSquaresLateration2DSolver(
-            final Circle[] circles,
-            final double[] distanceStandardDeviations) {
+            final Circle[] circles, final double[] distanceStandardDeviations) {
         super();
         internalSetCirclesAndStandardDeviations(circles, distanceStandardDeviations);
     }
@@ -269,8 +256,7 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
      * @throws IllegalArgumentException if circles is null or if length of circles array is less than 2.
      */
     public NonLinearLeastSquaresLateration2DSolver(
-            final Circle[] circles,
-            final double[] distanceStandardDeviations, final Point2D initialPosition) {
+            final Circle[] circles, final double[] distanceStandardDeviations, final Point2D initialPosition) {
         super(initialPosition);
         internalSetCirclesAndStandardDeviations(circles, distanceStandardDeviations);
     }
@@ -284,8 +270,7 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
      * @throws IllegalArgumentException if circles is null or if length of circles array is less than 2.
      */
     public NonLinearLeastSquaresLateration2DSolver(
-            final Circle[] circles,
-            final double[] distanceStandardDeviations,
+            final Circle[] circles, final double[] distanceStandardDeviations,
             final LaterationSolverListener<Point2D> listener) {
         super(listener);
         internalSetCirclesAndStandardDeviations(circles, distanceStandardDeviations);
@@ -301,8 +286,7 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
      * @throws IllegalArgumentException if circles is null or if length of circles array is less than 2.
      */
     public NonLinearLeastSquaresLateration2DSolver(
-            final Circle[] circles,
-            final double[] distanceStandardDeviations, final Point2D initialPosition,
+            final Circle[] circles, final double[] distanceStandardDeviations, final Point2D initialPosition,
             final LaterationSolverListener<Point2D> listener) {
         super(initialPosition, listener);
         internalSetCirclesAndStandardDeviations(circles, distanceStandardDeviations);
@@ -314,14 +298,14 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
      * @return circles defined by provided positions and distances.
      */
     public Circle[] getCircles() {
-        if (mPositions == null) {
+        if (positions == null) {
             return null;
         }
 
-        final Circle[] result = new Circle[mPositions.length];
+        final var result = new Circle[positions.length];
 
-        for (int i = 0; i < mPositions.length; i++) {
-            result[i] = new Circle(mPositions[i], mDistances[i]);
+        for (var i = 0; i < positions.length; i++) {
+            result[i] = new Circle(positions[i], distances[i]);
         }
         return result;
     }
@@ -351,8 +335,7 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
      *                                  2 or don't have the same length.
      * @throws LockedException          if instance is busy solving the lateration problem.
      */
-    public void setCirclesAndStandardDeviations(
-            final Circle[] circles, final double[] radiusStandardDeviations)
+    public void setCirclesAndStandardDeviations(final Circle[] circles, final double[] radiusStandardDeviations)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -388,11 +371,11 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
      */
     @Override
     public Point2D getEstimatedPosition() {
-        if (mEstimatedPositionCoordinates == null) {
+        if (estimatedPositionCoordinates == null) {
             return null;
         }
 
-        final InhomogeneousPoint2D position = new InhomogeneousPoint2D();
+        final var position = new InhomogeneousPoint2D();
         getEstimatedPosition(position);
         return position;
     }
@@ -409,10 +392,10 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
             throw new IllegalArgumentException();
         }
 
-        final Point2D[] positions = new Point2D[circles.length];
-        final double[] distances = new double[circles.length];
-        for (int i = 0; i < circles.length; i++) {
-            final Circle circle = circles[i];
+        final var positions = new Point2D[circles.length];
+        final var distances = new double[circles.length];
+        for (var i = 0; i < circles.length; i++) {
+            final var circle = circles[i];
             positions[i] = circle.getCenter();
             distances[i] = circle.getRadius();
         }
@@ -430,8 +413,7 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
      *                                  2 or don't have the same length.
      */
     private void internalSetCirclesAndStandardDeviations(
-            final Circle[] circles,
-            final double[] radiusStandardDeviations) {
+            final Circle[] circles, final double[] radiusStandardDeviations) {
         if (circles == null || circles.length < getMinRequiredPositionsAndDistances()) {
             throw new IllegalArgumentException();
         }
@@ -444,15 +426,14 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
             throw new IllegalArgumentException();
         }
 
-        final Point2D[] positions = new Point2D[circles.length];
-        final double[] distances = new double[circles.length];
-        for (int i = 0; i < circles.length; i++) {
-            Circle circle = circles[i];
+        final var positions = new Point2D[circles.length];
+        final var distances = new double[circles.length];
+        for (var i = 0; i < circles.length; i++) {
+            final var circle = circles[i];
             positions[i] = circle.getCenter();
             distances[i] = circle.getRadius();
         }
 
-        internalSetPositionsDistancesAndStandardDeviations(positions, distances,
-                radiusStandardDeviations);
+        internalSetPositionsDistancesAndStandardDeviations(positions, distances, radiusStandardDeviations);
     }
 }

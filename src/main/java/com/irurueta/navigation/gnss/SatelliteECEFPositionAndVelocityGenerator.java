@@ -19,7 +19,6 @@ import com.irurueta.navigation.geodesic.Constants;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Computes satellites positions and velocities.
@@ -57,7 +56,7 @@ public class SatelliteECEFPositionAndVelocityGenerator {
      */
     public static Collection<ECEFPositionAndVelocity> generateSatellitesPositionAndVelocity(
             final double time, final GNSSConfig config) {
-        final List<ECEFPositionAndVelocity> result = new ArrayList<>();
+        final var result = new ArrayList<ECEFPositionAndVelocity>();
         generateSatellitesPositionAndVelocity(time, config, result);
         return result;
     }
@@ -69,13 +68,13 @@ public class SatelliteECEFPositionAndVelocityGenerator {
      * @param config GNSS configuration.
      * @param result instance where computed positions and velocities of satellites will be stored.
      */
-    public static void generateSatellitesPositionAndVelocity(final double time, final GNSSConfig config,
-                                                             final Collection<ECEFPositionAndVelocity> result) {
+    public static void generateSatellitesPositionAndVelocity(
+            final double time, final GNSSConfig config, final Collection<ECEFPositionAndVelocity> result) {
         result.clear();
 
-        final int numSatellites = config.getNumberOfSatellites();
-        for (int j = 0; j < numSatellites; j++) {
-            final ECEFPositionAndVelocity satellitePositionAndVelocity = new ECEFPositionAndVelocity();
+        final var numSatellites = config.getNumberOfSatellites();
+        for (var j = 0; j < numSatellites; j++) {
+            final var satellitePositionAndVelocity = new ECEFPositionAndVelocity();
             generateSatellitePositionAndVelocity(time, config, j, satellitePositionAndVelocity);
             result.add(satellitePositionAndVelocity);
         }
@@ -92,7 +91,7 @@ public class SatelliteECEFPositionAndVelocityGenerator {
     public static ECEFPositionAndVelocity generateSatellitePositionAndVelocity(final double time,
                                                                                final GNSSConfig config,
                                                                                final int j) {
-        final ECEFPositionAndVelocity result = new ECEFPositionAndVelocity();
+        final var result = new ECEFPositionAndVelocity();
         generateSatellitePositionAndVelocity(time, config, j, result);
         return result;
     }
@@ -109,55 +108,49 @@ public class SatelliteECEFPositionAndVelocityGenerator {
                                                             final int j, final ECEFPositionAndVelocity result) {
 
         // Convert inclination angle to radians.
-        final double inclinationRadians = Math.toRadians(config.getSatellitesInclinationDegrees());
+        final var inclinationRadians = Math.toRadians(config.getSatellitesInclinationDegrees());
 
         // Determine orbital angular rate using (8.8)
-        final double orbitalRadius = config.getOrbitalRadiusOfSatellites();
-        final double orbitalRadius3 = orbitalRadius * orbitalRadius * orbitalRadius;
-        final double omegaIs = Math.sqrt(EARTH_GRAVITATIONAL_CONSTANT / orbitalRadius3);
+        final var orbitalRadius = config.getOrbitalRadiusOfSatellites();
+        final var orbitalRadius3 = orbitalRadius * orbitalRadius * orbitalRadius;
+        final var omegaIs = Math.sqrt(EARTH_GRAVITATIONAL_CONSTANT / orbitalRadius3);
 
         // determine constellation time
-        final double constTime = time + config.getConstellationTimingOffset();
+        final var constTime = time + config.getConstellationTimingOffset();
 
         // (Corrected) argument of latitude
-        final double uOsO = 2.0 * Math.PI * j / config.getNumberOfSatellites()
-                + omegaIs * constTime;
+        final var uOsO = 2.0 * Math.PI * j / config.getNumberOfSatellites() + omegaIs * constTime;
 
         // Satellite position in the orbital frame from (8.14)
-        final double cosUoso = Math.cos(uOsO);
-        final double sinUoso = Math.sin(uOsO);
-        final double rOsO1 = orbitalRadius * cosUoso;
-        final double rOsO2 = orbitalRadius * sinUoso;
+        final var cosUoso = Math.cos(uOsO);
+        final var sinUoso = Math.sin(uOsO);
+        final var rOsO1 = orbitalRadius * cosUoso;
+        final var rOsO2 = orbitalRadius * sinUoso;
 
         // longitude of the ascending node from (8.16)
-        final double constDeltaLambdaRadians = Math.toRadians(config.getConstellationLongitudeOffsetDegrees());
-        final double omega = (Math.PI * ((j + 1) % 6) / 3.0 + constDeltaLambdaRadians)
-                - EARTH_ROTATION_RATE * constTime;
+        final var constDeltaLambdaRadians = Math.toRadians(config.getConstellationLongitudeOffsetDegrees());
+        final var omega = (Math.PI * ((j + 1) % 6) / 3.0 + constDeltaLambdaRadians) - EARTH_ROTATION_RATE * constTime;
 
         // ECEF satellite position from (8.19)
-        final double cosOmega = Math.cos(omega);
-        final double sinOmega = Math.sin(omega);
-        final double cosInclination = Math.cos(inclinationRadians);
-        final double sinInclination = Math.sin(inclinationRadians);
+        final var cosOmega = Math.cos(omega);
+        final var sinOmega = Math.sin(omega);
+        final var cosInclination = Math.cos(inclinationRadians);
+        final var sinInclination = Math.sin(inclinationRadians);
 
-        final double satelliteX = rOsO1 * cosOmega
-                - rOsO2 * cosInclination * sinOmega;
-        final double satelliteY = rOsO1 * sinOmega
-                + rOsO2 * cosInclination * cosOmega;
-        final double satelliteZ = rOsO2 * sinInclination;
+        final var satelliteX = rOsO1 * cosOmega - rOsO2 * cosInclination * sinOmega;
+        final var satelliteY = rOsO1 * sinOmega + rOsO2 * cosInclination * cosOmega;
+        final var satelliteZ = rOsO2 * sinInclination;
 
         // Satellite velocity in the orbital frame from (8.25), noting that with a circular orbit rOsO is
         // constant and the time derivative of uOsO is omegaIs.
-        final double tmp = orbitalRadius * omegaIs;
-        final double vOsO1 = -tmp * sinUoso;
-        final double vOsO2 = tmp * cosUoso;
+        final var tmp = orbitalRadius * omegaIs;
+        final var vOsO1 = -tmp * sinUoso;
+        final var vOsO2 = tmp * cosUoso;
 
         // ECEF satellite velocity from (8.26)
-        final double satelliteVx = vOsO1 * cosOmega - vOsO2 * cosInclination * sinOmega
-                + EARTH_ROTATION_RATE * satelliteY;
-        final double satelliteVy = vOsO1 * sinOmega + vOsO2 * cosInclination * cosOmega
-                - EARTH_ROTATION_RATE * satelliteX;
-        final double satelliteVz = vOsO2 * sinInclination;
+        final var satelliteVx = vOsO1 * cosOmega - vOsO2 * cosInclination * sinOmega + EARTH_ROTATION_RATE * satelliteY;
+        final var satelliteVy = vOsO1 * sinOmega + vOsO2 * cosInclination * cosOmega - EARTH_ROTATION_RATE * satelliteX;
+        final var satelliteVz = vOsO2 * sinInclination;
 
         result.setPositionCoordinates(satelliteX, satelliteY, satelliteZ);
         result.setVelocityCoordinates(satelliteVx, satelliteVy, satelliteVz);

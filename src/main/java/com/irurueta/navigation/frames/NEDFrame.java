@@ -48,40 +48,40 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
     /**
      * Latitude expressed in radians.
      */
-    private double mLatitude;
+    private double latitude;
 
     /**
      * Longitude expressed in radians.
      */
-    private double mLongitude;
+    private double longitude;
 
     /**
      * Height expressed in meters.
      */
-    private double mHeight;
+    private double height;
 
     /**
      * Coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame and
      * resolved along North axis.
      */
-    private double mVn;
+    private double vn;
 
     /**
      * Coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame and
      * resolved along East axis.
      */
-    private double mVe;
+    private double ve;
 
     /**
      * Coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame and
      * resolved along Down axis.
      */
-    private double mVd;
+    private double vd;
 
     /**
      * Body to NED coordinate transformation matrix.
      */
-    private CoordinateTransformation mC;
+    private CoordinateTransformation c;
 
     /**
      * Constructor.
@@ -89,7 +89,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * identity.
      */
     public NEDFrame() {
-        mC = new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
+        c = new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
     }
 
     /**
@@ -563,7 +563,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @return latitude expressed in radians.
      */
     public double getLatitude() {
-        return mLatitude;
+        return latitude;
     }
 
     /**
@@ -572,7 +572,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param latitude latitude expressed in radians to be set.
      */
     public void setLatitude(final double latitude) {
-        mLatitude = latitude;
+        this.latitude = latitude;
     }
 
     /**
@@ -581,7 +581,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @return longitude expressed in radians.
      */
     public double getLongitude() {
-        return mLongitude;
+        return longitude;
     }
 
     /**
@@ -590,7 +590,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param longitude longitude expressed in radians to be set.
      */
     public void setLongitude(final double longitude) {
-        mLongitude = longitude;
+        this.longitude = longitude;
     }
 
     /**
@@ -599,7 +599,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @return height expressed in meters.
      */
     public double getHeight() {
-        return mHeight;
+        return height;
     }
 
     /**
@@ -608,7 +608,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param height height expressed in meters to be set.
      */
     public void setHeight(final double height) {
-        mHeight = height;
+        this.height = height;
     }
 
     /**
@@ -619,9 +619,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param height    height expressed in meters to be set.
      */
     public void setPosition(final double latitude, final double longitude, final double height) {
-        mLatitude = latitude;
-        mLongitude = longitude;
-        mHeight = height;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.height = height;
     }
 
     /**
@@ -630,7 +630,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param result instance where latitude will be stored.
      */
     public void getLatitudeAngle(final Angle result) {
-        result.setValue(mLatitude);
+        result.setValue(latitude);
         result.setUnit(AngleUnit.RADIANS);
     }
 
@@ -640,7 +640,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @return latitude.
      */
     public Angle getLatitudeAngle() {
-        return new Angle(mLatitude, AngleUnit.RADIANS);
+        return new Angle(latitude, AngleUnit.RADIANS);
     }
 
     /**
@@ -649,8 +649,8 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param latitudeAngle latitude to be set.
      */
     public void setLatitudeAngle(final Angle latitudeAngle) {
-        mLatitude = AngleConverter.convert(latitudeAngle.getValue().doubleValue(),
-                latitudeAngle.getUnit(), AngleUnit.RADIANS);
+        latitude = AngleConverter.convert(latitudeAngle.getValue().doubleValue(), latitudeAngle.getUnit(),
+                AngleUnit.RADIANS);
     }
 
     /**
@@ -659,7 +659,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param result instance where longitude will be stored.
      */
     public void getLongitudeAngle(final Angle result) {
-        result.setValue(mLongitude);
+        result.setValue(longitude);
         result.setUnit(AngleUnit.RADIANS);
     }
 
@@ -669,7 +669,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @return longitude.
      */
     public Angle getLongitudeAngle() {
-        return new Angle(mLongitude, AngleUnit.RADIANS);
+        return new Angle(longitude, AngleUnit.RADIANS);
     }
 
     /**
@@ -678,8 +678,8 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param longitudeAngle longitude to be set.
      */
     public void setLongitudeAngle(final Angle longitudeAngle) {
-        mLongitude = AngleConverter.convert(longitudeAngle.getValue().doubleValue(),
-                longitudeAngle.getUnit(), AngleUnit.RADIANS);
+        longitude = AngleConverter.convert(longitudeAngle.getValue().doubleValue(), longitudeAngle.getUnit(),
+                AngleUnit.RADIANS);
     }
 
     /**
@@ -688,7 +688,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param result instance where height will be stored.
      */
     public void getHeightDistance(final Distance result) {
-        result.setValue(mHeight);
+        result.setValue(height);
         result.setUnit(DistanceUnit.METER);
     }
 
@@ -698,7 +698,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @return height.
      */
     public Distance getHeightDistance() {
-        return new Distance(mHeight, DistanceUnit.METER);
+        return new Distance(height, DistanceUnit.METER);
     }
 
     /**
@@ -707,8 +707,8 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param heightDistance height to be set.
      */
     public void setHeightDistance(final Distance heightDistance) {
-        mHeight = DistanceConverter.convert(heightDistance.getValue().doubleValue(),
-                heightDistance.getUnit(), DistanceUnit.METER);
+        height = DistanceConverter.convert(heightDistance.getValue().doubleValue(), heightDistance.getUnit(),
+                DistanceUnit.METER);
     }
 
     /**
@@ -719,8 +719,8 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param height    height to be set.
      */
     public void setPosition(final double latitude, final double longitude, final Distance height) {
-        mLatitude = latitude;
-        mLongitude = longitude;
+        this.latitude = latitude;
+        this.longitude = longitude;
         setHeightDistance(height);
     }
 
@@ -734,7 +734,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
     public void setPosition(final Angle latitude, final Angle longitude, final double height) {
         setLatitudeAngle(latitude);
         setLongitudeAngle(longitude);
-        mHeight = height;
+        this.height = height;
     }
 
     /**
@@ -756,7 +756,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param result instance where curvilinear coordinates will be stored.
      */
     public void getPosition(final NEDPosition result) {
-        result.setCoordinates(mLatitude, mLongitude, mHeight);
+        result.setCoordinates(latitude, longitude, height);
     }
 
     /**
@@ -765,7 +765,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @return curvilinear coordinates.
      */
     public NEDPosition getPosition() {
-        return new NEDPosition(mLatitude, mLongitude, mHeight);
+        return new NEDPosition(latitude, longitude, height);
     }
 
     /**
@@ -774,9 +774,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param position curvilinear position to be set.
      */
     public void setPosition(final NEDPosition position) {
-        mLatitude = position.getLatitude();
-        mLongitude = position.getLongitude();
-        mHeight = position.getHeight();
+        latitude = position.getLatitude();
+        longitude = position.getLongitude();
+        height = position.getHeight();
     }
 
     /**
@@ -786,7 +786,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @return North velocity coordinate value.
      */
     public double getVn() {
-        return mVn;
+        return vn;
     }
 
     /**
@@ -796,7 +796,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param vn North velocity coordinate value.
      */
     public void setVn(final double vn) {
-        mVn = vn;
+        this.vn = vn;
     }
 
     /**
@@ -806,7 +806,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @return East velocity coordinate value.
      */
     public double getVe() {
-        return mVe;
+        return ve;
     }
 
     /**
@@ -816,7 +816,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param ve East velocity coordinate value.
      */
     public void setVe(final double ve) {
-        mVe = ve;
+        this.ve = ve;
     }
 
     /**
@@ -826,7 +826,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @return Down velocity coordinate value.
      */
     public double getVd() {
-        return mVd;
+        return vd;
     }
 
     /**
@@ -836,7 +836,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param vd Down velocity coordinate value.
      */
     public void setVd(final double vd) {
-        mVd = vd;
+        this.vd = vd;
     }
 
     /**
@@ -848,9 +848,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param vd Down velocity coordinate value.
      */
     public void setVelocityCoordinates(final double vn, final double ve, final double vd) {
-        mVn = vn;
-        mVe = ve;
-        mVd = vd;
+        this.vn = vn;
+        this.ve = ve;
+        this.vd = vd;
     }
 
     /**
@@ -860,7 +860,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @return norm of velocity expressed in meters per second (m/s).
      */
     public double getVelocityNorm() {
-        return Math.sqrt(mVn * mVn + mVe * mVe + mVd * mVd);
+        return Math.sqrt(vn * vn + ve * ve + vd * vd);
     }
 
     /**
@@ -889,7 +889,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param result instance where North velocity coordinate will be stored.
      */
     public void getSpeedN(final Speed result) {
-        result.setValue(mVn);
+        result.setValue(vn);
         result.setUnit(SpeedUnit.METERS_PER_SECOND);
     }
 
@@ -900,7 +900,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @return North velocity coordinate.
      */
     public Speed getSpeedN() {
-        return new Speed(mVn, SpeedUnit.METERS_PER_SECOND);
+        return new Speed(vn, SpeedUnit.METERS_PER_SECOND);
     }
 
     /**
@@ -910,8 +910,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param speedN North velocity coordinate to be set.
      */
     public void setSpeedN(final Speed speedN) {
-        mVn = SpeedConverter.convert(speedN.getValue().doubleValue(),
-                speedN.getUnit(), SpeedUnit.METERS_PER_SECOND);
+        vn = SpeedConverter.convert(speedN.getValue().doubleValue(), speedN.getUnit(), SpeedUnit.METERS_PER_SECOND);
     }
 
     /**
@@ -921,7 +920,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param result instance where East velocity coordinate will be stored.
      */
     public void getSpeedE(final Speed result) {
-        result.setValue(mVe);
+        result.setValue(ve);
         result.setUnit(SpeedUnit.METERS_PER_SECOND);
     }
 
@@ -932,7 +931,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @return East velocity coordinate.
      */
     public Speed getSpeedE() {
-        return new Speed(mVe, SpeedUnit.METERS_PER_SECOND);
+        return new Speed(ve, SpeedUnit.METERS_PER_SECOND);
     }
 
     /**
@@ -942,8 +941,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param speedE East velocity coordinate to be set.
      */
     public void setSpeedE(final Speed speedE) {
-        mVe = SpeedConverter.convert(speedE.getValue().doubleValue(),
-                speedE.getUnit(), SpeedUnit.METERS_PER_SECOND);
+        ve = SpeedConverter.convert(speedE.getValue().doubleValue(), speedE.getUnit(), SpeedUnit.METERS_PER_SECOND);
     }
 
     /**
@@ -953,7 +951,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param result instance where Down velocity coordinate will be stored.
      */
     public void getSpeedD(final Speed result) {
-        result.setValue(mVd);
+        result.setValue(vd);
         result.setUnit(SpeedUnit.METERS_PER_SECOND);
     }
 
@@ -964,7 +962,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @return Down velocity coordinate.
      */
     public Speed getSpeedD() {
-        return new Speed(mVd, SpeedUnit.METERS_PER_SECOND);
+        return new Speed(vd, SpeedUnit.METERS_PER_SECOND);
     }
 
     /**
@@ -974,8 +972,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param speedD Down velocity coordinate to be set.
      */
     public void setSpeedD(final Speed speedD) {
-        mVd = SpeedConverter.convert(speedD.getValue().doubleValue(),
-                speedD.getUnit(), SpeedUnit.METERS_PER_SECOND);
+        vd = SpeedConverter.convert(speedD.getValue().doubleValue(), speedD.getUnit(), SpeedUnit.METERS_PER_SECOND);
     }
 
     /**
@@ -986,8 +983,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param speedE East velocity coordinate.
      * @param speedD Down velocity coordinate.
      */
-    public void setSpeedCoordinates(final Speed speedN, final Speed speedE,
-                                    final Speed speedD) {
+    public void setSpeedCoordinates(final Speed speedN, final Speed speedE, final Speed speedD) {
         setSpeedN(speedN);
         setSpeedE(speedE);
         setSpeedD(speedD);
@@ -999,7 +995,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param result instance where velocity values will be stored.
      */
     public void getVelocity(final NEDVelocity result) {
-        result.setCoordinates(mVn, mVe, mVd);
+        result.setCoordinates(vn, ve, vd);
     }
 
     /**
@@ -1008,7 +1004,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @return velocity coordinates.
      */
     public NEDVelocity getVelocity() {
-        return new NEDVelocity(mVn, mVe, mVd);
+        return new NEDVelocity(vn, ve, vd);
     }
 
     /**
@@ -1017,9 +1013,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param velocity velocity to be set.
      */
     public void setVelocity(final NEDVelocity velocity) {
-        mVn = velocity.getVn();
-        mVe = velocity.getVe();
-        mVd = velocity.getVd();
+        vn = velocity.getVn();
+        ve = velocity.getVe();
+        vd = velocity.getVd();
     }
 
     /**
@@ -1029,8 +1025,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      */
     @Override
     public CoordinateTransformation getCoordinateTransformation() {
-        final CoordinateTransformation result = new CoordinateTransformation(FrameType.BODY_FRAME,
-                FrameType.LOCAL_NAVIGATION_FRAME);
+        final var result = new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
         getCoordinateTransformation(result);
         return result;
     }
@@ -1042,7 +1037,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      */
     @Override
     public void getCoordinateTransformation(final CoordinateTransformation result) {
-        mC.copyTo(result);
+        c.copyTo(result);
     }
 
     /**
@@ -1072,7 +1067,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      */
     @Override
     public void getCoordinateTransformationMatrix(final Matrix result) {
-        mC.mMatrix.copyTo(result);
+        c.matrix.copyTo(result);
     }
 
     /**
@@ -1090,7 +1085,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
     @Override
     public void setCoordinateTransformationMatrix(final Matrix matrix, final double threshold)
             throws InvalidRotationMatrixException {
-        mC.setMatrix(matrix,threshold);
+        c.setMatrix(matrix,threshold);
     }
 
     /**
@@ -1105,7 +1100,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      */
     @Override
     public void setCoordinateTransformationMatrix(final Matrix matrix) throws InvalidRotationMatrixException {
-        mC.setMatrix(matrix);
+        c.setMatrix(matrix);
     }
 
     /**
@@ -1117,7 +1112,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      */
     @Override
     public Rotation3D getCoordinateTransformationRotation() throws InvalidRotationMatrixException {
-        return mC.asRotation();
+        return c.asRotation();
     }
 
     /**
@@ -1129,7 +1124,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      */
     @Override
     public void getCoordinateTransformationRotation(final Rotation3D result) throws InvalidRotationMatrixException {
-        mC.asRotation(result);
+        c.asRotation(result);
     }
 
     /**
@@ -1143,7 +1138,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      */
     @Override
     public void setCoordinateTransformationRotation(final Rotation3D rotation) {
-        mC.fromRotation(rotation);
+        c.fromRotation(rotation);
     }
 
     /**
@@ -1160,7 +1155,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
             throw new InvalidSourceAndDestinationFrameTypeException();
         }
 
-        mC = c;
+        this.c = c;
     }
 
     /**
@@ -1171,8 +1166,8 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @return true if provided value is valid, false otherwise.
      */
     public static boolean isValidCoordinateTransformation(final CoordinateTransformation c) {
-        return c.getSourceType() == FrameType.BODY_FRAME &&
-                c.getDestinationType() == FrameType.LOCAL_NAVIGATION_FRAME;
+        return c.getSourceType() == FrameType.BODY_FRAME
+                && c.getDestinationType() == FrameType.LOCAL_NAVIGATION_FRAME;
     }
 
     /**
@@ -1181,15 +1176,15 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param output destination instance where data will be copied to.
      */
     public void copyTo(final NEDFrame output) {
-        output.mLatitude = mLatitude;
-        output.mLongitude = mLongitude;
-        output.mHeight = mHeight;
+        output.latitude = latitude;
+        output.longitude = longitude;
+        output.height = height;
 
-        output.mVn = mVn;
-        output.mVe = mVe;
-        output.mVd = mVd;
+        output.vn = vn;
+        output.ve = ve;
+        output.vd = vd;
 
-        mC.copyTo(output.mC);
+        c.copyTo(output.c);
     }
 
     /**
@@ -1198,15 +1193,15 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param input instance to copy data from.
      */
     public void copyFrom(final NEDFrame input) {
-        mLatitude = input.mLatitude;
-        mLongitude = input.mLongitude;
-        mHeight = input.mHeight;
+        latitude = input.latitude;
+        longitude = input.longitude;
+        height = input.height;
 
-        mVn = input.mVn;
-        mVe = input.mVe;
-        mVd = input.mVd;
+        vn = input.vn;
+        ve = input.ve;
+        vd = input.vd;
 
-        mC.copyFrom(input.mC);
+        c.copyFrom(input.c);
     }
 
     /**
@@ -1217,7 +1212,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(mLatitude, mLongitude, mHeight, mVn, mVe, mVd, mC);
+        return Objects.hash(latitude, longitude, height, vn, ve, vd, c);
     }
 
     /**
@@ -1266,13 +1261,13 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
             return false;
         }
 
-        return Math.abs(mLatitude - other.mLatitude) <= threshold
-                && Math.abs(mLongitude - other.mLongitude) <= threshold
-                && Math.abs(mHeight - other.mHeight) <= threshold
-                && Math.abs(mVn - other.mVn) <= threshold
-                && Math.abs(mVe - other.mVe) <= threshold
-                && Math.abs(mVd - other.mVd) <= threshold
-                && mC.equals(other.mC, threshold);
+        return Math.abs(latitude - other.latitude) <= threshold
+                && Math.abs(longitude - other.longitude) <= threshold
+                && Math.abs(height - other.height) <= threshold
+                && Math.abs(vn - other.vn) <= threshold
+                && Math.abs(ve - other.ve) <= threshold
+                && Math.abs(vd - other.vd) <= threshold
+                && c.equals(other.c, threshold);
     }
 
     /**
@@ -1283,7 +1278,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      */
     @Override
     protected Object clone() throws CloneNotSupportedException {
-        final NEDFrame result = (NEDFrame)super.clone();
+        final var result = (NEDFrame)super.clone();
         copyTo(result);
         return result;
     }

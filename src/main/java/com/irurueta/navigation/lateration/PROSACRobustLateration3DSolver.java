@@ -61,23 +61,23 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
      * The threshold refers to the amount of error on distance between estimated position and
      * distances provided for each sample.
      */
-    private double mThreshold = DEFAULT_THRESHOLD;
+    private double threshold = DEFAULT_THRESHOLD;
 
     /**
      * Indicates whether inliers must be computed and kept.
      */
-    private boolean mComputeAndKeepInliers = DEFAULT_COMPUTE_AND_KEEP_INLIERS;
+    private boolean computeAndKeepInliers = DEFAULT_COMPUTE_AND_KEEP_INLIERS;
 
     /**
      * Indicates whether residuals must be computed and kept.
      */
-    private boolean mComputeAndKeepResiduals = DEFAULT_COMPUTE_AND_KEEP_RESIDUALS;
+    private boolean computeAndKeepResiduals = DEFAULT_COMPUTE_AND_KEEP_RESIDUALS;
 
     /**
      * Quality scores corresponding to each provided sample.
      * The larger the score value the better the quality of the sample.
      */
-    private double[] mQualityScores;
+    private double[] qualityScores;
 
     /**
      * Constructor.
@@ -92,8 +92,7 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or its progress significantly changes.
      */
-    public PROSACRobustLateration3DSolver(
-            final RobustLaterationSolverListener<Point3D> listener) {
+    public PROSACRobustLateration3DSolver(final RobustLaterationSolverListener<Point3D> listener) {
         super(listener);
     }
 
@@ -106,8 +105,7 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
      * @throws IllegalArgumentException if either positions or distances are null,
      *                                  don't have the same length of their length is smaller than required (4 points).
      */
-    public PROSACRobustLateration3DSolver(
-            final Point3D[] positions, final double[] distances) {
+    public PROSACRobustLateration3DSolver(final Point3D[] positions, final double[] distances) {
         super(positions, distances);
     }
 
@@ -122,8 +120,7 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
      *                                  don't have the same length or their length is smaller than required (4 points).
      */
     public PROSACRobustLateration3DSolver(
-            final Point3D[] positions, final double[] distances,
-            final double[] distanceStandardDeviations) {
+            final Point3D[] positions, final double[] distances, final double[] distanceStandardDeviations) {
         super(positions, distances, distanceStandardDeviations);
     }
 
@@ -140,8 +137,7 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
      *                                  smaller than required (4 points).
      */
     public PROSACRobustLateration3DSolver(
-            final Point3D[] positions, final double[] distances,
-            final double[] distanceStandardDeviations,
+            final Point3D[] positions, final double[] distances, final double[] distanceStandardDeviations,
             final RobustLaterationSolverListener<Point3D> listener) {
         super(positions, distances, distanceStandardDeviations, listener);
     }
@@ -242,8 +238,7 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
      *                                  of quality scores is less than required minimum (4 samples).
      */
     public PROSACRobustLateration3DSolver(
-            final double[] qualityScores,
-            final RobustLaterationSolverListener<Point3D> listener) {
+            final double[] qualityScores, final RobustLaterationSolverListener<Point3D> listener) {
         super(listener);
         internalSetQualityScores(qualityScores);
     }
@@ -262,8 +257,7 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
      *                                  than required (4 points).
      */
     public PROSACRobustLateration3DSolver(
-            final double[] qualityScores, final Point3D[] positions,
-            final double[] distances) {
+            final double[] qualityScores, final Point3D[] positions, final double[] distances) {
         super(positions, distances);
         internalSetQualityScores(qualityScores);
     }
@@ -283,8 +277,8 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
      *                                  smaller than required (4 points).
      */
     public PROSACRobustLateration3DSolver(
-            final double[] qualityScores, final Point3D[] positions,
-            final double[] distances, final double[] distanceStandardDeviations) {
+            final double[] qualityScores, final Point3D[] positions, final double[] distances,
+            final double[] distanceStandardDeviations) {
         super(positions, distances, distanceStandardDeviations);
         internalSetQualityScores(qualityScores);
     }
@@ -305,9 +299,8 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
      *                                  smaller than required (4 points).
      */
     public PROSACRobustLateration3DSolver(
-            final double[] qualityScores, final Point3D[] positions,
-            final double[] distances, final double[] distanceStandardDeviations,
-            final RobustLaterationSolverListener<Point3D> listener) {
+            final double[] qualityScores, final Point3D[] positions, final double[] distances,
+            final double[] distanceStandardDeviations, final RobustLaterationSolverListener<Point3D> listener) {
         super(positions, distances, distanceStandardDeviations, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -327,8 +320,8 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
      *                                  length or their length is smaller than required (4 points).
      */
     public PROSACRobustLateration3DSolver(
-            final double[] qualityScores, final Point3D[] positions,
-            final double[] distances, final RobustLaterationSolverListener<Point3D> listener) {
+            final double[] qualityScores, final Point3D[] positions, final double[] distances,
+            final RobustLaterationSolverListener<Point3D> listener) {
         super(positions, distances, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -344,8 +337,7 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
      *                                  are null don't have the same length or their length is less than
      *                                  required (4 points).
      */
-    public PROSACRobustLateration3DSolver(
-            final double[] qualityScores, final Sphere[] spheres) {
+    public PROSACRobustLateration3DSolver(final double[] qualityScores, final Sphere[] spheres) {
         super(spheres);
         internalSetQualityScores(qualityScores);
     }
@@ -363,8 +355,7 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
      *                                  length is less than required (4 points).
      */
     public PROSACRobustLateration3DSolver(
-            final double[] qualityScores, final Sphere[] spheres,
-            final double[] distanceStandardDeviations) {
+            final double[] qualityScores, final Sphere[] spheres, final double[] distanceStandardDeviations) {
         super(spheres, distanceStandardDeviations);
         internalSetQualityScores(qualityScores);
     }
@@ -404,8 +395,7 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
      *                                  length is less than required (4 points).
      */
     public PROSACRobustLateration3DSolver(
-            final double[] qualityScores, final Sphere[] spheres,
-            final double[] distanceStandardDeviations,
+            final double[] qualityScores, final Sphere[] spheres, final double[] distanceStandardDeviations,
             final RobustLaterationSolverListener<Point3D> listener) {
         super(spheres, distanceStandardDeviations, listener);
         internalSetQualityScores(qualityScores);
@@ -419,7 +409,7 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
      * @return threshold to determine whether samples are inliers or not.
      */
     public double getThreshold() {
-        return mThreshold;
+        return threshold;
     }
 
     /**
@@ -438,7 +428,7 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
         if (threshold <= MIN_THRESHOLD) {
             throw new IllegalArgumentException();
         }
-        mThreshold = threshold;
+        this.threshold = threshold;
     }
 
     /**
@@ -450,7 +440,7 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
      */
     @Override
     public double[] getQualityScores() {
-        return mQualityScores;
+        return qualityScores;
     }
 
     /**
@@ -466,8 +456,7 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
      *                                  estimation is already in progress.
      */
     @Override
-    public void setQualityScores(final double[] qualityScores)
-            throws LockedException {
+    public void setQualityScores(final double[] qualityScores) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -481,8 +470,7 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
      */
     @Override
     public boolean isReady() {
-        return super.isReady() && mQualityScores != null &&
-                mQualityScores.length == mDistances.length;
+        return super.isReady() && qualityScores != null && qualityScores.length == distances.length;
     }
 
     /**
@@ -492,7 +480,7 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
      * only need to be computed but not kept.
      */
     public boolean isComputeAndKeepInliersEnabled() {
-        return mComputeAndKeepInliers;
+        return computeAndKeepInliers;
     }
 
     /**
@@ -502,12 +490,11 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
      *                              false if inliers only need to be computed but not kept.
      * @throws LockedException if this solver is locked.
      */
-    public void setComputeAndKeepInliersEnabled(final boolean computeAndKeepInliers)
-            throws LockedException {
+    public void setComputeAndKeepInliersEnabled(final boolean computeAndKeepInliers) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        mComputeAndKeepInliers = computeAndKeepInliers;
+        this.computeAndKeepInliers = computeAndKeepInliers;
     }
 
     /**
@@ -517,7 +504,7 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
      * only need to be computed but not kept.
      */
     public boolean isComputeAndKeepResiduals() {
-        return mComputeAndKeepResiduals;
+        return computeAndKeepResiduals;
     }
 
     /**
@@ -527,12 +514,11 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
      *                                false if residuals only need to be computed but not kept.
      * @throws LockedException if this solver is locked.
      */
-    public void setComputeAndKeepResidualsEnabled(final boolean computeAndKeepResiduals)
-            throws LockedException {
+    public void setComputeAndKeepResidualsEnabled(final boolean computeAndKeepResiduals) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        mComputeAndKeepResiduals = computeAndKeepResiduals;
+        this.computeAndKeepResiduals = computeAndKeepResiduals;
     }
 
     /**
@@ -545,8 +531,7 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
      *                                  (i.e. numerical instability, no solution available, etc).
      */
     @Override
-    public Point3D solve() throws LockedException, NotReadyException,
-            RobustEstimatorException {
+    public Point3D solve() throws LockedException, NotReadyException, RobustEstimatorException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -554,94 +539,86 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
             throw new NotReadyException();
         }
 
-        final PROSACRobustEstimator<Point3D> innerEstimator =
-                new PROSACRobustEstimator<>(new PROSACRobustEstimatorListener<Point3D>() {
-                    @Override
-                    public double[] getQualityScores() {
-                        return mQualityScores;
-                    }
-
-                    @Override
-                    public double getThreshold() {
-                        return mThreshold;
-                    }
-
-                    @Override
-                    public int getTotalSamples() {
-                        return mDistances.length;
-                    }
-
-                    @Override
-                    public int getSubsetSize() {
-                        return mPreliminarySubsetSize;
-                    }
-
-                    @Override
-                    public void estimatePreliminarSolutions(
-                            final int[] samplesIndices, final List<Point3D> solutions) {
-                        solvePreliminarySolutions(samplesIndices, solutions);
-                    }
-
-                    @Override
-                    public double computeResidual(final Point3D currentEstimation, int i) {
-                        return Math.abs(currentEstimation.distanceTo(mPositions[i]) - mDistances[i]);
-                    }
-
-                    @Override
-                    public boolean isReady() {
-                        return PROSACRobustLateration3DSolver.this.isReady();
-                    }
-
-                    @Override
-                    public void onEstimateStart(final RobustEstimator<Point3D> estimator) {
-                        // no action needed
-                    }
-
-                    @Override
-                    public void onEstimateEnd(final RobustEstimator<Point3D> estimator) {
-                        // no action needed
-                    }
-
-                    @Override
-                    public void onEstimateNextIteration(
-                            final RobustEstimator<Point3D> estimator, final int iteration) {
-                        if (mListener != null) {
-                            mListener.onSolveNextIteration(
-                                    PROSACRobustLateration3DSolver.this, iteration);
-                        }
-                    }
-
-                    @Override
-                    public void onEstimateProgressChange(
-                            final RobustEstimator<Point3D> estimator, final float progress) {
-                        if (mListener != null) {
-                            mListener.onSolveProgressChange(
-                                    PROSACRobustLateration3DSolver.this, progress);
-                        }
-                    }
-                });
-
-        try {
-            mLocked = true;
-
-            if (mListener != null) {
-                mListener.onSolveStart(this);
+        final var innerEstimator = new PROSACRobustEstimator<>(new PROSACRobustEstimatorListener<Point3D>() {
+            @Override
+            public double[] getQualityScores() {
+                return qualityScores;
             }
 
-            mInliersData = null;
-            innerEstimator.setComputeAndKeepInliersEnabled(
-                    mComputeAndKeepInliers || mRefineResult);
-            innerEstimator.setComputeAndKeepResidualsEnabled(
-                    mComputeAndKeepResiduals || mRefineResult);
-            innerEstimator.setConfidence(mConfidence);
-            innerEstimator.setMaxIterations(mMaxIterations);
-            innerEstimator.setProgressDelta(mProgressDelta);
-            Point3D result = innerEstimator.estimate();
-            mInliersData = innerEstimator.getInliersData();
+            @Override
+            public double getThreshold() {
+                return threshold;
+            }
+
+            @Override
+            public int getTotalSamples() {
+                return distances.length;
+            }
+
+            @Override
+            public int getSubsetSize() {
+                return preliminarySubsetSize;
+            }
+
+            @Override
+            public void estimatePreliminarSolutions(final int[] samplesIndices, final List<Point3D> solutions) {
+                solvePreliminarySolutions(samplesIndices, solutions);
+            }
+
+            @Override
+            public double computeResidual(final Point3D currentEstimation, int i) {
+                return Math.abs(currentEstimation.distanceTo(positions[i]) - distances[i]);
+            }
+
+            @Override
+            public boolean isReady() {
+                return PROSACRobustLateration3DSolver.this.isReady();
+            }
+
+            @Override
+            public void onEstimateStart(final RobustEstimator<Point3D> estimator) {
+                // no action needed
+            }
+
+            @Override
+            public void onEstimateEnd(final RobustEstimator<Point3D> estimator) {
+                // no action needed
+            }
+
+            @Override
+            public void onEstimateNextIteration(final RobustEstimator<Point3D> estimator, final int iteration) {
+                if (listener != null) {
+                    listener.onSolveNextIteration(PROSACRobustLateration3DSolver.this, iteration);
+                }
+            }
+
+            @Override
+            public void onEstimateProgressChange(final RobustEstimator<Point3D> estimator, final float progress) {
+                if (listener != null) {
+                    listener.onSolveProgressChange(PROSACRobustLateration3DSolver.this, progress);
+                }
+            }
+        });
+
+        try {
+            locked = true;
+
+            if (listener != null) {
+                listener.onSolveStart(this);
+            }
+
+            inliersData = null;
+            innerEstimator.setComputeAndKeepInliersEnabled(computeAndKeepInliers || refineResult);
+            innerEstimator.setComputeAndKeepResidualsEnabled(computeAndKeepResiduals || refineResult);
+            innerEstimator.setConfidence(confidence);
+            innerEstimator.setMaxIterations(maxIterations);
+            innerEstimator.setProgressDelta(progressDelta);
+            var result = innerEstimator.estimate();
+            inliersData = innerEstimator.getInliersData();
             result = attemptRefine(result);
 
-            if (mListener != null) {
-                mListener.onSolveEnd(this);
+            if (listener != null) {
+                listener.onSolveEnd(this);
             }
 
             return result;
@@ -651,7 +628,7 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
         } catch (final com.irurueta.numerical.NotReadyException e) {
             throw new NotReadyException(e);
         } finally {
-            mLocked = false;
+            locked = false;
         }
     }
 
@@ -675,11 +652,10 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
      *                                  is smaller than 3 samples.
      */
     private void internalSetQualityScores(final double[] qualityScores) {
-        if (qualityScores == null ||
-                qualityScores.length < getMinRequiredPositionsAndDistances()) {
+        if (qualityScores == null || qualityScores.length < getMinRequiredPositionsAndDistances()) {
             throw new IllegalArgumentException();
         }
 
-        mQualityScores = qualityScores;
+        this.qualityScores = qualityScores;
     }
 }

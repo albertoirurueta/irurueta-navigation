@@ -82,198 +82,198 @@ public class GNSSLeastSquaresPositionAndVelocityEstimator {
     /**
      * GNSS measurements of a collection of satellites.
      */
-    private Collection<GNSSMeasurement> mMeasurements;
+    private Collection<GNSSMeasurement> measurements;
 
     /**
      * Previously predicted ECEF user position and velocity.
      */
-    private ECEFPositionAndVelocity mPriorPositionAndVelocity;
+    private ECEFPositionAndVelocity priorPositionAndVelocity;
 
     /**
      * Listener to notify events raised by this instance.
      */
-    private GNSSLeastSquaresPositionAndVelocityEstimatorListener mListener;
+    private GNSSLeastSquaresPositionAndVelocityEstimatorListener listener;
 
     /**
      * Threshold to determine when convergence has been reached.
      */
-    private double mConvergenceThreshold = CONVERGENCE_THRESHOLD;
+    private double convergenceThreshold = CONVERGENCE_THRESHOLD;
 
     /**
      * Indicates whether estimation is currently running.
      */
-    private boolean mRunning;
+    private boolean running;
 
     /**
      * Internal matrix to be reused containing frame rotation during signal transit
      * time.
      */
-    private final Matrix mCei;
+    private final Matrix cei;
 
     /**
      * Predicted state to be reused.
      */
-    private final Matrix mXPred;
+    private final Matrix xPred;
 
     /**
      * Temporal matrix to be reused.
      */
-    private final Matrix mTmp1;
+    private final Matrix tmp1;
 
     /**
      * Temporal matrix to be reused.
      */
-    private final Matrix mTmp2;
+    private final Matrix tmp2;
 
     /**
      * Estimated state to be reused.
      */
-    private final Matrix mXEst;
+    private final Matrix xEst;
 
     /**
      * Contains square representation of measurement or geometry matrix.
      */
-    private final Matrix mHSqr;
+    private final Matrix hSqr;
 
     /**
      * Inverse of the square representation of measurement or geometry matrix.
      */
-    private final Matrix mInvHSqr;
+    private final Matrix invHSqr;
 
     /**
      * Temporal matrix to be reused.
      */
-    private final Matrix mTmp3;
+    private final Matrix tmp3;
 
     /**
      * Skew symmetric matrix of Earth rotation rate.
      */
-    private final Matrix mOmegaIe;
+    private final Matrix omegaIe;
 
     /**
      * Temporal matrix to be reused.
      */
-    private final Matrix mTmp4;
+    private final Matrix tmp4;
 
     /**
      * Temporal matrix to be reused.
      */
-    private final Matrix mTmp5;
+    private final Matrix tmp5;
 
     /**
      * Temporal matrix to be reused.
      */
-    private final Matrix mTmp6;
+    private final Matrix tmp6;
 
     /**
      * Temporal matrix to be reused.
      */
-    private final Matrix mTmp7;
+    private final Matrix tmp7;
 
     /**
      * Temporal matrix to be reused.
      */
-    private final Matrix mTmp8;
+    private final Matrix tmp8;
 
     /**
      * Temporal matrix to be reused.
      */
-    private final Matrix mTmp9;
+    private final Matrix tmp9;
 
     /**
      * Temporal matrix to be reused.
      */
-    private final Matrix mTmp10;
+    private final Matrix tmp10;
 
     /**
      * Measurement position to be reused.
      */
-    private final Matrix mMeasurementPosition;
+    private final Matrix measurementPosition;
 
     /**
      * Measurement velocity to be reused.
      */
-    private final Matrix mMeasurementVelocity;
+    private final Matrix measurementVelocity;
 
     /**
      * Predicted velocity to be reused.
      */
-    private final Matrix mPredVelocity;
+    private final Matrix predVelocity;
 
     /**
      * Result position to be reused.
      */
-    private final Matrix mResultPosition;
+    private final Matrix resultPosition;
 
     /**
      * Constructor.
      */
     public GNSSLeastSquaresPositionAndVelocityEstimator() {
-        Matrix xPred = null;
-        Matrix tmp1 = null;
-        Matrix tmp2 = null;
-        Matrix xEst = null;
-        Matrix hSqr = null;
-        Matrix invHSqr = null;
-        Matrix tmp3 = null;
-        Matrix omegaIe = null;
-        Matrix cei = null;
-        Matrix tmp4 = null;
-        Matrix tmp5 = null;
-        Matrix tmp6 = null;
-        Matrix tmp7 = null;
-        Matrix tmp8 = null;
-        Matrix tmp9 = null;
-        Matrix tmp10 = null;
-        Matrix measurementPosition = null;
-        Matrix measurementVelocity = null;
-        Matrix predVelocity = null;
-        Matrix resultPosition = null;
+        Matrix cxPred = null;
+        Matrix ctmp1 = null;
+        Matrix ctmp2 = null;
+        Matrix cxEst = null;
+        Matrix chSqr = null;
+        Matrix cinvHSqr = null;
+        Matrix ctmp3 = null;
+        Matrix comegaIe = null;
+        Matrix ccei = null;
+        Matrix ctmp4 = null;
+        Matrix ctmp5 = null;
+        Matrix ctmp6 = null;
+        Matrix ctmp7 = null;
+        Matrix ctmp8 = null;
+        Matrix ctmp9 = null;
+        Matrix ctmp10 = null;
+        Matrix cmeasurementPosition = null;
+        Matrix cmeasurementVelocity = null;
+        Matrix cpredVelocity = null;
+        Matrix cresultPosition = null;
         try {
-            cei = Matrix.identity(ELEMS, ELEMS);
-            xPred = new Matrix(STATE_COMPONENTS, 1);
-            tmp1 = new Matrix(ELEMS, 1);
-            tmp2 = new Matrix(ELEMS, 1);
-            xEst = new Matrix(STATE_COMPONENTS, 1);
-            hSqr = new Matrix(STATE_COMPONENTS, STATE_COMPONENTS);
-            invHSqr = new Matrix(STATE_COMPONENTS, STATE_COMPONENTS);
-            tmp3 = new Matrix(STATE_COMPONENTS, 1);
-            omegaIe = Utils.skewMatrix(new double[]{0.0, 0.0, EARTH_ROTATION_RATE});
-            tmp4 = new Matrix(STATE_COMPONENTS, 1);
-            tmp5 = new Matrix(STATE_COMPONENTS, 1);
-            tmp6 = new Matrix(STATE_COMPONENTS, 1);
-            tmp7 = new Matrix(STATE_COMPONENTS, 1);
-            tmp8 = new Matrix(STATE_COMPONENTS, 1);
-            tmp9 = new Matrix(STATE_COMPONENTS, 1);
-            tmp10 = new Matrix(STATE_COMPONENTS, 1);
-            measurementPosition = new Matrix(ELEMS, 1);
-            measurementVelocity = new Matrix(ELEMS, 1);
-            predVelocity = new Matrix(ELEMS, 1);
-            resultPosition = new Matrix(ELEMS, 1);
+            ccei = Matrix.identity(ELEMS, ELEMS);
+            cxPred = new Matrix(STATE_COMPONENTS, 1);
+            ctmp1 = new Matrix(ELEMS, 1);
+            ctmp2 = new Matrix(ELEMS, 1);
+            cxEst = new Matrix(STATE_COMPONENTS, 1);
+            chSqr = new Matrix(STATE_COMPONENTS, STATE_COMPONENTS);
+            cinvHSqr = new Matrix(STATE_COMPONENTS, STATE_COMPONENTS);
+            ctmp3 = new Matrix(STATE_COMPONENTS, 1);
+            comegaIe = Utils.skewMatrix(new double[]{0.0, 0.0, EARTH_ROTATION_RATE});
+            ctmp4 = new Matrix(STATE_COMPONENTS, 1);
+            ctmp5 = new Matrix(STATE_COMPONENTS, 1);
+            ctmp6 = new Matrix(STATE_COMPONENTS, 1);
+            ctmp7 = new Matrix(STATE_COMPONENTS, 1);
+            ctmp8 = new Matrix(STATE_COMPONENTS, 1);
+            ctmp9 = new Matrix(STATE_COMPONENTS, 1);
+            ctmp10 = new Matrix(STATE_COMPONENTS, 1);
+            cmeasurementPosition = new Matrix(ELEMS, 1);
+            cmeasurementVelocity = new Matrix(ELEMS, 1);
+            cpredVelocity = new Matrix(ELEMS, 1);
+            cresultPosition = new Matrix(ELEMS, 1);
         } catch (WrongSizeException ignore) {
             // never happens
         }
 
-        mCei = cei;
-        mXPred = xPred;
-        mTmp1 = tmp1;
-        mTmp2 = tmp2;
-        mXEst = xEst;
-        mHSqr = hSqr;
-        mInvHSqr = invHSqr;
-        mTmp3 = tmp3;
-        mOmegaIe = omegaIe;
-        mTmp4 = tmp4;
-        mTmp5 = tmp5;
-        mTmp6 = tmp6;
-        mTmp7 = tmp7;
-        mTmp8 = tmp8;
-        mTmp9 = tmp9;
-        mTmp10 = tmp10;
-        mMeasurementPosition = measurementPosition;
-        mMeasurementVelocity = measurementVelocity;
-        mPredVelocity = predVelocity;
-        mResultPosition = resultPosition;
+        this.cei = ccei;
+        this.xPred = cxPred;
+        this.tmp1 = ctmp1;
+        this.tmp2 = ctmp2;
+        this.xEst = cxEst;
+        this.hSqr = chSqr;
+        this.invHSqr = cinvHSqr;
+        this.tmp3 = ctmp3;
+        this.omegaIe = comegaIe;
+        this.tmp4 = ctmp4;
+        this.tmp5 = ctmp5;
+        this.tmp6 = ctmp6;
+        this.tmp7 = ctmp7;
+        this.tmp8 = ctmp8;
+        this.tmp9 = ctmp9;
+        this.tmp10 = ctmp10;
+        this.measurementPosition = cmeasurementPosition;
+        this.measurementVelocity = cmeasurementVelocity;
+        this.predVelocity = cpredVelocity;
+        this.resultPosition = cresultPosition;
     }
 
     /**
@@ -282,8 +282,7 @@ public class GNSSLeastSquaresPositionAndVelocityEstimator {
      * @param measurements GNSS measurements of a collection of satellites.
      * @throws IllegalArgumentException if less than 4 measurements are provided.
      */
-    public GNSSLeastSquaresPositionAndVelocityEstimator(
-            final Collection<GNSSMeasurement> measurements) {
+    public GNSSLeastSquaresPositionAndVelocityEstimator(final Collection<GNSSMeasurement> measurements) {
         this();
         try {
             setMeasurements(measurements);
@@ -412,7 +411,7 @@ public class GNSSLeastSquaresPositionAndVelocityEstimator {
      * @return GNSS measurements of a collection of satellites.
      */
     public Collection<GNSSMeasurement> getMeasurements() {
-        return mMeasurements;
+        return measurements;
     }
 
     /**
@@ -422,16 +421,15 @@ public class GNSSLeastSquaresPositionAndVelocityEstimator {
      * @throws IllegalArgumentException if less than 4 measurements are provided.
      * @throws LockedException          if this estimator is already running.
      */
-    public void setMeasurements(
-            final Collection<GNSSMeasurement> measurements) throws LockedException {
-        if (mRunning) {
+    public void setMeasurements(final Collection<GNSSMeasurement> measurements) throws LockedException {
+        if (running) {
             throw new LockedException();
         }
         if (!isValidMeasurements(measurements)) {
             throw new IllegalArgumentException();
         }
 
-        mMeasurements = measurements;
+        this.measurements = measurements;
     }
 
     /**
@@ -440,7 +438,7 @@ public class GNSSLeastSquaresPositionAndVelocityEstimator {
      * @return previously predicted ECEF user position and velocity.
      */
     public ECEFPositionAndVelocity getPriorPositionAndVelocity() {
-        return mPriorPositionAndVelocity;
+        return priorPositionAndVelocity;
     }
 
     /**
@@ -451,13 +449,12 @@ public class GNSSLeastSquaresPositionAndVelocityEstimator {
      * @throws LockedException if this estimator is already running.
      */
     public void setPriorPositionAndVelocity(
-            final ECEFPositionAndVelocity priorPositionAndVelocity)
-            throws LockedException {
-        if (mRunning) {
+            final ECEFPositionAndVelocity priorPositionAndVelocity) throws LockedException {
+        if (running) {
             throw new LockedException();
         }
 
-        mPriorPositionAndVelocity = priorPositionAndVelocity;
+        this.priorPositionAndVelocity = priorPositionAndVelocity;
     }
 
     /**
@@ -468,14 +465,12 @@ public class GNSSLeastSquaresPositionAndVelocityEstimator {
      * @throws LockedException if this estimator is already running.
      */
     public void setPriorPositionAndVelocityFromEstimation(
-            final GNSSEstimation priorEstimation)
-            throws LockedException {
-        if (mRunning) {
+            final GNSSEstimation priorEstimation) throws LockedException {
+        if (running) {
             throw new LockedException();
         }
 
-        mPriorPositionAndVelocity = priorEstimation != null ?
-                priorEstimation.getPositionAndVelocity() : null;
+        priorPositionAndVelocity = priorEstimation != null ? priorEstimation.getPositionAndVelocity() : null;
     }
 
     /**
@@ -484,7 +479,7 @@ public class GNSSLeastSquaresPositionAndVelocityEstimator {
      * @return listener to notify events raised by this instance.
      */
     public GNSSLeastSquaresPositionAndVelocityEstimatorListener getListener() {
-        return mListener;
+        return listener;
     }
 
     /**
@@ -494,12 +489,11 @@ public class GNSSLeastSquaresPositionAndVelocityEstimator {
      * @throws LockedException if this estimator is already running.
      */
     public void setListener(
-            final GNSSLeastSquaresPositionAndVelocityEstimatorListener listener)
-            throws LockedException {
-        if (mRunning) {
+            final GNSSLeastSquaresPositionAndVelocityEstimatorListener listener) throws LockedException {
+        if (running) {
             throw new LockedException();
         }
-        mListener = listener;
+        this.listener = listener;
     }
 
     /**
@@ -508,7 +502,7 @@ public class GNSSLeastSquaresPositionAndVelocityEstimator {
      * @return threshold to determine when convergence has been reached.
      */
     public double getConvergenceThreshold() {
-        return mConvergenceThreshold;
+        return convergenceThreshold;
     }
 
     /**
@@ -519,16 +513,16 @@ public class GNSSLeastSquaresPositionAndVelocityEstimator {
      * @throws LockedException          if this estimator is already running.
      * @throws IllegalArgumentException if provided threshold is zero or negative.
      */
-    public void setConvergenceThreshold(final double convergenceThreshold)
-            throws LockedException, IllegalArgumentException {
-        if (mRunning) {
+    public void setConvergenceThreshold(final double convergenceThreshold) throws LockedException,
+            IllegalArgumentException {
+        if (running) {
             throw new LockedException();
         }
         if (convergenceThreshold <= 0.0) {
             throw new IllegalArgumentException();
         }
 
-        mConvergenceThreshold = convergenceThreshold;
+        this.convergenceThreshold = convergenceThreshold;
     }
 
     /**
@@ -537,7 +531,7 @@ public class GNSSLeastSquaresPositionAndVelocityEstimator {
      * @return true if estimator is ready, false otherwise.
      */
     public boolean isReady() {
-        return isValidMeasurements(mMeasurements);
+        return isValidMeasurements(measurements);
     }
 
     /**
@@ -546,7 +540,7 @@ public class GNSSLeastSquaresPositionAndVelocityEstimator {
      * @return true if estimator is running, false otherwise.
      */
     public boolean isRunning() {
-        return mRunning;
+        return running;
     }
 
     /**
@@ -555,8 +549,7 @@ public class GNSSLeastSquaresPositionAndVelocityEstimator {
      * @param gnssMeasurements measurements to be checked.
      * @return true if at least 4 measurements are provided, false otherwise.
      */
-    public static boolean isValidMeasurements(
-            final Collection<GNSSMeasurement> gnssMeasurements) {
+    public static boolean isValidMeasurements(final Collection<GNSSMeasurement> gnssMeasurements) {
         return gnssMeasurements != null && gnssMeasurements.size() >= MIN_MEASUREMENTS;
     }
 
@@ -570,20 +563,19 @@ public class GNSSLeastSquaresPositionAndVelocityEstimator {
      * @throws GNSSException     if estimation fails due to numerical instabilities.
      */
     @SuppressWarnings("DuplicatedCode")
-    public void estimate(final GNSSEstimation result)
-            throws NotReadyException, LockedException, GNSSException {
+    public void estimate(final GNSSEstimation result) throws NotReadyException, LockedException, GNSSException {
         if (!isReady()) {
             throw new NotReadyException();
         }
-        if (mRunning) {
+        if (running) {
             throw new LockedException();
         }
 
         try {
-            mRunning = true;
+            running = true;
 
-            if (mListener != null) {
-                mListener.onEstimateStart(this);
+            if (listener != null) {
+                listener.onEstimateStart(this);
             }
 
             // if no prior position and velocity is available, assume that
@@ -594,66 +586,65 @@ public class GNSSLeastSquaresPositionAndVelocityEstimator {
             // POSITION AND CLOCK OFFSET
 
             // Setup predicted state
-            final double priorX = mPriorPositionAndVelocity.getX();
-            final double priorY = mPriorPositionAndVelocity.getY();
-            final double priorZ = mPriorPositionAndVelocity.getZ();
+            final var priorX = priorPositionAndVelocity.getX();
+            final var priorY = priorPositionAndVelocity.getY();
+            final var priorZ = priorPositionAndVelocity.getZ();
 
-            mXPred.setElementAtIndex(0, priorX);
-            mXPred.setElementAtIndex(1, priorY);
-            mXPred.setElementAtIndex(2, priorZ);
-            mXPred.setElementAtIndex(3, 0.0);
+            xPred.setElementAtIndex(0, priorX);
+            xPred.setElementAtIndex(1, priorY);
+            xPred.setElementAtIndex(2, priorZ);
+            xPred.setElementAtIndex(3, 0.0);
 
-            final int numMeasurements = mMeasurements.size();
-            final Matrix predMeas = new Matrix(numMeasurements, 1);
-            final Matrix h = new Matrix(numMeasurements, STATE_COMPONENTS);
-            for (int i = 0; i < numMeasurements; i++) {
+            final var numMeasurements = measurements.size();
+            final var predMeas = new Matrix(numMeasurements, 1);
+            final var h = new Matrix(numMeasurements, STATE_COMPONENTS);
+            for (var i = 0; i < numMeasurements; i++) {
                 h.setElementAt(i, 3, 1.0);
             }
 
-            final Matrix hTrans = new Matrix(STATE_COMPONENTS, numMeasurements);
-            final Matrix hTmp1 = new Matrix(STATE_COMPONENTS, numMeasurements);
-            final Matrix deltaPseudoRange = new Matrix(numMeasurements, 1);
+            final var hTrans = new Matrix(STATE_COMPONENTS, numMeasurements);
+            final var hTmp1 = new Matrix(STATE_COMPONENTS, numMeasurements);
+            final var deltaPseudoRange = new Matrix(numMeasurements, 1);
 
             // Repeat until convergence
-            double testConvergence = 1.0;
-            while (testConvergence > mConvergenceThreshold) {
+            var testConvergence = 1.0;
+            while (testConvergence > convergenceThreshold) {
 
                 // Loop measurements
-                int j = 0;
-                for (final GNSSMeasurement measurement : mMeasurements) {
+                var j = 0;
+                for (final var measurement : measurements) {
 
                     // Predict approx range
-                    final double measX = measurement.getX();
-                    final double measY = measurement.getY();
-                    final double measZ = measurement.getZ();
+                    final var measX = measurement.getX();
+                    final var measY = measurement.getY();
+                    final var measZ = measurement.getZ();
 
-                    double deltaRx = measX - priorX;
-                    double deltaRy = measY - priorY;
-                    double deltaRz = measZ - priorZ;
-                    final double approxRange = norm(deltaRx, deltaRy, deltaRz);
+                    var deltaRx = measX - priorX;
+                    var deltaRy = measY - priorY;
+                    var deltaRz = measZ - priorZ;
+                    final var approxRange = norm(deltaRx, deltaRy, deltaRz);
 
                     // Calculate frame rotation during signal transit time using (8.36)
-                    final double ceiValue = EARTH_ROTATION_RATE * approxRange / SPEED_OF_LIGHT;
-                    mCei.setElementAt(0, 1, ceiValue);
-                    mCei.setElementAt(1, 0, -ceiValue);
+                    final var ceiValue = EARTH_ROTATION_RATE * approxRange / SPEED_OF_LIGHT;
+                    cei.setElementAt(0, 1, ceiValue);
+                    cei.setElementAt(1, 0, -ceiValue);
 
                     // Predict pseudo-range using (9.143)
-                    mTmp1.setElementAtIndex(0, measX);
-                    mTmp1.setElementAtIndex(1, measY);
-                    mTmp1.setElementAtIndex(2, measZ);
+                    tmp1.setElementAtIndex(0, measX);
+                    tmp1.setElementAtIndex(1, measY);
+                    tmp1.setElementAtIndex(2, measZ);
 
-                    mCei.multiply(mTmp1, mTmp2);
+                    cei.multiply(tmp1, tmp2);
 
-                    deltaRx = mTmp2.getElementAtIndex(0) - mXPred.getElementAtIndex(0);
-                    deltaRy = mTmp2.getElementAtIndex(1) - mXPred.getElementAtIndex(1);
-                    deltaRz = mTmp2.getElementAtIndex(2) - mXPred.getElementAtIndex(2);
-                    final double range = norm(deltaRx, deltaRy, deltaRz);
+                    deltaRx = tmp2.getElementAtIndex(0) - xPred.getElementAtIndex(0);
+                    deltaRy = tmp2.getElementAtIndex(1) - xPred.getElementAtIndex(1);
+                    deltaRz = tmp2.getElementAtIndex(2) - xPred.getElementAtIndex(2);
+                    final var range = norm(deltaRx, deltaRy, deltaRz);
 
-                    final double predictedPseudoRange = range + mXPred.getElementAtIndex(3);
+                    final var predictedPseudoRange = range + xPred.getElementAtIndex(3);
                     predMeas.setElementAtIndex(j, predictedPseudoRange);
 
-                    deltaPseudoRange.setElementAtIndex(j,
-                            measurement.getPseudoRange() - predictedPseudoRange);
+                    deltaPseudoRange.setElementAtIndex(j, measurement.getPseudoRange() - predictedPseudoRange);
 
                     // Predict line of sight and deploy in measurement matrix, (9.144)
                     h.setElementAt(j, 0, -deltaRx / range);
@@ -665,120 +656,118 @@ public class GNSSLeastSquaresPositionAndVelocityEstimator {
 
                 // Unweighted least-squares solution, (9.35)/(9.141)
                 h.transpose(hTrans);
-                hTrans.multiply(h, mHSqr);
-                Utils.inverse(mHSqr, mInvHSqr);
-                mInvHSqr.multiply(hTrans, hTmp1);
-                hTmp1.multiply(deltaPseudoRange, mTmp3);
+                hTrans.multiply(h, hSqr);
+                Utils.inverse(hSqr, invHSqr);
+                invHSqr.multiply(hTrans, hTmp1);
+                hTmp1.multiply(deltaPseudoRange, tmp3);
 
-                mXPred.add(mTmp3, mXEst);
+                xPred.add(tmp3, xEst);
 
                 // Test convergence
                 testConvergence = predictionError();
 
                 // Set predictions to estimates for next iteration
-                mXPred.copyFrom(mXEst);
+                xPred.copyFrom(xEst);
             }
 
             // Set outputs to estimates
-            final double resultX = mXEst.getElementAtIndex(0);
-            final double resultY = mXEst.getElementAtIndex(1);
-            final double resultZ = mXEst.getElementAtIndex(2);
+            final var resultX = xEst.getElementAtIndex(0);
+            final var resultY = xEst.getElementAtIndex(1);
+            final var resultZ = xEst.getElementAtIndex(2);
             result.setPositionCoordinates(resultX, resultY, resultZ);
 
-            final double resultClockOffset = mXEst.getElementAtIndex(3);
+            final var resultClockOffset = xEst.getElementAtIndex(3);
             result.setClockOffset(resultClockOffset);
 
 
             // VELOCITY AND CLOCK DRIFT
 
             // Setup predicted state
-            final double priorVx = mPriorPositionAndVelocity.getVx();
-            final double priorVy = mPriorPositionAndVelocity.getVy();
-            final double priorVz = mPriorPositionAndVelocity.getVz();
+            final var priorVx = priorPositionAndVelocity.getVx();
+            final var priorVy = priorPositionAndVelocity.getVy();
+            final var priorVz = priorPositionAndVelocity.getVz();
 
-            mXPred.setElementAtIndex(0, priorVx);
-            mXPred.setElementAtIndex(1, priorVy);
-            mXPred.setElementAtIndex(2, priorVz);
-            mXPred.setElementAtIndex(3, 0.0);
+            xPred.setElementAtIndex(0, priorVx);
+            xPred.setElementAtIndex(1, priorVy);
+            xPred.setElementAtIndex(2, priorVz);
+            xPred.setElementAtIndex(3, 0.0);
 
-            mResultPosition.setElementAtIndex(0, resultX);
-            mResultPosition.setElementAtIndex(1, resultY);
-            mResultPosition.setElementAtIndex(2, resultZ);
+            resultPosition.setElementAtIndex(0, resultX);
+            resultPosition.setElementAtIndex(1, resultY);
+            resultPosition.setElementAtIndex(2, resultZ);
 
-            final Matrix deltaPseudoRangeRate = new Matrix(numMeasurements, 1);
+            final var deltaPseudoRangeRate = new Matrix(numMeasurements, 1);
 
             // Repeat until convergence
             testConvergence = 1.0;
-            while (testConvergence > mConvergenceThreshold) {
+            while (testConvergence > convergenceThreshold) {
 
                 // Loop measurements
-                int j = 0;
-                for (final GNSSMeasurement measurement : mMeasurements) {
+                var j = 0;
+                for (final var measurement : measurements) {
                     // Predict approx range
-                    final double measX = measurement.getX();
-                    final double measY = measurement.getY();
-                    final double measZ = measurement.getZ();
+                    final var measX = measurement.getX();
+                    final var measY = measurement.getY();
+                    final var measZ = measurement.getZ();
 
-                    double deltaRx = measX - resultX;
-                    double deltaRy = measY - resultY;
-                    double deltaRz = measZ - resultZ;
-                    final double approxRange = norm(deltaRx, deltaRy, deltaRz);
+                    var deltaRx = measX - resultX;
+                    var deltaRy = measY - resultY;
+                    var deltaRz = measZ - resultZ;
+                    final var approxRange = norm(deltaRx, deltaRy, deltaRz);
 
                     // Calculate frame rotation during signal transit time using (8.36)
-                    final double ceiValue = EARTH_ROTATION_RATE * approxRange / SPEED_OF_LIGHT;
-                    mCei.setElementAt(0, 1, ceiValue);
-                    mCei.setElementAt(1, 0, -ceiValue);
+                    final var ceiValue = EARTH_ROTATION_RATE * approxRange / SPEED_OF_LIGHT;
+                    cei.setElementAt(0, 1, ceiValue);
+                    cei.setElementAt(1, 0, -ceiValue);
 
                     // Calculate range using (8.35)
-                    mTmp1.setElementAtIndex(0, measX);
-                    mTmp1.setElementAtIndex(1, measY);
-                    mTmp1.setElementAtIndex(2, measZ);
+                    tmp1.setElementAtIndex(0, measX);
+                    tmp1.setElementAtIndex(1, measY);
+                    tmp1.setElementAtIndex(2, measZ);
 
-                    mCei.multiply(mTmp1, mTmp2);
+                    cei.multiply(tmp1, tmp2);
 
-                    deltaRx = mTmp2.getElementAtIndex(0) - resultX;
-                    deltaRy = mTmp2.getElementAtIndex(1) - resultY;
-                    deltaRz = mTmp2.getElementAtIndex(2) - resultZ;
-                    final double range = norm(deltaRx, deltaRy, deltaRz);
+                    deltaRx = tmp2.getElementAtIndex(0) - resultX;
+                    deltaRy = tmp2.getElementAtIndex(1) - resultY;
+                    deltaRz = tmp2.getElementAtIndex(2) - resultZ;
+                    final var range = norm(deltaRx, deltaRy, deltaRz);
 
                     // Calculate line of sight using (8.41)
-                    final double uaseX = deltaRx / range;
-                    final double uaseY = deltaRy / range;
-                    final double uaseZ = deltaRz / range;
+                    final var uaseX = deltaRx / range;
+                    final var uaseY = deltaRy / range;
+                    final var uaseZ = deltaRz / range;
 
                     // Predict pseudo-range rate using (9.143)
-                    mMeasurementPosition.setElementAtIndex(0, measX);
-                    mMeasurementPosition.setElementAtIndex(1, measY);
-                    mMeasurementPosition.setElementAtIndex(2, measZ);
+                    measurementPosition.setElementAtIndex(0, measX);
+                    measurementPosition.setElementAtIndex(1, measY);
+                    measurementPosition.setElementAtIndex(2, measZ);
 
-                    final double measVx = measurement.getVx();
-                    final double measVy = measurement.getVy();
-                    final double measVz = measurement.getVz();
+                    final var measVx = measurement.getVx();
+                    final var measVy = measurement.getVy();
+                    final var measVz = measurement.getVz();
 
-                    mMeasurementVelocity.setElementAtIndex(0, measVx);
-                    mMeasurementVelocity.setElementAtIndex(1, measVy);
-                    mMeasurementVelocity.setElementAtIndex(2, measVz);
+                    measurementVelocity.setElementAtIndex(0, measVx);
+                    measurementVelocity.setElementAtIndex(1, measVy);
+                    measurementVelocity.setElementAtIndex(2, measVz);
 
-                    mOmegaIe.multiply(mMeasurementPosition, mTmp4);
+                    omegaIe.multiply(measurementPosition, tmp4);
 
-                    mMeasurementVelocity.add(mTmp4, mTmp5);
+                    measurementVelocity.add(tmp4, tmp5);
 
-                    mCei.multiply(mTmp5, mTmp6);
+                    cei.multiply(tmp5, tmp6);
 
-                    mOmegaIe.multiply(mResultPosition, mTmp7);
+                    omegaIe.multiply(resultPosition, tmp7);
 
-                    mXPred.getSubmatrix(0, 0,
-                            ELEMS_MINUS_ONE, 0, mPredVelocity);
+                    xPred.getSubmatrix(0, 0, ELEMS_MINUS_ONE, 0, predVelocity);
 
-                    mPredVelocity.add(mTmp7, mTmp8);
+                    predVelocity.add(tmp7, tmp8);
 
-                    mTmp6.subtract(mTmp8, mTmp9);
+                    tmp6.subtract(tmp8, tmp9);
 
-                    final double rangeRate = uaseX * mTmp9.getElementAtIndex(0)
-                            + uaseY * mTmp9.getElementAtIndex(1)
-                            + uaseZ * mTmp9.getElementAtIndex(2);
+                    final var rangeRate = uaseX * tmp9.getElementAtIndex(0) + uaseY * tmp9.getElementAtIndex(1)
+                            + uaseZ * tmp9.getElementAtIndex(2);
 
-                    final double predictedPseudoRangeRate = rangeRate + mXPred.getElementAtIndex(3);
+                    final var predictedPseudoRangeRate = rangeRate + xPred.getElementAtIndex(3);
                     predMeas.setElementAtIndex(j, predictedPseudoRangeRate);
 
                     deltaPseudoRangeRate.setElementAtIndex(j,
@@ -794,38 +783,37 @@ public class GNSSLeastSquaresPositionAndVelocityEstimator {
 
                 // Unweighted least-squares solution, (9.35)/(9.141)
                 h.transpose(hTrans);
-                hTrans.multiply(h, mHSqr);
-                Utils.inverse(mHSqr, mInvHSqr);
-                mInvHSqr.multiply(hTrans, hTmp1);
-                hTmp1.multiply(deltaPseudoRangeRate, mTmp10);
+                hTrans.multiply(h, hSqr);
+                Utils.inverse(hSqr, invHSqr);
+                invHSqr.multiply(hTrans, hTmp1);
+                hTmp1.multiply(deltaPseudoRangeRate, tmp10);
 
-                mXPred.add(mTmp10, mXEst);
+                xPred.add(tmp10, xEst);
 
                 // Test convergence
                 testConvergence = predictionError();
 
                 // Set predictions to estimates for next iteration
-                mXPred.copyFrom(mXEst);
+                xPred.copyFrom(xEst);
             }
 
             // Set outputs to estimates
-            final double resultVx = mXEst.getElementAtIndex(0);
-            final double resultVy = mXEst.getElementAtIndex(1);
-            final double resultVz = mXEst.getElementAtIndex(2);
+            final var resultVx = xEst.getElementAtIndex(0);
+            final var resultVy = xEst.getElementAtIndex(1);
+            final var resultVz = xEst.getElementAtIndex(2);
             result.setVelocityCoordinates(resultVx, resultVy, resultVz);
 
-            final double resultClockDrift = mXEst.getElementAtIndex(3);
+            final var resultClockDrift = xEst.getElementAtIndex(3);
             result.setClockDrift(resultClockDrift);
 
         } catch (final AlgebraException e) {
             throw new GNSSException(e);
         } finally {
-
-            if (mListener != null) {
-                mListener.onEstimateEnd(this);
+            if (listener != null) {
+                listener.onEstimateEnd(this);
             }
 
-            mRunning = false;
+            running = false;
         }
     }
 
@@ -838,10 +826,8 @@ public class GNSSLeastSquaresPositionAndVelocityEstimator {
      * @throws LockedException   if estimator is already running.
      * @throws GNSSException     if estimation fails due to numerical instabilities.
      */
-    public GNSSEstimation estimate()
-            throws NotReadyException, LockedException, GNSSException {
-        final GNSSEstimation result =
-                new GNSSEstimation();
+    public GNSSEstimation estimate() throws NotReadyException, LockedException, GNSSException {
+        final var result = new GNSSEstimation();
         estimate(result);
         return result;
     }
@@ -852,27 +838,26 @@ public class GNSSLeastSquaresPositionAndVelocityEstimator {
      * satellite measurements, at Earth's surface (height = 0) and with zero velocity.
      */
     private void initializePriorPositionAndVelocityIfNeeded() {
-        if (mPriorPositionAndVelocity != null) {
+        if (priorPositionAndVelocity != null) {
             return;
         }
 
-        int numMeasurements = mMeasurements.size();
-        final NEDPosition nedPosition = new NEDPosition();
-        final NEDVelocity nedVelocity = new NEDVelocity();
+        var numMeasurements = measurements.size();
+        final var nedPosition = new NEDPosition();
+        final var nedVelocity = new NEDVelocity();
 
-        final ECEFPosition ecefPosition = new ECEFPosition();
-        final ECEFVelocity ecefVelocity = new ECEFVelocity();
+        final var ecefPosition = new ECEFPosition();
+        final var ecefVelocity = new ECEFVelocity();
 
-        double userLatitude = 0.0;
-        double userLongitude = 0.0;
-        for (final GNSSMeasurement measurement : mMeasurements) {
+        var userLatitude = 0.0;
+        var userLongitude = 0.0;
+        for (final var measurement : measurements) {
             measurement.getEcefPosition(ecefPosition);
             measurement.getEcefVelocity(ecefVelocity);
-            ECEFtoNEDPositionVelocityConverter.convertECEFtoNED(
-                    ecefPosition, ecefVelocity, nedPosition, nedVelocity);
+            ECEFtoNEDPositionVelocityConverter.convertECEFtoNED(ecefPosition, ecefVelocity, nedPosition, nedVelocity);
 
-            final double satLatitude = nedPosition.getLatitude();
-            final double satLongitude = nedPosition.getLongitude();
+            final var satLatitude = nedPosition.getLatitude();
+            final var satLongitude = nedPosition.getLongitude();
 
             userLatitude += satLatitude / numMeasurements;
             userLongitude += satLongitude / numMeasurements;
@@ -881,11 +866,9 @@ public class GNSSLeastSquaresPositionAndVelocityEstimator {
         nedPosition.setCoordinates(userLatitude, userLongitude, 0.0);
         nedVelocity.setCoordinates(0.0, 0.0, 0.0);
 
-        NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(
-                nedPosition, nedVelocity, ecefPosition, ecefVelocity);
+        NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity, ecefPosition, ecefVelocity);
 
-        mPriorPositionAndVelocity = new ECEFPositionAndVelocity(
-                ecefPosition, ecefVelocity);
+        priorPositionAndVelocity = new ECEFPositionAndVelocity(ecefPosition, ecefVelocity);
     }
 
     /**
@@ -907,10 +890,9 @@ public class GNSSLeastSquaresPositionAndVelocityEstimator {
      * @return norm of error.
      */
     private double predictionError() {
-        double sqrPredictionError = 0.0;
-        for (int i = 0; i < STATE_COMPONENTS; i++) {
-            final double diff = mXEst.getElementAtIndex(i)
-                    - mXPred.getElementAtIndex(i);
+        var sqrPredictionError = 0.0;
+        for (var i = 0; i < STATE_COMPONENTS; i++) {
+            final var diff = xEst.getElementAtIndex(i) - xPred.getElementAtIndex(i);
             sqrPredictionError += diff * diff;
         }
         return Math.sqrt(sqrPredictionError);

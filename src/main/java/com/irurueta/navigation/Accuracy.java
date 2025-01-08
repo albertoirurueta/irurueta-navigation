@@ -33,7 +33,7 @@ public abstract class Accuracy<A extends com.irurueta.geometry.Accuracy> {
     /**
      * Internal accuracy reference.
      */
-    protected A mInternalAccuracy;
+    protected A internalAccuracy;
 
     /**
      * Constructor.
@@ -47,7 +47,7 @@ public abstract class Accuracy<A extends com.irurueta.geometry.Accuracy> {
      * @param internalAccuracy internal accuracy to be set.
      */
     Accuracy(final A internalAccuracy) {
-        mInternalAccuracy = internalAccuracy;
+        this.internalAccuracy = internalAccuracy;
     }
 
     /**
@@ -56,7 +56,7 @@ public abstract class Accuracy<A extends com.irurueta.geometry.Accuracy> {
      * @return covariance matrix representing the accuracy of an estimated point or measure.
      */
     public Matrix getCovarianceMatrix() {
-        return mInternalAccuracy.getCovarianceMatrix();
+        return internalAccuracy.getCovarianceMatrix();
     }
 
     /**
@@ -70,9 +70,8 @@ public abstract class Accuracy<A extends com.irurueta.geometry.Accuracy> {
      * @throws NonSymmetricPositiveDefiniteMatrixException if provided matrix is not symmetric
      *                                                     and positive definite.
      */
-    public void setCovarianceMatrix(final Matrix covarianceMatrix)
-            throws NonSymmetricPositiveDefiniteMatrixException {
-        mInternalAccuracy.setCovarianceMatrix(covarianceMatrix);
+    public void setCovarianceMatrix(final Matrix covarianceMatrix) throws NonSymmetricPositiveDefiniteMatrixException {
+        internalAccuracy.setCovarianceMatrix(covarianceMatrix);
     }
 
     /**
@@ -85,7 +84,7 @@ public abstract class Accuracy<A extends com.irurueta.geometry.Accuracy> {
      * @return standard deviation factor.
      */
     public double getStandardDeviationFactor() {
-        return mInternalAccuracy.getStandardDeviationFactor();
+        return internalAccuracy.getStandardDeviationFactor();
     }
 
     /**
@@ -99,7 +98,7 @@ public abstract class Accuracy<A extends com.irurueta.geometry.Accuracy> {
      * @throws IllegalArgumentException if provided value is zero or negative.
      */
     public void setStandardDeviationFactor(final double standardDeviationFactor) {
-        mInternalAccuracy.setStandardDeviationFactor(standardDeviationFactor);
+        internalAccuracy.setStandardDeviationFactor(standardDeviationFactor);
     }
 
     /**
@@ -110,7 +109,7 @@ public abstract class Accuracy<A extends com.irurueta.geometry.Accuracy> {
      * @return confidence of provided accuracy of estimated point or measure.
      */
     public double getConfidence() {
-        return mInternalAccuracy.getConfidence();
+        return internalAccuracy.getConfidence();
     }
 
     /**
@@ -122,7 +121,7 @@ public abstract class Accuracy<A extends com.irurueta.geometry.Accuracy> {
      * @throws IllegalArgumentException if provided value is not within 0 and 1.
      */
     public void setConfidence(final double confidence) {
-        mInternalAccuracy.setConfidence(confidence);
+        internalAccuracy.setConfidence(confidence);
     }
 
     /**
@@ -143,7 +142,7 @@ public abstract class Accuracy<A extends com.irurueta.geometry.Accuracy> {
      * @return smallest accuracy in any direction expressed in meters.
      */
     public double getSmallestAccuracyMeters() {
-        return mInternalAccuracy.getSmallestAccuracy();
+        return internalAccuracy.getSmallestAccuracy();
     }
 
     /**
@@ -164,7 +163,7 @@ public abstract class Accuracy<A extends com.irurueta.geometry.Accuracy> {
      * @return largest accuracy in any direction expressed in meters.
      */
     public double getLargestAccuracyMeters() {
-        return mInternalAccuracy.getLargestAccuracy();
+        return internalAccuracy.getLargestAccuracy();
     }
 
     /**
@@ -186,7 +185,7 @@ public abstract class Accuracy<A extends com.irurueta.geometry.Accuracy> {
      * @return average accuracy among all directions expressed in meters.
      */
     public double getAverageAccuracyMeters() {
-        return mInternalAccuracy.getAverageAccuracy();
+        return internalAccuracy.getAverageAccuracy();
     }
 
     /**
@@ -196,6 +195,6 @@ public abstract class Accuracy<A extends com.irurueta.geometry.Accuracy> {
      * @return number of dimensions.
      */
     public int getNumberOfDimensions() {
-        return mInternalAccuracy.getNumberOfDimensions();
+        return internalAccuracy.getNumberOfDimensions();
     }
 }

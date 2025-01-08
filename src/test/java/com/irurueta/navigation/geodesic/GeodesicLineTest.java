@@ -15,69 +15,68 @@
  */
 package com.irurueta.navigation.geodesic;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class GeodesicLineTest {
+class GeodesicLineTest {
 
     private static final double ABSOLUTE_ERROR = 1e-9;
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         //define polygon around Plaça Sant Jaume, Barcelona using the following coordinates:
         //41.382643,2.176700
         //41.382524,2.176861
 
-        final double lat1 = 41.382643;
-        final double lon1 = 2.176700;
+        final var lat1 = 41.382643;
+        final var lon1 = 2.176700;
 
-        final double lat2 = 41.382524;
-        final double lon2 = 2.176861;
+        final var lat2 = 41.382524;
+        final var lon2 = 2.176861;
 
         assertNotNull(Geodesic.WGS84);
-        final GeodesicData data1 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
-        final GeodesicLine line = new GeodesicLine(Geodesic.WGS84, lat1, lon1, data1.getAzi1());
+        final var data1 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
+        final var line = new GeodesicLine(Geodesic.WGS84, lat1, lon1, data1.getAzi1());
 
         //check
-        assertEquals(line.getLatitude(), lat1, 0.0);
-        assertEquals(line.getLongitude(), lon1, 0.0);
-        assertEquals(line.getAzimuth(), data1.getAzi1(), 0.0);
+        assertEquals(lat1, line.getLatitude(), 0.0);
+        assertEquals(lon1, line.getLongitude(), 0.0);
+        assertEquals(data1.getAzi1(), line.getAzimuth(), 0.0);
 
-        final Pair p1 = GeoMath.sincosd(GeoMath.angRound(GeoMath.angNormalize(data1.getAzi1())));
-        final Pair p2 = line.getAzimuthCosines();
+        final var p1 = GeoMath.sincosd(GeoMath.angRound(GeoMath.angNormalize(data1.getAzi1())));
+        final var p2 = line.getAzimuthCosines();
 
         assertEquals(p1.getFirst(), p2.getFirst(), ABSOLUTE_ERROR);
         assertEquals(p1.getSecond(), p2.getSecond(), ABSOLUTE_ERROR);
 
-        final Pair p = line.getEquatorialAzimuthCosines();
-        assertEquals(line.getEquatorialAzimuth(), GeoMath.atan2d(p.getFirst(), p.getSecond()),
-                ABSOLUTE_ERROR);
+        final var p = line.getEquatorialAzimuthCosines();
+        assertEquals(line.getEquatorialAzimuth(), GeoMath.atan2d(p.getFirst(), p.getSecond()), ABSOLUTE_ERROR);
 
-        assertNotEquals(line.getEquatorialArc(), Double.NaN);
-        assertEquals(line.getMajorRadius(), Geodesic.WGS84.getMajorRadius(), ABSOLUTE_ERROR);
-        assertEquals(line.getFlattening(), Geodesic.WGS84.getFlattening(), ABSOLUTE_ERROR);
-        assertEquals(line.getCapabilities(), GeodesicMask.ALL |
-                GeodesicMask.LATITUDE | GeodesicMask.AZIMUTH | GeodesicMask.LONG_UNROLL);
+        assertNotEquals(Double.NaN, line.getEquatorialArc());
+        assertEquals(Geodesic.WGS84.getMajorRadius(), line.getMajorRadius(), ABSOLUTE_ERROR);
+        assertEquals(Geodesic.WGS84.getFlattening(), line.getFlattening(), ABSOLUTE_ERROR);
+        assertEquals(GeodesicMask.ALL | GeodesicMask.LATITUDE | GeodesicMask.AZIMUTH
+                | GeodesicMask.LONG_UNROLL, line.getCapabilities());
     }
 
     @Test
-    public void testPosition() {
+    void testPosition() {
         //define polygon around Plaça Sant Jaume, Barcelona using the following coordinates:
         //41.382643,2.176700
         //41.382524,2.176861
 
-        final double lat1 = 41.382643;
-        final double lon1 = 2.176700;
+        final var lat1 = 41.382643;
+        final var lon1 = 2.176700;
 
-        final double lat2 = 41.382524;
-        final double lon2 = 2.176861;
+        final var lat2 = 41.382524;
+        final var lon2 = 2.176861;
 
         assertNotNull(Geodesic.WGS84);
-        final GeodesicData data1 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
+        final var data1 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
 
-        final GeodesicLine line = new GeodesicLine(Geodesic.WGS84, lat1, lon1, data1.getAzi1());
-        final GeodesicData data1b = line.position(data1.getS12());
+        final var line = new GeodesicLine(Geodesic.WGS84, lat1, lon1, data1.getAzi1());
+        final var data1b = line.position(data1.getS12());
 
         assertEquals(data1.getLat1(), data1b.getLat1(), ABSOLUTE_ERROR);
         assertEquals(data1.getLon1(), data1b.getLon1(), ABSOLUTE_ERROR);
@@ -92,7 +91,7 @@ public class GeodesicLineTest {
         assertEquals(data1.getScaleM21(), data1b.getScaleM21(), ABSOLUTE_ERROR);
         assertEquals(data1.getAreaS12(), data1b.getAreaS12(), ABSOLUTE_ERROR);
 
-        final GeodesicData data1c = line.position(data1.getS12(), GeodesicMask.STANDARD);
+        final var data1c = line.position(data1.getS12(), GeodesicMask.STANDARD);
 
         assertEquals(data1.getLat1(), data1c.getLat1(), ABSOLUTE_ERROR);
         assertEquals(data1.getLon1(), data1c.getLon1(), ABSOLUTE_ERROR);
@@ -107,7 +106,7 @@ public class GeodesicLineTest {
         assertEquals(data1.getScaleM21(), data1c.getScaleM21(), ABSOLUTE_ERROR);
         assertEquals(data1.getAreaS12(), data1c.getAreaS12(), ABSOLUTE_ERROR);
 
-        final GeodesicData data1d = line.position(false, data1.getS12(), GeodesicMask.STANDARD);
+        final var data1d = line.position(false, data1.getS12(), GeodesicMask.STANDARD);
 
         assertEquals(data1.getLat1(), data1d.getLat1(), ABSOLUTE_ERROR);
         assertEquals(data1.getLon1(), data1d.getLon1(), ABSOLUTE_ERROR);
@@ -124,22 +123,22 @@ public class GeodesicLineTest {
     }
 
     @Test
-    public void testArcPosition() {
+    void testArcPosition() {
         //define polygon around Plaça Sant Jaume, Barcelona using the following coordinates:
         //41.382643,2.176700
         //41.382524,2.176861
 
-        final double lat1 = 41.382643;
-        final double lon1 = 2.176700;
+        final var lat1 = 41.382643;
+        final var lon1 = 2.176700;
 
-        final double lat2 = 41.382524;
-        final double lon2 = 2.176861;
+        final var lat2 = 41.382524;
+        final var lon2 = 2.176861;
 
         assertNotNull(Geodesic.WGS84);
-        final GeodesicData data1 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
+        final var data1 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
 
-        final GeodesicLine line = new GeodesicLine(Geodesic.WGS84, lat1, lon1, data1.getAzi1());
-        final GeodesicData data1b = line.arcPosition(data1.getA12());
+        final var line = new GeodesicLine(Geodesic.WGS84, lat1, lon1, data1.getAzi1());
+        final var data1b = line.arcPosition(data1.getA12());
 
         assertEquals(data1.getLat1(), data1b.getLat1(), ABSOLUTE_ERROR);
         assertEquals(data1.getLon1(), data1b.getLon1(), ABSOLUTE_ERROR);
@@ -154,7 +153,7 @@ public class GeodesicLineTest {
         assertEquals(data1.getScaleM21(), data1b.getScaleM21(), ABSOLUTE_ERROR);
         assertEquals(data1.getAreaS12(), data1b.getAreaS12(), ABSOLUTE_ERROR);
 
-        final GeodesicData data1c = line.arcPosition(data1.getA12(), GeodesicMask.STANDARD);
+        final var data1c = line.arcPosition(data1.getA12(), GeodesicMask.STANDARD);
 
         assertEquals(data1.getLat1(), data1c.getLat1(), ABSOLUTE_ERROR);
         assertEquals(data1.getLon1(), data1c.getLon1(), ABSOLUTE_ERROR);
@@ -169,7 +168,7 @@ public class GeodesicLineTest {
         assertEquals(data1.getScaleM21(), data1c.getScaleM21(), ABSOLUTE_ERROR);
         assertEquals(data1.getAreaS12(), data1c.getAreaS12(), ABSOLUTE_ERROR);
 
-        final GeodesicData data1d = line.position(true, data1.getA12(), GeodesicMask.STANDARD);
+        final var data1d = line.position(true, data1.getA12(), GeodesicMask.STANDARD);
 
         assertEquals(data1.getLat1(), data1d.getLat1(), ABSOLUTE_ERROR);
         assertEquals(data1.getLon1(), data1d.getLon1(), ABSOLUTE_ERROR);
@@ -186,21 +185,21 @@ public class GeodesicLineTest {
     }
 
     @Test
-    public void testGetSetDistance() {
+    void testGetSetDistance() {
         //define polygon around Plaça Sant Jaume, Barcelona using the following coordinates:
         //41.382643,2.176700
         //41.382524,2.176861
 
-        final double lat1 = 41.382643;
-        final double lon1 = 2.176700;
+        final var lat1 = 41.382643;
+        final var lon1 = 2.176700;
 
-        final double lat2 = 41.382524;
-        final double lon2 = 2.176861;
+        final var lat2 = 41.382524;
+        final var lon2 = 2.176861;
 
         assertNotNull(Geodesic.WGS84);
-        final GeodesicData data1 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
+        final var data1 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
 
-        final GeodesicLine line = new GeodesicLine(Geodesic.WGS84, lat1, lon1, data1.getAzi1());
+        final var line = new GeodesicLine(Geodesic.WGS84, lat1, lon1, data1.getAzi1());
         line.setDistance(data1.getS12());
 
         //check
@@ -212,21 +211,21 @@ public class GeodesicLineTest {
     }
 
     @Test
-    public void testGetSetArc() {
+    void testGetSetArc() {
         //define polygon around Plaça Sant Jaume, Barcelona using the following coordinates:
         //41.382643,2.176700
         //41.382524,2.176861
 
-        final double lat1 = 41.382643;
-        final double lon1 = 2.176700;
+        final var lat1 = 41.382643;
+        final var lon1 = 2.176700;
 
-        final double lat2 = 41.382524;
-        final double lon2 = 2.176861;
+        final var lat2 = 41.382524;
+        final var lon2 = 2.176861;
 
         assertNotNull(Geodesic.WGS84);
-        final GeodesicData data1 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
+        final var data1 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
 
-        final GeodesicLine line = new GeodesicLine(Geodesic.WGS84, lat1, lon1, data1.getAzi1());
+        final var line = new GeodesicLine(Geodesic.WGS84, lat1, lon1, data1.getAzi1());
         line.setArc(data1.getA12());
 
         //check
@@ -238,21 +237,21 @@ public class GeodesicLineTest {
     }
 
     @Test
-    public void testGenSetDistance() {
+    void testGenSetDistance() {
         //define polygon around Plaça Sant Jaume, Barcelona using the following coordinates:
         //41.382643,2.176700
         //41.382524,2.176861
 
-        final double lat1 = 41.382643;
-        final double lon1 = 2.176700;
+        final var lat1 = 41.382643;
+        final var lon1 = 2.176700;
 
-        final double lat2 = 41.382524;
-        final double lon2 = 2.176861;
+        final var lat2 = 41.382524;
+        final var lon2 = 2.176861;
 
         assertNotNull(Geodesic.WGS84);
-        final GeodesicData data1 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
+        final var data1 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
 
-        final GeodesicLine line = new GeodesicLine(Geodesic.WGS84, lat1, lon1, data1.getAzi1());
+        final var line = new GeodesicLine(Geodesic.WGS84, lat1, lon1, data1.getAzi1());
         line.genSetDistance(false, data1.getS12());
 
         //check
@@ -274,23 +273,23 @@ public class GeodesicLineTest {
     }
 
     @Test
-    public void testCapabilities() {
+    void testCapabilities() {
         //define polygon around Plaça Sant Jaume, Barcelona using the following coordinates:
         //41.382643,2.176700
         //41.382524,2.176861
 
-        final double lat1 = 41.382643;
-        final double lon1 = 2.176700;
+        final var lat1 = 41.382643;
+        final var lon1 = 2.176700;
 
-        final double lat2 = 41.382524;
-        final double lon2 = 2.176861;
+        final var lat2 = 41.382524;
+        final var lon2 = 2.176861;
 
         assertNotNull(Geodesic.WGS84);
-        final GeodesicData data1 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
-        final GeodesicLine line = new GeodesicLine(Geodesic.WGS84, lat1, lon1, data1.getAzi1());
+        final var data1 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
+        final var line = new GeodesicLine(Geodesic.WGS84, lat1, lon1, data1.getAzi1());
 
-        assertEquals(line.getCapabilities(), GeodesicMask.ALL |
-                GeodesicMask.LATITUDE | GeodesicMask.AZIMUTH | GeodesicMask.LONG_UNROLL);
+        assertEquals(GeodesicMask.ALL | GeodesicMask.LATITUDE | GeodesicMask.AZIMUTH
+                | GeodesicMask.LONG_UNROLL, line.getCapabilities());
 
         assertTrue(line.capabilities(GeodesicMask.ALL));
         assertTrue(line.capabilities(GeodesicMask.LATITUDE));

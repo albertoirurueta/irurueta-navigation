@@ -21,14 +21,15 @@ import com.irurueta.geometry.Point2D;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Random;
-
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
-public class NonLinearLeastSquaresLateration2DSolverTest implements LaterationSolverListener<Point2D> {
+@ExtendWith(MockitoExtension.class)
+class NonLinearLeastSquaresLateration2DSolverTest implements LaterationSolverListener<Point2D> {
 
     private static final int MIN_CIRCLES = 3;
     private static final int MAX_CIRCLES = 10;
@@ -51,9 +52,9 @@ public class NonLinearLeastSquaresLateration2DSolverTest implements LaterationSo
     private int solveEnd;
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         // empty constructor
-        NonLinearLeastSquaresLateration2DSolver solver = new NonLinearLeastSquaresLateration2DSolver();
+        var solver = new NonLinearLeastSquaresLateration2DSolver();
 
         // check correctness
         assertNull(solver.getListener());
@@ -71,13 +72,12 @@ public class NonLinearLeastSquaresLateration2DSolverTest implements LaterationSo
         assertEquals(LaterationSolverType.NON_LINEAR_TRILATERATION_SOLVER, solver.getType());
         assertEquals(3, solver.getMinRequiredPositionsAndDistances());
 
-
         // constructor with positions and distances
-        final Point2D[] positions = new Point2D[3];
+        final var positions = new Point2D[3];
         positions[0] = new InhomogeneousPoint2D();
         positions[1] = new InhomogeneousPoint2D();
         positions[2] = new InhomogeneousPoint2D();
-        final double[] distances = new double[3];
+        final var distances = new double[3];
         solver = new NonLinearLeastSquaresLateration2DSolver(positions, distances);
 
         // check correctness
@@ -97,34 +97,20 @@ public class NonLinearLeastSquaresLateration2DSolverTest implements LaterationSo
         assertEquals(3, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
-        final double[] wrong = new double[4];
-        final Point2D[] shortPositions = new Point2D[1];
-        final double[] shortDistances = new double[1];
-        solver = null;
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver((Point2D[]) null, distances);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver(positions, null);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver(positions, wrong);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver(shortPositions, shortDistances);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(solver);
+        final var wrong = new double[4];
+        final var shortPositions = new Point2D[1];
+        final var shortDistances = new double[1];
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver((Point2D[]) null,
+                distances));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver(positions,
+                null));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver(positions,
+                wrong));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver(shortPositions,
+                shortDistances));
 
         // constructor with initial position
-        final InhomogeneousPoint2D initialPosition = new InhomogeneousPoint2D();
+        final var initialPosition = new InhomogeneousPoint2D();
         solver = new NonLinearLeastSquaresLateration2DSolver(initialPosition);
 
         // check correctness
@@ -142,7 +128,6 @@ public class NonLinearLeastSquaresLateration2DSolverTest implements LaterationSo
         assertNull(solver.getCircles());
         assertEquals(LaterationSolverType.NON_LINEAR_TRILATERATION_SOLVER, solver.getType());
         assertEquals(3, solver.getMinRequiredPositionsAndDistances());
-
 
         // constructor with positions, distances and initial position
         solver = new NonLinearLeastSquaresLateration2DSolver(positions, distances, initialPosition);
@@ -164,30 +149,14 @@ public class NonLinearLeastSquaresLateration2DSolverTest implements LaterationSo
         assertEquals(3, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
-        solver = null;
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver((Point2D[]) null, distances, initialPosition);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver(positions, null, initialPosition);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver(positions, wrong, initialPosition);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver(shortPositions, shortDistances,
-                    initialPosition);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(solver);
-
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver((Point2D[]) null,
+                distances, initialPosition));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver(positions,
+                null, initialPosition));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver(positions, wrong,
+                initialPosition));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver(shortPositions,
+                shortDistances, initialPosition));
 
         // constructor with listener
         // noinspection unchecked
@@ -230,29 +199,14 @@ public class NonLinearLeastSquaresLateration2DSolverTest implements LaterationSo
         assertEquals(3, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
-        solver = null;
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver((Point2D[]) null, distances, listener);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver(positions, null, listener);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver(positions, wrong, listener);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver(shortPositions, shortDistances, listener);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(solver);
-
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver((Point2D[]) null,
+                distances, listener));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver(positions,
+                null, listener));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver(positions, wrong,
+                listener));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver(shortPositions,
+                shortDistances, listener));
 
         // constructor with initial position and listener
         solver = new NonLinearLeastSquaresLateration2DSolver(initialPosition, listener);
@@ -293,35 +247,17 @@ public class NonLinearLeastSquaresLateration2DSolverTest implements LaterationSo
         assertEquals(3, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
-        solver = null;
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver((Point2D[]) null, distances, initialPosition,
-                    listener);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver(positions, null, initialPosition,
-                    listener);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver(positions, wrong, initialPosition, listener);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver(shortPositions, shortDistances, initialPosition,
-                    listener);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(solver);
-
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver((Point2D[]) null,
+                distances, initialPosition, listener));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver(positions,
+                null, initialPosition, listener));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver(positions, wrong,
+                initialPosition, listener));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver(shortPositions,
+                shortDistances, initialPosition, listener));
 
         // constructor with circles
-        final Circle[] circles = new Circle[3];
+        final var circles = new Circle[3];
         circles[0] = new Circle(positions[0], distances[0]);
         circles[1] = new Circle(positions[1], distances[1]);
         circles[2] = new Circle(positions[2], distances[2]);
@@ -344,21 +280,10 @@ public class NonLinearLeastSquaresLateration2DSolverTest implements LaterationSo
         assertEquals(3, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
-        final Circle[] shortCircles = new Circle[1];
-
-        solver = null;
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver((Circle[]) null);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver(shortCircles);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(solver);
-
+        final var shortCircles = new Circle[1];
+        assertThrows(IllegalArgumentException.class,
+                () -> new NonLinearLeastSquaresLateration2DSolver((Circle[]) null));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver(shortCircles));
 
         // constructor with circles and initial position
         solver = new NonLinearLeastSquaresLateration2DSolver(circles, initialPosition);
@@ -380,19 +305,10 @@ public class NonLinearLeastSquaresLateration2DSolverTest implements LaterationSo
         assertEquals(3, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
-        solver = null;
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver(null, initialPosition);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver(shortCircles, initialPosition);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(solver);
-
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver(null,
+                initialPosition));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver(shortCircles,
+                initialPosition));
 
         // constructor with circles and listener
         solver = new NonLinearLeastSquaresLateration2DSolver(circles, listener);
@@ -414,19 +330,10 @@ public class NonLinearLeastSquaresLateration2DSolverTest implements LaterationSo
         assertEquals(3, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
-        solver = null;
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver((Circle[]) null, listener);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver(shortCircles, listener);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(solver);
-
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver((Circle[]) null,
+                listener));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver(shortCircles,
+                listener));
 
         // constructor with circles, initial position and listener
         solver = new NonLinearLeastSquaresLateration2DSolver(circles, initialPosition, listener);
@@ -448,22 +355,13 @@ public class NonLinearLeastSquaresLateration2DSolverTest implements LaterationSo
         assertEquals(3, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
-        solver = null;
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver(null, initialPosition, listener);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver(shortCircles, initialPosition, listener);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(solver);
-
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver(null,
+                initialPosition, listener));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver(shortCircles,
+                initialPosition, listener));
 
         // constructor with positions, distances and standard deviations
-        final double[] standardDeviations = new double[3];
+        final var standardDeviations = new double[3];
         solver = new NonLinearLeastSquaresLateration2DSolver(positions, distances, standardDeviations);
 
         // check correctness
@@ -483,44 +381,21 @@ public class NonLinearLeastSquaresLateration2DSolverTest implements LaterationSo
         assertEquals(3, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
-        solver = null;
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver(null, distances, standardDeviations);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver(positions, null, standardDeviations);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver(positions, distances, (double[]) null);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver(positions, wrong, standardDeviations);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver(positions, distances, wrong);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver(shortPositions, shortDistances,
-                    standardDeviations);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(solver);
-
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver(null,
+                distances, standardDeviations));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver(positions,
+                null, standardDeviations));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver(positions,
+                distances, (double[]) null));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver(positions, wrong,
+                standardDeviations));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver(positions,
+                distances, wrong));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver(shortPositions,
+                shortDistances, standardDeviations));
 
         // constructor with positions, distances, standard deviations and initial position
-        solver = new NonLinearLeastSquaresLateration2DSolver(positions, distances,
-                standardDeviations, initialPosition);
+        solver = new NonLinearLeastSquaresLateration2DSolver(positions, distances, standardDeviations, initialPosition);
 
         // check correctness
         assertNull(solver.getListener());
@@ -539,48 +414,21 @@ public class NonLinearLeastSquaresLateration2DSolverTest implements LaterationSo
         assertEquals(3, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
-        solver = null;
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver(null, distances,
-                    standardDeviations, initialPosition);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver(positions, null,
-                    standardDeviations, initialPosition);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver(positions, distances,
-                    null, initialPosition);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver(positions, wrong,
-                    standardDeviations, initialPosition);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver(positions, distances, wrong, initialPosition);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver(shortPositions, shortDistances,
-                    standardDeviations, initialPosition);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(solver);
-
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver(null,
+                distances, standardDeviations, initialPosition));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver(positions,
+                null, standardDeviations, initialPosition));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver(positions,
+                distances, null, initialPosition));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver(positions, wrong,
+                standardDeviations, initialPosition));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver(positions,
+                distances, wrong, initialPosition));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver(shortPositions,
+                shortDistances, standardDeviations, initialPosition));
 
         // check positions, distances, standard deviations and listener
-        solver = new NonLinearLeastSquaresLateration2DSolver(positions, distances,
-                standardDeviations, this);
+        solver = new NonLinearLeastSquaresLateration2DSolver(positions, distances, standardDeviations, this);
 
         // check correctness
         assertSame(this, solver.getListener());
@@ -599,48 +447,22 @@ public class NonLinearLeastSquaresLateration2DSolverTest implements LaterationSo
         assertEquals(3, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
-        solver = null;
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver(null, distances,
-                    standardDeviations, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver(positions, null,
-                    standardDeviations, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver(positions, distances,
-                    (double[]) null, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver(positions, wrong,
-                    standardDeviations, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver(positions, distances, wrong, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver(shortPositions, shortDistances,
-                    standardDeviations, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(solver);
-
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver(null,
+                distances, standardDeviations, this));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver(positions,
+                null, standardDeviations, this));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver(positions,
+                distances, (double[]) null, this));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver(positions, wrong,
+                standardDeviations, this));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver(positions,
+                distances, wrong, this));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver(shortPositions,
+                shortDistances, standardDeviations, this));
 
         // check positions, distances, standard deviations, initial position and listener
-        solver = new NonLinearLeastSquaresLateration2DSolver(positions, distances,
-                standardDeviations, initialPosition, this);
+        solver = new NonLinearLeastSquaresLateration2DSolver(positions, distances, standardDeviations, initialPosition,
+                this);
 
         // check correctness
         assertSame(this, solver.getListener());
@@ -659,45 +481,18 @@ public class NonLinearLeastSquaresLateration2DSolverTest implements LaterationSo
         assertEquals(3, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
-        solver = null;
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver(null, distances,
-                    standardDeviations, initialPosition, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver(positions, null,
-                    standardDeviations, initialPosition, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver(positions, distances,
-                    null, initialPosition, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver(positions, wrong,
-                    standardDeviations, initialPosition, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver(positions, distances,
-                    wrong, initialPosition, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver(shortPositions, shortDistances,
-                    standardDeviations, initialPosition, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(solver);
-
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver(null,
+                distances, standardDeviations, initialPosition, this));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver(positions,
+                null, standardDeviations, initialPosition, this));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver(positions,
+                distances, null, initialPosition, this));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver(positions, wrong,
+                standardDeviations, initialPosition, this));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver(positions,
+                distances, wrong, initialPosition, this));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver(shortPositions,
+                shortDistances, standardDeviations, initialPosition, this));
 
         // constructor with circles and standard deviations
         solver = new NonLinearLeastSquaresLateration2DSolver(circles, standardDeviations);
@@ -719,19 +514,10 @@ public class NonLinearLeastSquaresLateration2DSolverTest implements LaterationSo
         assertEquals(3, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
-        solver = null;
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver((Circle[]) null, standardDeviations);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver(shortCircles, standardDeviations);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(solver);
-
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver((Circle[]) null,
+                standardDeviations));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver(shortCircles,
+                standardDeviations));
 
         // constructor with circles, standard deviations and initial position
         solver = new NonLinearLeastSquaresLateration2DSolver(circles, standardDeviations, initialPosition);
@@ -753,21 +539,10 @@ public class NonLinearLeastSquaresLateration2DSolverTest implements LaterationSo
         assertEquals(3, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
-        solver = null;
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver((Circle[]) null,
-                    standardDeviations, initialPosition);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver(shortCircles,
-                    standardDeviations, initialPosition);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(solver);
-
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver((Circle[]) null,
+                standardDeviations, initialPosition));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver(shortCircles,
+                standardDeviations, initialPosition));
 
         // constructor with circles, standard deviations and listener
         solver = new NonLinearLeastSquaresLateration2DSolver(circles, standardDeviations, this);
@@ -789,25 +564,14 @@ public class NonLinearLeastSquaresLateration2DSolverTest implements LaterationSo
         assertEquals(3, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
-        solver = null;
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver((Circle[]) null,
-                    standardDeviations, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver(shortCircles,
-                    standardDeviations, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(solver);
-
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver((Circle[]) null,
+                standardDeviations, this));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver(shortCircles,
+                standardDeviations, this));
 
         // constructor with circles, standard deviations, initial position and listener
-        solver = new NonLinearLeastSquaresLateration2DSolver(circles,
-                standardDeviations, initialPosition, this);
+        solver = new NonLinearLeastSquaresLateration2DSolver(circles, standardDeviations, initialPosition,
+                this);
 
         // check correctness
         assertSame(this, solver.getListener());
@@ -826,42 +590,32 @@ public class NonLinearLeastSquaresLateration2DSolverTest implements LaterationSo
         assertEquals(3, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
-        solver = null;
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver((Circle[]) null,
-                    standardDeviations, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new NonLinearLeastSquaresLateration2DSolver(shortCircles,
-                    standardDeviations, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(solver);
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver((Circle[]) null,
+                standardDeviations, this));
+        assertThrows(IllegalArgumentException.class, () -> new NonLinearLeastSquaresLateration2DSolver(shortCircles,
+                standardDeviations, this));
     }
 
     @Test
-    public void testGetSetCircles() throws LockedException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+    void testGetSetCircles() throws LockedException {
+        final var randomizer = new UniformRandomizer();
 
-        final NonLinearLeastSquaresLateration2DSolver solver = new NonLinearLeastSquaresLateration2DSolver();
+        final var solver = new NonLinearLeastSquaresLateration2DSolver();
 
         // initial value
         assertNull(solver.getCircles());
 
         // set new value
-        final Point2D[] positions = new Point2D[3];
+        final var positions = new Point2D[3];
         positions[0] = new InhomogeneousPoint2D(randomizer.nextDouble(), randomizer.nextDouble());
         positions[1] = new InhomogeneousPoint2D(randomizer.nextDouble(), randomizer.nextDouble());
         positions[2] = new InhomogeneousPoint2D(randomizer.nextDouble(), randomizer.nextDouble());
-        final double[] distances = new double[3];
+        final var distances = new double[3];
         distances[0] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
         distances[1] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
         distances[2] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
 
-        final Circle[] circles = new Circle[3];
+        final var circles = new Circle[3];
         circles[0] = new Circle(positions[0], distances[0]);
         circles[1] = new Circle(positions[1], distances[1]);
         circles[2] = new Circle(positions[2], distances[2]);
@@ -869,7 +623,7 @@ public class NonLinearLeastSquaresLateration2DSolverTest implements LaterationSo
         solver.setCircles(circles);
 
         // check
-        final Circle[] circles2 = solver.getCircles();
+        final var circles2 = solver.getCircles();
         assertSame(circles[0].getCenter(), circles2[0].getCenter());
         assertSame(circles[1].getCenter(), circles2[1].getCenter());
         assertSame(circles[2].getCenter(), circles2[2].getCenter());
@@ -878,49 +632,41 @@ public class NonLinearLeastSquaresLateration2DSolverTest implements LaterationSo
         assertEquals(circles[2].getRadius(), circles2[2].getRadius(), 0.0);
 
         // force IllegalArgumentException
-        try {
-            solver.setCircles(null);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver.setCircles(new Circle[1]);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> solver.setCircles(null));
+        assertThrows(IllegalArgumentException.class, () -> solver.setCircles(new Circle[1]));
     }
 
     @Test
-    public void testGetSetCirclesAndStandardDeviations() throws LockedException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+    void testGetSetCirclesAndStandardDeviations() throws LockedException {
+        final var randomizer = new UniformRandomizer();
 
-        final NonLinearLeastSquaresLateration2DSolver solver = new NonLinearLeastSquaresLateration2DSolver();
+        final var solver = new NonLinearLeastSquaresLateration2DSolver();
 
         // initial value
         assertNull(solver.getCircles());
         assertNull(solver.getDistanceStandardDeviations());
 
         // set new values
-        final Point2D[] positions = new Point2D[3];
+        final var positions = new Point2D[3];
         positions[0] = new InhomogeneousPoint2D(randomizer.nextDouble(), randomizer.nextDouble());
         positions[1] = new InhomogeneousPoint2D(randomizer.nextDouble(), randomizer.nextDouble());
         positions[2] = new InhomogeneousPoint2D(randomizer.nextDouble(), randomizer.nextDouble());
-        final double[] distances = new double[3];
+        final var distances = new double[3];
         distances[0] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
         distances[1] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
         distances[2] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
 
-        final Circle[] circles = new Circle[3];
+        final var circles = new Circle[3];
         circles[0] = new Circle(positions[0], distances[0]);
         circles[1] = new Circle(positions[1], distances[1]);
         circles[2] = new Circle(positions[2], distances[2]);
 
-        final double[] standardDeviations = new double[3];
+        final var standardDeviations = new double[3];
 
         solver.setCirclesAndStandardDeviations(circles, standardDeviations);
 
         // check
-        final Circle[] circles2 = solver.getCircles();
+        final var circles2 = solver.getCircles();
         assertSame(circles[0].getCenter(), circles2[0].getCenter());
         assertSame(circles[1].getCenter(), circles2[1].getCenter());
         assertSame(circles[2].getCenter(), circles2[2].getCenter());
@@ -930,31 +676,19 @@ public class NonLinearLeastSquaresLateration2DSolverTest implements LaterationSo
         assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
 
         // force IllegalArgumentException
-        try {
-            solver.setCirclesAndStandardDeviations(null, standardDeviations);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver.setCirclesAndStandardDeviations(new Circle[1], standardDeviations);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver.setCirclesAndStandardDeviations(circles, null);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver.setCirclesAndStandardDeviations(circles, new double[1]);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> solver.setCirclesAndStandardDeviations(null,
+                standardDeviations));
+        assertThrows(IllegalArgumentException.class, () -> solver.setCirclesAndStandardDeviations(new Circle[1],
+                standardDeviations));
+        assertThrows(IllegalArgumentException.class, () -> solver.setCirclesAndStandardDeviations(circles,
+                null));
+        assertThrows(IllegalArgumentException.class, () -> solver.setCirclesAndStandardDeviations(circles,
+                new double[1]));
     }
 
     @Test
-    public void testGetSetListener() throws LockedException {
-        final NonLinearLeastSquaresLateration2DSolver solver = new NonLinearLeastSquaresLateration2DSolver();
+    void testGetSetListener() throws LockedException {
+        final var solver = new NonLinearLeastSquaresLateration2DSolver();
 
         // initial value
         assertNull(solver.getListener());
@@ -969,8 +703,8 @@ public class NonLinearLeastSquaresLateration2DSolverTest implements LaterationSo
     }
 
     @Test
-    public void testGetSetPositionsAndDistances() throws LockedException {
-        final NonLinearLeastSquaresLateration2DSolver solver = new NonLinearLeastSquaresLateration2DSolver();
+    void testGetSetPositionsAndDistances() throws LockedException {
+        final var solver = new NonLinearLeastSquaresLateration2DSolver();
 
         // initial value
         assertNull(solver.getPositions());
@@ -978,11 +712,11 @@ public class NonLinearLeastSquaresLateration2DSolverTest implements LaterationSo
         assertFalse(solver.isReady());
 
         // set new values
-        final Point2D[] positions = new Point2D[3];
+        final var positions = new Point2D[3];
         positions[0] = new InhomogeneousPoint2D();
         positions[1] = new InhomogeneousPoint2D();
         positions[2] = new InhomogeneousPoint2D();
-        final double[] distances = new double[3];
+        final var distances = new double[3];
 
         solver.setPositionsAndDistances(positions, distances);
 
@@ -992,31 +726,16 @@ public class NonLinearLeastSquaresLateration2DSolverTest implements LaterationSo
         assertTrue(solver.isReady());
 
         // Force IllegalArgumentException
-        try {
-            solver.setPositionsAndDistances(null, distances);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver.setPositionsAndDistances(positions, null);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver.setPositionsAndDistances(positions, new double[4]);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver.setPositionsAndDistances(new Point2D[1], new double[1]);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> solver.setPositionsAndDistances(null, distances));
+        assertThrows(IllegalArgumentException.class, () -> solver.setPositionsAndDistances(positions, null));
+        assertThrows(IllegalArgumentException.class, () -> solver.setPositionsAndDistances(positions, new double[4]));
+        assertThrows(IllegalArgumentException.class, () -> solver.setPositionsAndDistances(new Point2D[1],
+                new double[1]));
     }
 
     @Test
-    public void testGetSetPositionsDistancesAndStandardDeviations() throws LockedException {
-        final NonLinearLeastSquaresLateration2DSolver solver = new NonLinearLeastSquaresLateration2DSolver();
+    void testGetSetPositionsDistancesAndStandardDeviations() throws LockedException {
+        final var solver = new NonLinearLeastSquaresLateration2DSolver();
 
         // initial value
         assertNull(solver.getPositions());
@@ -1025,12 +744,12 @@ public class NonLinearLeastSquaresLateration2DSolverTest implements LaterationSo
         assertFalse(solver.isReady());
 
         // set new values
-        final Point2D[] positions = new Point2D[3];
+        final var positions = new Point2D[3];
         positions[0] = new InhomogeneousPoint2D();
         positions[1] = new InhomogeneousPoint2D();
         positions[2] = new InhomogeneousPoint2D();
-        final double[] distances = new double[3];
-        final double[] standardDeviations = new double[3];
+        final var distances = new double[3];
+        final var standardDeviations = new double[3];
 
         solver.setPositionsDistancesAndStandardDeviations(positions, distances, standardDeviations);
 
@@ -1041,37 +760,22 @@ public class NonLinearLeastSquaresLateration2DSolverTest implements LaterationSo
         assertSame(standardDeviations, solver.getDistanceStandardDeviations());
 
         // Force IllegalArgumentException
-        try {
-            solver.setPositionsAndDistances(null, distances);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver.setPositionsAndDistances(positions, null);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver.setPositionsAndDistances(positions, new double[4]);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver.setPositionsAndDistances(new Point2D[1], new double[1]);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> solver.setPositionsAndDistances(null, distances));
+        assertThrows(IllegalArgumentException.class, () -> solver.setPositionsAndDistances(positions, null));
+        assertThrows(IllegalArgumentException.class, () -> solver.setPositionsAndDistances(positions, new double[4]));
+        assertThrows(IllegalArgumentException.class, () -> solver.setPositionsAndDistances(new Point2D[1],
+                new double[1]));
     }
 
     @Test
-    public void testGetSetInitialPosition() throws LockedException {
-        final NonLinearLeastSquaresLateration2DSolver solver = new NonLinearLeastSquaresLateration2DSolver();
+    void testGetSetInitialPosition() throws LockedException {
+        final var solver = new NonLinearLeastSquaresLateration2DSolver();
 
         // check initial value
         assertNull(solver.getInitialPosition());
 
         // set new value
-        final InhomogeneousPoint2D initialPosition = new InhomogeneousPoint2D();
+        final var initialPosition = new InhomogeneousPoint2D();
         solver.setInitialPosition(initialPosition);
 
         // check
@@ -1079,30 +783,27 @@ public class NonLinearLeastSquaresLateration2DSolverTest implements LaterationSo
     }
 
     @Test
-    public void testSolveNoInitialPositionAndNoError()
-            throws LaterationException, NotReadyException, LockedException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+    void testSolveNoInitialPositionAndNoError() throws LaterationException, NotReadyException, LockedException {
+        final var randomizer = new UniformRandomizer();
 
-        int numValid = 0, numInvalid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final int numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
+        var numValid = 0;
+        var numInvalid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
 
-            final InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+            final var position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-            InhomogeneousPoint2D center;
-            double radius;
-            final Circle[] circles = new Circle[numCircles];
-            for (int i = 0; i < numCircles; i++) {
-                center = new InhomogeneousPoint2D(
+            final var circles = new Circle[numCircles];
+            for (var i = 0; i < numCircles; i++) {
+                final var center = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-                radius = center.distanceTo(position);
+                final var radius = center.distanceTo(position);
                 circles[i] = new Circle(center, radius);
             }
 
-            final NonLinearLeastSquaresLateration2DSolver solver = new NonLinearLeastSquaresLateration2DSolver(
-                    circles, this);
+            final var solver = new NonLinearLeastSquaresLateration2DSolver(circles, this);
 
             reset();
             assertEquals(0, solveStart);
@@ -1113,8 +814,8 @@ public class NonLinearLeastSquaresLateration2DSolverTest implements LaterationSo
 
             solver.solve();
 
-            final Point2D estimatedPosition = solver.getEstimatedPosition();
-            final double distance = estimatedPosition.distanceTo(position);
+            final var estimatedPosition = solver.getEstimatedPosition();
+            final var distance = estimatedPosition.distanceTo(position);
             if (distance >= ABSOLUTE_ERROR) {
                 numInvalid++;
             } else {
@@ -1126,61 +827,45 @@ public class NonLinearLeastSquaresLateration2DSolverTest implements LaterationSo
         assertTrue(numValid > numInvalid);
 
         // Force NotReadyException
-        final NonLinearLeastSquaresLateration2DSolver solver = new NonLinearLeastSquaresLateration2DSolver();
-        try {
-            solver.solve();
-            fail("NotReadyException expected but not thrown");
-        } catch (final NotReadyException ignore) {
-        }
+        final var solver = new NonLinearLeastSquaresLateration2DSolver();
+        assertThrows(NotReadyException.class, solver::solve);
 
         // Force LaterationException
-        final Circle[] circles = new Circle[3];
-        InhomogeneousPoint2D center;
-        double radius;
-        for (int i = 0; i < 3; i++) {
-            center = new InhomogeneousPoint2D(Double.NaN, Double.NaN);
-            radius = LaterationSolver.EPSILON;
+        final var circles = new Circle[3];
+        for (var i = 0; i < 3; i++) {
+            final var center = new InhomogeneousPoint2D(Double.NaN, Double.NaN);
+            final var radius = LaterationSolver.EPSILON;
             circles[i] = new Circle(center, radius);
         }
         solver.setCircles(circles);
-        try {
-            solver.solve();
-            fail("LaterationException expected but not thrown");
-        } catch (final LaterationException ignore) {
-        }
+        assertThrows(LaterationException.class, solver::solve);
     }
 
     @Test
-    public void testSolveWithInitialPositionAndNoError()
-            throws LaterationException, NotReadyException, LockedException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+    void testSolveWithInitialPositionAndNoError() throws LaterationException, NotReadyException, LockedException {
+        final var randomizer = new UniformRandomizer();
 
         // when an initial solution close to the real solution is provided, the algorithm
         // always converges to the true solution
-        for (int t = 0; t < TIMES; t++) {
-            final int numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
+        for (var t = 0; t < TIMES; t++) {
+            final var numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
 
-            final InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+            final var position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-            final InhomogeneousPoint2D initialPosition = new InhomogeneousPoint2D(
-                    position.getInhomX() + randomizer.nextDouble(
-                            MIN_POSITION_ERROR, MAX_POSITION_ERROR),
-                    position.getInhomY() + randomizer.nextDouble(
-                            MIN_POSITION_ERROR, MAX_POSITION_ERROR));
-            InhomogeneousPoint2D center;
-            double radius;
-            final Circle[] circles = new Circle[numCircles];
-            for (int i = 0; i < numCircles; i++) {
-                center = new InhomogeneousPoint2D(
+            final var initialPosition = new InhomogeneousPoint2D(
+                    position.getInhomX() + randomizer.nextDouble(MIN_POSITION_ERROR, MAX_POSITION_ERROR),
+                    position.getInhomY() + randomizer.nextDouble(MIN_POSITION_ERROR, MAX_POSITION_ERROR));
+            final var circles = new Circle[numCircles];
+            for (var i = 0; i < numCircles; i++) {
+                final var center = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-                radius = center.distanceTo(position);
+                final var radius = center.distanceTo(position);
                 circles[i] = new Circle(center, radius);
             }
 
-            final NonLinearLeastSquaresLateration2DSolver solver = new NonLinearLeastSquaresLateration2DSolver(
-                    circles, initialPosition, this);
+            final var solver = new NonLinearLeastSquaresLateration2DSolver(circles, initialPosition, this);
 
             reset();
             assertEquals(0, solveStart);
@@ -1191,39 +876,36 @@ public class NonLinearLeastSquaresLateration2DSolverTest implements LaterationSo
 
             solver.solve();
 
-            final Point2D estimatedPosition = solver.getEstimatedPosition();
+            final var estimatedPosition = solver.getEstimatedPosition();
             assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
         }
     }
 
     @Test
-    public void testSolveNoInitialPositionAndError()
-            throws LaterationException, NotReadyException, LockedException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+    void testSolveNoInitialPositionAndError() throws LaterationException, NotReadyException, LockedException {
+        final var randomizer = new UniformRandomizer();
 
-        int numValid = 0, numInvalid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final int numPoints = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
+        var numValid = 0;
+        var numInvalid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var numPoints = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
 
-            final InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+            final var position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-            InhomogeneousPoint2D point;
-            double distance, error;
-            final Point2D[] positions = new Point2D[numPoints];
-            final double[] distances = new double[numPoints];
-            for (int i = 0; i < numPoints; i++) {
-                point = new InhomogeneousPoint2D(
+            final var positions = new Point2D[numPoints];
+            final var distances = new double[numPoints];
+            for (var i = 0; i < numPoints; i++) {
+                final var point = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-                distance = point.distanceTo(position);
-                error = randomizer.nextDouble(MIN_DISTANCE_ERROR, MAX_DISTANCE_ERROR);
+                final var distance = point.distanceTo(position);
+                final var error = randomizer.nextDouble(MIN_DISTANCE_ERROR, MAX_DISTANCE_ERROR);
                 positions[i] = point;
                 distances[i] = distance + error;
             }
 
-            final NonLinearLeastSquaresLateration2DSolver solver = new NonLinearLeastSquaresLateration2DSolver(
-                    positions, distances, this);
+            final var solver = new NonLinearLeastSquaresLateration2DSolver(positions, distances, this);
 
             reset();
             assertEquals(0, solveStart);
@@ -1234,8 +916,8 @@ public class NonLinearLeastSquaresLateration2DSolverTest implements LaterationSo
 
             solver.solve();
 
-            final Point2D estimatedPosition = solver.getEstimatedPosition();
-            distance = estimatedPosition.distanceTo(position);
+            final var estimatedPosition = solver.getEstimatedPosition();
+            final var distance = estimatedPosition.distanceTo(position);
             if (distance >= LARGE_ABSOLUTE_ERROR) {
                 numInvalid++;
             } else {
@@ -1248,40 +930,35 @@ public class NonLinearLeastSquaresLateration2DSolverTest implements LaterationSo
     }
 
     @Test
-    public void testSolveWithInitialPositionAndError()
-            throws LaterationException, NotReadyException, LockedException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+    void testSolveWithInitialPositionAndError() throws LaterationException, NotReadyException, LockedException {
+        final var randomizer = new UniformRandomizer();
 
         // when an initial solution close to the real solution is provided, the algorithm
         // always converges to the true solution
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final int numPoints = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var numPoints = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
 
-            final InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+            final var position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-            final InhomogeneousPoint2D initialPosition = new InhomogeneousPoint2D(
-                    position.getInhomX() + randomizer.nextDouble(
-                            MIN_POSITION_ERROR, MAX_POSITION_ERROR),
-                    position.getInhomY() + randomizer.nextDouble(
-                            MIN_POSITION_ERROR, MAX_POSITION_ERROR));
-            InhomogeneousPoint2D point;
-            double distance, error;
-            final Point2D[] positions = new Point2D[numPoints];
-            final double[] distances = new double[numPoints];
-            for (int i = 0; i < numPoints; i++) {
-                point = new InhomogeneousPoint2D(
+            final var initialPosition = new InhomogeneousPoint2D(
+                    position.getInhomX() + randomizer.nextDouble(MIN_POSITION_ERROR, MAX_POSITION_ERROR),
+                    position.getInhomY() + randomizer.nextDouble(MIN_POSITION_ERROR, MAX_POSITION_ERROR));
+            final var positions = new Point2D[numPoints];
+            final var distances = new double[numPoints];
+            for (var i = 0; i < numPoints; i++) {
+                final var point = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-                distance = point.distanceTo(position);
-                error = randomizer.nextDouble(MIN_DISTANCE_ERROR, MAX_DISTANCE_ERROR);
+                final var distance = point.distanceTo(position);
+                final var error = randomizer.nextDouble(MIN_DISTANCE_ERROR, MAX_DISTANCE_ERROR);
                 positions[i] = point;
                 distances[i] = distance + error;
             }
 
-            final NonLinearLeastSquaresLateration2DSolver solver = new NonLinearLeastSquaresLateration2DSolver(
-                    positions, distances, initialPosition, this);
+            final var solver = new NonLinearLeastSquaresLateration2DSolver(positions, distances, initialPosition,
+                    this);
 
             reset();
             assertEquals(0, solveStart);
@@ -1292,7 +969,7 @@ public class NonLinearLeastSquaresLateration2DSolverTest implements LaterationSo
 
             solver.solve();
 
-            final Point2D estimatedPosition = solver.getEstimatedPosition();
+            final var estimatedPosition = solver.getEstimatedPosition();
             if (!position.equals(estimatedPosition, LARGE_ABSOLUTE_ERROR)) {
                 continue;
             }
@@ -1306,30 +983,27 @@ public class NonLinearLeastSquaresLateration2DSolverTest implements LaterationSo
     }
 
     @Test
-    public void testSolveNoInitialPositionAndNoError3Circles()
-            throws LaterationException, NotReadyException, LockedException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+    void testSolveNoInitialPositionAndNoError3Circles() throws LaterationException, NotReadyException, LockedException {
+        final var randomizer = new UniformRandomizer();
 
-        int numValid = 0, numInvalid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final int numCircles = MIN_CIRCLES;
+        var numValid = 0;
+        var numInvalid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var numCircles = MIN_CIRCLES;
 
-            final InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+            final var position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-            InhomogeneousPoint2D center;
-            double radius;
-            final Circle[] circles = new Circle[numCircles];
-            for (int i = 0; i < numCircles; i++) {
-                center = new InhomogeneousPoint2D(
+            final var circles = new Circle[numCircles];
+            for (var i = 0; i < numCircles; i++) {
+                final var center = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-                radius = center.distanceTo(position);
+                final var radius = center.distanceTo(position);
                 circles[i] = new Circle(center, radius);
             }
 
-            final NonLinearLeastSquaresLateration2DSolver solver = new NonLinearLeastSquaresLateration2DSolver(
-                    circles, this);
+            final var solver = new NonLinearLeastSquaresLateration2DSolver(circles, this);
 
             reset();
             assertEquals(0, solveStart);
@@ -1340,8 +1014,8 @@ public class NonLinearLeastSquaresLateration2DSolverTest implements LaterationSo
 
             solver.solve();
 
-            final Point2D estimatedPosition = solver.getEstimatedPosition();
-            final double distance = estimatedPosition.distanceTo(position);
+            final var estimatedPosition = solver.getEstimatedPosition();
+            final var distance = estimatedPosition.distanceTo(position);
             if (distance >= ABSOLUTE_ERROR) {
                 numInvalid++;
             } else {
@@ -1353,28 +1027,18 @@ public class NonLinearLeastSquaresLateration2DSolverTest implements LaterationSo
         assertTrue(numValid > numInvalid);
 
         // Force NotReadyException
-        final NonLinearLeastSquaresLateration2DSolver solver = new NonLinearLeastSquaresLateration2DSolver();
-        try {
-            solver.solve();
-            fail("NotReadyException expected but not thrown");
-        } catch (final NotReadyException ignore) {
-        }
+        final var solver = new NonLinearLeastSquaresLateration2DSolver();
+        assertThrows(NotReadyException.class, solver::solve);
 
         // Force LaterationException
-        final Circle[] circles = new Circle[3];
-        InhomogeneousPoint2D center;
-        double radius;
-        for (int i = 0; i < 3; i++) {
-            center = new InhomogeneousPoint2D(Double.NaN, Double.NaN);
-            radius = LaterationSolver.EPSILON;
+        final var circles = new Circle[3];
+        for (var i = 0; i < 3; i++) {
+            final var center = new InhomogeneousPoint2D(Double.NaN, Double.NaN);
+            final var radius = LaterationSolver.EPSILON;
             circles[i] = new Circle(center, radius);
         }
         solver.setCircles(circles);
-        try {
-            solver.solve();
-            fail("LaterationException expected but not thrown");
-        } catch (final LaterationException ignore) {
-        }
+        assertThrows(LaterationException.class, solver::solve);
     }
 
     @Override
@@ -1393,45 +1057,15 @@ public class NonLinearLeastSquaresLateration2DSolverTest implements LaterationSo
         solveStart = solveEnd = 0;
     }
 
-    private void checkLocked(final NonLinearLeastSquaresLateration2DSolver solver) {
-        try {
-            solver.setListener(null);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            solver.setPositionsAndDistances(null, null);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            solver.setPositionsDistancesAndStandardDeviations(
-                    null, null, null);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            solver.setInitialPosition(null);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            solver.setCircles(null);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            solver.setCirclesAndStandardDeviations(
-                    null, null);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            solver.solve();
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        } catch (final Exception ignore) {
-            fail("LockedException expected but not thrown");
-        }
+    private static void checkLocked(final NonLinearLeastSquaresLateration2DSolver solver) {
+        assertThrows(LockedException.class, () -> solver.setListener(null));
+        assertThrows(LockedException.class, () -> solver.setPositionsAndDistances(null, null));
+        assertThrows(LockedException.class, () -> solver.setPositionsDistancesAndStandardDeviations(
+                null, null, null));
+        assertThrows(LockedException.class, () -> solver.setInitialPosition(null));
+        assertThrows(LockedException.class, () -> solver.setCircles(null));
+        assertThrows(LockedException.class, () -> solver.setCirclesAndStandardDeviations(
+                null, null));
+        assertThrows(LockedException.class, solver::solve);
     }
 }

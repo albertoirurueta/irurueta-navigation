@@ -76,11 +76,10 @@ public class GNSSMeasurementsGenerator {
      */
     public static Collection<GNSSMeasurement> generate(
             final Time time, final List<ECEFPositionAndVelocity> satellitePositionsAndVelocities,
-            final ECEFPositionAndVelocity userPositionAndVelocity,
-            final List<Double> gnssRangeErrorBiases, final GNSSConfig config,
-            final Random random) {
-        return generate(convertTime(time), satellitePositionsAndVelocities,
-                userPositionAndVelocity, gnssRangeErrorBiases, config, random);
+            final ECEFPositionAndVelocity userPositionAndVelocity, final List<Double> gnssRangeErrorBiases,
+            final GNSSConfig config, final Random random) {
+        return generate(convertTime(time), satellitePositionsAndVelocities, userPositionAndVelocity,
+                gnssRangeErrorBiases, config, random);
     }
 
     /**
@@ -98,12 +97,10 @@ public class GNSSMeasurementsGenerator {
      */
     public static void generate(
             final Time time, final List<ECEFPositionAndVelocity> satellitePositionsAndVelocities,
-            final ECEFPositionAndVelocity userPositionAndVelocity,
-            final List<Double> gnssRangeErrorBiases, final GNSSConfig config,
-            final Random random, final Collection<GNSSMeasurement> result) {
-        generate(convertTime(time), satellitePositionsAndVelocities,
-                userPositionAndVelocity, gnssRangeErrorBiases, config, random,
-                result);
+            final ECEFPositionAndVelocity userPositionAndVelocity, final List<Double> gnssRangeErrorBiases,
+            final GNSSConfig config, final Random random, final Collection<GNSSMeasurement> result) {
+        generate(convertTime(time), satellitePositionsAndVelocities, userPositionAndVelocity, gnssRangeErrorBiases,
+                config, random, result);
     }
 
     /**
@@ -121,9 +118,8 @@ public class GNSSMeasurementsGenerator {
      */
     public static Collection<GNSSMeasurement> generate(
             final double time, final List<ECEFPositionAndVelocity> satellitePositionsAndVelocities,
-            final ECEFPositionAndVelocity userPositionAndVelocity,
-            final List<Double> gnssRangeErrorBiases, final GNSSConfig config,
-            final Random random) {
+            final ECEFPositionAndVelocity userPositionAndVelocity, final List<Double> gnssRangeErrorBiases,
+            final GNSSConfig config, final Random random) {
         return generate(time, satellitePositionsAndVelocities, userPositionAndVelocity.getX(),
                 userPositionAndVelocity.getY(), userPositionAndVelocity.getZ(),
                 userPositionAndVelocity.getVx(), userPositionAndVelocity.getVy(),
@@ -146,14 +142,12 @@ public class GNSSMeasurementsGenerator {
      */
     public static void generate(
             final double time, final List<ECEFPositionAndVelocity> satellitePositionsAndVelocities,
-            final ECEFPositionAndVelocity userPositionAndVelocity,
-            final List<Double> gnssRangeErrorBiases, final GNSSConfig config,
-            final Random random, final Collection<GNSSMeasurement> result) {
+            final ECEFPositionAndVelocity userPositionAndVelocity, final List<Double> gnssRangeErrorBiases,
+            final GNSSConfig config, final Random random, final Collection<GNSSMeasurement> result) {
         generate(time, satellitePositionsAndVelocities, userPositionAndVelocity.getX(),
                 userPositionAndVelocity.getY(), userPositionAndVelocity.getZ(),
                 userPositionAndVelocity.getVx(), userPositionAndVelocity.getVy(),
-                userPositionAndVelocity.getVz(), gnssRangeErrorBiases, config, random,
-                result);
+                userPositionAndVelocity.getVz(), gnssRangeErrorBiases, config, random, result);
     }
 
     /**
@@ -171,12 +165,10 @@ public class GNSSMeasurementsGenerator {
      */
     public static Collection<GNSSMeasurement> generate(
             final Time time, final List<ECEFPositionAndVelocity> satellitePositionsAndVelocities,
-            final ECEFPosition userPosition, final ECEFVelocity userVelocity,
-            final List<Double> gnssRangeErrorBiases, final GNSSConfig config,
-            final Random random) {
+            final ECEFPosition userPosition, final ECEFVelocity userVelocity, final List<Double> gnssRangeErrorBiases,
+            final GNSSConfig config, final Random random) {
         return generate(convertTime(time), satellitePositionsAndVelocities,
-                userPosition, userVelocity, gnssRangeErrorBiases, config,
-                random);
+                userPosition, userVelocity, gnssRangeErrorBiases, config, random);
     }
 
     /**
@@ -195,12 +187,10 @@ public class GNSSMeasurementsGenerator {
      */
     public static void generate(
             final Time time, final List<ECEFPositionAndVelocity> satellitePositionsAndVelocities,
-            final ECEFPosition userPosition, final ECEFVelocity userVelocity,
-            final List<Double> gnssRangeErrorBiases, final GNSSConfig config,
-            final Random random, final Collection<GNSSMeasurement> result) {
-        generate(convertTime(time), satellitePositionsAndVelocities,
-                userPosition, userVelocity, gnssRangeErrorBiases, config,
-                random, result);
+            final ECEFPosition userPosition, final ECEFVelocity userVelocity, final List<Double> gnssRangeErrorBiases,
+            final GNSSConfig config, final Random random, final Collection<GNSSMeasurement> result) {
+        generate(convertTime(time), satellitePositionsAndVelocities, userPosition, userVelocity, gnssRangeErrorBiases,
+                config, random, result);
     }
 
     /**
@@ -219,13 +209,11 @@ public class GNSSMeasurementsGenerator {
      */
     public static Collection<GNSSMeasurement> generate(
             final double time, final List<ECEFPositionAndVelocity> satellitePositionsAndVelocities,
-            final ECEFPosition userPosition, final ECEFVelocity userVelocity,
-            final List<Double> gnssRangeErrorBiases, final GNSSConfig config,
-            final Random random) {
+            final ECEFPosition userPosition, final ECEFVelocity userVelocity, final List<Double> gnssRangeErrorBiases,
+            final GNSSConfig config, final Random random) {
         return generate(time, satellitePositionsAndVelocities,
                 userPosition.getX(), userPosition.getY(), userPosition.getZ(),
-                userVelocity.getVx(), userVelocity.getVy(), userVelocity.getVz(),
-                gnssRangeErrorBiases, config, random);
+                userVelocity.getVx(), userVelocity.getVy(), userVelocity.getVz(), gnssRangeErrorBiases, config, random);
     }
 
     /**
@@ -245,13 +233,12 @@ public class GNSSMeasurementsGenerator {
      */
     public static void generate(
             final double time, final List<ECEFPositionAndVelocity> satellitePositionsAndVelocities,
-            final ECEFPosition userPosition, final ECEFVelocity userVelocity,
-            final List<Double> gnssRangeErrorBiases, final GNSSConfig config,
-            final Random random, final Collection<GNSSMeasurement> result) {
+            final ECEFPosition userPosition, final ECEFVelocity userVelocity, final List<Double> gnssRangeErrorBiases,
+            final GNSSConfig config, final Random random, final Collection<GNSSMeasurement> result) {
         generate(time, satellitePositionsAndVelocities,
                 userPosition.getX(), userPosition.getY(), userPosition.getZ(),
-                userVelocity.getVx(), userVelocity.getVy(), userVelocity.getVz(),
-                gnssRangeErrorBiases, config, random, result);
+                userVelocity.getVx(), userVelocity.getVy(), userVelocity.getVz(), gnssRangeErrorBiases, config, random,
+                result);
     }
 
     /**
@@ -282,11 +269,10 @@ public class GNSSMeasurementsGenerator {
             final double time, final List<ECEFPositionAndVelocity> satellitePositionsAndVelocities,
             final double userX, final double userY, final double userZ,
             final double userVx, final double userVy, final double userVz,
-            final List<Double> gnssRangeErrorBiases, final GNSSConfig config,
-            final Random random) {
-        final List<GNSSMeasurement> result = new ArrayList<>();
-        generate(time, satellitePositionsAndVelocities, userX, userY, userZ,
-                userVx, userVy, userVz, gnssRangeErrorBiases, config, random, result);
+            final List<Double> gnssRangeErrorBiases, final GNSSConfig config, final Random random) {
+        final var result = new ArrayList<GNSSMeasurement>();
+        generate(time, satellitePositionsAndVelocities, userX, userY, userZ, userVx, userVy, userVz,
+                gnssRangeErrorBiases, config, random, result);
         return result;
     }
 
@@ -328,16 +314,16 @@ public class GNSSMeasurementsGenerator {
 
         result.clear();
 
-        int pos = 0;
-        for (final ECEFPositionAndVelocity satellitePositionAndVelocity : satellitePositionsAndVelocities) {
-            final Double gnssRangeErrorBias = gnssRangeErrorBiases.get(pos);
+        var pos = 0;
+        for (final var satellitePositionAndVelocity : satellitePositionsAndVelocities) {
+            final var gnssRangeErrorBias = gnssRangeErrorBiases.get(pos);
             pos++;
 
             if (gnssRangeErrorBias == null) {
                 continue;
             }
 
-            final GNSSMeasurement measurement = generate(time,
+            final var measurement = generate(time,
                     satellitePositionAndVelocity.getX(),
                     satellitePositionAndVelocity.getY(),
                     satellitePositionAndVelocity.getZ(),
@@ -345,8 +331,8 @@ public class GNSSMeasurementsGenerator {
                     satellitePositionAndVelocity.getVy(),
                     satellitePositionAndVelocity.getVz(),
                     userX, userY, userZ,
-                    userVx, userVy, userVz, gnssRangeErrorBias, config,
-                    random);
+                    userVx, userVy, userVz,
+                    gnssRangeErrorBias, config, random);
             if (measurement != null) {
                 result.add(measurement);
             }
@@ -366,11 +352,10 @@ public class GNSSMeasurementsGenerator {
      */
     public static GNSSMeasurement generate(
             final Time time, final ECEFPositionAndVelocity satellitePositionAndVelocity,
-            final ECEFPositionAndVelocity userPositionAndVelocity,
-            final double gnssRangeErrorBias, final GNSSConfig config,
-            final Random random) {
-        return generate(convertTime(time), satellitePositionAndVelocity,
-                userPositionAndVelocity, gnssRangeErrorBias, config, random);
+            final ECEFPositionAndVelocity userPositionAndVelocity, final double gnssRangeErrorBias,
+            final GNSSConfig config, final Random random) {
+        return generate(convertTime(time), satellitePositionAndVelocity, userPositionAndVelocity, gnssRangeErrorBias,
+                config, random);
     }
 
     /**
@@ -389,11 +374,10 @@ public class GNSSMeasurementsGenerator {
      */
     public static boolean generate(
             final Time time, final ECEFPositionAndVelocity satellitePositionAndVelocity,
-            final ECEFPositionAndVelocity userPositionAndVelocity,
-            final double gnssRangeErrorBias, final GNSSConfig config,
-            final Random random, final GNSSMeasurement result) {
-        return generate(convertTime(time), satellitePositionAndVelocity,
-                userPositionAndVelocity, gnssRangeErrorBias, config, random, result);
+            final ECEFPositionAndVelocity userPositionAndVelocity, final double gnssRangeErrorBias,
+            final GNSSConfig config, final Random random, final GNSSMeasurement result) {
+        return generate(convertTime(time), satellitePositionAndVelocity, userPositionAndVelocity, gnssRangeErrorBias,
+                config, random, result);
     }
 
     /**
@@ -410,9 +394,8 @@ public class GNSSMeasurementsGenerator {
      */
     public static GNSSMeasurement generate(
             final double time, final ECEFPositionAndVelocity satellitePositionAndVelocity,
-            final ECEFPositionAndVelocity userPositionAndVelocity,
-            final double gnssRangeErrorBias, final GNSSConfig config,
-            final Random random) {
+            final ECEFPositionAndVelocity userPositionAndVelocity, final double gnssRangeErrorBias,
+            final GNSSConfig config, final Random random) {
         return generate(time, satellitePositionAndVelocity.getX(),
                 satellitePositionAndVelocity.getY(), satellitePositionAndVelocity.getZ(),
                 satellitePositionAndVelocity.getVx(), satellitePositionAndVelocity.getVy(),
@@ -438,10 +421,8 @@ public class GNSSMeasurementsGenerator {
      * mask angle and result is not updated.
      */
     public static boolean generate(
-            final double time,
-            final ECEFPositionAndVelocity satellitePositionAndVelocity,
-            final ECEFPositionAndVelocity userPositionAndVelocity,
-            final double gnssRangeErrorBias,
+            final double time, final ECEFPositionAndVelocity satellitePositionAndVelocity,
+            final ECEFPositionAndVelocity userPositionAndVelocity, final double gnssRangeErrorBias,
             final GNSSConfig config, final Random random, final GNSSMeasurement result) {
         return generate(time, satellitePositionAndVelocity.getX(),
                 satellitePositionAndVelocity.getY(), satellitePositionAndVelocity.getZ(),
@@ -466,12 +447,11 @@ public class GNSSMeasurementsGenerator {
      * @return a new GNSS measurement.
      */
     public static GNSSMeasurement generate(
-            final Time time, final ECEFPosition satellitePosition,
-            final ECEFVelocity satelliteVelocity, final ECEFPosition userPosition,
-            final ECEFVelocity userVelocity, final double gnssRangeErrorBias,
+            final Time time, final ECEFPosition satellitePosition, final ECEFVelocity satelliteVelocity,
+            final ECEFPosition userPosition, final ECEFVelocity userVelocity, final double gnssRangeErrorBias,
             final GNSSConfig config, final Random random) {
-        return generate(convertTime(time), satellitePosition, satelliteVelocity,
-                userPosition, userVelocity, gnssRangeErrorBias, config, random);
+        return generate(convertTime(time), satellitePosition, satelliteVelocity, userPosition, userVelocity,
+                gnssRangeErrorBias, config, random);
     }
 
     /**
@@ -490,12 +470,10 @@ public class GNSSMeasurementsGenerator {
      * mask angle and result is not updated.
      */
     public static boolean generate(
-            final Time time, final ECEFPosition satellitePosition,
-            final ECEFVelocity satelliteVelocity, final ECEFPosition userPosition,
-            final ECEFVelocity userVelocity, final double gnssRangeErrorBias,
+            final Time time, final ECEFPosition satellitePosition, final ECEFVelocity satelliteVelocity,
+            final ECEFPosition userPosition, final ECEFVelocity userVelocity, final double gnssRangeErrorBias,
             final GNSSConfig config, final Random random, final GNSSMeasurement result) {
-        return generate(convertTime(time), satellitePosition,
-                satelliteVelocity, userPosition, userVelocity,
+        return generate(convertTime(time), satellitePosition, satelliteVelocity, userPosition, userVelocity,
                 gnssRangeErrorBias, config, random, result);
     }
 
@@ -513,16 +491,13 @@ public class GNSSMeasurementsGenerator {
      * @return a new GNSS measurement.
      */
     public static GNSSMeasurement generate(
-            final double time, final ECEFPosition satellitePosition,
-            final ECEFVelocity satelliteVelocity, final ECEFPosition userPosition,
-            final ECEFVelocity userVelocity, final double gnssRangeErrorBias,
+            final double time, final ECEFPosition satellitePosition, final ECEFVelocity satelliteVelocity,
+            final ECEFPosition userPosition, final ECEFVelocity userVelocity, final double gnssRangeErrorBias,
             final GNSSConfig config, final Random random) {
-        return generate(time,
-                satellitePosition.getX(), satellitePosition.getY(), satellitePosition.getZ(),
+        return generate(time, satellitePosition.getX(), satellitePosition.getY(), satellitePosition.getZ(),
                 satelliteVelocity.getVx(), satelliteVelocity.getVy(), satelliteVelocity.getVz(),
                 userPosition.getX(), userPosition.getY(), userPosition.getZ(),
-                userVelocity.getVx(), userVelocity.getVy(), userVelocity.getVz(),
-                gnssRangeErrorBias, config, random);
+                userVelocity.getVx(), userVelocity.getVy(), userVelocity.getVz(), gnssRangeErrorBias, config, random);
     }
 
     /**
@@ -542,12 +517,10 @@ public class GNSSMeasurementsGenerator {
      * mask angle and result is not updated.
      */
     public static boolean generate(
-            final double time, final ECEFPosition satellitePosition,
-            final ECEFVelocity satelliteVelocity, final ECEFPosition userPosition,
-            final ECEFVelocity userVelocity, final double gnssRangeErrorBias,
+            final double time, final ECEFPosition satellitePosition, final ECEFVelocity satelliteVelocity,
+            final ECEFPosition userPosition, final ECEFVelocity userVelocity, final double gnssRangeErrorBias,
             final GNSSConfig config, final Random random, final GNSSMeasurement result) {
-        return generate(time,
-                satellitePosition.getX(), satellitePosition.getY(), satellitePosition.getZ(),
+        return generate(time, satellitePosition.getX(), satellitePosition.getY(), satellitePosition.getZ(),
                 satelliteVelocity.getVx(), satelliteVelocity.getVy(), satelliteVelocity.getVz(),
                 userPosition.getX(), userPosition.getY(), userPosition.getZ(),
                 userVelocity.getVx(), userVelocity.getVy(), userVelocity.getVz(),
@@ -588,17 +561,14 @@ public class GNSSMeasurementsGenerator {
      * @return a new GNSS measurement.
      */
     public static GNSSMeasurement generate(
-            final double time, final double satelliteX, final double satelliteY,
-            final double satelliteZ, final double satelliteVx, final double satelliteVy,
-            final double satelliteVz, final double userX, final double userY,
-            final double userZ, final double userVx, final double userVy,
-            final double userVz, final double gnssRangeErrorBias,
-            final GNSSConfig config, final Random random) {
-        final GNSSMeasurement result = new GNSSMeasurement();
-        if (generate(time, satelliteX, satelliteY, satelliteZ,
-                satelliteVx, satelliteVy, satelliteVz,
-                userX, userY, userZ, userVx, userVy, userVz,
-                gnssRangeErrorBias, config, random, result)) {
+            final double time, final double satelliteX, final double satelliteY, final double satelliteZ,
+            final double satelliteVx, final double satelliteVy, final double satelliteVz,
+            final double userX, final double userY, final double userZ,
+            final double userVx, final double userVy, final double userVz,
+            final double gnssRangeErrorBias, final GNSSConfig config, final Random random) {
+        final var result = new GNSSMeasurement();
+        if (generate(time, satelliteX, satelliteY, satelliteZ, satelliteVx, satelliteVy, satelliteVz,
+                userX, userY, userZ, userVx, userVy, userVz, gnssRangeErrorBias, config, random, result)) {
             return result;
         } else {
             return null;
@@ -642,24 +612,20 @@ public class GNSSMeasurementsGenerator {
      * mask angle and result is not updated.
      */
     public static boolean generate(
-            final double time, final double satelliteX, final double satelliteY,
-            final double satelliteZ, final double satelliteVx, final double satelliteVy,
-            final double satelliteVz, final double userX, final double userY,
-            final double userZ, final double userVx, final double userVy,
-            final double userVz, final double gnssRangeErrorBias,
+            final double time, final double satelliteX, final double satelliteY, final double satelliteZ,
+            final double satelliteVx, final double satelliteVy, final double satelliteVz,
+            final double userX, final double userY, final double userZ,
+            final double userVx, final double userVy, final double userVz, final double gnssRangeErrorBias,
             final GNSSConfig config, final Random random, final GNSSMeasurement result) {
-        final NEDPosition userNedPosition = new NEDPosition();
-        final NEDVelocity userNedVelocity = new NEDVelocity();
-        ECEFtoNEDPositionVelocityConverter.convertECEFtoNED(
-                userX, userY, userZ,
-                userVx, userVy, userVz, userNedPosition, userNedVelocity);
-        final double userLatitude = userNedPosition.getLatitude();
-        final double userLongitude = userNedPosition.getLongitude();
+        final var userNedPosition = new NEDPosition();
+        final var userNedVelocity = new NEDVelocity();
+        ECEFtoNEDPositionVelocityConverter.convertECEFtoNED(userX, userY, userZ, userVx, userVy, userVz,
+                userNedPosition, userNedVelocity);
+        final var userLatitude = userNedPosition.getLatitude();
+        final var userLongitude = userNedPosition.getLongitude();
 
-        return generate(time, satelliteX, satelliteY, satelliteZ,
-                satelliteVx, satelliteVy, satelliteVz,
-                userX, userY, userZ, userLatitude, userLongitude,
-                userVx, userVy, userVz, gnssRangeErrorBias,
+        return generate(time, satelliteX, satelliteY, satelliteZ, satelliteVx, satelliteVy, satelliteVz,
+                userX, userY, userZ, userLatitude, userLongitude, userVx, userVy, userVz, gnssRangeErrorBias,
                 config, random, result);
     }
 
@@ -704,38 +670,37 @@ public class GNSSMeasurementsGenerator {
      * mask angle and result is not updated.
      */
     private static boolean generate(
-            final double time, final double satelliteX, final double satelliteY,
-            final double satelliteZ, final double satelliteVx, final double satelliteVy,
-            final double satelliteVz, final double userX, final double userY,
-            final double userZ, final double userLatitude, final double userLongitude,
+            final double time, final double satelliteX, final double satelliteY, final double satelliteZ,
+            final double satelliteVx, final double satelliteVy, final double satelliteVz,
+            final double userX, final double userY, final double userZ,
+            final double userLatitude, final double userLongitude,
             final double userVx, final double userVy, final double userVz,
-            final double gnssRangeErrorBias, final GNSSConfig config,
-            final Random random, final GNSSMeasurement result) {
+            final double gnssRangeErrorBias, final GNSSConfig config, final Random random,
+            final GNSSMeasurement result) {
 
         // Calculate ECEF to NED coordinate transformation matrix using (2.150)
-        final Matrix cen = CoordinateTransformation.ecefToNedMatrix(userLatitude, userLongitude);
+        final var cen = CoordinateTransformation.ecefToNedMatrix(userLatitude, userLongitude);
 
         // Skew symmetric matrix of Earth rate
         try {
-            final Matrix omegaIe = Utils.skewMatrix(new double[]{0.0, 0.0, EARTH_ROTATION_RATE});
-            final Matrix cei = Matrix.identity(CoordinateTransformation.ROWS,
-                    CoordinateTransformation.COLS);
-            final Matrix satellitePosition = new Matrix(CoordinateTransformation.ROWS, 1);
-            final Matrix deltaR = new Matrix(CoordinateTransformation.ROWS, 1);
-            final Matrix satelliteVelocity = new Matrix(CoordinateTransformation.ROWS, 1);
-            final Matrix userPosition = new Matrix(CoordinateTransformation.ROWS, 1);
-            final Matrix userVelocity = new Matrix(CoordinateTransformation.ROWS, 1);
-            final Matrix tmp1 = new Matrix(CoordinateTransformation.ROWS, 1);
-            final Matrix tmp2 = new Matrix(CoordinateTransformation.ROWS, 1);
-            final Matrix tmp3 = new Matrix(CoordinateTransformation.ROWS, 1);
-            final Matrix tmp4 = new Matrix(CoordinateTransformation.ROWS, 1);
-            final Matrix tmp5 = new Matrix(CoordinateTransformation.ROWS, 1);
-            final Matrix tmp6 = new Matrix(CoordinateTransformation.ROWS, 1);
+            final var omegaIe = Utils.skewMatrix(new double[]{0.0, 0.0, EARTH_ROTATION_RATE});
+            final var cei = Matrix.identity(CoordinateTransformation.ROWS, CoordinateTransformation.COLS);
+            final var satellitePosition = new Matrix(CoordinateTransformation.ROWS, 1);
+            final var deltaR = new Matrix(CoordinateTransformation.ROWS, 1);
+            final var satelliteVelocity = new Matrix(CoordinateTransformation.ROWS, 1);
+            final var userPosition = new Matrix(CoordinateTransformation.ROWS, 1);
+            final var userVelocity = new Matrix(CoordinateTransformation.ROWS, 1);
+            final var tmp1 = new Matrix(CoordinateTransformation.ROWS, 1);
+            final var tmp2 = new Matrix(CoordinateTransformation.ROWS, 1);
+            final var tmp3 = new Matrix(CoordinateTransformation.ROWS, 1);
+            final var tmp4 = new Matrix(CoordinateTransformation.ROWS, 1);
+            final var tmp5 = new Matrix(CoordinateTransformation.ROWS, 1);
+            final var tmp6 = new Matrix(CoordinateTransformation.ROWS, 1);
 
             return generate(time, satelliteX, satelliteY, satelliteZ, satelliteVx, satelliteVy, satelliteVz,
-                    userX, userY, userZ, userVx, userVy, userVz, gnssRangeErrorBias, config, cen,
-                    omegaIe, cei, satellitePosition, deltaR, satelliteVelocity, userPosition,
-                    userVelocity, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, random, result);
+                    userX, userY, userZ, userVx, userVy, userVz, gnssRangeErrorBias, config, cen, omegaIe, cei,
+                    satellitePosition, deltaR, satelliteVelocity, userPosition, userVelocity, tmp1, tmp2, tmp3, tmp4,
+                    tmp5, tmp6, random, result);
         } catch (final WrongSizeException ignore) {
             return false;
         }
@@ -794,8 +759,7 @@ public class GNSSMeasurementsGenerator {
      * @throws WrongSizeException if an error occurs.
      */
     private static boolean generate(
-            final double time,
-            final double satelliteX, final double satelliteY, final double satelliteZ,
+            final double time, final double satelliteX, final double satelliteY, final double satelliteZ,
             final double satelliteVx, final double satelliteVy, final double satelliteVz,
             final double userX, final double userY, final double userZ,
             final double userVx, final double userVy, final double userVz,
@@ -808,29 +772,29 @@ public class GNSSMeasurementsGenerator {
             final Random random, final GNSSMeasurement result) throws WrongSizeException {
 
         // Determine ECEF line-of-sight vector using (8.41)
-        final double deltaRx = satelliteX - userX;
-        final double deltaRy = satelliteY - userY;
-        final double deltaRz = satelliteZ - userZ;
+        final var deltaRx = satelliteX - userX;
+        final var deltaRy = satelliteY - userY;
+        final var deltaRz = satelliteZ - userZ;
 
-        final double approxRange = Math.sqrt(deltaRx * deltaRx + deltaRy * deltaRy + deltaRz * deltaRz);
+        final var approxRange = Math.sqrt(deltaRx * deltaRx + deltaRy * deltaRy + deltaRz * deltaRz);
 
-        final double uaseX = deltaRx / approxRange;
-        final double uaseY = deltaRy / approxRange;
-        final double uaseZ = deltaRz / approxRange;
+        final var uaseX = deltaRx / approxRange;
+        final var uaseY = deltaRy / approxRange;
+        final var uaseZ = deltaRz / approxRange;
 
         // Convert line-of-sight vector to NED using (8.39) and determine
         // elevation using (8.57)
-        final double cen1 = cen.getElementAt(2, 0);
-        final double cen2 = cen.getElementAt(2, 1);
-        final double cen3 = cen.getElementAt(2, 2);
+        final var cen1 = cen.getElementAt(2, 0);
+        final var cen2 = cen.getElementAt(2, 1);
+        final var cen3 = cen.getElementAt(2, 2);
 
-        final double elevation = -Math.asin(cen1 * uaseX + cen2 * uaseY + cen3 * uaseZ);
+        final var elevation = -Math.asin(cen1 * uaseX + cen2 * uaseY + cen3 * uaseZ);
 
         // Determine if satellite is above the masking angle
         if (elevation >= Math.toRadians(config.getMaskAngleDegrees())) {
 
             // Calculate frame rotation during signal transit time using (8.36)
-            final double ceiValue = EARTH_ROTATION_RATE * approxRange / SPEED_OF_LIGHT;
+            final var ceiValue = EARTH_ROTATION_RATE * approxRange / SPEED_OF_LIGHT;
             cei.setElementAt(0, 1, ceiValue);
             cei.setElementAt(1, 0, -ceiValue);
 
@@ -845,7 +809,7 @@ public class GNSSMeasurementsGenerator {
             deltaR.setElementAtIndex(1, deltaR.getElementAtIndex(1) - userY);
             deltaR.setElementAtIndex(2, deltaR.getElementAtIndex(2) - userZ);
 
-            final double range = Utils.normF(deltaR);
+            final var range = Utils.normF(deltaR);
 
             // Calculate range rate using (8.44)
 
@@ -873,19 +837,16 @@ public class GNSSMeasurementsGenerator {
 
             tmp3.subtract(tmp5, tmp6);
 
-            final double rangeRate = uaseX * tmp6.getElementAtIndex(0)
-                    + uaseY * tmp6.getElementAtIndex(1)
+            final var rangeRate = uaseX * tmp6.getElementAtIndex(0) + uaseY * tmp6.getElementAtIndex(1)
                     + uaseZ * tmp6.getElementAtIndex(2);
 
             // Calculate pseudo-range measurement
-            final double pseudoRange = range + gnssRangeErrorBias
-                    + config.getInitialReceiverClockOffset()
+            final var pseudoRange = range + gnssRangeErrorBias + config.getInitialReceiverClockOffset()
                     + config.getInitialReceiverClockDrift() * time
                     + config.getCodeTrackingErrorSD() * random.nextGaussian();
 
             // Calculate pseudo-range rate measurement
-            final double pseudoRate = rangeRate
-                    + config.getInitialReceiverClockDrift()
+            final var pseudoRate = rangeRate + config.getInitialReceiverClockDrift()
                     + config.getRangeRateTrackingErrorSD() * random.nextGaussian();
 
             // Set result values
@@ -909,7 +870,6 @@ public class GNSSMeasurementsGenerator {
      * @return time converted to seconds.
      */
     private static double convertTime(final Time time) {
-        return TimeConverter.convert(time.getValue().doubleValue(),
-                time.getUnit(), TimeUnit.SECOND);
+        return TimeConverter.convert(time.getValue().doubleValue(), time.getUnit(), TimeUnit.SECOND);
     }
 }

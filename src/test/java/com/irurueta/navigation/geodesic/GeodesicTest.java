@@ -15,11 +15,11 @@
  */
 package com.irurueta.navigation.geodesic;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class GeodesicTest {
+class GeodesicTest {
     private static final double ABSOLUTE_ERROR = 1e-9;
 
     private static final PolygonArea POLYGON = new PolygonArea(Geodesic.WGS84, false);
@@ -108,42 +108,40 @@ public class GeodesicTest {
                     -0.51527225545373252, -0.51556587964721788, 104679964020340.318}};
 
     @Test
-    public void testConstructor() throws GeodesicException {
-        Geodesic g = new Geodesic(1.0, 0.0);
+    void testConstructor() throws GeodesicException {
+        var g = new Geodesic(1.0, 0.0);
 
         //check
         assertEquals(1.0, g.getMajorRadius(), 0.0);
         assertEquals(0.0, g.getFlattening(), 0.0);
         assertEquals(4 * Math.PI * 1.0, g.getEllipsoidArea(), 0.0);
 
-        g = null;
-        try {
-            g = new Geodesic(-1.0, 0.0);
-            fail("GeodesicException expected but not thrown");
-        } catch (GeodesicException ignore) {
-        }
-        try {
-            g = new Geodesic(1.0, 1.2);
-            fail("GeodesicException expected but not thrown");
-        } catch (GeodesicException ignore) {
-        }
-        assertNull(g);
+        assertThrows(GeodesicException.class, () -> new Geodesic(-1.0, 0.0));
+        assertThrows(GeodesicException.class, () -> new Geodesic(1.0, 1.2));
     }
 
     @Test
-    public void testDirect() {
-        int numValid = 0;
-        for (double[] TESTCASE : TESTCASES) {
-            final double lat1 = TESTCASE[0], lon1 = TESTCASE[1], azi1 = TESTCASE[2],
-                    lat2 = TESTCASE[3], lon2 = TESTCASE[4], azi2 = TESTCASE[5],
-                    s12 = TESTCASE[6], a12 = TESTCASE[7], m12 = TESTCASE[8],
-                    M12 = TESTCASE[9], M21 = TESTCASE[10], S12 = TESTCASE[11];
+    void testDirect() {
+        var numValid = 0;
+        for (final var TESTCASE : TESTCASES) {
+            final var lat1 = TESTCASE[0];
+            final var lon1 = TESTCASE[1];
+            final var azi1 = TESTCASE[2];
+            final var lat2 = TESTCASE[3];
+            final var lon2 = TESTCASE[4];
+            final var azi2 = TESTCASE[5];
+            final var s12 = TESTCASE[6];
+            final var a12 = TESTCASE[7];
+            final var m12 = TESTCASE[8];
+            final var M12 = TESTCASE[9];
+            final var M21 = TESTCASE[10];
+            final var S12 = TESTCASE[11];
             assertNotNull(Geodesic.WGS84);
-            final GeodesicData dir1 = Geodesic.WGS84.direct(lat1, lon1, azi1, s12,
+            final var dir1 = Geodesic.WGS84.direct(lat1, lon1, azi1, s12,
                     GeodesicMask.ALL | GeodesicMask.LONG_UNROLL);
-            final GeodesicData dir2 = Geodesic.WGS84.direct(lat1, lon1, azi1, s12);
-            final GeodesicData dir3 = Geodesic.WGS84.direct(lat1, lon1, azi1,
-                    false, s12, GeodesicMask.ALL | GeodesicMask.LONG_UNROLL);
+            final var dir2 = Geodesic.WGS84.direct(lat1, lon1, azi1, s12);
+            final var dir3 = Geodesic.WGS84.direct(lat1, lon1, azi1, false, s12,
+                    GeodesicMask.ALL | GeodesicMask.LONG_UNROLL);
 
             assertEquals(lat2, dir1.getLat2(), 1e-13);
             assertEquals(lon2, dir1.getLon2(), 1e-13);
@@ -179,19 +177,27 @@ public class GeodesicTest {
     }
 
     @Test
-    public void testArcDirect() {
-        int numValid = 0;
-        for (double[] TESTCASE : TESTCASES) {
-            final double lat1 = TESTCASE[0], lon1 = TESTCASE[1], azi1 = TESTCASE[2],
-                    lat2 = TESTCASE[3], lon2 = TESTCASE[4], azi2 = TESTCASE[5],
-                    s12 = TESTCASE[6], a12 = TESTCASE[7], m12 = TESTCASE[8],
-                    M12 = TESTCASE[9], M21 = TESTCASE[10], S12 = TESTCASE[11];
+    void testArcDirect() {
+        var numValid = 0;
+        for (final var TESTCASE : TESTCASES) {
+            final var lat1 = TESTCASE[0];
+            final var lon1 = TESTCASE[1];
+            final var azi1 = TESTCASE[2];
+            final var lat2 = TESTCASE[3];
+            final var lon2 = TESTCASE[4];
+            final var azi2 = TESTCASE[5];
+            final var s12 = TESTCASE[6];
+            final var a12 = TESTCASE[7];
+            final var m12 = TESTCASE[8];
+            final var M12 = TESTCASE[9];
+            final var M21 = TESTCASE[10];
+            final var S12 = TESTCASE[11];
             assertNotNull(Geodesic.WGS84);
-            final GeodesicData dir1 = Geodesic.WGS84.arcDirect(lat1, lon1, azi1, a12,
+            final var dir1 = Geodesic.WGS84.arcDirect(lat1, lon1, azi1, a12,
                     GeodesicMask.ALL | GeodesicMask.LONG_UNROLL);
-            final GeodesicData dir2 = Geodesic.WGS84.arcDirect(lat1, lon1, azi1, a12);
-            final GeodesicData dir3 = Geodesic.WGS84.direct(lat1, lon1, azi1,
-                    true, a12, GeodesicMask.ALL | GeodesicMask.LONG_UNROLL);
+            final var dir2 = Geodesic.WGS84.arcDirect(lat1, lon1, azi1, a12);
+            final var dir3 = Geodesic.WGS84.direct(lat1, lon1, azi1, true, a12,
+                    GeodesicMask.ALL | GeodesicMask.LONG_UNROLL);
 
             assertEquals(lat2, dir1.getLat2(), 1e-13);
             assertEquals(lon2, dir1.getLon2(), 1e-13);
@@ -227,25 +233,24 @@ public class GeodesicTest {
     }
 
     @Test
-    public void testDirectLine() {
+    void testDirectLine() {
         //define polygon around Plaça Sant Jaume, Barcelona using the following coordinates:
         //41.382643,2.176700
         //41.382524,2.176861
 
-        final double lat1 = 41.382643;
-        final double lon1 = 2.176700;
+        final var lat1 = 41.382643;
+        final var lon1 = 2.176700;
 
-        final double lat2 = 41.382524;
-        final double lon2 = 2.176861;
+        final var lat2 = 41.382524;
+        final var lon2 = 2.176861;
 
         assertNotNull(Geodesic.WGS84);
-        final GeodesicData data1 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
+        final var data1 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
 
-        final GeodesicLine line1 = Geodesic.WGS84.directLine(lat1, lon1, data1.getAzi1(), data1.getS12());
-        final GeodesicLine line2 = Geodesic.WGS84.directLine(lat1, lon1, data1.getAzi1(), data1.getS12(),
+        final var line1 = Geodesic.WGS84.directLine(lat1, lon1, data1.getAzi1(), data1.getS12());
+        final var line2 = Geodesic.WGS84.directLine(lat1, lon1, data1.getAzi1(), data1.getS12(), GeodesicMask.ALL);
+        final var line3 = Geodesic.WGS84.genDirectLine(lat1, lon1, data1.getAzi1(), false, data1.getS12(),
                 GeodesicMask.ALL);
-        final GeodesicLine line3 = Geodesic.WGS84.genDirectLine(lat1, lon1, data1.getAzi1(),
-                false, data1.getS12(), GeodesicMask.ALL);
 
         //check
         assertEquals(lat1, line1.getLatitude(), 0.0);
@@ -256,13 +261,12 @@ public class GeodesicTest {
         assertEquals(GeodesicMask.ALL | GeodesicMask.LATITUDE | GeodesicMask.AZIMUTH
                 | GeodesicMask.LONG_UNROLL, line1.getCapabilities());
 
-        final GeodesicData data2 = line1.position(data1.getS12());
+        final var data2 = line1.position(data1.getS12());
 
         assertEquals(lat1, data2.getLat1(), ABSOLUTE_ERROR);
         assertEquals(lon1, data2.getLon1(), ABSOLUTE_ERROR);
         assertEquals(lat2, data2.getLat2(), ABSOLUTE_ERROR);
         assertEquals(lon2, data2.getLon2(), ABSOLUTE_ERROR);
-
 
         assertEquals(lat1, line2.getLatitude(), 0.0);
         assertEquals(lon1, line2.getLongitude(), 0.0);
@@ -272,13 +276,12 @@ public class GeodesicTest {
         assertEquals(GeodesicMask.ALL | GeodesicMask.LATITUDE | GeodesicMask.AZIMUTH
                 | GeodesicMask.LONG_UNROLL, line2.getCapabilities());
 
-        final GeodesicData data2b = line2.position(data1.getS12());
+        final var data2b = line2.position(data1.getS12());
 
         assertEquals(lat1, data2b.getLat1(), ABSOLUTE_ERROR);
         assertEquals(lon1, data2b.getLon1(), ABSOLUTE_ERROR);
         assertEquals(lat2, data2b.getLat2(), ABSOLUTE_ERROR);
         assertEquals(lon2, data2b.getLon2(), ABSOLUTE_ERROR);
-
 
         assertEquals(lat1, line3.getLatitude(), 0.0);
         assertEquals(lon1, line3.getLongitude(), 0.0);
@@ -288,7 +291,7 @@ public class GeodesicTest {
         assertEquals(GeodesicMask.ALL | GeodesicMask.LATITUDE | GeodesicMask.AZIMUTH
                 | GeodesicMask.LONG_UNROLL, line3.getCapabilities());
 
-        final GeodesicData data2c = line3.position(data1.getS12());
+        final var data2c = line3.position(data1.getS12());
 
         assertEquals(lat1, data2c.getLat1(), ABSOLUTE_ERROR);
         assertEquals(lon1, data2c.getLon1(), ABSOLUTE_ERROR);
@@ -297,43 +300,40 @@ public class GeodesicTest {
     }
 
     @Test
-    public void testArcDirectLine() {
+    void testArcDirectLine() {
         //define polygon around Plaça Sant Jaume, Barcelona using the following coordinates:
         //41.382643,2.176700
         //41.382524,2.176861
 
-        final double lat1 = 41.382643;
-        final double lon1 = 2.176700;
+        final var lat1 = 41.382643;
+        final var lon1 = 2.176700;
 
-        final double lat2 = 41.382524;
-        final double lon2 = 2.176861;
+        final var lat2 = 41.382524;
+        final var lon2 = 2.176861;
 
         assertNotNull(Geodesic.WGS84);
-        final GeodesicData data1 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
+        final var data1 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
 
-        final GeodesicLine line1 = Geodesic.WGS84.arcDirectLine(lat1, lon1, data1.getAzi1(),
-                data1.getA12());
-        final GeodesicLine line2 = Geodesic.WGS84.arcDirectLine(lat1, lon1, data1.getAzi1(),
-                data1.getA12(), GeodesicMask.ALL);
-        final GeodesicLine line3 = Geodesic.WGS84.genDirectLine(lat1, lon1, data1.getAzi1(),
-                true, data1.getA12(), GeodesicMask.ALL);
+        final var line1 = Geodesic.WGS84.arcDirectLine(lat1, lon1, data1.getAzi1(), data1.getA12());
+        final var line2 = Geodesic.WGS84.arcDirectLine(lat1, lon1, data1.getAzi1(), data1.getA12(), GeodesicMask.ALL);
+        final var line3 = Geodesic.WGS84.genDirectLine(lat1, lon1, data1.getAzi1(), true, data1.getA12(),
+                GeodesicMask.ALL);
 
         //check
-        assertEquals(line1.getLatitude(), lat1, 0.0);
-        assertEquals(line1.getLongitude(), lon1, 0.0);
-        assertEquals(line1.getAzimuth(), data1.getAzi2(), 1e-3);
-        assertEquals(line1.getMajorRadius(), Geodesic.WGS84.getMajorRadius(), ABSOLUTE_ERROR);
-        assertEquals(line1.getFlattening(), Geodesic.WGS84.getFlattening(), ABSOLUTE_ERROR);
+        assertEquals(lat1, line1.getLatitude(), 0.0);
+        assertEquals(lon1, line1.getLongitude(), 0.0);
+        assertEquals(data1.getAzi2(), line1.getAzimuth(), 1e-3);
+        assertEquals(Geodesic.WGS84.getMajorRadius(), line1.getMajorRadius(), ABSOLUTE_ERROR);
+        assertEquals(Geodesic.WGS84.getFlattening(), line1.getFlattening(), ABSOLUTE_ERROR);
         assertEquals(GeodesicMask.ALL | GeodesicMask.LATITUDE | GeodesicMask.AZIMUTH
                 | GeodesicMask.LONG_UNROLL, line1.getCapabilities());
 
-        final GeodesicData data2 = line1.arcPosition(data1.getA12());
+        final var data2 = line1.arcPosition(data1.getA12());
 
         assertEquals(lat1, data2.getLat1(), ABSOLUTE_ERROR);
         assertEquals(lon1, data2.getLon1(), ABSOLUTE_ERROR);
         assertEquals(lat2, data2.getLat2(), ABSOLUTE_ERROR);
         assertEquals(lon2, data2.getLon2(), ABSOLUTE_ERROR);
-
 
         assertEquals(lat1, line2.getLatitude(), 0.0);
         assertEquals(lon1, line2.getLongitude(), 0.0);
@@ -343,13 +343,12 @@ public class GeodesicTest {
         assertEquals(GeodesicMask.ALL | GeodesicMask.LATITUDE | GeodesicMask.AZIMUTH
                 | GeodesicMask.LONG_UNROLL, line2.getCapabilities());
 
-        final GeodesicData data2b = line2.arcPosition(data1.getA12());
+        final var data2b = line2.arcPosition(data1.getA12());
 
         assertEquals(lat1, data2b.getLat1(), ABSOLUTE_ERROR);
         assertEquals(lon1, data2b.getLon1(), ABSOLUTE_ERROR);
         assertEquals(lat2, data2b.getLat2(), ABSOLUTE_ERROR);
         assertEquals(lon2, data2b.getLon2(), ABSOLUTE_ERROR);
-
 
         assertEquals(lat1, line3.getLatitude(), 0.0);
         assertEquals(lon1, line3.getLongitude(), 0.0);
@@ -359,7 +358,7 @@ public class GeodesicTest {
         assertEquals(GeodesicMask.ALL | GeodesicMask.LATITUDE | GeodesicMask.AZIMUTH
                 | GeodesicMask.LONG_UNROLL, line3.getCapabilities());
 
-        final GeodesicData data2c = line3.arcPosition(data1.getA12());
+        final var data2c = line3.arcPosition(data1.getA12());
 
         assertEquals(lat1, data2c.getLat1(), ABSOLUTE_ERROR);
         assertEquals(lon1, data2c.getLon1(), ABSOLUTE_ERROR);
@@ -368,17 +367,25 @@ public class GeodesicTest {
     }
 
     @Test
-    public void testInverse() {
-        int numValid = 0;
-        for (double[] TESTCASE : TESTCASES) {
-            final double lat1 = TESTCASE[0], lon1 = TESTCASE[1], azi1 = TESTCASE[2],
-                    lat2 = TESTCASE[3], lon2 = TESTCASE[4], azi2 = TESTCASE[5],
-                    s12 = TESTCASE[6], a12 = TESTCASE[7], m12 = TESTCASE[8],
-                    M12 = TESTCASE[9], M21 = TESTCASE[10], S12 = TESTCASE[11];
+    void testInverse() {
+        var numValid = 0;
+        for (final var TESTCASE : TESTCASES) {
+            final var lat1 = TESTCASE[0];
+            final var lon1 = TESTCASE[1];
+            final var azi1 = TESTCASE[2];
+            final var lat2 = TESTCASE[3];
+            final var lon2 = TESTCASE[4];
+            final var azi2 = TESTCASE[5];
+            final var s12 = TESTCASE[6];
+            final var a12 = TESTCASE[7];
+            final var m12 = TESTCASE[8];
+            final var M12 = TESTCASE[9];
+            final var M21 = TESTCASE[10];
+            final var S12 = TESTCASE[11];
             assertNotNull(Geodesic.WGS84);
-            final GeodesicData inv1 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2,
+            final var inv1 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2,
                     GeodesicMask.ALL | GeodesicMask.LONG_UNROLL);
-            final GeodesicData inv2 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
+            final var inv2 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
 
             assertEquals(lon2, inv1.getLon2(), 1e-13);
             assertEquals(azi1, inv1.getAzi1(), 1e-13);
@@ -407,22 +414,22 @@ public class GeodesicTest {
     }
 
     @Test
-    public void testInverseLine() {
+    void testInverseLine() {
         //define polygon around Plaça Sant Jaume, Barcelona using the following coordinates:
         //41.382643,2.176700
         //41.382524,2.176861
 
-        final double lat1 = 41.382643;
-        final double lon1 = 2.176700;
+        final var lat1 = 41.382643;
+        final var lon1 = 2.176700;
 
-        final double lat2 = 41.382524;
-        final double lon2 = 2.176861;
+        final var lat2 = 41.382524;
+        final var lon2 = 2.176861;
 
         assertNotNull(Geodesic.WGS84);
-        final GeodesicData data1 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
+        final var data1 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
 
-        final GeodesicLine line1 = Geodesic.WGS84.inverseLine(lat1, lon1, lat2, lon2);
-        final GeodesicLine line2 = Geodesic.WGS84.inverseLine(lat1, lon1, lat2, lon2, GeodesicMask.ALL);
+        final var line1 = Geodesic.WGS84.inverseLine(lat1, lon1, lat2, lon2);
+        final var line2 = Geodesic.WGS84.inverseLine(lat1, lon1, lat2, lon2, GeodesicMask.ALL);
 
         //check
         assertEquals(lat1, line1.getLatitude(), 0.0);
@@ -433,23 +440,22 @@ public class GeodesicTest {
         assertEquals(GeodesicMask.ALL | GeodesicMask.LATITUDE | GeodesicMask.AZIMUTH
                 | GeodesicMask.LONG_UNROLL, line1.getCapabilities());
 
-        final GeodesicData data2 = line1.position(data1.getS12());
+        final var data2 = line1.position(data1.getS12());
 
         assertEquals(lat1, data2.getLat1(), ABSOLUTE_ERROR);
         assertEquals(lon1, data2.getLon1(), ABSOLUTE_ERROR);
         assertEquals(lat2, data2.getLat2(), ABSOLUTE_ERROR);
         assertEquals(lon2, data2.getLon2(), ABSOLUTE_ERROR);
 
-
         assertEquals(lat1, line2.getLatitude(), 0.0);
         assertEquals(lon1, line2.getLongitude(), 0.0);
         assertEquals(data1.getAzi2(), line2.getAzimuth(), 1e-3);
         assertEquals(Geodesic.WGS84.getMajorRadius(), line2.getMajorRadius(), ABSOLUTE_ERROR);
         assertEquals(Geodesic.WGS84.getFlattening(), line2.getFlattening(), ABSOLUTE_ERROR);
-        assertEquals(line2.getCapabilities(), GeodesicMask.ALL |
-                GeodesicMask.LATITUDE | GeodesicMask.AZIMUTH | GeodesicMask.LONG_UNROLL);
+        assertEquals(GeodesicMask.ALL | GeodesicMask.LATITUDE | GeodesicMask.AZIMUTH
+                | GeodesicMask.LONG_UNROLL, line2.getCapabilities());
 
-        final GeodesicData data2b = line2.position(data1.getS12());
+        final var data2b = line2.position(data1.getS12());
 
         assertEquals(lat1, data2b.getLat1(), ABSOLUTE_ERROR);
         assertEquals(lon1, data2b.getLon1(), ABSOLUTE_ERROR);
@@ -458,22 +464,22 @@ public class GeodesicTest {
     }
 
     @Test
-    public void testLine() {
+    void testLine() {
         //define polygon around Plaça Sant Jaume, Barcelona using the following coordinates:
         //41.382643,2.176700
         //41.382524,2.176861
 
-        final double lat1 = 41.382643;
-        final double lon1 = 2.176700;
+        final var lat1 = 41.382643;
+        final var lon1 = 2.176700;
 
-        final double lat2 = 41.382524;
-        final double lon2 = 2.176861;
+        final var lat2 = 41.382524;
+        final var lon2 = 2.176861;
 
         assertNotNull(Geodesic.WGS84);
-        final GeodesicData data1 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
+        final var data1 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
 
-        final GeodesicLine line1 = Geodesic.WGS84.line(lat1, lon1, data1.getAzi1());
-        final GeodesicLine line2 = Geodesic.WGS84.line(lat1, lon1, data1.getAzi1(), GeodesicMask.ALL);
+        final var line1 = Geodesic.WGS84.line(lat1, lon1, data1.getAzi1());
+        final var line2 = Geodesic.WGS84.line(lat1, lon1, data1.getAzi1(), GeodesicMask.ALL);
 
         //check
         assertEquals(lat1, line1.getLatitude(), 0.0);
@@ -484,13 +490,12 @@ public class GeodesicTest {
         assertEquals(GeodesicMask.ALL | GeodesicMask.LATITUDE | GeodesicMask.AZIMUTH |
                 GeodesicMask.LONG_UNROLL, line1.getCapabilities());
 
-        final GeodesicData data2 = line1.arcPosition(data1.getA12());
+        final var data2 = line1.arcPosition(data1.getA12());
 
         assertEquals(lat1, data2.getLat1(), ABSOLUTE_ERROR);
         assertEquals(lon1, data2.getLon1(), ABSOLUTE_ERROR);
         assertEquals(lat2, data2.getLat2(), ABSOLUTE_ERROR);
         assertEquals(lon2, data2.getLon2(), ABSOLUTE_ERROR);
-
 
         assertEquals(lat1, line2.getLatitude(), 0.0);
         assertEquals(lon1, line2.getLongitude(), 0.0);
@@ -500,7 +505,7 @@ public class GeodesicTest {
         assertEquals(GeodesicMask.ALL | GeodesicMask.LATITUDE | GeodesicMask.AZIMUTH |
                 GeodesicMask.LONG_UNROLL, line2.getCapabilities());
 
-        final GeodesicData data2b = line2.arcPosition(data1.getA12());
+        final var data2b = line2.arcPosition(data1.getA12());
 
         assertEquals(lat1, data2b.getLat1(), ABSOLUTE_ERROR);
         assertEquals(lon1, data2b.getLon1(), ABSOLUTE_ERROR);
@@ -509,29 +514,27 @@ public class GeodesicTest {
     }
 
     @Test
-    public void testGeodSolve0() {
+    void testGeodSolve0() {
         assertNotNull(Geodesic.WGS84);
-        final GeodesicData inv = Geodesic.WGS84.inverse(40.6, -73.8,
-                49.01666667, 2.55);
+        final var inv = Geodesic.WGS84.inverse(40.6, -73.8, 49.01666667, 2.55);
         assertEquals(53.47022, inv.getAzi1(), 0.5e-5);
         assertEquals(111.59367, inv.getAzi2(), 0.5e-5);
         assertEquals(5853226, inv.getS12(), 0.5);
     }
 
     @Test
-    public void testGeodSolve1() {
+    void testGeodSolve1() {
         assertNotNull(Geodesic.WGS84);
-        final GeodesicData dir = Geodesic.WGS84.direct(40.63972222, -73.77888889,
-                53.5, 5850e3);
+        final var dir = Geodesic.WGS84.direct(40.63972222, -73.77888889, 53.5, 5850e3);
         assertEquals(49.01467, dir.getLat2(), 0.5e-5);
         assertEquals(2.56106, dir.getLon2(), 0.5e-5);
         assertEquals(111.62947, dir.getAzi2(), 0.5e-5);
     }
 
     @Test
-    public void testGeodSolve2() throws GeodesicException {
+    void testGeodSolve2() throws GeodesicException {
         // Check fix for antipodal prolate bug found 2010-09-04
-        final Geodesic geod = new Geodesic(6.4e6, -1 / 150.0);
+        final var geod = new Geodesic(6.4e6, -1 / 150.0);
         GeodesicData inv = geod.inverse(0.07476, 0, -0.07476, 180);
         assertEquals(90.00078, inv.getAzi1(), 0.5e-5);
         assertEquals(90.00078, inv.getAzi2(), 0.5e-5);
@@ -543,19 +546,18 @@ public class GeodesicTest {
     }
 
     @Test
-    public void testGeodSolve4() {
+    void testGeodSolve4() {
         // Check fix for short line bug found 2010-05-21
         assertNotNull(Geodesic.WGS84);
-        final GeodesicData inv = Geodesic.WGS84.inverse(36.493349428792, 0,
-                36.49334942879201, .0000008);
+        final var inv = Geodesic.WGS84.inverse(36.493349428792, 0, 36.49334942879201, .0000008);
         assertEquals(0.072, inv.getS12(), 0.5e-3);
     }
 
     @Test
-    public void testGeodSolve5() {
+    void testGeodSolve5() {
         // Check fix for point2=pole bug found 2010-05-03
         assertNotNull(Geodesic.WGS84);
-        final GeodesicData dir = Geodesic.WGS84.direct(0.01777745589997, 30, 0, 10e6);
+        final var dir = Geodesic.WGS84.direct(0.01777745589997, 30, 0, 10e6);
         assertEquals(90, dir.getLat2(), 0.5e-5);
         if (dir.getLon2() < 0) {
             assertEquals(-150, dir.getLon2(), 0.5e-5);
@@ -567,7 +569,7 @@ public class GeodesicTest {
     }
 
     @Test
-    public void testGeodSolve6() {
+    void testGeodSolve6() {
         // Check fix for volatile sbet12a bug found 2011-06-25 (gcc 4.4.4
         // x86 -O3).  Found again on 2012-03-27 with tdm-mingw32 (g++ 4.6.1).
         assertNotNull(Geodesic.WGS84);
@@ -583,76 +585,75 @@ public class GeodesicTest {
     }
 
     @Test
-    public void testGeodSolve9() {
+    void testGeodSolve9() {
         // Check fix for volatile x bug found 2011-06-25 (gcc 4.4.4 x86 -O3)
         assertNotNull(Geodesic.WGS84);
-        final GeodesicData inv = Geodesic.WGS84.inverse(56.320923501171, 0,
+        final var inv = Geodesic.WGS84.inverse(56.320923501171, 0,
                 -56.320923501171, 179.664747671772880215);
         assertEquals(19993558.287, inv.getS12(), 0.5e-3);
     }
 
     @Test
-    public void testGeodSolve10() {
+    void testGeodSolve10() {
         // Check fix for adjust tol1_ bug found 2011-06-25 (Visual Studio
         // 10 rel + debug)
         assertNotNull(Geodesic.WGS84);
-        final GeodesicData inv =
-                Geodesic.WGS84.inverse(52.784459512564, 0,
-                        -52.784459512563990912, 179.634407464943777557);
+        final var inv = Geodesic.WGS84.inverse(52.784459512564, 0,
+                -52.784459512563990912, 179.634407464943777557);
         assertEquals(19991596.095, inv.getS12(), 0.5e-3);
     }
 
     @Test
-    public void testGeodSolve11() {
+    void testGeodSolve11() {
         // Check fix for bet2 = -bet1 bug found 2011-06-25 (Visual Studio
         // 10 rel + debug)
         assertNotNull(Geodesic.WGS84);
-        final GeodesicData inv = Geodesic.WGS84.inverse(48.522876735459, 0,
+        final var inv = Geodesic.WGS84.inverse(48.522876735459, 0,
                 -48.52287673545898293, 179.599720456223079643);
         assertEquals(19989144.774, inv.getS12(), 0.5e-3);
     }
 
     @Test
-    public void testGeodSolve12() throws GeodesicException {
+    void testGeodSolve12() throws GeodesicException {
         // Check fix for inverse geodesics on extreme prolate/oblate
         // ellipsoids Reported 2012-08-29 Stefan Guenther
         // <stefan.gunther@embl.de>; fixed 2012-10-07
-        final Geodesic geod = new Geodesic(89.8, -1.83);
-        final GeodesicData inv = geod.inverse(0, 0, -10, 160);
+        final var geod = new Geodesic(89.8, -1.83);
+        final var inv = geod.inverse(0, 0, -10, 160);
         assertEquals(120.27, inv.getAzi1(), 1e-2);
         assertEquals(105.15, inv.getAzi2(), 1e-2);
         assertEquals(266.7, inv.getS12(), 1e-1);
     }
 
     @Test
-    public void testGeodSolve14() {
+    void testGeodSolve14() {
         // Check fix for inverse ignoring lon12 = nan
         assertNotNull(Geodesic.WGS84);
-        final GeodesicData inv = Geodesic.WGS84.inverse(0, 0, 1, Double.NaN);
+        final var inv = Geodesic.WGS84.inverse(0, 0, 1, Double.NaN);
         assertTrue(isNaN(inv.getAzi1()));
         assertTrue(isNaN(inv.getAzi2()));
         assertTrue(isNaN(inv.getS12()));
     }
 
     @Test
-    public void testGeodSolve15() throws GeodesicException {
+    void testGeodSolve15() throws GeodesicException {
         // Initial implementation of Math::eatanhe was wrong for e^2 < 0.  This
         // checks that this is fixed.
-        final Geodesic geod = new Geodesic(6.4e6, -1 / 150.0);
-        final GeodesicData dir = geod.direct(1, 2, 3, 4, GeodesicMask.AREA);
+        final var geod = new Geodesic(6.4e6, -1 / 150.0);
+        final var dir = geod.direct(1, 2, 3, 4, GeodesicMask.AREA);
         assertEquals(23700, dir.getAreaS12(), 0.5);
     }
 
     @Test
-    public void testGeodSolve17() {
+    void testGeodSolve17() {
         // Check fix for LONG_UNROLL bug found on 2015-05-07
         assertNotNull(Geodesic.WGS84);
-        GeodesicData dir = Geodesic.WGS84.direct(40, -75, -10, 2e7,
+        var dir = Geodesic.WGS84.direct(40, -75, -10, 2e7,
                 GeodesicMask.STANDARD | GeodesicMask.LONG_UNROLL);
         assertEquals(-39, dir.getLat2(), 1);
         assertEquals(-254, dir.getLon2(), 1);
         assertEquals(-170, dir.getAzi2(), 1);
-        GeodesicLine line = Geodesic.WGS84.line(40, -75, -10);
+        var line = Geodesic.WGS84.line(40, -75, -10);
         dir = line.position(2e7, GeodesicMask.STANDARD | GeodesicMask.LONG_UNROLL);
         assertEquals(-39, dir.getLat2(), 1);
         assertEquals(-254, dir.getLon2(), 1);
@@ -668,24 +669,24 @@ public class GeodesicTest {
     }
 
     @Test
-    public void testGeodSolve26() throws GeodesicException {
+    void testGeodSolve26() throws GeodesicException {
         // Check 0/0 problem with area calculation on sphere 2015-09-08
-        final Geodesic geod = new Geodesic(6.4e6, 0);
-        final GeodesicData inv = geod.inverse(1, 2, 3, 4, GeodesicMask.AREA);
+        final var geod = new Geodesic(6.4e6, 0);
+        final var inv = geod.inverse(1, 2, 3, 4, GeodesicMask.AREA);
         assertEquals(49911046115.0, inv.getAreaS12(), 0.5);
     }
 
     @Test
-    public void testGeodSolve28() throws GeodesicException {
+    void testGeodSolve28() throws GeodesicException {
         // Check for bad placement of assignment of r.a12 with |f| > 0.01 (bug in
         // Java implementation fixed on 2015-05-19).
-        final Geodesic geod = new Geodesic(6.4e6, 0.1);
-        final GeodesicData dir = geod.direct(1, 2, 10, 5e6);
+        final var geod = new Geodesic(6.4e6, 0.1);
+        final var dir = geod.direct(1, 2, 10, 5e6);
         assertEquals(48.55570690, dir.getA12(), 0.5e-8);
     }
 
     @Test
-    public void testGeodSolve29() {
+    void testGeodSolve29() {
         // Check longitude unrolling with inverse calculation 2015-09-16
         assertNotNull(Geodesic.WGS84);
         GeodesicData dir = Geodesic.WGS84.inverse(0, 539, 0, 181);
@@ -700,7 +701,7 @@ public class GeodesicTest {
     }
 
     @Test
-    public void testGeodSolve33() throws GeodesicException {
+    void testGeodSolve33() throws GeodesicException {
         // Check max(-0.0,+0.0) issues 2015-08-22 (triggered by bugs in Octave --
         // sind(-0.0) = +0.0 -- and in some version of Visual Studio --
         // fmod(-0.0, 360.0) = +0.0.
@@ -754,7 +755,7 @@ public class GeodesicTest {
     }
 
     @Test
-    public void testGeodSolve55() {
+    void testGeodSolve55() {
         // Check fix for nan + point on the equator or pole not returning all nans in
         // Geodesic::Inverse, found 2015-09-23.
         assertNotNull(Geodesic.WGS84);
@@ -769,17 +770,17 @@ public class GeodesicTest {
     }
 
     @Test
-    public void testGeodSolve59() {
+    void testGeodSolve59() {
         // Check for points close with longitudes close to 180 deg apart.
         assertNotNull(Geodesic.WGS84);
-        final GeodesicData inv = Geodesic.WGS84.inverse(5, 0.00000000000001, 10, 180);
+        final var inv = Geodesic.WGS84.inverse(5, 0.00000000000001, 10, 180);
         assertEquals(0.000000000000035, inv.getAzi1(), 1.5e-14);
         assertEquals(179.99999999999996, inv.getAzi2(), 1.5e-14);
         assertEquals(18345191.174332713, inv.getS12(), 4e-9);
     }
 
     @Test
-    public void testGeodSolve61() {
+    void testGeodSolve61() {
         // Make sure small negative azimuths are west-going
         assertNotNull(Geodesic.WGS84);
         GeodesicData dir = Geodesic.WGS84.direct(45, 0, -0.000000000000000003, 1e7,
@@ -787,8 +788,7 @@ public class GeodesicTest {
         assertEquals(45.30632, dir.getLat2(), 0.5e-5);
         assertEquals(-180, dir.getLon2(), 0.5e-5);
         assertEquals(180, Math.abs(dir.getAzi2()), 0.5e-5);
-        final GeodesicLine line = Geodesic.WGS84.inverseLine(45, 0, 80,
-                -0.000000000000000003);
+        final var line = Geodesic.WGS84.inverseLine(45, 0, 80, -0.000000000000000003);
         dir = line.position(1e7, GeodesicMask.STANDARD | GeodesicMask.LONG_UNROLL);
         assertEquals(45.30632, dir.getLat2(), 0.5e-5);
         assertEquals(-180, dir.getLon2(), 0.5e-5);
@@ -796,14 +796,13 @@ public class GeodesicTest {
     }
 
     @Test
-    public void testGeodSolve65() {
+    void testGeodSolve65() {
         // Check for bug in east-going check in GeodesicLine (needed to check for
         // sign of 0) and sign error in area calculation due to a bogus override
         // of the code for alp12.  Found/fixed on 2015-12-19.
         assertNotNull(Geodesic.WGS84);
-        final GeodesicLine line = Geodesic.WGS84.inverseLine(30, -0.000000000000000001,
-                -31, 180);
-        GeodesicData dir = line.position(1e7, GeodesicMask.ALL | GeodesicMask.LONG_UNROLL);
+        final var line = Geodesic.WGS84.inverseLine(30, -0.000000000000000001, -31, 180);
+        var dir = line.position(1e7, GeodesicMask.ALL | GeodesicMask.LONG_UNROLL);
         assertEquals(30.00000, dir.getLat1(), 0.5e-5);
         assertEquals(-0.00000, dir.getLon1(), 0.5e-5);
         assertEquals(180.00000, Math.abs(dir.getAzi1()), 0.5e-5);
@@ -832,29 +831,26 @@ public class GeodesicTest {
     }
 
     @Test
-    public void testGeodSolve69() {
+    void testGeodSolve69() {
         // Check for InverseLine if line is slightly west of S and that s13 is
         // correctly set.
         assertNotNull(Geodesic.WGS84);
-        final GeodesicLine line =
-                Geodesic.WGS84.inverseLine(-5, -0.000000000000002, -10, 180);
-        GeodesicData dir =
-                line.position(2e7, GeodesicMask.STANDARD | GeodesicMask.LONG_UNROLL);
+        final var line = Geodesic.WGS84.inverseLine(-5, -0.000000000000002, -10, 180);
+        var dir = line.position(2e7, GeodesicMask.STANDARD | GeodesicMask.LONG_UNROLL);
         assertEquals(4.96445, dir.getLat2(), 0.5e-5);
         assertEquals(-180.00000, dir.getLon2(), 0.5e-5);
         assertEquals(-0.00000, dir.getAzi2(), 0.5e-5);
-        dir = line.position(0.5 * line.getDistance(),
-                GeodesicMask.STANDARD | GeodesicMask.LONG_UNROLL);
+        dir = line.position(0.5 * line.getDistance(), GeodesicMask.STANDARD | GeodesicMask.LONG_UNROLL);
         assertEquals(-87.52461, dir.getLat2(), 0.5e-5);
         assertEquals(-0.00000, dir.getLon2(), 0.5e-5);
         assertEquals(-180.00000, dir.getAzi2(), 0.5e-5);
     }
 
     @Test
-    public void testGeodSolve71() {
+    void testGeodSolve71() {
         // Check that DirectLine sets s13.
         assertNotNull(Geodesic.WGS84);
-        final GeodesicLine line = Geodesic.WGS84.directLine(1, 2, 45, 1e7);
+        final var line = Geodesic.WGS84.directLine(1, 2, 45, 1e7);
         GeodesicData dir = line.position(0.5 * line.getDistance(),
                 GeodesicMask.STANDARD | GeodesicMask.LONG_UNROLL);
         assertEquals(30.92625, dir.getLat2(), 0.5e-5);
@@ -863,24 +859,24 @@ public class GeodesicTest {
     }
 
     @Test
-    public void testGeodSolve73() {
+    void testGeodSolve73() {
         // Check for backwards from the pole bug reported by Anon on 2016-02-13.
         // This only affected the Java implementation.  It was introduced in Java
         // version 1.44 and fixed in 1.46-SNAPSHOT on 2016-01-17.
         assertNotNull(Geodesic.WGS84);
-        GeodesicData dir = Geodesic.WGS84.direct(90, 10, 180, -1e6);
+        var dir = Geodesic.WGS84.direct(90, 10, 180, -1e6);
         assertEquals(81.04623, dir.getLat2(), 0.5e-5);
         assertEquals(-170, dir.getLon2(), 0.5e-5);
         assertEquals(0, dir.getAzi2(), 0.5e-5);
     }
 
     @Test
-    public void testGeodSolve74() {
+    void testGeodSolve74() {
         // Check fix for inaccurate areas, bug introduced in v1.46, fixed
         // 2015-10-16.
         assertNotNull(Geodesic.WGS84);
-        final GeodesicData inv = Geodesic.WGS84.inverse(54.1589, 15.3872,
-                54.1591, 15.3877, GeodesicMask.ALL);
+        final var inv = Geodesic.WGS84.inverse(54.1589, 15.3872, 54.1591, 15.3877,
+                GeodesicMask.ALL);
         assertEquals(55.723110355, inv.getAzi1(), 5e-9);
         assertEquals(55.723515675, inv.getAzi2(), 5e-9);
         assertEquals(39.527686385, inv.getS12(), 5e-9);
@@ -892,11 +888,11 @@ public class GeodesicTest {
     }
 
     @Test
-    public void testGeodSolve76() {
+    void testGeodSolve76() {
         // The distance from Wellington and Salamanca (a classic failure of
         // Vincenty)
         assertNotNull(Geodesic.WGS84);
-        final GeodesicData inv = Geodesic.WGS84.inverse(-(41 + 19 / 60.0), 174 + 49 / 60.0,
+        final var inv = Geodesic.WGS84.inverse(-(41 + 19 / 60.0), 174 + 49 / 60.0,
                 40 + 58 / 60.0, -(5 + 30 / 60.0));
         assertEquals(160.39137649664, inv.getAzi1(), 0.5e-11);
         assertEquals(19.50042925176, inv.getAzi2(), 0.5e-11);
@@ -904,20 +900,20 @@ public class GeodesicTest {
     }
 
     @Test
-    public void testGeodSolve78() {
+    void testGeodSolve78() {
         // An example where the NGS calculator fails to converge
         assertNotNull(Geodesic.WGS84);
-        final GeodesicData inv = Geodesic.WGS84.inverse(27.2, 0.0, -27.1, 179.5);
+        final var inv = Geodesic.WGS84.inverse(27.2, 0.0, -27.1, 179.5);
         assertEquals(45.82468716758, inv.getAzi1(), 0.5e-11);
         assertEquals(134.22776532670, inv.getAzi2(), 0.5e-11);
         assertEquals(19974354.765767, inv.getS12(), 0.5e-6);
     }
 
     @Test
-    public void testPlanimeter0() {
+    void testPlanimeter0() {
         // Check fix for pole-encircling bug found 2011-03-16
         final double[][] pa = {{89, 0}, {89, 90}, {89, 180}, {89, 270}};
-        PolygonResult a = planimeter(pa);
+        var a = planimeter(pa);
         assertEquals(631819.8745, a.getPerimeter(), 1e-4);
         assertEquals(24952305678.0, a.getArea(), 1);
 
@@ -941,19 +937,19 @@ public class GeodesicTest {
     }
 
     @Test
-    public void testPlanimeter5() {
+    void testPlanimeter5() {
         // Check fix for Planimeter pole crossing bug found 2011-06-24
         final double[][] points = {{89, 0.1}, {89, 90.1}, {89, -179.9}};
-        final PolygonResult a = planimeter(points);
+        final var a = planimeter(points);
         assertEquals(539297, a.getPerimeter(), 1);
         assertEquals(12476152838.5, a.getArea(), 1);
     }
 
     @Test
-    public void testPlanimeter6() {
+    void testPlanimeter6() {
         // Check fix for Planimeter lon12 rounding bug found 2012-12-03
         final double[][] pa = {{9, -0.00000000000001}, {9, 180}, {9, 0}};
-        PolygonResult a = planimeter(pa);
+        var a = planimeter(pa);
         assertEquals(36026861, a.getPerimeter(), 1);
         assertEquals(0, a.getArea(), 1);
         final double[][] pb = {{9, 0.00000000000001}, {9, 0}, {9, 180}};
@@ -971,30 +967,31 @@ public class GeodesicTest {
     }
 
     @Test
-    public void testPlanimeter12() {
+    void testPlanimeter12() {
         // Area of arctic circle (not really -- adjunct to rhumb-area test)
         final double[][] points = {{66.562222222, 0}, {66.562222222, 180}};
-        final PolygonResult a = planimeter(points);
+        final var a = planimeter(points);
         assertEquals(10465729, a.getPerimeter(), 1);
         assertEquals(0, a.getArea(), 1);
     }
 
     @Test
-    public void testPlanimeter13() {
+    void testPlanimeter13() {
         // Check encircling pole twice
         final double[][] points = {{89, -360}, {89, -240}, {89, -120}, {89, 0}, {89, 120}, {89, 240}};
-        final PolygonResult a = planimeter(points);
+        final var a = planimeter(points);
         assertEquals(1160741, a.getPerimeter(), 1);
         assertEquals(32415230256.0, a.getArea(), 1);
     }
 
     private static boolean isNaN(double x) {
+        //noinspection ExpressionComparedToItself
         return x != x;
     }
 
     private static PolygonResult planimeter(final double[][] points) {
         POLYGON.clear();
-        for (double[] point : points) {
+        for (final var point : points) {
             POLYGON.addPoint(point[0], point[1]);
         }
         return POLYGON.compute(false, true);
@@ -1002,7 +999,7 @@ public class GeodesicTest {
 
     private static PolygonResult polyLength(final double[][] points) {
         POLYLINE.clear();
-        for (double[] point : points) {
+        for (final var point : points) {
             POLYLINE.addPoint(point[0], point[1]);
         }
         return POLYLINE.compute(false, true);

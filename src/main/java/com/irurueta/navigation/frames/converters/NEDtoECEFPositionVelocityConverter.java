@@ -57,10 +57,8 @@ public class NEDtoECEFPositionVelocityConverter {
      * @param destinationVelocity instance where velocity resolved on ECEF frame will
      *                            be stored.
      */
-    public void convert(final NEDPosition sourcePosition,
-                        final NEDVelocity sourceVelocity,
-                        final ECEFPosition destinationPosition,
-                        final ECEFVelocity destinationVelocity) {
+    public void convert(final NEDPosition sourcePosition, final NEDVelocity sourceVelocity,
+                        final ECEFPosition destinationPosition, final ECEFVelocity destinationVelocity) {
         convertNEDtoECEF(sourcePosition, sourceVelocity, destinationPosition, destinationVelocity);
     }
 
@@ -82,10 +80,8 @@ public class NEDtoECEFPositionVelocityConverter {
      * @param destinationVelocity instance where velocity resolved on ECEF frame will
      *                            be stored.
      */
-    public void convert(final double latitude, final double longitude,
-                        final double height, final double vn,
-                        final double ve, final double vd,
-                        final ECEFPosition destinationPosition,
+    public void convert(final double latitude, final double longitude, final double height, final double vn,
+                        final double ve, final double vd, final ECEFPosition destinationPosition,
                         final ECEFVelocity destinationVelocity) {
         convertNEDtoECEF(latitude, longitude, height, vn, ve, vd, destinationPosition, destinationVelocity);
     }
@@ -105,13 +101,13 @@ public class NEDtoECEFPositionVelocityConverter {
                                         final NEDVelocity sourceVelocity,
                                         final ECEFPosition destinationPosition,
                                         final ECEFVelocity destinationVelocity) {
-        final double latitude = sourcePosition.getLatitude();
-        final double longitude = sourcePosition.getLongitude();
-        final double height = sourcePosition.getHeight();
+        final var latitude = sourcePosition.getLatitude();
+        final var longitude = sourcePosition.getLongitude();
+        final var height = sourcePosition.getHeight();
 
-        final double vn = sourceVelocity.getVn();
-        final double ve = sourceVelocity.getVe();
-        final double vd = sourceVelocity.getVd();
+        final var vn = sourceVelocity.getVn();
+        final var ve = sourceVelocity.getVe();
+        final var vd = sourceVelocity.getVd();
 
         convertNEDtoECEF(latitude, longitude, height, vn, ve, vd, destinationPosition, destinationVelocity);
     }
@@ -135,42 +131,41 @@ public class NEDtoECEFPositionVelocityConverter {
      *                            be stored.
      */
     @SuppressWarnings("DuplicatedCode")
-    public static void convertNEDtoECEF(final double latitude, final double longitude,
-                                        final double height, final double vn,
-                                        final double ve, final double vd,
+    public static void convertNEDtoECEF(final double latitude, final double longitude, final double height,
+                                        final double vn, final double ve, final double vd,
                                         final ECEFPosition destinationPosition,
                                         final ECEFVelocity destinationVelocity) {
         try {
 
             // Calculate transverse radius of curvature using (2.105)
-            final double re = EARTH_EQUATORIAL_RADIUS_WGS84
+            final var re = EARTH_EQUATORIAL_RADIUS_WGS84
                     / Math.sqrt(1.0 - Math.pow(EARTH_ECCENTRICITY * Math.sin(latitude), 2.0));
 
             // Convert position using (2.112)
-            final double cosLat = Math.cos(latitude);
-            final double sinLat = Math.sin(latitude);
-            final double cosLong = Math.cos(longitude);
-            final double sinLong = Math.sin(longitude);
+            final var cosLat = Math.cos(latitude);
+            final var sinLat = Math.sin(latitude);
+            final var cosLong = Math.cos(longitude);
+            final var sinLong = Math.sin(longitude);
 
-            final double x = (re + height) * cosLat * cosLong;
-            final double y = (re + height) * cosLat * sinLong;
-            final double z = ((1.0 - EARTH_ECCENTRICITY * EARTH_ECCENTRICITY) * re + height) * sinLat;
+            final var x = (re + height) * cosLat * cosLong;
+            final var y = (re + height) * cosLat * sinLong;
+            final var z = ((1.0 - EARTH_ECCENTRICITY * EARTH_ECCENTRICITY) * re + height) * sinLat;
 
             destinationPosition.setCoordinates(x, y, z);
 
             // Calculate NED to ECEF coordinate transformation matrix
-            final Matrix cne = CoordinateTransformation.nedToEcefMatrix(latitude, longitude);
+            final var cne = CoordinateTransformation.nedToEcefMatrix(latitude, longitude);
 
             // Transform velocity using (2.73)
-            final Matrix vEbn = new Matrix(NEDFrame.NUM_VELOCITY_COORDINATES, 1);
+            final var vEbn = new Matrix(NEDFrame.NUM_VELOCITY_COORDINATES, 1);
             vEbn.setElementAtIndex(0, vn);
             vEbn.setElementAtIndex(1, ve);
             vEbn.setElementAtIndex(2, vd);
 
-            final Matrix vEbe = cne.multiplyAndReturnNew(vEbn);
-            final double vx = vEbe.getElementAtIndex(0);
-            final double vy = vEbe.getElementAtIndex(1);
-            final double vz = vEbe.getElementAtIndex(2);
+            final var vEbe = cne.multiplyAndReturnNew(vEbn);
+            final var vx = vEbe.getElementAtIndex(0);
+            final var vy = vEbe.getElementAtIndex(1);
+            final var vz = vEbe.getElementAtIndex(2);
 
             destinationVelocity.setCoordinates(vx, vy, vz);
         } catch (final WrongSizeException ignore) {

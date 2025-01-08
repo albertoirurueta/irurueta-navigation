@@ -28,18 +28,19 @@ import com.irurueta.navigation.geodesic.Constants;
 import com.irurueta.statistics.UniformRandomizer;
 import com.irurueta.units.Time;
 import com.irurueta.units.TimeUnit;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.Random;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class GNSSMeasurementsGeneratorTest {
+@ExtendWith(MockitoExtension.class)
+class GNSSMeasurementsGeneratorTest {
 
     private static final double MIN_VALUE = 1e-4;
     private static final double MAX_VALUE = 1e-3;
@@ -70,103 +71,97 @@ public class GNSSMeasurementsGeneratorTest {
     private static final double ABSOLUTE_ERROR = 1e-8;
 
     @Test
-    public void testGenerateSingleMeasurement() throws WrongSizeException {
-        for (int t = 0; t < TIMES; t++) {
-            final Random random = mock(Random.class);
+    void testGenerateSingleMeasurement() throws WrongSizeException {
+        for (var t = 0; t < TIMES; t++) {
+            final var random = mock(Random.class);
             when(random.nextGaussian()).thenReturn(0.5);
-            when(random.nextDouble()).thenReturn(0.5);
 
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            final var randomizer = new UniformRandomizer();
 
-            final double timeSeconds = randomizer.nextDouble(MIN_TIME, MAX_TIME);
-            final Time time = new Time(timeSeconds, TimeUnit.SECOND);
+            final var timeSeconds = randomizer.nextDouble(MIN_TIME, MAX_TIME);
+            final var time = new Time(timeSeconds, TimeUnit.SECOND);
 
-            final ECEFPosition satellitePosition = new ECEFPosition(
+            final var satellitePosition = new ECEFPosition(
                     randomizer.nextDouble(MIN_SAT_POSITION_VALUE, MAX_SAT_POSITION_VALUE),
                     randomizer.nextDouble(MIN_SAT_POSITION_VALUE, MAX_SAT_POSITION_VALUE),
                     randomizer.nextDouble(MIN_SAT_POSITION_VALUE, MAX_SAT_POSITION_VALUE));
-            final ECEFPosition userPosition = new ECEFPosition(
+            final var userPosition = new ECEFPosition(
                     randomizer.nextDouble(MIN_USER_POSITION_VALUE, MAX_USER_POSITION_VALUE),
                     randomizer.nextDouble(MIN_USER_POSITION_VALUE, MAX_USER_POSITION_VALUE),
                     randomizer.nextDouble(MIN_USER_POSITION_VALUE, MAX_USER_POSITION_VALUE));
 
-            final ECEFVelocity satelliteVelocity = new ECEFVelocity(
+            final var satelliteVelocity = new ECEFVelocity(
                     randomizer.nextDouble(MIN_SAT_VELOCITY_VALUE, MAX_SAT_VELOCITY_VALUE),
                     randomizer.nextDouble(MIN_SAT_VELOCITY_VALUE, MAX_SAT_VELOCITY_VALUE),
                     randomizer.nextDouble(MIN_SAT_VELOCITY_VALUE, MAX_SAT_VELOCITY_VALUE));
-            final ECEFVelocity userVelocity = new ECEFVelocity(
+            final var userVelocity = new ECEFVelocity(
                     randomizer.nextDouble(MIN_USER_VELOCITY_VALUE, MAX_USER_VELOCITY_VALUE),
                     randomizer.nextDouble(MIN_USER_VELOCITY_VALUE, MAX_USER_VELOCITY_VALUE),
                     randomizer.nextDouble(MIN_USER_VELOCITY_VALUE, MAX_USER_VELOCITY_VALUE));
 
-            final double satelliteX = satellitePosition.getX();
-            final double satelliteY = satellitePosition.getY();
-            final double satelliteZ = satellitePosition.getZ();
+            final var satelliteX = satellitePosition.getX();
+            final var satelliteY = satellitePosition.getY();
+            final var satelliteZ = satellitePosition.getZ();
 
-            final double satelliteVx = satelliteVelocity.getVx();
-            final double satelliteVy = satelliteVelocity.getVy();
-            final double satelliteVz = satelliteVelocity.getVz();
+            final var satelliteVx = satelliteVelocity.getVx();
+            final var satelliteVy = satelliteVelocity.getVy();
+            final var satelliteVz = satelliteVelocity.getVz();
 
-            final double userX = userPosition.getX();
-            final double userY = userPosition.getY();
-            final double userZ = userPosition.getZ();
+            final var userX = userPosition.getX();
+            final var userY = userPosition.getY();
+            final var userZ = userPosition.getZ();
 
-            final double userVx = userVelocity.getVx();
-            final double userVy = userVelocity.getVy();
-            final double userVz = userVelocity.getVz();
+            final var userVx = userVelocity.getVx();
+            final var userVy = userVelocity.getVy();
+            final var userVz = userVelocity.getVz();
 
-            final ECEFPositionAndVelocity satellitePositionAndVelocity =
-                    new ECEFPositionAndVelocity(satellitePosition, satelliteVelocity);
-            final ECEFPositionAndVelocity userPositionAndVelocity =
-                    new ECEFPositionAndVelocity(userPosition, userVelocity);
+            final var satellitePositionAndVelocity = new ECEFPositionAndVelocity(satellitePosition, satelliteVelocity);
+            final var userPositionAndVelocity = new ECEFPositionAndVelocity(userPosition, userVelocity);
 
-            final GNSSConfig config = generateConfig();
+            final var config = generateConfig();
 
-            final double bias = GNSSBiasesGenerator.generateBias(satellitePosition, userPosition, config, random);
+            final var bias = GNSSBiasesGenerator.generateBias(satellitePosition, userPosition, config, random);
 
-            final GNSSMeasurement measurement1 = new GNSSMeasurement();
+            final var measurement1 = new GNSSMeasurement();
             assertTrue(GNSSMeasurementsGenerator.generate(timeSeconds, satelliteX, satelliteY, satelliteZ,
-                    satelliteVx, satelliteVy, satelliteVz, userX, userY, userZ, userVx, userVy, userVz,
-                    bias, config, random, measurement1));
+                    satelliteVx, satelliteVy, satelliteVz, userX, userY, userZ, userVx, userVy, userVz, bias, config,
+                    random, measurement1));
 
-            final GNSSMeasurement measurement2 = GNSSMeasurementsGenerator.generate(
-                    timeSeconds, satelliteX, satelliteY, satelliteZ, satelliteVx, satelliteVy, satelliteVz,
-                    userX, userY, userZ, userVx, userVy, userVz, bias, config, random);
+            final var measurement2 = GNSSMeasurementsGenerator.generate(timeSeconds, satelliteX, satelliteY, satelliteZ,
+                    satelliteVx, satelliteVy, satelliteVz, userX, userY, userZ, userVx, userVy, userVz, bias, config,
+                    random);
             assertNotNull(measurement2);
 
-            final GNSSMeasurement measurement3 = new GNSSMeasurement();
-            assertTrue(GNSSMeasurementsGenerator.generate(timeSeconds,
-                    satellitePosition, satelliteVelocity, userPosition, userVelocity,
-                    bias, config, random, measurement3));
+            final var measurement3 = new GNSSMeasurement();
+            assertTrue(GNSSMeasurementsGenerator.generate(timeSeconds, satellitePosition, satelliteVelocity,
+                    userPosition, userVelocity, bias, config, random, measurement3));
 
-            final GNSSMeasurement measurement4 = GNSSMeasurementsGenerator.generate(
-                    timeSeconds, satellitePosition, satelliteVelocity,
-                    userPosition, userVelocity, bias, config, random);
+            final var measurement4 = GNSSMeasurementsGenerator.generate(timeSeconds, satellitePosition,
+                    satelliteVelocity, userPosition, userVelocity, bias, config, random);
             assertNotNull(measurement4);
 
-            final GNSSMeasurement measurement5 = new GNSSMeasurement();
-            assertTrue(GNSSMeasurementsGenerator.generate(time, satellitePosition,
-                    satelliteVelocity, userPosition, userVelocity, bias,
-                    config, random, measurement5));
+            final var measurement5 = new GNSSMeasurement();
+            assertTrue(GNSSMeasurementsGenerator.generate(time, satellitePosition, satelliteVelocity, userPosition,
+                    userVelocity, bias, config, random, measurement5));
 
-            final GNSSMeasurement measurement6 = GNSSMeasurementsGenerator.generate(
-                    time, satellitePosition, satelliteVelocity, userPosition, userVelocity, bias, config, random);
+            final var measurement6 = GNSSMeasurementsGenerator.generate(time, satellitePosition, satelliteVelocity,
+                    userPosition, userVelocity, bias, config, random);
             assertNotNull(measurement6);
 
-            final GNSSMeasurement measurement7 = new GNSSMeasurement();
-            assertTrue(GNSSMeasurementsGenerator.generate(timeSeconds,
-                    satellitePositionAndVelocity, userPositionAndVelocity, bias, config, random, measurement7));
+            final var measurement7 = new GNSSMeasurement();
+            assertTrue(GNSSMeasurementsGenerator.generate(timeSeconds, satellitePositionAndVelocity,
+                    userPositionAndVelocity, bias, config, random, measurement7));
 
-            final GNSSMeasurement measurement8 = GNSSMeasurementsGenerator.generate(
-                    timeSeconds, satellitePositionAndVelocity, userPositionAndVelocity, bias, config, random);
+            final var measurement8 = GNSSMeasurementsGenerator.generate(timeSeconds, satellitePositionAndVelocity,
+                    userPositionAndVelocity, bias, config, random);
             assertNotNull(measurement8);
 
-            final GNSSMeasurement measurement9 = new GNSSMeasurement();
-            assertTrue(GNSSMeasurementsGenerator.generate(time, satellitePositionAndVelocity,
-                    userPositionAndVelocity, bias, config, random, measurement9));
+            final var measurement9 = new GNSSMeasurement();
+            assertTrue(GNSSMeasurementsGenerator.generate(time, satellitePositionAndVelocity, userPositionAndVelocity,
+                    bias, config, random, measurement9));
 
-            final GNSSMeasurement measurement10 = GNSSMeasurementsGenerator.generate(
-                    time, satellitePositionAndVelocity, userPositionAndVelocity, bias, config, random);
+            final var measurement10 = GNSSMeasurementsGenerator.generate(time, satellitePositionAndVelocity,
+                    userPositionAndVelocity, bias, config, random);
             assertNotNull(measurement10);
 
             assertEquals(measurement1, measurement2);
@@ -179,8 +174,8 @@ public class GNSSMeasurementsGeneratorTest {
             assertEquals(measurement1, measurement9);
             assertEquals(measurement1, measurement10);
 
-            final GNSSMeasurement measurement = generate(timeSeconds, satellitePositionAndVelocity,
-                    userPositionAndVelocity, bias, config, random);
+            final var measurement = generate(timeSeconds, satellitePositionAndVelocity, userPositionAndVelocity, bias,
+                    config, random);
 
             assertNotNull(measurement);
             assertTrue(measurement.equals(measurement1, ABSOLUTE_ERROR));
@@ -188,102 +183,98 @@ public class GNSSMeasurementsGeneratorTest {
     }
 
     @Test
-    public void testGenerateMultipleMeasurements() throws WrongSizeException {
-        final Random random = mock(Random.class);
+    void testGenerateMultipleMeasurements() throws WrongSizeException {
+        final var random = mock(Random.class);
         when(random.nextGaussian()).thenReturn(0.5);
-        when(random.nextDouble()).thenReturn(0.5);
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final var randomizer = new UniformRandomizer(new Random());
 
-        final int numSatellites = randomizer.nextInt(MIN_NUM_SAT, MAX_NUM_SAT);
+        final var numSatellites = randomizer.nextInt(MIN_NUM_SAT, MAX_NUM_SAT);
 
-        final double timeSeconds = randomizer.nextDouble(MIN_TIME, MAX_TIME);
-        final Time time = new Time(timeSeconds, TimeUnit.SECOND);
+        final var timeSeconds = randomizer.nextDouble(MIN_TIME, MAX_TIME);
+        final var time = new Time(timeSeconds, TimeUnit.SECOND);
 
-        final ECEFPosition userPosition = new ECEFPosition(
+        final var userPosition = new ECEFPosition(
                 randomizer.nextDouble(MIN_USER_POSITION_VALUE, MAX_USER_POSITION_VALUE),
                 randomizer.nextDouble(MIN_USER_POSITION_VALUE, MAX_USER_POSITION_VALUE),
                 randomizer.nextDouble(MIN_USER_POSITION_VALUE, MAX_USER_POSITION_VALUE));
-        final ECEFVelocity userVelocity = new ECEFVelocity(
+        final var userVelocity = new ECEFVelocity(
                 randomizer.nextDouble(MIN_USER_VELOCITY_VALUE, MAX_USER_VELOCITY_VALUE),
                 randomizer.nextDouble(MIN_USER_VELOCITY_VALUE, MAX_USER_VELOCITY_VALUE),
                 randomizer.nextDouble(MIN_USER_VELOCITY_VALUE, MAX_USER_VELOCITY_VALUE));
 
-        final double userX = userPosition.getX();
-        final double userY = userPosition.getY();
-        final double userZ = userPosition.getZ();
+        final var userX = userPosition.getX();
+        final var userY = userPosition.getY();
+        final var userZ = userPosition.getZ();
 
-        final double userVx = userVelocity.getVx();
-        final double userVy = userVelocity.getVy();
-        final double userVz = userVelocity.getVz();
+        final var userVx = userVelocity.getVx();
+        final var userVy = userVelocity.getVy();
+        final var userVz = userVelocity.getVz();
 
-        final ECEFPositionAndVelocity userPositionAndVelocity =
-                new ECEFPositionAndVelocity(userPosition, userVelocity);
+        final var userPositionAndVelocity = new ECEFPositionAndVelocity(userPosition, userVelocity);
 
-        final GNSSConfig config = generateConfig();
+        final var config = generateConfig();
 
-        final List<Double> biases = new ArrayList<>();
-        final List<ECEFPositionAndVelocity> satellitePositionsAndVelocities = new ArrayList<>();
-        final List<GNSSMeasurement> expectedResult = new ArrayList<>();
-        for (int n = 0; n < numSatellites; n++) {
-            final ECEFPosition satellitePosition = new ECEFPosition(
+        final var biases = new ArrayList<Double>();
+        final var satellitePositionsAndVelocities = new ArrayList<ECEFPositionAndVelocity>();
+        final var expectedResult = new ArrayList<GNSSMeasurement>();
+        for (var n = 0; n < numSatellites; n++) {
+            final var satellitePosition = new ECEFPosition(
                     randomizer.nextDouble(MIN_SAT_POSITION_VALUE, MAX_SAT_POSITION_VALUE),
                     randomizer.nextDouble(MIN_SAT_POSITION_VALUE, MAX_SAT_POSITION_VALUE),
                     randomizer.nextDouble(MIN_SAT_POSITION_VALUE, MAX_SAT_POSITION_VALUE));
-            final ECEFVelocity satelliteVelocity = new ECEFVelocity(
+            final var satelliteVelocity = new ECEFVelocity(
                     randomizer.nextDouble(MIN_SAT_VELOCITY_VALUE, MAX_SAT_VELOCITY_VALUE),
                     randomizer.nextDouble(MIN_SAT_VELOCITY_VALUE, MAX_SAT_VELOCITY_VALUE),
                     randomizer.nextDouble(MIN_SAT_VELOCITY_VALUE, MAX_SAT_VELOCITY_VALUE));
 
-            final ECEFPositionAndVelocity satellitePositionAndVelocity =
-                    new ECEFPositionAndVelocity(satellitePosition, satelliteVelocity);
+            final var satellitePositionAndVelocity = new ECEFPositionAndVelocity(satellitePosition, satelliteVelocity);
 
-            final double bias = GNSSBiasesGenerator.generateBias(satellitePosition, userPosition, config, random);
+            final var bias = GNSSBiasesGenerator.generateBias(satellitePosition, userPosition, config, random);
 
             biases.add(bias);
             satellitePositionsAndVelocities.add(satellitePositionAndVelocity);
 
-            final GNSSMeasurement measurement = generate(timeSeconds, satellitePositionAndVelocity,
-                    userPositionAndVelocity, bias, config, random);
+            final var measurement = generate(timeSeconds, satellitePositionAndVelocity, userPositionAndVelocity, bias,
+                    config, random);
 
             expectedResult.add(measurement);
         }
 
-        final List<GNSSMeasurement> result1 = new ArrayList<>();
-        GNSSMeasurementsGenerator.generate(timeSeconds, satellitePositionsAndVelocities, userX, userY, userZ,
-                userVx, userVy, userVz, biases, config, random, result1);
+        final var result1 = new ArrayList<GNSSMeasurement>();
+        GNSSMeasurementsGenerator.generate(timeSeconds, satellitePositionsAndVelocities, userX, userY, userZ, userVx,
+                userVy, userVz, biases, config, random, result1);
 
-        final Collection<GNSSMeasurement> result2 = GNSSMeasurementsGenerator.generate(timeSeconds,
-                satellitePositionsAndVelocities, userX, userY, userZ, userVx, userVy, userVz,
-                biases, config, random);
+        final var result2 = GNSSMeasurementsGenerator.generate(timeSeconds, satellitePositionsAndVelocities,
+                userX, userY, userZ, userVx, userVy, userVz, biases, config, random);
 
-        final List<GNSSMeasurement> result3 = new ArrayList<>();
-        GNSSMeasurementsGenerator.generate(timeSeconds, satellitePositionsAndVelocities, userPosition,
-                userVelocity, biases, config, random, result3);
+        final var result3 = new ArrayList<GNSSMeasurement>();
+        GNSSMeasurementsGenerator.generate(timeSeconds, satellitePositionsAndVelocities, userPosition, userVelocity,
+                biases, config, random, result3);
 
-        final Collection<GNSSMeasurement> result4 = GNSSMeasurementsGenerator.generate(timeSeconds,
-                satellitePositionsAndVelocities, userPosition, userVelocity, biases, config, random);
+        final var result4 = GNSSMeasurementsGenerator.generate(timeSeconds, satellitePositionsAndVelocities,
+                userPosition, userVelocity, biases, config, random);
 
-        final List<GNSSMeasurement> result5 = new ArrayList<>();
-        GNSSMeasurementsGenerator.generate(time, satellitePositionsAndVelocities,
-                userPosition, userVelocity, biases, config, random, result5);
+        final var result5 = new ArrayList<GNSSMeasurement>();
+        GNSSMeasurementsGenerator.generate(time, satellitePositionsAndVelocities, userPosition, userVelocity, biases,
+                config, random, result5);
 
-        final Collection<GNSSMeasurement> result6 = GNSSMeasurementsGenerator.generate(time,
-                satellitePositionsAndVelocities, userPosition, userVelocity, biases, config, random);
+        final var result6 = GNSSMeasurementsGenerator.generate(time, satellitePositionsAndVelocities, userPosition,
+                userVelocity, biases, config, random);
 
-        final List<GNSSMeasurement> result7 = new ArrayList<>();
-        GNSSMeasurementsGenerator.generate(timeSeconds, satellitePositionsAndVelocities,
-                userPositionAndVelocity, biases, config, random, result7);
+        final var result7 = new ArrayList<GNSSMeasurement>();
+        GNSSMeasurementsGenerator.generate(timeSeconds, satellitePositionsAndVelocities, userPositionAndVelocity,
+                biases, config, random, result7);
 
-        final Collection<GNSSMeasurement> result8 = GNSSMeasurementsGenerator.generate(timeSeconds,
-                satellitePositionsAndVelocities, userPositionAndVelocity, biases, config, random);
+        final var result8 = GNSSMeasurementsGenerator.generate(timeSeconds, satellitePositionsAndVelocities,
+                userPositionAndVelocity, biases, config, random);
 
-        final List<GNSSMeasurement> result9 = new ArrayList<>();
-        GNSSMeasurementsGenerator.generate(time, satellitePositionsAndVelocities, userPositionAndVelocity,
-                biases, config, random, result9);
+        final var result9 = new ArrayList<GNSSMeasurement>();
+        GNSSMeasurementsGenerator.generate(time, satellitePositionsAndVelocities, userPositionAndVelocity, biases,
+                config, random, result9);
 
-        final Collection<GNSSMeasurement> result10 = GNSSMeasurementsGenerator.generate(time,
-                satellitePositionsAndVelocities, userPositionAndVelocity, biases, config, random);
+        final var result10 = GNSSMeasurementsGenerator.generate(time, satellitePositionsAndVelocities,
+                userPositionAndVelocity, biases, config, random);
 
         assertEquals(result1.size(), numSatellites);
         assertEquals(result1, result2);
@@ -297,98 +288,92 @@ public class GNSSMeasurementsGeneratorTest {
         assertEquals(result1, result10);
 
         assertEquals(expectedResult.size(), numSatellites);
-        for (int i = 0; i < numSatellites; i++) {
-            final GNSSMeasurement m1 = expectedResult.get(i);
-            final GNSSMeasurement m2 = result1.get(i);
+        for (var i = 0; i < numSatellites; i++) {
+            final var m1 = expectedResult.get(i);
+            final var m2 = result1.get(i);
 
             assertTrue(m1.equals(m2, ABSOLUTE_ERROR));
         }
     }
 
     private static GNSSConfig generateConfig() {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double epochInterval = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        final double initialEstimatedEcefPositionX = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        final double initialEstimatedEcefPositionY = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        final double initialEstimatedEcefPositionZ = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        final int numberOfSatellites = randomizer.nextInt(MIN_SATELLITES, MAX_SATELLITES);
-        final double orbitalRadiusOfSatellites = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        final double satellitesInclinationDegrees = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        final double constellationLongitudeOffsetDegrees = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        final double constellationTimingOffset = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        final double maskAngleDegrees = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        final double sisErrorSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        final double zenithIonosphereErrorSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        final double zenithTroposphereErrorSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        final double codeTrackingErrorSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        final double rangeRateTrackingErrorSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        final double initialReceiverClockOffset = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        final double initialReceiverClockDrift = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var epochInterval = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final var initialEstimatedEcefPositionX = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final var initialEstimatedEcefPositionY = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final var initialEstimatedEcefPositionZ = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final var numberOfSatellites = randomizer.nextInt(MIN_SATELLITES, MAX_SATELLITES);
+        final var orbitalRadiusOfSatellites = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final var satellitesInclinationDegrees = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final var constellationLongitudeOffsetDegrees = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final var constellationTimingOffset = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final var maskAngleDegrees = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final var sisErrorSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final var zenithIonosphereErrorSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final var zenithTroposphereErrorSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final var codeTrackingErrorSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final var rangeRateTrackingErrorSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final var initialReceiverClockOffset = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final var initialReceiverClockDrift = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        return new GNSSConfig(epochInterval, initialEstimatedEcefPositionX,
-                initialEstimatedEcefPositionY, initialEstimatedEcefPositionZ,
-                numberOfSatellites, orbitalRadiusOfSatellites,
-                satellitesInclinationDegrees, constellationLongitudeOffsetDegrees,
-                constellationTimingOffset, maskAngleDegrees, sisErrorSD,
-                zenithIonosphereErrorSD, zenithTroposphereErrorSD, codeTrackingErrorSD,
-                rangeRateTrackingErrorSD, initialReceiverClockOffset,
-                initialReceiverClockDrift);
+        return new GNSSConfig(epochInterval, initialEstimatedEcefPositionX, initialEstimatedEcefPositionY,
+                initialEstimatedEcefPositionZ, numberOfSatellites, orbitalRadiusOfSatellites,
+                satellitesInclinationDegrees, constellationLongitudeOffsetDegrees, constellationTimingOffset,
+                maskAngleDegrees, sisErrorSD, zenithIonosphereErrorSD, zenithTroposphereErrorSD, codeTrackingErrorSD,
+                rangeRateTrackingErrorSD, initialReceiverClockOffset, initialReceiverClockDrift);
     }
 
     private static GNSSMeasurement generate(
-            final double time, final ECEFPositionAndVelocity satPosAndVel,
-            final ECEFPositionAndVelocity userPosAndVel, final double bias, final GNSSConfig config,
-            final Random random) throws WrongSizeException {
+            final double time, final ECEFPositionAndVelocity satPosAndVel, final ECEFPositionAndVelocity userPosAndVel,
+            final double bias, final GNSSConfig config, final Random random) throws WrongSizeException {
 
-        final ECEFPosition satPosition = satPosAndVel.getEcefPosition();
-        final ECEFVelocity satVelocity = satPosAndVel.getEcefVelocity();
+        final var satPosition = satPosAndVel.getEcefPosition();
+        final var satVelocity = satPosAndVel.getEcefVelocity();
 
-        final ECEFPosition userPosition = userPosAndVel.getEcefPosition();
-        final ECEFVelocity userVelocity = userPosAndVel.getEcefVelocity();
+        final var userPosition = userPosAndVel.getEcefPosition();
+        final var userVelocity = userPosAndVel.getEcefVelocity();
 
-        final NEDPosition userNedPosition = new NEDPosition();
-        final NEDVelocity userNedVelocity = new NEDVelocity();
+        final var userNedPosition = new NEDPosition();
+        final var userNedVelocity = new NEDVelocity();
         ECEFtoNEDPositionVelocityConverter.convertECEFtoNED(userPosition, userVelocity, userNedPosition,
                 userNedVelocity);
 
-        final Matrix cen = CoordinateTransformation.ecefToNedMatrix(
-                userNedPosition.getLatitude(), userNedPosition.getLongitude());
+        final var cen = CoordinateTransformation.ecefToNedMatrix(userNedPosition.getLatitude(),
+                userNedPosition.getLongitude());
 
-        final Matrix omegaIe = Utils.skewMatrix(new double[]{0.0, 0.0, Constants.EARTH_ROTATION_RATE});
+        final var omegaIe = Utils.skewMatrix(new double[]{0.0, 0.0, Constants.EARTH_ROTATION_RATE});
 
-        final Matrix satRese = satPosition.asMatrix();
-        final Matrix rEae = userPosition.asMatrix();
-        Matrix deltaR = satRese.subtractAndReturnNew(rEae);
-        final double approxRange = Utils.normF(deltaR);
-        final Matrix uase = deltaR.multiplyByScalarAndReturnNew(1.0 / approxRange);
+        final var satRese = satPosition.asMatrix();
+        final var rEae = userPosition.asMatrix();
+        var deltaR = satRese.subtractAndReturnNew(rEae);
+        final var approxRange = Utils.normF(deltaR);
+        final var uase = deltaR.multiplyByScalarAndReturnNew(1.0 / approxRange);
 
-        final double elevation = -Math.asin(
+        final var elevation = -Math.asin(
                 cen.getSubmatrix(2, 0, 2, 2)
                         .multiplyAndReturnNew(uase).getElementAtIndex(0));
 
         if (elevation >= Math.toRadians(config.getMaskAngleDegrees())) {
-            final double value = Constants.EARTH_ROTATION_RATE * approxRange / Constants.SPEED_OF_LIGHT;
-            final Matrix cei = new Matrix(3, 3);
+            final var value = Constants.EARTH_ROTATION_RATE * approxRange / Constants.SPEED_OF_LIGHT;
+            final var cei = new Matrix(3, 3);
             cei.setSubmatrix(0, 0, 2, 2,
                     new double[]{1.0, -value, 0.0, value, 1.0, 0.0, 0.0, 0.0, 1.0});
 
             deltaR = cei.multiplyAndReturnNew(satRese).subtractAndReturnNew(rEae);
-            final double range = Utils.normF(deltaR);
+            final var range = Utils.normF(deltaR);
 
-            final Matrix satvese = satVelocity.asMatrix();
-            final Matrix veae = userVelocity.asMatrix();
+            final var satvese = satVelocity.asMatrix();
+            final var veae = userVelocity.asMatrix();
 
-            final double rangeRate = uase.transposeAndReturnNew()
-                    .multiplyAndReturnNew(cei.multiplyAndReturnNew(
-                            satvese.addAndReturnNew(omegaIe.multiplyAndReturnNew(satRese)))
-                            .subtractAndReturnNew(veae.addAndReturnNew(omegaIe.multiplyAndReturnNew(rEae))))
-                    .getElementAtIndex(0);
+            final var rangeRate = uase.transposeAndReturnNew().multiplyAndReturnNew(cei.multiplyAndReturnNew(
+                    satvese.addAndReturnNew(omegaIe.multiplyAndReturnNew(satRese))).subtractAndReturnNew(
+                            veae.addAndReturnNew(omegaIe.multiplyAndReturnNew(rEae)))).getElementAtIndex(0);
 
-            final double pseudoRange = range + bias + config.getInitialReceiverClockOffset()
+            final var pseudoRange = range + bias + config.getInitialReceiverClockOffset()
                     + config.getInitialReceiverClockDrift() * time
                     + config.getCodeTrackingErrorSD() * random.nextGaussian();
 
-            final double pseudoRangeRate = rangeRate + config.getInitialReceiverClockDrift()
+            final var pseudoRangeRate = rangeRate + config.getInitialReceiverClockDrift()
                     + config.getRangeRateTrackingErrorSD() * random.nextGaussian();
 
             return new GNSSMeasurement(pseudoRange, pseudoRangeRate, satPosAndVel);

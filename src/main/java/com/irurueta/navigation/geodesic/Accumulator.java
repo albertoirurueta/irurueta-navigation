@@ -30,12 +30,12 @@ public class Accumulator {
     /**
      * s + t accumulators for the sum.
      */
-    private double mS;
+    private double s;
 
     /**
      * s + t accumulators for the sum.
      */
-    private double mT;
+    private double t;
 
     /**
      * Constructor from a double.
@@ -43,8 +43,8 @@ public class Accumulator {
      * @param y set <i>sum</i> = <i>y</i>.
      */
     public Accumulator(final double y) {
-        mS = y;
-        mT = 0;
+        s = y;
+        t = 0;
     }
 
     /**
@@ -53,8 +53,8 @@ public class Accumulator {
      * @param a set <i>sum</i> = <i>a</i>.
      */
     public Accumulator(final Accumulator a) {
-        mS = a.mS;
-        mT = a.mT;
+        s = a.s;
+        t = a.t;
     }
 
     /**
@@ -63,8 +63,8 @@ public class Accumulator {
      * @param y set <i>sum</i> = <i>y</i>.
      */
     public void set(final double y) {
-        mS = y;
-        mT = 0;
+        s = y;
+        t = 0;
     }
 
     /**
@@ -73,7 +73,7 @@ public class Accumulator {
      * @return <i>sum</i>.
      */
     public double getSum() {
-        return mS;
+        return s;
     }
 
     /**
@@ -83,9 +83,9 @@ public class Accumulator {
      * @return <i>sum</i> + <i>y</i>.
      */
     public double sum(final double y) {
-        Accumulator a = new Accumulator(this);
+        final var a = new Accumulator(this);
         a.add(y);
-        return a.mS;
+        return a.s;
     }
 
     /**
@@ -100,13 +100,13 @@ public class Accumulator {
         double u;
 
         // accumulate starting at least significant end
-        Pair r = GeoMath.sum(y, mT);
+        var r = GeoMath.sum(y, t);
         y = r.getFirst();
         u = r.getSecond();
 
-        r = GeoMath.sum(y, mS);
-        mS = r.getFirst();
-        mT = r.getSecond();
+        r = GeoMath.sum(y, s);
+        s = r.getFirst();
+        t = r.getSecond();
 
         // Start is mS, mT decreasing and non-adjacent. Sum is now (s + t + u) exactly with s, t, u
         // non-adjacent and in decreasing order (except for possible zeros). The following code tries
@@ -133,12 +133,12 @@ public class Accumulator {
         // [128, 16] + 1 -> [160, -16] -- 160 = round(145).
         // But [160, 0] - 16 -> [128, 16] -- 128 = round(144).
 
-        if (mS == 0) {
+        if (s == 0) {
             // this implies t == 0, so result is u.
-            mS = u;
+            s = u;
         } else {
             // otherwise just accumulate u to t.
-            mT += u;
+            t += u;
         }
     }
 
@@ -147,7 +147,7 @@ public class Accumulator {
      * Set <i>sum</i> = &minus;<i>sum</i>.
      */
     public void negate() {
-        mS = -mS;
-        mT = -mT;
+        s = -s;
+        t = -t;
     }
 }

@@ -53,8 +53,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
     /**
      * Default robust estimator method when none is provided.
      */
-    public static final RobustEstimatorMethod DEFAULT_ROBUST_METHOD =
-            RobustEstimatorMethod.PROMEDS;
+    public static final RobustEstimatorMethod DEFAULT_ROBUST_METHOD = RobustEstimatorMethod.PROMEDS;
 
     /**
      * Indicates that result is refined by default using a non-linear lateration solver
@@ -118,76 +117,76 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
     /**
      * Known positions of static nodes.
      */
-    protected P[] mPositions;
+    protected P[] positions;
 
     /**
      * Euclidean distances from static nodes to mobile node.
      */
-    protected double[] mDistances;
+    protected double[] distances;
 
     /**
      * Listener to be notified of events such as when solving starts, ends or its
      * progress significantly changes.
      */
-    protected RobustLaterationSolverListener<P> mListener;
+    protected RobustLaterationSolverListener<P> listener;
 
     /**
      * Initial position to use as a starting point to find a new solution.
      * This is optional, but if provided, when no linear solvers are used, this is
      * taken into account. If linear solvers are used, this is ignored.
      */
-    protected P mInitialPosition;
+    protected P initialPosition;
 
     /**
      * Indicates whether a linear solver is used or not (either homogeneous or inhomogeneous)
      * for preliminary solutions.
      */
-    protected boolean mUseLinearSolver = DEFAULT_USE_LINEAR_SOLVER;
+    protected boolean useLinearSolver = DEFAULT_USE_LINEAR_SOLVER;
 
     /**
      * Indicates whether an homogeneous linear solver is used either to estimate preliminary solutions
      * or an initial solution for preliminary solutions that will be later refined.
      */
-    protected boolean mUseHomogeneousLinearSolver = DEFAULT_USE_HOMOGENEOUS_LINEAR_SOLVER;
+    protected boolean useHomogeneousLinearSolver = DEFAULT_USE_HOMOGENEOUS_LINEAR_SOLVER;
 
     /**
      * Indicates whether preliminary solutions must be refined after an initial linear solution is found.
      */
-    protected boolean mRefinePreliminarySolutions = DEFAULT_REFINE_PRELIMINARY_SOLUTIONS;
+    protected boolean refinePreliminarySolutions = DEFAULT_REFINE_PRELIMINARY_SOLUTIONS;
 
     /**
      * Estimated position.
      */
-    protected P mEstimatedPosition;
+    protected P estimatedPosition;
 
     /**
      * Indicates if this instance is locked because lateration is being solved.
      */
-    protected boolean mLocked;
+    protected boolean locked;
 
     /**
      * Amount of progress variation before notifying a progress change during estimation.
      */
-    protected float mProgressDelta = DEFAULT_PROGRESS_DELTA;
+    protected float progressDelta = DEFAULT_PROGRESS_DELTA;
 
     /**
      * Amount of confidence expressed as a value between 0.0 and 1.0 (which is equivalent
      * to 100%). The amount of confidence indicates the probability that the estimated
      * result is correct. Usually this value will be close to 1.0, but not exactly 1.0.
      */
-    protected double mConfidence = DEFAULT_CONFIDENCE;
+    protected double confidence = DEFAULT_CONFIDENCE;
 
     /**
      * Maximum allowed number of iterations. When the maximum number of iterations is
      * exceeded, result will not be available, however an approximate result will be
      * available for retrieval.
      */
-    protected int mMaxIterations = DEFAULT_MAX_ITERATIONS;
+    protected int maxIterations = DEFAULT_MAX_ITERATIONS;
 
     /**
      * Data related to inliers found after estimation.
      */
-    protected InliersData mInliersData;
+    protected InliersData inliersData;
 
     /**
      * Indicates whether result must be refined using a non-linear lateration solver over
@@ -195,29 +194,29 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
      * If true, inliers will be computed and kept in any implementation regardless of the
      * settings.
      */
-    protected boolean mRefineResult = DEFAULT_REFINE_RESULT;
+    protected boolean refineResult = DEFAULT_REFINE_RESULT;
 
     /**
      * Indicates whether covariance must be kept after refining result.
      * This setting is only taken into account if result is refined.
      */
-    protected boolean mKeepCovariance = DEFAULT_KEEP_COVARIANCE;
+    protected boolean keepCovariance = DEFAULT_KEEP_COVARIANCE;
 
     /**
      * Estimated covariance of estimated position.
      * This is only available when result has been refined and covariance is kept.
      */
-    protected Matrix mCovariance;
+    protected Matrix covariance;
 
     /**
      * Standard deviations of provided distances.
      */
-    protected double[] mDistanceStandardDeviations;
+    protected double[] distanceStandardDeviations;
 
     /**
      * Size of subsets to be checked during robust estimation.
      */
-    protected int mPreliminarySubsetSize;
+    protected int preliminarySubsetSize;
 
     /**
      * Constructor.
@@ -231,9 +230,8 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or its progress significantly changes.
      */
-    protected RobustLaterationSolver(
-            final RobustLaterationSolverListener<P> listener) {
-        mListener = listener;
+    protected RobustLaterationSolver(final RobustLaterationSolverListener<P> listener) {
+        this.listener = listener;
     }
 
     /**
@@ -259,8 +257,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
      *                                  (3 for 2D points or 4 for 3D points).
      */
     protected RobustLaterationSolver(
-            final P[] positions, final double[] distances,
-            final double[] distanceStandardDeviations) {
+            final P[] positions, final double[] distances, final double[] distanceStandardDeviations) {
         internalSetPositionsDistancesAndStandardDeviations(positions, distances, distanceStandardDeviations);
     }
 
@@ -276,10 +273,9 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
      *                                  length is smaller than required (3 for 2D points or 4 for 3D points).
      */
     protected RobustLaterationSolver(
-            final P[] positions, final double[] distances,
-            final RobustLaterationSolverListener<P> listener) {
+            final P[] positions, final double[] distances, final RobustLaterationSolverListener<P> listener) {
         internalSetPositionsAndDistances(positions, distances);
-        mListener = listener;
+        this.listener = listener;
     }
 
     /**
@@ -293,11 +289,10 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
      *                                  length is smaller than required (3 for 2D points or 4 for 3D points).
      */
     protected RobustLaterationSolver(
-            final P[] positions, final double[] distances,
-            final double[] distanceStandardDeviations,
+            final P[] positions, final double[] distances, final double[] distanceStandardDeviations,
             final RobustLaterationSolverListener<P> listener) {
         internalSetPositionsDistancesAndStandardDeviations(positions, distances, distanceStandardDeviations);
-        mListener = listener;
+        this.listener = listener;
     }
 
     /**
@@ -306,7 +301,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
      * @return listener to be notified of events raised by this instance.
      */
     public RobustLaterationSolverListener<P> getListener() {
-        return mListener;
+        return listener;
     }
 
     /**
@@ -315,12 +310,11 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
      * @param listener listener to be notified of events raised by this instance.
      * @throws LockedException if instance is busy solving the lateration problem.
      */
-    public void setListener(final RobustLaterationSolverListener<P> listener)
-            throws LockedException {
+    public void setListener(final RobustLaterationSolverListener<P> listener) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        mListener = listener;
+        this.listener = listener;
     }
 
     /**
@@ -331,7 +325,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
      * @return an initial position.
      */
     public P getInitialPosition() {
-        return mInitialPosition;
+        return initialPosition;
     }
 
     /**
@@ -347,7 +341,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
             throw new LockedException();
         }
 
-        mInitialPosition = initialPosition;
+        this.initialPosition = initialPosition;
     }
 
     /**
@@ -357,7 +351,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
      * @return true if a linear solver is used, false otherwise.
      */
     public boolean isLinearSolverUsed() {
-        return mUseLinearSolver;
+        return useLinearSolver;
     }
 
     /**
@@ -372,7 +366,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
             throw new LockedException();
         }
 
-        mUseLinearSolver = linearSolverUsed;
+        useLinearSolver = linearSolverUsed;
     }
 
     /**
@@ -382,7 +376,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
      * @return true if homogeneous linear solver is used, false otherwise.
      */
     public boolean isHomogeneousLinearSolverUsed() {
-        return mUseHomogeneousLinearSolver;
+        return useHomogeneousLinearSolver;
     }
 
     /**
@@ -393,13 +387,12 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
      *                                   otherwise.
      * @throws LockedException if instance is busy solving the lateration problem.
      */
-    public void setHomogeneousLinearSolverUsed(final boolean useHomogeneousLinearSolver)
-            throws LockedException {
+    public void setHomogeneousLinearSolverUsed(final boolean useHomogeneousLinearSolver) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
 
-        mUseHomogeneousLinearSolver = useHomogeneousLinearSolver;
+        this.useHomogeneousLinearSolver = useHomogeneousLinearSolver;
     }
 
     /**
@@ -412,7 +405,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
      * otherwise.
      */
     public boolean isPreliminarySolutionRefined() {
-        return mRefinePreliminarySolutions;
+        return refinePreliminarySolutions;
     }
 
     /**
@@ -425,13 +418,12 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
      *                                   initial linear solution, false otherwise.
      * @throws LockedException if instance is busy solving the lateration problem.
      */
-    public void setPreliminarySolutionRefined(final boolean preliminarySolutionRefined)
-            throws LockedException {
+    public void setPreliminarySolutionRefined(final boolean preliminarySolutionRefined) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
 
-        mRefinePreliminarySolutions = preliminarySolutionRefined;
+        refinePreliminarySolutions = preliminarySolutionRefined;
     }
 
     /**
@@ -441,7 +433,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
      * @return true if solver is locked, false otherwise.
      */
     public boolean isLocked() {
-        return mLocked;
+        return locked;
     }
 
     /**
@@ -452,7 +444,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
      * estimation.
      */
     public float getProgressDelta() {
-        return mProgressDelta;
+        return progressDelta;
     }
 
     /**
@@ -468,11 +460,10 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
         if (isLocked()) {
             throw new LockedException();
         }
-        if (progressDelta < MIN_PROGRESS_DELTA ||
-                progressDelta > MAX_PROGRESS_DELTA) {
+        if (progressDelta < MIN_PROGRESS_DELTA || progressDelta > MAX_PROGRESS_DELTA) {
             throw new IllegalArgumentException();
         }
-        mProgressDelta = progressDelta;
+        this.progressDelta = progressDelta;
     }
 
     /**
@@ -484,7 +475,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
      * @return amount of confidence as a value between 0.0 and 1.0.
      */
     public double getConfidence() {
-        return mConfidence;
+        return confidence;
     }
 
     /**
@@ -504,7 +495,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
         if (confidence < MIN_CONFIDENCE || confidence > MAX_CONFIDENCE) {
             throw new IllegalArgumentException();
         }
-        mConfidence = confidence;
+        this.confidence = confidence;
     }
 
     /**
@@ -515,7 +506,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
      * @return maximum allowed number of iterations.
      */
     public int getMaxIterations() {
-        return mMaxIterations;
+        return maxIterations;
     }
 
     /**
@@ -535,7 +526,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
         if (maxIterations < MIN_ITERATIONS) {
             throw new IllegalArgumentException();
         }
-        mMaxIterations = maxIterations;
+        this.maxIterations = maxIterations;
     }
 
     /**
@@ -544,7 +535,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
      * @return data related to inliers found after estimation.
      */
     public InliersData getInliersData() {
-        return mInliersData;
+        return inliersData;
     }
 
     /**
@@ -554,7 +545,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
      * without further refining.
      */
     public boolean isResultRefined() {
-        return mRefineResult;
+        return refineResult;
     }
 
     /**
@@ -568,7 +559,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
         if (isLocked()) {
             throw new LockedException();
         }
-        mRefineResult = refineResult;
+        this.refineResult = refineResult;
     }
 
     /**
@@ -578,7 +569,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
      * @return true if covariance must be kept after refining result, false otherwise.
      */
     public boolean isCovarianceKept() {
-        return mKeepCovariance;
+        return keepCovariance;
     }
 
     /**
@@ -593,7 +584,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
         if (isLocked()) {
             throw new LockedException();
         }
-        mKeepCovariance = keepCovariance;
+        this.keepCovariance = keepCovariance;
     }
 
     /**
@@ -602,7 +593,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
      * @return known positions of static nodes.
      */
     public P[] getPositions() {
-        return mPositions;
+        return positions;
     }
 
     /**
@@ -611,7 +602,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
      * @return euclidean distances from static nodes to mobile node.
      */
     public double[] getDistances() {
-        return mDistances;
+        return distances;
     }
 
     /**
@@ -621,7 +612,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
      * @return standard deviations of provided distances.
      */
     public double[] getDistanceStandardDeviations() {
-        return mDistanceStandardDeviations;
+        return distanceStandardDeviations;
     }
 
     /**
@@ -630,8 +621,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
      * @return true if solver is ready, false otherwise.
      */
     public boolean isReady() {
-        return mPositions != null && mDistances != null &&
-                mPositions.length >= getMinRequiredPositionsAndDistances();
+        return positions != null && distances != null && positions.length >= getMinRequiredPositionsAndDistances();
     }
 
     /**
@@ -661,8 +651,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
      * @throws LockedException          if robust solver is locked because an
      *                                  estimation is already in progress.
      */
-    public void setQualityScores(final double[] qualityScores)
-            throws LockedException {
+    public void setQualityScores(final double[] qualityScores) throws LockedException {
     }
 
     /**
@@ -673,7 +662,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
      * @return estimated covariance or null.
      */
     public Matrix getCovariance() {
-        return mCovariance;
+        return covariance;
     }
 
     /**
@@ -686,8 +675,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
      *                                  length is smaller than required (2 points).
      * @throws LockedException          if instance is busy solving the lateration problem.
      */
-    public void setPositionsAndDistances(final P[] positions, final double[] distances)
-            throws LockedException {
+    public void setPositionsAndDistances(final P[] positions, final double[] distances) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -708,13 +696,12 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
      * @throws LockedException          if instance is busy solving the lateration problem.
      */
     public void setPositionsDistancesAndStandardDeviations(
-            final P[] positions, final double[] distances,
-            final double[] distanceStandardDeviations) throws LockedException {
+            final P[] positions, final double[] distances, final double[] distanceStandardDeviations)
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        internalSetPositionsDistancesAndStandardDeviations(positions, distances,
-                distanceStandardDeviations);
+        internalSetPositionsDistancesAndStandardDeviations(positions, distances, distanceStandardDeviations);
     }
 
     /**
@@ -723,7 +710,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
      * @return estimated position.
      */
     public P getEstimatedPosition() {
-        return mEstimatedPosition;
+        return estimatedPosition;
     }
 
     /**
@@ -748,7 +735,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
      * @return size of subsets to be checked during robust estimation.
      */
     public int getPreliminarySubsetSize() {
-        return mPreliminarySubsetSize;
+        return preliminarySubsetSize;
     }
 
     /**
@@ -759,8 +746,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
      * @throws LockedException          if instance is busy solving the lateration problem.
      * @throws IllegalArgumentException if provided value is less than {@link #getMinRequiredPositionsAndDistances()}.
      */
-    public void setPreliminarySubsetSize(final int preliminarySubsetSize)
-            throws LockedException {
+    public void setPreliminarySubsetSize(final int preliminarySubsetSize) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -768,7 +754,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
             throw new IllegalArgumentException();
         }
 
-        mPreliminarySubsetSize = preliminarySubsetSize;
+        this.preliminarySubsetSize = preliminarySubsetSize;
     }
 
     /**
@@ -780,8 +766,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
      * @throws RobustEstimatorException if estimation fails for any reason
      *                                  (i.e. numerical instability, no solution available, etc).
      */
-    public abstract P solve() throws LockedException, NotReadyException,
-            RobustEstimatorException;
+    public abstract P solve() throws LockedException, NotReadyException, RobustEstimatorException;
 
     /**
      * Returns method being used for robust estimation.
@@ -799,8 +784,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      *                                  length is smaller than required (2 points).
      */
-    protected void internalSetPositionsAndDistances(
-            final P[] positions, final double[] distances) {
+    protected void internalSetPositionsAndDistances(final P[] positions, final double[] distances) {
         if (positions == null || distances == null) {
             throw new IllegalArgumentException();
         }
@@ -813,13 +797,13 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
             throw new IllegalArgumentException();
         }
 
-        mPositions = positions;
-        mDistances = distances;
+        this.positions = positions;
+        this.distances = distances;
 
         // fix distances if needed
-        for (int i = 0; i < mDistances.length; i++) {
-            if (mDistances[i] < EPSILON) {
-                mDistances[i] = EPSILON;
+        for (var i = 0; i < this.distances.length; i++) {
+            if (this.distances[i] < EPSILON) {
+                this.distances[i] = EPSILON;
             }
         }
     }
@@ -836,8 +820,7 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
      *                                  length is smaller than required (2 points).
      */
     protected void internalSetPositionsDistancesAndStandardDeviations(
-            final P[] positions, final double[] distances,
-            final double[] distanceStandardDeviations) {
+            final P[] positions, final double[] distances, final double[] distanceStandardDeviations) {
         if (distanceStandardDeviations == null || distances == null) {
             throw new IllegalArgumentException();
         }
@@ -845,6 +828,6 @@ public abstract class RobustLaterationSolver<P extends Point<?>> {
             throw new IllegalArgumentException();
         }
         internalSetPositionsAndDistances(positions, distances);
-        mDistanceStandardDeviations = distanceStandardDeviations;
+        this.distanceStandardDeviations = distanceStandardDeviations;
     }
 }

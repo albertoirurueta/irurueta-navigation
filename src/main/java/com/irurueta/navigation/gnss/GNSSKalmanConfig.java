@@ -34,49 +34,49 @@ public class GNSSKalmanConfig implements Serializable, Cloneable {
     /**
      * Initial position uncertainty per axis expressed in meters (m).
      */
-    private double mInitialPositionUncertainty;
+    private double initialPositionUncertainty;
 
     /**
      * Initial velocity uncertainty per axis expressed in meters per second (m/s).
      */
-    private double mInitialVelocityUncertainty;
+    private double initialVelocityUncertainty;
 
     /**
      * Initial clock offset uncertainty per axis expressed in meters (m).
      */
-    private double mInitialClockOffsetUncertainty;
+    private double initialClockOffsetUncertainty;
 
     /**
      * Initial clock drift uncertainty per axis expressed in meters per second (m/s).
      */
-    private double mInitialClockDriftUncertainty;
+    private double initialClockDriftUncertainty;
 
     /**
      * Acceleration PSD (Power Spectral Density) per axis expressed in (m^2/s^3).
      */
-    private double mAccelerationPSD;
+    private double accelerationPSD;
 
     /**
      * Receiver clock frequency-drift PSD (Power Spectral Density) expressed in
      * (m^2/s^3).
      */
-    private double mClockFrequencyPSD;
+    private double clockFrequencyPSD;
 
     /**
      * Receiver clock phase-drift PSD (Power Spectral Density) expressed in (m^2/s).
      */
-    private double mClockPhasePSD;
+    private double clockPhasePSD;
 
     /**
      * Pseudo-range measurement noise SD (Standard Deviation) expressed in meters (m).
      */
-    private double mPseudoRangeSD;
+    private double pseudoRangeSD;
 
     /**
      * Pseudo-range rate measurement noise SD (Standard Deviation) expressed in meters
      * per second (m/s).
      */
-    private double mRangeRateSD;
+    private double rangeRateSD;
 
     /**
      * Constructor.
@@ -113,9 +113,8 @@ public class GNSSKalmanConfig implements Serializable, Cloneable {
                             final double accelerationPSD, final double clockFrequencyPSD,
                             final double clockPhasePSD, final double pseudoRangeSD,
                             final double rangeRateSD) {
-        setValues(initialPositionUncertainty, initialVelocityUncertainty,
-                initialClockOffsetUncertainty, initialClockDriftUncertainty,
-                accelerationPSD, clockFrequencyPSD, clockPhasePSD, pseudoRangeSD,
+        setValues(initialPositionUncertainty, initialVelocityUncertainty, initialClockOffsetUncertainty,
+                initialClockDriftUncertainty, accelerationPSD, clockFrequencyPSD, clockPhasePSD, pseudoRangeSD,
                 rangeRateSD);
     }
 
@@ -144,9 +143,8 @@ public class GNSSKalmanConfig implements Serializable, Cloneable {
                             final double accelerationPSD, final double clockFrequencyPSD,
                             final double clockPhasePSD, final Distance pseudoRangeSD,
                             final Speed rangeRateSD) {
-        setValues(initialPositionUncertainty, initialVelocityUncertainty,
-                initialClockOffsetUncertainty, initialClockDriftUncertainty,
-                accelerationPSD, clockFrequencyPSD, clockPhasePSD, pseudoRangeSD,
+        setValues(initialPositionUncertainty, initialVelocityUncertainty, initialClockOffsetUncertainty,
+                initialClockDriftUncertainty, accelerationPSD, clockFrequencyPSD, clockPhasePSD, pseudoRangeSD,
                 rangeRateSD);
     }
 
@@ -165,7 +163,7 @@ public class GNSSKalmanConfig implements Serializable, Cloneable {
      * @return initial position uncertainty per axis.
      */
     public double getInitialPositionUncertainty() {
-        return mInitialPositionUncertainty;
+        return initialPositionUncertainty;
     }
 
     /**
@@ -174,7 +172,7 @@ public class GNSSKalmanConfig implements Serializable, Cloneable {
      * @param initialPositionUncertainty initial position uncertainty per axis.
      */
     public void setInitialPositionUncertainty(final double initialPositionUncertainty) {
-        mInitialPositionUncertainty = initialPositionUncertainty;
+        this.initialPositionUncertainty = initialPositionUncertainty;
     }
 
     /**
@@ -183,7 +181,7 @@ public class GNSSKalmanConfig implements Serializable, Cloneable {
      * @param result instance where initial position uncertainty per axis will be stored.
      */
     public void getDistanceInitialPositionUncertainty(final Distance result) {
-        result.setValue(mInitialPositionUncertainty);
+        result.setValue(initialPositionUncertainty);
         result.setUnit(DistanceUnit.METER);
     }
 
@@ -193,7 +191,7 @@ public class GNSSKalmanConfig implements Serializable, Cloneable {
      * @return initial position uncertainty per axis.
      */
     public Distance getDistanceInitialPositionUncertainty() {
-        return new Distance(mInitialPositionUncertainty, DistanceUnit.METER);
+        return new Distance(initialPositionUncertainty, DistanceUnit.METER);
     }
 
     /**
@@ -202,7 +200,7 @@ public class GNSSKalmanConfig implements Serializable, Cloneable {
      * @param initialPositionUncertainty initial position uncertainty per axis.
      */
     public void setInitialPositionUncertainty(final Distance initialPositionUncertainty) {
-        mInitialPositionUncertainty = DistanceConverter.convert(
+        this.initialPositionUncertainty = DistanceConverter.convert(
                 initialPositionUncertainty.getValue().doubleValue(), initialPositionUncertainty.getUnit(),
                 DistanceUnit.METER);
     }
@@ -213,7 +211,7 @@ public class GNSSKalmanConfig implements Serializable, Cloneable {
      * @return initial velocity uncertainty per axis.
      */
     public double getInitialVelocityUncertainty() {
-        return mInitialVelocityUncertainty;
+        return initialVelocityUncertainty;
     }
 
     /**
@@ -222,7 +220,7 @@ public class GNSSKalmanConfig implements Serializable, Cloneable {
      * @param initialVelocityUncertainty initial velocity uncertainty per axis.
      */
     public void setInitialVelocityUncertainty(final double initialVelocityUncertainty) {
-        mInitialVelocityUncertainty = initialVelocityUncertainty;
+        this.initialVelocityUncertainty = initialVelocityUncertainty;
     }
 
     /**
@@ -231,7 +229,7 @@ public class GNSSKalmanConfig implements Serializable, Cloneable {
      * @param result instance where initial velocity uncertainty per axis will be stored.
      */
     public void getSpeedInitialVelocityUncertainty(final Speed result) {
-        result.setValue(mInitialVelocityUncertainty);
+        result.setValue(initialVelocityUncertainty);
         result.setUnit(SpeedUnit.METERS_PER_SECOND);
     }
 
@@ -241,7 +239,7 @@ public class GNSSKalmanConfig implements Serializable, Cloneable {
      * @return initial velocity uncertainty per axis.
      */
     public Speed getSpeedInitialVelocityUncertainty() {
-        return new Speed(mInitialVelocityUncertainty, SpeedUnit.METERS_PER_SECOND);
+        return new Speed(initialVelocityUncertainty, SpeedUnit.METERS_PER_SECOND);
     }
 
     /**
@@ -250,10 +248,8 @@ public class GNSSKalmanConfig implements Serializable, Cloneable {
      * @param initialVelocityUncertainty initial velocity uncertainty per axis.
      */
     public void setInitialVelocityUncertainty(final Speed initialVelocityUncertainty) {
-        mInitialVelocityUncertainty = SpeedConverter.convert(
-                initialVelocityUncertainty.getValue().doubleValue(),
-                initialVelocityUncertainty.getUnit(),
-                SpeedUnit.METERS_PER_SECOND);
+        this.initialVelocityUncertainty = SpeedConverter.convert(initialVelocityUncertainty.getValue().doubleValue(),
+                initialVelocityUncertainty.getUnit(), SpeedUnit.METERS_PER_SECOND);
     }
 
     /**
@@ -262,7 +258,7 @@ public class GNSSKalmanConfig implements Serializable, Cloneable {
      * @return initial clock offset uncertainty per axis.
      */
     public double getInitialClockOffsetUncertainty() {
-        return mInitialClockOffsetUncertainty;
+        return initialClockOffsetUncertainty;
     }
 
     /**
@@ -271,7 +267,7 @@ public class GNSSKalmanConfig implements Serializable, Cloneable {
      * @param initialClockOffsetUncertainty initial clock offset uncertainty per axis.
      */
     public void setInitialClockOffsetUncertainty(final double initialClockOffsetUncertainty) {
-        mInitialClockOffsetUncertainty = initialClockOffsetUncertainty;
+        this.initialClockOffsetUncertainty = initialClockOffsetUncertainty;
     }
 
     /**
@@ -280,7 +276,7 @@ public class GNSSKalmanConfig implements Serializable, Cloneable {
      * @param result instance where initial clock offset uncertainty per axis will be stored.
      */
     public void getDistanceInitialClockOffsetUncertainty(final Distance result) {
-        result.setValue(mInitialClockOffsetUncertainty);
+        result.setValue(initialClockOffsetUncertainty);
         result.setUnit(DistanceUnit.METER);
     }
 
@@ -290,7 +286,7 @@ public class GNSSKalmanConfig implements Serializable, Cloneable {
      * @return initial clock offset uncertainty per axis.
      */
     public Distance getDistanceInitialClockOffsetUncertainty() {
-        return new Distance(mInitialClockOffsetUncertainty, DistanceUnit.METER);
+        return new Distance(initialClockOffsetUncertainty, DistanceUnit.METER);
     }
 
     /**
@@ -299,9 +295,9 @@ public class GNSSKalmanConfig implements Serializable, Cloneable {
      * @param initialClockOffsetUncertainty initial clock offset uncertainty per axis.
      */
     public void setInitialClockOffsetUncertainty(final Distance initialClockOffsetUncertainty) {
-        mInitialClockOffsetUncertainty = DistanceConverter.convert(
-                initialClockOffsetUncertainty.getValue().doubleValue(),
-                initialClockOffsetUncertainty.getUnit(), DistanceUnit.METER);
+        this.initialClockOffsetUncertainty = DistanceConverter.convert(
+                initialClockOffsetUncertainty.getValue().doubleValue(), initialClockOffsetUncertainty.getUnit(),
+                DistanceUnit.METER);
     }
 
     /**
@@ -310,7 +306,7 @@ public class GNSSKalmanConfig implements Serializable, Cloneable {
      * @return initial clock drift uncertainty per axis.
      */
     public double getInitialClockDriftUncertainty() {
-        return mInitialClockDriftUncertainty;
+        return initialClockDriftUncertainty;
     }
 
     /**
@@ -319,7 +315,7 @@ public class GNSSKalmanConfig implements Serializable, Cloneable {
      * @param initialClockDriftUncertainty initial clock drift uncertainty per axis.
      */
     public void setInitialClockDriftUncertainty(final double initialClockDriftUncertainty) {
-        mInitialClockDriftUncertainty = initialClockDriftUncertainty;
+        this.initialClockDriftUncertainty = initialClockDriftUncertainty;
     }
 
     /**
@@ -328,7 +324,7 @@ public class GNSSKalmanConfig implements Serializable, Cloneable {
      * @param result instance where initial clock drift uncertainty per axis will be stored.
      */
     public void getSpeedInitialClockDriftUncertainty(final Speed result) {
-        result.setValue(mInitialClockDriftUncertainty);
+        result.setValue(initialClockDriftUncertainty);
         result.setUnit(SpeedUnit.METERS_PER_SECOND);
     }
 
@@ -338,7 +334,7 @@ public class GNSSKalmanConfig implements Serializable, Cloneable {
      * @return initial clock drift uncertainty per axis.
      */
     public Speed getSpeedInitialClockDriftUncertainty() {
-        return new Speed(mInitialClockDriftUncertainty, SpeedUnit.METERS_PER_SECOND);
+        return new Speed(initialClockDriftUncertainty, SpeedUnit.METERS_PER_SECOND);
     }
 
     /**
@@ -347,9 +343,8 @@ public class GNSSKalmanConfig implements Serializable, Cloneable {
      * @param initialClockDriftUncertainty initial clock drift uncertainty per axis.
      */
     public void setInitialClockDriftUncertainty(final Speed initialClockDriftUncertainty) {
-        mInitialClockDriftUncertainty = SpeedConverter.convert(
-                initialClockDriftUncertainty.getValue().doubleValue(),
-                initialClockDriftUncertainty.getUnit(),
+        this.initialClockDriftUncertainty = SpeedConverter.convert(
+                initialClockDriftUncertainty.getValue().doubleValue(), initialClockDriftUncertainty.getUnit(),
                 SpeedUnit.METERS_PER_SECOND);
     }
 
@@ -359,7 +354,7 @@ public class GNSSKalmanConfig implements Serializable, Cloneable {
      * @return acceleration PSD.
      */
     public double getAccelerationPSD() {
-        return mAccelerationPSD;
+        return accelerationPSD;
     }
 
     /**
@@ -368,7 +363,7 @@ public class GNSSKalmanConfig implements Serializable, Cloneable {
      * @param accelerationPSD acceleration PSD.
      */
     public void setAccelerationPSD(final double accelerationPSD) {
-        mAccelerationPSD = accelerationPSD;
+        this.accelerationPSD = accelerationPSD;
     }
 
     /**
@@ -378,7 +373,7 @@ public class GNSSKalmanConfig implements Serializable, Cloneable {
      * @return receiver clock frequency-drift PSD.
      */
     public double getClockFrequencyPSD() {
-        return mClockFrequencyPSD;
+        return clockFrequencyPSD;
     }
 
     /**
@@ -388,7 +383,7 @@ public class GNSSKalmanConfig implements Serializable, Cloneable {
      * @param clockFrequencyPSD receiver clock frequency-drift PSD.
      */
     public void setClockFrequencyPSD(final double clockFrequencyPSD) {
-        mClockFrequencyPSD = clockFrequencyPSD;
+        this.clockFrequencyPSD = clockFrequencyPSD;
     }
 
     /**
@@ -398,7 +393,7 @@ public class GNSSKalmanConfig implements Serializable, Cloneable {
      * @return receiver clock phase-drift PSD.
      */
     public double getClockPhasePSD() {
-        return mClockPhasePSD;
+        return clockPhasePSD;
     }
 
     /**
@@ -408,7 +403,7 @@ public class GNSSKalmanConfig implements Serializable, Cloneable {
      * @param clockPhasePSD receiver clock phase-drift PSD.
      */
     public void setClockPhasePSD(final double clockPhasePSD) {
-        mClockPhasePSD = clockPhasePSD;
+        this.clockPhasePSD = clockPhasePSD;
     }
 
     /**
@@ -417,7 +412,7 @@ public class GNSSKalmanConfig implements Serializable, Cloneable {
      * @return pseudo-range measurement noise SD.
      */
     public double getPseudoRangeSD() {
-        return mPseudoRangeSD;
+        return pseudoRangeSD;
     }
 
     /**
@@ -426,7 +421,7 @@ public class GNSSKalmanConfig implements Serializable, Cloneable {
      * @param pseudoRangeSD pseudo-range measurement noise SD.
      */
     public void setPseudoRangeSD(final double pseudoRangeSD) {
-        mPseudoRangeSD = pseudoRangeSD;
+        this.pseudoRangeSD = pseudoRangeSD;
     }
 
     /**
@@ -435,7 +430,7 @@ public class GNSSKalmanConfig implements Serializable, Cloneable {
      * @param result instance where pseudo-range measurement noise SD will be stored.
      */
     public void getDistancePseudoRangeSD(final Distance result) {
-        result.setValue(mPseudoRangeSD);
+        result.setValue(pseudoRangeSD);
         result.setUnit(DistanceUnit.METER);
     }
 
@@ -445,7 +440,7 @@ public class GNSSKalmanConfig implements Serializable, Cloneable {
      * @return pseudo-range measurement noise SD.
      */
     public Distance getDistancePseudoRangeSD() {
-        return new Distance(mPseudoRangeSD, DistanceUnit.METER);
+        return new Distance(pseudoRangeSD, DistanceUnit.METER);
     }
 
     /**
@@ -454,8 +449,7 @@ public class GNSSKalmanConfig implements Serializable, Cloneable {
      * @param pseudoRangeSD pseudo-range measurement noise SD.
      */
     public void setPseudoRangeSD(final Distance pseudoRangeSD) {
-        mPseudoRangeSD = DistanceConverter.convert(
-                pseudoRangeSD.getValue().doubleValue(), pseudoRangeSD.getUnit(),
+        this.pseudoRangeSD = DistanceConverter.convert(pseudoRangeSD.getValue().doubleValue(), pseudoRangeSD.getUnit(),
                 DistanceUnit.METER);
     }
 
@@ -466,7 +460,7 @@ public class GNSSKalmanConfig implements Serializable, Cloneable {
      * @return pseudo-range rate measurement SD.
      */
     public double getRangeRateSD() {
-        return mRangeRateSD;
+        return rangeRateSD;
     }
 
     /**
@@ -476,7 +470,7 @@ public class GNSSKalmanConfig implements Serializable, Cloneable {
      * @param rangeRateSD pseudo-range rate measurement SD.
      */
     public void setRangeRateSD(final double rangeRateSD) {
-        mRangeRateSD = rangeRateSD;
+        this.rangeRateSD = rangeRateSD;
     }
 
     /**
@@ -486,7 +480,7 @@ public class GNSSKalmanConfig implements Serializable, Cloneable {
      *               stored.
      */
     public void getSpeedRangeRateSD(final Speed result) {
-        result.setValue(mRangeRateSD);
+        result.setValue(rangeRateSD);
         result.setUnit(SpeedUnit.METERS_PER_SECOND);
     }
 
@@ -496,7 +490,7 @@ public class GNSSKalmanConfig implements Serializable, Cloneable {
      * @return pseudo-range rate measurement noise SD.
      */
     public Speed getSpeedRangeRateSD() {
-        return new Speed(mRangeRateSD, SpeedUnit.METERS_PER_SECOND);
+        return new Speed(rangeRateSD, SpeedUnit.METERS_PER_SECOND);
     }
 
     /**
@@ -505,8 +499,8 @@ public class GNSSKalmanConfig implements Serializable, Cloneable {
      * @param rangeRateSD pseudo-range rate measurement noise SD.
      */
     public void setRangeRateSD(final Speed rangeRateSD) {
-        mRangeRateSD = SpeedConverter.convert(rangeRateSD.getValue().doubleValue(),
-                rangeRateSD.getUnit(), SpeedUnit.METERS_PER_SECOND);
+        this.rangeRateSD = SpeedConverter.convert(rangeRateSD.getValue().doubleValue(), rangeRateSD.getUnit(),
+                SpeedUnit.METERS_PER_SECOND);
     }
 
     /**
@@ -538,15 +532,15 @@ public class GNSSKalmanConfig implements Serializable, Cloneable {
                           final double accelerationPSD, final double clockFrequencyPSD,
                           final double clockPhasePSD, final double pseudoRangeSD,
                           final double rangeRateSD) {
-        mInitialPositionUncertainty = initialPositionUncertainty;
-        mInitialVelocityUncertainty = initialVelocityUncertainty;
-        mInitialClockOffsetUncertainty = initialClockOffsetUncertainty;
-        mInitialClockDriftUncertainty = initialClockDriftUncertainty;
-        mAccelerationPSD = accelerationPSD;
-        mClockFrequencyPSD = clockFrequencyPSD;
-        mClockPhasePSD = clockPhasePSD;
-        mPseudoRangeSD = pseudoRangeSD;
-        mRangeRateSD = rangeRateSD;
+        this.initialPositionUncertainty = initialPositionUncertainty;
+        this.initialVelocityUncertainty = initialVelocityUncertainty;
+        this.initialClockOffsetUncertainty = initialClockOffsetUncertainty;
+        this.initialClockDriftUncertainty = initialClockDriftUncertainty;
+        this.accelerationPSD = accelerationPSD;
+        this.clockFrequencyPSD = clockFrequencyPSD;
+        this.clockPhasePSD = clockPhasePSD;
+        this.pseudoRangeSD = pseudoRangeSD;
+        this.rangeRateSD = rangeRateSD;
     }
 
     /**
@@ -565,20 +559,17 @@ public class GNSSKalmanConfig implements Serializable, Cloneable {
      * @param pseudoRangeSD                 pseudo-range measurement noise SD (Standard Deviation).
      * @param rangeRateSD                   pseudo-range measurement noise SD (Standard Deviation).
      */
-    public void setValues(final Distance initialPositionUncertainty,
-                          final Speed initialVelocityUncertainty,
-                          final Distance initialClockOffsetUncertainty,
-                          final Speed initialClockDriftUncertainty,
-                          final double accelerationPSD, final double clockFrequencyPSD,
-                          final double clockPhasePSD, final Distance pseudoRangeSD,
-                          final Speed rangeRateSD) {
+    public void setValues(final Distance initialPositionUncertainty, final Speed initialVelocityUncertainty,
+                          final Distance initialClockOffsetUncertainty, final Speed initialClockDriftUncertainty,
+                          final double accelerationPSD, final double clockFrequencyPSD, final double clockPhasePSD,
+                          final Distance pseudoRangeSD, final Speed rangeRateSD) {
         setInitialPositionUncertainty(initialPositionUncertainty);
         setInitialVelocityUncertainty(initialVelocityUncertainty);
         setInitialClockOffsetUncertainty(initialClockOffsetUncertainty);
         setInitialClockDriftUncertainty(initialClockDriftUncertainty);
-        mAccelerationPSD = accelerationPSD;
-        mClockFrequencyPSD = clockFrequencyPSD;
-        mClockPhasePSD = clockPhasePSD;
+        this.accelerationPSD = accelerationPSD;
+        this.clockFrequencyPSD = clockFrequencyPSD;
+        this.clockPhasePSD = clockPhasePSD;
         setPseudoRangeSD(pseudoRangeSD);
         setRangeRateSD(rangeRateSD);
     }
@@ -589,15 +580,15 @@ public class GNSSKalmanConfig implements Serializable, Cloneable {
      * @param output destination instance where data will be copied to.
      */
     public void copyTo(final GNSSKalmanConfig output) {
-        output.mInitialPositionUncertainty = mInitialPositionUncertainty;
-        output.mInitialVelocityUncertainty = mInitialVelocityUncertainty;
-        output.mInitialClockOffsetUncertainty = mInitialClockOffsetUncertainty;
-        output.mInitialClockDriftUncertainty = mInitialClockDriftUncertainty;
-        output.mAccelerationPSD = mAccelerationPSD;
-        output.mClockFrequencyPSD = mClockFrequencyPSD;
-        output.mClockPhasePSD = mClockPhasePSD;
-        output.mPseudoRangeSD = mPseudoRangeSD;
-        output.mRangeRateSD = mRangeRateSD;
+        output.initialPositionUncertainty = initialPositionUncertainty;
+        output.initialVelocityUncertainty = initialVelocityUncertainty;
+        output.initialClockOffsetUncertainty = initialClockOffsetUncertainty;
+        output.initialClockDriftUncertainty = initialClockDriftUncertainty;
+        output.accelerationPSD = accelerationPSD;
+        output.clockFrequencyPSD = clockFrequencyPSD;
+        output.clockPhasePSD = clockPhasePSD;
+        output.pseudoRangeSD = pseudoRangeSD;
+        output.rangeRateSD = rangeRateSD;
     }
 
     /**
@@ -606,15 +597,15 @@ public class GNSSKalmanConfig implements Serializable, Cloneable {
      * @param input instance to copy data from.
      */
     public void copyFrom(final GNSSKalmanConfig input) {
-        mInitialPositionUncertainty = input.mInitialPositionUncertainty;
-        mInitialVelocityUncertainty = input.mInitialVelocityUncertainty;
-        mInitialClockOffsetUncertainty = input.mInitialClockOffsetUncertainty;
-        mInitialClockDriftUncertainty = input.mInitialClockDriftUncertainty;
-        mAccelerationPSD = input.mAccelerationPSD;
-        mClockFrequencyPSD = input.mClockFrequencyPSD;
-        mClockPhasePSD = input.mClockPhasePSD;
-        mPseudoRangeSD = input.mPseudoRangeSD;
-        mRangeRateSD = input.mRangeRateSD;
+        initialPositionUncertainty = input.initialPositionUncertainty;
+        initialVelocityUncertainty = input.initialVelocityUncertainty;
+        initialClockOffsetUncertainty = input.initialClockOffsetUncertainty;
+        initialClockDriftUncertainty = input.initialClockDriftUncertainty;
+        accelerationPSD = input.accelerationPSD;
+        clockFrequencyPSD = input.clockFrequencyPSD;
+        clockPhasePSD = input.clockPhasePSD;
+        pseudoRangeSD = input.pseudoRangeSD;
+        rangeRateSD = input.rangeRateSD;
     }
 
     /**
@@ -625,10 +616,9 @@ public class GNSSKalmanConfig implements Serializable, Cloneable {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(mInitialPositionUncertainty, mInitialVelocityUncertainty,
-                mInitialClockOffsetUncertainty, mInitialClockDriftUncertainty,
-                mAccelerationPSD, mClockFrequencyPSD, mClockPhasePSD,
-                mPseudoRangeSD, mRangeRateSD);
+        return Objects.hash(initialPositionUncertainty, initialVelocityUncertainty, initialClockOffsetUncertainty,
+                initialClockDriftUncertainty, accelerationPSD, clockFrequencyPSD, clockPhasePSD, pseudoRangeSD,
+                rangeRateSD);
     }
 
     /**
@@ -647,7 +637,7 @@ public class GNSSKalmanConfig implements Serializable, Cloneable {
             return false;
         }
 
-        final GNSSKalmanConfig other = (GNSSKalmanConfig) obj;
+        final var other = (GNSSKalmanConfig) obj;
         return equals(other);
     }
 
@@ -675,15 +665,15 @@ public class GNSSKalmanConfig implements Serializable, Cloneable {
             return false;
         }
 
-        return Math.abs(mInitialPositionUncertainty - other.mInitialPositionUncertainty) <= threshold
-                && Math.abs(mInitialVelocityUncertainty - other.mInitialVelocityUncertainty) <= threshold
-                && Math.abs(mInitialClockOffsetUncertainty - other.mInitialClockOffsetUncertainty) <= threshold
-                && Math.abs(mInitialClockDriftUncertainty - other.mInitialClockDriftUncertainty) <= threshold
-                && Math.abs(mAccelerationPSD - other.mAccelerationPSD) <= threshold
-                && Math.abs(mClockFrequencyPSD - other.mClockFrequencyPSD) <= threshold
-                && Math.abs(mClockPhasePSD - other.mClockPhasePSD) <= threshold
-                && Math.abs(mPseudoRangeSD - other.mPseudoRangeSD) <= threshold
-                && Math.abs(mRangeRateSD - other.mRangeRateSD) <= threshold;
+        return Math.abs(initialPositionUncertainty - other.initialPositionUncertainty) <= threshold
+                && Math.abs(initialVelocityUncertainty - other.initialVelocityUncertainty) <= threshold
+                && Math.abs(initialClockOffsetUncertainty - other.initialClockOffsetUncertainty) <= threshold
+                && Math.abs(initialClockDriftUncertainty - other.initialClockDriftUncertainty) <= threshold
+                && Math.abs(accelerationPSD - other.accelerationPSD) <= threshold
+                && Math.abs(clockFrequencyPSD - other.clockFrequencyPSD) <= threshold
+                && Math.abs(clockPhasePSD - other.clockPhasePSD) <= threshold
+                && Math.abs(pseudoRangeSD - other.pseudoRangeSD) <= threshold
+                && Math.abs(rangeRateSD - other.rangeRateSD) <= threshold;
     }
 
     /**
@@ -694,7 +684,7 @@ public class GNSSKalmanConfig implements Serializable, Cloneable {
      */
     @Override
     protected Object clone() throws CloneNotSupportedException {
-        final GNSSKalmanConfig result = (GNSSKalmanConfig)super.clone();
+        final var result = (GNSSKalmanConfig)super.clone();
         copyTo(result);
         return result;
     }

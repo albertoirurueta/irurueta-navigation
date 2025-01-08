@@ -81,8 +81,7 @@ public class ECEFtoNEDPositionVelocityConverter {
      */
     public void convert(final double x, final double y, final double z,
                         final double vx, final double vy, final double vz,
-                        final NEDPosition destinationPosition,
-                        final NEDVelocity destinationVelocity) {
+                        final NEDPosition destinationPosition, final NEDVelocity destinationVelocity) {
         convertECEFtoNED(x, y, z, vx, vy, vz, destinationPosition, destinationVelocity);
     }
 
@@ -124,70 +123,67 @@ public class ECEFtoNEDPositionVelocityConverter {
     @SuppressWarnings("DuplicatedCode")
     public static void convertECEFtoNED(final double x, final double y, final double z,
                                         final double vx, final double vy, final double vz,
-                                        final NEDPosition destinationPosition,
-                                        final NEDVelocity destinationVelocity) {
+                                        final NEDPosition destinationPosition, final NEDVelocity destinationVelocity) {
 
         try {
             // Convert position using Borlowski closed-form exact solution
             // From (2.113)
-            final double longitude = Math.atan2(y, x);
+            final var longitude = Math.atan2(y, x);
 
             // From (C.29) and (C.30)
-            final double ecc2 = EARTH_ECCENTRICITY * EARTH_ECCENTRICITY;
-            final double k1 = Math.sqrt(1.0 - ecc2) * Math.abs(z);
-            final double k2 = ecc2 * EARTH_EQUATORIAL_RADIUS_WGS84;
-            final double beta = Math.sqrt(x * x + y * y);
-            final double e = (k1 - k2) / beta;
-            final double f = (k1 + k2) / beta;
+            final var ecc2 = EARTH_ECCENTRICITY * EARTH_ECCENTRICITY;
+            final var k1 = Math.sqrt(1.0 - ecc2) * Math.abs(z);
+            final var k2 = ecc2 * EARTH_EQUATORIAL_RADIUS_WGS84;
+            final var beta = Math.sqrt(x * x + y * y);
+            final var e = (k1 - k2) / beta;
+            final var f = (k1 + k2) / beta;
 
             // From (C.31)
-            final double p = 4.0 / 3.0 * (e * f + 1.0);
+            final var p = 4.0 / 3.0 * (e * f + 1.0);
 
             // From (C.32)
-            final double e2 = e * e;
-            final double f2 = f * f;
-            final double q = 2.0 * (e2 - f2);
+            final var e2 = e * e;
+            final var f2 = f * f;
+            final var q = 2.0 * (e2 - f2);
 
             // From (C.33)
-            final double p3 = p * p * p;
-            final double q2 = q * q;
-            final double d = p3 + q2;
+            final var p3 = p * p * p;
+            final var q2 = q * q;
+            final var d = p3 + q2;
 
             // From (C.34)
-            final double v = Math.pow(Math.sqrt(d) - q, 1.0 / 3.0)
-                    - Math.pow(Math.sqrt(d) + q, 1.0 / 3.0);
+            final var v = Math.pow(Math.sqrt(d) - q, 1.0 / 3.0) - Math.pow(Math.sqrt(d) + q, 1.0 / 3.0);
 
             // From (C.35)
-            final double g = 0.5 * (Math.sqrt(e2 + v) + e);
+            final var g = 0.5 * (Math.sqrt(e2 + v) + e);
 
             // From (C.36)
-            final double g2 = g * g;
-            final double t = Math.sqrt(g2 + (f - v * g) / (2.0 * g - e)) - g;
+            final var g2 = g * g;
+            final var t = Math.sqrt(g2 + (f - v * g) / (2.0 * g - e)) - g;
 
             // From (C.37)
-            final double t2 = t * t;
-            final double latitude = Math.signum(z) * Math.atan((1 - t2)
-                    / (2.0 * t * Math.sqrt(1.0 - ecc2)));
+            final var t2 = t * t;
+            final var latitude = Math.signum(z) * Math.atan((1 - t2) / (2.0 * t * Math.sqrt(1.0 - ecc2)));
 
             // From (C.38)
-            final double height = (beta - EARTH_EQUATORIAL_RADIUS_WGS84 * t)
+            final var height = (beta - EARTH_EQUATORIAL_RADIUS_WGS84 * t)
                     * Math.cos(latitude) + (z - Math.signum(z)
                     * EARTH_EQUATORIAL_RADIUS_WGS84 * Math.sqrt(1.0 - ecc2))
                     * Math.sin(latitude);
 
             // Calculate ECEF to NED coordinate transformation matrix
-            final Matrix cen = CoordinateTransformation.ecefToNedMatrix(latitude, longitude);
+            final var cen = CoordinateTransformation.ecefToNedMatrix(latitude, longitude);
 
             // Transform velocity using (2.73)
-            final Matrix vEbe = new Matrix(ECIorECEFFrame.NUM_VELOCITY_COORDINATES, 1);
+            final var vEbe = new Matrix(ECIorECEFFrame.NUM_VELOCITY_COORDINATES, 1);
             vEbe.setElementAtIndex(0, vx);
             vEbe.setElementAtIndex(1, vy);
             vEbe.setElementAtIndex(2, vz);
 
-            final Matrix vEbn = cen.multiplyAndReturnNew(vEbe);
-            final double vn = vEbn.getElementAtIndex(0);
-            final double ve = vEbn.getElementAtIndex(1);
-            final double vd = vEbn.getElementAtIndex(2);
+            final var vEbn = cen.multiplyAndReturnNew(vEbe);
+            final var vn = vEbn.getElementAtIndex(0);
+            final var ve = vEbn.getElementAtIndex(1);
+            final var vd = vEbn.getElementAtIndex(2);
 
             destinationPosition.setCoordinates(latitude, longitude, height);
             destinationVelocity.setCoordinates(vn, ve, vd);

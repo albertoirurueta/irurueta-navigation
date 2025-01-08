@@ -37,42 +37,42 @@ public class GNSSMeasurement implements Serializable, Cloneable {
     /**
      * Pseudo-range measurement expressed in meters (m).
      */
-    private double mPseudoRange;
+    private double pseudoRange;
 
     /**
      * Pseudo-range rate measurement expressed in meters per second (m/s).
      */
-    private double mPseudoRate;
+    private double pseudoRate;
 
     /**
      * X coordinate of satellite ECEF position expressed in meters (m).
      */
-    private double mX;
+    private double x;
 
     /**
      * Y coordinate of satellite ECEF position expressed in meters (m).
      */
-    private double mY;
+    private double y;
 
     /**
      * Z coordinate of satellite ECEF position expressed in meters (m).
      */
-    private double mZ;
+    private double z;
 
     /**
      * X coordinate of satellite ECEF velocity expressed in meters per second (m/s).
      */
-    private double mVx;
+    private double vx;
 
     /**
      * Y coordinate of satellite ECEF velocity expressed in meters per second (m/s).
      */
-    private double mVy;
+    private double vy;
 
     /**
      * Z coordinate of satellite ECEF velocity expressed in meters per second (m/s).
      */
-    private double mVz;
+    private double vz;
 
     /**
      * Constructor.
@@ -132,8 +132,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param vy          y coordinate of satellite ECEF velocity.
      * @param vz          z coordinate of satellite ECEF velocity.
      */
-    public GNSSMeasurement(final Distance pseudoRange, final Speed pseudoRate,
-                           final Point3D position,
+    public GNSSMeasurement(final Distance pseudoRange, final Speed pseudoRate, final Point3D position,
                            final Speed vx, final Speed vy, final Speed vz) {
         setPseudoRangeDistance(pseudoRange);
         setPseudoRateSpeed(pseudoRate);
@@ -149,8 +148,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param position    satellite ECEF position.
      * @param velocity    satellite ECEF velocity.
      */
-    public GNSSMeasurement(final double pseudoRange, final double pseudoRate,
-                           final ECEFPosition position,
+    public GNSSMeasurement(final double pseudoRange, final double pseudoRate, final ECEFPosition position,
                            final ECEFVelocity velocity) {
         setPseudoRange(pseudoRange);
         setPseudoRate(pseudoRate);
@@ -180,8 +178,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param position    satellite ECEF position.
      * @param velocity    satellite ECEF velocity.
      */
-    public GNSSMeasurement(final Distance pseudoRange, final Speed pseudoRate,
-                           final ECEFPosition position,
+    public GNSSMeasurement(final Distance pseudoRange, final Speed pseudoRate, final ECEFPosition position,
                            final ECEFVelocity velocity) {
         setPseudoRangeDistance(pseudoRange);
         setPseudoRateSpeed(pseudoRate);
@@ -218,7 +215,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @return pseudo-range measurement expressed in meters (m).
      */
     public double getPseudoRange() {
-        return mPseudoRange;
+        return pseudoRange;
     }
 
     /**
@@ -227,7 +224,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param pseudoRange pseudo-range measurement expressed in meters (m).
      */
     public void setPseudoRange(final double pseudoRange) {
-        mPseudoRange = pseudoRange;
+        this.pseudoRange = pseudoRange;
     }
 
     /**
@@ -236,7 +233,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param result instance where pseudo-range measurement will be stored.
      */
     public void getPseudoRangeDistance(final Distance result) {
-        result.setValue(mPseudoRange);
+        result.setValue(pseudoRange);
         result.setUnit(DistanceUnit.METER);
     }
 
@@ -246,7 +243,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @return pseudo-range measurement.
      */
     public Distance getPseudoRangeDistance() {
-        return new Distance(mPseudoRange, DistanceUnit.METER);
+        return new Distance(pseudoRange, DistanceUnit.METER);
     }
 
     /**
@@ -255,8 +252,8 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param pseudoRange pseudo-range measurement.
      */
     public void setPseudoRangeDistance(final Distance pseudoRange) {
-        mPseudoRange = DistanceConverter.convert(pseudoRange.getValue().doubleValue(),
-                pseudoRange.getUnit(), DistanceUnit.METER);
+        this.pseudoRange = DistanceConverter.convert(pseudoRange.getValue().doubleValue(), pseudoRange.getUnit(),
+                DistanceUnit.METER);
     }
 
     /**
@@ -265,7 +262,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @return pseudo-range rate measurement expressed in meters per second (m/s).
      */
     public double getPseudoRate() {
-        return mPseudoRate;
+        return pseudoRate;
     }
 
     /**
@@ -274,7 +271,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param pseudoRate pseudo-range rate measurement expressed in meters per second (m/s).
      */
     public void setPseudoRate(final double pseudoRate) {
-        mPseudoRate = pseudoRate;
+        this.pseudoRate = pseudoRate;
     }
 
     /**
@@ -283,7 +280,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param result instance where pseudo-range rate measurement will be stored.
      */
     public void getPseudoRateSpeed(final Speed result) {
-        result.setValue(mPseudoRate);
+        result.setValue(pseudoRate);
         result.setUnit(SpeedUnit.METERS_PER_SECOND);
     }
 
@@ -293,7 +290,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @return pseudo-range rate measurement.
      */
     public Speed getPseudoRateSpeed() {
-        return new Speed(mPseudoRate, SpeedUnit.METERS_PER_SECOND);
+        return new Speed(pseudoRate, SpeedUnit.METERS_PER_SECOND);
     }
 
     /**
@@ -302,8 +299,8 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param pseudoRate pseudo-range rate measurement.
      */
     public void setPseudoRateSpeed(final Speed pseudoRate) {
-        mPseudoRate = SpeedConverter.convert(pseudoRate.getValue().doubleValue(),
-                pseudoRate.getUnit(), SpeedUnit.METERS_PER_SECOND);
+        this.pseudoRate = SpeedConverter.convert(pseudoRate.getValue().doubleValue(), pseudoRate.getUnit(),
+                SpeedUnit.METERS_PER_SECOND);
     }
 
     /**
@@ -312,7 +309,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @return x coordinate of satellite ECEF position expressed in meters (m).
      */
     public double getX() {
-        return mX;
+        return x;
     }
 
     /**
@@ -321,7 +318,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param x x coordinate of satellite ECEF position expressed in meters (m).
      */
     public void setX(final double x) {
-        mX = x;
+        this.x = x;
     }
 
     /**
@@ -331,7 +328,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      *               stored.
      */
     public void getDistanceX(final Distance result) {
-        result.setValue(mX);
+        result.setValue(x);
         result.setUnit(DistanceUnit.METER);
     }
 
@@ -341,7 +338,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @return x coordinate of satellite ECEF position.
      */
     public Distance getDistanceX() {
-        return new Distance(mX, DistanceUnit.METER);
+        return new Distance(x, DistanceUnit.METER);
     }
 
     /**
@@ -350,8 +347,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param x x coordinate of satellite ECEF position.
      */
     public void setDistanceX(final Distance x) {
-        mX = DistanceConverter.convert(x.getValue().doubleValue(), x.getUnit(),
-                DistanceUnit.METER);
+        this.x = DistanceConverter.convert(x.getValue().doubleValue(), x.getUnit(), DistanceUnit.METER);
     }
 
     /**
@@ -360,7 +356,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @return y coordinate of satellite ECEF position expressed in meters (m).
      */
     public double getY() {
-        return mY;
+        return y;
     }
 
     /**
@@ -369,7 +365,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param y y coordinate of satellite ECEF position expressed in meters (m).
      */
     public void setY(final double y) {
-        mY = y;
+        this.y = y;
     }
 
     /**
@@ -379,7 +375,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      *               stored.
      */
     public void getDistanceY(final Distance result) {
-        result.setValue(mY);
+        result.setValue(y);
         result.setUnit(DistanceUnit.METER);
     }
 
@@ -389,7 +385,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @return y coordinate of satellite ECEF position.
      */
     public Distance getDistanceY() {
-        return new Distance(mY, DistanceUnit.METER);
+        return new Distance(y, DistanceUnit.METER);
     }
 
     /**
@@ -398,8 +394,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param y y coordinate of satellite ECEF position.
      */
     public void setDistanceY(final Distance y) {
-        mY = DistanceConverter.convert(y.getValue().doubleValue(), y.getUnit(),
-                DistanceUnit.METER);
+        this.y = DistanceConverter.convert(y.getValue().doubleValue(), y.getUnit(), DistanceUnit.METER);
     }
 
     /**
@@ -408,7 +403,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @return z coordinate of satellite ECEF position expressed in meters (m).
      */
     public double getZ() {
-        return mZ;
+        return z;
     }
 
     /**
@@ -417,7 +412,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param z z coordinate of satellite ECEF position expressed in meters (m).
      */
     public void setZ(final double z) {
-        mZ = z;
+        this.z = z;
     }
 
     /**
@@ -427,7 +422,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      *               stored.
      */
     public void getDistanceZ(final Distance result) {
-        result.setValue(mZ);
+        result.setValue(z);
         result.setUnit(DistanceUnit.METER);
     }
 
@@ -437,7 +432,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @return z coordinate of satellite ECEF position.
      */
     public Distance getDistanceZ() {
-        return new Distance(mZ, DistanceUnit.METER);
+        return new Distance(z, DistanceUnit.METER);
     }
 
     /**
@@ -446,8 +441,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param z z coordinate of satellite ECEF position.
      */
     public void setDistanceZ(final Distance z) {
-        mZ = DistanceConverter.convert(z.getValue().doubleValue(), z.getUnit(),
-                DistanceUnit.METER);
+        this.z = DistanceConverter.convert(z.getValue().doubleValue(), z.getUnit(), DistanceUnit.METER);
     }
 
     /**
@@ -458,9 +452,9 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param z z coordinate.
      */
     public void setPositionCoordinates(final double x, final double y, final double z) {
-        mX = x;
-        mY = y;
-        mZ = z;
+        this.x = x;
+        this.y = y;
+        this.z = z;
     }
 
     /**
@@ -482,7 +476,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param result instance where satellite ECEF position will be stored.
      */
     public void getPosition(final Point3D result) {
-        result.setInhomogeneousCoordinates(mX, mY, mZ);
+        result.setInhomogeneousCoordinates(x, y, z);
     }
 
     /**
@@ -491,7 +485,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @return ECEF position of satellite.
      */
     public Point3D getPosition() {
-        return new InhomogeneousPoint3D(mX, mY, mZ);
+        return new InhomogeneousPoint3D(x, y, z);
     }
 
     /**
@@ -500,9 +494,9 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param position ECEF position of satellite.
      */
     public void setPosition(final Point3D position) {
-        mX = position.getInhomX();
-        mY = position.getInhomY();
-        mZ = position.getInhomZ();
+        x = position.getInhomX();
+        y = position.getInhomY();
+        z = position.getInhomZ();
     }
 
     /**
@@ -511,7 +505,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param result instance where ECEF position of satellite will be stored.
      */
     public void getEcefPosition(final ECEFPosition result) {
-        result.setCoordinates(mX, mY, mZ);
+        result.setCoordinates(x, y, z);
     }
 
     /**
@@ -520,7 +514,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @return ECEF position of satellite.
      */
     public ECEFPosition getEcefPosition() {
-        return new ECEFPosition(mX, mY, mZ);
+        return new ECEFPosition(x, y, z);
     }
 
     /**
@@ -529,9 +523,9 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param ecefPosition ECEF position of satellite.
      */
     public void setEcefPosition(final ECEFPosition ecefPosition) {
-        mX = ecefPosition.getX();
-        mY = ecefPosition.getY();
-        mZ = ecefPosition.getZ();
+        x = ecefPosition.getX();
+        y = ecefPosition.getY();
+        z = ecefPosition.getZ();
     }
 
     /**
@@ -540,7 +534,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @return x coordinate of satellite ECEF velocity expressed in meters per second (m/s).
      */
     public double getVx() {
-        return mVx;
+        return vx;
     }
 
     /**
@@ -549,7 +543,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param vx x coordinate of satellite ECEF velocity expressed in meters per second (m/s).
      */
     public void setVx(final double vx) {
-        mVx = vx;
+        this.vx = vx;
     }
 
     /**
@@ -559,7 +553,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      *               be stored.
      */
     public void getSpeedX(final Speed result) {
-        result.setValue(mVx);
+        result.setValue(vx);
         result.setUnit(SpeedUnit.METERS_PER_SECOND);
     }
 
@@ -569,7 +563,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @return x coordinate of satellite ECEF velocity.
      */
     public Speed getSpeedX() {
-        return new Speed(mVx, SpeedUnit.METERS_PER_SECOND);
+        return new Speed(vx, SpeedUnit.METERS_PER_SECOND);
     }
 
     /**
@@ -578,8 +572,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param speedX x coordinate of satellite ECEF velocity.
      */
     public void setSpeedX(final Speed speedX) {
-        mVx = SpeedConverter.convert(speedX.getValue().doubleValue(), speedX.getUnit(),
-                SpeedUnit.METERS_PER_SECOND);
+        vx = SpeedConverter.convert(speedX.getValue().doubleValue(), speedX.getUnit(), SpeedUnit.METERS_PER_SECOND);
     }
 
     /**
@@ -588,7 +581,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @return y coordinate of satellite ECEF velocity expressed in meters per second (m/s).
      */
     public double getVy() {
-        return mVy;
+        return vy;
     }
 
     /**
@@ -597,7 +590,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param vy y coordinate of satellite ECEF velocity expressed in meters per second (m/s).
      */
     public void setVy(final double vy) {
-        mVy = vy;
+        this.vy = vy;
     }
 
     /**
@@ -607,7 +600,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      *               be stored.
      */
     public void getSpeedY(final Speed result) {
-        result.setValue(mVy);
+        result.setValue(vy);
         result.setUnit(SpeedUnit.METERS_PER_SECOND);
     }
 
@@ -617,7 +610,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @return y coordinate of satellite ECEF velocity.
      */
     public Speed getSpeedY() {
-        return new Speed(mVy, SpeedUnit.METERS_PER_SECOND);
+        return new Speed(vy, SpeedUnit.METERS_PER_SECOND);
     }
 
     /**
@@ -626,8 +619,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param speedY y coordinate of satellite ECEF velocity.
      */
     public void setSpeedY(final Speed speedY) {
-        mVy = SpeedConverter.convert(speedY.getValue().doubleValue(), speedY.getUnit(),
-                SpeedUnit.METERS_PER_SECOND);
+        vy = SpeedConverter.convert(speedY.getValue().doubleValue(), speedY.getUnit(), SpeedUnit.METERS_PER_SECOND);
     }
 
     /**
@@ -636,7 +628,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @return z coordinate of satellite ECEF velocity expressed in meters per second (m/s).
      */
     public double getVz() {
-        return mVz;
+        return vz;
     }
 
     /**
@@ -645,7 +637,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param vz z coordinate of satellite ECEF velocity expressed in meters per second (m/s).
      */
     public void setVz(final double vz) {
-        mVz = vz;
+        this.vz = vz;
     }
 
     /**
@@ -654,7 +646,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param result z coordinate of satellite ECEF velocity.
      */
     public void getSpeedZ(final Speed result) {
-        result.setValue(mVz);
+        result.setValue(vz);
         result.setUnit(SpeedUnit.METERS_PER_SECOND);
     }
 
@@ -664,7 +656,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @return z coordinate of satellite ECEF velocity.
      */
     public Speed getSpeedZ() {
-        return new Speed(mVz, SpeedUnit.METERS_PER_SECOND);
+        return new Speed(vz, SpeedUnit.METERS_PER_SECOND);
     }
 
     /**
@@ -673,8 +665,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param speedZ z coordinate of satellite ECEF velocity.
      */
     public void setSpeedZ(final Speed speedZ) {
-        mVz = SpeedConverter.convert(speedZ.getValue().doubleValue(), speedZ.getUnit(),
-                SpeedUnit.METERS_PER_SECOND);
+        vz = SpeedConverter.convert(speedZ.getValue().doubleValue(), speedZ.getUnit(), SpeedUnit.METERS_PER_SECOND);
     }
 
     /**
@@ -685,9 +676,9 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param vz z coordinate of satellite ECEF velocity.
      */
     public void setVelocityCoordinates(final double vx, final double vy, final double vz) {
-        mVx = vx;
-        mVy = vy;
-        mVz = vz;
+        this.vx = vx;
+        this.vy = vy;
+        this.vz = vz;
     }
 
     /**
@@ -709,7 +700,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param result instance where ECEF velocity of satellite will be stored.
      */
     public void getEcefVelocity(final ECEFVelocity result) {
-        result.setCoordinates(mVx, mVy, mVz);
+        result.setCoordinates(vx, vy, vz);
     }
 
     /**
@@ -718,7 +709,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @return ECEF velocity of satellite.
      */
     public ECEFVelocity getEcefVelocity() {
-        return new ECEFVelocity(mVx, mVy, mVz);
+        return new ECEFVelocity(vx, vy, vz);
     }
 
     /**
@@ -727,9 +718,9 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param ecefVelocity ECEF velocity of satellite.
      */
     public void setEcefVelocity(final ECEFVelocity ecefVelocity) {
-        mVx = ecefVelocity.getVx();
-        mVy = ecefVelocity.getVy();
-        mVz = ecefVelocity.getVz();
+        vx = ecefVelocity.getVx();
+        vy = ecefVelocity.getVy();
+        vz = ecefVelocity.getVz();
     }
 
     /**
@@ -738,8 +729,8 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param result instance where position and velocity will be stored.
      */
     public void getPositionAndVelocity(final ECEFPositionAndVelocity result) {
-        result.setPositionCoordinates(mX, mY, mZ);
-        result.setVelocityCoordinates(mVx, mVy, mVz);
+        result.setPositionCoordinates(x, y, z);
+        result.setVelocityCoordinates(vx, vy, vz);
     }
 
     /**
@@ -748,7 +739,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @return ECEF position and velocity of satellite.
      */
     public ECEFPositionAndVelocity getPositionAndVelocity() {
-        return new ECEFPositionAndVelocity(mX, mY, mZ, mVx, mVy, mVz);
+        return new ECEFPositionAndVelocity(x, y, z, vx, vy, vz);
     }
 
     /**
@@ -757,13 +748,13 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param positionAndVelocity ECEF position and velocity of satellite.
      */
     public void setPositionAndVelocity(final ECEFPositionAndVelocity positionAndVelocity) {
-        mX = positionAndVelocity.getX();
-        mY = positionAndVelocity.getY();
-        mZ = positionAndVelocity.getZ();
+        x = positionAndVelocity.getX();
+        y = positionAndVelocity.getY();
+        z = positionAndVelocity.getZ();
 
-        mVx = positionAndVelocity.getVx();
-        mVy = positionAndVelocity.getVy();
-        mVz = positionAndVelocity.getVz();
+        vx = positionAndVelocity.getVx();
+        vy = positionAndVelocity.getVy();
+        vz = positionAndVelocity.getVz();
     }
 
     /**
@@ -772,16 +763,16 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param output destination instance where data will be copied to.
      */
     public void copyTo(final GNSSMeasurement output) {
-        output.mPseudoRange = mPseudoRange;
-        output.mPseudoRate = mPseudoRate;
+        output.pseudoRange = pseudoRange;
+        output.pseudoRate = pseudoRate;
 
-        output.mX = mX;
-        output.mY = mY;
-        output.mZ = mZ;
+        output.x = x;
+        output.y = y;
+        output.z = z;
 
-        output.mVx = mVx;
-        output.mVy = mVy;
-        output.mVz = mVz;
+        output.vx = vx;
+        output.vy = vy;
+        output.vz = vz;
     }
 
     /**
@@ -790,16 +781,16 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param input instance to copy data from.
      */
     public void copyFrom(final GNSSMeasurement input) {
-        mPseudoRange = input.mPseudoRange;
-        mPseudoRate = input.mPseudoRate;
+        pseudoRange = input.pseudoRange;
+        pseudoRate = input.pseudoRate;
 
-        mX = input.mX;
-        mY = input.mY;
-        mZ = input.mZ;
+        x = input.x;
+        y = input.y;
+        z = input.z;
 
-        mVx = input.mVx;
-        mVy = input.mVy;
-        mVz = input.mVz;
+        vx = input.vx;
+        vy = input.vy;
+        vz = input.vz;
     }
 
     /**
@@ -810,7 +801,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(mPseudoRange, mPseudoRate, mX, mY, mZ, mVx, mVy, mVz);
+        return Objects.hash(pseudoRange, pseudoRate, x, y, z, vx, vy, vz);
     }
 
     /**
@@ -829,7 +820,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
             return false;
         }
 
-        final GNSSMeasurement other = (GNSSMeasurement) obj;
+        final var other = (GNSSMeasurement) obj;
         return equals(other);
     }
 
@@ -857,14 +848,14 @@ public class GNSSMeasurement implements Serializable, Cloneable {
             return false;
         }
 
-        return Math.abs(mPseudoRange - other.mPseudoRange) <= threshold
-                && Math.abs(mPseudoRate - other.mPseudoRate) <= threshold
-                && Math.abs(mX - other.mX) <= threshold
-                && Math.abs(mY - other.mY) <= threshold
-                && Math.abs(mZ - other.mZ) <= threshold
-                && Math.abs(mVx - other.mVx) <= threshold
-                && Math.abs(mVy - other.mVy) <= threshold
-                && Math.abs(mVz - other.mVz) <= threshold;
+        return Math.abs(pseudoRange - other.pseudoRange) <= threshold
+                && Math.abs(pseudoRate - other.pseudoRate) <= threshold
+                && Math.abs(x - other.x) <= threshold
+                && Math.abs(y - other.y) <= threshold
+                && Math.abs(z - other.z) <= threshold
+                && Math.abs(vx - other.vx) <= threshold
+                && Math.abs(vy - other.vy) <= threshold
+                && Math.abs(vz - other.vz) <= threshold;
     }
 
     /**
@@ -875,7 +866,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      */
     @Override
     protected Object clone() throws CloneNotSupportedException {
-        final GNSSMeasurement result = (GNSSMeasurement) super.clone();
+        final var result = (GNSSMeasurement) super.clone();
         copyTo(result);
         return result;
     }

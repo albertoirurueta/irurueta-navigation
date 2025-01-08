@@ -75,13 +75,13 @@ public class PROMedSRobustLateration2DSolver extends RobustLateration2DSolver {
      * lower than the one typically used in RANSAC, and yet the algorithm could
      * still produce even smaller thresholds in estimated results.
      */
-    private double mStopThreshold = DEFAULT_STOP_THRESHOLD;
+    private double stopThreshold = DEFAULT_STOP_THRESHOLD;
 
     /**
      * Quality scores corresponding to each provided sample.
      * The larger the score value the better the quality of the sample.
      */
-    private double[] mQualityScores;
+    private double[] qualityScores;
 
     /**
      * Constructor.
@@ -96,8 +96,7 @@ public class PROMedSRobustLateration2DSolver extends RobustLateration2DSolver {
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or its progress significantly changes.
      */
-    public PROMedSRobustLateration2DSolver(
-            final RobustLaterationSolverListener<Point2D> listener) {
+    public PROMedSRobustLateration2DSolver(final RobustLaterationSolverListener<Point2D> listener) {
         super(listener);
     }
 
@@ -110,8 +109,7 @@ public class PROMedSRobustLateration2DSolver extends RobustLateration2DSolver {
      * @throws IllegalArgumentException if either positions or distances are null,
      *                                  don't have the same length of their length is smaller than required (3 points).
      */
-    public PROMedSRobustLateration2DSolver(
-            final Point2D[] positions, final double[] distances) {
+    public PROMedSRobustLateration2DSolver(final Point2D[] positions, final double[] distances) {
         super(positions, distances);
     }
 
@@ -143,8 +141,7 @@ public class PROMedSRobustLateration2DSolver extends RobustLateration2DSolver {
      *                                  smaller than required (3 points).
      */
     public PROMedSRobustLateration2DSolver(
-            final Point2D[] positions, final double[] distances,
-            final double[] distanceStandardDeviations,
+            final Point2D[] positions, final double[] distances, final double[] distanceStandardDeviations,
             final RobustLaterationSolverListener<Point2D> listener) {
         super(positions, distances, distanceStandardDeviations, listener);
     }
@@ -184,8 +181,7 @@ public class PROMedSRobustLateration2DSolver extends RobustLateration2DSolver {
      * @throws IllegalArgumentException if circles is null, length of circles array is less
      *                                  than required (3 points) or don't have the same length.
      */
-    public PROMedSRobustLateration2DSolver(final Circle[] circles,
-                                           final double[] distanceStandardDeviations) {
+    public PROMedSRobustLateration2DSolver(final Circle[] circles, final double[] distanceStandardDeviations) {
         super(circles, distanceStandardDeviations);
     }
 
@@ -245,8 +241,7 @@ public class PROMedSRobustLateration2DSolver extends RobustLateration2DSolver {
      *                                  of quality scores is less than required minimum (3 samples).
      */
     public PROMedSRobustLateration2DSolver(
-            final double[] qualityScores,
-            final RobustLaterationSolverListener<Point2D> listener) {
+            final double[] qualityScores, final RobustLaterationSolverListener<Point2D> listener) {
         super(listener);
         internalSetQualityScores(qualityScores);
     }
@@ -284,9 +279,8 @@ public class PROMedSRobustLateration2DSolver extends RobustLateration2DSolver {
      *                                  standard deviations are null, don't have the same length or their length is
      *                                  smaller than required (3 points).
      */
-    public PROMedSRobustLateration2DSolver(final double[] qualityScores,
-                                           final Point2D[] positions, final double[] distances,
-                                           final double[] distanceStandardDeviations) {
+    public PROMedSRobustLateration2DSolver(final double[] qualityScores, final Point2D[] positions,
+                                           final double[] distances, final double[] distanceStandardDeviations) {
         super(positions, distances, distanceStandardDeviations);
         internalSetQualityScores(qualityScores);
     }
@@ -308,8 +302,7 @@ public class PROMedSRobustLateration2DSolver extends RobustLateration2DSolver {
      */
     public PROMedSRobustLateration2DSolver(
             final double[] qualityScores, final Point2D[] positions, final double[] distances,
-            final double[] distanceStandardDeviations,
-            final RobustLaterationSolverListener<Point2D> listener) {
+            final double[] distanceStandardDeviations, final RobustLaterationSolverListener<Point2D> listener) {
         super(positions, distances, distanceStandardDeviations, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -346,8 +339,7 @@ public class PROMedSRobustLateration2DSolver extends RobustLateration2DSolver {
      *                                  are null don't have the same length or their length is less than
      *                                  required (3 points).
      */
-    public PROMedSRobustLateration2DSolver(
-            final double[] qualityScores, final Circle[] circles) {
+    public PROMedSRobustLateration2DSolver(final double[] qualityScores, final Circle[] circles) {
         super(circles);
         internalSetQualityScores(qualityScores);
     }
@@ -365,8 +357,7 @@ public class PROMedSRobustLateration2DSolver extends RobustLateration2DSolver {
      *                                  length is less than required (3 points).
      */
     public PROMedSRobustLateration2DSolver(
-            final double[] qualityScores, final Circle[] circles,
-            final double[] distanceStandardDeviations) {
+            final double[] qualityScores, final Circle[] circles, final double[] distanceStandardDeviations) {
         super(circles, distanceStandardDeviations);
         internalSetQualityScores(qualityScores);
     }
@@ -406,8 +397,7 @@ public class PROMedSRobustLateration2DSolver extends RobustLateration2DSolver {
      *                                  length is less than required (3 points).
      */
     public PROMedSRobustLateration2DSolver(
-            final double[] qualityScores, final Circle[] circles,
-            final double[] distanceStandardDeviations,
+            final double[] qualityScores, final Circle[] circles, final double[] distanceStandardDeviations,
             final RobustLaterationSolverListener<Point2D> listener) {
         super(circles, distanceStandardDeviations, listener);
         internalSetQualityScores(qualityScores);
@@ -433,7 +423,7 @@ public class PROMedSRobustLateration2DSolver extends RobustLateration2DSolver {
      * accuracy has been reached.
      */
     public double getStopThreshold() {
-        return mStopThreshold;
+        return stopThreshold;
     }
 
     /**
@@ -465,7 +455,7 @@ public class PROMedSRobustLateration2DSolver extends RobustLateration2DSolver {
             throw new IllegalArgumentException();
         }
 
-        mStopThreshold = stopThreshold;
+        this.stopThreshold = stopThreshold;
     }
 
     /**
@@ -477,7 +467,7 @@ public class PROMedSRobustLateration2DSolver extends RobustLateration2DSolver {
      */
     @Override
     public double[] getQualityScores() {
-        return mQualityScores;
+        return qualityScores;
     }
 
     /**
@@ -493,8 +483,7 @@ public class PROMedSRobustLateration2DSolver extends RobustLateration2DSolver {
      *                                  estimation is already in progress.
      */
     @Override
-    public void setQualityScores(final double[] qualityScores)
-            throws LockedException {
+    public void setQualityScores(final double[] qualityScores) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -508,8 +497,7 @@ public class PROMedSRobustLateration2DSolver extends RobustLateration2DSolver {
      */
     @Override
     public boolean isReady() {
-        return super.isReady() && mQualityScores != null &&
-                mQualityScores.length == mDistances.length;
+        return super.isReady() && qualityScores != null && qualityScores.length == distances.length;
     }
 
     /**
@@ -522,8 +510,7 @@ public class PROMedSRobustLateration2DSolver extends RobustLateration2DSolver {
      *                                  (i.e. numerical instability, no solution available, etc).
      */
     @Override
-    public Point2D solve() throws LockedException, NotReadyException,
-            RobustEstimatorException {
+    public Point2D solve() throws LockedException, NotReadyException, RobustEstimatorException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -531,92 +518,85 @@ public class PROMedSRobustLateration2DSolver extends RobustLateration2DSolver {
             throw new NotReadyException();
         }
 
-        final PROMedSRobustEstimator<Point2D> innerEstimator =
-                new PROMedSRobustEstimator<>(new PROMedSRobustEstimatorListener<Point2D>() {
-                    @Override
-                    public double[] getQualityScores() {
-                        return mQualityScores;
-                    }
-
-                    @Override
-                    public double getThreshold() {
-                        return mStopThreshold;
-                    }
-
-                    @Override
-                    public int getTotalSamples() {
-                        return mDistances.length;
-                    }
-
-                    @Override
-                    public int getSubsetSize() {
-                        return mPreliminarySubsetSize;
-                    }
-
-                    @Override
-                    public void estimatePreliminarSolutions(
-                            final int[] samplesIndices, final List<Point2D> solutions) {
-                        solvePreliminarySolutions(samplesIndices, solutions);
-                    }
-
-                    @Override
-                    public double computeResidual(
-                            final Point2D currentEstimation, final int i) {
-                        return Math.abs(currentEstimation.distanceTo(mPositions[i]) - mDistances[i]);
-                    }
-
-                    @Override
-                    public boolean isReady() {
-                        return PROMedSRobustLateration2DSolver.this.isReady();
-                    }
-
-                    @Override
-                    public void onEstimateStart(final RobustEstimator<Point2D> estimator) {
-                        // no action needed
-                    }
-
-                    @Override
-                    public void onEstimateEnd(final RobustEstimator<Point2D> estimator) {
-                        // no action needed
-                    }
-
-                    @Override
-                    public void onEstimateNextIteration(
-                            final RobustEstimator<Point2D> estimator, final int iteration) {
-                        if (mListener != null) {
-                            mListener.onSolveNextIteration(
-                                    PROMedSRobustLateration2DSolver.this, iteration);
-                        }
-                    }
-
-                    @Override
-                    public void onEstimateProgressChange(
-                            final RobustEstimator<Point2D> estimator, final float progress) {
-                        if (mListener != null) {
-                            mListener.onSolveProgressChange(PROMedSRobustLateration2DSolver.this,
-                                    progress);
-                        }
-                    }
-                });
-
-        try {
-            mLocked = true;
-
-            if (mListener != null) {
-                mListener.onSolveStart(this);
+        final var innerEstimator = new PROMedSRobustEstimator<>(new PROMedSRobustEstimatorListener<Point2D>() {
+            @Override
+            public double[] getQualityScores() {
+                return qualityScores;
             }
 
-            mInliersData = null;
-            innerEstimator.setConfidence(mConfidence);
-            innerEstimator.setMaxIterations(mMaxIterations);
-            innerEstimator.setProgressDelta(mProgressDelta);
+            @Override
+            public double getThreshold() {
+                return stopThreshold;
+            }
+
+            @Override
+            public int getTotalSamples() {
+                return distances.length;
+            }
+
+            @Override
+            public int getSubsetSize() {
+                return preliminarySubsetSize;
+            }
+
+            @Override
+            public void estimatePreliminarSolutions(final int[] samplesIndices, final List<Point2D> solutions) {
+                solvePreliminarySolutions(samplesIndices, solutions);
+            }
+
+            @Override
+            public double computeResidual(final Point2D currentEstimation, final int i) {
+                return Math.abs(currentEstimation.distanceTo(positions[i]) - distances[i]);
+            }
+
+            @Override
+            public boolean isReady() {
+                return PROMedSRobustLateration2DSolver.this.isReady();
+            }
+
+            @Override
+            public void onEstimateStart(final RobustEstimator<Point2D> estimator) {
+                // no action needed
+            }
+
+            @Override
+            public void onEstimateEnd(final RobustEstimator<Point2D> estimator) {
+                // no action needed
+            }
+
+            @Override
+            public void onEstimateNextIteration(final RobustEstimator<Point2D> estimator, final int iteration) {
+                if (listener != null) {
+                    listener.onSolveNextIteration(PROMedSRobustLateration2DSolver.this, iteration);
+                }
+            }
+
+            @Override
+            public void onEstimateProgressChange(final RobustEstimator<Point2D> estimator, final float progress) {
+                if (listener != null) {
+                    listener.onSolveProgressChange(PROMedSRobustLateration2DSolver.this, progress);
+                }
+            }
+        });
+
+        try {
+            locked = true;
+
+            if (listener != null) {
+                listener.onSolveStart(this);
+            }
+
+            inliersData = null;
+            innerEstimator.setConfidence(confidence);
+            innerEstimator.setMaxIterations(maxIterations);
+            innerEstimator.setProgressDelta(progressDelta);
             innerEstimator.setUseInlierThresholds(false);
-            Point2D result = innerEstimator.estimate();
-            mInliersData = innerEstimator.getInliersData();
+            var result = innerEstimator.estimate();
+            inliersData = innerEstimator.getInliersData();
             result = attemptRefine(result);
 
-            if (mListener != null) {
-                mListener.onSolveEnd(this);
+            if (listener != null) {
+                listener.onSolveEnd(this);
             }
 
             return result;
@@ -626,7 +606,7 @@ public class PROMedSRobustLateration2DSolver extends RobustLateration2DSolver {
         } catch (final com.irurueta.numerical.NotReadyException e) {
             throw new NotReadyException(e);
         } finally {
-            mLocked = false;
+            locked = false;
         }
     }
 
@@ -650,11 +630,10 @@ public class PROMedSRobustLateration2DSolver extends RobustLateration2DSolver {
      *                                  is smaller than 3 samples.
      */
     private void internalSetQualityScores(final double[] qualityScores) {
-        if (qualityScores == null ||
-                qualityScores.length < getMinRequiredPositionsAndDistances()) {
+        if (qualityScores == null || qualityScores.length < getMinRequiredPositionsAndDistances()) {
             throw new IllegalArgumentException();
         }
 
-        mQualityScores = qualityScores;
+        this.qualityScores = qualityScores;
     }
 }

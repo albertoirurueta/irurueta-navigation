@@ -53,7 +53,7 @@ public class NEDtoECEFFrameConverter implements FrameConverter<NEDFrame, ECEFFra
      */
     @Override
     public ECEFFrame convertAndReturnNew(final NEDFrame source) {
-        final ECEFFrame result = new ECEFFrame();
+        final var result = new ECEFFrame();
         convert(source, result);
         return result;
     }
@@ -95,7 +95,7 @@ public class NEDtoECEFFrameConverter implements FrameConverter<NEDFrame, ECEFFra
      * @return a new destination frame instance.
      */
     public static ECEFFrame convertNEDtoECEFAndReturnNew(final NEDFrame source) {
-        final ECEFFrame result = new ECEFFrame();
+        final var result = new ECEFFrame();
         convertNEDtoECEF(source, result);
         return result;
     }
@@ -108,48 +108,48 @@ public class NEDtoECEFFrameConverter implements FrameConverter<NEDFrame, ECEFFra
     @SuppressWarnings("DuplicatedCode")
     public static void convertNEDtoECEF(final NEDFrame source, final ECEFFrame destination) {
         try {
-            final double latitude = source.getLatitude();
-            final double longitude = source.getLongitude();
-            final double height = source.getHeight();
+            final var latitude = source.getLatitude();
+            final var longitude = source.getLongitude();
+            final var height = source.getHeight();
 
-            final double cosLat = Math.cos(latitude);
-            final double sinLat = Math.sin(latitude);
-            final double cosLong = Math.cos(longitude);
-            final double sinLong = Math.sin(longitude);
+            final var cosLat = Math.cos(latitude);
+            final var sinLat = Math.sin(latitude);
+            final var cosLong = Math.cos(longitude);
+            final var sinLong = Math.sin(longitude);
 
             // Calculate transverse radius of curvature using (2.105)
-            final double eSinLat = EARTH_ECCENTRICITY * sinLat;
-            final double eSinLat2 = eSinLat * eSinLat;
-            double re = EARTH_EQUATORIAL_RADIUS_WGS84 / Math.sqrt(1.0 - eSinLat2);
+            final var eSinLat = EARTH_ECCENTRICITY * sinLat;
+            final var eSinLat2 = eSinLat * eSinLat;
+            var re = EARTH_EQUATORIAL_RADIUS_WGS84 / Math.sqrt(1.0 - eSinLat2);
 
             // Convert position using (2.112)
-            final double e2 = EARTH_ECCENTRICITY * EARTH_ECCENTRICITY;
-            final double x = (re + height) * cosLat * cosLong;
-            final double y = (re + height) * cosLat * sinLong;
-            final double z = ((1.0 - e2) * re + height) * sinLat;
+            final var e2 = EARTH_ECCENTRICITY * EARTH_ECCENTRICITY;
+            final var x = (re + height) * cosLat * cosLong;
+            final var y = (re + height) * cosLat * sinLong;
+            final var z = ((1.0 - e2) * re + height) * sinLat;
 
             // Calculate NED to ECEF coordinate transformation matrix
-            final Matrix cne = CoordinateTransformation.nedToEcefMatrix(latitude, longitude);
+            final var cne = CoordinateTransformation.nedToEcefMatrix(latitude, longitude);
 
             // Transform velocity using (2.73)
-            final double vn = source.getVn();
-            final double ve = source.getVe();
-            final double vd = source.getVd();
-            final Matrix vEbn = new Matrix(NEDFrame.NUM_VELOCITY_COORDINATES, 1);
+            final var vn = source.getVn();
+            final var ve = source.getVe();
+            final var vd = source.getVd();
+            final var vEbn = new Matrix(NEDFrame.NUM_VELOCITY_COORDINATES, 1);
             vEbn.setElementAtIndex(0, vn);
             vEbn.setElementAtIndex(1, ve);
             vEbn.setElementAtIndex(2, vd);
 
-            final Matrix vEbe = cne.multiplyAndReturnNew(vEbn);
-            final double vx = vEbe.getElementAtIndex(0);
-            final double vy = vEbe.getElementAtIndex(1);
-            final double vz = vEbe.getElementAtIndex(2);
+            final var vEbe = cne.multiplyAndReturnNew(vEbn);
+            final var vx = vEbe.getElementAtIndex(0);
+            final var vy = vEbe.getElementAtIndex(1);
+            final var vz = vEbe.getElementAtIndex(2);
 
             // Transform attitude using (2.15)
-            final Matrix cbn = source.getCoordinateTransformation().getMatrix();
+            final var cbn = source.getCoordinateTransformation().getMatrix();
             cne.multiply(cbn); // cne is now cbe
 
-            final CoordinateTransformation c = new CoordinateTransformation(cne, FrameType.BODY_FRAME,
+            final var c = new CoordinateTransformation(cne, FrameType.BODY_FRAME,
                     FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
             // set result

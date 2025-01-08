@@ -15,21 +15,21 @@
  */
 package com.irurueta.navigation.geodesic;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class GeodesicMaskTest {
+class GeodesicMaskTest {
 
     @Test
-    public void testConstants() {
-        assertEquals(GeodesicMask.NONE, 0);
+    void testConstants() {
+        assertEquals(0, GeodesicMask.NONE);
         assertEquals(GeodesicMask.LATITUDE, 1 << 7);
         assertEquals(GeodesicMask.LONGITUDE, 1 << 8 | 1 << 3);
         assertEquals(GeodesicMask.AZIMUTH, 1 << 9);
         assertEquals(GeodesicMask.DISTANCE, 1 << 10 | 1);
-        assertEquals(GeodesicMask.STANDARD, GeodesicMask.LATITUDE | GeodesicMask.LONGITUDE |
-                GeodesicMask.AZIMUTH | GeodesicMask.DISTANCE);
+        assertEquals(GeodesicMask.STANDARD, GeodesicMask.LATITUDE | GeodesicMask.LONGITUDE
+                | GeodesicMask.AZIMUTH | GeodesicMask.DISTANCE);
         assertEquals(GeodesicMask.DISTANCE_IN, 1 << 11 | 1 | 1 << 1);
         assertEquals(GeodesicMask.REDUCED_LENGTH, 1 << 12 | 1 | 1 << 2);
         assertEquals(GeodesicMask.GEODESIC_SCALE, 1 << 13 | 1 | 1 << 2);

@@ -38,37 +38,37 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      * Cartesian x coordinate of position resolved in ECEF axes and expressed
      * in meters (m).
      */
-    double mX;
+    double x;
 
     /**
      * Cartesian y coordinate of position resolved in ECEF axes and expressed
      * in meters (m).
      */
-    double mY;
+    double y;
 
     /**
      * Cartesian z coordinate of position resolved in ECEF axes and expressed
      * in meters(m).
      */
-    double mZ;
+    double z;
 
     /**
      * X coordinate of velocity resolved in ECEF axes and expressed in meters
      * per second (m/s).
      */
-    double mVx;
+    double vx;
 
     /**
      * Y coordinate of velocity resolved in ECEF axes and expressed in meters
      * per second (m/s).
      */
-    double mVy;
+    double vy;
 
     /**
      * Z coordinate of velocity resolved in ECEF axes and expressed in meters
      * per second (m/s).
      */
-    double mVz;
+    double vz;
 
     /**
      * Constructor.
@@ -97,8 +97,7 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      * @param y cartesian y coordinate of ECEF position.
      * @param z cartesian z coordinate of ECEF position.
      */
-    public ECEFPositionAndVelocity(final Distance x, final Distance y,
-                                   final Distance z) {
+    public ECEFPositionAndVelocity(final Distance x, final Distance y, final Distance z) {
         setPositionDistanceCoordinates(x, y, z);
     }
 
@@ -192,8 +191,7 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      *                     meters (m).
      * @param ecefVelocity satellite velocity.
      */
-    public ECEFPositionAndVelocity(final double x, final double y, final double z,
-                                   final ECEFVelocity ecefVelocity) {
+    public ECEFPositionAndVelocity(final double x, final double y, final double z, final ECEFVelocity ecefVelocity) {
         this(x, y, z);
         setEcefVelocity(ecefVelocity);
     }
@@ -211,9 +209,8 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      * @param vz z coordinate of velocity resolved in ECEF axes and expressed
      *           in meters per second (m/s).
      */
-    public ECEFPositionAndVelocity(final Distance x, final Distance y,
-                                   final Distance z, final double vx, final double vy,
-                                   final double vz) {
+    public ECEFPositionAndVelocity(final Distance x, final Distance y, final Distance z,
+                                   final double vx, final double vy, final double vz) {
         this(x, y, z);
         setVelocityCoordinates(vx, vy, vz);
     }
@@ -228,9 +225,8 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      * @param vy y coordinate of velocity resolved in ECEF axes.
      * @param vz z coordinate of velocity resolved in ECEF axes.
      */
-    public ECEFPositionAndVelocity(final Distance x, final Distance y,
-                                   final Distance z, final Speed vx, final Speed vy,
-                                   final Speed vz) {
+    public ECEFPositionAndVelocity(final Distance x, final Distance y, final Distance z,
+                                   final Speed vx, final Speed vy, final Speed vz) {
         this(x, y, z);
         setSpeedCoordinates(vx, vy, vz);
     }
@@ -243,8 +239,7 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      * @param z            cartesian z coordinate of ECEF position.
      * @param ecefVelocity satellite velocity.
      */
-    public ECEFPositionAndVelocity(final Distance x, final Distance y,
-                                   final Distance z,
+    public ECEFPositionAndVelocity(final Distance x, final Distance y, final Distance z,
                                    final ECEFVelocity ecefVelocity) {
         this(x, y, z);
         setEcefVelocity(ecefVelocity);
@@ -287,8 +282,7 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      * @param ecefPosition ECEF position to be set.
      * @param ecefVelocity velocity to be set.
      */
-    public ECEFPositionAndVelocity(final ECEFPosition ecefPosition,
-                                   final ECEFVelocity ecefVelocity) {
+    public ECEFPositionAndVelocity(final ECEFPosition ecefPosition, final ECEFVelocity ecefVelocity) {
         this(ecefPosition);
         setEcefVelocity(ecefVelocity);
     }
@@ -304,8 +298,7 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      * @param vz       z coordinate of velocity resolved in ECEF axes and expressed
      *                 in meters per second (m/s).
      */
-    public ECEFPositionAndVelocity(final Point3D position,
-                                   final double vx, final double vy, final double vz) {
+    public ECEFPositionAndVelocity(final Point3D position, final double vx, final double vy, final double vz) {
         this(position);
         setVelocityCoordinates(vx, vy, vz);
     }
@@ -318,8 +311,7 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      * @param vy       y coordinate of velocity resolved in ECEF axes.
      * @param vz       z coordinate of velocity resolved in ECEF axes.
      */
-    public ECEFPositionAndVelocity(final Point3D position,
-                                   final Speed vx, final Speed vy, final Speed vz) {
+    public ECEFPositionAndVelocity(final Point3D position, final Speed vx, final Speed vy, final Speed vz) {
         this(position);
         setSpeedCoordinates(vx, vy, vz);
     }
@@ -330,8 +322,7 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      * @param position     position to be set.
      * @param ecefVelocity velocity to be set.
      */
-    public ECEFPositionAndVelocity(final Point3D position,
-                                   final ECEFVelocity ecefVelocity) {
+    public ECEFPositionAndVelocity(final Point3D position, final ECEFVelocity ecefVelocity) {
         this(position);
         setEcefVelocity(ecefVelocity);
     }
@@ -353,7 +344,7 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      * and expressed in meters (m).
      */
     public double getX() {
-        return mX;
+        return x;
     }
 
     /**
@@ -364,7 +355,7 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      *          and expressed in meters (m).
      */
     public void setX(final double x) {
-        mX = x;
+        this.x = x;
     }
 
     /**
@@ -375,7 +366,7 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      * and expressed in meters (m).
      */
     public double getY() {
-        return mY;
+        return y;
     }
 
     /**
@@ -386,7 +377,7 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      *          and expressed in meters (m).
      */
     public void setY(final double y) {
-        mY = y;
+        this.y = y;
     }
 
     /**
@@ -397,7 +388,7 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      * and expressed in meters (m).
      */
     public double getZ() {
-        return mZ;
+        return z;
     }
 
     /**
@@ -408,7 +399,7 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      *          and expressed in meters (m).
      */
     public void setZ(final double z) {
-        mZ = z;
+        this.z = z;
     }
 
     /**
@@ -419,9 +410,9 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      * @param z cartesian z coordinate of position.
      */
     public void setPositionCoordinates(final double x, final double y, final double z) {
-        mX = x;
-        mY = y;
-        mZ = z;
+        this.x = x;
+        this.y = y;
+        this.z = z;
     }
 
     /**
@@ -431,7 +422,7 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      *               be stored.
      */
     public void getXDistance(final Distance result) {
-        result.setValue(mX);
+        result.setValue(x);
         result.setUnit(DistanceUnit.METER);
     }
 
@@ -441,7 +432,7 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      * @return cartesian x coordinate of position.
      */
     public Distance getXDistance() {
-        return new Distance(mX, DistanceUnit.METER);
+        return new Distance(x, DistanceUnit.METER);
     }
 
     /**
@@ -450,8 +441,7 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      * @param x cartesian x coordinate of position.
      */
     public void setXDistance(final Distance x) {
-        mX = DistanceConverter.convert(x.getValue().doubleValue(),
-                x.getUnit(), DistanceUnit.METER);
+        this.x = DistanceConverter.convert(x.getValue().doubleValue(), x.getUnit(), DistanceUnit.METER);
     }
 
     /**
@@ -461,7 +451,7 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      *               be stored.
      */
     public void getYDistance(final Distance result) {
-        result.setValue(mY);
+        result.setValue(y);
         result.setUnit(DistanceUnit.METER);
     }
 
@@ -471,7 +461,7 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      * @return cartesian y coordinate of position.
      */
     public Distance getYDistance() {
-        return new Distance(mY, DistanceUnit.METER);
+        return new Distance(y, DistanceUnit.METER);
     }
 
     /**
@@ -480,8 +470,7 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      * @param y cartesian y coordinate of position.
      */
     public void setYDistance(final Distance y) {
-        mY = DistanceConverter.convert(y.getValue().doubleValue(),
-                y.getUnit(), DistanceUnit.METER);
+        this.y = DistanceConverter.convert(y.getValue().doubleValue(), y.getUnit(), DistanceUnit.METER);
     }
 
     /**
@@ -491,7 +480,7 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      *               be stored.
      */
     public void getZDistance(final Distance result) {
-        result.setValue(mZ);
+        result.setValue(z);
         result.setUnit(DistanceUnit.METER);
     }
 
@@ -501,7 +490,7 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      * @return cartesian z coordinate of position.
      */
     public Distance getZDistance() {
-        return new Distance(mZ, DistanceUnit.METER);
+        return new Distance(z, DistanceUnit.METER);
     }
 
     /**
@@ -510,8 +499,7 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      * @param z cartesian z coordinate of position.
      */
     public void setZDistance(final Distance z) {
-        mZ = DistanceConverter.convert(z.getValue().doubleValue(),
-                z.getUnit(), DistanceUnit.METER);
+        this.z = DistanceConverter.convert(z.getValue().doubleValue(), z.getUnit(), DistanceUnit.METER);
     }
 
     /**
@@ -521,8 +509,7 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      * @param y cartesian y coordinate of position.
      * @param z cartesian z coordinate of position.
      */
-    public void setPositionDistanceCoordinates(final Distance x, final Distance y,
-                                               final Distance z) {
+    public void setPositionDistanceCoordinates(final Distance x, final Distance y, final Distance z) {
         setXDistance(x);
         setYDistance(y);
         setZDistance(z);
@@ -534,7 +521,7 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      * @param result instance where ECEF position will be stored.
      */
     public void getEcefPosition(final ECEFPosition result) {
-        result.setCoordinates(mX, mY, mZ);
+        result.setCoordinates(x, y, z);
     }
 
     /**
@@ -543,7 +530,7 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      * @return ECEF position.
      */
     public ECEFPosition getEcefPosition() {
-        return new ECEFPosition(mX, mY, mZ);
+        return new ECEFPosition(x, y, z);
     }
 
     /**
@@ -552,9 +539,9 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      * @param ecefPosition ECEF position.
      */
     public void setEcefPosition(final ECEFPosition ecefPosition) {
-        mX = ecefPosition.getX();
-        mY = ecefPosition.getY();
-        mZ = ecefPosition.getZ();
+        x = ecefPosition.getX();
+        y = ecefPosition.getY();
+        z = ecefPosition.getZ();
     }
 
     /**
@@ -563,7 +550,7 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      * @param result instance where position will be stored.
      */
     public void getPosition(final Point3D result) {
-        result.setInhomogeneousCoordinates(mX, mY, mZ);
+        result.setInhomogeneousCoordinates(x, y, z);
     }
 
     /**
@@ -572,7 +559,7 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      * @return position.
      */
     public Point3D getPosition() {
-        return new InhomogeneousPoint3D(mX, mY, mZ);
+        return new InhomogeneousPoint3D(x, y, z);
     }
 
     /**
@@ -581,9 +568,9 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      * @param position position.
      */
     public void setPosition(final Point3D position) {
-        mX = position.getInhomX();
-        mY = position.getInhomY();
-        mZ = position.getInhomZ();
+        x = position.getInhomX();
+        y = position.getInhomY();
+        z = position.getInhomZ();
     }
 
     /**
@@ -593,7 +580,7 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      * @return x coordinate of velocity resolved in ECEF axes.
      */
     public double getVx() {
-        return mVx;
+        return vx;
     }
 
     /**
@@ -603,7 +590,7 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      * @param vx x coordinate of velocity resolved in ECEF axes.
      */
     public void setVx(final double vx) {
-        mVx = vx;
+        this.vx = vx;
     }
 
     /**
@@ -613,7 +600,7 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      * @return y coordinate of velocity resolved in ECEF axes.
      */
     public double getVy() {
-        return mVy;
+        return vy;
     }
 
     /**
@@ -623,7 +610,7 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      * @param vy y coordinate of velocity resolved in ECEf axes.
      */
     public void setVy(final double vy) {
-        mVy = vy;
+        this.vy = vy;
     }
 
     /**
@@ -633,7 +620,7 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      * @return z coordinate of velocity resolved in ECEF axes.
      */
     public double getVz() {
-        return mVz;
+        return vz;
     }
 
     /**
@@ -643,7 +630,7 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      * @param vz z coordinate of velocity resolved in ECEF axes.
      */
     public void setVz(final double vz) {
-        mVz = vz;
+        this.vz = vz;
     }
 
     /**
@@ -655,9 +642,9 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      * @param vz z coordinate of velocity.
      */
     public void setVelocityCoordinates(final double vx, final double vy, final double vz) {
-        mVx = vx;
-        mVy = vy;
-        mVz = vz;
+        this.vx = vx;
+        this.vy = vy;
+        this.vz = vz;
     }
 
     /**
@@ -666,7 +653,7 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      * @param result instance where x coordinate of velocity will be stored.
      */
     public void getSpeedX(final Speed result) {
-        result.setValue(mVx);
+        result.setValue(vx);
         result.setUnit(SpeedUnit.METERS_PER_SECOND);
     }
 
@@ -676,7 +663,7 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      * @return x coordinate of velocity.
      */
     public Speed getSpeedX() {
-        return new Speed(mVx, SpeedUnit.METERS_PER_SECOND);
+        return new Speed(vx, SpeedUnit.METERS_PER_SECOND);
     }
 
     /**
@@ -685,8 +672,7 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      * @param vx x coordinate of velocity.
      */
     public void setSpeedX(final Speed vx) {
-        mVx = SpeedConverter.convert(vx.getValue().doubleValue(),
-                vx.getUnit(), SpeedUnit.METERS_PER_SECOND);
+        this.vx = SpeedConverter.convert(vx.getValue().doubleValue(), vx.getUnit(), SpeedUnit.METERS_PER_SECOND);
     }
 
     /**
@@ -695,7 +681,7 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      * @param result instance where y coordinate of velocity will be stored.
      */
     public void getSpeedY(final Speed result) {
-        result.setValue(mVy);
+        result.setValue(vy);
         result.setUnit(SpeedUnit.METERS_PER_SECOND);
     }
 
@@ -705,7 +691,7 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      * @return y coordinate of velocity.
      */
     public Speed getSpeedY() {
-        return new Speed(mVy, SpeedUnit.METERS_PER_SECOND);
+        return new Speed(vy, SpeedUnit.METERS_PER_SECOND);
     }
 
     /**
@@ -714,8 +700,7 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      * @param vy y coordinate of velocity.
      */
     public void setSpeedY(final Speed vy) {
-        mVy = SpeedConverter.convert(vy.getValue().doubleValue(),
-                vy.getUnit(), SpeedUnit.METERS_PER_SECOND);
+        this.vy = SpeedConverter.convert(vy.getValue().doubleValue(), vy.getUnit(), SpeedUnit.METERS_PER_SECOND);
     }
 
     /**
@@ -724,7 +709,7 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      * @param result instance where z coordinate of velocity will be stored.
      */
     public void getSpeedZ(final Speed result) {
-        result.setValue(mVz);
+        result.setValue(vz);
         result.setUnit(SpeedUnit.METERS_PER_SECOND);
     }
 
@@ -734,7 +719,7 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      * @return z coordinate of velocity.
      */
     public Speed getSpeedZ() {
-        return new Speed(mVz, SpeedUnit.METERS_PER_SECOND);
+        return new Speed(vz, SpeedUnit.METERS_PER_SECOND);
     }
 
     /**
@@ -743,8 +728,7 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      * @param vz z coordinate of velocity.
      */
     public void setSpeedZ(final Speed vz) {
-        mVz = SpeedConverter.convert(vz.getValue().doubleValue(),
-                vz.getUnit(), SpeedUnit.METERS_PER_SECOND);
+        this.vz = SpeedConverter.convert(vz.getValue().doubleValue(), vz.getUnit(), SpeedUnit.METERS_PER_SECOND);
     }
 
     /**
@@ -766,7 +750,7 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      * @param result instance where velocity will be stored.
      */
     public void getEcefVelocity(final ECEFVelocity result) {
-        result.setCoordinates(mVx, mVy, mVz);
+        result.setCoordinates(vx, vy, vz);
     }
 
     /**
@@ -775,7 +759,7 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      * @return velocity.
      */
     public ECEFVelocity getEcefVelocity() {
-        return new ECEFVelocity(mVx, mVy, mVz);
+        return new ECEFVelocity(vx, vy, vz);
     }
 
     /**
@@ -784,9 +768,9 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      * @param ecefVelocity velocity.
      */
     public void setEcefVelocity(final ECEFVelocity ecefVelocity) {
-        mVx = ecefVelocity.getVx();
-        mVy = ecefVelocity.getVy();
-        mVz = ecefVelocity.getVz();
+        vx = ecefVelocity.getVx();
+        vy = ecefVelocity.getVy();
+        vz = ecefVelocity.getVz();
     }
 
     /**
@@ -795,13 +779,13 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      * @param output destination instance where data will be copied to.
      */
     public void copyTo(final ECEFPositionAndVelocity output) {
-        output.mX = mX;
-        output.mY = mY;
-        output.mZ = mZ;
+        output.x = x;
+        output.y = y;
+        output.z = z;
 
-        output.mVx = mVx;
-        output.mVy = mVy;
-        output.mVz = mVz;
+        output.vx = vx;
+        output.vy = vy;
+        output.vz = vz;
     }
 
     /**
@@ -810,13 +794,13 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      * @param input instance to copy data from.
      */
     public void copyFrom(final ECEFPositionAndVelocity input) {
-        mX = input.mX;
-        mY = input.mY;
-        mZ = input.mZ;
+        x = input.x;
+        y = input.y;
+        z = input.z;
 
-        mVx = input.mVx;
-        mVy = input.mVy;
-        mVz = input.mVz;
+        vx = input.vx;
+        vy = input.vy;
+        vz = input.vz;
     }
 
     /**
@@ -828,7 +812,7 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(mX, mY, mZ, mVx, mVy, mVz);
+        return Objects.hash(x, y, z, vx, vy, vz);
     }
 
     /**
@@ -846,7 +830,7 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        ECEFPositionAndVelocity other = (ECEFPositionAndVelocity) o;
+        final var other = (ECEFPositionAndVelocity) o;
         return equals(other);
     }
 
@@ -870,18 +854,17 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      * @return true if both instances are considered to be equal (up to provided
      * threshold), false otherwise.
      */
-    public boolean equals(final ECEFPositionAndVelocity other,
-                          final double threshold) {
+    public boolean equals(final ECEFPositionAndVelocity other, final double threshold) {
         if (other == null) {
             return false;
         }
 
-        return Math.abs(mX - other.mX) <= threshold
-                && Math.abs(mY - other.mY) <= threshold
-                && Math.abs(mZ - other.mZ) <= threshold
-                && Math.abs(mVx - other.mVx) <= threshold
-                && Math.abs(mVy - other.mVy) <= threshold
-                && Math.abs(mVz - other.mVz) <= threshold;
+        return Math.abs(x - other.x) <= threshold
+                && Math.abs(y - other.y) <= threshold
+                && Math.abs(z - other.z) <= threshold
+                && Math.abs(vx - other.vx) <= threshold
+                && Math.abs(vy - other.vy) <= threshold
+                && Math.abs(vz - other.vz) <= threshold;
     }
 
     /**
@@ -892,7 +875,7 @@ public class ECEFPositionAndVelocity implements Serializable, Cloneable {
      */
     @Override
     protected Object clone() throws CloneNotSupportedException {
-        final ECEFPositionAndVelocity result = (ECEFPositionAndVelocity) super.clone();
+        final var result = (ECEFPositionAndVelocity) super.clone();
         copyTo(result);
         return result;
     }

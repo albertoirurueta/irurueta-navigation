@@ -42,8 +42,7 @@ public class HomogeneousLinearLeastSquaresLateration3DSolver extends
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      *                                  length is smaller than required (4 points).
      */
-    public HomogeneousLinearLeastSquaresLateration3DSolver(
-            final Point3D[] positions, final double[] distances) {
+    public HomogeneousLinearLeastSquaresLateration3DSolver(final Point3D[] positions, final double[] distances) {
         super(positions, distances);
     }
 
@@ -52,8 +51,7 @@ public class HomogeneousLinearLeastSquaresLateration3DSolver extends
      *
      * @param listener listener to be notified of events raised by this instance.
      */
-    public HomogeneousLinearLeastSquaresLateration3DSolver(
-            final LaterationSolverListener<Point3D> listener) {
+    public HomogeneousLinearLeastSquaresLateration3DSolver(final LaterationSolverListener<Point3D> listener) {
         super(listener);
     }
 
@@ -67,8 +65,7 @@ public class HomogeneousLinearLeastSquaresLateration3DSolver extends
      *                                  length is smaller than required (4 points).
      */
     public HomogeneousLinearLeastSquaresLateration3DSolver(
-            final Point3D[] positions, final double[] distances,
-            final LaterationSolverListener<Point3D> listener) {
+            final Point3D[] positions, final double[] distances, final LaterationSolverListener<Point3D> listener) {
         super(positions, distances, listener);
     }
 
@@ -91,8 +88,7 @@ public class HomogeneousLinearLeastSquaresLateration3DSolver extends
      * @throws IllegalArgumentException if spheres is null or if length of spheres array is less than 4.
      */
     public HomogeneousLinearLeastSquaresLateration3DSolver(
-            final Sphere[] spheres,
-            final LaterationSolverListener<Point3D> listener) {
+            final Sphere[] spheres, final LaterationSolverListener<Point3D> listener) {
         super(listener);
         internalSetSpheres(spheres);
     }
@@ -103,14 +99,14 @@ public class HomogeneousLinearLeastSquaresLateration3DSolver extends
      * @return spheres defined by provided positions and distances.
      */
     public Sphere[] getSpheres() {
-        if (mPositions == null) {
+        if (positions == null) {
             return null;
         }
 
-        final Sphere[] result = new Sphere[mPositions.length];
+        final var result = new Sphere[positions.length];
 
-        for (int i = 0; i < mPositions.length; i++) {
-            result[i] = new Sphere(mPositions[i], mDistances[i]);
+        for (var i = 0; i < positions.length; i++) {
+            result[i] = new Sphere(positions[i], distances[i]);
         }
         return result;
     }
@@ -158,11 +154,11 @@ public class HomogeneousLinearLeastSquaresLateration3DSolver extends
      */
     @Override
     public Point3D getEstimatedPosition() {
-        if (mEstimatedPositionCoordinates == null) {
+        if (estimatedPositionCoordinates == null) {
             return null;
         }
 
-        final InhomogeneousPoint3D position = new InhomogeneousPoint3D();
+        final var position = new InhomogeneousPoint3D();
         getEstimatedPosition(position);
         return position;
     }
@@ -179,10 +175,10 @@ public class HomogeneousLinearLeastSquaresLateration3DSolver extends
             throw new IllegalArgumentException();
         }
 
-        final Point3D[] positions = new Point3D[spheres.length];
-        final double[] distances = new double[spheres.length];
-        for (int i = 0; i < spheres.length; i++) {
-            final Sphere sphere = spheres[i];
+        final var positions = new Point3D[spheres.length];
+        final var distances = new double[spheres.length];
+        for (var i = 0; i < spheres.length; i++) {
+            final var sphere = spheres[i];
             positions[i] = sphere.getCenter();
             distances[i] = sphere.getRadius();
         }

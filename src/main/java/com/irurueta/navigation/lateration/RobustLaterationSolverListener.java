@@ -45,8 +45,7 @@ public interface RobustLaterationSolverListener<P extends Point<?>> {
      * @param solver    solver raising the event.
      * @param iteration current iteration.
      */
-    void onSolveNextIteration(final RobustLaterationSolver<P> solver,
-                              final int iteration);
+    void onSolveNextIteration(final RobustLaterationSolver<P> solver, final int iteration);
 
     /**
      * Called when solving progress changes significantly.
@@ -54,6 +53,5 @@ public interface RobustLaterationSolverListener<P extends Point<?>> {
      * @param solver   solver raising the event.
      * @param progress progress of estimation expressed as a value between 0.0 and 1.0.
      */
-    void onSolveProgressChange(final RobustLaterationSolver<P> solver,
-                               final float progress);
+    void onSolveProgressChange(final RobustLaterationSolver<P> solver, final float progress);
 }

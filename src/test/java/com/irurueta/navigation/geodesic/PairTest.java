@@ -15,21 +15,21 @@
  */
 package com.irurueta.navigation.geodesic;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class PairTest {
+class PairTest {
 
     @Test
-    public void testConstructor() {
-        final Random r = new Random();
-        final double first = r.nextDouble();
-        final double second = r.nextDouble();
+    void testConstructor() {
+        final var r = new Random();
+        final var first = r.nextDouble();
+        final var second = r.nextDouble();
 
-        final Pair p = new Pair(first, second);
+        final var p = new Pair(first, second);
 
         //check
         assertEquals(first, p.getFirst(), 0.0);
@@ -37,12 +37,12 @@ public class PairTest {
     }
 
     @Test
-    public void testGetSetFirst() {
-        final Random r = new Random();
-        final double value1 = r.nextDouble();
-        final double value2 = r.nextDouble();
+    void testGetSetFirst() {
+        final var r = new Random();
+        final var value1 = r.nextDouble();
+        final var value2 = r.nextDouble();
 
-        final Pair p = new Pair(value1, 0.0);
+        final var p = new Pair(value1, 0.0);
 
         //check
         assertEquals(value1, p.getFirst(), 0.0);
@@ -55,12 +55,12 @@ public class PairTest {
     }
 
     @Test
-    public void testGetSetSecond() {
-        final Random r = new Random();
-        final double value1 = r.nextDouble();
-        final double value2 = r.nextDouble();
+    void testGetSetSecond() {
+        final var r = new Random();
+        final var value1 = r.nextDouble();
+        final var value2 = r.nextDouble();
 
-        final Pair p = new Pair(0.0, value1);
+        final var p = new Pair(0.0, value1);
 
         //check
         assertEquals(value1, p.getSecond(), 0.0);

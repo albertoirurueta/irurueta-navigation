@@ -15,7 +15,6 @@
  */
 package com.irurueta.navigation;
 
-import java.io.InputStream;
 import java.lang.ref.SoftReference;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -85,64 +84,62 @@ public class BuildInfo {
      * Singleton stored in a soft reference (to keep it cached in memory unless
      * memory is claimed).
      */
-    private static SoftReference<BuildInfo> sReference;
+    private static SoftReference<BuildInfo> reference;
 
     /**
      * Build timestamp.
      */
-    private Date mBuildTimestamp;
+    private Date buildTimestamp;
 
     /**
      * GroupId of this library.
      */
-    private String mGroupId;
+    private String groupId;
 
     /**
      * ArtifactId of this library.
      */
-    private String mArtifactId;
+    private String artifactId;
 
     /**
      * Version of this library.
      */
-    private String mVersion;
+    private String version;
 
     /**
      * Build number.
      */
-    private String mBuildNumber;
+    private String buildNumber;
 
     /**
      * Build commit.
      */
-    private String mCommit;
+    private String commit;
 
     /**
      * Build branch.
      */
-    private String mBranch;
+    private String branch;
 
     /**
      * Constructor.
      */
     private BuildInfo() {
         // loads properties file data.
-        try (final InputStream stream = BuildInfo.class.getResourceAsStream(BUILD_INFO_PROPERTIES)) {
-            final Properties props = new Properties();
+        try (final var stream = BuildInfo.class.getResourceAsStream(BUILD_INFO_PROPERTIES)) {
+            final var props = new Properties();
             props.load(stream);
 
-            final String buildTimestampString = props.getProperty(
-                    BUILD_TIMESTAMP_KEY);
-            final SimpleDateFormat format = new SimpleDateFormat(TIMESTAMP_FORMAT,
-                    Locale.ENGLISH);
-            mBuildTimestamp = format.parse(buildTimestampString);
+            final var buildTimestampString = props.getProperty(BUILD_TIMESTAMP_KEY);
+            final var format = new SimpleDateFormat(TIMESTAMP_FORMAT, Locale.ENGLISH);
+            buildTimestamp = format.parse(buildTimestampString);
 
-            mGroupId = props.getProperty(GROUP_ID_KEY);
-            mArtifactId = props.getProperty(ARTIFACT_ID_KEY);
-            mVersion = props.getProperty(VERSION_KEY);
-            mBuildNumber = props.getProperty(BUILD_NUMBER_KEY);
-            mCommit = props.getProperty(COMMIT_KEY);
-            mBranch = props.getProperty(BRANCH_KEY);
+            groupId = props.getProperty(GROUP_ID_KEY);
+            artifactId = props.getProperty(ARTIFACT_ID_KEY);
+            version = props.getProperty(VERSION_KEY);
+            buildNumber = props.getProperty(BUILD_NUMBER_KEY);
+            commit = props.getProperty(COMMIT_KEY);
+            branch = props.getProperty(BRANCH_KEY);
         } catch (final Exception e) {
             LOGGER.log(Level.WARNING, "Failed to load build info", e);
         }
@@ -155,9 +152,9 @@ public class BuildInfo {
      */
     public static synchronized BuildInfo getInstance() {
         BuildInfo info;
-        if (sReference == null || (info = sReference.get()) == null) {
+        if (reference == null || (info = reference.get()) == null) {
             info = new BuildInfo();
-            sReference = new SoftReference<>(info);
+            reference = new SoftReference<>(info);
         }
 
         return info;
@@ -169,7 +166,7 @@ public class BuildInfo {
      * @return build timestamp.
      */
     public Date getBuildTimestamp() {
-        return (Date) mBuildTimestamp.clone();
+        return (Date) buildTimestamp.clone();
     }
 
     /**
@@ -178,7 +175,7 @@ public class BuildInfo {
      * @return groupId of this library.
      */
     public String getGroupId() {
-        return mGroupId;
+        return groupId;
     }
 
     /**
@@ -187,7 +184,7 @@ public class BuildInfo {
      * @return artifactId of this library.
      */
     public String getArtifactId() {
-        return mArtifactId;
+        return artifactId;
     }
 
     /**
@@ -196,7 +193,7 @@ public class BuildInfo {
      * @return version of this library.
      */
     public String getVersion() {
-        return mVersion;
+        return version;
     }
 
     /**
@@ -205,7 +202,7 @@ public class BuildInfo {
      * @return build number.
      */
     public String getBuildNumber() {
-        return mBuildNumber;
+        return buildNumber;
     }
 
     /**
@@ -214,7 +211,7 @@ public class BuildInfo {
      * @return build commit.
      */
     public String getCommit() {
-        return mCommit;
+        return commit;
     }
 
     /**
@@ -223,6 +220,6 @@ public class BuildInfo {
      * @return build branch.
      */
     public String getBranch() {
-        return mBranch;
+        return branch;
     }
 }

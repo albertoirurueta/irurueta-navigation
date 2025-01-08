@@ -15,14 +15,14 @@
  */
 package com.irurueta.navigation.gnss;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class GNSSExceptionTest {
+class GNSSExceptionTest {
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         GNSSException ex = new GNSSException();
         assertNotNull(ex);
 

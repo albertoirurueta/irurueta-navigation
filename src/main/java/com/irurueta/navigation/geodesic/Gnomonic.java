@@ -114,17 +114,17 @@ public class Gnomonic {
     /**
      * Earth geodesic.
      */
-    private final Geodesic mEarth;
+    private final Geodesic earth;
 
     /**
      * Major equatorial Earth radius.
      */
-    private final double mA;
+    private final double a;
 
     /**
      * Earth flattening.
      */
-    private final double mF;
+    private final double f;
 
     /**
      * Constructor for Gnomonic.
@@ -132,9 +132,9 @@ public class Gnomonic {
      * @param earth the {@link Geodesic} object to use for geodesic calculations.
      */
     public Gnomonic(final Geodesic earth) {
-        mEarth = earth;
-        mA = mEarth.getMajorRadius();
-        mF = mEarth.getFlattening();
+        this.earth = earth;
+        a = this.earth.getMajorRadius();
+        f = this.earth.getFlattening();
     }
 
     /**
@@ -155,17 +155,15 @@ public class Gnomonic {
      * @return {@link GnomonicData} object with the following fields:
      * <i>lat0</i>, <i>lon0</i>, <i>lat</i>, <i>lon</i>, <i>x</i>, <i>y</i>, <i>azi</i>, <i>rk</i>.
      */
-    public GnomonicData forward(
-            final double lat0, final double lon0, final double lat, final double lon) {
-        final GeodesicData inv = mEarth.inverse(lat0, lon0, lat, lon,
-                GeodesicMask.AZIMUTH | GeodesicMask.GEODESIC_SCALE |
-                        GeodesicMask.REDUCED_LENGTH);
-        final GnomonicData fwd = new GnomonicData(lat0, lon0, lat, lon, Double.NaN, Double.NaN,
-                inv.getAzi2(), inv.getScaleM12());
+    public GnomonicData forward(final double lat0, final double lon0, final double lat, final double lon) {
+        final var inv = earth.inverse(lat0, lon0, lat, lon,
+                GeodesicMask.AZIMUTH | GeodesicMask.GEODESIC_SCALE | GeodesicMask.REDUCED_LENGTH);
+        final var fwd = new GnomonicData(lat0, lon0, lat, lon, Double.NaN, Double.NaN, inv.getAzi2(),
+                inv.getScaleM12());
 
         if (inv.getScaleM12() > 0) {
-            final double rho = inv.getM12() / inv.getScaleM12();
-            final Pair p = GeoMath.sincosd(inv.getAzi1());
+            final var rho = inv.getM12() / inv.getScaleM12();
+            final var p = GeoMath.sincosd(inv.getAzi1());
             fwd.setX(rho * p.getFirst());
             fwd.setY(rho * p.getSecond());
         }
@@ -194,44 +192,41 @@ public class Gnomonic {
      * <i>lat0</i>, <i>lon0</i>, <i>lat</i>, <i>lon</i>, <i>x</i>, <i>y</i>,
      * <i>azi</i>, <i>rk</i>.
      */
-    public GnomonicData reverse(
-            final double lat0, final double lon0, final double x, final double y) {
-        final GnomonicData rev = new GnomonicData(lat0, lon0, Double.NaN, Double.NaN, x, y,
-                Double.NaN, Double.NaN);
+    public GnomonicData reverse(final double lat0, final double lon0, final double x, final double y) {
+        final var rev = new GnomonicData(lat0, lon0, Double.NaN, Double.NaN, x, y, Double.NaN, Double.NaN);
 
         //noinspection all
-        final double azi0 = GeoMath.atan2d(x, y);
-        double rho = Math.hypot(x, y);
-        double s = mA * Math.atan(rho / mA);
-        final boolean little = rho <= mA;
+        final var azi0 = GeoMath.atan2d(x, y);
+        var rho = Math.hypot(x, y);
+        var s = a * Math.atan(rho / a);
+        final var little = rho <= a;
 
         if (!little) {
             rho = 1 / rho;
         }
 
-        final GeodesicLine line = mEarth.line(lat0, lon0, azi0, GeodesicMask.LATITUDE |
-                GeodesicMask.LONGITUDE | GeodesicMask.AZIMUTH | GeodesicMask.DISTANCE_IN |
-                GeodesicMask.REDUCED_LENGTH | GeodesicMask.GEODESIC_SCALE);
+        final var line = earth.line(lat0, lon0, azi0, GeodesicMask.LATITUDE | GeodesicMask.LONGITUDE
+                | GeodesicMask.AZIMUTH | GeodesicMask.DISTANCE_IN | GeodesicMask.REDUCED_LENGTH
+                | GeodesicMask.GEODESIC_SCALE);
 
-        int count = NUMIT;
-        int trip = 0;
+        var count = NUMIT;
+        var trip = 0;
         GeodesicData pos = null;
 
         while (count-- > 0) {
-            pos = line.position(s, GeodesicMask.LONGITUDE | GeodesicMask.LATITUDE |
-                    GeodesicMask.AZIMUTH | GeodesicMask.DISTANCE_IN |
-                    GeodesicMask.REDUCED_LENGTH | GeodesicMask.GEODESIC_SCALE);
+            pos = line.position(s, GeodesicMask.LONGITUDE | GeodesicMask.LATITUDE | GeodesicMask.AZIMUTH
+                    | GeodesicMask.DISTANCE_IN | GeodesicMask.REDUCED_LENGTH | GeodesicMask.GEODESIC_SCALE);
 
             if (trip > 0) {
                 break;
             }
 
-            final double ds = little
+            final var ds = little
                     ? ((pos.getM12() / pos.getScaleM12()) - rho) * pos.getScaleM12() * pos.getScaleM12()
                     : (rho - (pos.getScaleM12() / pos.getM12())) * pos.getM12() * pos.getM12();
             s -= ds;
 
-            if (Math.abs(ds) <= EPS * mA) {
+            if (Math.abs(ds) <= EPS * a) {
                 trip++;
             }
         }
@@ -255,7 +250,7 @@ public class Gnomonic {
      * @return <i>a</i> the equatorial radius of the ellipsoid (meters).
      */
     public double getMajorRadius() {
-        return mA;
+        return a;
     }
 
     /**
@@ -265,6 +260,6 @@ public class Gnomonic {
      * Geodesic object used in the constructor.
      */
     public double getFlattening() {
-        return mF;
+        return f;
     }
 }

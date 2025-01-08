@@ -63,10 +63,10 @@ public class GNSSBiasesGenerator {
      * @param random             random number generator.
      * @return list of generated biases for each provided satellite position.
      */
-    public static List<Double> generateBiases(final List<ECEFPosition> satellitePositions,
-                                              final ECEFPosition userPosition,
-                                              final GNSSConfig config, final Random random) {
-        final List<Double> result = new ArrayList<>();
+    public static List<Double> generateBiases(
+            final List<ECEFPosition> satellitePositions, final ECEFPosition userPosition, final GNSSConfig config,
+            final Random random) {
+        final var result = new ArrayList<Double>();
         generateBiases(satellitePositions, userPosition, config, random, result);
         return result;
     }
@@ -81,18 +81,16 @@ public class GNSSBiasesGenerator {
      * @param result             instance where generated biases for each
      *                           provided satellite position will be stored.
      */
-    public static void generateBiases(final List<ECEFPosition> satellitePositions,
-                                      final ECEFPosition userPosition,
-                                      final GNSSConfig config, final Random random,
-                                      final List<Double> result) {
+    public static void generateBiases(
+            final List<ECEFPosition> satellitePositions, final ECEFPosition userPosition, final GNSSConfig config,
+            final Random random, final List<Double> result) {
         // Calculate NED user position
-        final NEDPosition userNedPosition = new NEDPosition();
-        final NEDVelocity userNedVelocity = new NEDVelocity();
+        final var userNedPosition = new NEDPosition();
+        final var userNedVelocity = new NEDVelocity();
         ECEFtoNEDPositionVelocityConverter.convertECEFtoNED(
-                userPosition.getX(), userPosition.getY(), userPosition.getZ(),
-                0.0, 0.0, 0.0, userNedPosition, userNedVelocity);
-        generate(satellitePositions, userPosition,
-                userNedPosition.getLatitude(), userNedPosition.getLongitude(),
+                userPosition.getX(), userPosition.getY(), userPosition.getZ(), 0.0, 0.0, 0.0,
+                userNedPosition, userNedVelocity);
+        generate(satellitePositions, userPosition, userNedPosition.getLatitude(), userNedPosition.getLongitude(),
                 config, random, result);
     }
 
@@ -105,20 +103,19 @@ public class GNSSBiasesGenerator {
      * @param random            random number generator.
      * @return generated bias for provided satellite position.
      */
-    public static double generateBias(final ECEFPosition satellitePosition,
-                                      final ECEFPosition userPosition, final GNSSConfig config,
-                                      final Random random) {
+    public static double generateBias(final ECEFPosition satellitePosition, final ECEFPosition userPosition,
+                                      final GNSSConfig config, final Random random) {
         // Calculate NED user position
-        final NEDPosition userNedPosition = new NEDPosition();
-        final NEDVelocity userNedVelocity = new NEDVelocity();
+        final var userNedPosition = new NEDPosition();
+        final var userNedVelocity = new NEDVelocity();
         ECEFtoNEDPositionVelocityConverter.convertECEFtoNED(
-                userPosition.getX(), userPosition.getY(), userPosition.getZ(),
-                0.0, 0.0, 0.0, userNedPosition, userNedVelocity);
-        final double userLatitude = userNedPosition.getLatitude();
-        final double userLongitude = userNedPosition.getLongitude();
+                userPosition.getX(), userPosition.getY(), userPosition.getZ(), 0.0, 0.0, 0.0,
+                userNedPosition, userNedVelocity);
+        final var userLatitude = userNedPosition.getLatitude();
+        final var userLongitude = userNedPosition.getLongitude();
 
         // Calculate ECEF to NED coordinate transformation matrix
-        final Matrix cen = CoordinateTransformation.ecefToNedMatrix(userLatitude, userLongitude);
+        final var cen = CoordinateTransformation.ecefToNedMatrix(userLatitude, userLongitude);
         return generate(satellitePosition, userPosition, config, cen, random);
     }
 
@@ -134,19 +131,17 @@ public class GNSSBiasesGenerator {
      * @param result             instance where generated biases for each
      *                           provided satellite position will be stored.
      */
-    private static void generate(final List<ECEFPosition> satellitePositions,
-                                 final ECEFPosition userPosition,
-                                 final double userLatitude,
-                                 final double userLongitude,
-                                 final GNSSConfig config, final Random random,
-                                 final List<Double> result) {
+    private static void generate(
+            final List<ECEFPosition> satellitePositions, final ECEFPosition userPosition,
+            final double userLatitude, final double userLongitude, final GNSSConfig config, final Random random,
+            final List<Double> result) {
         result.clear();
 
         // Calculate ECEF to NED coordinate transformation matrix
-        final Matrix cen = CoordinateTransformation.ecefToNedMatrix(userLatitude, userLongitude);
+        final var cen = CoordinateTransformation.ecefToNedMatrix(userLatitude, userLongitude);
 
         // Loop satellites
-        for (final ECEFPosition satellitePosition : satellitePositions) {
+        for (final var satellitePosition : satellitePositions) {
             result.add(generate(satellitePosition, userPosition, config, cen, random));
         }
     }
@@ -166,34 +161,32 @@ public class GNSSBiasesGenerator {
                                    final GNSSConfig config, final Matrix cen, final Random random) {
 
         // Determine ECEF line-of-sight vector using (8.41)
-        final double deltaRx = satellitePosition.getX() - userPosition.getX();
-        final double deltaRy = satellitePosition.getY() - userPosition.getY();
-        final double deltaRz = satellitePosition.getZ() - userPosition.getZ();
+        final var deltaRx = satellitePosition.getX() - userPosition.getX();
+        final var deltaRy = satellitePosition.getY() - userPosition.getY();
+        final var deltaRz = satellitePosition.getZ() - userPosition.getZ();
 
-        final double deltaRNorm = Math.sqrt(deltaRx * deltaRx + deltaRy * deltaRy + deltaRz * deltaRz);
+        final var deltaRNorm = Math.sqrt(deltaRx * deltaRx + deltaRy * deltaRy + deltaRz * deltaRz);
 
-        final double uaseX = deltaRx / deltaRNorm;
-        final double uaseY = deltaRy / deltaRNorm;
-        final double uaseZ = deltaRz / deltaRNorm;
+        final var uaseX = deltaRx / deltaRNorm;
+        final var uaseY = deltaRy / deltaRNorm;
+        final var uaseZ = deltaRz / deltaRNorm;
 
         // Convert line of sight vector to NED using (8.39) and determine
         // elevation using (8.57)
-        final double cen1 = cen.getElementAt(2, 0);
-        final double cen2 = cen.getElementAt(2, 1);
-        final double cen3 = cen.getElementAt(2, 2);
+        final var cen1 = cen.getElementAt(2, 0);
+        final var cen2 = cen.getElementAt(2, 1);
+        final var cen3 = cen.getElementAt(2, 2);
 
-        double elevation = -Math.asin(cen1 * uaseX + cen2 * uaseY + cen3 * uaseZ);
+        var elevation = -Math.asin(cen1 * uaseX + cen2 * uaseY + cen3 * uaseZ);
 
         // Limit the minimum elevation angle to the masking angle
         elevation = Math.max(elevation, Math.toRadians(config.getMaskAngleDegrees()));
 
         // Calculate ionosphere and troposphere error SDs using (9.79) and (9.80)
-        final double cosElevation = Math.cos(elevation);
-        final double cosElevation2 = cosElevation * cosElevation;
-        final double ionoSD = config.getZenithIonosphereErrorSD() / Math.sqrt(1.0
-                - IONO_FACTOR * cosElevation2);
-        final double tropSD = config.getZenithTroposphereErrorSD() / Math.sqrt(1.0
-                - TROPO_FACTOR * cosElevation2);
+        final var cosElevation = Math.cos(elevation);
+        final var cosElevation2 = cosElevation * cosElevation;
+        final var ionoSD = config.getZenithIonosphereErrorSD() / Math.sqrt(1.0 - IONO_FACTOR * cosElevation2);
+        final var tropSD = config.getZenithTroposphereErrorSD() / Math.sqrt(1.0 - TROPO_FACTOR * cosElevation2);
 
         // Determine range bias
         return config.getSISErrorSD() * random.nextGaussian() + ionoSD * random.nextGaussian()

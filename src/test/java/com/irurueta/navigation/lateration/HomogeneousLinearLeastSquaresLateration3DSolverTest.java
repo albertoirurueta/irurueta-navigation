@@ -21,14 +21,15 @@ import com.irurueta.geometry.Sphere;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Random;
-
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
-public class HomogeneousLinearLeastSquaresLateration3DSolverTest implements LaterationSolverListener<Point3D> {
+@ExtendWith(MockitoExtension.class)
+class HomogeneousLinearLeastSquaresLateration3DSolverTest implements LaterationSolverListener<Point3D> {
 
     private static final int MIN_SPHERES = 4;
     private static final int MAX_SPHERES = 10;
@@ -48,10 +49,9 @@ public class HomogeneousLinearLeastSquaresLateration3DSolverTest implements Late
     private int solveEnd;
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         // empty constructor
-        HomogeneousLinearLeastSquaresLateration3DSolver solver =
-                new HomogeneousLinearLeastSquaresLateration3DSolver();
+        var solver = new HomogeneousLinearLeastSquaresLateration3DSolver();
 
         // check correctness
         assertNull(solver.getListener());
@@ -66,12 +66,12 @@ public class HomogeneousLinearLeastSquaresLateration3DSolverTest implements Late
         assertEquals(4, solver.getMinRequiredPositionsAndDistances());
 
         // constructor with positions and distances
-        final Point3D[] positions = new Point3D[4];
+        final var positions = new Point3D[4];
         positions[0] = new InhomogeneousPoint3D();
         positions[1] = new InhomogeneousPoint3D();
         positions[2] = new InhomogeneousPoint3D();
         positions[3] = new InhomogeneousPoint3D();
-        final double[] distances = new double[4];
+        final var distances = new double[4];
         solver = new HomogeneousLinearLeastSquaresLateration3DSolver(positions, distances);
 
         // check correctness
@@ -87,31 +87,17 @@ public class HomogeneousLinearLeastSquaresLateration3DSolverTest implements Late
         assertEquals(4, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
-        final double[] wrong = new double[5];
-        final Point3D[] shortPositions = new Point3D[1];
-        final double[] shortDistances = new double[1];
-        solver = null;
-        try {
-            solver = new HomogeneousLinearLeastSquaresLateration3DSolver(null, distances);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new HomogeneousLinearLeastSquaresLateration3DSolver(positions, null);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new HomogeneousLinearLeastSquaresLateration3DSolver(positions, wrong);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new HomogeneousLinearLeastSquaresLateration3DSolver(shortPositions, shortDistances);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(solver);
+        final var wrong = new double[5];
+        final var shortPositions = new Point3D[1];
+        final var shortDistances = new double[1];
+        assertThrows(IllegalArgumentException.class,
+                () -> new HomogeneousLinearLeastSquaresLateration3DSolver(null, distances));
+        assertThrows(IllegalArgumentException.class,
+                () -> new HomogeneousLinearLeastSquaresLateration3DSolver(positions, null));
+        assertThrows(IllegalArgumentException.class,
+                () -> new HomogeneousLinearLeastSquaresLateration3DSolver(positions, wrong));
+        assertThrows(IllegalArgumentException.class,
+                () -> new HomogeneousLinearLeastSquaresLateration3DSolver(shortPositions, shortDistances));
 
         // constructor with listener
         // noinspection unchecked
@@ -146,32 +132,17 @@ public class HomogeneousLinearLeastSquaresLateration3DSolverTest implements Late
         assertEquals(4, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
-        solver = null;
-        try {
-            solver = new HomogeneousLinearLeastSquaresLateration3DSolver(null, distances, listener);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new HomogeneousLinearLeastSquaresLateration3DSolver(positions, null, listener);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new HomogeneousLinearLeastSquaresLateration3DSolver(positions, wrong, listener);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new HomogeneousLinearLeastSquaresLateration3DSolver(shortPositions, shortDistances,
-                    listener);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(solver);
+        assertThrows(IllegalArgumentException.class, () -> new HomogeneousLinearLeastSquaresLateration3DSolver(
+                null, distances, listener));
+        assertThrows(IllegalArgumentException.class, () -> new HomogeneousLinearLeastSquaresLateration3DSolver(
+                positions, null, listener));
+        assertThrows(IllegalArgumentException.class, () -> new HomogeneousLinearLeastSquaresLateration3DSolver(
+                positions, wrong, listener));
+        assertThrows(IllegalArgumentException.class, () -> new HomogeneousLinearLeastSquaresLateration3DSolver(
+                shortPositions, shortDistances, listener));
 
         // constructor with spheres
-        final Sphere[] spheres = new Sphere[4];
+        final var spheres = new Sphere[4];
         spheres[0] = new Sphere(positions[0], distances[0]);
         spheres[1] = new Sphere(positions[1], distances[1]);
         spheres[2] = new Sphere(positions[1], distances[1]);
@@ -191,20 +162,11 @@ public class HomogeneousLinearLeastSquaresLateration3DSolverTest implements Late
         assertEquals(4, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
-        final Sphere[] shortSpheres = new Sphere[1];
-
-        solver = null;
-        try {
-            solver = new HomogeneousLinearLeastSquaresLateration3DSolver((Sphere[]) null);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new HomogeneousLinearLeastSquaresLateration3DSolver(shortSpheres);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(solver);
+        final var shortSpheres = new Sphere[1];
+        assertThrows(IllegalArgumentException.class,
+                () -> new HomogeneousLinearLeastSquaresLateration3DSolver((Sphere[]) null));
+        assertThrows(IllegalArgumentException.class,
+                () -> new HomogeneousLinearLeastSquaresLateration3DSolver(shortSpheres));
 
         // constructor with spheres and listener
         solver = new HomogeneousLinearLeastSquaresLateration3DSolver(spheres, listener);
@@ -222,32 +184,23 @@ public class HomogeneousLinearLeastSquaresLateration3DSolverTest implements Late
         assertEquals(4, solver.getMinRequiredPositionsAndDistances());
 
         // Force IllegalArgumentException
-        solver = null;
-        try {
-            solver = new HomogeneousLinearLeastSquaresLateration3DSolver(null, listener);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver = new HomogeneousLinearLeastSquaresLateration3DSolver(shortSpheres, listener);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(solver);
+        assertThrows(IllegalArgumentException.class,
+                () -> new HomogeneousLinearLeastSquaresLateration3DSolver(null, listener));
+        assertThrows(IllegalArgumentException.class,
+                () -> new HomogeneousLinearLeastSquaresLateration3DSolver(shortSpheres, listener));
     }
 
     @Test
-    public void testGetSetSpheres() throws LockedException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+    void testGetSetSpheres() throws LockedException {
+        final var randomizer = new UniformRandomizer();
 
-        final HomogeneousLinearLeastSquaresLateration3DSolver solver =
-                new HomogeneousLinearLeastSquaresLateration3DSolver();
+        final var solver = new HomogeneousLinearLeastSquaresLateration3DSolver();
 
         // initial value
         assertNull(solver.getSpheres());
 
         // set new value
-        final Point3D[] positions = new Point3D[4];
+        final var positions = new Point3D[4];
         positions[0] = new InhomogeneousPoint3D(randomizer.nextDouble(),
                 randomizer.nextDouble(), randomizer.nextDouble());
         positions[1] = new InhomogeneousPoint3D(randomizer.nextDouble(),
@@ -256,13 +209,13 @@ public class HomogeneousLinearLeastSquaresLateration3DSolverTest implements Late
                 randomizer.nextDouble(), randomizer.nextDouble());
         positions[3] = new InhomogeneousPoint3D(randomizer.nextDouble(),
                 randomizer.nextDouble(), randomizer.nextDouble());
-        final double[] distances = new double[4];
+        final var distances = new double[4];
         distances[0] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
         distances[1] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
         distances[2] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
         distances[3] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
 
-        final Sphere[] spheres = new Sphere[4];
+        final var spheres = new Sphere[4];
         spheres[0] = new Sphere(positions[0], distances[0]);
         spheres[1] = new Sphere(positions[1], distances[1]);
         spheres[2] = new Sphere(positions[2], distances[2]);
@@ -271,29 +224,20 @@ public class HomogeneousLinearLeastSquaresLateration3DSolverTest implements Late
         solver.setSpheres(spheres);
 
         // check
-        final Sphere[] spheres2 = solver.getSpheres();
-        for (int i = 0; i < 4; i++) {
+        final var spheres2 = solver.getSpheres();
+        for (var i = 0; i < 4; i++) {
             assertSame(spheres[i].getCenter(), spheres2[i].getCenter());
             assertEquals(spheres[i].getRadius(), spheres2[i].getRadius(), 0.0);
         }
 
         // force IllegalArgumentException
-        try {
-            solver.setSpheres(null);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver.setSpheres(new Sphere[1]);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> solver.setSpheres(null));
+        assertThrows(IllegalArgumentException.class, () -> solver.setSpheres(new Sphere[1]));
     }
 
     @Test
-    public void testGetSetListener() throws LockedException {
-        final HomogeneousLinearLeastSquaresLateration3DSolver solver =
-                new HomogeneousLinearLeastSquaresLateration3DSolver();
+    void testGetSetListener() throws LockedException {
+        final var solver = new HomogeneousLinearLeastSquaresLateration3DSolver();
 
         // initial value
         assertNull(solver.getListener());
@@ -308,9 +252,8 @@ public class HomogeneousLinearLeastSquaresLateration3DSolverTest implements Late
     }
 
     @Test
-    public void testGetSetPositionsAndDistances() throws LockedException {
-        final HomogeneousLinearLeastSquaresLateration3DSolver solver =
-                new HomogeneousLinearLeastSquaresLateration3DSolver();
+    void testGetSetPositionsAndDistances() throws LockedException {
+        final var solver = new HomogeneousLinearLeastSquaresLateration3DSolver();
 
         // initial value
         assertNull(solver.getPositions());
@@ -318,12 +261,12 @@ public class HomogeneousLinearLeastSquaresLateration3DSolverTest implements Late
         assertFalse(solver.isReady());
 
         // set new values
-        final Point3D[] positions = new Point3D[4];
+        final var positions = new Point3D[4];
         positions[0] = new InhomogeneousPoint3D();
         positions[1] = new InhomogeneousPoint3D();
         positions[2] = new InhomogeneousPoint3D();
         positions[3] = new InhomogeneousPoint3D();
-        final double[] distances = new double[4];
+        final var distances = new double[4];
 
         solver.setPositionsAndDistances(positions, distances);
 
@@ -333,44 +276,29 @@ public class HomogeneousLinearLeastSquaresLateration3DSolverTest implements Late
         assertTrue(solver.isReady());
 
         // Force IllegalArgumentException
-        try {
-            solver.setPositionsAndDistances(null, distances);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver.setPositionsAndDistances(positions, null);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver.setPositionsAndDistances(positions, new double[3]);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            solver.setPositionsAndDistances(new Point3D[1], new double[1]);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> solver.setPositionsAndDistances(null, distances));
+        assertThrows(IllegalArgumentException.class, () -> solver.setPositionsAndDistances(positions, null));
+        assertThrows(IllegalArgumentException.class, () -> solver.setPositionsAndDistances(positions, new double[3]));
+        assertThrows(IllegalArgumentException.class, () -> solver.setPositionsAndDistances(new Point3D[1],
+                new double[1]));
     }
 
     @Test
-    public void testSolveNoError() throws LaterationException, NotReadyException, LockedException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+    void testSolveNoError() throws LaterationException, NotReadyException, LockedException {
+        final var randomizer = new UniformRandomizer();
 
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final int numSpheres = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var numSpheres = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
 
-            final InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+            final var position = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
             InhomogeneousPoint3D center;
             double radius;
-            final Sphere[] spheres = new Sphere[numSpheres];
-            for (int i = 0; i < numSpheres; i++) {
+            final var spheres = new Sphere[numSpheres];
+            for (var i = 0; i < numSpheres; i++) {
                 center = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
@@ -379,8 +307,7 @@ public class HomogeneousLinearLeastSquaresLateration3DSolverTest implements Late
                 spheres[i] = new Sphere(center, radius);
             }
 
-            final HomogeneousLinearLeastSquaresLateration3DSolver solver =
-                    new HomogeneousLinearLeastSquaresLateration3DSolver(spheres, this);
+            final var solver = new HomogeneousLinearLeastSquaresLateration3DSolver(spheres, this);
 
             reset();
             assertEquals(0, solveStart);
@@ -391,7 +318,7 @@ public class HomogeneousLinearLeastSquaresLateration3DSolverTest implements Late
 
             solver.solve();
 
-            final Point3D estimatedPosition = solver.getEstimatedPosition();
+            final var estimatedPosition = solver.getEstimatedPosition();
             if (estimatedPosition.distanceTo(position) > ABSOLUTE_ERROR) {
                 continue;
             }
@@ -404,60 +331,47 @@ public class HomogeneousLinearLeastSquaresLateration3DSolverTest implements Late
         assertTrue(numValid > 0);
 
         // Force NotReadyException
-        final HomogeneousLinearLeastSquaresLateration3DSolver solver =
-                new HomogeneousLinearLeastSquaresLateration3DSolver();
-        try {
-            solver.solve();
-            fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) {
-        }
+        final var solver = new HomogeneousLinearLeastSquaresLateration3DSolver();
+        assertThrows(NotReadyException.class, solver::solve);
 
         // Force LaterationException
-        final Sphere[] circles = new Sphere[4];
-        InhomogeneousPoint3D center;
-        double radius;
-        for (int i = 0; i < 4; i++) {
-            center = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
-            radius = LaterationSolver.EPSILON;
+        final var circles = new Sphere[4];
+        for (var i = 0; i < 4; i++) {
+            final var center = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
+            final var radius = LaterationSolver.EPSILON;
             circles[i] = new Sphere(center, radius);
         }
         solver.setSpheres(circles);
-        try {
-            solver.solve();
-            fail("LaterationException expected but not thrown");
-        } catch (final LaterationException ignore) {
-        }
+        assertThrows(LaterationException.class, solver::solve);
     }
 
     @Test
-    public void testSolveWithError() throws LaterationException, NotReadyException, LockedException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+    void testSolveWithError() throws LaterationException, NotReadyException, LockedException {
+        final var randomizer = new UniformRandomizer();
 
-        int numValid = 0, numInvalid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final int numPoints = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
+        var numValid = 0;
+        var numInvalid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var numPoints = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
 
-            final InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+            final var position = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-            InhomogeneousPoint3D point;
-            double distance, error;
-            final Point3D[] positions = new Point3D[numPoints];
-            final double[] distances = new double[numPoints];
-            for (int i = 0; i < numPoints; i++) {
-                point = new InhomogeneousPoint3D(
+            final var positions = new Point3D[numPoints];
+            final var distances = new double[numPoints];
+            for (var i = 0; i < numPoints; i++) {
+                final var point = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-                distance = point.distanceTo(position);
-                error = randomizer.nextDouble(MIN_DISTANCE_ERROR, MAX_DISTANCE_ERROR);
+                final var distance = point.distanceTo(position);
+                final var error = randomizer.nextDouble(MIN_DISTANCE_ERROR, MAX_DISTANCE_ERROR);
                 positions[i] = point;
                 distances[i] = distance + error;
             }
 
-            final HomogeneousLinearLeastSquaresLateration3DSolver solver =
-                    new HomogeneousLinearLeastSquaresLateration3DSolver(positions, distances, this);
+            final var solver = new HomogeneousLinearLeastSquaresLateration3DSolver(positions, distances, this);
 
             reset();
             assertEquals(0, solveStart);
@@ -468,8 +382,8 @@ public class HomogeneousLinearLeastSquaresLateration3DSolverTest implements Late
 
             solver.solve();
 
-            final Point3D estimatedPosition = solver.getEstimatedPosition();
-            distance = estimatedPosition.distanceTo(position);
+            final var estimatedPosition = solver.getEstimatedPosition();
+            final var distance = estimatedPosition.distanceTo(position);
             if (distance >= LARGE_ABSOLUTE_ERROR) {
                 numInvalid++;
             } else {
@@ -482,31 +396,28 @@ public class HomogeneousLinearLeastSquaresLateration3DSolverTest implements Late
     }
 
     @Test
-    public void testSolve4SpheresNoError() throws LaterationException, NotReadyException, LockedException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+    void testSolve4SpheresNoError() throws LaterationException, NotReadyException, LockedException {
+        final var randomizer = new UniformRandomizer();
 
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final int numSpheres = MIN_SPHERES;
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var numSpheres = MIN_SPHERES;
 
-            final InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+            final var position = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-            InhomogeneousPoint3D center;
-            double radius;
-            final Sphere[] spheres = new Sphere[numSpheres];
-            for (int i = 0; i < numSpheres; i++) {
-                center = new InhomogeneousPoint3D(
+            final var spheres = new Sphere[numSpheres];
+            for (var i = 0; i < numSpheres; i++) {
+                final var center = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-                radius = center.distanceTo(position);
+                final var radius = center.distanceTo(position);
                 spheres[i] = new Sphere(center, radius);
             }
 
-            final HomogeneousLinearLeastSquaresLateration3DSolver solver =
-                    new HomogeneousLinearLeastSquaresLateration3DSolver(spheres, this);
+            final var solver = new HomogeneousLinearLeastSquaresLateration3DSolver(spheres, this);
 
             reset();
             assertEquals(0, solveStart);
@@ -517,7 +428,7 @@ public class HomogeneousLinearLeastSquaresLateration3DSolverTest implements Late
 
             solver.solve();
 
-            final Point3D estimatedPosition = solver.getEstimatedPosition();
+            final var estimatedPosition = solver.getEstimatedPosition();
             if (estimatedPosition.distanceTo(position) > ABSOLUTE_ERROR) {
                 continue;
             }
@@ -530,29 +441,18 @@ public class HomogeneousLinearLeastSquaresLateration3DSolverTest implements Late
         assertTrue(numValid > 0);
 
         // Force NotReadyException
-        final HomogeneousLinearLeastSquaresLateration3DSolver solver =
-                new HomogeneousLinearLeastSquaresLateration3DSolver();
-        try {
-            solver.solve();
-            fail("NotReadyException expected but not thrown");
-        } catch (final NotReadyException ignore) {
-        }
+        final var solver = new HomogeneousLinearLeastSquaresLateration3DSolver();
+        assertThrows(NotReadyException.class, solver::solve);
 
         // Force LaterationException
-        final Sphere[] circles = new Sphere[4];
-        InhomogeneousPoint3D center;
-        double radius;
-        for (int i = 0; i < 4; i++) {
-            center = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
-            radius = LaterationSolver.EPSILON;
+        final var circles = new Sphere[4];
+        for (var i = 0; i < 4; i++) {
+            final var center = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
+            final var radius = LaterationSolver.EPSILON;
             circles[i] = new Sphere(center, radius);
         }
         solver.setSpheres(circles);
-        try {
-            solver.solve();
-            fail("LaterationException expected but not thrown");
-        } catch (final LaterationException ignore) {
-        }
+        assertThrows(LaterationException.class, solver::solve);
     }
 
     @Override
@@ -571,28 +471,10 @@ public class HomogeneousLinearLeastSquaresLateration3DSolverTest implements Late
         solveStart = solveEnd = 0;
     }
 
-    private void checkLocked(final HomogeneousLinearLeastSquaresLateration3DSolver solver) {
-        try {
-            solver.setListener(null);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            solver.setPositionsAndDistances(null, null);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            solver.setSpheres(null);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            solver.solve();
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        } catch (final Exception ignore) {
-            fail("LockedException expected but not thrown");
-        }
+    private static void checkLocked(final HomogeneousLinearLeastSquaresLateration3DSolver solver) {
+        assertThrows(LockedException.class, () -> solver.setListener(null));
+        assertThrows(LockedException.class, () -> solver.setPositionsAndDistances(null, null));
+        assertThrows(LockedException.class, () -> solver.setSpheres(null));
+        assertThrows(LockedException.class, solver::solve);
     }
 }

@@ -38,27 +38,27 @@ public abstract class LaterationSolver<P extends Point<?>> {
     /**
      * Known positions of static nodes.
      */
-    protected P[] mPositions;
+    protected P[] positions;
 
     /**
      * Euclidean distances from static nodes to mobile node.
      */
-    protected double[] mDistances;
+    protected double[] distances;
 
     /**
      * Listener to be notified of events raised by this instance.
      */
-    protected LaterationSolverListener<P> mListener;
+    protected LaterationSolverListener<P> listener;
 
     /**
      * Estimated inhomogeneous position coordinates.
      */
-    protected double[] mEstimatedPositionCoordinates;
+    protected double[] estimatedPositionCoordinates;
 
     /**
      * Indicates if this instance is locked because lateration is being solved.
      */
-    protected boolean mLocked;
+    protected boolean locked;
 
     /**
      * Constructor.
@@ -85,7 +85,7 @@ public abstract class LaterationSolver<P extends Point<?>> {
      * @param listener listener to be notified of events raised by this instance.
      */
     protected LaterationSolver(final LaterationSolverListener<P> listener) {
-        mListener = listener;
+        this.listener = listener;
     }
 
     /**
@@ -99,10 +99,9 @@ public abstract class LaterationSolver<P extends Point<?>> {
      *                                  length is smaller than required (3 for 2D points or 4 for 3D points).
      */
     protected LaterationSolver(
-            final P[] positions, final double[] distances,
-            final LaterationSolverListener<P> listener) {
+            final P[] positions, final double[] distances, final LaterationSolverListener<P> listener) {
         this(positions, distances);
-        mListener = listener;
+        this.listener = listener;
     }
 
     /**
@@ -111,7 +110,7 @@ public abstract class LaterationSolver<P extends Point<?>> {
      * @return listener to be notified of events raised by this instance.
      */
     public LaterationSolverListener<P> getListener() {
-        return mListener;
+        return listener;
     }
 
     /**
@@ -120,12 +119,11 @@ public abstract class LaterationSolver<P extends Point<?>> {
      * @param listener listener to be notified of events raised by this instance.
      * @throws LockedException if instance is busy solving the lateration problem.
      */
-    public void setListener(
-            final LaterationSolverListener<P> listener) throws LockedException {
+    public void setListener(final LaterationSolverListener<P> listener) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        mListener = listener;
+        this.listener = listener;
     }
 
     /**
@@ -134,7 +132,7 @@ public abstract class LaterationSolver<P extends Point<?>> {
      * @return known positions of static nodes.
      */
     public P[] getPositions() {
-        return mPositions;
+        return positions;
     }
 
     /**
@@ -143,7 +141,7 @@ public abstract class LaterationSolver<P extends Point<?>> {
      * @return euclidean distances from static nodes to mobile node.
      */
     public double[] getDistances() {
-        return mDistances;
+        return distances;
     }
 
     /**
@@ -152,8 +150,7 @@ public abstract class LaterationSolver<P extends Point<?>> {
      * @return true if solver is ready, false otherwise.
      */
     public boolean isReady() {
-        return mPositions != null && mDistances != null &&
-                mPositions.length >= getMinRequiredPositionsAndDistances();
+        return positions != null && distances != null && positions.length >= getMinRequiredPositionsAndDistances();
     }
 
     /**
@@ -163,7 +160,7 @@ public abstract class LaterationSolver<P extends Point<?>> {
      * @return true if solver is locked, false otherwise.
      */
     public boolean isLocked() {
-        return mLocked;
+        return locked;
     }
 
     /**
@@ -190,7 +187,7 @@ public abstract class LaterationSolver<P extends Point<?>> {
      * @return estimated inhomogeneous position coordinates.
      */
     public double[] getEstimatedPositionCoordinates() {
-        return mEstimatedPositionCoordinates;
+        return estimatedPositionCoordinates;
     }
 
     /**
@@ -199,10 +196,9 @@ public abstract class LaterationSolver<P extends Point<?>> {
      * @param estimatedPosition instance where estimated position will be stored.
      */
     public void getEstimatedPosition(final P estimatedPosition) {
-        if (mEstimatedPositionCoordinates != null) {
-            for (int i = 0; i < mEstimatedPositionCoordinates.length; i++) {
-                estimatedPosition.setInhomogeneousCoordinate(i,
-                        mEstimatedPositionCoordinates[i]);
+        if (estimatedPositionCoordinates != null) {
+            for (var i = 0; i < estimatedPositionCoordinates.length; i++) {
+                estimatedPosition.setInhomogeneousCoordinate(i, estimatedPositionCoordinates[i]);
             }
         }
     }
@@ -228,8 +224,7 @@ public abstract class LaterationSolver<P extends Point<?>> {
      * @throws NotReadyException   is solver is not ready.
      * @throws LockedException     if instance is busy solving the lateration problem.
      */
-    public abstract void solve() throws LaterationException, NotReadyException,
-            LockedException;
+    public abstract void solve() throws LaterationException, NotReadyException, LockedException;
 
     /**
      * Gets lateration solver type.
@@ -255,8 +250,7 @@ public abstract class LaterationSolver<P extends Point<?>> {
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      *                                  length is smaller than required (2 points).
      */
-    protected void internalSetPositionsAndDistances(
-            final P[] positions, final double[] distances) {
+    protected void internalSetPositionsAndDistances(final P[] positions, final double[] distances) {
         if (positions == null || distances == null) {
             throw new IllegalArgumentException();
         }
@@ -269,13 +263,13 @@ public abstract class LaterationSolver<P extends Point<?>> {
             throw new IllegalArgumentException();
         }
 
-        mPositions = positions;
-        mDistances = distances;
+        this.positions = positions;
+        this.distances = distances;
 
         // fix distances if needed
-        for (int i = 0; i < mDistances.length; i++) {
-            if (mDistances[i] < EPSILON) {
-                mDistances[i] = EPSILON;
+        for (var i = 0; i < this.distances.length; i++) {
+            if (this.distances[i] < EPSILON) {
+                this.distances[i] = EPSILON;
             }
         }
     }

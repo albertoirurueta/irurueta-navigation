@@ -31,19 +31,19 @@ public class NEDVelocity implements Serializable, Cloneable {
      * Coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame and
      * resolved along North axis.
      */
-    private double mVn;
+    private double vn;
 
     /**
      * Coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame and
      * resolved along East axis.
      */
-    private double mVe;
+    private double ve;
 
     /**
      * Coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame and
      * resolved along Down axis.
      */
-    private double mVd;
+    private double vd;
 
     /**
      * Constructor.
@@ -89,7 +89,7 @@ public class NEDVelocity implements Serializable, Cloneable {
      * @return North velocity coordinate value.
      */
     public double getVn() {
-        return mVn;
+        return vn;
     }
 
     /**
@@ -99,7 +99,7 @@ public class NEDVelocity implements Serializable, Cloneable {
      * @param vn North velocity coordinate value.
      */
     public void setVn(final double vn) {
-        mVn = vn;
+        this.vn = vn;
     }
 
     /**
@@ -109,7 +109,7 @@ public class NEDVelocity implements Serializable, Cloneable {
      * @return East velocity coordinate value.
      */
     public double getVe() {
-        return mVe;
+        return ve;
     }
 
     /**
@@ -119,7 +119,7 @@ public class NEDVelocity implements Serializable, Cloneable {
      * @param ve East velocity coordinate value.
      */
     public void setVe(final double ve) {
-        mVe = ve;
+        this.ve = ve;
     }
 
     /**
@@ -129,7 +129,7 @@ public class NEDVelocity implements Serializable, Cloneable {
      * @return Down velocity coordinate value.
      */
     public double getVd() {
-        return mVd;
+        return vd;
     }
 
     /**
@@ -139,7 +139,7 @@ public class NEDVelocity implements Serializable, Cloneable {
      * @param vd Down velocity coordinate value.
      */
     public void setVd(final double vd) {
-        mVd = vd;
+        this.vd = vd;
     }
 
     /**
@@ -151,9 +151,9 @@ public class NEDVelocity implements Serializable, Cloneable {
      * @param vd Down velocity coordinate value.
      */
     public void setCoordinates(final double vn, final double ve, final double vd) {
-        mVn = vn;
-        mVe = ve;
-        mVd = vd;
+        this.vn = vn;
+        this.ve = ve;
+        this.vd = vd;
     }
 
     /**
@@ -163,7 +163,7 @@ public class NEDVelocity implements Serializable, Cloneable {
      * @return norm of velocity expressed in meters per second (m/s).
      */
     public double getNorm() {
-        return Math.sqrt(mVn * mVn + mVe * mVe + mVd * mVd);
+        return Math.sqrt(vn * vn + ve * ve + vd * vd);
     }
 
     /**
@@ -192,7 +192,7 @@ public class NEDVelocity implements Serializable, Cloneable {
      * @param result instance where North velocity coordinate will be stored.
      */
     public void getSpeedN(final Speed result) {
-        result.setValue(mVn);
+        result.setValue(vn);
         result.setUnit(SpeedUnit.METERS_PER_SECOND);
     }
 
@@ -203,7 +203,7 @@ public class NEDVelocity implements Serializable, Cloneable {
      * @return North velocity coordinate.
      */
     public Speed getSpeedN() {
-        return new Speed(mVn, SpeedUnit.METERS_PER_SECOND);
+        return new Speed(vn, SpeedUnit.METERS_PER_SECOND);
     }
 
     /**
@@ -213,8 +213,7 @@ public class NEDVelocity implements Serializable, Cloneable {
      * @param speedN North velocity coordinate to be set.
      */
     public void setSpeedN(final Speed speedN) {
-        mVn = SpeedConverter.convert(speedN.getValue().doubleValue(),
-                speedN.getUnit(), SpeedUnit.METERS_PER_SECOND);
+        vn = SpeedConverter.convert(speedN.getValue().doubleValue(), speedN.getUnit(), SpeedUnit.METERS_PER_SECOND);
     }
 
     /**
@@ -224,7 +223,7 @@ public class NEDVelocity implements Serializable, Cloneable {
      * @param result instance where East velocity coordinate will be stored.
      */
     public void getSpeedE(final Speed result) {
-        result.setValue(mVe);
+        result.setValue(ve);
         result.setUnit(SpeedUnit.METERS_PER_SECOND);
     }
 
@@ -235,7 +234,7 @@ public class NEDVelocity implements Serializable, Cloneable {
      * @return East velocity coordinate.
      */
     public Speed getSpeedE() {
-        return new Speed(mVe, SpeedUnit.METERS_PER_SECOND);
+        return new Speed(ve, SpeedUnit.METERS_PER_SECOND);
     }
 
     /**
@@ -245,8 +244,7 @@ public class NEDVelocity implements Serializable, Cloneable {
      * @param speedE East velocity coordinate to be set.
      */
     public void setSpeedE(final Speed speedE) {
-        mVe = SpeedConverter.convert(speedE.getValue().doubleValue(),
-                speedE.getUnit(), SpeedUnit.METERS_PER_SECOND);
+        ve = SpeedConverter.convert(speedE.getValue().doubleValue(), speedE.getUnit(), SpeedUnit.METERS_PER_SECOND);
     }
 
     /**
@@ -256,7 +254,7 @@ public class NEDVelocity implements Serializable, Cloneable {
      * @param result instance where Down velocity coordinate will be stored.
      */
     public void getSpeedD(final Speed result) {
-        result.setValue(mVd);
+        result.setValue(vd);
         result.setUnit(SpeedUnit.METERS_PER_SECOND);
     }
 
@@ -267,7 +265,7 @@ public class NEDVelocity implements Serializable, Cloneable {
      * @return Down velocity coordinate.
      */
     public Speed getSpeedD() {
-        return new Speed(mVd, SpeedUnit.METERS_PER_SECOND);
+        return new Speed(vd, SpeedUnit.METERS_PER_SECOND);
     }
 
     /**
@@ -277,8 +275,7 @@ public class NEDVelocity implements Serializable, Cloneable {
      * @param speedD Down velocity coordinate to be set.
      */
     public void setSpeedD(final Speed speedD) {
-        mVd = SpeedConverter.convert(speedD.getValue().doubleValue(),
-                speedD.getUnit(), SpeedUnit.METERS_PER_SECOND);
+        vd = SpeedConverter.convert(speedD.getValue().doubleValue(), speedD.getUnit(), SpeedUnit.METERS_PER_SECOND);
     }
 
     /**
@@ -289,8 +286,7 @@ public class NEDVelocity implements Serializable, Cloneable {
      * @param speedE East velocity coordinate.
      * @param speedD Down velocity coordinate.
      */
-    public void setCoordinates(final Speed speedN, final Speed speedE,
-                               final Speed speedD) {
+    public void setCoordinates(final Speed speedN, final Speed speedE, final Speed speedD) {
         setSpeedN(speedN);
         setSpeedE(speedE);
         setSpeedD(speedD);
@@ -302,9 +298,9 @@ public class NEDVelocity implements Serializable, Cloneable {
      * @param output destination instance where data will be copied to.
      */
     public void copyTo(final NEDVelocity output) {
-        output.mVn = mVn;
-        output.mVe = mVe;
-        output.mVd = mVd;
+        output.vn = vn;
+        output.ve = ve;
+        output.vd = vd;
     }
 
     /**
@@ -313,9 +309,9 @@ public class NEDVelocity implements Serializable, Cloneable {
      * @param input instance to copy data from.
      */
     public void copyFrom(final NEDVelocity input) {
-        mVn = input.mVn;
-        mVe = input.mVe;
-        mVd = input.mVd;
+        vn = input.vn;
+        ve = input.ve;
+        vd = input.vd;
     }
 
     /**
@@ -326,7 +322,7 @@ public class NEDVelocity implements Serializable, Cloneable {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(mVn, mVe, mVd);
+        return Objects.hash(vn, ve, vd);
     }
 
     /**
@@ -344,11 +340,10 @@ public class NEDVelocity implements Serializable, Cloneable {
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof NEDVelocity)) {
+        if (!(obj instanceof NEDVelocity other)) {
             return false;
         }
 
-        final NEDVelocity other = (NEDVelocity) obj;
         return equals(other);
     }
 
@@ -375,9 +370,9 @@ public class NEDVelocity implements Serializable, Cloneable {
             return false;
         }
 
-        return Math.abs(mVn - other.mVn) <= threshold
-                && Math.abs(mVe - other.mVe) <= threshold
-                && Math.abs(mVd - other.mVd) <= threshold;
+        return Math.abs(vn - other.vn) <= threshold
+                && Math.abs(ve - other.ve) <= threshold
+                && Math.abs(vd - other.vd) <= threshold;
     }
 
     /**
@@ -388,7 +383,7 @@ public class NEDVelocity implements Serializable, Cloneable {
      */
     @Override
     protected Object clone() throws CloneNotSupportedException {
-        final NEDVelocity result = (NEDVelocity) super.clone();
+        final var result = (NEDVelocity) super.clone();
         copyTo(result);
         return result;
     }

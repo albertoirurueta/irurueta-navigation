@@ -32,7 +32,7 @@ public class Accuracy3D extends Accuracy<com.irurueta.geometry.Accuracy3D> {
      * Constructor.
      */
     public Accuracy3D() {
-        mInternalAccuracy = new com.irurueta.geometry.Accuracy3D();
+        internalAccuracy = new com.irurueta.geometry.Accuracy3D();
     }
 
     /**
@@ -46,9 +46,8 @@ public class Accuracy3D extends Accuracy<com.irurueta.geometry.Accuracy3D> {
      * @throws NonSymmetricPositiveDefiniteMatrixException if provided matrix is not
      *                                                     symmetric and positive definite.
      */
-    public Accuracy3D(final Matrix covarianceMatrix)
-            throws NonSymmetricPositiveDefiniteMatrixException {
-        mInternalAccuracy = new com.irurueta.geometry.Accuracy3D(covarianceMatrix);
+    public Accuracy3D(final Matrix covarianceMatrix) throws NonSymmetricPositiveDefiniteMatrixException {
+        internalAccuracy = new com.irurueta.geometry.Accuracy3D(covarianceMatrix);
     }
 
     /**
@@ -58,7 +57,7 @@ public class Accuracy3D extends Accuracy<com.irurueta.geometry.Accuracy3D> {
      * @throws IllegalArgumentException if provided value is not within 0 and 1.
      */
     public Accuracy3D(final double confidence) {
-        mInternalAccuracy = new com.irurueta.geometry.Accuracy3D(confidence);
+        internalAccuracy = new com.irurueta.geometry.Accuracy3D(confidence);
     }
 
     /**
@@ -76,7 +75,7 @@ public class Accuracy3D extends Accuracy<com.irurueta.geometry.Accuracy3D> {
      */
     public Accuracy3D(final Matrix covarianceMatrix, final double confidence)
             throws NonSymmetricPositiveDefiniteMatrixException {
-        mInternalAccuracy = new com.irurueta.geometry.Accuracy3D(covarianceMatrix, confidence);
+        internalAccuracy = new com.irurueta.geometry.Accuracy3D(covarianceMatrix, confidence);
     }
 
     /**
@@ -98,7 +97,7 @@ public class Accuracy3D extends Accuracy<com.irurueta.geometry.Accuracy3D> {
      * @throws InvalidRotationMatrixException if rotation cannot be properly determined.
      */
     public Ellipsoid toEllipsoid() throws InvalidRotationMatrixException {
-        return mInternalAccuracy.toEllipsoid();
+        return internalAccuracy.toEllipsoid();
     }
 
     /**
@@ -110,7 +109,7 @@ public class Accuracy3D extends Accuracy<com.irurueta.geometry.Accuracy3D> {
      * @throws GeometryException    if accuracy cannot be flattened.
      */
     public Accuracy2D flattenTo2D() throws GeometryException {
-        return new Accuracy2D(mInternalAccuracy.flattenTo2D());
+        return new Accuracy2D(internalAccuracy.flattenTo2D());
     }
 
     /**
@@ -121,6 +120,6 @@ public class Accuracy3D extends Accuracy<com.irurueta.geometry.Accuracy3D> {
      * @throws GeometryException    if intersection cannot be computed.
      */
     public Ellipse intersectWithPlane() throws GeometryException {
-        return mInternalAccuracy.intersectWithPlane();
+        return internalAccuracy.intersectWithPlane();
     }
 }
